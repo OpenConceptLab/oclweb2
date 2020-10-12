@@ -1,12 +1,12 @@
 import React from 'react';
-import { Paper, TableContainer, Table, TableHead, TableBody, TableCell, TableRow, TableFooter } from '@material-ui/core';
+import moment from 'moment';
+import { Paper, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab'
 import { map, startCase } from 'lodash';
 import Concept from './Concept';
 import Mapping from './Mapping';
 import { PAGE_LIMIT } from '../../common/constants';
 import ResourceLabel from './ResourceLabel';
-import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 
 
 const ResultsTable = props => {
@@ -40,7 +40,7 @@ const ResultsTable = props => {
                 {
                   map(props.results.items, item => (
                     <TableRow hover key={item.id}>
-                      <TableCell align='left'>
+                      <TableCell component="th" scope="row" align='left'>
                         <ResourceLabel
                           owner={item.owner}
                           parent={item.source}
@@ -51,26 +51,28 @@ const ResultsTable = props => {
                       <TableCell align='left'>{item.concept_class}</TableCell>
                       <TableCell align='left'>{item.datatype}</TableCell>
                       <TableCell align='left'>
-                        <LastUpdatedOnLabel date={item.version_created_on} />
+                        {moment(item.version_created_on).format('MM/DD/YYYY')}
                       </TableCell>
                     </TableRow>
                   ))
                 }
+                <TableRow colspan='4'>
+                  <TableCell colspan='4' align='center' className='pagination-center'>
+                    <Pagination
+                      onChange={onPageChange}
+                      count={props.results.pages}
+                      variant="outlined"
+                      shape="rounded"
+                      color="primary"
+                      showFirstButton
+                      showLastButton
+                      page={props.results.pageNumber}
+                    />
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
-          <div className='col-sm-12 no-side-padding pagination' style={{textAlign: 'center', marginTop: '10px'}}>
-            <Pagination
-              onChange={onPageChange}
-              count={props.results.pages}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              showFirstButton
-              showLastButton
-              page={props.results.pageNumber}
-            />
-          </div>
         </div> :
         <div style={{padding: '2px'}}>We found 0 {startCase(props.resource)}.</div>
       }

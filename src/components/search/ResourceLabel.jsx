@@ -10,7 +10,7 @@ const ResourceLabel = props => {
         <span>{SEPARATOR}</span>
         <span>{props.parent}</span>
         <span>{SEPARATOR}</span>
-        <span className='resource-name'>{props.id}</span>
+        <span className='resource-name'>{props.id || props.name}</span>
       </span>
       <span className='resource-label resource-id'>
         <span>{props.name}</span>

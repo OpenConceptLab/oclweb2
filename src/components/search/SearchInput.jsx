@@ -68,8 +68,9 @@ class SearchInput extends React.Component {
   moveToSearchPage = () => {
     if(!isAtGlobalSearch()) {
       const { input, exactMatch } = this.state
+      let _input = input || '';
       const exactMatchStr = exactMatch === 'on' ? '&exactMatch=on' : '';
-      const URL = `/search/?q=${input}&type=concepts${exactMatchStr}`;
+      const URL = `/search/?q=${_input}&type=concepts${exactMatchStr}`;
       window.location.hash = URL;
     }
   }
@@ -79,26 +80,15 @@ class SearchInput extends React.Component {
     this.setState({exactMatch: isOn ? 'off' : 'on'}, this.performSearch)
   }
 
-  render() {
-    const { input, exactMatch } = this.state
+  getExactMatchDOM() {
+    const { moreControls, exactMatchOnNewLine } = this.props;
+    const { exactMatch } = this.state;
     const isExactMatch = exactMatch === 'on';
+    const className = exactMatchOnNewLine ? '' : 'col-sm-2 no-side-padding';
+    const styles = exactMatchOnNewLine ? {textAlign: 'left'} : {marginTop: '8px'}
     return (
-      <div className='col-sm-12 no-side-padding'>
-        <div className='col-sm-10 no-side-padding'>
-          <OutlinedInput
-            id="outlined-adornment-weight"
-            endAdornment={<InputAdornment position="end"><SearchIcon /></InputAdornment>}
-            aria-describedby="outlined-weight-helper-text"
-            labelWidth={0}
-            placeholder="Search OCL"
-            className="search-input"
-            fullWidth
-            onKeyPress={this.handleKeyPress}
-            value={input}
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div className='col-sm-2' style={{padding: '9px'}}>
+      <div className={className} style={styles}>
+        <span style={{padding: '0 5px'}}>
           <Chip
             onClick={this.handleExactMatchChange}
             label='Exact Match'
@@ -106,7 +96,42 @@ class SearchInput extends React.Component {
             color={isExactMatch ? 'primary' : 'default'}
             size="small"
           />
+        </span>
+        {moreControls}
+      </div>
+    )
+  }
+
+  render() {
+    const { exactMatchOnNewLine } = this.props;
+    const { input } = this.state
+    const inputContainerClass = exactMatchOnNewLine ? 'col-sm-12 no-side-padding' : 'col-sm-10 no-side-padding';
+    return (
+      <div>
+        <div className='col-sm-12 no-side-padding' style={{marginBottom: '5px'}}>
+          <div className={inputContainerClass}>
+            <OutlinedInput
+              id="outlined-adornment-weight"
+              endAdornment={<InputAdornment position="end"><SearchIcon /></InputAdornment>}
+              aria-describedby="outlined-weight-helper-text"
+              labelWidth={0}
+              placeholder="Search OCL"
+              className="search-input"
+              fullWidth
+              onKeyPress={this.handleKeyPress}
+              value={input}
+              onChange={this.handleInputChange}
+            />
+          </div>
+          {
+            !exactMatchOnNewLine &&
+            this.getExactMatchDOM()
+          }
         </div>
+        {
+          exactMatchOnNewLine &&
+          this.getExactMatchDOM()
+        }
       </div>
     )
   }

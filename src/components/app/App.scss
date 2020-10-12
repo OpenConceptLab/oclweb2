@@ -41,7 +41,7 @@
 
 span.resource-label {
     height: 25px;
-    padding: 0 8px;
+    padding: 0 4px;
     color: #666;
     background-color: #eee;
     font-weight: 200;
@@ -96,5 +96,10 @@ div.resource-metadata {
         thead th {
             font-weight: bold;
         }
+    }
+}
+td.pagination-center {
+    ul {
+        display: inline-flex;
     }
 }

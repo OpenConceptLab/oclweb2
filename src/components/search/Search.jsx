@@ -1,5 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
+import moment from 'moment';
 import SearchInput from './SearchInput';
 import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
@@ -14,7 +15,8 @@ import Results from './Results';
 import ResultsInfinite from './ResultsInfinite';
 import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
-import PageResultsLabel from './PageResultsLabel'
+import PageResultsLabel from './PageResultsLabel';
+import ChipDatePicker from '../common/ChipDatePicker';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -35,6 +37,7 @@ class Search extends React.Component {
     this.isInfinite = false;
     this.state = {
       page: 1,
+      updatedSince: false,
       searchStr: '',
       exactMatch: 'off',
       resource: 'concepts',
@@ -154,8 +157,10 @@ class Search extends React.Component {
       })
     }
     this.setState(newState, () => {
-      const { resource, searchStr, page, exactMatch, sortParams } = this.state;
+      const { resource, searchStr, page, exactMatch, sortParams, updatedSince } = this.state;
       const queryParams = {q: searchStr, page: page, exact_match: exactMatch};
+      if(updatedSince)
+        queryParams['updatedSince'] = updatedSince
       fetchSearchResults(
         resource,
         {...queryParams, ...sortParams},
@@ -201,28 +206,57 @@ class Search extends React.Component {
     this.fetchNewResults({resource: resource}, false, true)
   }
 
+  onDateChange = date => {
+    this.fetchNewResults({updatedSince: date}, true, true)
+  }
+
+  getUpdatedSinceText() {
+    const { updatedSince } = this.state;
+    if(updatedSince)
+      return `Since: ${moment(updatedSince).format('MM/DD/YY')}`;
+    return 'All Time'
+  }
+
+  getFilterControls() {
+    const updatedSinceText = this.getUpdatedSinceText();
+    const { updatedSince } = this.state;
+    return (
+      <span style={{display: 'inline-flex'}}>
+        <span style={{paddingRight: '5px'}}>
+          <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size='small' />
+        </span>
+        <span>
+          <SortButton onChange={this.onSortChange} />
+        </span>
+      </span>
+    )
+  }
+
   render() {
-    const { resource, results, isLoading, searchStr } = this.state;
+    const { resource, results, isLoading, searchStr, updatedSince } = this.state;
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
+    const updatedSinceText = this.getUpdatedSinceText()
     return (
       <div className='col-sm-12' style={{paddingTop: '10px'}}>
         <div className='col-sm-3'>
           <Resources active={resource} results={results} onClick={this.onResourceChange} />
         </div>
         <div className='col-sm-9 no-left-padding'>
-          <div className='col-sm-7 no-side-padding' style={{textAlign: 'center'}}>
-            <SearchInput {...this.props} onSearch={this.onSearch} />
+          <div className='col-sm-8 no-side-padding' style={{textAlign: 'center'}}>
+            <SearchInput
+              {...this.props}
+              onSearch={this.onSearch}
+              exactMatchOnNewLine
+              moreControls={this.getFilterControls()}
+            />
           </div>
-          <div className='col-sm-2 no-side-padding' style={{marginTop: '7px', textAlign: 'center'}}>
-            <SortButton onChange={this.onSortChange} />
-          </div>
-          <div className='col-sm-3 no-side-padding' style={{textAlign: 'center', marginTop: '7px'}}>
-            <span className='col-sm-8 no-side-padding' style={{marginTop: '2px',}}>
+          <div className='col-sm-4 no-side-padding' style={{textAlign: 'center', marginTop: '7px'}}>
+            <span className='col-sm-9 no-side-padding' style={{marginTop: '2px',}}>
               <PageResultsLabel resource={resource} results={results[resource]} />
             </span>
-            <span className='col-sm-4 no-side-padding'>
+            <span className='col-sm-3 no-side-padding' style={{textAlign: 'right'}}>
               <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
                 <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
                   <NavigateBeforeIcon width="10" />
