@@ -12,6 +12,7 @@ import {
 import { BLUE } from '../../common/constants';
 import Results from './Results';
 import ResultsInfinite from './ResultsInfinite';
+import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
 import PageResultsLabel from './PageResultsLabel'
 
@@ -57,6 +58,7 @@ class Search extends React.Component {
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(this.props.location.search)
     this.isInfinite = queryParams.get('isInfinite', false)
+    this.isTable = queryParams.get('isTable', false)
     this.setState({
       resource: queryParams.get('type') || 'concepts',
       page: queryParams.get('page') || 1,
@@ -171,7 +173,7 @@ class Search extends React.Component {
 
   onPageChange = page => {
     if(page !== this.state.page)
-      this.fetchNewResults({page: page}, false, true)
+      this.fetchNewResults({page: page}, false, false)
   }
 
   onSortChange = params => {
@@ -236,10 +238,17 @@ class Search extends React.Component {
             <div style={{marginTop: '100px', textAlign: 'center'}}>
               <CircularProgress style={{color: BLUE}}/>
             </div> :
-            <div className='col-sm-12' style={{marginTop: '10px'}}>
+            <div className='col-sm-12 no-side-padding' style={{marginTop: '10px'}}>
               {
-                this.isInfinite ?
-                <ResultsInfinite resource={resource} results={resourceResults} onLoadMore={this.loadMore} /> :
+                this.isInfinite &&
+                <ResultsInfinite resource={resource} results={resourceResults} onLoadMore={this.loadMore} />
+              }
+              {
+                this.isTable &&
+                <ResultsTable resource={resource} results={resourceResults} onPageChange={this.onPageChange} />
+              }
+              {
+                !this.isTable && !this.isInfinite &&
                 <Results resource={resource} results={resourceResults} onPageChange={this.onPageChange} />
               }
             </div>

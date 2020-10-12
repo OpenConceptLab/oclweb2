@@ -90,3 +90,11 @@ div.resource-metadata {
 .pagination ul {
     display: inline-flex;
 }
+
+.search-results {
+    table {
+        thead th {
+            font-weight: bold;
+        }
+    }
+}
