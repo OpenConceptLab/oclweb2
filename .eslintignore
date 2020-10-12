@@ -1,0 +1,6 @@
+*.scss
+*.css
+*.config.js
+*.json
+src/components/external/*
+src/stories/*

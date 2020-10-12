@@ -1,8 +1,6 @@
 import React from 'react';
 import { Search as SearchIcon } from '@material-ui/icons';
-import { OutlinedInput, InputAdornment, FormControlLabel, Checkbox, Chip } from '@material-ui/core';
-import { get } from 'lodash';
-import APIService from '../../services/APIService';
+import { OutlinedInput, InputAdornment, Chip } from '@material-ui/core';
 import { isAtGlobalSearch } from '../../common/utils';
 
 class SearchInput extends React.Component {

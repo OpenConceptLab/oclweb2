@@ -1,14 +1,11 @@
 import React from 'react';
-import { Divider, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { Divider } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab'
 import { map, startCase } from 'lodash';
 import Concept from './Concept';
 import Mapping from './Mapping';
-import { PAGE_LIMIT } from '../../common/constants';
-
 
 const Results = props => {
-
   const getComponentFor = data => {
     const { resource } = props;
     if(resource === 'concepts')

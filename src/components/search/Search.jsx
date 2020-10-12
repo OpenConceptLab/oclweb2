@@ -4,8 +4,8 @@ import moment from 'moment';
 import SearchInput from './SearchInput';
 import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
-import { get, compact, cloneDeep, merge, forEach, isEqual } from 'lodash';
-import { CircularProgress, IconButton, ButtonGroup, Button } from '@material-ui/core';
+import { get, cloneDeep, merge, forEach } from 'lodash';
+import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon
@@ -152,7 +152,7 @@ class Search extends React.Component {
       newState.page = 1
 
     if(counts) {
-      forEach(newState.results, (resourceState, resource) => {
+      forEach(newState.results, resourceState => {
         resourceState.isLoadingCount = true
       })
     }
@@ -233,11 +233,10 @@ class Search extends React.Component {
   }
 
   render() {
-    const { resource, results, isLoading, searchStr, updatedSince } = this.state;
+    const { resource, results, isLoading  } = this.state;
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
-    const updatedSinceText = this.getUpdatedSinceText()
     return (
       <div className='col-sm-12' style={{paddingTop: '10px'}}>
         <div className='col-sm-3'>

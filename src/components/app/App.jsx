@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, IconButton, Button, InputBase, OutlinedInput, InputAdornment } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { WHITE, BLACK } from '../../common/constants';
 import './App.scss';
 import SearchInput from '../search/SearchInput';
 import Search from '../search/Search';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { isAtGlobalSearch } from '../../common/utils';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      searchResults: undefined,
-    }
-  }
-
   handleSearchResults = results => {
     this.setState({searchResults: results}, () => {
       window.location.hash = 'search'
@@ -25,7 +15,6 @@ class App extends Component {
   }
 
   render() {
-    const { searchResults } = this.state;
     return (
       <div>
         <AppBar position="static" variant="outlined" style={{backgroundColor: WHITE, color: BLACK}}>

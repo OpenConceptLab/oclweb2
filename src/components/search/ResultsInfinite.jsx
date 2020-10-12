@@ -1,39 +1,18 @@
 import React from 'react';
 import { Divider, CircularProgress } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab'
-import { map, startCase, get } from 'lodash';
+import { map, startCase} from 'lodash';
 import Concept from './Concept';
 import Mapping from './Mapping';
-import { PAGE_LIMIT, BLUE } from '../../common/constants';
+import { BLUE } from '../../common/constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const ResultsInfinite = props => {
-
   const getComponentFor = data => {
     const { resource } = props;
     if(resource === 'concepts')
       return <Concept {...data} />;
     if(resource === 'mappings')
       return <Mapping {...data} />
-  }
-
-  const onPageChange = (event, page) => {
-    props.onPageChange(page)
-  }
-
-  const prepareItems = () => {
-    const { results } = props;
-    return map(
-      get(results, 'items', []),
-      item => {
-        return (
-          <div className='col-sm-12 no-side-padding' key={item.id}>
-            <Divider />
-            {getComponentFor(item)}
-          </div>
-        )
-      }
-    )
   }
 
   return (

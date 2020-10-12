@@ -3,22 +3,10 @@ import moment from 'moment';
 import { Paper, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab'
 import { map, startCase } from 'lodash';
-import Concept from './Concept';
-import Mapping from './Mapping';
-import { PAGE_LIMIT } from '../../common/constants';
 import ResourceLabel from './ResourceLabel';
 
 
 const ResultsTable = props => {
-
-  const getComponentFor = data => {
-    const { resource } = props;
-    if(resource === 'concepts')
-      return <Concept {...data} />;
-    if(resource === 'mappings')
-      return <Mapping {...data} />
-  }
-
   const onPageChange = (event, page) => {
     props.onPageChange(page)
   }
