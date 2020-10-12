@@ -1,0 +1,92 @@
+.search-input input {
+    height: 0.3em;
+}
+
+.brand {
+    font-size: 2rem !important;
+    font-weight: bold !important;
+}
+
+.search-resources {
+    .active {
+        background-color: rgb(51, 115, 170);
+        color: #FFF;
+    }
+    th {
+        padding: 8px;
+        cursor: pointer;
+    }
+}
+
+.no-anchor-styles {
+    color: inherit;
+}
+.no-anchor-styles:hover, .no-anchor-styles:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+.no-side-padding {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.no-left-padding {
+    padding-left: 0 !important;
+}
+
+.no-right-padding {
+    padding-right: 0 !important;
+}
+
+span.resource-label {
+    height: 25px;
+    padding: 0 8px;
+    color: #666;
+    background-color: #eee;
+    font-weight: 200;
+    letter-spacing: -0.1pt;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em 0 0 .25em;
+    font-size: 10pt;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: middle;
+    span {
+        padding: 0 2px;
+    }
+    &.resource-id {
+        background-color: rgb(51, 115, 170);
+        color: #fff;
+        border-radius: 0 .25em .25em 0;
+    }
+    .resource-name {
+        font-weight: bold;
+        color: #000;
+    }
+}
+div.resource-attributes {
+    font-size: 9pt;
+    margin: 4px 0;
+    span.resource-attr {
+        font-weight: 300;
+        font-style: italic;
+    }
+    span {
+        margin-right: 2px;
+        &.resource-value {
+            margin-right: 5px;
+        }
+    }
+}
+div.resource-metadata {
+    color: #777;
+    display: inline-flex;
+    font-size: 8pt;
+}
+.pagination ul {
+    display: inline-flex;
+}
