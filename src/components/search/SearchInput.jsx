@@ -117,7 +117,7 @@ class SearchInput extends React.Component {
               className="search-input"
               fullWidth
               onKeyPress={this.handleKeyPress}
-              value={input}
+              value={input || ''}
               onChange={this.handleInputChange}
             />
           </div>
