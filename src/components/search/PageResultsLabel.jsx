@@ -1,5 +1,5 @@
 import React from 'react';
-import { min, isNaN } from 'lodash';
+import { min, isNaN, startCase } from 'lodash';
 const LIMIT = 25;
 
 class PageResultsLabel extends React.Component {
@@ -29,7 +29,7 @@ class PageResultsLabel extends React.Component {
         <span style={{fontWeight: 'bold', paddingRight: '4px'}}>{`${pageRange[0]}-${pageRange[1]}`}</span>
         <span style={{paddingRight: '4px'}}>of</span>
         <span style={{fontWeight: 'bold', paddingRight: '4px'}}>{results.total.toLocaleString()}</span>
-        <span>{resource}</span>
+        <span>{startCase(resource)}</span>
       </span>
     )
   }
