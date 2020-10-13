@@ -10,11 +10,11 @@ class ChipDatePicker extends React.Component {
   }
 
   render() {
-    const { label, size, date } = this.props;
+    const { label, size, date, defaultValue } = this.props;
     return (
       <span id='chip-date-picker'>
         <span id='hidden-date-html5'>
-          <input className='hidden-date' type="date" onChange={this.onChange} />
+          <input className='hidden-date' type="date" value={defaultValue || ''} onChange={this.onChange} />
           <Chip
             icon={<Schedule />}
             id='calendarText'
