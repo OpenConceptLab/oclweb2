@@ -1,6 +1,6 @@
 import React from 'react';
-import { Search as SearchIcon } from '@material-ui/icons';
-import { OutlinedInput, InputAdornment, Chip } from '@material-ui/core';
+import { Search as SearchIcon, CenterFocusWeakSharp as SharpIcon } from '@material-ui/icons';
+import { InputBase, Divider, IconButton, Tooltip  } from '@material-ui/core';
 import { isAtGlobalSearch } from '../../common/utils';
 
 class SearchInput extends React.Component {
@@ -13,7 +13,6 @@ class SearchInput extends React.Component {
       queryParams: {},
     }
   }
-
 
   getValueFromURL(attr, defaultValue, props) {
     if(!props)
@@ -51,7 +50,7 @@ class SearchInput extends React.Component {
       this.performSearch()
   }
 
-  performSearch() {
+  performSearch = () => {
     const { input, exactMatch } = this.state
     if(this.props.onSearch)
       this.props.onSearch(input, exactMatch)
@@ -78,58 +77,36 @@ class SearchInput extends React.Component {
     this.setState({exactMatch: isOn ? 'off' : 'on'}, this.performSearch)
   }
 
-  getExactMatchDOM() {
-    const { moreControls, exactMatchOnNewLine } = this.props;
-    const { exactMatch, input } = this.state;
-    const isExactMatch = exactMatch === 'on';
-    const className = exactMatchOnNewLine ? '' : 'col-sm-2 no-side-padding';
-    const styles = exactMatchOnNewLine ? {textAlign: 'left'} : {marginTop: '4px'}
-    return (
-      <div className={className} style={styles}>
-        <span style={{padding: '0 5px'}}>
-          <Chip
-            onClick={this.handleExactMatchChange}
-            label='Exact Match'
-            variant='outlined'
-            color={isExactMatch ? 'primary' : 'secondary'}
-            disabled={!input}
-          />
-        </span>
-        {moreControls}
-      </div>
-    )
-  }
-
   render() {
-    const { exactMatchOnNewLine } = this.props;
-    const { input } = this.state
-    const inputContainerClass = exactMatchOnNewLine ? 'col-sm-12 no-side-padding' : 'col-sm-10 no-side-padding';
+    const { input, exactMatch } = this.state
+    const { moreControls } = this.props
     return (
-      <div>
-        <div className='col-sm-12 no-side-padding' style={{marginBottom: '5px'}}>
-          <div className={inputContainerClass}>
-            <OutlinedInput
-              id="outlined-adornment-weight"
-              endAdornment={<InputAdornment position="end"><SearchIcon /></InputAdornment>}
-              aria-describedby="outlined-weight-helper-text"
-              labelWidth={0}
-              placeholder="Search OCL"
-              className="search-input"
-              fullWidth
-              onKeyPress={this.handleKeyPress}
-              value={input || ''}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          {
-            !exactMatchOnNewLine &&
-            this.getExactMatchDOM()
-          }
+      <div className='col-sm-12 no-side-padding'>
+        <div className='col-sm-12 no-side-padding' style={{marginBottom: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
+          <InputBase
+            style={{flex: 1, marginLeft: '10px'}}
+            placeholder="Search OCL"
+            inputProps={{ 'aria-label': 'search ocl' }}
+            onKeyPress={this.handleKeyPress}
+            value={input || ''}
+            fullWidth
+            onChange={this.handleInputChange}
+          />
+          <Tooltip title='Search'>
+            <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
+              <SearchIcon />
+            </IconButton>
+          </Tooltip>
+          <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
+          <Tooltip title='Exact Match'>
+            <IconButton color={exactMatch === 'on' ? "primary" : "default"} style={{padding: '10px'}} aria-label="exact" onClick={this.handleExactMatchChange}>
+              <SharpIcon />
+            </IconButton>
+          </Tooltip>
         </div>
-        {
-          exactMatchOnNewLine &&
-          this.getExactMatchDOM()
-        }
+        <div style={{textAlign: 'left'}}>
+          {moreControls}
+        </div>
       </div>
     )
   }
