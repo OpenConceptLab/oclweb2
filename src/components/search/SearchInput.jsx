@@ -80,10 +80,10 @@ class SearchInput extends React.Component {
 
   getExactMatchDOM() {
     const { moreControls, exactMatchOnNewLine } = this.props;
-    const { exactMatch } = this.state;
+    const { exactMatch, input } = this.state;
     const isExactMatch = exactMatch === 'on';
     const className = exactMatchOnNewLine ? '' : 'col-sm-2 no-side-padding';
-    const styles = exactMatchOnNewLine ? {textAlign: 'left'} : {marginTop: '8px'}
+    const styles = exactMatchOnNewLine ? {textAlign: 'left'} : {marginTop: '4px'}
     return (
       <div className={className} style={styles}>
         <span style={{padding: '0 5px'}}>
@@ -91,8 +91,8 @@ class SearchInput extends React.Component {
             onClick={this.handleExactMatchChange}
             label='Exact Match'
             variant='outlined'
-            color={isExactMatch ? 'primary' : 'default'}
-            size="small"
+            color={isExactMatch ? 'primary' : 'secondary'}
+            disabled={!input}
           />
         </span>
         {moreControls}

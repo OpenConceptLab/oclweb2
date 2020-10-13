@@ -88,8 +88,8 @@ class SortButton extends React.Component {
     return (
       <span>
         <Tooltip title='Sort By'>
-          <ButtonGroup variant="outlined" color="primary" ref={this.anchorRef} aria-label="split button" style={{height: '23px'}}>
-            <Button onClick={this.handleClick} style={{width: '105px', fontSize: '10px', padding: '2px 4px 2px 2px'}}>
+          <ButtonGroup variant="outlined" color="primary" ref={this.anchorRef} aria-label="split button">
+            <Button onClick={this.handleClick} style={{fontSize: '0.8125em'}}>
               {
                 isAsc ?
                 <ArrowUpwardIcon style={SORT_ICON_STYLES} /> :
@@ -99,7 +99,6 @@ class SortButton extends React.Component {
             </Button>
             <Button
               color="primary"
-              size="small"
               aria-controls={open ? 'split-button-menu' : undefined}
               aria-expanded={open ? 'true' : undefined}
               aria-label="select merge strategy"

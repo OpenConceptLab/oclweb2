@@ -5,7 +5,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import alertifyjs from 'alertifyjs';
 import App from './components/app/App';
 import './index.scss';
-import { BLUE, DARKGRAY, WHITE, BLACK } from './common/constants';
+import { BLUE, WHITE, BLACK } from './common/constants';
 
 
 alertifyjs.defaults = {
@@ -26,9 +26,9 @@ const theme = createMuiTheme({
       contrastText: WHITE,
     },
     secondary: {
-      main: DARKGRAY,
-      dark: DARKGRAY,
-      light: DARKGRAY,
+      main: BLACK,
+      dark: BLACK,
+      light: BLACK,
       contrastText: BLACK,
     },
   },

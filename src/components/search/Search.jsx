@@ -213,7 +213,7 @@ class Search extends React.Component {
   getUpdatedSinceText() {
     const { updatedSince } = this.state;
     if(updatedSince)
-      return `Since: ${moment(updatedSince).format('MM/DD/YY')}`;
+      return `Since: ${moment(updatedSince).format('MM/DD/YYYY')}`;
     return 'All Time'
   }
 
@@ -223,7 +223,7 @@ class Search extends React.Component {
     return (
       <span style={{display: 'inline-flex'}}>
         <span style={{paddingRight: '5px'}}>
-          <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size='small' />
+          <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
         </span>
         <span>
           <SortButton onChange={this.onSortChange} />
