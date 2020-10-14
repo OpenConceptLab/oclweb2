@@ -38,6 +38,7 @@
     }
   },
   "rules": {
+    "react/display-name": "off",
     "import/prefer-default-export": 0,
     "import/no-named-as-default": 0,
     "react/prefer-stateless-function": 0,

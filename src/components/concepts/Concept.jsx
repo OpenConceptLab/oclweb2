@@ -1,8 +1,8 @@
 import React from 'react';
-import {LocalOffer as LocalOfferIcon} from '@material-ui/icons'
+import { LocalOffer as LocalOfferIcon } from '@material-ui/icons'
 import { DARKGRAY } from '../../common/constants';
-import ResourceLabel from './ResourceLabel';
-import LastUpdatedOnLabel from './LastUpdatedOnLabel';
+import ResourceLabel from '../common/ResourceLabel';
+import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 
 const Concept = props => {
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Divider, CircularProgress } from '@material-ui/core';
 import { map, startCase} from 'lodash';
-import Concept from './Concept';
-import Mapping from './Mapping';
+import Concept from '../concepts/Concept';
+import Mapping from '../mappings/Mapping';
 import { BLUE } from '../../common/constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
 

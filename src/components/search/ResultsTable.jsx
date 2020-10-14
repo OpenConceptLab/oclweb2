@@ -1,60 +1,104 @@
 import React from 'react';
-import moment from 'moment';
-import { Paper, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab'
-import { map, startCase } from 'lodash';
-import ResourceLabel from './ResourceLabel';
+import { map, startCase, get } from 'lodash';
+import { BLUE, WHITE } from '../../common/constants';
+import { formatDate } from '../../common/utils';
+import ToConceptLabel from '../mappings/ToConceptLabel';
+import FromConceptLabel from '../mappings/FromConceptLabel';
 
+const RESOURCE_DEFINITIONS = {
+  concepts: {
+    headBgColor: BLUE,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'id', label: 'ID', value: 'display_name'},
+      {id: 'name', label: 'Name', value: 'id'},
+      {id: 'owner', label: 'Owner', value: 'owner'},
+      {id: 'parent', label: 'Parent', value: 'source'},
+      {id: 'class', label: 'Class', value: 'concept_class'},
+      {id: 'datatype', label: 'Datatype', value: 'datatype'},
+      {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate},
+    ]
+  },
+  mappings: {
+    headBgColor: BLUE,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'id', label: 'ID', value: 'id'},
+      {id: 'owner', label: 'Owner', value: 'owner'},
+      {id: 'parent', label: 'Parent', value: 'source'},
+      {id: 'from', label: 'From', renderer: (mapping) => <FromConceptLabel {...mapping} />},
+      {id: 'mapType', label: 'Map Type', value: 'map_type'},
+      {id: 'to', label: 'To', renderer: (mapping) => <ToConceptLabel {...mapping} />},
+      {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate},
+    ]
+  }
+}
 
-const ResultsTable = props => {
-  const onPageChange = (event, page) => {
-    props.onPageChange(page)
+const ResultsTable = ({resource, results, onPageChange}) => {
+  const resourceDefinition = RESOURCE_DEFINITIONS[resource];
+  const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
+  const theadTextColor = get(resourceDefinition, 'headTextColor', WHITE);
+  const theadStyles = {
+    backgroundColor: theadBgColor,
+    border: `1px solid ${theadBgColor}`,
+  }
+  const columnsCount = get(resourceDefinition, 'columns.length', 1).toString()
+  const canRender = results.total && resourceDefinition;
+
+  const getValue = (item, column) => {
+    const value = get(item, column.value, '')
+    if(get(column, 'formatter') && value)
+      return column.formatter(value)
+    if(get(column, 'renderer'))
+      return column.renderer(item)
+    return value
   }
 
   return (
     <div className='col-sm-12 no-side-padding'>
       {
-        props.results.total ?
+        canRender ?
         <div className='col-sm-12 no-side-padding search-results'>
-          <TableContainer component={Paper}>
+          <TableContainer style={{borderRadius: '4px'}}>
             <Table size='small'>
-              <TableHead>
-                <TableCell align='left'>Name</TableCell>
-                <TableCell align='left'>Class</TableCell>
-                <TableCell align='left'>Datatype</TableCell>
-                <TableCell align='left'>Updated On</TableCell>
+              <TableHead style={theadStyles}>
+                <TableRow>
+                  {
+                    map(resourceDefinition.columns, column => (
+                      <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
+                        { column.label }
+                      </TableCell>
+                    ))
+                  }
+                </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody style={{border: '1px solid lightgray'}}>
                 {
-                  map(props.results.items, item => (
+                  map(results.items, item => (
                     <TableRow hover key={item.id}>
-                      <TableCell component="th" scope="row" align='left'>
-                        <ResourceLabel
-                          owner={item.owner}
-                          parent={item.source}
-                          id={item.display_name}
-                          name={item.id}
-                        />
-                      </TableCell>
-                      <TableCell align='left'>{item.concept_class}</TableCell>
-                      <TableCell align='left'>{item.datatype}</TableCell>
-                      <TableCell align='left'>
-                        {moment(item.version_created_on).format('MM/DD/YYYY')}
-                      </TableCell>
+                      {
+                        map(resourceDefinition.columns, column => (
+                          <TableCell key={column.id} align='left'>
+                            { getValue(item, column) }
+                          </TableCell>
+                        ))
+                      }
                     </TableRow>
                   ))
                 }
-                <TableRow colspan='4'>
-                  <TableCell colspan='4' align='center' className='pagination-center'>
+                <TableRow colSpan={columnsCount}>
+                  <TableCell colSpan={columnsCount} align='center' className='pagination-center'>
                     <Pagination
-                      onChange={onPageChange}
-                      count={props.results.pages}
+                      onChange={(event, page) => onPageChange(page)}
+                      count={results.pages}
                       variant="outlined"
                       shape="rounded"
                       color="primary"
                       showFirstButton
                       showLastButton
-                      page={props.results.pageNumber}
+                      page={results.pageNumber}
                     />
                   </TableCell>
                 </TableRow>
@@ -62,7 +106,7 @@ const ResultsTable = props => {
             </Table>
           </TableContainer>
         </div> :
-        <div style={{padding: '2px'}}>We found 0 {startCase(props.resource)}.</div>
+        <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
       }
     </div>
   )

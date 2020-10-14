@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search as SearchIcon, CenterFocusWeakSharp as SharpIcon } from '@material-ui/icons';
+import { Search as SearchIcon, GpsFixedSharp as SharpIcon } from '@material-ui/icons';
 import { InputBase, Divider, IconButton, Tooltip  } from '@material-ui/core';
 import { isAtGlobalSearch } from '../../common/utils';
 

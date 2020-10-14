@@ -1,9 +1,16 @@
 import React from 'react';
-import {Link as LinkIcon, LocalOffer as LocalOfferIcon} from '@material-ui/icons'
+import {
+  Link as LinkIcon,
+  LocalOffer as LocalOfferIcon
+} from '@material-ui/icons'
 import { DARKGRAY } from '../../common/constants';
-import ResourceLabel from './ResourceLabel';
-import LastUpdatedOnLabel from './LastUpdatedOnLabel';
-const LABEL_STYLES = {textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY}
+import ResourceLabel from '../common/ResourceLabel';
+import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
+
+const LABEL_STYLES = {
+  textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
+};
+
 const Mapping = props => {
   return (
     <div className='col-sm-12 no-side-padding' style={{paddingTop: '10px'}}>

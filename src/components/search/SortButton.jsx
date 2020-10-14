@@ -16,7 +16,7 @@ const OPTIONS = {
 }
 const ASC = 'asc';
 const DESC = 'desc';
-const SORT_ICON_STYLES = {fontSize: '12px', marginRight: '5px'};
+const SORT_ICON_STYLES = {fontSize: '1.1em', marginRight: '4px', marginTop: '-2px'};
 
 class SortButton extends React.Component {
   constructor(props) {
@@ -104,7 +104,7 @@ class SortButton extends React.Component {
               aria-label="select merge strategy"
               aria-haspopup="menu"
               onClick={this.toggleOpen}
-              style={{padding: '0px', 'min-width': '30px'}}
+              style={{padding: '0px', minWidth: '30px'}}
             >
               <ArrowDropDownIcon />
             </Button>
