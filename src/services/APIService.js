@@ -41,6 +41,11 @@ class APIService {
     return this;
   }
 
+  overrideURL(url) {
+    this.URL = `${APIURL}${url}`;
+    return this;
+  }
+
   head(token, headers = {}, query) {
     return this.sendRequest('HEAD', null, token, headers, query);
   }
