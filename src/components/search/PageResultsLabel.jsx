@@ -1,18 +1,19 @@
 import React from 'react';
 import { min, isNaN, startCase } from 'lodash';
-const LIMIT = 25;
+import { DEFAULT_LIMIT } from '../../common/constants';
 
 class PageResultsLabel extends React.Component {
-
   getPageRange() {
-    const { results } = this.props;
-
+    const { results, limit } = this.props;
     const total = results.total
+    let _limit = limit || DEFAULT_LIMIT;
+
     if(total === 0)
       return [0, 0]
+
     const page = results.pageNumber || 1
-    const resultsInCurrentPage = min([(total - (25 * (page-1))), LIMIT])
-    let start = ((page - 1) * LIMIT) + 1;
+    const resultsInCurrentPage = min([(total - (_limit * (page-1))), _limit])
+    let start = ((page - 1) * _limit) + 1;
     let end = start + resultsInCurrentPage - 1;
 
     if(isNaN(start)) start = 0;

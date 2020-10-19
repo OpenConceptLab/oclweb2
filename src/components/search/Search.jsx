@@ -15,8 +15,10 @@ import Results from './Results';
 import ResultsInfinite from './ResultsInfinite';
 import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
+import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import ChipDatePicker from '../common/ChipDatePicker';
+import { DEFAULT_LIMIT } from '../../common/constants';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -43,6 +45,7 @@ class Search extends React.Component {
       resource: 'concepts',
       isLoading: false,
       sortParams: {sortDesc: 'last_update'},
+      limit: DEFAULT_LIMIT,
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -68,6 +71,7 @@ class Search extends React.Component {
       isLoading: true,
       searchStr: queryParams.get('q') || '',
       exactMatch: queryParams.get('exactMatch') || 'off',
+      limit: parseInt(queryParams.get('limit')) || DEFAULT_LIMIT,
     }, this.fetchNewResults)
   }
 
@@ -157,8 +161,8 @@ class Search extends React.Component {
       })
     }
     this.setState(newState, () => {
-      const { resource, searchStr, page, exactMatch, sortParams, updatedSince } = this.state;
-      const queryParams = {q: searchStr, page: page, exact_match: exactMatch};
+      const { resource, searchStr, page, exactMatch, sortParams, updatedSince, limit } = this.state;
+      const queryParams = {q: searchStr, page: page, exact_match: exactMatch, limit: limit};
       if(updatedSince)
         queryParams['updatedSince'] = updatedSince
       fetchSearchResults(
@@ -219,21 +223,28 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { updatedSince } = this.state;
+    const { updatedSince, limit } = this.state;
     return (
       <span style={{display: 'inline-flex'}}>
         <span style={{paddingRight: '5px'}}>
           <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
         </span>
-        <span>
+        <span style={{paddingRight: '5px'}}>
           <SortButton onChange={this.onSortChange} />
+        </span>
+        <span>
+          <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} />
         </span>
       </span>
     )
   }
 
+  onLimitChange = limit => {
+    this.fetchNewResults({limit: limit}, false, true)
+  }
+
   render() {
-    const { resource, results, isLoading  } = this.state;
+    const { resource, results, isLoading, limit  } = this.state;
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
@@ -253,7 +264,7 @@ class Search extends React.Component {
           </div>
           <div className='col-sm-4 no-side-padding' style={{textAlign: 'center', marginTop: '7px'}}>
             <span className='col-sm-9 no-side-padding' style={{marginTop: '2px',}}>
-              <PageResultsLabel resource={resource} results={results[resource]} />
+              <PageResultsLabel resource={resource} results={results[resource]} limit={limit} />
             </span>
             <span className='col-sm-3 no-side-padding' style={{textAlign: 'right'}}>
               <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">

@@ -67,7 +67,7 @@ class SearchInput extends React.Component {
       const { input, exactMatch } = this.state
       let _input = input || '';
       const exactMatchStr = exactMatch === 'on' ? '&exactMatch=on' : '';
-      const URL = `/search/?q=${_input}&type=concepts${exactMatchStr}`;
+      const URL = `/search/?q=${_input}&type=concepts${exactMatchStr}&isTable=true`;
       window.location.hash = URL;
     }
   }

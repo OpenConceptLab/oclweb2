@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Collapse, IconButton, Box, Paper, Tabs, Tab,
+  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox
 } from '@material-ui/core';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -119,9 +119,7 @@ const ExpandibleRow = props => {
     <React.Fragment>
       <TableRow hover>
         <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={onClick}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          <Checkbox />
         </TableCell>
         {
           map(resourceDefinition.columns, column => (
@@ -130,6 +128,11 @@ const ExpandibleRow = props => {
             </TableCell>
           ))
         }
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={onClick}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columnsCount}>
@@ -183,7 +186,7 @@ const ResultsTable = ({resource, results, onPageChange}) => {
             <Table size='small'>
               <TableHead style={theadStyles}>
                 <TableRow>
-                  <TableCell />
+                  <TableCell><Checkbox style={{color: WHITE}} /></TableCell>
                   {
                     map(resourceDefinition.columns, column => (
                       <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
@@ -191,6 +194,7 @@ const ResultsTable = ({resource, results, onPageChange}) => {
                       </TableCell>
                     ))
                   }
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody style={{border: '1px solid lightgray'}}>

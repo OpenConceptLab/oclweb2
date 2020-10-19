@@ -5,3 +5,4 @@ export const DARKGRAY = 'rgb(119, 119, 119)';
 export const PAGE_LIMIT = 25;
 export const DATE_FORMAT = 'MM/DD/YYYY';
 export const DATETIME_FORMAT = DATE_FORMAT + ' hh:mm A';
+export const DEFAULT_LIMIT = 50;
