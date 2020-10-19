@@ -145,6 +145,11 @@ class Search extends React.Component {
       )
   }
 
+  getCurrentResourceTotalResults() {
+    const { resource, results } = this.state
+    return get(results, `${resource}.total`, 0)
+  }
+
   fetchNewResults(attrsToSet, counts=true, resetItems=true) {
     if(!attrsToSet)
       attrsToSet = {}
@@ -223,6 +228,7 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
+    const totalResults = this.getCurrentResourceTotalResults();
     const { updatedSince, limit } = this.state;
     return (
       <span style={{display: 'inline-flex'}}>
@@ -233,7 +239,7 @@ class Search extends React.Component {
           <SortButton onChange={this.onSortChange} />
         </span>
         <span>
-          <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} />
+          <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} />
         </span>
       </span>
     )

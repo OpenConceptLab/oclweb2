@@ -27,10 +27,11 @@ class ResultsCountDropDown extends React.Component {
 
   onSetCount = limit => {
     let _limit = parseInt(limit) || DEFAULT_LIMIT;
-    this.setState({limit: _limit}, () => {
-      this.toggleOpen();
-      this.props.onChange(_limit);
-    })
+    if(_limit !== this.state.limit)
+      this.setState({limit: _limit}, () => {
+        this.toggleOpen();
+        this.props.onChange(_limit);
+      })
   }
 
   toggleOpen = () => {
@@ -59,6 +60,7 @@ class ResultsCountDropDown extends React.Component {
   }
 
   render() {
+    const { total } = this.props;
     const { limit, open } = this.state;
     return (
       <span>
@@ -99,6 +101,7 @@ class ResultsCountDropDown extends React.Component {
                           key={option.id}
                           selected={option.count === limit}
                           onClick={() => this.onSetCount(option.count)}
+                          disabled={option.count !== limit && option.count > total}
                           >
                           {option.id}
                         </MenuItem>
