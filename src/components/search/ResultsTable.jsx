@@ -8,7 +8,7 @@ import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
-import { map, startCase, get } from 'lodash';
+import { map, startCase, get, without, uniq, includes } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants';
 import { formatDate, formatDateTime } from '../../common/utils';
 import ToConceptLabel from '../mappings/ToConceptLabel';
@@ -115,11 +115,15 @@ const ExpandibleRow = props => {
     }
   }
 
+  const onCheckboxClick = event => {
+    props.onSelectChange(item.id, event.target.checked)
+  }
+
   return (
     <React.Fragment>
       <TableRow hover>
         <TableCell>
-          <Checkbox />
+          <Checkbox checked={props.isSelected} onChange={onCheckboxClick} />
         </TableCell>
         {
           map(resourceDefinition.columns, column => (
@@ -176,6 +180,21 @@ const ResultsTable = ({resource, results, onPageChange}) => {
   }
   const columnsCount = get(resourceDefinition, 'columns.length', 1) + 1;
   const canRender = results.total && resourceDefinition;
+  const [selectedList, setSelectedList] = React.useState([]);
+
+  const onAllSelect = event => {
+    if(event.target.checked)
+      setSelectedList(map(results.items, 'id'))
+    else
+      setSelectedList([])
+  }
+
+  const updateSelected = (id, selected) => {
+    if(selected)
+      setSelectedList(uniq([...selectedList, id]))
+    else
+      setSelectedList(without(selectedList, id))
+  }
 
   return (
     <div className='col-sm-12 no-side-padding'>
@@ -186,7 +205,7 @@ const ResultsTable = ({resource, results, onPageChange}) => {
             <Table size='small'>
               <TableHead style={theadStyles}>
                 <TableRow>
-                  <TableCell><Checkbox style={{color: WHITE}} /></TableCell>
+                  <TableCell><Checkbox style={{color: WHITE}} onChange={onAllSelect} /></TableCell>
                   {
                     map(resourceDefinition.columns, column => (
                       <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
@@ -200,7 +219,13 @@ const ResultsTable = ({resource, results, onPageChange}) => {
               <TableBody style={{border: '1px solid lightgray'}}>
                 {
                   map(results.items, item => (
-                    <ExpandibleRow key={item.id} item={item} resourceDefinition={resourceDefinition} />
+                    <ExpandibleRow
+                      key={item.id}
+                      item={item}
+                      resourceDefinition={resourceDefinition}
+                      isSelected={includes(selectedList, item.id)}
+                      onSelectChange={updateSelected}
+                    />
                   ))
                 }
                 <TableRow colSpan={columnsCount}>
