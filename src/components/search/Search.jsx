@@ -14,7 +14,7 @@ import { BLUE } from '../../common/constants';
 import Results from './Results';
 import ResultsInfinite from './ResultsInfinite';
 import ResultsTable from './ResultsTable';
-import SortButton from './SortButton';
+//import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import ChipDatePicker from '../common/ChipDatePicker';
@@ -235,9 +235,9 @@ class Search extends React.Component {
         <span style={{paddingRight: '5px'}}>
           <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
         </span>
-        <span style={{paddingRight: '5px'}}>
-          <SortButton onChange={this.onSortChange} />
-        </span>
+        {/* <span style={{paddingRight: '5px'}}>
+            <SortButton onChange={this.onSortChange} />
+            </span> */}
         <span>
           <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} />
         </span>
@@ -250,7 +250,7 @@ class Search extends React.Component {
   }
 
   render() {
-    const { resource, results, isLoading, limit  } = this.state;
+    const { resource, results, isLoading, limit, sortParams } = this.state;
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
@@ -295,7 +295,7 @@ class Search extends React.Component {
               }
               {
                 this.isTable &&
-                <ResultsTable resource={resource} results={resourceResults} onPageChange={this.onPageChange} />
+                <ResultsTable resource={resource} results={resourceResults} onPageChange={this.onPageChange} onSortChange={this.onSortChange} sortParams={sortParams} />
               }
               {
                 !this.isTable && !this.isInfinite &&
