@@ -9,7 +9,7 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import { map, startCase, get, without, uniq, includes, find, keys, values } from 'lodash';
-import { BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED } from '../../common/constants';
+import { BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN } from '../../common/constants';
 import { formatDate, formatDateTime } from '../../common/utils';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
@@ -41,7 +41,38 @@ const RESOURCE_DEFINITIONS = {
       {id: 'to', label: 'To', renderer: (mapping) => <ToConceptLabel {...mapping} />},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ]
-  }
+  },
+  sources: {
+    headBgColor: GREEN,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
+      {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
+      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortOn: 'short_code'},
+      {id: 'sourceType', label: 'Source Type', value: 'source_type', sortOn: 'source_type'},
+      {id: 'updatedOn', label: 'Updated On', value: 'updated_at', formatter: formatDate, sortOn: 'updated_at'},
+    ]
+  },
+  collections: {
+    headBgColor: GREEN,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
+      {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
+      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortOn: 'short_code'},
+      {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
+      {id: 'updatedOn', label: 'Updated On', value: 'updated_at', formatter: formatDate, sortOn: 'updated_at'},
+    ]
+  },
+  organizations: {
+    headBgColor: ORANGE,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
+      {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
+      {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
+    ]
+  },
 }
 
 const getValue = (item, column) => {
@@ -128,7 +159,7 @@ const ExpandibleRow = props => {
         {
           map(resourceDefinition.columns, column => (
             <TableCell key={column.id} align='left'>
-              { getValue(item, column) }
+              { getValue(item, column) || 'None' }
             </TableCell>
           ))
         }

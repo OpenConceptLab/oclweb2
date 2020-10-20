@@ -14,7 +14,7 @@ import { BLUE } from '../../common/constants';
 import Results from './Results';
 import ResultsInfinite from './ResultsInfinite';
 import ResultsTable from './ResultsTable';
-//import SortButton from './SortButton';
+import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import ChipDatePicker from '../common/ChipDatePicker';
@@ -170,8 +170,11 @@ class Search extends React.Component {
       const queryParams = {q: searchStr, page: page, exact_match: exactMatch, limit: limit};
       if(updatedSince)
         queryParams['updatedSince'] = updatedSince
+      let _resource = resource
+      if(_resource === 'organizations')
+        _resource = 'orgs'
       fetchSearchResults(
-        resource,
+        _resource,
         {...queryParams, ...sortParams},
         null,
         (response) => this.onSearchResultsLoad(resource, response, resetItems)
@@ -235,9 +238,11 @@ class Search extends React.Component {
         <span style={{paddingRight: '5px'}}>
           <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
         </span>
-        {/* <span style={{paddingRight: '5px'}}>
+        {
+          !this.isTable && <span style={{paddingRight: '5px'}}>
             <SortButton onChange={this.onSortChange} />
-            </span> */}
+          </span>
+        }
         <span>
           <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} />
         </span>
