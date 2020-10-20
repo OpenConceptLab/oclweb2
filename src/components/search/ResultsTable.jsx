@@ -9,7 +9,7 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import { map, startCase, get, without, uniq, includes } from 'lodash';
-import { BLUE, WHITE } from '../../common/constants';
+import { BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED } from '../../common/constants';
 import { formatDate, formatDateTime } from '../../common/utils';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
@@ -121,7 +121,7 @@ const ExpandibleRow = props => {
 
   return (
     <React.Fragment>
-      <TableRow hover>
+      <TableRow hover style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED} : {}}>
         <TableCell>
           <Checkbox checked={props.isSelected} onChange={onCheckboxClick} />
         </TableCell>
@@ -178,7 +178,7 @@ const ResultsTable = ({resource, results, onPageChange}) => {
     backgroundColor: theadBgColor,
     border: `1px solid ${theadBgColor}`,
   }
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + 1;
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) + 2;
   const canRender = results.total && resourceDefinition;
   const [selectedList, setSelectedList] = React.useState([]);
 
@@ -204,8 +204,18 @@ const ResultsTable = ({resource, results, onPageChange}) => {
           <TableContainer style={{borderRadius: '4px'}}>
             <Table size='small'>
               <TableHead style={theadStyles}>
+                {
+                  selectedList.length > 0 &&
+                  <TableRow colSpan={columnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
+                    <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
+                      {selectedList.length} Selected
+                    </TableCell>
+                  </TableRow>
+                }
                 <TableRow>
-                  <TableCell><Checkbox style={{color: WHITE}} onChange={onAllSelect} /></TableCell>
+                  <TableCell>
+                    <Checkbox style={{color: theadTextColor}} onChange={onAllSelect} />
+                  </TableCell>
                   {
                     map(resourceDefinition.columns, column => (
                       <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
