@@ -4,7 +4,7 @@ import moment from 'moment';
 import SearchInput from './SearchInput';
 import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
-import { get, cloneDeep, merge, forEach } from 'lodash';
+import { get, cloneDeep, merge, forEach, includes } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
@@ -167,7 +167,9 @@ class Search extends React.Component {
     }
     this.setState(newState, () => {
       const { resource, searchStr, page, exactMatch, sortParams, updatedSince, limit } = this.state;
-      const queryParams = {q: searchStr, page: page, exact_match: exactMatch, limit: limit};
+      const queryParams = {
+        q: searchStr, page: page, exact_match: exactMatch, limit: limit, verbose: includes(['sources', 'collections', 'organizations', 'users'], resource)
+      };
       if(updatedSince)
         queryParams['updatedSince'] = updatedSince
       let _resource = resource

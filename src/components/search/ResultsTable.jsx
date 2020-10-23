@@ -1,11 +1,17 @@
 import React from 'react';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel,
+  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Chip
 } from '@material-ui/core';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
+  LocalOffer as LocalOfferIcon,
+  Link as LinkIcon, List as ListIcon,
+  Loyalty as LoyaltyIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
+  AcUnit as AsteriskIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import { map, startCase, get, without, uniq, includes, find, keys, values } from 'lodash';
@@ -27,7 +33,8 @@ const RESOURCE_DEFINITIONS = {
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
-    ]
+    ],
+    expandible: true,
   },
   mappings: {
     headBgColor: BLUE,
@@ -40,7 +47,8 @@ const RESOURCE_DEFINITIONS = {
       {id: 'mapType', label: 'Map Type', value: 'map_type', sortOn: 'map_type'},
       {id: 'to', label: 'To', renderer: (mapping) => <ToConceptLabel {...mapping} />},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
-    ]
+    ],
+    expandible: true,
   },
   sources: {
     headBgColor: GREEN,
@@ -48,10 +56,16 @@ const RESOURCE_DEFINITIONS = {
     columns: [
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortOn: 'short_code'},
+      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortable: false},
       {id: 'sourceType', label: 'Source Type', value: 'source_type', sortOn: 'source_type'},
-      {id: 'updatedOn', label: 'Updated On', value: 'updated_at', formatter: formatDate, sortOn: 'updated_at'},
-    ]
+      {id: 'updatedOn', label: 'Updated On', value: 'updated_on', formatter: formatDate, sortOn: 'last_update'},
+    ],
+    tags: [
+      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={{width: '12px'}} />},
+      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={{width: '12px'}} />},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={{width: '12px'}} />},
+    ],
+    expandible: true,
   },
   collections: {
     headBgColor: GREEN,
@@ -59,10 +73,11 @@ const RESOURCE_DEFINITIONS = {
     columns: [
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortOn: 'short_code'},
+      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortOn: 'name'},
       {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
-      {id: 'updatedOn', label: 'Updated On', value: 'updated_at', formatter: formatDate, sortOn: 'updated_at'},
-    ]
+      {id: 'updatedOn', label: 'Updated On', value: 'updated_on', formatter: formatDate, sortOn: 'last_update'},
+    ],
+    expandible: true,
   },
   organizations: {
     headBgColor: ORANGE,
@@ -71,7 +86,20 @@ const RESOURCE_DEFINITIONS = {
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
-    ]
+    ],
+    expandible: false,
+  },
+  users: {
+    headBgColor: ORANGE,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'username', label: 'Username', value: 'username', sortOn: 'username'},
+      {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
+      {id: 'company', label: 'Company', value: 'company', sortOn: 'company'},
+      {id: 'location', label: 'Location', value: 'location', sortOn: 'Location'},
+      {id: 'createdOn', label: 'Joined On', value: 'created_on', formatter: formatDate, sortOn: 'date_joined'},
+    ],
+    expandible: false,
   },
 }
 
@@ -120,9 +148,12 @@ const ExpandibleRow = props => {
   const [versions, setVersions] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = React.useState(0);
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + 2
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1)
 
-  const onClick = () => {
+  const onClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
+
     setOpen(prevOpen => {
       const newOpen = !prevOpen
       if(newOpen)
@@ -152,10 +183,16 @@ const ExpandibleRow = props => {
 
   return (
     <React.Fragment>
-      <TableRow hover style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED} : {}}>
-        <TableCell>
-          <Checkbox checked={props.isSelected} onChange={onCheckboxClick} />
-        </TableCell>
+      <TableRow
+        hover
+        style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
+        onClick={onClick}>
+        {
+          props.isSelecteable &&
+          <TableCell>
+            <Checkbox checked={props.isSelected} onChange={onCheckboxClick} />
+          </TableCell>
+        }
         {
           map(resourceDefinition.columns, column => (
             <TableCell key={column.id} align='left'>
@@ -163,11 +200,28 @@ const ExpandibleRow = props => {
             </TableCell>
           ))
         }
-        <TableCell>
+        {
+          !props.isSelecteable &&
+          <TableCell align='center' style={{width: '120px', padding: '2px'}}>
+            {
+              map(resourceDefinition.tags, tag => (
+                <Chip
+                  size='small' label={`${get(item, tag.value, '0')} ${tag.label}`} color='primary'
+                  variant='outlined'
+                  style={{fontSize: '12px', width: '100%', marginTop: '2px'}}
+                />
+              ))
+            }
+          </TableCell>
+        }
+        {
+          resourceDefinition.expandible &&
+          <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={onClick}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
+          </TableCell>
+        }
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columnsCount}>
@@ -209,13 +263,14 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
     backgroundColor: theadBgColor,
     border: `1px solid ${theadBgColor}`,
   }
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + 2;
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
   const defaultOrder = get(keys(sortParams), '0') === 'sortAsc' ? 'asc' : 'desc';
   const [selectedList, setSelectedList] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
+  const isSelecteable = includes(['concepts', 'mappings'], resource);
 
   const onAllSelect = event => {
     if(event.target.checked)
@@ -267,29 +322,46 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                   </TableRow>
                 }
                 <TableRow>
-                  <TableCell>
-                    <Checkbox style={{color: theadTextColor}} onChange={onAllSelect} />
-                  </TableCell>
                   {
-                    map(resourceDefinition.columns, column => (
-                      <TableCell
-                        key={column.id}
-                        sortDirection={orderBy === column.id ? order : false}
-                        align='left'
-                        style={{color: theadTextColor}}>
-                        <TableSortLabel
-                          className='table-sort-label-white'
-                          active={orderBy === column.id}
-                          direction={orderBy === column.id ? order : 'desc'}
-                          onClick={(event) => onSort(event, column.id)}
-                          style={{color: theadTextColor}}
-                        >
-                          { column.label }
-                        </TableSortLabel>
-                      </TableCell>
-                    ))
+                    isSelecteable &&
+                    <TableCell>
+                      <Checkbox style={{color: theadTextColor}} onChange={onAllSelect} />
+                    </TableCell>
                   }
-                  <TableCell />
+                  {
+                    map(resourceDefinition.columns, column => {
+                      const isSortable = column.sortable !== false;
+                      return isSortable ? (
+                        <TableCell
+                          key={column.id}
+                          sortDirection={orderBy === column.id ? order : false}
+                          align='left'
+                          style={{color: theadTextColor}}>
+                          <TableSortLabel
+                            className='table-sort-label-white'
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'desc'}
+                            onClick={(event) => onSort(event, column.id)}
+                            style={{color: theadTextColor}}
+                          >
+                            { column.label }
+                          </TableSortLabel>
+                        </TableCell>
+                      ) : (
+                        <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
+                          {column.label}
+                        </TableCell>
+                      )
+                    })
+                  }
+                  {
+                    !isSelecteable &&
+                    <TableCell />
+                  }
+                  {
+                    resourceDefinition.expandible &&
+                    <TableCell />
+                  }
                 </TableRow>
               </TableHead>
               <TableBody style={{border: '1px solid lightgray'}}>
@@ -301,6 +373,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                       resourceDefinition={resourceDefinition}
                       isSelected={includes(selectedList, item.id)}
                       onSelectChange={updateSelected}
+                      isSelecteable={isSelecteable}
                     />
                   ))
                 }
