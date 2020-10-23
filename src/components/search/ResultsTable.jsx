@@ -12,6 +12,7 @@ import {
   Home as HomeIcon,
   Person as PersonIcon,
   AcUnit as AsteriskIcon,
+  Done as DoneIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import { map, startCase, get, without, uniq, includes, find, keys, values } from 'lodash';
@@ -143,9 +144,49 @@ const VersionsTable = ({ versions }) => {
   );
 }
 
+const LocalesTable = ({ locales, isDescription }) => {
+  const nameAttr = isDescription ? 'description' : 'name';
+  const typeAttr = isDescription ? 'description_type' : 'name_type';
+  return (
+    <Table size="small" aria-label="versions">
+      <TableHead>
+        <TableRow>
+          <TableCell />
+          <TableCell align='center'>ID</TableCell>
+          <TableCell align='center'>External ID</TableCell>
+          <TableCell align='center'>{startCase(nameAttr)}</TableCell>
+          <TableCell align='center'>Locale</TableCell>
+          <TableCell align='center'>Type</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {
+          map(locales, locale => (
+            <TableRow hover key={locale.uuid}>
+              <TableCell align='center'>
+                {
+                  locale.locale_preferred &&
+                  <DoneIcon style={{color: GREEN, marginRight: '5px'}} fontSize='small' />
+                }
+              </TableCell>
+              <TableCell align='center'>{ locale.uuid }</TableCell>
+              <TableCell align='center'>{ locale.external_id }</TableCell>
+              <TableCell align='center'>{ get(locale, nameAttr) }</TableCell>
+              <TableCell align='center'>{ locale.locale }</TableCell>
+              <TableCell align='center'>{ startCase(get(locale, typeAttr)) }</TableCell>
+            </TableRow>
+          ))
+        }
+      </TableBody>
+    </Table>
+  );
+}
+
 const ExpandibleRow = props => {
   const { item, resourceDefinition } = props;
   const [versions, setVersions] = React.useState([]);
+  const [names, setNames] = React.useState([]);
+  const [descriptions, setDescriptions] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = React.useState(0);
   const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1)
@@ -156,8 +197,11 @@ const ExpandibleRow = props => {
 
     setOpen(prevOpen => {
       const newOpen = !prevOpen
-      if(newOpen)
-        fetchVersions()
+      if(newOpen) {
+        fetchVersions();
+        fetchNames();
+        fetchDescriptions();
+      }
       return newOpen
     })
   }
@@ -167,12 +211,36 @@ const ExpandibleRow = props => {
   };
 
   const fetchVersions = () => {
-    if(item.versions_url) {
-      APIService.concepts().overrideURL(item.versions_url)
+    if(item.url) {
+      APIService.concepts().overrideURL(item.url)
+                .appendToUrl('versions/')
                 .get()
                 .then(response => {
                   if(response.status === 200)
                     setVersions(response.data)
+                })
+    }
+  }
+  const fetchNames = () => {
+    if(item) {
+      APIService.concepts().overrideURL(item.url)
+                .appendToUrl('names/')
+                .get()
+                .then(response => {
+                  if(response.status === 200)
+                    setNames(response.data)
+                })
+    }
+  }
+
+  const fetchDescriptions = () => {
+    if(item) {
+      APIService.concepts().overrideURL(item.url)
+                .appendToUrl('descriptions/')
+                .get()
+                .then(response => {
+                  if(response.status === 200)
+                    setDescriptions(response.data)
                 })
     }
   }
@@ -217,9 +285,9 @@ const ExpandibleRow = props => {
         {
           resourceDefinition.expandible &&
           <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={onClick}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+            <IconButton aria-label="expand row" size="small" onClick={onClick}>
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
           </TableCell>
         }
       </TableRow>
@@ -235,7 +303,8 @@ const ExpandibleRow = props => {
                   onChange={handleTabChange}
                 >
                   <Tab label="Versions" style={{fontSize: '12px', fontWeight: 'bold'}} />
-                  <Tab label="Mappings" style={{fontSize: '12px', fontWeight: 'bold'}} />
+                  <Tab label="Synonyms" style={{fontSize: '12px', fontWeight: 'bold'}} />
+                  <Tab label="Descriptions" style={{fontSize: '12px', fontWeight: 'bold'}} />
                 </Tabs>
                 {
                   tab === 0 &&
@@ -244,7 +313,16 @@ const ExpandibleRow = props => {
                   </div>
                 }
                 {
-                  tab === 1 && <div>Mappings</div>
+                  tab === 1 &&
+                  <div>
+                    <LocalesTable locales={names} />
+                  </div>
+                }
+                {
+                  tab === 2 &&
+                  <div>
+                    <LocalesTable locales={descriptions} isDescription={true} />
+                  </div>
                 }
               </Paper>
             </Box>
