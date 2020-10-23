@@ -16,7 +16,7 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import { map, startCase, get, without, uniq, includes, find, keys, values } from 'lodash';
-import { BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN } from '../../common/constants';
+import { BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE } from '../../common/constants';
 import { formatDate, formatDateTime } from '../../common/utils';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
@@ -170,10 +170,10 @@ const LocalesTable = ({ locales, isDescription }) => {
                 }
               </TableCell>
               <TableCell align='center'>{ locale.uuid }</TableCell>
-              <TableCell align='center'>{ locale.external_id }</TableCell>
+              <TableCell align='center'>{ locale.external_id || EMPTY_VALUE }</TableCell>
               <TableCell align='center'>{ get(locale, nameAttr) }</TableCell>
               <TableCell align='center'>{ locale.locale }</TableCell>
-              <TableCell align='center'>{ startCase(get(locale, typeAttr)) }</TableCell>
+              <TableCell align='center'>{ startCase(get(locale, typeAttr)) || EMPTY_VALUE }</TableCell>
             </TableRow>
           ))
         }
@@ -442,7 +442,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                   }
                 </TableRow>
               </TableHead>
-              <TableBody style={{border: '1px solid lightgray'}}>
+              <TableBody>
                 {
                   map(results.items, item => (
                     <ExpandibleRow
