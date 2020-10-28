@@ -11,6 +11,6 @@ services:
     volumes:
       - .:/app
     environment:
-      - API_URL=http://127.0.0.1:8000
-      - NODE_ENV=development
+      - API_URL=${API_URL-http://127.0.0.1:8000}
+      - NODE_ENV=${NODE_ENV-development}
       - PORT=4000
