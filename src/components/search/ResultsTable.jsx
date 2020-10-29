@@ -243,7 +243,9 @@ const ExpandibleRow = props => {
   }
 
   const onCheckboxClick = event => {
-    props.onSelectChange(item.id, event.target.checked)
+    event.stopPropagation();
+    event.preventDefault();
+    props.onSelectChange(item.id, event.target.checked);
   }
 
   return (
