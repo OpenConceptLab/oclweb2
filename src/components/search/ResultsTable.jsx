@@ -12,9 +12,14 @@ import {
   Done as DoneIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
-import { map, startCase, get, without, uniq, includes, find, keys, values } from 'lodash';
-import { BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE } from '../../common/constants';
+import {
+  map, startCase, get, without, uniq, includes, find, keys, values
+} from 'lodash';
+import {
+  BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
+} from '../../common/constants';
 import { formatDate, formatDateTime } from '../../common/utils';
+import OwnerWithIcon from '../common/OwnerWithIcon';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
 import APIService from '../../services/APIService';
@@ -24,10 +29,10 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: [
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerWithIcon ownerType={concept.owner_type} owner={concept.owner} />},
+      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'display_name', sortOn: 'id'},
       {id: 'name', label: 'Name', value: 'id', sortOn: 'name'},
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
-      {id: 'parent', label: 'Parent', value: 'source', sortOn: 'source'},
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
@@ -38,9 +43,9 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: [
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerWithIcon ownerType={mapping.owner_type} owner={mapping.owner} />},
+      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
-      {id: 'parent', label: 'Parent', value: 'source', sortOn: 'source'},
       {id: 'from', label: 'From', renderer: (mapping) => <FromConceptLabel {...mapping} />},
       {id: 'mapType', label: 'Map Type', value: 'map_type', sortOn: 'map_type'},
       {id: 'to', label: 'To', renderer: (mapping) => <ToConceptLabel {...mapping} />},
@@ -110,7 +115,7 @@ const getValue = (item, column) => {
   return value
 }
 
-const VersionsTable = ({ versions }) => {
+const HistoryTable = ({ versions }) => {
   return (
     <Table size="small" aria-label="versions">
       <TableHead>
@@ -145,7 +150,7 @@ const LocalesTable = ({ locales, isDescription }) => {
   const nameAttr = isDescription ? 'description' : 'name';
   const typeAttr = isDescription ? 'description_type' : 'name_type';
   return (
-    <Table size="small" aria-label="versions">
+    <Table size="small" aria-label="locales">
       <TableHead>
         <TableRow>
           <TableCell />
@@ -262,7 +267,7 @@ const ExpandibleRow = props => {
         }
         {
           map(resourceDefinition.columns, column => (
-            <TableCell key={column.id} align='left'>
+            <TableCell key={column.id} align={column.align || 'left'}>
               { getValue(item, column) || 'None' }
             </TableCell>
           ))
@@ -291,7 +296,7 @@ const ExpandibleRow = props => {
         }
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={columnsCount}>
+        <TableCell style={{ padding: 0 }} colSpan={columnsCount}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Paper square style={{boxShadow: 'none', border: '1px solid lightgray'}}>
@@ -301,25 +306,25 @@ const ExpandibleRow = props => {
                   textColor="primary"
                   onChange={handleTabChange}
                 >
-                  <Tab label="Versions" style={{fontSize: '12px', fontWeight: 'bold'}} />
+                  <Tab label="History" style={{fontSize: '12px', fontWeight: 'bold'}} />
                   <Tab label="Synonyms" style={{fontSize: '12px', fontWeight: 'bold'}} />
                   <Tab label="Descriptions" style={{fontSize: '12px', fontWeight: 'bold'}} />
                 </Tabs>
                 {
                   tab === 0 &&
-                  <div>
-                    <VersionsTable versions={versions} />
+                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                    <HistoryTable versions={versions} />
                   </div>
                 }
                 {
                   tab === 1 &&
-                  <div>
+                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                     <LocalesTable locales={names} />
                   </div>
                 }
                 {
                   tab === 2 &&
-                  <div>
+                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                     <LocalesTable locales={descriptions} isDescription={true} />
                   </div>
                 }
@@ -412,7 +417,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                         <TableCell
                           key={column.id}
                           sortDirection={orderBy === column.id ? order : false}
-                          align='left'
+                          align={column.align || 'left'}
                           style={{color: theadTextColor}}>
                           <TableSortLabel
                             className='table-sort-label-white'
