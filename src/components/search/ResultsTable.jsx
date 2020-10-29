@@ -7,10 +7,7 @@ import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
   LocalOffer as LocalOfferIcon,
-  Link as LinkIcon, List as ListIcon,
-  Loyalty as LoyaltyIcon,
-  Home as HomeIcon,
-  Person as PersonIcon,
+  Link as LinkIcon,
   AcUnit as AsteriskIcon,
   Done as DoneIcon,
 } from '@material-ui/icons'
