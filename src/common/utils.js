@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { filter } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
 export const isAtGlobalSearch = () => {
@@ -11,4 +12,11 @@ export const formatDate = date => {
 
 export const formatDateTime = date => {
   return moment(date).format(DATETIME_FORMAT);
+}
+
+export const getIndirectMappings = (mappings, concept) => {
+  return filter(mappings, {from_concept_code: concept});
+}
+export const getDirectMappings = (mappings, concept) => {
+  return filter(mappings, {to_concept_code: concept});
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Chip
+  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Chip, Tooltip,
 } from '@material-ui/core';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -9,19 +9,22 @@ import {
   LocalOffer as LocalOfferIcon,
   Link as LinkIcon,
   AcUnit as AsteriskIcon,
-  Done as DoneIcon,
+  Flag as FlagIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty,
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
-import { formatDate, formatDateTime } from '../../common/utils';
+import {
+  formatDate, formatDateTime, getIndirectMappings, getDirectMappings,
+} from '../../common/utils';
 import OwnerWithIcon from '../common/OwnerWithIcon';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
+import NestedMappingsTable from '../mappings/NestedMappingsTable';
 import APIService from '../../services/APIService';
 
 const RESOURCE_DEFINITIONS = {
@@ -115,14 +118,49 @@ const getValue = (item, column) => {
   return value
 }
 
+const getMappingsHeader = (mappings, isDirect) => {
+  const count = mappings.length;
+  const label = `${isDirect ? 'Direct' : 'Inverse'} Mappings (${count})`
+  return label;
+}
+
+const MappingsTable = ({ mappings, concept }) => {
+  const directMappings = getDirectMappings(mappings, concept);
+  const indirectMappings = getIndirectMappings(mappings, concept);
+  const directMappingsHeader = getMappingsHeader(directMappings, true);
+  const indirectMappingsHeader = getMappingsHeader(indirectMappings);
+
+  const getMappingsDom = (mappings, header) => {
+    const isPresent = !isEmpty(mappings);
+    return (
+      <div className='col-sm-6' style={isPresent ? {marginBottom: '10px'} : {}}>
+        <h4 style={{background: 'lightgray', padding: "10px", marginTop: '10px', marginBottom: '0px'}}>
+          { header }
+        </h4>
+        {
+          isPresent &&
+          <NestedMappingsTable mappings={mappings} />
+        }
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      { getMappingsDom(directMappings, directMappingsHeader) }
+      { getMappingsDom(indirectMappings, indirectMappingsHeader) }
+    </div>
+  );
+}
+
 const HistoryTable = ({ versions }) => {
   return (
     <Table size="small" aria-label="versions">
       <TableHead>
         <TableRow>
           <TableCell align='center'>Version</TableCell>
-          <TableCell align='center'>Created By</TableCell>
-          <TableCell align='center'>Created On</TableCell>
+          <TableCell align='left'>Created By</TableCell>
+          <TableCell align='left'>Created On</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -132,10 +170,10 @@ const HistoryTable = ({ versions }) => {
               <TableCell align='center'>
                 { version.uuid }
               </TableCell>
-              <TableCell align='center'>
+              <TableCell align='left'>
                 { version.version_created_by }
               </TableCell>
-              <TableCell align='center'>
+              <TableCell align='left'>
                 { formatDateTime(version.version_created_on) }
               </TableCell>
             </TableRow>
@@ -153,29 +191,42 @@ const LocalesTable = ({ locales, isDescription }) => {
     <Table size="small" aria-label="locales">
       <TableHead>
         <TableRow>
-          <TableCell />
           <TableCell align='center'>ID</TableCell>
-          <TableCell align='center'>External ID</TableCell>
-          <TableCell align='center'>{startCase(nameAttr)}</TableCell>
-          <TableCell align='center'>Locale</TableCell>
-          <TableCell align='center'>Type</TableCell>
+          <TableCell align='left'>Type</TableCell>
+          <TableCell align='left'>{startCase(nameAttr)}</TableCell>
+          <TableCell align='left'>External ID</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {
+          isEmpty(locales) ?
+          <TableRow colSpan='5'>
+            <TableCell colSpan='6' align='center'>No Records</TableCell>
+          </TableRow> :
           map(locales, locale => (
             <TableRow hover key={locale.uuid}>
               <TableCell align='center'>
                 {
-                  locale.locale_preferred &&
-                  <DoneIcon style={{color: GREEN, marginRight: '5px'}} fontSize='small' />
+                  locale.locale_preferred ?
+                  <Tooltip title={`Preferred ${nameAttr} for this locale`} placement='top-start'>
+                    <Chip
+                      icon={<FlagIcon color='default' fontSize='small' />}
+                      label={locale.uuid}
+                      variant='outlined'
+                      color='default'
+                      size="small"
+                      style={{border: 'none'}}
+                    />
+                  </Tooltip> :
+                  <span> { locale.uuid } </span>
                 }
               </TableCell>
-              <TableCell align='center'>{ locale.uuid }</TableCell>
-              <TableCell align='center'>{ locale.external_id || EMPTY_VALUE }</TableCell>
-              <TableCell align='center'>{ get(locale, nameAttr) }</TableCell>
-              <TableCell align='center'>{ locale.locale }</TableCell>
-              <TableCell align='center'>{ startCase(get(locale, typeAttr)) || EMPTY_VALUE }</TableCell>
+              <TableCell align='left'>{ startCase(get(locale, typeAttr)) || EMPTY_VALUE }</TableCell>
+              <TableCell align='left' className='ellipsis-text'>
+                <span className='gray-italics-small'>{`[${locale.locale}]`}</span>
+                <span>{ get(locale, nameAttr) }</span>
+              </TableCell>
+              <TableCell align='left'>{ locale.external_id || EMPTY_VALUE }</TableCell>
             </TableRow>
           ))
         }
@@ -186,6 +237,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 
 const ExpandibleRow = props => {
   const { item, resourceDefinition } = props;
+  const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
   const [names, setNames] = React.useState([]);
   const [descriptions, setDescriptions] = React.useState([]);
@@ -201,8 +253,11 @@ const ExpandibleRow = props => {
       const newOpen = !prevOpen
       if(newOpen) {
         fetchVersions();
-        fetchNames();
-        fetchDescriptions();
+        if(props.resource === 'concepts') {
+          fetchNames();
+          fetchDescriptions();
+          fetchMappings();
+        }
       }
       return newOpen
     })
@@ -243,6 +298,18 @@ const ExpandibleRow = props => {
                 .then(response => {
                   if(response.status === 200)
                     setDescriptions(response.data)
+                })
+    }
+  }
+
+  const fetchMappings = () => {
+    if(item) {
+      APIService.concepts().overrideURL(item.url)
+                .appendToUrl('mappings/')
+                .get(null, null, {includeInverseMappings: true})
+                .then(response => {
+                  if(response.status === 200)
+                    setMappings(response.data)
                 })
     }
   }
@@ -306,14 +373,15 @@ const ExpandibleRow = props => {
                   textColor="primary"
                   onChange={handleTabChange}
                 >
-                  <Tab label="History" style={{fontSize: '12px', fontWeight: 'bold'}} />
+                  <Tab label="Mappings" style={{fontSize: '12px', fontWeight: 'bold'}} />
                   <Tab label="Synonyms" style={{fontSize: '12px', fontWeight: 'bold'}} />
                   <Tab label="Descriptions" style={{fontSize: '12px', fontWeight: 'bold'}} />
+                  <Tab label="History" style={{fontSize: '12px', fontWeight: 'bold'}} />
                 </Tabs>
                 {
                   tab === 0 &&
                   <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                    <HistoryTable versions={versions} />
+                    <MappingsTable mappings={mappings} concept={item.id}/>
                   </div>
                 }
                 {
@@ -326,6 +394,12 @@ const ExpandibleRow = props => {
                   tab === 2 &&
                   <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                     <LocalesTable locales={descriptions} isDescription={true} />
+                  </div>
+                }
+                {
+                  tab === 3 &&
+                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                    <HistoryTable versions={versions} />
                   </div>
                 }
               </Paper>
@@ -452,6 +526,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                     <ExpandibleRow
                       key={item.id}
                       item={item}
+                      resource={resource}
                       resourceDefinition={resourceDefinition}
                       isSelected={includes(selectedList, item.id)}
                       onSelectChange={updateSelected}

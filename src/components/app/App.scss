@@ -118,3 +118,15 @@ td.pagination-center {
     display: inline-flex;
     align-items: center;
 }
+.ellipsis-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 500px;
+}
+.gray-italics-small {
+    color: gray;
+    font-style: italic;
+    margin-right: 5px;
+    font-size: 12px;
+}

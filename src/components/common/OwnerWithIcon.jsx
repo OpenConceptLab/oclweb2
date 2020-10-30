@@ -1,8 +1,9 @@
 import React from 'react';
-import { Chip } from '@material-ui/core';
+import { Chip, Tooltip } from '@material-ui/core';
 import {
   Home as HomeIcon, Person as PersonIcon
 } from '@material-ui/icons';
+import { startCase } from 'lodash';
 
 const OwnerWithIcon = ({owner, ownerType}) => {
   const icon = ownerType.toLowerCase() === 'user' ?
@@ -10,7 +11,9 @@ const OwnerWithIcon = ({owner, ownerType}) => {
                <HomeIcon fontSize='small' color='primary' />;
 
   return (
-    <Chip icon={icon} label={owner} variant='outlined' color='secondary' />
+    <Tooltip placement='top-start' title={`${startCase(ownerType.toLowerCase())}: ${owner}`}>
+      <Chip icon={icon} label={owner} variant='outlined' color='secondary' />
+    </Tooltip>
   )
 }
 
