@@ -10,6 +10,7 @@ import {
   Link as LinkIcon,
   AcUnit as AsteriskIcon,
   Flag as FlagIcon,
+  ArrowForward as ForwardIcon
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -129,11 +130,14 @@ const MappingsTable = ({ mappings, concept }) => {
   const indirectMappings = getIndirectMappings(mappings, concept);
   const directMappingsHeader = getMappingsHeader(directMappings, true);
   const indirectMappingsHeader = getMappingsHeader(indirectMappings);
+  const zeroMappings = isEmpty(mappings);
 
   const getMappingsDom = (mappings, header) => {
     const isPresent = !isEmpty(mappings);
     return (
-      <div className='col-sm-6' style={isPresent ? {marginBottom: '10px'} : {}}>
+      <div className='col-sm-6' style={
+        (isPresent || zeroMappings) ? {marginBottom: '10px'} : {}
+      }>
         <h4 style={{background: 'lightgray', padding: "10px", marginTop: '10px', marginBottom: '0px'}}>
           { header }
         </h4>
@@ -191,7 +195,7 @@ const LocalesTable = ({ locales, isDescription }) => {
     <Table size="small" aria-label="locales">
       <TableHead>
         <TableRow>
-          <TableCell align='center'>ID</TableCell>
+          <TableCell align='right'>ID</TableCell>
           <TableCell align='left'>Type</TableCell>
           <TableCell align='left'>{startCase(nameAttr)}</TableCell>
           <TableCell align='left'>External ID</TableCell>
@@ -205,21 +209,36 @@ const LocalesTable = ({ locales, isDescription }) => {
           </TableRow> :
           map(locales, locale => (
             <TableRow hover key={locale.uuid}>
-              <TableCell align='center'>
-                {
-                  locale.locale_preferred ?
-                  <Tooltip title={`Preferred ${nameAttr} for this locale`} placement='top-start'>
-                    <Chip
-                      icon={<FlagIcon color='default' fontSize='small' />}
-                      label={locale.uuid}
-                      variant='outlined'
-                      color='default'
-                      size="small"
-                      style={{border: 'none'}}
-                    />
-                  </Tooltip> :
+              <TableCell align='right' style={{width: '100px'}}>
+                <span className='flex-vertical-center'>
+                  {
+                    locale.locale_preferred &&
+                    <span style={{marginRight: '5px'}}>
+                      <Tooltip title={`Preferred ${nameAttr} for this locale`} placement='top-start'>
+                        <FlagIcon color='secondary' fontSize='small' style={{width: '18px', marginTop: '4px'}}/>
+                      </Tooltip>
+                    </span>
+                  }
+                  {
+                    locale.external_id &&
+                    <span style={{marginRight: '5px'}}>
+                      <Tooltip title={`External ID: ${locale.external_id}`} placement='top-start'>
+                        <ForwardIcon
+                          fontSize='small'
+                          color='secondary'
+                          style={{
+                            border: '1px solid', borderRadius: '10px',
+                            background: 'gray', color: 'white',
+                            width: '18px',
+                            height: '18px',
+                            marginTop: '4px'
+                          }}
+                        />
+                      </Tooltip>
+                    </span>
+                  }
                   <span> { locale.uuid } </span>
-                }
+                </span>
               </TableCell>
               <TableCell align='left'>{ startCase(get(locale, typeAttr)) || EMPTY_VALUE }</TableCell>
               <TableCell align='left' className='ellipsis-text'>
