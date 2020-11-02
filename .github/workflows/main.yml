@@ -15,4 +15,4 @@ jobs:
         run: |
           npm install
           npm install -g eslint
-          eslint src/ --ext=.js*
+          ~/.npm-global/bin/eslint src/ --ext=.js*
