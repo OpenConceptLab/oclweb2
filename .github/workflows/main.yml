@@ -1,18 +1,12 @@
 name: CI
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+
+on: [push]
+
 jobs:
-  build:
+  eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Eslint
-        env:
-          NPM_CONFIG_PREFIX: "~/.npm-global"
-        run: |
-          npm install
-          npm install -g eslint
-          ~/.npm-global/bin/eslint src/ --ext=.js*
+      - uses: actions/checkout@v1
+      - uses: stefanoeb/eslint-action@1.0.2
+        with:
+          files: src/
