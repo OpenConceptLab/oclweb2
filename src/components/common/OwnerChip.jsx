@@ -5,7 +5,7 @@ import {
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
 
-const OwnerWithIcon = ({owner, ownerType}) => {
+const OwnerChip = ({owner, ownerType}) => {
   const icon = ownerType.toLowerCase() === 'user' ?
                <PersonIcon fontSize='small' color='primary' /> :
                <HomeIcon fontSize='small' color='primary' />;
@@ -17,4 +17,4 @@ const OwnerWithIcon = ({owner, ownerType}) => {
   )
 }
 
-export default OwnerWithIcon;
+export default OwnerChip;

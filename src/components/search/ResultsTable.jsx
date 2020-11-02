@@ -22,7 +22,7 @@ import {
 import {
   formatDate, formatDateTime, getIndirectMappings, getDirectMappings,
 } from '../../common/utils';
-import OwnerWithIcon from '../common/OwnerWithIcon';
+import OwnerChip from '../common/OwnerChip';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
 import NestedMappingsTable from '../mappings/NestedMappingsTable';
@@ -33,7 +33,7 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: [
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerWithIcon ownerType={concept.owner_type} owner={concept.owner} />},
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
       {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name'},
@@ -47,7 +47,7 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: [
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerWithIcon ownerType={mapping.owner_type} owner={mapping.owner} />},
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
       {id: 'from', label: 'From', renderer: (mapping) => <FromConceptLabel {...mapping} />},
