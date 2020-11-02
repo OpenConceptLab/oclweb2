@@ -35,8 +35,8 @@ const RESOURCE_DEFINITIONS = {
     columns: [
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerWithIcon ownerType={concept.owner_type} owner={concept.owner} />},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
-      {id: 'id', label: 'ID', value: 'display_name', sortOn: 'id'},
-      {id: 'name', label: 'Name', value: 'id', sortOn: 'name'},
+      {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
+      {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name'},
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
