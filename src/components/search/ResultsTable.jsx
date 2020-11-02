@@ -1,4 +1,5 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Chip, Tooltip,
@@ -10,7 +11,7 @@ import {
   Link as LinkIcon,
   AcUnit as AsteriskIcon,
   Flag as FlagIcon,
-  ArrowForward as ForwardIcon
+  ArrowForward as ForwardIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -20,7 +21,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, getIndirectMappings, getDirectMappings,
+  formatDate, formatDateTime, getIndirectMappings, getDirectMappings, toFullURL
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
 import ToConceptLabel from '../mappings/ToConceptLabel';
@@ -339,12 +340,28 @@ const ExpandibleRow = props => {
     props.onSelectChange(item.id, event.target.checked);
   }
 
+  const onCopyClick = event => {
+    event.stopPropagation();
+    event.preventDefault();
+    if(item.url) {
+      navigator.clipboard.writeText(toFullURL(item.url));
+      alertifyjs.success('Copied URL to clipboard!')
+    }
+  }
+
   return (
     <React.Fragment>
       <TableRow
         hover
         style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onClick}>
+        <TableCell align='center'>
+          <Tooltip title='Copy URL'>
+            <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary'>
+              <LinkIcon fontSize="inherit" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
         {
           props.isSelecteable &&
           <TableCell>
@@ -438,7 +455,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
     backgroundColor: theadBgColor,
     border: `1px solid ${theadBgColor}`,
   }
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1);
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 3 : 2);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
   const defaultOrder = get(keys(sortParams), '0') === 'sortAsc' ? 'asc' : 'desc';
@@ -497,6 +514,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                   </TableRow>
                 }
                 <TableRow>
+                  <TableCell />
                   {
                     isSelecteable &&
                     <TableCell>
