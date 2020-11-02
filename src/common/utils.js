@@ -25,3 +25,4 @@ export const getDirectMappings = (mappings, concept) => {
 export const toFullURL = uri => {
   return window.location.origin + '/#' + uri;
 }
+
