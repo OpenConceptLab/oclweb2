@@ -28,4 +28,6 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Eslint
-        run: bash -c "eslint src/ --ext=.js*"
+        run: |
+          npm install -g eslint
+          bash -c "eslint src/ --ext=.js*
