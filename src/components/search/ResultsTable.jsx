@@ -12,6 +12,7 @@ import {
   AcUnit as AsteriskIcon,
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
+  FileCopy as CopyIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -358,7 +359,7 @@ const ExpandibleRow = props => {
         <TableCell align='center'>
           <Tooltip title='Copy URL'>
             <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary'>
-              <LinkIcon fontSize="inherit" />
+              <CopyIcon fontSize="inherit" />
             </IconButton>
           </Tooltip>
         </TableCell>
