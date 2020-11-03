@@ -8,6 +8,7 @@ services:
       - "4001:35729"
       - "6006:6006"
     restart: on-failure
+    command: ["bash", "-c", "./start.sh"]
     volumes:
       - .:/app:z
     environment:
