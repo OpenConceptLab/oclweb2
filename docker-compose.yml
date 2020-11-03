@@ -9,7 +9,7 @@ services:
       - "6006:6006"
     restart: on-failure
     volumes:
-      - .:/app
+      - .:/app:z
     environment:
       - API_URL=${API_URL-http://127.0.0.1:8000}
       - NODE_ENV=${NODE_ENV-development}

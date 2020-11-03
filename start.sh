@@ -1,3 +1,3 @@
-#! /bin/bash
+#!/bin/bash
 npm update && npm install
 npm start
