@@ -88,6 +88,11 @@ const RESOURCE_DEFINITIONS = {
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
     ],
+    tags: [
+      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={{width: '12px'}} />},
+      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={{width: '12px'}} />},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={{width: '12px'}} />},
+    ],
     tabs: ['History',],
     expandible: true,
   },
