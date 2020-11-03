@@ -8,4 +8,6 @@ COPY start.sh /app/
 COPY start-prod.sh /app/
 COPY webpack.config.js /app/
 ADD . /app/
+RUN chmod +x start.sh
+RUN chmod +x start-prod.sh
 CMD ["sh", "-c", "./start.sh"]
