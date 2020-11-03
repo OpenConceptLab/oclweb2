@@ -43,6 +43,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ],
+    tabs: ['Mappings', 'Synonyms', 'Descriptions', 'History',],
     expandible: true,
   },
   mappings: {
@@ -52,47 +53,48 @@ const RESOURCE_DEFINITIONS = {
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
-      {id: 'from', label: 'From', renderer: (mapping) => <FromConceptLabel {...mapping} />},
+      {id: 'from', label: 'From Concept', renderer: (mapping) => <FromConceptLabel {...mapping} />},
       {id: 'mapType', label: 'Map Type', value: 'map_type', sortOn: 'map_type'},
-      {id: 'to', label: 'To', renderer: (mapping) => <ToConceptLabel {...mapping} />},
+      {id: 'to', label: 'To Concept', renderer: (mapping) => <ToConceptLabel {...mapping} />},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ],
+    tabs: ['History',],
     expandible: true,
   },
   sources: {
     headBgColor: GREEN,
     headTextColor: WHITE,
     columns: [
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} />},
+      {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortable: false},
       {id: 'sourceType', label: 'Source Type', value: 'source_type', sortOn: 'source_type'},
-      {id: 'updatedOn', label: 'Updated On', value: 'updated_on', formatter: formatDate, sortOn: 'last_update'},
     ],
     tags: [
       {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={{width: '12px'}} />},
       {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={{width: '12px'}} />},
       {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={{width: '12px'}} />},
     ],
+    tabs: ['History',],
     expandible: true,
   },
   collections: {
     headBgColor: GREEN,
     headTextColor: WHITE,
     columns: [
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner'},
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} />},
+      {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'shortCode', label: 'Short Code', value: 'short_code', sortOn: 'name'},
       {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
-      {id: 'updatedOn', label: 'Updated On', value: 'updated_on', formatter: formatDate, sortOn: 'last_update'},
     ],
+    tabs: ['History',],
     expandible: true,
   },
   organizations: {
     headBgColor: ORANGE,
     headTextColor: WHITE,
     columns: [
-      {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
+      {id: 'id', label: 'ID', value: 'id', sortOn: 'mnemonic', renderer: org => <OwnerChip ownerType='Organization' owner={org.id} />},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
     ],
@@ -102,10 +104,8 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: ORANGE,
     headTextColor: WHITE,
     columns: [
-      {id: 'username', label: 'Username', value: 'username', sortOn: 'username'},
+      {id: 'username', label: 'Username', value: 'username', sortOn: 'username', renderer: user => <OwnerChip ownerType='user' owner={user.username} />},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'company', label: 'Company', value: 'company', sortOn: 'company'},
-      {id: 'location', label: 'Location', value: 'location', sortOn: 'Location'},
       {id: 'createdOn', label: 'Joined On', value: 'created_on', formatter: formatDate, sortOn: 'date_joined'},
     ],
     expandible: false,
@@ -350,6 +350,12 @@ const ExpandibleRow = props => {
     }
   }
 
+  const getTab = label => {
+    return (
+      <Tab label={label} style={{fontSize: '12px', fontWeight: 'bold'}} />
+    )
+  }
+
   return (
     <React.Fragment>
       <TableRow
@@ -399,51 +405,53 @@ const ExpandibleRow = props => {
           </TableCell>
         }
       </TableRow>
-      <TableRow>
-        <TableCell style={{ padding: 0 }} colSpan={columnsCount}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Paper square style={{boxShadow: 'none', border: '1px solid lightgray'}}>
-                <Tabs
-                  value={tab}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  onChange={handleTabChange}
-                >
-                  <Tab label="Mappings" style={{fontSize: '12px', fontWeight: 'bold'}} />
-                  <Tab label="Synonyms" style={{fontSize: '12px', fontWeight: 'bold'}} />
-                  <Tab label="Descriptions" style={{fontSize: '12px', fontWeight: 'bold'}} />
-                  <Tab label="History" style={{fontSize: '12px', fontWeight: 'bold'}} />
-                </Tabs>
-                {
-                  tab === 0 &&
-                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                    <MappingsTable mappings={mappings} concept={item.id}/>
-                  </div>
-                }
-                {
-                  tab === 1 &&
-                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                    <LocalesTable locales={names} />
-                  </div>
-                }
-                {
-                  tab === 2 &&
-                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                    <LocalesTable locales={descriptions} isDescription={true} />
-                  </div>
-                }
-                {
-                  tab === 3 &&
-                  <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                    <HistoryTable versions={versions} />
-                  </div>
-                }
-              </Paper>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      {
+        resourceDefinition.expandible &&
+        <TableRow>
+          <TableCell style={{ padding: 0 }} colSpan={columnsCount}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <Paper square style={{boxShadow: 'none', border: '1px solid lightgray'}}>
+                  <Tabs
+                    value={tab}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    onChange={handleTabChange}
+                  >
+                    {
+                      map(resourceDefinition.tabs, label => getTab(label))
+                    }
+                  </Tabs>
+                  {
+                    tab === resourceDefinition.tabs.indexOf('Mappings') &&
+                    <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                      <MappingsTable mappings={mappings} concept={item.id}/>
+                    </div>
+                  }
+                  {
+                    tab === resourceDefinition.tabs.indexOf('Synonyms') &&
+                    <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                      <LocalesTable locales={names} />
+                    </div>
+                  }
+                  {
+                    tab === resourceDefinition.tabs.indexOf('Descriptions') &&
+                    <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                      <LocalesTable locales={descriptions} isDescription={true} />
+                    </div>
+                  }
+                  {
+                    tab === resourceDefinition.tabs.indexOf('History') &&
+                    <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                      <HistoryTable versions={versions} />
+                    </div>
+                  }
+                </Paper>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      }
     </React.Fragment>
   )
 }
