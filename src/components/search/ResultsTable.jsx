@@ -165,6 +165,7 @@ const HistoryTable = ({ versions }) => {
       <TableHead>
         <TableRow>
           <TableCell align='center'>Version</TableCell>
+          <TableCell align='left'>Comment/Description</TableCell>
           <TableCell align='left'>Created By</TableCell>
           <TableCell align='left'>Created On</TableCell>
         </TableRow>
@@ -174,13 +175,16 @@ const HistoryTable = ({ versions }) => {
           map(versions, version => (
             <TableRow hover key={version.uuid}>
               <TableCell align='center'>
-                { version.uuid }
+                { version.uuid || version.id }
+              </TableCell>
+              <TableCell align='left'>
+                { version.update_comment || version.description }
               </TableCell>
               <TableCell align='left'>
                 { version.version_created_by }
               </TableCell>
               <TableCell align='left'>
-                { formatDateTime(version.version_created_on) }
+                { formatDateTime(version.version_created_on || version.created_at) }
               </TableCell>
             </TableRow>
           ))
@@ -267,6 +271,9 @@ const ExpandibleRow = props => {
   const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1)
 
   const onClick = event => {
+    if(!resourceDefinition.expandible)
+      return;
+
     event.stopPropagation()
     event.preventDefault()
 
@@ -290,7 +297,7 @@ const ExpandibleRow = props => {
 
   const fetchVersions = () => {
     if(item.url) {
-      APIService.concepts().overrideURL(item.url)
+      APIService.new().overrideURL(item.url)
                 .appendToUrl('versions/')
                 .get()
                 .then(response => {
@@ -301,7 +308,7 @@ const ExpandibleRow = props => {
   }
   const fetchNames = () => {
     if(item) {
-      APIService.concepts().overrideURL(item.url)
+      APIService.new().overrideURL(item.url)
                 .appendToUrl('names/')
                 .get()
                 .then(response => {
@@ -313,7 +320,7 @@ const ExpandibleRow = props => {
 
   const fetchDescriptions = () => {
     if(item) {
-      APIService.concepts().overrideURL(item.url)
+      APIService.new().overrideURL(item.url)
                 .appendToUrl('descriptions/')
                 .get()
                 .then(response => {
@@ -325,7 +332,7 @@ const ExpandibleRow = props => {
 
   const fetchMappings = () => {
     if(item) {
-      APIService.concepts().overrideURL(item.url)
+      APIService.new().overrideURL(item.url)
                 .appendToUrl('mappings/')
                 .get(null, null, {includeInverseMappings: true})
                 .then(response => {

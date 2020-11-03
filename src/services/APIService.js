@@ -12,6 +12,7 @@ const RESOURCES = [
   { name: 'users', relations: [] },
   { name: 'sources', relations: [] },
   { name: 'collections', relations: [] },
+  { name: 'new', relations: [] },
 ];
 
 class APIService {
