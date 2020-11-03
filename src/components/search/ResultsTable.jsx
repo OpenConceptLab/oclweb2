@@ -13,6 +13,7 @@ import {
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
   FileCopy as CopyIcon,
+  Public as PublicIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -363,18 +364,29 @@ const ExpandibleRow = props => {
     )
   }
 
+  const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase());
+  const showPublicIndicator = includes(['sources', 'collections'], props.resource);
+
   return (
     <React.Fragment>
       <TableRow
         hover
         style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onClick}>
-        <TableCell align='center'>
+        <TableCell align={showPublicIndicator ? 'right' : 'center'}>
+          <span className='flex-vertical-center'>
+            {
+              showPublicIndicator && isPublic &&
+              <Tooltip title='Public'>
+                <PublicIcon fontSize='small' />
+              </Tooltip>
+            }
           <Tooltip title='Copy URL'>
-            <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary'>
+            <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary' style={showPublicIndicator ? {padding: '10px'} : {}}>
               <CopyIcon fontSize="inherit" />
             </IconButton>
           </Tooltip>
+          </span>
         </TableCell>
         {
           props.isSelecteable &&
