@@ -26,6 +26,7 @@ import {
   formatDate, formatDateTime, getIndirectMappings, getDirectMappings, toFullURL
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
+import ReleasedChip from '../common/ReleasedChip';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
 import NestedMappingsTable from '../mappings/NestedMappingsTable';
@@ -174,12 +175,13 @@ const HistoryTable = ({ versions }) => {
           <TableCell align='left'>Comment/Description</TableCell>
           <TableCell align='left'>Created By</TableCell>
           <TableCell align='left'>Created On</TableCell>
+          <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>
         {
           map(versions, version => (
-            <TableRow hover key={version.uuid}>
+            <TableRow hover key={version.uuid || version.id}>
               <TableCell align='center'>
                 { version.uuid || version.id }
               </TableCell>
@@ -192,6 +194,11 @@ const HistoryTable = ({ versions }) => {
               <TableCell align='left'>
                 { formatDateTime(version.version_created_on || version.created_at) }
               </TableCell>
+              {
+                version.released ?
+                <TableCell align='center'><ReleasedChip /></TableCell> :
+                <TableCell />
+              }
             </TableRow>
           ))
         }
@@ -365,7 +372,7 @@ const ExpandibleRow = props => {
 
   const getTab = label => {
     return (
-      <Tab label={label} style={{fontSize: '12px', fontWeight: 'bold'}} />
+      <Tab key={label} label={label} style={{fontSize: '12px', fontWeight: 'bold'}} />
     )
   }
 
@@ -412,6 +419,7 @@ const ExpandibleRow = props => {
             {
               map(resourceDefinition.tags, tag => (
                 <Chip
+                  key={tag.label}
                   size='small' label={`${get(item, tag.value, '0')} ${tag.label}`} color='primary'
                   variant='outlined'
                   style={{fontSize: '12px', width: '100%', marginTop: '2px'}}
