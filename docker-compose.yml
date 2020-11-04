@@ -2,16 +2,11 @@ version: '3'
 
 services:
   web:
-    build: .
+    image: openconceptlab/oclweb2:${ENVIRONMENT-latest}
+    build:
+      context: .
     ports:
-      - "4000:4000"
-      - "4001:35729"
-      - "6006:6006"
+      - "80:4000"
     restart: on-failure
-    command: ["bash", "-c", "./start.sh"]
-    volumes:
-      - .:/app:z
     environment:
       - API_URL=${API_URL-http://127.0.0.1:8000}
-      - NODE_ENV=${NODE_ENV-development}
-      - PORT=4000

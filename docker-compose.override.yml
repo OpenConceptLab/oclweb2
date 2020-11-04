@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web:
+    image: openconceptlab/oclweb2:dev
+    build:
+      context: .
+      target: build
+    ports:
+      - "4000:4000"
+      - "4001:35729"
+      - "6006:6006"
+    restart: on-failure
+    volumes:
+      - .:/app:z
+    environment:
+      - PORT=4000
