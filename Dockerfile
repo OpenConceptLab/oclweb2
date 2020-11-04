@@ -46,8 +46,8 @@ COPY --from=build /app/dist/ /usr/share/nginx/html/
 # Copy nginx configuration
 ADD ngnix /etc/nginx/conf.d/
 
-# Make port 80 available to the world outside the container
-EXPOSE 8080
+# Make port 4000 available to the world outside the container
+EXPOSE 4000
 
 # Start the server
 CMD ["bash", "-c", "/start-prod.sh"]
