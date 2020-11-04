@@ -6,7 +6,7 @@ Overhauled OCL Web Authoring Interface v2
 2. Visit http://localhost:4000
 
 ### Run Production (do check CORS origin policy with API_URL)
-1. docker-compose run -p 4000:4000 -e NODE_ENV=production -e API_URL="http://127.0.0.1:8000" web bash ./start-prod.sh
+1. docker-compose -f docker-compose.yml up -d
 2. Visit http://localhost:4000
 
 

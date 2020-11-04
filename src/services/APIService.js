@@ -3,7 +3,7 @@ import axios from 'axios';
 import {get, omit, isPlainObject, isString, defaults } from 'lodash';
 
 /*eslint no-undef: 0*/
-const APIURL = process.env.API_URL;
+const APIURL = window.API_URL || process.env.API_URL;
 const APIServiceProvider = {};
 const RESOURCES = [
   { name: 'concepts', relations: [] },

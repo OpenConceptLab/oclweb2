@@ -2,11 +2,13 @@ version: '3'
 
 services:
   web:
-    image: openconceptlab/oclweb2:${ENVIRONMENT-latest}
+    image: openconceptlab/oclweb2:${TAG-latest}
     build:
       context: .
+      args:
+        NODE_ENV: production
     ports:
-      - "80:4000"
+      - "4000:8080"
     restart: on-failure
     environment:
       - API_URL=${API_URL-http://127.0.0.1:8000}

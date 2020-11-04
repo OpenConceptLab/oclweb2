@@ -2,10 +2,12 @@ version: '3'
 
 services:
   web:
-    image: openconceptlab/oclweb2:dev
+    image: openconceptlab/oclweb2:${TAG-dev}
     build:
       context: .
       target: build
+      args:
+        NODE_ENV: development
     ports:
       - "4000:4000"
       - "4001:35729"
@@ -14,4 +16,4 @@ services:
     volumes:
       - .:/app:z
     environment:
-      - PORT=4000
+      - PORT=${PORT-4000}
