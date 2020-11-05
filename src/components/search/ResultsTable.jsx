@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Chip, Tooltip,
+  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
 } from '@material-ui/core';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -14,6 +15,10 @@ import {
   ArrowForward as ForwardIcon,
   FileCopy as CopyIcon,
   Public as PublicIcon,
+  List as ListIcon,
+  Person as PersonIcon,
+  Home as HomeIcon,
+  Loyalty as LoyaltyIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -31,6 +36,8 @@ import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
 import NestedMappingsTable from '../mappings/NestedMappingsTable';
 import APIService from '../../services/APIService';
+
+const TAG_ICON_STYLES = {width: '11px', marginRight: '2px'}
 
 const RESOURCE_DEFINITIONS = {
   concepts: {
@@ -73,9 +80,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'sourceType', label: 'Source Type', value: 'source_type', sortOn: 'source_type'},
     ],
     tags: [
-      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={{width: '12px'}} />},
-      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={{width: '12px'}} />},
-      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={{width: '12px'}} />},
+      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />},
     ],
     tabs: ['History',],
     expandible: true,
@@ -90,9 +97,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
     ],
     tags: [
-      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={{width: '12px'}} />},
-      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={{width: '12px'}} />},
-      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={{width: '12px'}} />},
+      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />},
     ],
     tabs: ['History',],
     expandible: true,
@@ -106,9 +113,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
     ],
     tags: [
-      {id: 'members', value: 'members', label: 'Members'},
-      {id: 'sources', value: 'public_sources', label: 'Public Sources'},
-      {id: 'collections', value: 'public_collections', label: 'Public Collections'},
+      {id: 'members', value: 'members', label: 'Members', icon: <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />},
     ],
     expandible: false,
   },
@@ -121,9 +128,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'createdOn', label: 'Joined On', value: 'created_on', formatter: formatDate, sortOn: 'date_joined'},
     ],
     tags: [
-      {id: 'orgs', value: 'orgs', label: 'Organization Membership'},
-      {id: 'sources', value: 'public_sources', label: 'Public Sources'},
-      {id: 'collections', value: 'public_collections', label: 'Public Collections'},
+      {id: 'orgs', value: 'orgs', label: 'Organizations', icon: <HomeIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />},
     ],
     expandible: false,
   },
@@ -291,7 +298,11 @@ const ExpandibleRow = props => {
   const [descriptions, setDescriptions] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = React.useState(0);
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1)
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) +
+                       1 + //copy column
+                         (props.isSelectable ? 1 : 0) + // select column
+                          (resourceDefinition.expandible ? 1 : 0) + // expand icon column
+                        (resourceDefinition.tags ? 1 : 0); //tags column
 
   const onClick = event => {
     if(!resourceDefinition.expandible)
@@ -403,15 +414,15 @@ const ExpandibleRow = props => {
                 <PublicIcon fontSize='small' />
               </Tooltip>
             }
-          <Tooltip title='Copy URL'>
-            <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary' style={showPublicIndicator ? {padding: '10px'} : {}}>
-              <CopyIcon fontSize="inherit" />
-            </IconButton>
-          </Tooltip>
+            <Tooltip title='Copy URL'>
+              <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary' style={showPublicIndicator ? {padding: '10px'} : {}}>
+                <CopyIcon fontSize="inherit" />
+              </IconButton>
+            </Tooltip>
           </span>
         </TableCell>
         {
-          props.isSelecteable &&
+          props.isSelectable &&
           <TableCell>
             <Checkbox checked={props.isSelected} onChange={onCheckboxClick} />
           </TableCell>
@@ -424,16 +435,19 @@ const ExpandibleRow = props => {
           ))
         }
         {
-          !props.isSelecteable &&
+          !props.isSelectable &&
           <TableCell align='center' style={{width: '120px', padding: '2px'}}>
             {
               map(resourceDefinition.tags, tag => (
-                <Chip
-                  key={tag.label}
-                  size='small' label={`${get(item, tag.value, '0')} ${tag.label}`} color='primary'
-                  variant='outlined'
-                  style={{fontSize: '12px', width: '100%', marginTop: '2px'}}
-                />
+                <Link to={window.location.hash}>
+                <div key={tag.id} style={{lineHeight: '10px', marginBottom: '5px'}}>
+                  <div className='flex-vertical-center' style={{fontSize: '11px'}}>
+                    <span>{tag.icon}</span>
+                    <span>{tag.label}</span>
+                  </div>
+                  <div style={{fontSize: '14px'}}>{`${get(item, tag.value, '0')}`}</div>
+                </div>
+                </Link>
               ))
             }
           </TableCell>
@@ -513,7 +527,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
   const [selectedList, setSelectedList] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
-  const isSelecteable = includes(['concepts', 'mappings'], resource);
+  const isSelectable = includes(['concepts', 'mappings'], resource);
 
   const onAllSelect = event => {
     if(event.target.checked)
@@ -567,7 +581,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                 <TableRow>
                   <TableCell />
                   {
-                    isSelecteable &&
+                    isSelectable &&
                     <TableCell>
                       <Checkbox style={{color: theadTextColor}} onChange={onAllSelect} />
                     </TableCell>
@@ -599,7 +613,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                     })
                   }
                   {
-                    !isSelecteable &&
+                    !isSelectable &&
                     <TableCell />
                   }
                   {
@@ -618,7 +632,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                       resourceDefinition={resourceDefinition}
                       isSelected={includes(selectedList, item.id)}
                       onSelectChange={updateSelected}
-                      isSelecteable={isSelecteable}
+                      isSelectable={isSelectable}
                     />
                   ))
                 }
