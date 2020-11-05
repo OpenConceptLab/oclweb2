@@ -105,6 +105,11 @@ const RESOURCE_DEFINITIONS = {
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
     ],
+    tags: [
+      {id: 'members', value: 'members', label: 'Members'},
+      {id: 'sources', value: 'public_sources', label: 'Public Sources'},
+      {id: 'collections', value: 'public_collections', label: 'Public Collections'},
+    ],
     expandible: false,
   },
   users: {
@@ -114,6 +119,11 @@ const RESOURCE_DEFINITIONS = {
       {id: 'username', label: 'Username', value: 'username', sortOn: 'username', renderer: user => <OwnerChip ownerType='user' owner={user.username} />},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'createdOn', label: 'Joined On', value: 'created_on', formatter: formatDate, sortOn: 'date_joined'},
+    ],
+    tags: [
+      {id: 'orgs', value: 'orgs', label: 'Organization Membership'},
+      {id: 'sources', value: 'public_sources', label: 'Public Sources'},
+      {id: 'collections', value: 'public_collections', label: 'Public Collections'},
     ],
     expandible: false,
   },
