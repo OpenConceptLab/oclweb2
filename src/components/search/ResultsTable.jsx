@@ -28,13 +28,13 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, getIndirectMappings, getDirectMappings, toFullAPIURL
+  formatDate, formatDateTime, toFullAPIURL
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
-import NestedMappingsTable from '../mappings/NestedMappingsTable';
+import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 
 const TAG_ICON_STYLES = {width: '11px', marginRight: '2px'}
@@ -143,44 +143,6 @@ const getValue = (item, column) => {
   if(get(column, 'renderer'))
     return column.renderer(item)
   return value
-}
-
-const getMappingsHeader = (mappings, isDirect) => {
-  const count = mappings.length;
-  const label = `${isDirect ? 'Direct' : 'Inverse'} Mappings (${count})`
-  return label;
-}
-
-const MappingsTable = ({ mappings, concept }) => {
-  const directMappings = getDirectMappings(mappings, concept);
-  const indirectMappings = getIndirectMappings(mappings, concept);
-  const directMappingsHeader = getMappingsHeader(directMappings, true);
-  const indirectMappingsHeader = getMappingsHeader(indirectMappings);
-  const zeroMappings = isEmpty(mappings);
-
-  const getMappingsDom = (mappings, header) => {
-    const isPresent = !isEmpty(mappings);
-    return (
-      <div className='col-sm-6' style={
-        (isPresent || zeroMappings) ? {marginBottom: '10px'} : {}
-      }>
-        <h4 style={{background: 'lightgray', padding: "10px", marginTop: '10px', marginBottom: '0px'}}>
-          { header }
-        </h4>
-        {
-          isPresent &&
-          <NestedMappingsTable mappings={mappings} />
-        }
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      { getMappingsDom(directMappings, directMappingsHeader) }
-      { getMappingsDom(indirectMappings, indirectMappingsHeader) }
-    </div>
-  );
 }
 
 const HistoryTable = ({ versions }) => {
@@ -325,6 +287,16 @@ const ExpandibleRow = props => {
     })
   }
 
+  const onRowClick = event => {
+    if(props.resource === 'concepts' && item.url) {
+      event.stopPropagation();
+      event.preventDefault()
+      window.open('#' + item.url, '_blank')
+    } else {
+      onClick(event);
+    }
+  }
+
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
@@ -405,7 +377,7 @@ const ExpandibleRow = props => {
       <TableRow
         hover
         style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
-        onClick={onClick}>
+        onClick={onRowClick}>
         <TableCell align={showPublicIndicator ? 'right' : 'center'}>
           <span className='flex-vertical-center'>
             {
@@ -481,7 +453,7 @@ const ExpandibleRow = props => {
                   {
                     tab === resourceDefinition.tabs.indexOf('Mappings') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <MappingsTable mappings={mappings} concept={item.id}/>
+                      <AllMappingsTables mappings={mappings} concept={item.id}/>
                     </div>
                   }
                   {

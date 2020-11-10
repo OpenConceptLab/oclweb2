@@ -1,7 +1,8 @@
 import React from 'react';
-import { CircularProgress, Tabs, Tab } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import APIService from '../../services/APIService';
 import ConceptHomeHeader from './ConceptHomeHeader';
+import ConceptHomeTabs from './ConceptHomeTabs';
 
 class ConceptHome extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class ConceptHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.props.location.pathname)
-                .get()
+                .get(null, null, {includeInverseMappings: true})
                 .then(response => {
                   this.setState({isLoading: false, concept: response.data})
                 })
@@ -47,18 +48,7 @@ class ConceptHome extends React.Component {
           <CircularProgress color='primary' /> :
           <div className='col-md-12 home-container no-side-padding'>
             <ConceptHomeHeader concept={concept} />
-            <div className='col-md-12 sub-tab'>
-              <Tabs indicatorColor='none' className='sub-tab-header' value={tab} onChange={this.onTabChange} aria-label="concept-home-tabs">
-                <Tab label="Details" />
-                <Tab label="Mappings" />
-                <Tab label="History" />
-              </Tabs>
-              <div className='sub-tab-container'>
-                {tab === 0 && <span>Details</span>}
-                {tab === 1 && <span>Mappings</span>}
-                {tab === 2 && <span>History</span>}
-              </div>
-            </div>
+            <ConceptHomeTabs tab={tab} onChange={this.onTabChange} concept={concept} />
           </div>
         }
       </div>

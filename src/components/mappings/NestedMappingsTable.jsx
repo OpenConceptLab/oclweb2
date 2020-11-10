@@ -41,7 +41,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
                       icon={
                         <ForwardIcon
                           fontSize='small'
-                                    color='default'
+                                    color='inherit'
                                     style={{
                                       border: '1px solid', borderRadius: '10px',
                                       background: 'black', color: 'white',
