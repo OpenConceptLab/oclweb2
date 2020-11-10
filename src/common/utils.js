@@ -31,5 +31,3 @@ export const toFullAPIURL = uri => {
   const APIURL = window.API_URL || process.env.API_URL;
   return APIURL + uri;
 }
-
-
