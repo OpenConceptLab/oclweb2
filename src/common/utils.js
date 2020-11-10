@@ -1,3 +1,4 @@
+/*eslint no-process-env: 0*/
 import moment from 'moment';
 import { filter } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
@@ -25,4 +26,10 @@ export const getDirectMappings = (mappings, concept) => {
 export const toFullURL = uri => {
   return window.location.origin + '/#' + uri;
 }
+export const toFullAPIURL = uri => {
+  /*eslint no-undef: 0*/
+  const APIURL = window.API_URL || process.env.API_URL;
+  return APIURL + uri;
+}
+
 

@@ -28,7 +28,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, getIndirectMappings, getDirectMappings, toFullURL
+  formatDate, formatDateTime, getIndirectMappings, getDirectMappings, toFullAPIURL
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
@@ -386,7 +386,7 @@ const ExpandibleRow = props => {
     event.stopPropagation();
     event.preventDefault();
     if(item.url) {
-      navigator.clipboard.writeText(toFullURL(item.url));
+      navigator.clipboard.writeText(toFullAPIURL(item.url));
       alertifyjs.success('Copied URL to clipboard!')
     }
   }
