@@ -211,3 +211,11 @@ td.pagination-center {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0);
     background-repeat: repeat-x;
 }
+div.bottom-fixed-center {
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid lightgray;
+}

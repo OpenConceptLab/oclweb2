@@ -29,7 +29,7 @@ const theme = createMuiTheme({
       main: BLACK,
       dark: BLACK,
       light: BLACK,
-      contrastText: BLACK,
+      contrastText: WHITE,
     },
   },
 });

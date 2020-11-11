@@ -4,7 +4,7 @@ import moment from 'moment';
 import SearchInput from './SearchInput';
 import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
-import { get, cloneDeep, merge, forEach, includes } from 'lodash';
+import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
@@ -18,6 +18,8 @@ import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import ChipDatePicker from '../common/ChipDatePicker';
+import FilterButton from '../common/FilterButton';
+import FilterDrawer from '../common/FilterDrawer';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
 const resourceResultStruct = {
@@ -46,6 +48,8 @@ class Search extends React.Component {
       isLoading: false,
       sortParams: {sortDesc: 'last_update'},
       limit: DEFAULT_LIMIT,
+      openFacetsDrawer: false,
+      appliedFacets: {},
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -150,6 +154,18 @@ class Search extends React.Component {
     return get(results, `${resource}.total`, 0)
   }
 
+  getFacetQueryParam() {
+    const { appliedFacets } = this.state;
+    const queryParam = {}
+    forEach(
+      appliedFacets, (value, field) => {
+        queryParam[field] = keys(pickBy(value, Boolean)).join(',')
+      }
+    )
+
+    return queryParam
+  }
+
   fetchNewResults(attrsToSet, counts=true, resetItems=true) {
     if(!attrsToSet)
       attrsToSet = {}
@@ -168,7 +184,9 @@ class Search extends React.Component {
     this.setState(newState, () => {
       const { resource, searchStr, page, exactMatch, sortParams, updatedSince, limit } = this.state;
       const queryParams = {
-        q: searchStr, page: page, exact_match: exactMatch, limit: limit, verbose: includes(['sources', 'collections', 'organizations', 'users'], resource)
+        q: searchStr, page: page, exact_match: exactMatch, limit: limit,
+        verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
+        ...this.getFacetQueryParam(),
       };
       if(updatedSince)
         queryParams['updatedSince'] = updatedSince
@@ -234,11 +252,14 @@ class Search extends React.Component {
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const totalResults = this.getCurrentResourceTotalResults();
-    const { updatedSince, limit } = this.state;
+    const { updatedSince, limit, appliedFacets } = this.state;
     return (
       <span style={{display: 'inline-flex'}}>
         <span style={{paddingRight: '5px'}}>
           <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
+        </span>
+        <span style={{paddingRight: '5px'}}>
+          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} />
         </span>
         {
           !this.isTable && <span style={{paddingRight: '5px'}}>
@@ -256,8 +277,22 @@ class Search extends React.Component {
     this.fetchNewResults({limit: limit}, false, true)
   }
 
+  toggleFacetsDrawer = () => {
+    this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
+  }
+
+  onCloseFacetsDrawer = () => {
+    this.setState({openFacetsDrawer: false})
+  }
+
+  onApplyFacets = filters => {
+    this.setState({appliedFacets: filters}, () => this.fetchNewResults(null, true, true))
+  }
+
   render() {
-    const { resource, results, isLoading, limit, sortParams } = this.state;
+    const {
+      resource, results, isLoading, limit, sortParams, openFacetsDrawer,
+    } = this.state;
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
@@ -295,7 +330,7 @@ class Search extends React.Component {
             <div style={{marginTop: '100px', textAlign: 'center'}}>
               <CircularProgress style={{color: BLUE}}/>
             </div> :
-            <div className='col-sm-12 no-side-padding' style={{marginTop: '10px'}}>
+            <div className='col-sm-12 no-side-padding' style={{marginTop: '5px'}}>
               {
                 this.isInfinite &&
                 <ResultsInfinite resource={resource} results={resourceResults} onLoadMore={this.loadMore} />
@@ -311,6 +346,7 @@ class Search extends React.Component {
             </div>
           }
         </div>
+        <FilterDrawer open={openFacetsDrawer} onClose={this.onCloseFacetsDrawer} filters={get(results[resource], 'facets.fields', {})} onApply={this.onApplyFacets} />
       </div>
     );
   }
