@@ -252,14 +252,15 @@ class Search extends React.Component {
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const totalResults = this.getCurrentResourceTotalResults();
-    const { updatedSince, limit, appliedFacets } = this.state;
+    const { updatedSince, limit, appliedFacets, resource } = this.state;
+    const isDisabledFilters = includes(['organizations', 'users'], resource);
     return (
       <span style={{display: 'inline-flex'}}>
         <span style={{paddingRight: '5px'}}>
           <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
         </span>
         <span style={{paddingRight: '5px'}}>
-          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} />
+          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} />
         </span>
         {
           !this.isTable && <span style={{paddingRight: '5px'}}>

@@ -4,7 +4,7 @@ import {
   FilterList as FilterListIcon,
 } from '@material-ui/icons';
 
-const FilterButton = ({tooltipTitle, label, count, onClick}) => {
+const FilterButton = ({tooltipTitle, label, count, disabled, onClick}) => {
   const hasFilters = count && count > 0;
   const color = hasFilters ? 'primary' : 'secondary';
   const buttonLabel = (label || 'Filters') + (hasFilters ? ` (${count})` : '');
@@ -18,6 +18,7 @@ const FilterButton = ({tooltipTitle, label, count, onClick}) => {
         icon={<FilterListIcon fontSize='small' />}
         label={buttonLabel}
         style={{minWidth: '100px'}}
+        disabled={disabled}
       />
     </Tooltip>
   )
