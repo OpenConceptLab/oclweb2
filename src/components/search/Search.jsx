@@ -290,6 +290,10 @@ class Search extends React.Component {
     this.setState({appliedFacets: filters}, () => this.fetchNewResults(null, true, true))
   }
 
+  areRetiredIncluded() {
+    return Boolean(get(this.state.appliedFacets, 'includeRetired', false))
+  }
+
   render() {
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer,
@@ -347,7 +351,13 @@ class Search extends React.Component {
             </div>
           }
         </div>
-        <FilterDrawer open={openFacetsDrawer} onClose={this.onCloseFacetsDrawer} filters={get(results[resource], 'facets.fields', {})} onApply={this.onApplyFacets} />
+        <FilterDrawer
+          open={openFacetsDrawer}
+          defaultIncludeRetired={this.areRetiredIncluded()}
+          onClose={this.onCloseFacetsDrawer}
+          filters={get(results[resource], 'facets.fields', {})}
+          onApply={this.onApplyFacets}
+        />
       </div>
     );
   }

@@ -47,7 +47,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
-      {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name'},
+      {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name', renderer: concept => (concept.retired ? <span className='retired'>{concept.display_name}</span> : <span>{concept.display_name}</span>)},
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},

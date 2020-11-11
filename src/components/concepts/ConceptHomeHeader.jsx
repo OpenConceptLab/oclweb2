@@ -9,6 +9,7 @@ import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 
 const ConceptHomeHeader = ({concept}) => {
+  const isRetired = concept.retired;
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
@@ -21,10 +22,10 @@ const ConceptHomeHeader = ({concept}) => {
             <span className='separator'>/</span>
             <SourceButton label={concept.source} onClick={() => {}} />
             <span className='separator'>/</span>
-            <ConceptButton label={concept.id} onClick={() => {}} />
+            <ConceptButton label={concept.id} retired={isRetired} onClick={() => {}} />
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <span style={{marginRight: '10px'}}>
+            <span style={{marginRight: '10px'}} className={isRetired && 'retired'}>
               {concept.display_name}
             </span>
             <span className='gray-italics-small'>
