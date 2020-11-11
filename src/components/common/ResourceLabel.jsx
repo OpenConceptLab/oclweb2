@@ -13,7 +13,7 @@ const ResourceLabel = props => {
         <span className='resource-name'>{props.id || props.name}</span>
       </span>
       <span className='resource-label resource-id'>
-        <span>{props.name}</span>
+        <span>{props.name || 'None'}</span>
       </span>
     </div>
   )

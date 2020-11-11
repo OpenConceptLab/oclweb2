@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import ConceptHomeDetails from './ConceptHomeDetails';
+import ConceptHomeMappings from './ConceptHomeMappings';
 
 const ConceptHomeTabs = props => {
   const { tab, onChange, concept } = props;
@@ -12,9 +13,9 @@ const ConceptHomeTabs = props => {
         <Tab label="History" />
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex'}}>
-        {tab === 0 && <ConceptHomeDetails concept={concept} />}
-        {tab === 1 && <span>Mappings</span>}
-        {tab === 2 && <span>History</span>}
+        { tab === 0 && <ConceptHomeDetails concept={concept} /> }
+        { tab === 1 && <ConceptHomeMappings concept={concept} /> }
+        { tab === 2 && <span>History</span> }
       </div>
     </div>
   );

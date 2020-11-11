@@ -12,7 +12,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'scroll', display: 'inline-block'
+  maxHeight: '300px', overflow: 'scroll',
 }
 
 const None = () => {
@@ -33,7 +33,6 @@ const ConceptHomeDetails = ({ concept }) => {
             className='light-gray-bg'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
-            id="panel1a-header"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Names & Synonyms</Typography>
           </AccordionSummary>
@@ -52,7 +51,6 @@ const ConceptHomeDetails = ({ concept }) => {
             className='light-gray-bg'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
-            id="panel1a-header"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Descriptions</Typography>
           </AccordionSummary>
@@ -71,7 +69,6 @@ const ConceptHomeDetails = ({ concept }) => {
             className='light-gray-bg'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
-            id="panel1a-header"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Custom Attributes</Typography>
           </AccordionSummary>
@@ -99,13 +96,12 @@ const ConceptHomeDetails = ({ concept }) => {
             className='light-gray-bg'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
-            id="panel1a-header"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Mappings</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
-              isEmpty(indirectMappings) ?
+              isEmpty(directMappings) ?
               None() :
               <NestedMappingsTable mappings={directMappings} />
             }
@@ -116,7 +112,6 @@ const ConceptHomeDetails = ({ concept }) => {
             className='light-gray-bg'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
-            id="panel1a-header"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Inverse Mappings</Typography>
           </AccordionSummary>

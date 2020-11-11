@@ -25,7 +25,7 @@ const ConceptHomeHeader = ({concept}) => {
             <ConceptButton label={concept.id} retired={isRetired} onClick={() => {}} />
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <span style={{marginRight: '10px'}} className={isRetired && 'retired'}>
+            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
               {concept.display_name}
             </span>
             <span className='gray-italics-small'>
