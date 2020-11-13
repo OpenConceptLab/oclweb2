@@ -12,14 +12,14 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'scroll',
+  maxHeight: '300px', overflow: 'scroll', display: 'inline-block', width: '100%',
 }
 
 const None = () => {
   return <div style={{margin: '5px', fontWeight: '300'}}>None</div>
 }
 
-const ConceptHomeDetails = ({ concept }) => {
+const ConceptHomeDetails = ({ concept, currentURL }) => {
   const directMappings = getDirectMappings(concept.mappings, concept.id);
   const indirectMappings = getIndirectMappings(concept.mappings, concept.id);
   const names = get(concept, 'names', [])
@@ -41,7 +41,7 @@ const ConceptHomeDetails = ({ concept }) => {
               isEmpty(names) ?
               None() :
               map(names, name => (
-                <ConceptDetailsLocale locale={name} key={name.uuid} />
+                <ConceptDetailsLocale locale={name} key={name.uuid} url={`${currentURL}names/${name.uuid}/`} />
               ))
             }
           </AccordionDetails>
@@ -59,7 +59,7 @@ const ConceptHomeDetails = ({ concept }) => {
               isEmpty(descriptions) ?
               None() :
               map(descriptions, description => (
-                <ConceptDetailsLocale locale={description} isDescription={true} key={description.uuid} />
+                <ConceptDetailsLocale locale={description} isDescription={true} key={description.uuid} url={`${currentURL}descriptions/${description.uuid}/`} />
               ))
             }
           </AccordionDetails>

@@ -11,7 +11,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'scroll', display: 'inline-block'
+  maxHeight: '300px', overflow: 'scroll', display: 'inline-block', width: '100%'
 }
 
 const None = () => {
@@ -36,7 +36,7 @@ const ConceptHomeMappings = ({ concept }) => {
               isEmpty(mappingsDistribution) ?
               None() :
               map(mappingsDistribution, (mappings, category) => (
-                <div className='col-md-12 no-side-padding'>
+                <div className='col-md-12 no-side-padding' key={category}>
                   <div className='col-md-12'>
                     <div className='col-md-2 no-left-padding text-muted small' style={{paddingTop: '15px'}}>
                       {category}
@@ -44,7 +44,7 @@ const ConceptHomeMappings = ({ concept }) => {
                     <div className='col-md-10 no-right-padding'>
                       {
                         map(mappings, (mapping, index) => (
-                          <div className='col-md-12 no-side-padding'>
+                          <div className='col-md-12 no-side-padding' key={index}>
                             <Mapping key={mapping.uuid} {...mapping} conceptContext={concept.id} />
                             {
                               (index + 1) < mappings.length &&

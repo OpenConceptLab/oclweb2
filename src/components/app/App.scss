@@ -136,6 +136,10 @@ td.pagination-center {
 .home-icon {
     width: 48px;
     color: #e5e5e5;
+    cursor: pointer;
+    &.concept {
+        color:  rgb(51, 115, 170)
+    }
     svg {
         font-size: 32pt;
         width: 48px;

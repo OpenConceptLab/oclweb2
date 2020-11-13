@@ -2,9 +2,10 @@ import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import ConceptHomeDetails from './ConceptHomeDetails';
 import ConceptHomeMappings from './ConceptHomeMappings';
+import ConceptHomeVersions from './ConceptHomeVersions';
 
 const ConceptHomeTabs = props => {
-  const { tab, onChange, concept } = props;
+  const { tab, onChange, concept, versions, currentURL } = props;
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header' value={tab} onChange={onChange} aria-label="concept-home-tabs" indicatorColor='none'>
@@ -13,9 +14,9 @@ const ConceptHomeTabs = props => {
         <Tab label="History" />
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex'}}>
-        { tab === 0 && <ConceptHomeDetails concept={concept} /> }
+        { tab === 0 && <ConceptHomeDetails concept={concept} currentURL={currentURL} /> }
         { tab === 1 && <ConceptHomeMappings concept={concept} /> }
-        { tab === 2 && <span>History</span> }
+        { tab === 2 && <ConceptHomeVersions versions={versions} /> }
       </div>
     </div>
   );

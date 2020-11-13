@@ -1,4 +1,5 @@
 /*eslint no-process-env: 0*/
+import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import { filter, difference } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
@@ -80,4 +81,11 @@ export const toFullAPIURL = uri => {
   /*eslint no-undef: 0*/
   const APIURL = window.API_URL || process.env.API_URL;
   return APIURL + uri;
+}
+
+export const copyURL = url => {
+  if(url) {
+    navigator.clipboard.writeText(url);
+    alertifyjs.success('Copied URL to clipboard!')
+  }
 }

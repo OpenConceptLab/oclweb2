@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import alertifyjs from 'alertifyjs';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
@@ -28,7 +27,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, toFullAPIURL
+  formatDate, formatDateTime, toFullAPIURL, copyURL,
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
@@ -357,10 +356,8 @@ const ExpandibleRow = props => {
   const onCopyClick = event => {
     event.stopPropagation();
     event.preventDefault();
-    if(item.url) {
-      navigator.clipboard.writeText(toFullAPIURL(item.url));
-      alertifyjs.success('Copied URL to clipboard!')
-    }
+    if(item.url)
+      copyURL(toFullAPIURL(item.url))
   }
 
   const getTab = label => {

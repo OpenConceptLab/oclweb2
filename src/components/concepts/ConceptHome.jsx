@@ -10,7 +10,8 @@ class ConceptHome extends React.Component {
     this.state = {
       isLoading: true,
       concept: {},
-      tab: 0,
+      versions: [],
+      tab: this.getDefaultTabIndex(),
     }
   }
 
@@ -19,36 +20,91 @@ class ConceptHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname)
+    if(prevProps.location.pathname !== this.props.location.pathname) {
       this.refreshDataByURL()
+      this.onTabChange(null, this.getDefaultTabIndex())
+    }
+  }
+
+  getDefaultTabIndex() {
+    const { location } = this.props;
+
+    if(location.pathname.indexOf('/mappings') > -1)
+      return 1;
+    if(location.pathname.indexOf('/history') > -1)
+      return 2;
+
+    return 0;
+  }
+
+  getConceptURLFromPath() {
+    const { location, match } = this.props;
+    if(location.pathname.indexOf('/history') > -1)
+      return location.pathname.split('/history')[0] + '/'
+    if(location.pathname.indexOf('/mappings') > -1)
+      return location.pathname.split('/mappings')[0] + '/'
+    if(match.params.conceptVersion)
+      return location.pathname.split('/').slice(0, 8).join('/') + '/';
+    return this.getVersionedObjectURLFromPath();
+  }
+
+  getVersionedObjectURLFromPath() {
+    const { location } = this.props;
+
+    return location.pathname.split('/').slice(0, 7).join('/') + '/';
   }
 
   refreshDataByURL() {
     this.setState({isLoading: true}, () => {
       APIService.new()
-                .overrideURL(this.props.location.pathname)
+                .overrideURL(this.getConceptURLFromPath())
                 .get(null, null, {includeInverseMappings: true})
                 .then(response => {
-                  this.setState({isLoading: false, concept: response.data})
+                  this.setState({isLoading: false, concept: response.data}, () => {
+                    if(this.state.tab === 2)
+                      this.getVersions()
+                  })
                 })
 
     })
   }
 
+  getVersions() {
+    APIService.new()
+              .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
+              .get()
+              .then(response => {
+                this.setState({versions: response.data})
+              })
+  }
+
   onTabChange = (event, value) => {
-    this.setState({tab: value})
+    this.setState({tab: value}, () => {
+      if(value === 2)
+        this.getVersions()
+    })
+  }
+
+  isVersionedObject() {
+    return !this.props.match.params.conceptVersion
   }
 
   render() {
-    const { concept, isLoading, tab } = this.state;
+    const { concept, versions, isLoading, tab } = this.state;
+    const currentURL = this.getConceptURLFromPath()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
           isLoading ?
           <CircularProgress color='primary' /> :
           <div className='col-md-12 home-container no-side-padding'>
-            <ConceptHomeHeader concept={concept} />
-            <ConceptHomeTabs tab={tab} onChange={this.onTabChange} concept={concept} />
+            <ConceptHomeHeader
+              concept={concept}
+              isVersionedObject={this.isVersionedObject()}
+              versionedObjectURL={this.getVersionedObjectURLFromPath()}
+              currentURL={currentURL}
+            />
+            <ConceptHomeTabs tab={tab} onChange={this.onTabChange} concept={concept} versions={versions} currentURL={currentURL} />
           </div>
         }
       </div>

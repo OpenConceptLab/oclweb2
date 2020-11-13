@@ -2,19 +2,27 @@ import React from 'react';
 import {
   LocalOffer as LocalOfferIcon
 } from '@material-ui/icons';
+import { Tooltip } from '@material-ui/core';
+import { toFullAPIURL, copyURL } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import ConceptButton from '../common/ConceptButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 
-const ConceptHomeHeader = ({concept}) => {
+const ConceptHomeHeader = ({concept, isVersionedObject, versionedObjectURL, currentURL}) => {
   const isRetired = concept.retired;
+  const onIconClick = () => {
+    copyURL(toFullAPIURL(currentURL))
+  }
+
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon'>
-          <LocalOfferIcon />
+        <div className='no-side-padding col-md-1 home-icon concept'>
+          <Tooltip title='Copy URL'>
+            <LocalOfferIcon onClick={onIconClick} />
+          </Tooltip>
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -22,7 +30,12 @@ const ConceptHomeHeader = ({concept}) => {
             <span className='separator'>/</span>
             <SourceButton label={concept.source} onClick={() => {}} />
             <span className='separator'>/</span>
-            <ConceptButton label={concept.id} retired={isRetired} onClick={() => {}} />
+            <ConceptButton label={concept.id} retired={isRetired} href={`#${versionedObjectURL}`} />
+
+            {
+              !isVersionedObject &&
+              <span style={{marginLeft: '10px'}}>[{concept.version}]</span>
+            }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
             <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
