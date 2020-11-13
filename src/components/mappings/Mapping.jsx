@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Link as LinkIcon,
   LocalOffer as LocalOfferIcon
@@ -54,7 +55,15 @@ const Mapping = props => {
           From:
         </div>
         <div className='col-sm-11 no-side-padding'>
-          {fromConceptLabel}
+          {
+            props.from_concept_url ?
+            <Link to={props.from_concept_url}>
+              {fromConceptLabel}
+            </Link> :
+            <span>
+              {fromConceptLabel}
+            </span>
+          }
         </div>
       </div>
       <div className='col-sm-12 no-left-padding' style={{margin: '0px 5px 5px 5px'}}>
@@ -62,7 +71,15 @@ const Mapping = props => {
           To:
         </div>
         <div className='col-sm-11 no-side-padding'>
-          {toConceptLabel}
+          {
+            props.to_concept_url ?
+            <Link to={props.to_concept_url}>
+              {toConceptLabel}
+            </Link> :
+            <span>
+              {toConceptLabel}
+            </span>
+          }
         </div>
       </div>
       <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '5px'}}>

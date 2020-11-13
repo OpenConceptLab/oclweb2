@@ -22,7 +22,7 @@ const ConceptHomeMappings = ({ concept }) => {
   const mappingsDistribution = omitBy(getMappingsDistributionByMapType(concept.mappings, concept.id), isEmpty);
   return (
     <div className='col-md-12'>
-      <div className='col-md-8'>
+      <div className='col-md-8 no-left-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg'
@@ -62,7 +62,7 @@ const ConceptHomeMappings = ({ concept }) => {
           </AccordionDetails>
         </Accordion>
       </div>
-      <div className='col-md-4'>
+      <div className='col-md-4 no-right-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg'

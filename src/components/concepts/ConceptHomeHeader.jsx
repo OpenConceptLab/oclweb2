@@ -7,6 +7,7 @@ import { toFullAPIURL, copyURL } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import ConceptButton from '../common/ConceptButton';
+import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 
@@ -34,7 +35,11 @@ const ConceptHomeHeader = ({concept, isVersionedObject, versionedObjectURL, curr
 
             {
               !isVersionedObject &&
-              <span style={{marginLeft: '10px'}}>[{concept.version}]</span>
+              <React.Fragment>
+                <span className='separator'>/</span>
+
+                <VersionButton label={concept.version} retired={isRetired} href={`#${currentURL}`} />
+              </React.Fragment>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>

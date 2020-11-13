@@ -13,7 +13,7 @@ const ConceptHomeTabs = props => {
         <Tab label="Mappings" />
         <Tab label="History" />
       </Tabs>
-      <div className='sub-tab-container' style={{display: 'flex'}}>
+      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         { tab === 0 && <ConceptHomeDetails concept={concept} currentURL={currentURL} /> }
         { tab === 1 && <ConceptHomeMappings concept={concept} /> }
         { tab === 2 && <ConceptHomeVersions versions={versions} /> }

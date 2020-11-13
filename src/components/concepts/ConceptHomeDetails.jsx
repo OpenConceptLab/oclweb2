@@ -27,7 +27,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
   const extras = get(concept, 'extras', {});
   return (
     <div className='col-md-12'>
-      <div className='col-md-6'>
+      <div className='col-md-6 no-left-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg'
@@ -90,7 +90,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
           </AccordionDetails>
         </Accordion>
       </div>
-      <div className='col-md-6'>
+      <div className='col-md-6 no-right-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg'
