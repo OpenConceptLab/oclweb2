@@ -19,7 +19,7 @@ const FromConceptLabel = props => {
   return (
     <React.Fragment>
       {
-        props.from_concept_url ?
+        !props.noRedirect && props.from_concept_url ?
         <Link to={props.from_concept_url} style={{display: 'inline-block'}}>{labelComponent}</Link>:
         <span>{labelComponent}</span>
       }
