@@ -27,7 +27,7 @@ const Mapping = props => {
 
   return (
     <div className='col-sm-12 no-side-padding' style={{paddingTop: '10px'}}>
-      <Link to={props.url}>
+      <Link to={props.url} style={{display: 'inline-block'}}>
         <ResourceLabel
           owner={props.owner} parent={props.source} id={props.id} name={props.map_type}
           icon={<LinkIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}

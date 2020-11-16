@@ -20,7 +20,7 @@ const FromConceptLabel = props => {
     <React.Fragment>
       {
         props.from_concept_url ?
-        <Link to={props.from_concept_url}>{labelComponent}</Link>:
+        <Link to={props.from_concept_url} style={{display: 'inline-block'}}>{labelComponent}</Link>:
         <span>{labelComponent}</span>
       }
     </React.Fragment>
