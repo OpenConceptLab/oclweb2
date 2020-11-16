@@ -61,9 +61,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
-      {id: 'from', label: 'From Concept', renderer: (mapping) => <FromConceptLabel {...mapping} />},
+      {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabel {...mapping} />},
       {id: 'mapType', label: 'Map Type', value: 'map_type', sortOn: 'map_type'},
-      {id: 'to', label: 'To Concept', renderer: (mapping) => <ToConceptLabel {...mapping} />},
+      {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabel {...mapping} />},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ],
     tabs: ['History',],
@@ -287,7 +287,7 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(props.resource === 'concepts' && item.url) {
+    if(includes(['concepts', 'mappings'], props.resource) && item.url) {
       event.stopPropagation();
       event.preventDefault()
       window.open('#' + item.url, '_blank')

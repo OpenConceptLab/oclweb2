@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import {Event as EventIcon} from '@material-ui/icons'
+import { DATE_FORMAT } from '../../common/constants'
 
 const STYLES = {
   medium: {
@@ -25,7 +26,7 @@ const LastUpdatedOnLabel = props => {
         <EventIcon style={styles.icon} />
       </span>
       <span>
-        {mainLabel} on {moment(props.date).format('MM/DD/YYYY')} {byLabel}
+        {mainLabel} on {moment(props.date).format(DATE_FORMAT)} {byLabel}
       </span>
     </div>
   )

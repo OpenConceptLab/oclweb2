@@ -3,11 +3,11 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton
 } from '@material-ui/core';
-import { map, isEmpty, } from 'lodash';
+import { map, isEmpty, startCase} from 'lodash';
 import {
   ExpandMore as ExpandMoreIcon, Search as SearchIcon
 } from '@material-ui/icons';
-import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
+import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -20,7 +20,7 @@ const None = () => {
   return <div style={{margin: '5px', fontWeight: '300'}}>None</div>
 }
 
-const ConceptHomeVersions = ({ versions }) => {
+const VersionList = ({ versions, resource }) => {
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-left-padding'>
@@ -30,7 +30,7 @@ const ConceptHomeVersions = ({ versions }) => {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Conept Version History</Typography>
+            <Typography style={ACCORDIAN_HEADING_STYLES}>{`${startCase(resource)} Version History`}</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
@@ -82,8 +82,9 @@ const ConceptHomeVersions = ({ versions }) => {
             <Typography style={ACCORDIAN_HEADING_STYLES}>Tip</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
-            <p className="small">All changes to a concept are automatically saved to its
-						  <strong>Concept Version History</strong>.
+            <p className="small">
+              {`All changes to a ${resource} are automatically saved to its `}
+						  <strong>Mapping Version History</strong>.
             </p>
           </AccordionDetails>
         </Accordion>
@@ -92,4 +93,4 @@ const ConceptHomeVersions = ({ versions }) => {
   );
 }
 
-export default ConceptHomeVersions;
+export default VersionList;

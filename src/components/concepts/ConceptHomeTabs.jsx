@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import ConceptHomeDetails from './ConceptHomeDetails';
 import ConceptHomeMappings from './ConceptHomeMappings';
-import ConceptHomeVersions from './ConceptHomeVersions';
+import VersionList from '../common/VersionList';
 
 const ConceptHomeTabs = props => {
   const { tab, onChange, concept, versions, currentURL } = props;
@@ -16,7 +16,7 @@ const ConceptHomeTabs = props => {
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         { tab === 0 && <ConceptHomeDetails concept={concept} currentURL={currentURL} /> }
         { tab === 1 && <ConceptHomeMappings concept={concept} /> }
-        { tab === 2 && <ConceptHomeVersions versions={versions} /> }
+        { tab === 2 && <VersionList versions={versions} resource='concept' /> }
       </div>
     </div>
   );

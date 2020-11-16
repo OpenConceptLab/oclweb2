@@ -11,11 +11,11 @@ import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 
-const ConceptHomeHeader = ({concept, isVersionedObject, versionedObjectURL, currentURL}) => {
+const ConceptHomeHeader = ({
+  concept, isVersionedObject, versionedObjectURL, currentURL
+}) => {
   const isRetired = concept.retired;
-  const onIconClick = () => {
-    copyURL(toFullAPIURL(currentURL))
-  }
+  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
 
   return (
     <header className='home-header col-md-12'>
@@ -85,10 +85,7 @@ const ConceptHomeHeader = ({concept, isVersionedObject, versionedObjectURL, curr
             {
               concept.external_id &&
               <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                <ExternalIdLabel
-                  externalId={concept.external_id}
-                  iconSize='medium'
-                />
+                <ExternalIdLabel externalId={concept.external_id} iconSize='medium' />
               </span>
             }
           </div>
