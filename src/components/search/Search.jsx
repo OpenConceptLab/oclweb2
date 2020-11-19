@@ -69,20 +69,23 @@ class Search extends React.Component {
 
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(this.props.location.search)
+    const fixedFilters = this.props.fixedFilters;
     this.isInfinite = queryParams.get('isInfinite', false)
-    this.isTable = queryParams.get('isTable', false)
+    this.isTable = queryParams.get('isTable') || get(fixedFilters, 'isTable');
     this.setState({
-      resource: queryParams.get('type') || 'concepts',
+      resource: queryParams.get('type') || this.props.resource || 'concepts',
       page: queryParams.get('page') || 1,
       isLoading: true,
       searchStr: queryParams.get('q') || '',
       exactMatch: queryParams.get('exactMatch') || 'off',
-      limit: parseInt(queryParams.get('limit')) || DEFAULT_LIMIT,
+      limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
     }, this.fetchNewResults)
   }
 
   componentDidUpdate(prevProps) {
     if(prevProps.location.search !== this.props.location.search)
+      this.setQueryParamsInState()
+    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL)
       this.setQueryParamsInState()
   }
 
@@ -202,10 +205,11 @@ class Search extends React.Component {
       fetchSearchResults(
         _resource,
         {...queryParams, ...sortParams},
+        this.props.baseURL,
         null,
         (response) => this.onSearchResultsLoad(resource, response, resetItems)
       )
-      if(counts)
+      if(counts && !this.props.nested)
         fetchCounts(resource, queryParams, this.onCountsLoad)
     })
   }
@@ -262,28 +266,37 @@ class Search extends React.Component {
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const totalResults = this.getCurrentResourceTotalResults();
+    const { nested, extraControls } = this.props;
     const {
       updatedSince, limit, appliedFacets, resource, includeRetired
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
     return (
-      <span style={{display: 'inline-flex'}}>
+      <span style={{display: 'inline-flex', alignItems: 'center'}}>
+        {
+          extraControls &&
+          <span style={{paddingRight: '5px'}}>
+            {
+              extraControls
+            }
+          </span>
+        }
         <span style={{paddingRight: '5px'}}>
-          <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} />
+          <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
         </span>
         <span style={{paddingRight: '5px'}}>
-          <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
+          <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
         </span>
         <span style={{paddingRight: '5px'}}>
-          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' />
+          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
         </span>
         {
           !this.isTable && <span style={{paddingRight: '5px'}}>
-            <SortButton onChange={this.onSortChange} />
+            <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} />
           </span>
         }
         <span>
-          <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} />
+          <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
         </span>
       </span>
     )
@@ -306,18 +319,23 @@ class Search extends React.Component {
   }
 
   render() {
+    const { nested } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer,
     } = this.state;
+    const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-9 no-left-padding';
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
     return (
-      <div className='col-sm-12' style={{paddingTop: '10px'}}>
-        <div className='col-sm-3'>
-          <Resources active={resource} results={results} onClick={this.onResourceChange} />
-        </div>
-        <div className='col-sm-9 no-left-padding'>
+      <div className='col-sm-12' style={nested ? {} : {paddingTop: '10px'}}>
+        {
+          !nested &&
+          <div className='col-sm-3'>
+            <Resources active={resource} results={results} onClick={this.onResourceChange} />
+          </div>
+        }
+        <div className={searchResultsContainerClass}>
           <div className='col-sm-8 no-side-padding' style={{textAlign: 'center'}}>
             <SearchInput
               {...this.props}
@@ -343,7 +361,7 @@ class Search extends React.Component {
           </div>
           {
             isLoading ?
-            <div style={{marginTop: '100px', textAlign: 'center'}}>
+            <div className='col-sm-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center'}}>
               <CircularProgress style={{color: BLUE}}/>
             </div> :
             <div className='col-sm-12 no-side-padding' style={{marginTop: '5px'}}>

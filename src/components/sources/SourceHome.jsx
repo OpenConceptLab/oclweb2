@@ -1,5 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
+import { includes } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
@@ -76,7 +77,7 @@ class SourceHome extends React.Component {
 
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
-      if(value === 3)
+      if(includes([1, 2, 3], value))
         this.getVersions()
     })
   }
@@ -88,7 +89,7 @@ class SourceHome extends React.Component {
                 .get()
                 .then(response => {
                   this.setState({isLoading: false, source: response.data}, () => {
-                    if(this.state.tab === 1)
+                    if(includes([1, 2, 3], this.state.tab))
                       this.getVersions()
                   })
                 })
@@ -103,6 +104,7 @@ class SourceHome extends React.Component {
   render() {
     const { source, versions, isLoading, tab } = this.state;
     const currentURL = this.getURLFromPath()
+    const versionedObjectURL = this.getVersionedObjectURLFromPath()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -112,10 +114,18 @@ class SourceHome extends React.Component {
             <SourceHomeHeader
               source={source}
               isVersionedObject={this.isVersionedObject()}
-              versionedObjectURL={this.getVersionedObjectURLFromPath()}
+              versionedObjectURL={versionedObjectURL}
               currentURL={currentURL}
             />
-            <SourceHomeTabs tab={tab} onChange={this.onTabChange} source={source} versions={versions} />
+            <SourceHomeTabs
+              tab={tab}
+              onChange={this.onTabChange}
+              source={source}
+              versions={versions}
+              location={this.props.location}
+              versionedObjectURL={versionedObjectURL}
+              currentVersion={this.props.match.params.version}
+            />
           </div>
         }
       </div>

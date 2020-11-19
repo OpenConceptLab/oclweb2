@@ -1,5 +1,9 @@
 import React from 'react';
-import { Search as SearchIcon, GpsFixedSharp as SharpIcon } from '@material-ui/icons';
+import {
+  Search as SearchIcon,
+  GpsFixedSharp as SharpIcon,
+  Clear as ClearIcon,
+} from '@material-ui/icons';
 import { InputBase, Divider, IconButton, Tooltip  } from '@material-ui/core';
 import { isAtGlobalSearch } from '../../common/utils';
 
@@ -58,6 +62,10 @@ class SearchInput extends React.Component {
       this.moveToSearchPage()
   }
 
+  clearSearch = () => {
+    this.setState({input: ''}, this.performSearch)
+  }
+
   handleInputChange = event => {
     this.setState({input: event.target.value})
   }
@@ -92,6 +100,14 @@ class SearchInput extends React.Component {
             fullWidth
             onChange={this.handleInputChange}
           />
+          {
+            input &&
+            <Tooltip title='Clear'>
+              <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.clearSearch}>
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          }
           <Tooltip title='Search'>
             <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
               <SearchIcon />

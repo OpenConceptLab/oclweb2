@@ -1,26 +1,30 @@
 import APIService from '../../services/APIService';
 import { without, forEach } from 'lodash';
 
-export const fetchSearchResults = (resource, queryParams, beforeCallback, afterCallback) => {
+export const fetchSearchResults = (resource, queryParams, baseURL, beforeCallback, afterCallback) => {
   if(!resource)
     resource = 'concepts';
 
   if(beforeCallback)
-    beforeCallback(__fetchSearchResults(resource, queryParams, afterCallback));
+    beforeCallback(__fetchSearchResults(resource, queryParams, baseURL, afterCallback));
   else
-    __fetchSearchResults(resource, queryParams, afterCallback);
+    __fetchSearchResults(resource, queryParams, baseURL, afterCallback);
 };
 
-const __fetchSearchResults = (resource, queryParams, callback, method='get') => {
+const __fetchSearchResults = (resource, queryParams, baseURL, callback, method='get') => {
   if(!queryParams)
     queryParams = {};
 
+  const service = APIService[resource]();
+  if(baseURL)
+    service.overrideURL(baseURL);
+
   if(method === 'get')
-  APIService[resource]()
+    service
     .get(null, {INCLUDEFACETS: true}, queryParams)
     .then(response => callback(response, resource));
   if(method === 'head')
-    APIService[resource]()
+    service
     .head(null, {INCLUDEFACETS: true}, queryParams)
     .then(response => callback(response, resource));
 };
@@ -31,6 +35,6 @@ export const fetchCounts = (excludeResource, queryParams, callback) => {
     queryParams = {};
 
   forEach(resources, resource => {
-    __fetchSearchResults(resource, queryParams, callback, 'head')
+    __fetchSearchResults(resource, queryParams, null, callback, 'head')
   });
 }
