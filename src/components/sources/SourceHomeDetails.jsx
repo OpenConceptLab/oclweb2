@@ -1,13 +1,9 @@
 import React from 'react';
-import moment from 'moment';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider
 } from '@material-ui/core';
-import { get } from 'lodash';
-import { DATETIME_FORMAT } from '../../common/constants';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FromConceptLabel from './FromConceptLabel';
-import ToConceptLabel from './ToConceptLabel';
+import { get } from 'lodash';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -17,7 +13,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   display: 'inline-block', width: '100%', textAlign: 'left',
 }
 
-const MappingHomeDetails = ({ mapping }) => {
+const SourceHomeDetails = ({ source }) => {
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-side-padding'>
@@ -27,87 +23,64 @@ const MappingHomeDetails = ({ mapping }) => {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Mapping Details</Typography>
+            <Typography style={ACCORDIAN_HEADING_STYLES}>Source Details</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                ID
+                Description
               </div>
               <div className='col-md-8 no-right-padding'>
-                {mapping.uuid}
+                {source.description}
               </div>
             </div>
             <div className='col-md-12' style={{marginBottom: '5px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                Retired
+                Website
               </div>
               <div className='col-md-8 no-right-padding'>
-                {mapping.retired ? 'True' : 'False'}
+                {source.website}
               </div>
             </div>
             <div className='col-md-12' style={{marginBottom: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                Map Type
+                Public Access
               </div>
               <div className='col-md-8 no-right-padding'>
-                {mapping.map_type}
+                {source.public_access}
               </div>
             </div>
+
             <Divider style={{width: '100%'}} />
+
             <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                From Concept
+                Default Locale
               </div>
               <div className='col-md-8 no-right-padding'>
-                <FromConceptLabel {...mapping} />
-              </div>
-            </div>
-            <div className='col-md-12' style={{marginBottom: '15px'}}>
-              <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                To Concept
-              </div>
-              <div className='col-md-8 no-right-padding'>
-                <ToConceptLabel {...mapping} />
-              </div>
-            </div>
-            <Divider style={{width: '100%'}} />
-            <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
-              <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                Updated By
-              </div>
-              <div className='col-md-8 no-right-padding'>
-                {mapping.updated_by}
+                {source.default_locale}
               </div>
             </div>
             <div className='col-md-12' style={{marginBottom: '5px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                Updated On
+                Supported Locales
               </div>
               <div className='col-md-8 no-right-padding'>
-                {moment(mapping.updated_at).format(DATETIME_FORMAT)}
+                {source.supported_locales.join(', ')}
               </div>
             </div>
-            <div className='col-md-12' style={{marginBottom: '5px'}}>
+            <div className='col-md-12'>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                Created By
+                Custom Validation Schema
               </div>
               <div className='col-md-8 no-right-padding'>
-                {mapping.created_by}
-              </div>
-            </div>
-            <div className='col-md-12' style={{marginBottom: '5px'}}>
-              <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                Created On
-              </div>
-              <div className='col-md-8 no-right-padding'>
-                {moment(mapping.created_at).format(DATETIME_FORMAT)}
+                {source.custom_validation_schema || 'None'}
               </div>
             </div>
           </AccordionDetails>
         </Accordion>
         <CustomAttributesAccordian
-          attributes={get(mapping, 'extras', {})}
+          attributes={get(source, 'extras', {})}
           headingStyles={ACCORDIAN_HEADING_STYLES}
           detailStyles={ACCORDIAN_DETAILS_STYLES}
         />
@@ -116,4 +89,4 @@ const MappingHomeDetails = ({ mapping }) => {
   );
 }
 
-export default MappingHomeDetails;
+export default SourceHomeDetails;

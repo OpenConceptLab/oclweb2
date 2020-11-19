@@ -6,6 +6,7 @@ import { map, get, isEmpty } from 'lodash';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
 import NestedMappingsTable from '../mappings/NestedMappingsTable';
+import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 import { getIndirectMappings, getDirectMappings } from '../../common/utils';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -64,31 +65,11 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
             }
           </AccordionDetails>
         </Accordion>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg'
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Custom Attributes</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
-            {
-              isEmpty(extras) ?
-              None() :
-              map(extras, (value, name) => (
-                <div className='col-md-12' style={{marginBottom: '5px'}} key={name}>
-                  <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
-                    {name}
-                  </div>
-                  <div className='col-md-4 no-right-padding'>
-                    {value}
-                  </div>
-                </div>
-              ))
-            }
-          </AccordionDetails>
-        </Accordion>
+        <CustomAttributesAccordian
+          attributes={extras}
+          headingStyles={ACCORDIAN_HEADING_STYLES}
+          detailStyles={ACCORDIAN_DETAILS_STYLES}
+        />
       </div>
       <div className='col-md-6 no-right-padding'>
         <Accordion defaultExpanded>

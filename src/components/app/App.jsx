@@ -7,6 +7,7 @@ import SearchInput from '../search/SearchInput';
 import Search from '../search/Search';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
+import SourceHome from '../sources/SourceHome';
 import { Link } from 'react-router-dom';
 import { isAtGlobalSearch } from '../../common/utils';
 
@@ -106,6 +107,24 @@ class App extends Component {
             <Route
               path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
               component={MappingHome}
+            />
+
+            { /* Source Details */ }
+            <Route
+              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
+              component={SourceHome}
+            />
+            <Route
+              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
+              component={SourceHome}
+            />
+            <Route
+              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)"
+              component={SourceHome}
+            />
+            <Route
+              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)"
+              component={SourceHome}
             />
           </Switch>
         </div>

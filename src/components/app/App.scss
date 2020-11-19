@@ -138,7 +138,13 @@ td.pagination-center {
     color: #e5e5e5;
     cursor: pointer;
     &.concept {
-        color:  rgb(51, 115, 170)
+        color: rgb(51, 115, 170)
+    }
+    &.mapping {
+        color: rgb(51, 115, 170)
+    }
+    &.source {
+        color: rgb(92, 184, 92);
     }
     svg {
         font-size: 32pt;
@@ -239,4 +245,11 @@ div.bottom-fixed-center {
 .this-concept {
     padding: 0 15px !important;
     font-weight: 500;
+}
+
+.home-resource-full-name {
+    padding-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 7px;
 }

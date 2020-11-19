@@ -1,9 +1,4 @@
 import React from 'react';
-import {
-  Link as LinkIcon,
-} from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
-import { toFullAPIURL, copyURL } from '../../common/utils';
 import { DARKGRAY } from '../../common/constants';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
@@ -13,6 +8,7 @@ import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
+import MappingIcon from './MappingIcon';
 
 const LABEL_STYLES = {
   textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
@@ -23,21 +19,16 @@ const MappingHomeHeader = ({
   mapping, isVersionedObject, versionedObjectURL, currentURL
 }) => {
   const isRetired = mapping.retired;
-  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
 
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon concept'>
-          <Tooltip title='Copy URL'>
-            <LinkIcon onClick={onIconClick} />
-          </Tooltip>
-        </div>
+        <MappingIcon url={currentURL} />
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...mapping} onClick={() => {}} />
             <span className='separator'>/</span>
-            <SourceButton label={mapping.source} onClick={() => {}} />
+            <SourceButton label={mapping.source} childURI={versionedObjectURL} />
             <span className='separator'>/</span>
             <MappingButton label={mapping.id} mapType={mapping.map_type} retired={isRetired} href={`#${versionedObjectURL}`} />
             {

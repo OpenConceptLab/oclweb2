@@ -89,3 +89,7 @@ export const copyURL = url => {
     alertifyjs.success('Copied URL to clipboard!')
   }
 }
+
+export const toParentURI = uri => {
+  return uri.split('/').splice(0, 5).join('/');
+};
