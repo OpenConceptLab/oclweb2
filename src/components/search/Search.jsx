@@ -18,6 +18,7 @@ import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import ChipDatePicker from '../common/ChipDatePicker';
+import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
 import FilterButton from '../common/FilterButton';
 import FilterDrawer from '../common/FilterDrawer';
 import { DEFAULT_LIMIT } from '../../common/constants';
@@ -50,6 +51,7 @@ class Search extends React.Component {
       limit: DEFAULT_LIMIT,
       openFacetsDrawer: false,
       appliedFacets: {},
+      includeRetired: false,
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -182,9 +184,13 @@ class Search extends React.Component {
       })
     }
     this.setState(newState, () => {
-      const { resource, searchStr, page, exactMatch, sortParams, updatedSince, limit } = this.state;
+      const {
+        resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
+        includeRetired,
+      } = this.state;
       const queryParams = {
         q: searchStr, page: page, exact_match: exactMatch, limit: limit,
+        includeRetired: includeRetired,
         verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
         ...this.getFacetQueryParam(),
       };
@@ -249,18 +255,27 @@ class Search extends React.Component {
     return 'All Time'
   }
 
+  onClickIncludeRetired = () => {
+    this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true)
+  }
+
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const totalResults = this.getCurrentResourceTotalResults();
-    const { updatedSince, limit, appliedFacets, resource } = this.state;
+    const {
+      updatedSince, limit, appliedFacets, resource, includeRetired
+    } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
     return (
       <span style={{display: 'inline-flex'}}>
         <span style={{paddingRight: '5px'}}>
+          <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} />
+        </span>
+        <span style={{paddingRight: '5px'}}>
           <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} />
         </span>
         <span style={{paddingRight: '5px'}}>
-          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} />
+          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' />
         </span>
         {
           !this.isTable && <span style={{paddingRight: '5px'}}>
@@ -288,10 +303,6 @@ class Search extends React.Component {
 
   onApplyFacets = filters => {
     this.setState({appliedFacets: filters}, () => this.fetchNewResults(null, true, true))
-  }
-
-  areRetiredIncluded() {
-    return Boolean(get(this.state.appliedFacets, 'includeRetired', false))
   }
 
   render() {
@@ -353,7 +364,6 @@ class Search extends React.Component {
         </div>
         <FilterDrawer
           open={openFacetsDrawer}
-          defaultIncludeRetired={this.areRetiredIncluded()}
           onClose={this.onCloseFacetsDrawer}
           filters={get(results[resource], 'facets.fields', {})}
           onApply={this.onApplyFacets}

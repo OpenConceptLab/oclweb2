@@ -8,7 +8,7 @@ import {
 } from 'lodash';
 
 const FilterDrawer = props => {
-  const { open, filters, onClose, onApply, defaultIncludeRetired } = props;
+  const { open, filters, onClose, onApply } = props;
   const uiFilters = omit(omitBy(filters, isEmpty), ['is_active', 'is_latest_version'])
 
   const existingFilters = () => {
@@ -23,20 +23,14 @@ const FilterDrawer = props => {
   }
 
   const [appliedFilters, setFilters] = React.useState(existingFilters());
-  const [includeRetired, setIncludeRetired] = React.useState(defaultIncludeRetired);
 
   const onApplyClick = () => {
-    const filters = cloneDeep(appliedFilters);
-    if(includeRetired)
-      filters['includeRetired'] = {'true': true}
-
-    onApply(filters)
+    onApply(cloneDeep(appliedFilters))
     onClose()
   }
 
   const onClear = () => {
     setFilters({})
-    setIncludeRetired(false)
     onApply({})
     onClose()
   }
@@ -60,16 +54,6 @@ const FilterDrawer = props => {
     <Drawer anchor='left' open={open} onClose={onClose}>
       <div className='col-md-12 no-side-padding' style={{width: '500px', height: 'calc(100% - 60px)', overflow: 'scroll'}}>
         <List>
-          <Typography style={{padding: '5px 10px 0px 10px', fontWeight: 'bold'}}>
-            General
-          </Typography>
-          <ListItem style={{padding: '0px 16px 0px 6px'}}>
-            <ListItemIcon>
-              <Checkbox checked={includeRetired} onChange={event => setIncludeRetired(event.target.checked)}/>
-            </ListItemIcon>
-            <ListItemText primary='Include Retired' />
-          </ListItem>
-          <Divider />
           {
             map(uiFilters, (facets, field) => (
               <div key={field}>
