@@ -29,7 +29,7 @@ const AboutAccordian = ({id, about}) => {
               className='col-md-12 no-side-padding'
               dangerouslySetInnerHTML={{__html: about}}
             /> :
-            <h3><small>No about entry</small></h3>
+            <p>No about entry</p>
           }
         </AccordionDetails>
       </Accordion>

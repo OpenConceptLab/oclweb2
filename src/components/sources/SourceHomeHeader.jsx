@@ -31,7 +31,7 @@ const SourceHomeHeader = ({
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...source} onClick={() => {}} />
             <span className='separator'>/</span>
-            <SourceButton label={source.id} href={`#${versionedObjectURL}`} />
+            <SourceButton label={source.short_code} href={`#${versionedObjectURL}`} />
             {
               !isVersionedObject &&
               <React.Fragment>

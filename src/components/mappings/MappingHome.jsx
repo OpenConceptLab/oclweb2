@@ -3,6 +3,9 @@ import { CircularProgress } from '@material-ui/core';
 import APIService from '../../services/APIService';
 import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeTabs from './MappingHomeTabs';
+import { includes } from 'lodash';
+
+const TABS = ['history'];
 
 class MappingHome extends React.Component {
   constructor(props) {
@@ -82,7 +85,10 @@ class MappingHome extends React.Component {
   }
 
   isVersionedObject() {
-    return !this.props.match.params.mappingVersion
+    const version = this.props.match.params.mappingVersion;
+    if(version)
+      return includes(TABS, version)
+    return true
   }
 
   render() {

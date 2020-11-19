@@ -5,6 +5,8 @@ import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
 
+const TABS = ['concepts', 'mappings', 'history', 'about']
+
 class SourceHome extends React.Component {
   constructor(props) {
     super(props);
@@ -98,7 +100,10 @@ class SourceHome extends React.Component {
   }
 
   isVersionedObject() {
-    return !this.props.match.params.version
+    const version = this.props.match.params.version;
+    if(version)
+      return includes(TABS, version)
+    return true
   }
 
   render() {

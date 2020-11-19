@@ -3,6 +3,9 @@ import { CircularProgress } from '@material-ui/core';
 import APIService from '../../services/APIService';
 import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
+import { includes } from 'lodash';
+
+const TABS = ['history'];
 
 class ConceptHome extends React.Component {
   constructor(props) {
@@ -86,7 +89,10 @@ class ConceptHome extends React.Component {
   }
 
   isVersionedObject() {
-    return !this.props.match.params.conceptVersion
+    const version = this.props.match.params.conceptVersion;
+    if(version)
+      return includes(TABS, version)
+    return true
   }
 
   render() {
