@@ -84,7 +84,7 @@ const VersionList = ({ versions, resource }) => {
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             <p className="small">
               {`All changes to a ${resource} are automatically saved to its `}
-						  <strong>Mapping Version History</strong>.
+						  <strong>{`${startCase(resource)} Version History`}</strong>.
             </p>
           </AccordionDetails>
         </Accordion>

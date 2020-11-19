@@ -30,7 +30,7 @@ const CustomAttributesAccordian = ({
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
                 {name}
               </div>
-              <div className='col-md-4 no-right-padding'>
+              <div className='col-md-8 no-right-padding ellipsis-text' style={{maxWidth: '100%'}}>
                 {value}
               </div>
             </div>
