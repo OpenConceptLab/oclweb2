@@ -10,6 +10,10 @@ import { map, isEmpty } from 'lodash';
 const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
   const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
+  const onRowClick = mapping => {
+    if(mapping.url)
+      window.location.hash = mapping.url
+  }
   return (
     <Table size="small" aria-label="versions">
       <TableHead>
@@ -29,7 +33,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
             </TableCell>
           </TableRow> :
           map(mappings, mapping => (
-            <TableRow hover key={mapping.uuid}>
+            <TableRow hover key={mapping.uuid} onClick={() => onRowClick(mapping)} style={{cursor: 'pointer'}}>
               <TableCell align='center'>
                 {
                   mapping.external_id ?
