@@ -22,7 +22,7 @@ const FilterDrawer = props => {
     return result
   }
 
-  const [appliedFilters, setFilters] = React.useState(existingFilters());
+  const [appliedFilters, setFilters] = React.useState(existingFilters);
 
   const onApplyClick = () => {
     onApply(cloneDeep(appliedFilters))
