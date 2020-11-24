@@ -3,7 +3,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, isBoolean } from 'lodash';
 
 const None = () => {
   return <div style={{margin: '5px', fontWeight: '300'}}>None</div>
@@ -31,7 +31,7 @@ const CustomAttributesAccordian = ({
                 {name}
               </div>
               <div className='col-md-8 no-right-padding ellipsis-text' style={{maxWidth: '100%'}}>
-                {value}
+                {isBoolean(value) ? value.toString() : value }
               </div>
             </div>
           ))

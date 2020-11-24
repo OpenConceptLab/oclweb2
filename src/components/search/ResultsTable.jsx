@@ -287,7 +287,7 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['concepts', 'mappings', 'sources'], props.resource) && item.url) {
+    if(includes(['concepts', 'mappings', 'sources', 'collections'], props.resource) && item.url) {
       event.stopPropagation();
       event.preventDefault()
       window.open('#' + item.url, '_blank')

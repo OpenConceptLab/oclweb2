@@ -3,7 +3,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton
 } from '@material-ui/core';
-import { map, isEmpty, startCase} from 'lodash';
+import { map, isEmpty, startCase, find, reject, compact } from 'lodash';
 import {
   ExpandMore as ExpandMoreIcon, Search as SearchIcon
 } from '@material-ui/icons';
@@ -22,6 +22,9 @@ const None = () => {
 }
 
 const ConceptContainerVersionList = ({ versions, resource }) => {
+  let sortedVersions = compact([
+    find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})
+  ])
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-left-padding'>
@@ -35,9 +38,9 @@ const ConceptContainerVersionList = ({ versions, resource }) => {
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
-              isEmpty(versions) ?
+              isEmpty(sortedVersions) ?
               None() :
-              map(versions, (version, index) => (
+              map(sortedVersions, (version, index) => (
                 <div className='col-md-12 no-side-padding' key={index}>
                   <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
                     <div className='col-md-11 no-left-padding'>
