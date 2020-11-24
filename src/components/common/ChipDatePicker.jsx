@@ -29,7 +29,7 @@ class ChipDatePicker extends React.Component {
                 date ? <Cancel style={{zIndex: 2}} /> : null
               }
               onDelete={date ? () => this.onChange({target: {value: false}}) : null}
-              variant="outlined"
+              variant={date ? "default" : "outlined"}
               clickable
               color={date ? "primary" : "secondary"}
               className="calendar-custom-date-button"

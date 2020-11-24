@@ -13,7 +13,7 @@ const FilterButton = ({tooltipTitle, label, count, disabled, onClick, size}) => 
     <Tooltip title={tooltipTitle || 'Filter Results'}>
       <Chip
         onClick={onClick}
-        variant='outlined'
+        variant={hasFilters ? 'default' : 'outlined'}
         color={color}
         icon={<FilterListIcon fontSize='small' />}
         label={buttonLabel}

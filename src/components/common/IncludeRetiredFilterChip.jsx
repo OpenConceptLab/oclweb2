@@ -7,7 +7,7 @@ const IncludeRetiredFilterChip = ({ size, applied, onClick }) => {
   return (
     <Chip
       label={ label }
-      variant="outlined"
+      variant={applied ? 'default' : 'outlined'}
       clickable
       color={ color }
       size={ size || 'medium' }

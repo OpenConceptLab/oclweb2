@@ -65,7 +65,7 @@ class ResultsCountDropDown extends React.Component {
     return (
       <span>
         <Tooltip title='Results Per Page'>
-          <ButtonGroup variant="outlined" color="primary" ref={this.buttonRef} aria-label="limit button" size={size || 'medium'}>
+          <ButtonGroup variant="contained" color="primary" ref={this.buttonRef} aria-label="limit button" size={size || 'medium'}>
             <Button style={{fontSize: '0.8125em'}} onClick={this.toggleOpen}>
               Results Per Page : {limit}
             </Button>
