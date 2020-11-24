@@ -15,7 +15,7 @@ class SourceHomeChildrenList extends React.Component {
     const { selectedVersion } = this.state;
     const { versionedObjectURL, resource } = this.props;
     let url = versionedObjectURL;
-    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'history'], selectedVersion))
+    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions'], selectedVersion))
       url += `${selectedVersion}/`
     url += `${resource}/`
 

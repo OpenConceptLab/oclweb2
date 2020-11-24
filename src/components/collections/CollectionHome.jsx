@@ -5,7 +5,7 @@ import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
 
-const TABS = ['concepts', 'mappings', 'history', 'about']
+const TABS = ['concepts', 'mappings', 'versions', 'about']
 
 class CollectionHome extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class CollectionHome extends React.Component {
 
     if(location.pathname.indexOf('/about') > -1)
       return 4;
-    if(location.pathname.indexOf('/history') > -1)
+    if(location.pathname.indexOf('/versions') > -1)
       return 3;
     if(location.pathname.indexOf('/mappings') > -1)
       return 2;
@@ -52,8 +52,8 @@ class CollectionHome extends React.Component {
 
   getURLFromPath() {
     const { location, match } = this.props;
-    if(location.pathname.indexOf('/history') > -1)
-      return location.pathname.split('/history')[0] + '/'
+    if(location.pathname.indexOf('/versions') > -1)
+      return location.pathname.split('/versions')[0] + '/'
     if(location.pathname.indexOf('/mappings') > -1)
       return location.pathname.split('/mappings')[0] + '/'
     if(location.pathname.indexOf('/concepts') > -1)
@@ -109,7 +109,7 @@ class CollectionHome extends React.Component {
   getCurrentVersion() {
     let version = this.props.match.params.version;
 
-    if(!includes(['mappings', 'concepts', 'history', 'about'], version))
+    if(!includes(['mappings', 'concepts', 'versions', 'about'], version))
       return version
   }
 

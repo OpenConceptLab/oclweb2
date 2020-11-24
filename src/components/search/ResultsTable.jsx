@@ -83,7 +83,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
       {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
     ],
-    tabs: ['History',],
+    tabs: ['Versions',],
     expandible: true,
   },
   collections: {
@@ -100,7 +100,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
       {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
     ],
-    tabs: ['History',],
+    tabs: ['Versions',],
     expandible: true,
   },
   organizations: {
@@ -473,7 +473,10 @@ const ExpandibleRow = props => {
                     </div>
                   }
                   {
-                    tab === resourceDefinition.tabs.indexOf('History') &&
+                    (
+                      tab === resourceDefinition.tabs.indexOf('History') ||
+                      tab === resourceDefinition.tabs.indexOf('Versions')
+                    ) &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       <HistoryTable versions={versions} />
                     </div>

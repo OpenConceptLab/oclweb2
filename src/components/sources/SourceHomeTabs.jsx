@@ -18,7 +18,7 @@ const SourceHomeTabs = props => {
         <Tab label="Details" />
         <Tab label="Concepts" />
         <Tab label="Mappings" />
-        <Tab label="History" />
+        <Tab label="Versions" />
         <Tab label="About" />
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
