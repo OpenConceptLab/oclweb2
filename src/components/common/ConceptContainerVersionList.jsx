@@ -47,7 +47,7 @@ const ConceptContainerVersionList = ({ versions, resource }) => {
                         <ResourceVersionLabel {...version} />
                       </div>
                       <div className='col-md-12'>
-                          <span>{version.description}</span>
+                        <span>{version.description}</span>
                       </div>
                       <div className='col-md-12'>
                         <LastUpdatedOnLabel
@@ -86,8 +86,20 @@ const ConceptContainerVersionList = ({ versions, resource }) => {
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             <p className="small">
-              {`All changes to a ${resource} are automatically saved to its `}
-						  <strong>{`${startCase(resource)} Version History`}</strong>.
+              Create a new
+              <strong>{` ${startCase(resource)} Version `}</strong>
+              {
+                `to save the state of a ${resource}'s concepts and mappings at a specific point in time.`
+              }
+            </p>
+				    <p className="small">
+              A
+              <strong> Released </strong>
+              {
+                ` ${resource} version indicates to your users that a particular source version is prepared for public consumption, while a`
+              }
+              <strong> Retired </strong>
+              {`${resource} version indicates that it should no longer be used.`}
             </p>
           </AccordionDetails>
         </Accordion>
