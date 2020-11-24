@@ -1,7 +1,7 @@
 import React from 'react';
 import Search from '../search/Search';
 import VersionFilter from '../common/VersionFilter';
-import { map } from 'lodash';
+import { map, includes } from 'lodash';
 
 class SourceHomeChildrenList extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class SourceHomeChildrenList extends React.Component {
     const { selectedVersion } = this.state;
     const { versionedObjectURL, resource } = this.props;
     let url = versionedObjectURL;
-    if(selectedVersion && selectedVersion !== 'HEAD')
+    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'history'], selectedVersion))
       url += `${selectedVersion}/`
     url += `${resource}/`
 

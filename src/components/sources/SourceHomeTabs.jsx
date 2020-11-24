@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { get } from 'lodash';
-import VersionList from '../common/VersionList';
+import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeDetails from './SourceHomeDetails';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import AboutAccordian from '../common/AboutAccordian';
@@ -50,7 +50,7 @@ const SourceHomeTabs = props => {
         }
         {
           tab === 3 &&
-          <VersionList versions={versions} resource='source' />
+          <ConceptContainerVersionList versions={versions} resource='source' />
         }
         {
           tab === 4 &&

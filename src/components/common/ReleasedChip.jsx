@@ -4,12 +4,12 @@ import {
   NewReleases as ReleaseIcon
 } from '@material-ui/icons';
 
-const ReleasedChip = () => {
-  const icon = <ReleaseIcon fontSize='small' color='primary' />;
+const ReleasedChip = props => {
+  const icon = <ReleaseIcon fontSize='inherit' color='primary' />;
 
   return (
     <Tooltip placement='top-start' title='Released'>
-      <Chip icon={icon} label='Released' variant='outlined' color='primary' />
+      <Chip icon={icon} label='Released' variant='outlined' color='primary' size={props.size || 'medium'}/>
     </Tooltip>
   )
 }
