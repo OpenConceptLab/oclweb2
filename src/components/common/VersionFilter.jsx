@@ -25,10 +25,11 @@ const VersionFilter = props => {
       <Chip
         variant="outlined"
         color='primary'
-        icon={<AsteriskIcon fontSize='inherit' />}
+        icon={<AsteriskIcon fontSize='inherit' style={{width: '14px'}} />}
         label={selected}
         onClick={onOpen}
         size={size || 'medium'}
+        style={{minWidth: '80px'}}
       />
       <Menu
         id="versions-menu"
