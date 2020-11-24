@@ -62,7 +62,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
       {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabel {...mapping} noRedirect />},
-      {id: 'mapType', label: 'Map Type', value: 'map_type', sortOn: 'map_type'},
+      {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type'},
       {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabel {...mapping} noRedirect />},
       {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ],
@@ -76,7 +76,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} />},
       {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'sourceType', label: 'Source Type', value: 'source_type', sortOn: 'source_type'},
+      {id: 'sourceType', label: 'Type', value: 'source_type', sortOn: 'source_type'},
     ],
     tags: [
       {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
@@ -93,7 +93,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} />},
       {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-      {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
+      {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},
     ],
     tags: [
       {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
