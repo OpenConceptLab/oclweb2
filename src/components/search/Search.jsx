@@ -2,7 +2,8 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import SearchInput from './SearchInput';
-import Resources from './Resources';
+import ResourcesHorizontal from './ResourcesHorizontal';
+//import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
 import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
@@ -323,7 +324,7 @@ class Search extends React.Component {
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer,
     } = this.state;
-    const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-9 no-left-padding';
+    const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-12 no-side-padding';
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
@@ -331,12 +332,12 @@ class Search extends React.Component {
       <div className='col-sm-12' style={nested ? {} : {paddingTop: '10px'}}>
         {
           !nested &&
-          <div className='col-sm-3'>
-            <Resources active={resource} results={results} onClick={this.onResourceChange} />
+          <div className='col-sm-12 no-side-padding'>
+            <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
           </div>
         }
         <div className={searchResultsContainerClass}>
-          <div className='col-sm-8 no-side-padding' style={{textAlign: 'center'}}>
+          <div className='col-sm-9 no-side-padding' style={{textAlign: 'center'}}>
             <SearchInput
               {...this.props}
               onSearch={this.onSearch}
@@ -344,7 +345,7 @@ class Search extends React.Component {
               moreControls={this.getFilterControls()}
             />
           </div>
-          <div className='col-sm-4 no-side-padding' style={{textAlign: 'center', marginTop: '7px'}}>
+          <div className='col-sm-3 no-side-padding' style={{textAlign: 'center', marginTop: '7px'}}>
             <span className='col-sm-9 no-side-padding' style={{marginTop: '2px',}}>
               <PageResultsLabel resource={resource} results={results[resource]} limit={limit} />
             </span>
