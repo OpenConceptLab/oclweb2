@@ -12,7 +12,7 @@ const OwnerChip = ({owner, ownerType}) => {
 
   return (
     <Tooltip placement='top-start' title={`${startCase(ownerType.toLowerCase())}: ${owner}`}>
-      <Chip icon={icon} label={owner} variant='outlined' color='secondary' />
+      <Chip icon={icon} label={owner} variant='outlined' color='default' />
     </Tooltip>
   )
 }
