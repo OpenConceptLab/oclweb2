@@ -27,7 +27,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, toFullAPIURL, copyURL,
+  formatDate, formatDateTime, toFullAPIURL, copyURL, headFirst
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
@@ -49,7 +49,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name', renderer: concept => (concept.retired ? <span className='retired'>{concept.display_name}</span> : <span>{concept.display_name}</span>)},
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
-      {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
+      {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ],
     tabs: ['Mappings', 'Synonyms', 'Descriptions', 'History',],
     expandible: true,
@@ -64,7 +64,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabel {...mapping} noRedirect />},
       {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type'},
       {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabel {...mapping} noRedirect />},
-      {id: 'updatedOn', label: 'Updated On', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
+      {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
     ],
     tabs: ['History',],
     expandible: true,
@@ -158,7 +158,7 @@ const HistoryTable = ({ versions }) => {
       </TableHead>
       <TableBody>
         {
-          map(versions, version => (
+          map(headFirst(versions), version => (
             <TableRow hover key={version.uuid || version.id}>
               <TableCell align='center'>
                 { version.uuid || version.id }

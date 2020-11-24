@@ -1,7 +1,7 @@
 /*eslint no-process-env: 0*/
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
-import { filter, difference } from 'lodash';
+import { filter, difference, compact, find, reject } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
 export const isAtGlobalSearch = () => {
@@ -92,4 +92,10 @@ export const copyURL = url => {
 
 export const toParentURI = uri => {
   return uri.split('/').splice(0, 5).join('/');
+};
+
+export const headFirst = versions => {
+  return compact([
+    find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})
+  ]);
 };

@@ -7,6 +7,7 @@ import { map, isEmpty, startCase} from 'lodash';
 import {
   ExpandMore as ExpandMoreIcon, Search as SearchIcon
 } from '@material-ui/icons';
+import { headFirst } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -21,6 +22,7 @@ const None = () => {
 }
 
 const VersionList = ({ versions, resource }) => {
+  const sortedVersions = headFirst(versions);
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-left-padding'>
@@ -34,9 +36,9 @@ const VersionList = ({ versions, resource }) => {
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
-              isEmpty(versions) ?
+              isEmpty(sortedVersions) ?
               None() :
-              map(versions, (version, index) => (
+              map(sortedVersions, (version, index) => (
                 <div className='col-md-12' key={index}>
                   <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
                     <div className='col-md-11 no-left-padding'>
