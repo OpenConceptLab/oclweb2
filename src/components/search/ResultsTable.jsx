@@ -79,9 +79,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'sourceType', label: 'Source Type', value: 'source_type', sortOn: 'source_type'},
     ],
     tags: [
-      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
+      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
     ],
     tabs: ['History',],
     expandible: true,
@@ -96,9 +96,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'collectionType', label: 'Collection Type', value: 'collection_type', sortOn: 'collection_type'},
     ],
     tags: [
-      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
+      {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
     ],
     tabs: ['History',],
     expandible: true,
@@ -369,6 +369,13 @@ const ExpandibleRow = props => {
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase());
   const showPublicIndicator = includes(['sources', 'collections'], props.resource);
 
+  const navigateTo = (event, url) => {
+    let _url = url.replace('/versions', '/history')
+    event.stopPropagation()
+    event.preventDefault()
+    window.open('#' + _url, '_blank')
+  }
+
   return (
     <React.Fragment>
       <TableRow
@@ -408,14 +415,14 @@ const ExpandibleRow = props => {
           <TableCell align='center' style={{width: '120px', padding: '2px'}}>
             {
               map(resourceDefinition.tags, tag => (
-                <Link to={window.location.hash}>
-                <div key={tag.id} style={{lineHeight: '10px', marginBottom: '5px'}}>
-                  <div className='flex-vertical-center' style={{fontSize: '11px'}}>
-                    <span>{tag.icon}</span>
-                    <span>{tag.label}</span>
+                <Link onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
+                  <div key={tag.id} style={{lineHeight: '10px', marginBottom: '5px'}}>
+                    <div className='flex-vertical-center' style={{fontSize: '11px'}}>
+                      <span>{tag.icon}</span>
+                      <span>{tag.label}</span>
+                    </div>
+                    <div style={{fontSize: '14px'}}>{`${get(item, tag.value, '0')}`}</div>
                   </div>
-                  <div style={{fontSize: '14px'}}>{`${get(item, tag.value, '0')}`}</div>
-                </div>
                 </Link>
               ))
             }

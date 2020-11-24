@@ -332,11 +332,11 @@ class Search extends React.Component {
       <div className='col-sm-12' style={nested ? {} : {paddingTop: '10px'}}>
         {
           !nested &&
-          <div className='col-sm-12 no-side-padding'>
+          <div className='col-sm-12 search-resources'>
             <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
           </div>
         }
-        <div className={searchResultsContainerClass}>
+        <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
           <div className='col-sm-9 no-side-padding' style={{textAlign: 'center'}}>
             <SearchInput
               {...this.props}

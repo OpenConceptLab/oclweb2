@@ -24,7 +24,7 @@ const ResourcesHorizontal = props => {
   }
 
   return (
-    <span className='col-sm-12 no-side-padding' style={{marginBottom: '5px'}}>
+    <span className='col-sm-12 no-side-padding'>
       {
         map(RESOURCES, (resource, i) => {
           const isActive = active === resource.id;
