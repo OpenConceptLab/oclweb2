@@ -106,6 +106,13 @@ class SourceHome extends React.Component {
     return true
   }
 
+  getCurrentVersion() {
+    let version = this.props.match.params.version;
+
+    if(!includes(['mappings', 'concepts', 'history', 'about'], version))
+      return version
+  }
+
   render() {
     const { source, versions, isLoading, tab } = this.state;
     const currentURL = this.getURLFromPath()
@@ -129,7 +136,7 @@ class SourceHome extends React.Component {
               versions={versions}
               location={this.props.location}
               versionedObjectURL={versionedObjectURL}
-              currentVersion={this.props.match.params.version}
+              currentVersion={this.getCurrentVersion()}
             />
           </div>
         }
