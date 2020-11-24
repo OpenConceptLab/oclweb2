@@ -330,12 +330,6 @@ class Search extends React.Component {
     const hasNext = this.hasNext()
     return (
       <div className='col-sm-12' style={nested ? {} : {paddingTop: '10px'}}>
-        {
-          !nested &&
-          <div className='col-sm-12 search-resources'>
-            <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
-          </div>
-        }
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
           <div className='col-sm-9 no-side-padding' style={{textAlign: 'center'}}>
             <SearchInput
@@ -360,6 +354,12 @@ class Search extends React.Component {
               </ButtonGroup>
             </span>
           </div>
+          {
+            !nested &&
+            <div className='col-sm-12 search-resources' style={{marginTop: '10px'}}>
+              <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
+            </div>
+          }
           {
             isLoading ?
             <div className='col-sm-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center'}}>
