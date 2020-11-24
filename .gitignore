@@ -3,3 +3,4 @@ src/stories/
 .storybook/
 dist/
 .idea/
+.DS_Store
