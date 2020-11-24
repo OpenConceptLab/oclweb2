@@ -10,7 +10,7 @@ const ResourceVersionLabel = props => {
     <div className='col-sm-12 no-side-padding'>
       <span className='resource-label'>
         <span style={{paddingTop: '5px'}}>
-          <AsteriskIcon fontSize='small' width='12' />
+          <AsteriskIcon fontSize='small' style={{width: '14px'}} />
         </span>
         <span>{props.owner}</span>
         <span>{SEPARATOR}</span>
