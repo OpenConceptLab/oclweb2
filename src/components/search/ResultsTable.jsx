@@ -367,10 +367,14 @@ const ExpandibleRow = props => {
   }
 
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase());
-  const showPublicIndicator = includes(['sources', 'collections'], props.resource);
+  const isConceptContainer = includes(['sources', 'collections'], props.resource);
 
   const navigateTo = (event, url) => {
-    let _url = url.replace('/versions', '/history')
+    let _url = url;
+
+    if(!isConceptContainer)
+      _url = url.replace('/versions', '/history')
+
     event.stopPropagation()
     event.preventDefault()
     window.open('#' + _url, '_blank')
@@ -382,16 +386,16 @@ const ExpandibleRow = props => {
         hover
         style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onRowClick}>
-        <TableCell align={showPublicIndicator ? 'right' : 'center'}>
+        <TableCell align={isConceptContainer ? 'right' : 'center'}>
           <span className='flex-vertical-center'>
             {
-              showPublicIndicator && isPublic &&
+              isConceptContainer && isPublic &&
               <Tooltip title='Public'>
                 <PublicIcon fontSize='small' />
               </Tooltip>
             }
             <Tooltip title='Copy URL'>
-              <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary' style={showPublicIndicator ? {padding: '10px'} : {}}>
+              <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary' style={isConceptContainer ? {padding: '10px'} : {}}>
                 <CopyIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>
