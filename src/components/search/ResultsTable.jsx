@@ -259,6 +259,7 @@ const ExpandibleRow = props => {
   const [descriptions, setDescriptions] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = React.useState(0);
+  const [selected, setSelected] = React.useState(props.isSelected);
   const columnsCount = get(resourceDefinition, 'columns.length', 1) +
                        1 + //copy column
                          (props.isSelectable ? 1 : 0) + // select column
@@ -348,9 +349,13 @@ const ExpandibleRow = props => {
   }
 
   const onCheckboxClick = event => {
+    setSelected(prevSelected => {
+      const newValue = !prevSelected;
+      props.onSelectChange(item.id, newValue)
+      return newValue;
+    })
     event.stopPropagation();
     event.preventDefault();
-    props.onSelectChange(item.id, event.target.checked);
   }
 
   const onCopyClick = event => {
@@ -384,7 +389,7 @@ const ExpandibleRow = props => {
     <React.Fragment>
       <TableRow
         hover
-        style={props.isSelected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
+        style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onRowClick}>
         <TableCell align={isConceptContainer ? 'right' : 'center'}>
           <span className='flex-vertical-center'>
@@ -404,7 +409,7 @@ const ExpandibleRow = props => {
         {
           props.isSelectable &&
           <TableCell>
-            <Checkbox checked={props.isSelected} onChange={onCheckboxClick} />
+            <Checkbox checked={selected} onClick={onCheckboxClick} />
           </TableCell>
         }
         {
