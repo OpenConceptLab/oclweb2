@@ -12,7 +12,6 @@ import {
   AcUnit as AsteriskIcon,
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
-  FileCopy as CopyIcon,
   Public as PublicIcon,
   List as ListIcon,
   Person as PersonIcon,
@@ -27,7 +26,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, toFullAPIURL, copyURL, headFirst
+  formatDate, formatDateTime, headFirst
 } from '../../common/utils';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
@@ -252,19 +251,22 @@ const LocalesTable = ({ locales, isDescription }) => {
 }
 
 const ExpandibleRow = props => {
-  const { item, resourceDefinition } = props;
+  const { item, resourceDefinition, resource, isSelected, isSelectable } = props;
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
   const [names, setNames] = React.useState([]);
   const [descriptions, setDescriptions] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = React.useState(0);
-  const [selected, setSelected] = React.useState(props.isSelected);
+  const [selected, setSelected] = React.useState(isSelected);
+  const isConceptContainer = includes(['sources', 'collections'], resource);
+  const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
+
   const columnsCount = get(resourceDefinition, 'columns.length', 1) +
-                       1 + //copy column
-                         (props.isSelectable ? 1 : 0) + // select column
-                          (resourceDefinition.expandible ? 1 : 0) + // expand icon column
-                        (resourceDefinition.tags ? 1 : 0); //tags column
+                       (isConceptContainer ? 1 : 0) + //public column
+                          (isSelectable ? 1 : 0) + // select column
+                           (resourceDefinition.expandible ? 1 : 0) + // expand icon column
+                         (resourceDefinition.tags ? 1 : 0); //tags column
 
   const onClick = event => {
     if(!resourceDefinition.expandible)
@@ -277,7 +279,7 @@ const ExpandibleRow = props => {
       const newOpen = !prevOpen
       if(newOpen) {
         fetchVersions();
-        if(props.resource === 'concepts') {
+        if(resource === 'concepts') {
           fetchNames();
           fetchDescriptions();
           fetchMappings();
@@ -288,7 +290,7 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['concepts', 'mappings', 'sources', 'collections'], props.resource) && item.url) {
+    if(includes(['concepts', 'mappings', 'sources', 'collections'], resource) && item.url) {
       event.stopPropagation();
       event.preventDefault()
       window.open('#' + item.url, '_blank')
@@ -358,21 +360,11 @@ const ExpandibleRow = props => {
     event.preventDefault();
   }
 
-  const onCopyClick = event => {
-    event.stopPropagation();
-    event.preventDefault();
-    if(item.url)
-      copyURL(toFullAPIURL(item.url))
-  }
-
   const getTab = label => {
     return (
       <Tab key={label} label={label} style={{fontSize: '12px', fontWeight: 'bold'}} />
     )
   }
-
-  const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase());
-  const isConceptContainer = includes(['sources', 'collections'], props.resource);
 
   const navigateTo = (event, url) => {
     let _url = url;
@@ -391,23 +383,18 @@ const ExpandibleRow = props => {
         hover
         style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onRowClick}>
-        <TableCell align={isConceptContainer ? 'right' : 'center'}>
-          <span className='flex-vertical-center'>
-            {
-              isConceptContainer && isPublic &&
-              <Tooltip title='Public'>
-                <PublicIcon fontSize='small' />
-              </Tooltip>
-            }
-            <Tooltip title='Copy URL'>
-              <IconButton aria-label="copy" size="small" onClick={onCopyClick} color='primary' style={isConceptContainer ? {padding: '10px'} : {}}>
-                <CopyIcon fontSize="inherit" />
-              </IconButton>
-            </Tooltip>
-          </span>
-        </TableCell>
         {
-          props.isSelectable &&
+          isPublic &&
+          <TableCell align='center'>
+            <Tooltip title='Public'>
+              <span className='flex-vertical-center'>
+                <PublicIcon fontSize='small' />
+              </span>
+            </Tooltip>
+          </TableCell>
+        }
+        {
+          isSelectable &&
           <TableCell>
             <Checkbox checked={selected} onClick={onCheckboxClick} />
           </TableCell>
@@ -420,7 +407,7 @@ const ExpandibleRow = props => {
           ))
         }
         {
-          !props.isSelectable &&
+          !isSelectable &&
           <TableCell align='center' style={{width: '120px', padding: '2px'}}>
             {
               map(resourceDefinition.tags, tag => (
@@ -508,7 +495,8 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
     backgroundColor: theadBgColor,
     border: `1px solid ${theadBgColor}`,
   }
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 3 : 2);
+  const isConceptContainer = includes(['sources', 'collections'], resource);
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
   const defaultOrder = get(keys(sortParams), '0') === 'sortAsc' ? 'asc' : 'desc';
@@ -567,7 +555,10 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                   </TableRow>
                 }
                 <TableRow>
-                  <TableCell />
+                  {
+                    isConceptContainer &&
+                    <TableCell />
+                  }
                   {
                     isSelectable &&
                     <TableCell>
