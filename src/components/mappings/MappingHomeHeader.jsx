@@ -26,7 +26,7 @@ const MappingHomeHeader = ({
         <MappingIcon url={currentURL} />
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...mapping} onClick={() => {}} />
+            <OwnerButton {...mapping} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <SourceButton label={mapping.source} childURI={versionedObjectURL} />
             <span className='separator'>/</span>

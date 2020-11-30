@@ -9,6 +9,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import SourceHome from '../sources/SourceHome';
 import CollectionHome from '../collections/CollectionHome';
+import OrgHome from '../orgs/OrgHome';
 import { Link } from 'react-router-dom';
 import { isAtGlobalSearch } from '../../common/utils';
 
@@ -143,6 +144,12 @@ class App extends Component {
             <Route
               path="/users/:user([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)"
               component={CollectionHome}
+            />
+
+            {/* Organization Details */}
+            <Route
+              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)"
+              component={OrgHome}
             />
           </Switch>
         </div>

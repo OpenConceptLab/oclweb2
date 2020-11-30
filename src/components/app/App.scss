@@ -147,6 +147,12 @@ td.pagination-center {
     &.source {
         color: rgb(92, 184, 92);
     }
+    &.org {
+        color: rgb(253, 164, 41);
+    }
+    &.user {
+        color: rgb(253, 164, 41);
+    }
     svg {
         font-size: 32pt;
         width: 48px;

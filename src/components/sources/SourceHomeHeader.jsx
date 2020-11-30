@@ -29,7 +29,7 @@ const SourceHomeHeader = ({
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...source} onClick={() => {}} />
+            <OwnerButton {...source} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <SourceButton label={source.short_code} href={`#${versionedObjectURL}`} />
             {

@@ -9,8 +9,8 @@ const VersionButton = ({label, onClick, retired, href, bgColor, textColor}) => {
   let backgroundColor = bgColor || BLUE;
   let txtColor = textColor || WHITE;
   const style = retired ?
-                {background: 'lightgray', color: RED, boxShadow: 'none', textDecoration: 'line-through', textDecorationColor: BLACK} :
-                {background: backgroundColor, color: txtColor, boxShadow: 'none'};
+                {background: 'lightgray', color: RED, boxShadow: 'none', textDecoration: 'line-through', textDecorationColor: BLACK, textTransform: 'none'} :
+                {background: backgroundColor, color: txtColor, boxShadow: 'none', textTransform: 'none'};
   return (
     <Button
       href={href}

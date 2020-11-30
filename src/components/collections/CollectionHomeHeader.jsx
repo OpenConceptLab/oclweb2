@@ -29,7 +29,7 @@ const CollectionHomeHeader = ({
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...collection} onClick={() => {}} />
+            <OwnerButton {...collection} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <CollectionButton label={collection.short_code} href={`#${versionedObjectURL}`} />
             {

@@ -5,8 +5,8 @@ import { BLUE, WHITE, RED, BLACK } from '../../common/constants';
 
 const ConceptButton = ({label, onClick, retired, href}) => {
   const style = retired ?
-                {background: 'lightgray', color: RED, boxShadow: 'none', textDecoration: 'line-through', textDecorationColor: BLACK} :
-                {background: BLUE, color: WHITE, boxShadow: 'none'};
+                {background: 'lightgray', color: RED, boxShadow: 'none', textDecoration: 'line-through', textDecorationColor: BLACK, textTransform: 'none'} :
+                {background: BLUE, color: WHITE, boxShadow: 'none', textTransform: 'none'};
   return (
     <Button
       href={href}

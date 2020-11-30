@@ -94,6 +94,10 @@ export const toParentURI = uri => {
   return uri.split('/').splice(0, 5).join('/');
 };
 
+export const toOwnerURI = uri => {
+  return uri.split('/').splice(0, 3).join('/');
+};
+
 export const headFirst = versions => {
   return compact([
     find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})

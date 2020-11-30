@@ -111,9 +111,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
     ],
     tags: [
-      {id: 'members', value: 'members', label: 'Members', icon: <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'members', value: 'members', label: 'Members', icon: <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'url'},
+      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'sources_url'},
+      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'collections_url'},
     ],
     expandible: false,
   },
@@ -290,7 +290,7 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['concepts', 'mappings', 'sources', 'collections'], resource) && item.url) {
+    if(includes(['concepts', 'mappings', 'sources', 'collections', 'organizations'], resource) && item.url) {
       event.stopPropagation();
       event.preventDefault()
       window.open('#' + item.url, '_blank')

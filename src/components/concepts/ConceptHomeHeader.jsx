@@ -17,7 +17,7 @@ const ConceptHomeHeader = ({
         <ConceptIcon url={currentURL} />
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...concept} onClick={() => {}} />
+            <OwnerButton {...concept} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <SourceButton label={concept.source} childURI={versionedObjectURL} />
             <span className='separator'>/</span>
