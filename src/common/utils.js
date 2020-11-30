@@ -103,3 +103,19 @@ export const headFirst = versions => {
     find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})
   ]);
 };
+
+export const currentUserToken = () => {
+  return localStorage.token;
+};
+
+export const isLoggedIn = () => {
+  return Boolean(currentUserToken());
+};
+
+export const getCurrentUser = () => {
+  const data = localStorage.user;
+  if(data)
+    return JSON.parse(data);
+
+  return null;
+};

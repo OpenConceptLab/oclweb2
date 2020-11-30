@@ -274,3 +274,18 @@ div.bottom-fixed-center {
     padding-bottom: 5px;
     border-radius: 5px;
 }
+div.login-paper {
+    padding: 10px;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    padding: 15px;
+    margin-bottom: 30px;
+    border: 1px solid #dca7a7;
+    border-radius: 4px;
+}

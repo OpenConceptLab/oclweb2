@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import alertifyjs from 'alertifyjs';
+import { AppBar, Toolbar, Typography, Button, IconButton, Tooltip } from '@material-ui/core';
+import { Person as PersonIcon, ExitToApp as LogoutIcon } from '@material-ui/icons';
+import { get } from 'lodash';
 import { WHITE, BLACK } from '../../common/constants';
 import './App.scss';
 import SearchInput from '../search/SearchInput';
@@ -11,8 +14,9 @@ import SourceHome from '../sources/SourceHome';
 import CollectionHome from '../collections/CollectionHome';
 import OrgHome from '../orgs/OrgHome';
 import UserHome from '../users/UserHome';
+import Login from '../users/Login';
 import { Link } from 'react-router-dom';
-import { isAtGlobalSearch } from '../../common/utils';
+import { isAtGlobalSearch, isLoggedIn, getCurrentUser } from '../../common/utils';
 
 class App extends Component {
   handleSearchResults = results => {
@@ -21,7 +25,23 @@ class App extends Component {
     })
   }
 
+  onLoginClick() {
+    window.location.hash = '#/accounts/login'
+  }
+
+  onLogoutClick() {
+    localStorage.clear()
+    alertifyjs.success('You have signed out.')
+    window.location.hash = '#/'
+  }
+
+  toUserHome() {
+    window.location.hash = '#' + get(getCurrentUser(), 'url');
+  }
+
   render() {
+    const user = getCurrentUser()
+    const authenticated = isLoggedIn()
     return (
       <div>
         <AppBar position="static" variant="outlined" style={{backgroundColor: WHITE, color: BLACK}}>
@@ -31,10 +51,28 @@ class App extends Component {
             </Typography>
             {
               !isAtGlobalSearch() &&
-              <div className="col-sm-6">
+              <div className="col-sm-8">
                 <SearchInput {...this.props} handleSearchResults={this.handleSearchResults} />
               </div>
             }
+            <div className='col-sm-4 pull-right' style={{textAlign: 'right'}}>
+              {
+                authenticated ?
+                <span>
+                  <Button onClick={this.toUserHome} color='primary' variant='contained' startIcon={<PersonIcon />}>
+                    {user.username}
+                  </Button>
+                  <Tooltip title='logout' placement='left'>
+                    <IconButton component='span' onClick={this.onLogoutClick} style={{marginLeft: '10px'}}>
+                      <LogoutIcon />
+                    </IconButton>
+                  </Tooltip>
+                </span>:
+                <Button onClick={this.onLoginClick} color='primary' variant='contained'>
+                  Sign In
+                </Button>
+              }
+            </div>
           </Toolbar>
         </AppBar>
         <div className="content">
@@ -152,6 +190,7 @@ class App extends Component {
 
             {/* User Home */}
             <Route path="/users/:user([a-zA-Z0-9\-\.\_]+)" component={UserHome} />
+            <Route exact path="/accounts/login" component={Login} />
           </Switch>
         </div>
 

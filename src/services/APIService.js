@@ -1,6 +1,7 @@
 /*eslint no-process-env: 0*/
 import axios from 'axios';
 import {get, omit, isPlainObject, isString, defaults } from 'lodash';
+import { currentUserToken } from '../common/utils';
 
 /*eslint no-undef: 0*/
 const APIURL = window.API_URL || process.env.API_URL;
@@ -9,9 +10,10 @@ const RESOURCES = [
   { name: 'concepts', relations: [] },
   { name: 'mappings', relations: [] },
   { name: 'orgs', relations: [] },
-  { name: 'users', relations: [] },
   { name: 'sources', relations: [] },
   { name: 'collections', relations: [] },
+  { name: 'users', relations: ['login'] },
+  { name: 'user', relations: [] },
   { name: 'new', relations: [] },
 ];
 
@@ -99,7 +101,7 @@ class APIService {
   };
 
   getHeaders(token, headers) {
-    //token = token || currentUserToken();
+    token = token || currentUserToken();
     const obj = defaults(headers, this.headers);
     if (token) obj['Authorization'] = `Token ${token}`;
     return obj;
