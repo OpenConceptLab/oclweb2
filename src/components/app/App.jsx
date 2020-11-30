@@ -77,7 +77,7 @@ class App extends Component {
                   <Button onClick={this.toUserHome} color='primary' variant='contained' startIcon={<PersonIcon />}>
                     {user.username}
                   </Button>
-                  <Tooltip title='logout' placement='left'>
+                  <Tooltip title='logout' placement='top'>
                     <IconButton component='span' onClick={this.onLogoutClick} style={{marginLeft: '10px'}}>
                       <LogoutIcon />
                     </IconButton>
