@@ -407,8 +407,8 @@ const ExpandibleRow = props => {
           <TableCell align='center' style={{width: '120px', padding: '2px'}}>
             {
               map(resourceDefinition.tags, tag => (
-                <Link onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
-                  <div key={tag.id} style={{lineHeight: '10px', marginBottom: '5px'}}>
+                <Link key={tag.id} to='' onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
+                  <div style={{lineHeight: '10px', marginBottom: '5px'}}>
                     <div className='flex-vertical-center' style={{fontSize: '11px'}}>
                       <span>{tag.icon}</span>
                       <span>{tag.label}</span>
@@ -601,7 +601,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                 {
                   map(results.items, item => (
                     <ExpandibleRow
-                      key={item.id}
+                      key={item.uuid || item.id}
                       item={item}
                       resource={resource}
                       resourceDefinition={resourceDefinition}

@@ -44,6 +44,7 @@ class UserHome extends React.Component {
 
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
+      this.url = this.getURLFromPath()
       this.refreshDataByURL()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
