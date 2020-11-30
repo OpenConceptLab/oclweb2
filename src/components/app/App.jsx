@@ -25,14 +25,29 @@ class App extends Component {
     })
   }
 
+  componentDidMount() {
+    this.addLogoutListenerForAllTabs()
+  }
+
+  addLogoutListenerForAllTabs() {
+    window.addEventListener("storage", function(event) {
+      if(event.key === 'token' && !event.newValue) {
+        localStorage.clear()
+        window.location = '/';
+      }
+    });
+  }
+
   onLoginClick() {
     window.location.hash = '#/accounts/login'
   }
 
   onLogoutClick() {
-    localStorage.clear()
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     alertifyjs.success('You have signed out.')
     window.location.hash = '#/'
+    window.location.reload()
   }
 
   toUserHome() {
