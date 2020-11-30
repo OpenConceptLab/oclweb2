@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip, ButtonGroup,
-} from '@material-ui/core'
-import {
-  ArrowDropDown as ArrowDropDownIcon,
-} from '@material-ui/icons'
+import { Tooltip, Chip, MenuItem, Menu } from '@material-ui/core'
+import { FormatListNumberedRtl as NumberListIcon } from '@material-ui/icons'
 import { map } from 'lodash';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
@@ -21,8 +17,8 @@ class ResultsCountDropDown extends React.Component {
     this.state = {
       open: false,
       limit: DEFAULT_LIMIT,
+      anchorEl: null,
     }
-    this.buttonRef = React.createRef(null);
   }
 
   onSetCount = limit => {
@@ -34,15 +30,9 @@ class ResultsCountDropDown extends React.Component {
       })
   }
 
-  toggleOpen = () => {
-    this.setState({open: !this.state.open})
-  }
-
-  handleClose = event => {
-    if (this.buttonRef.current && this.buttonRef.current.contains(event.target)) {
-      return;
-    }
-    this.toggleOpen()
+  toggleOpen = event => {
+    const newOpen = !this.state.open
+    this.setState({open: newOpen, anchorEl: newOpen ? event.currentTarget : null})
   }
 
   componentDidMount() {
@@ -60,59 +50,36 @@ class ResultsCountDropDown extends React.Component {
   }
 
   render() {
-    const { total, size } = this.props;
-    const { limit, open } = this.state;
+    const { size } = this.props;
+    const { limit, anchorEl } = this.state;
     return (
       <span>
         <Tooltip title='Results Per Page'>
-          <ButtonGroup variant="contained" color="primary" ref={this.buttonRef} aria-label="limit button" size={size || 'medium'}>
-            <Button style={{fontSize: '0.8125em'}} onClick={this.toggleOpen}>
-              PageSize : {limit}
-            </Button>
-            <Button
-              color="primary"
-              aria-controls={open ? 'limit-button-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-label="select merge strategy"
-              aria-haspopup="menu"
-              onClick={this.toggleOpen}
-              style={{padding: '0px', minWidth: '30px'}}
-            >
-              <ArrowDropDownIcon />
-            </Button>
-          </ButtonGroup>
+          <Chip
+            variant="outlined"
+            color='primary'
+            icon={<NumberListIcon fontSize='inherit' />}
+            label={`PageSize : ${limit}`}
+            onClick={this.toggleOpen}
+            size={size || 'medium'}
+            style={{minWidth: '80px'}}
+          />
         </Tooltip>
-        <Popper open={open} anchorEl={this.buttonRef.current} transition disablePortal style={{zIndex: 1000}}>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                zIndex: '1000'
-              }}
-              >
-              <Paper>
-                <ClickAwayListener onClickAway={this.handleClose}>
-                  <MenuList id="limit-button-menu">
-                    {
-                      map(OPTIONS, option => (
-                        <MenuItem
-                          id={option.id}
-                          key={option.id}
-                          selected={option.count === limit}
-                          onClick={() => this.onSetCount(option.count)}
-                          disabled={option.count !== limit && option.count > total}
-                          >
-                          {option.id}
-                        </MenuItem>
-                      ))
-                    }
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+        <Menu
+          id="results-size-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={this.toggleOpen}
+        >
+          {
+            map(OPTIONS, option => (
+              <MenuItem key={option.id} value={option.count} onClick={() => this.onSetCount(option.count)}>
+                {option.id}
+              </MenuItem>
+            ))
+          }
+        </Menu>
       </span>
     )
   }
