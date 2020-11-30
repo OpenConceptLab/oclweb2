@@ -126,9 +126,9 @@ const RESOURCE_DEFINITIONS = {
       {id: 'createdOn', label: 'Joined On', value: 'created_on', formatter: formatDate, sortOn: 'date_joined'},
     ],
     tags: [
-      {id: 'orgs', value: 'orgs', label: 'Organizations', icon: <HomeIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />},
-      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />},
+      {id: 'orgs', value: 'orgs', label: 'Organizations', icon: <HomeIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'organizations_url'},
+      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'sources_url'},
+      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'collections_url'},
     ],
     expandible: false,
   },
@@ -290,13 +290,9 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['concepts', 'mappings', 'sources', 'collections', 'organizations'], resource) && item.url) {
-      event.stopPropagation();
-      event.preventDefault()
-      window.open('#' + item.url, '_blank')
-    } else {
-      onClick(event);
-    }
+    event.stopPropagation();
+    event.preventDefault()
+    window.open('#' + item.url, '_blank')
   }
 
   const handleTabChange = (event, newValue) => {

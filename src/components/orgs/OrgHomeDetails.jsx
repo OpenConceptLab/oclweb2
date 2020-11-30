@@ -81,7 +81,7 @@ const OrgHomeDetails = ({ org, members }) => {
                 let label = member.name;
                 if(label === '- -')
                   label = member.username
-                return <UserButton label={label} href={`#${member.url}`} />;
+                return <UserButton key={member.username} label={label} href={`#${member.url}`} />;
               })
 
             }

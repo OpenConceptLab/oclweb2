@@ -63,6 +63,12 @@ span.resource-label {
         color: #fff;
         border-radius: 0 .25em .25em 0;
     }
+    &.orange {
+        background-color: rgb(92, 184, 92);
+    }
+    &.green {
+        background-color: rgb(253, 164, 41);
+    }
     .resource-name {
         font-weight: bold;
         color: #000;
