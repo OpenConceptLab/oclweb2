@@ -49,12 +49,12 @@ class App extends Component {
             <Typography variant="h6" className="brand col-sm-1">
               <Link className="no-anchor-styles" to="/">OCL</Link>
             </Typography>
-            {
-              !isAtGlobalSearch() &&
-              <div className="col-sm-8">
+            <div className="col-sm-8">
+              {
+                !isAtGlobalSearch() &&
                 <SearchInput {...this.props} handleSearchResults={this.handleSearchResults} />
-              </div>
-            }
+              }
+            </div>
             <div className='col-sm-4 pull-right' style={{textAlign: 'right'}}>
               {
                 authenticated ?
