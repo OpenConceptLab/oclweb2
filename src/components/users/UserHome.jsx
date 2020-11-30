@@ -110,10 +110,10 @@ class UserHome extends React.Component {
     const {user, isLoading} = this.state;
     return (
       <div className="col-md-12">
-        <div className="col-md-3">
+        <div className="col-md-3 no-right-padding">
           <UserHomeDetails user={user} isLoading={isLoading} />
         </div>
-        <div className='col-md-9' style={{marginTop: '15px'}}>
+        <div className='col-md-9 no-left-padding' style={{marginTop: '15px'}}>
           <UserHomeTabs {...this.state} onChange={this.onTabChange} />
         </div>
       </div>

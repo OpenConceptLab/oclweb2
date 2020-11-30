@@ -5,7 +5,7 @@ import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
 
-const TABS = ['concepts', 'mappings', 'versions', 'about']
+const TABS = ['concepts', 'mappings', 'references', 'versions', 'about']
 
 class CollectionHome extends React.Component {
   constructor(props) {
@@ -22,8 +22,10 @@ class CollectionHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1)
-      return 4;
+      return 5;
     if(location.pathname.indexOf('/versions') > -1)
+      return 4;
+    if(location.pathname.indexOf('/references') > -1)
       return 3;
     if(location.pathname.indexOf('/mappings') > -1)
       return 2;
@@ -52,6 +54,8 @@ class CollectionHome extends React.Component {
 
   getURLFromPath() {
     const { location, match } = this.props;
+    if(location.pathname.indexOf('/references') > -1)
+      return location.pathname.split('/references')[0] + '/'
     if(location.pathname.indexOf('/versions') > -1)
       return location.pathname.split('/versions')[0] + '/'
     if(location.pathname.indexOf('/mappings') > -1)
@@ -79,7 +83,7 @@ class CollectionHome extends React.Component {
 
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
-      if(includes([1, 2, 3], value))
+      if(includes([1, 2, 3, 4], value))
         this.getVersions()
     })
   }
@@ -91,7 +95,7 @@ class CollectionHome extends React.Component {
                 .get()
                 .then(response => {
                   this.setState({isLoading: false, collection: response.data}, () => {
-                    if(includes([1, 2, 3], this.state.tab))
+                    if(includes([1, 2, 3, 4], this.state.tab))
                       this.getVersions()
                   })
                 })
@@ -109,7 +113,7 @@ class CollectionHome extends React.Component {
   getCurrentVersion() {
     let version = this.props.match.params.version;
 
-    if(!includes(['mappings', 'concepts', 'versions', 'about'], version))
+    if(!includes(TABS, version))
       return version
   }
 

@@ -18,6 +18,7 @@ const CollectionHomeTabs = props => {
         <Tab label="Details" />
         <Tab label="Concepts" />
         <Tab label="Mappings" />
+        <Tab label="References" />
         <Tab label="Versions" />
         <Tab label="About" />
       </Tabs>
@@ -50,10 +51,22 @@ const CollectionHomeTabs = props => {
         }
         {
           tab === 3 &&
-          <ConceptContainerVersionList versions={versions} resource='collection' />
+          <CollectionHomeChildrenList
+            collection={collection}
+            location={location}
+            versionedObjectURL={versionedObjectURL}
+            versions={versions}
+            currentVersion={currentVersion}
+            resource='references'
+            references={true}
+          />
         }
         {
           tab === 4 &&
+          <ConceptContainerVersionList versions={versions} resource='collection' />
+        }
+        {
+          tab === 5 &&
           <AboutAccordian id={collection.id} about={about} />
         }
       </div>

@@ -15,9 +15,12 @@ const __fetchSearchResults = (resource, queryParams, baseURL, callback, method='
   if(!queryParams)
     queryParams = {};
 
-  const service = APIService[resource]();
+  let service;
+
   if(baseURL)
-    service.overrideURL(baseURL);
+    service = APIService.new().overrideURL(baseURL);
+  else if(resource)
+    service = APIService[resource]();
 
   if(method === 'get')
     service

@@ -28,6 +28,7 @@ import {
 import {
   formatDate, formatDateTime, headFirst
 } from '../../common/utils';
+import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
 import ToConceptLabel from '../mappings/ToConceptLabel';
@@ -38,6 +39,13 @@ import APIService from '../../services/APIService';
 const TAG_ICON_STYLES = {width: '11px', marginRight: '2px'}
 
 const RESOURCE_DEFINITIONS = {
+  references: {
+    headBgColor: BLUE,
+    headTextColor: WHITE,
+    columns: [
+      {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
+    ],
+  },
   concepts: {
     headBgColor: BLUE,
     headTextColor: WHITE,
@@ -290,6 +298,8 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
+    if(resource === 'references')
+      return
     event.stopPropagation();
     event.preventDefault()
     window.open('#' + item.url, '_blank')

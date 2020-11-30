@@ -65,6 +65,8 @@ class Search extends React.Component {
   }
 
   componentDidMount() {
+    if(this.props.references)
+      this.setState({results: {...this.state.results, references: cloneDeep(resourceResultStruct)}})
     this.setQueryParamsInState()
   }
 
@@ -282,19 +284,25 @@ class Search extends React.Component {
             }
           </span>
         }
-        <span style={{paddingRight: '5px'}}>
-          <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
-        </span>
-        <span style={{paddingRight: '5px'}}>
-          <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
-        </span>
-        <span style={{paddingRight: '5px'}}>
-          <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
-        </span>
         {
-          !this.isTable && <span style={{paddingRight: '5px'}}>
-            <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} />
+          resource !== 'references' &&
+          <span>
+            <span style={{paddingRight: '5px'}}>
+              <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
+            </span>
+            <span style={{paddingRight: '5px'}}>
+              <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
+            </span>
+            <span style={{paddingRight: '5px'}}>
+              <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
+            </span>
+            {
+              !this.isTable && <span style={{paddingRight: '5px'}}>
+                <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} />
+              </span>
+            }
           </span>
+
         }
         <span>
           <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
