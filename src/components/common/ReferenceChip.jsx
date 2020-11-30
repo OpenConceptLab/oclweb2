@@ -14,7 +14,7 @@ const ReferenceChip = props => {
 
   return (
     <Link to={expression}>
-      <Chip icon={icon} label={expression} variant='outlined' color='primary' style={{border: 'none'}}/>
+      <Chip className='clickable' icon={icon} label={expression} variant='outlined' color='primary' style={{border: 'none'}} />
     </Link>
   )
 }
