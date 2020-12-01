@@ -41,26 +41,35 @@ const CustomAttributesAccordian = ({
         {
           isEmpty(attributes) ?
           None() :
-          map(attributes, (value, name) => (
-            <div className='col-md-12' style={{marginBottom: '5px'}} key={name}>
-              <div style={{fontWeight: '300'}} className='col-md-3 no-left-padding'>
-                {name}
+          map(attributes, (value, name) => {
+            const isBool = isBoolean(value)
+            const needNesting = !isBool && shouldBeNested(value)
+            const isArr = isArray(value)
+            return (
+              <div className='col-md-12' style={{marginBottom: '5px'}} key={name}>
+                <div style={{fontWeight: '300'}} className='col-md-3 no-left-padding'>
+                  {name}
+                </div>
+                <div className='col-md-9 no-right-padding ellipsis-text' style={{maxWidth: '100%'}}>
+                  {
+                    isBool && value.toString()
+                  }
+                  {
+                    needNesting &&
+                    map(value, val => getNestedValueDom(val))
+                  }
+                  {
+                    isArr && !needNesting &&
+                    <pre style={{margin: '0'}}>{JSON.stringify(value)}</pre>
+                  }
+                  {
+                    !isBool && !needNesting && !isArr &&
+                    value
+                  }
+                </div>
               </div>
-              <div className='col-md-9 no-right-padding ellipsis-text' style={{maxWidth: '100%'}}>
-                {
-                  isBoolean(value) && value.toString()
-                }
-                {
-                  shouldBeNested(value) &&
-                  map(value, val => getNestedValueDom(val))
-                }
-                {
-                  !isBoolean(value) && !shouldBeNested(value) &&
-                  JSON.stringify(value)
-                }
-              </div>
-            </div>
-          ))
+            )
+          })
         }
       </AccordionDetails>
     </Accordion>
