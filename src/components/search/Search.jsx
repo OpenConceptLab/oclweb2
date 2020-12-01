@@ -146,15 +146,7 @@ class Search extends React.Component {
   }
 
   onSearch = (value, exactMatch) => {
-    if(
-      value !== this.state.searchStr ||
-      exactMatch !== this.state.exactMatch
-    )
-      this.fetchNewResults(
-        {searchStr: value, page: 1, exactMatch: exactMatch},
-        true,
-        true
-      )
+    this.fetchNewResults({searchStr: value, page: 1, exactMatch: exactMatch}, true, true)
   }
 
   getCurrentResourceTotalResults() {
