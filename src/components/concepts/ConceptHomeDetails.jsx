@@ -31,7 +31,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
       <div className='col-md-6 no-left-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
@@ -49,7 +49,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
         </Accordion>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
@@ -74,7 +74,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
       <div className='col-md-6 no-right-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
@@ -90,7 +90,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
         </Accordion>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >

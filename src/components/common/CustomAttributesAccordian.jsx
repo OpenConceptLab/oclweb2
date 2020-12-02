@@ -31,7 +31,7 @@ const CustomAttributesAccordian = ({
   return (
     <Accordion defaultExpanded>
       <AccordionSummary
-        className='light-gray-bg'
+        className='light-gray-bg less-paded-accordian-header'
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
       >

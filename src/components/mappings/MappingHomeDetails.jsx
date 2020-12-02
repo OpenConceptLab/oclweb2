@@ -23,7 +23,7 @@ const MappingHomeDetails = ({ mapping }) => {
       <div className='col-md-8 no-side-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >

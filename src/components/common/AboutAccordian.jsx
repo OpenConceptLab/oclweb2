@@ -16,7 +16,7 @@ const AboutAccordian = ({id, about}) => {
     <div className='col-md-12'>
       <Accordion defaultExpanded>
         <AccordionSummary
-          className='light-gray-bg'
+          className='light-gray-bg less-paded-accordian-header'
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
         >

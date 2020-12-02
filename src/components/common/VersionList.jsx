@@ -25,10 +25,10 @@ const VersionList = ({ versions, resource }) => {
   const sortedVersions = headFirst(versions);
   return (
     <div className='col-md-12'>
-      <div className='col-md-8 no-left-padding'>
+      <div className='col-md-8 no-left-padding less-paded-accordian-header'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
@@ -77,7 +77,7 @@ const VersionList = ({ versions, resource }) => {
       <div className='col-md-4 no-right-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >

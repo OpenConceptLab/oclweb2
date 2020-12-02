@@ -25,7 +25,7 @@ const ConceptHomeMappings = ({ concept }) => {
       <div className='col-md-8 no-left-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
@@ -65,7 +65,7 @@ const ConceptHomeMappings = ({ concept }) => {
       <div className='col-md-4 no-right-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg'
+            className='light-gray-bg less-paded-accordian-header'
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
