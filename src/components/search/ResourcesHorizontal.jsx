@@ -51,7 +51,7 @@ const ResourcesHorizontal = props => {
                       {resource.icon}
                     </Avatar>
                   }
-                  title={<span style={isActive ? {fontSize: '20px', fontWeight: 'bold'} : {}}>{resource.label}</span>}
+                  title={<span style={isActive ? {fontSize: '16px', fontWeight: 'bold'} : {}}>{resource.label}</span>}
                   subheader={isLoading ? inProgress : count}
                 />
               </Card>
