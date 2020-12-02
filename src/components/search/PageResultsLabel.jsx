@@ -1,5 +1,5 @@
 import React from 'react';
-import { min, isNaN, startCase, get } from 'lodash';
+import { min, isNaN, get } from 'lodash';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
 class PageResultsLabel extends React.Component {
@@ -23,14 +23,13 @@ class PageResultsLabel extends React.Component {
   }
 
   render() {
-    const { resource, results } = this.props;
+    const { results } = this.props;
     const pageRange = this.getPageRange()
     return (
       <span style={{fontSize: '12px'}}>
         <span style={{fontWeight: 'bold', paddingRight: '4px'}}>{`${pageRange[0]}-${pageRange[1]}`}</span>
         <span style={{paddingRight: '4px'}}>of</span>
         <span style={{fontWeight: 'bold', paddingRight: '4px'}}>{get(results, 'total', 0).toLocaleString()}</span>
-        <span>{startCase(resource)}</span>
       </span>
     )
   }
