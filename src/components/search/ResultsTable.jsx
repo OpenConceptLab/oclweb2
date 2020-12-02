@@ -36,7 +36,7 @@ import FromConceptLabel from '../mappings/FromConceptLabel';
 import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 
-const TAG_ICON_STYLES = {width: '11px', marginRight: '2px'}
+const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -414,17 +414,18 @@ const ExpandibleRow = props => {
         }
         {
           !isSelectable &&
-          <TableCell align='center' style={{width: '120px', padding: '2px'}}>
+          <TableCell align='left' style={{width: '120px', padding: '2px'}}>
             {
               map(resourceDefinition.tags, tag => (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
-                  <div style={{lineHeight: '10px', marginBottom: '5px'}}>
-                    <div className='flex-vertical-center' style={{fontSize: '11px'}}>
-                      <span>{tag.icon}</span>
-                      <span>{tag.label}</span>
+                  <Tooltip title={tag.label}>
+                    <div style={{fontSize: '14px', lineHeight: '10px', marginBottom: '5px'}}>
+                      <div className='flex-vertical-center'>
+                        <span>{tag.icon}</span>
+                        <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
+                      </div>
                     </div>
-                    <div style={{fontSize: '14px'}}>{`${get(item, tag.value, '0')}`}</div>
-                  </div>
+                  </Tooltip>
                 </Link>
               ))
             }
