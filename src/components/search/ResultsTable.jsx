@@ -9,7 +9,7 @@ import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   LocalOffer as LocalOfferIcon,
   Link as LinkIcon,
-  AcUnit as AsteriskIcon,
+  AccountTreeRounded as TreeIcon,
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
   Public as PublicIcon,
@@ -88,7 +88,7 @@ const RESOURCE_DEFINITIONS = {
     tags: [
       {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
       {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
-      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <TreeIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
     ],
     tabs: ['Versions',],
     expandible: true,
@@ -105,7 +105,7 @@ const RESOURCE_DEFINITIONS = {
     tags: [
       {id: 'activeConcepts', value: 'active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
       {id: 'activeMappings', value: 'active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
-      {id: 'versions', value: 'versions', label: 'Versions', icon: <AsteriskIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
+      {id: 'versions', value: 'versions', label: 'Versions', icon: <TreeIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
     ],
     tabs: ['Versions',],
     expandible: true,

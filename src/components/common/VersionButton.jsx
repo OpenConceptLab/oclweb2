@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
 import {
-  AcUnit as AsteriskIcon,
+  AccountTreeRounded as TreeIcon
 } from '@material-ui/icons';
 import { BLUE, WHITE, RED, BLACK } from '../../common/constants';
 
@@ -15,7 +15,7 @@ const VersionButton = ({label, onClick, retired, href, bgColor, textColor}) => {
     <Button
       href={href}
       variant='contained'
-      startIcon={<AsteriskIcon />}
+      startIcon={<TreeIcon />}
       onClick={onClick}
       style={style}>
       {label}

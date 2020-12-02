@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  AcUnit as AsteriskIcon,
+  AccountTreeRounded as TreeIcon
 } from '@material-ui/icons';
 import ReleasedChip from './ReleasedChip';
 
@@ -10,7 +10,7 @@ const ResourceVersionLabel = props => {
     <div className='col-sm-12 no-side-padding'>
       <span className='resource-label'>
         <span style={{paddingTop: '5px'}}>
-          <AsteriskIcon fontSize='small' style={{width: '14px'}} />
+          <TreeIcon fontSize='small' style={{width: '14px'}} />
         </span>
         <span>{props.owner}</span>
         <span>{SEPARATOR}</span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chip, MenuItem, Menu } from '@material-ui/core';
-import { AcUnit as AsteriskIcon } from '@material-ui/icons';
+import { AccountTreeRounded as TreeIcon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 import { map, without } from 'lodash';
 
 const VersionFilter = props => {
@@ -25,11 +25,13 @@ const VersionFilter = props => {
       <Chip
         variant="outlined"
         color='primary'
-        icon={<AsteriskIcon fontSize='inherit' style={{width: '14px'}} />}
+        icon={<TreeIcon fontSize='inherit' style={{width: '14px', marginLeft: '5px'}} />}
         label={selected}
         onClick={onOpen}
         size={size || 'medium'}
         style={{minWidth: '80px'}}
+        deleteIcon={<ArrowDropDownIcon fontSize="inherit" />}
+        onDelete={onOpen}
       />
       <Menu
         id="versions-menu"
