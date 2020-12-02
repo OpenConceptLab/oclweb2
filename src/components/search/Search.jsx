@@ -3,6 +3,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import SearchInput from './SearchInput';
 import ResourcesHorizontal from './ResourcesHorizontal';
+import ResourceTabs from './ResourceTabs';
 //import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
 import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size } from 'lodash';
@@ -356,8 +357,14 @@ class Search extends React.Component {
           </div>
           {
             !nested &&
-            <div className='col-sm-12 search-resources' style={{marginTop: '10px'}}>
+            <div className='col-sm-12 search-resources' style={{marginTop: '10px', display: 'none'}}>
               <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
+            </div>
+          }
+          {
+            !nested &&
+            <div className='col-sm-12' style={{marginTop: '5px', padding: '0px'}}>
+              <ResourceTabs active={resource} results={results} onClick={this.onResourceChange} />
             </div>
           }
           {

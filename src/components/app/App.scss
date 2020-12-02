@@ -64,15 +64,24 @@ span.resource-label {
         border-radius: 0 .25em .25em 0;
     }
     &.orange {
-        background-color: rgb(92, 184, 92);
+        background-color: rgb(253, 164, 41);
     }
     &.green {
-        background-color: rgb(253, 164, 41);
+        background-color: rgb(92, 184, 92);
     }
     .resource-name {
         font-weight: bold;
         color: #000;
     }
+}
+.bg-orange {
+    background-color: rgb(253, 164, 41) !important;
+}
+.bg-green {
+    background-color: rgb(92, 184, 92) !important;
+}
+.bg-blue {
+    background-color: rgb(51, 115, 170) !important;
 }
 div.resource-attributes {
     font-size: 13px;
@@ -293,4 +302,28 @@ div.login-paper {
 .less-paded-accordian-header {
     height: 40px !important;
     min-height: 40px !important;
+}
+.material-tab {
+    span {
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+    }
+}
+.material-tab:hover {
+    background-color: rgba(32,33,36,0.059);
+}
+.resource-count-bubble {
+    display: inline-block;
+    min-width: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    color: #000;
+    text-align: center;
+    background-color: rgb(232, 234, 236);
+    border: 1px solid transparent;
+    border-radius: 2em;
+    margin-left: 10px
 }
