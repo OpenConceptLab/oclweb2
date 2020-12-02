@@ -331,7 +331,7 @@ class Search extends React.Component {
     return (
       <div className='col-sm-12' style={nested ? {} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-9 no-side-padding' style={{textAlign: 'center'}}>
+          <div className='col-sm-10 no-side-padding' style={{textAlign: 'center'}}>
             <SearchInput
               {...this.props}
               onSearch={this.onSearch}
@@ -339,11 +339,11 @@ class Search extends React.Component {
               moreControls={this.getFilterControls()}
             />
           </div>
-          <div className='col-sm-3 no-side-padding' style={{textAlign: 'center', marginTop: '7px'}}>
-            <span className='col-sm-9 no-side-padding' style={{marginTop: '2px',}}>
+          <div className='col-sm-2 no-side-padding' style={{textAlign: 'right', marginTop: '7px'}}>
+            <span className='col-sm-8 no-side-padding' style={{marginTop: '2px', textAlign: 'center'}}>
               <PageResultsLabel resource={resource} results={results[resource]} limit={limit} />
             </span>
-            <span className='col-sm-3 no-side-padding' style={{textAlign: 'right'}}>
+            <span className='col-sm-4 no-side-padding'>
               <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
                 <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
                   <NavigateBeforeIcon width="10" />

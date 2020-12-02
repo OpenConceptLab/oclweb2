@@ -419,7 +419,7 @@ const ExpandibleRow = props => {
               map(resourceDefinition.tags, tag => (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
                   <Tooltip title={tag.label}>
-                    <div style={{fontSize: '14px', lineHeight: '10px', marginBottom: '5px'}}>
+                    <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
                       <div className='flex-vertical-center'>
                         <span>{tag.icon}</span>
                         <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
