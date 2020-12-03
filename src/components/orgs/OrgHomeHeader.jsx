@@ -7,6 +7,7 @@ import { toFullAPIURL, copyURL } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
+import LocationLabel from '../common/LocationLabel';
 
 const OrgHomeHeader = ({ org, url }) => {
   const onIconClick = () => copyURL(toFullAPIURL(url))
@@ -29,19 +30,25 @@ const OrgHomeHeader = ({ org, url }) => {
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+            {
+              org.location &&
+              <span style={{marginRight: '10px'}}>
+                <LocationLabel location={org.location} noContainerClass iconSize="medium" />
+              </span>
+            }
             <span>
               <LastUpdatedOnLabel
-                date={org.updated_on}
-                by={org.updated_by}
+                label='Created'
+                date={org.created_on}
+                by={org.created_by}
                 iconSize='medium'
                 noContainerClass
               />
             </span>
             <span style={{marginLeft: '10px'}}>
               <LastUpdatedOnLabel
-                label='Created'
-                date={org.created_on}
-                by={org.created_by}
+                date={org.updated_on}
+                by={org.updated_by}
                 iconSize='medium'
                 noContainerClass
               />
