@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Search as SearchIcon,
-  GpsFixedSharp as SharpIcon,
+  CenterFocusStrong as ExactMatchIcon,
   Clear as ClearIcon,
 } from '@material-ui/icons';
 import { InputBase, Divider, IconButton, Tooltip  } from '@material-ui/core';
@@ -116,7 +116,7 @@ class SearchInput extends React.Component {
           <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
           <Tooltip title='Exact Match'>
             <IconButton color={exactMatch === 'on' ? "primary" : "default"} style={{padding: '10px'}} aria-label="exact" onClick={this.handleExactMatchChange}>
-              <SharpIcon />
+              <ExactMatchIcon />
             </IconButton>
           </Tooltip>
         </div>
