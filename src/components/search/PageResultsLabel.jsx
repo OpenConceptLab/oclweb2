@@ -4,7 +4,7 @@ import { DEFAULT_LIMIT } from '../../common/constants';
 
 class PageResultsLabel extends React.Component {
   getPageRange() {
-    const { results, limit } = this.props;
+    const { results, limit, isInfinite } = this.props;
     const total = get(results, 'total', 0)
     let _limit = limit || DEFAULT_LIMIT;
 
@@ -18,6 +18,9 @@ class PageResultsLabel extends React.Component {
 
     if(isNaN(start)) start = 0;
     if(isNaN(end)) end = 0;
+
+    if(isInfinite)
+      start = 1
 
     return [start, end]
   }

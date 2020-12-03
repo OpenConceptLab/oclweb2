@@ -26,8 +26,8 @@ const Results = props => {
           {
             map(props.results.items, item => (
               <div className='col-sm-12 no-side-padding' key={item.id}>
-                <Divider />
                 {getComponentFor(item)}
+                <Divider style={{width: '100%'}} />
               </div>
             ))
           }

@@ -1,29 +1,30 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
-import SearchInput from './SearchInput';
-import ResourcesHorizontal from './ResourcesHorizontal';
-import ResourceTabs from './ResourceTabs';
-//import Resources from './Resources';
-import { fetchSearchResults, fetchCounts } from './utils';
 import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon
 } from '@material-ui/icons';
-import { BLUE } from '../../common/constants';
+import { BLUE, DEFAULT_LIMIT } from '../../common/constants';
+import ChipDatePicker from '../common/ChipDatePicker';
+import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
+import FilterButton from '../common/FilterButton';
+import FilterDrawer from '../common/FilterDrawer';
 import Results from './Results';
 import ResultsInfinite from './ResultsInfinite';
 import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
-import ChipDatePicker from '../common/ChipDatePicker';
-import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
-import FilterButton from '../common/FilterButton';
-import FilterDrawer from '../common/FilterDrawer';
-import { DEFAULT_LIMIT } from '../../common/constants';
+import SearchInput from './SearchInput';
+import ResourcesHorizontal from './ResourcesHorizontal';
+import ResourceTabs from './ResourceTabs';
+//import Resources from './Resources';
+import { fetchSearchResults, fetchCounts } from './utils';
+import LayoutToggle from '../common/LayoutToggle';
+import InfiniteScrollChip from '../common/InfiniteScrollChip';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -41,8 +42,9 @@ const resourceResultStruct = {
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.isInfinite = false;
     this.state = {
+      isTable: true,
+      isInfinite: false,
       page: 1,
       updatedSince: false,
       searchStr: '',
@@ -74,9 +76,9 @@ class Search extends React.Component {
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(this.props.location.search)
     const fixedFilters = this.props.fixedFilters;
-    this.isInfinite = queryParams.get('isInfinite', false)
-    this.isTable = queryParams.get('isTable') || get(fixedFilters, 'isTable');
     this.setState({
+      isTable: queryParams.get('isTable') || get(fixedFilters, 'isTable') || this.state.isTable,
+      isInfinite: queryParams.get('isInfinite') || get(fixedFilters, 'isInfinite'),
       resource: queryParams.get('type') || this.props.resource || 'concepts',
       page: queryParams.get('page') || 1,
       isLoading: true,
@@ -100,7 +102,7 @@ class Search extends React.Component {
     const previous = get(response, 'headers.previous')
     const facets = get(response, 'data.facets', {})
     let items = get(response, 'data.results', [])
-    if(this.isInfinite && !resetItems)
+    if(this.state.isInfinite && !resetItems)
       items = [...this.state.results[resource].items, ...items]
     return {
       total: numFound,
@@ -172,7 +174,7 @@ class Search extends React.Component {
       attrsToSet = {}
 
     let newState = {...this.state}
-    newState.isLoading = !this.isInfinite
+    newState.isLoading = !this.state.isInfinite
     newState = merge(newState, attrsToSet)
     if(resetItems)
       newState.page = 1
@@ -259,12 +261,25 @@ class Search extends React.Component {
     this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true)
   }
 
+  onLayoutChange = () => {
+    const newLayout = !this.state.isTable
+    let isInfinite = this.state.isInfinite
+    if(newLayout && isInfinite)
+      isInfinite = false
+
+    this.setState({ isTable: !this.state.isTable, isInfinite: isInfinite })
+  }
+
+  onInfiniteToggle = () => {
+    this.setState({isInfinite: !this.state.isInfinite})
+  }
+
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const totalResults = this.getCurrentResourceTotalResults();
     const { nested, extraControls } = this.props;
     const {
-      updatedSince, limit, appliedFacets, resource, includeRetired
+      updatedSince, limit, appliedFacets, resource, includeRetired, isTable, isInfinite,
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
     return (
@@ -290,7 +305,7 @@ class Search extends React.Component {
               <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
             </span>
             {
-              !this.isTable && <span style={{paddingRight: '5px'}}>
+              !isTable && <span style={{paddingRight: '5px'}}>
                 <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} />
               </span>
             }
@@ -300,6 +315,15 @@ class Search extends React.Component {
         <span>
           <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
         </span>
+        <span style={{paddingLeft: '5px'}}>
+          <LayoutToggle isTable={isTable} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
+        </span>
+        {
+          !isTable &&
+          <span style={{paddingLeft: '5px'}}>
+            <InfiniteScrollChip isInfinite={isInfinite} size={nested ? 'small' : 'medium'} onClick={this.onInfiniteToggle} />
+          </span>
+        }
       </span>
     )
   }
@@ -323,7 +347,7 @@ class Search extends React.Component {
   render() {
     const { nested } = this.props;
     const {
-      resource, results, isLoading, limit, sortParams, openFacetsDrawer,
+      resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
     } = this.state;
     const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-12 no-side-padding';
     const resourceResults = get(results, resource, {});
@@ -342,7 +366,7 @@ class Search extends React.Component {
           </div>
           <div className='col-sm-2 no-side-padding' style={{textAlign: 'right', marginTop: '7px'}}>
             <span className='col-sm-8 no-side-padding' style={{marginTop: '2px', textAlign: 'center'}}>
-              <PageResultsLabel resource={resource} results={results[resource]} limit={limit} />
+              <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} />
             </span>
             <span className='col-sm-4 no-side-padding'>
               <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
@@ -374,15 +398,15 @@ class Search extends React.Component {
             </div> :
             <div className='col-sm-12 no-side-padding' style={{marginTop: '5px'}}>
               {
-                this.isInfinite &&
+                isInfinite &&
                 <ResultsInfinite resource={resource} results={resourceResults} onLoadMore={this.loadMore} />
               }
               {
-                this.isTable &&
+                isTable &&
                 <ResultsTable resource={resource} results={resourceResults} onPageChange={this.onPageChange} onSortChange={this.onSortChange} sortParams={sortParams} />
               }
               {
-                !this.isTable && !this.isInfinite &&
+                !isTable && !isInfinite &&
                 <Results resource={resource} results={resourceResults} onPageChange={this.onPageChange} />
               }
             </div>
