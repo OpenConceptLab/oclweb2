@@ -10,7 +10,6 @@ class OrgHome extends React.Component {
     this.state = {
       isLoading: true,
       org: {},
-      members: [],
       tab: this.getDefaultTabIndex()
     }
   }
@@ -20,23 +19,23 @@ class OrgHome extends React.Component {
 
     if(location.pathname.indexOf('/about') > -1)
       return 3;
-    if(location.pathname.indexOf('/collections') > -1)
+    if(location.pathname.indexOf('/members') > -1)
       return 2;
-    if(location.pathname.indexOf('/sources') > -1)
+    if(location.pathname.indexOf('/collections') > -1)
       return 1;
+    if(location.pathname.indexOf('/sources') > -1)
+      return 0;
 
     return 0;
   }
 
   componentDidMount() {
     this.refreshDataByURL()
-    this.getMembers()
   }
 
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.refreshDataByURL()
-      this.getMembers()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
   }
@@ -56,19 +55,12 @@ class OrgHome extends React.Component {
                       .then(response => this.setState({isLoading: false, org: response.data})))
   }
 
-  getMembers() {
-    APIService.new()
-              .overrideURL(this.getURLFromPath() + 'members/')
-              .get()
-              .then(response => this.setState({members: response.data}))
-  }
-
   onTabChange = (event, value) => {
     this.setState({tab: value})
   }
 
   render() {
-    const { org, isLoading, tab, members } = this.state;
+    const { org, isLoading, tab } = this.state;
     const url = this.getURLFromPath()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
@@ -83,7 +75,6 @@ class OrgHome extends React.Component {
               org={org}
               location={this.props.location}
               url={url}
-              members={members}
             />
           </div>
         }

@@ -1,9 +1,8 @@
 import React from 'react';
 import {
   List as ListIcon,
-  Public as PublicIcon,
 } from '@material-ui/icons';
-import { Tooltip, Chip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { includes } from 'lodash';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 import { GREEN } from '../../common/constants';
@@ -12,6 +11,7 @@ import SourceButton from '../common/SourceButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
+import PublicAccessChip from '../common/PublicAccessChip';
 
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
@@ -49,9 +49,7 @@ const SourceHomeHeader = ({
             </span>
             {
               includes(['view', 'edit'], source.public_access.toLowerCase()) &&
-              <span style={{marginTop: '-5px'}}>
-                <Chip label='Public' size='small' icon=<PublicIcon fontSize='inherit' /> />
-              </span>
+              <PublicAccessChip publicAccess={source.public_access} />
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
