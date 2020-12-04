@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
-import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size } from 'lodash';
+import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
@@ -243,7 +243,8 @@ class Search extends React.Component {
   }
 
   onResourceChange = resource => {
-    this.fetchNewResults({resource: resource}, false, true)
+    const shouldGetCounts = !isEmpty(this.state.appliedFacets);
+    this.setState({resource: resource, appliedFacets: {}}, () => this.fetchNewResults(null, shouldGetCounts, true))
   }
 
   onDateChange = date => {
@@ -341,7 +342,7 @@ class Search extends React.Component {
   }
 
   onApplyFacets = filters => {
-    this.setState({appliedFacets: filters}, () => this.fetchNewResults(null, true, true))
+    this.setState({appliedFacets: filters}, () => this.fetchNewResults(null, false, true))
   }
 
   render() {
