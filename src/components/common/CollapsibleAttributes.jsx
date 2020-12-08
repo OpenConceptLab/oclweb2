@@ -5,6 +5,7 @@ import {
 import { Collapse, Chip } from '@material-ui/core';
 import { map, get, startCase, isEmpty, isArray } from 'lodash';
 import { formatDate } from '../../common/utils';
+import HeaderAttribute from './HeaderAttribute';
 
 
 const CollapsibleAttributes = ({
@@ -13,9 +14,21 @@ const CollapsibleAttributes = ({
   const [expand, setExpand] = React.useState(false);
   const onExpand = () => setExpand(!expand);
 
+  const getURLComponent = attr => {
+    const val = get(object, attr)
+    if(val)
+      return <a href={val} target="_blank" rel="noopener noreferrer">{val}</a>;
+  }
+
+  const getJSONComponent = attr => {
+    const val = get(object, attr)
+    if(!isEmpty(val))
+      return <pre>{JSON.stringify(val, undefined, 2)}</pre>;
+  }
+
   return (
     <React.Fragment>
-      <div className='col-md-12 no-side-padding' style={{marginLeft: '-8px', marginTop: '5px'}}>
+      <div className='col-md-12 no-side-padding' style={{marginLeft: '-8px'}}>
         <Chip
           label="More"
           onClick={onExpand}
@@ -27,71 +40,30 @@ const CollapsibleAttributes = ({
           style={{border: 'none'}}
         />
       </div>
-      <Collapse in={expand} className="col-md-8" style={{fontSize: '95%', padding: '5px', display: `${expand ? 'block' : 'none'}`}}>
+      <Collapse in={expand} className="col-md-8" style={{fontSize: '95%', padding: '5px 0', display: `${expand ? 'block' : 'none'}`}}>
         {
           isArray(urlAttrs) && map(urlAttrs, attr => (
-            <div className='col-md-6 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '10px'}}>
-                {`${startCase(attr)}:`}
-              </span>
-              <span>
-                {
-                  get(object, attr) ?
-                  <a href={object[attr]} target="_blank" rel="noopener noreferrer">
-                    {object[attr]}
-                  </a> :
-                  'None'
-                }
-              </span>
-            </div>
+            <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={getURLComponent(attr)} gridClass='col-md-6' />
           ))
         }
         {
           isArray(textAttrs) && map(textAttrs, attr => (
-            <div className='col-md-6 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '10px'}}>
-                {`${startCase(attr)}:`}
-              </span>
-              <span> {get(object, attr) || 'None'} </span>
-            </div>
+            <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(object, attr)} gridClass='col-md-6' />
           ))
         }
         {
           isArray(booleanAttrs) && map(booleanAttrs, attr => (
-            <div className='col-md-6 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '10px'}}>
-                {`${startCase(attr)}:`}
-              </span>
-              <span> {get(object, attr) ? 'True' : 'False'} </span>
-            </div>
+            <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(object, attr) ? 'True' : 'False'} gridClass='col-md-6' />
           ))
         }
         {
           isArray(dateAttrs) && map(dateAttrs, attr => (
-            <div className='col-md-6 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '10px'}}>
-                {`${startCase(attr)}:`}
-              </span>
-              <span>
-                {get(object, attr) ? formatDate(object[attr]) : 'None'}
-              </span>
-            </div>
+            <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(object, attr) ? formatDate(object[attr]) : 'None'} gridClass='col-md-6' />
           ))
         }
         {
           isArray(jsonAttrs) && map(jsonAttrs, attr => (
-            <div className='col-md-6 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '10px'}}>
-                {`${startCase(attr)}:`}
-              </span>
-              <span>
-                {
-                  isEmpty(get(object, attr)) ?
-                  'None':
-                  <pre>{JSON.stringify(object[attr], undefined, 2)}</pre>
-                }
-              </span>
-            </div>
+            <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={getJSONComponent(attr)} gridClass='col-md-6' />
           ))
         }
       </Collapse>

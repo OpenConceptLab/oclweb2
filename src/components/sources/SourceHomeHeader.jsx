@@ -14,6 +14,7 @@ import ExternalIdLabel from '../common/ExternalIdLabel';
 import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
+import HeaderAttribute from '../common/HeaderAttribute';
 
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
@@ -54,22 +55,25 @@ const SourceHomeHeader = ({
               <PublicAccessChip publicAccess={source.public_access} />
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Source Type:
-            </span>
-            <span>
-              {source.source_type}
-            </span>
+          <div className="col-md-5 no-side-padding">
+            <HeaderAttribute label="Description" value={source.description} gridClass="col-md-12" />
+            <HeaderAttribute
+              label="Website"
+              value={
+                source.website ?
+                     <a href={source.website} target="_blank" rel="noopener noreferrer"> {source.website} </a> :
+                     'None'
+              }
+              gridClass="col-md-12"
+            />
+            <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Custom Attributes:
-            </span>
-            <span>
-              <CustomAttributesPopup attributes={source.extras} />
-            </span>
+          <div className="col-md-7 no-side-padding">
+            <HeaderAttribute label="Default Locale" value={source.default_locale} gridClass="col-md-12" />
+            <HeaderAttribute label="Supported Locale" value={source.supported_locales.join(', ')} gridClass="col-md-12" />
+            <HeaderAttribute label="Custom Validation Schema" value={source.custom_validation_schema} gridClass="col-md-12" />
           </div>
+          <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
           <div className='col-md-12 no-side-padding'>
             <CollapsibleAttributes
               object={source}

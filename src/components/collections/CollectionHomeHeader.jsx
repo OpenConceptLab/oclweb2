@@ -14,6 +14,7 @@ import ExternalIdLabel from '../common/ExternalIdLabel';
 import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
+import HeaderAttribute from '../common/HeaderAttribute';
 
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL
@@ -54,22 +55,28 @@ const CollectionHomeHeader = ({
               <PublicAccessChip publicAccess={collection.public_access} />
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Collection Type:
-            </span>
-            <span>
-              {collection.collection_type}
-            </span>
+
+          <div className="col-md-5 no-side-padding">
+            <HeaderAttribute label="Short Code" value={collection.short_code} gridClass="col-md-12" />
+            <HeaderAttribute label="Name" value={collection.name} gridClass="col-md-12" />
+            <HeaderAttribute label="Description" value={collection.description} gridClass="col-md-12" />
+            <HeaderAttribute
+              label="Website"
+              value={
+                collection.website ?
+                     <a href={collection.website} target="_blank" rel="noopener noreferrer"> {collection.website} </a> :
+                     'None'
+              }
+              gridClass="col-md-12"
+            />
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Custom Attributes:
-            </span>
-            <span>
-              <CustomAttributesPopup attributes={collection.extras} />
-            </span>
+          <div className="col-md-7 no-side-padding">
+            <HeaderAttribute label="Collection Type" value={collection.collection_type} gridClass="col-md-12" />
+            <HeaderAttribute label="Default Locale" value={collection.default_locale} gridClass="col-md-12" />
+            <HeaderAttribute label="Supported Locale" value={collection.supported_locales.join(', ')} gridClass="col-md-12" />
+            <HeaderAttribute label="Custom Validation Schema" value={collection.custom_validation_schema} gridClass="col-md-12" />
           </div>
+          <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-md-12" />
           <div className='col-md-12 no-side-padding'>
             <CollapsibleAttributes
               object={collection}

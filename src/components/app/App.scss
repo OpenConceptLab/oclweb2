@@ -134,6 +134,10 @@ td.pagination-center {
     display: inline-flex;
     align-items: center;
 }
+.flex-vertical-start {
+    display: inline-flex;
+    align-items: flex-start;
+}
 .ellipsis-text {
     white-space: nowrap;
     text-overflow: ellipsis;
