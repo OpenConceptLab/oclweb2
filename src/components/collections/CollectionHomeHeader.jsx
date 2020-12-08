@@ -13,6 +13,7 @@ import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
+import CollapsibleAttributes from '../common/CollapsibleAttributes';
 
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL
@@ -70,6 +71,16 @@ const CollectionHomeHeader = ({
             <span>
               <CustomAttributesPopup attributes={collection.extras} />
             </span>
+          </div>
+          <div className='col-md-12 no-side-padding'>
+            <CollapsibleAttributes
+              object={collection}
+              urlAttrs={['canonical_url']}
+              textAttrs={['publisher', 'purpose', 'copyright', 'preferred_source', 'custom_resources_linked_source']}
+              dateAttrs={['revision_date']}
+              jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+              booleanAttrs={['immutable']}
+            />
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <span>

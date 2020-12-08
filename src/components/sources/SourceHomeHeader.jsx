@@ -13,6 +13,7 @@ import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
+import CollapsibleAttributes from '../common/CollapsibleAttributes';
 
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
@@ -68,6 +69,15 @@ const SourceHomeHeader = ({
             <span>
               <CustomAttributesPopup attributes={source.extras} />
             </span>
+          </div>
+          <div className='col-md-12 no-side-padding'>
+            <CollapsibleAttributes
+              object={source}
+              urlAttrs={['canonical_url']}
+              textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
+              dateAttrs={['revision_date']}
+              jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+            />
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <span>
