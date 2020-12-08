@@ -3,8 +3,6 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { get } from 'lodash';
-import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -113,11 +111,6 @@ const CollectionHomeDetails = ({ collection }) => {
             </div>
           </AccordionDetails>
         </Accordion>
-        <CustomAttributesAccordian
-          attributes={get(collection, 'extras', {})}
-          headingStyles={ACCORDIAN_HEADING_STYLES}
-          detailStyles={ACCORDIAN_DETAILS_STYLES}
-        />
       </div>
     </div>
   );

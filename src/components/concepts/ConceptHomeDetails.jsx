@@ -6,7 +6,6 @@ import { map, get, isEmpty } from 'lodash';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
 import NestedMappingsTable from '../mappings/NestedMappingsTable';
-import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 import { getIndirectMappings, getDirectMappings } from '../../common/utils';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -25,7 +24,6 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
   const indirectMappings = getIndirectMappings(concept.mappings, concept.id);
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
-  const extras = get(concept, 'extras', {});
   return (
     <div className='col-md-12'>
       <div className='col-md-6 no-left-padding'>
@@ -65,11 +63,6 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
             }
           </AccordionDetails>
         </Accordion>
-        <CustomAttributesAccordian
-          attributes={extras}
-          headingStyles={ACCORDIAN_HEADING_STYLES}
-          detailStyles={ACCORDIAN_DETAILS_STYLES}
-        />
       </div>
       <div className='col-md-6 no-right-padding'>
         <Accordion defaultExpanded>

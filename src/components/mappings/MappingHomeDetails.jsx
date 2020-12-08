@@ -3,12 +3,10 @@ import moment from 'moment';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider
 } from '@material-ui/core';
-import { get } from 'lodash';
 import { DATETIME_FORMAT } from '../../common/constants';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
-import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -106,11 +104,6 @@ const MappingHomeDetails = ({ mapping }) => {
             </div>
           </AccordionDetails>
         </Accordion>
-        <CustomAttributesAccordian
-          attributes={get(mapping, 'extras', {})}
-          headingStyles={ACCORDIAN_HEADING_STYLES}
-          detailStyles={ACCORDIAN_DETAILS_STYLES}
-        />
       </div>
     </div>
   );

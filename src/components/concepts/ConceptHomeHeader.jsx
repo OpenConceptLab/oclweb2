@@ -5,12 +5,14 @@ import ConceptButton from '../common/ConceptButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
+import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import ConceptIcon from './ConceptIcon';
 
 const ConceptHomeHeader = ({
   concept, isVersionedObject, versionedObjectURL, currentURL
 }) => {
   const isRetired = concept.retired;
+
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
@@ -52,6 +54,14 @@ const ConceptHomeHeader = ({
             </span>
             <span>
               {concept.datatype}
+            </span>
+          </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center'>
+            <span className='italic' style={{marginRight: '3px'}}>
+              Custom Attributes:
+            </span>
+            <span>
+                <CustomAttributesPopup attributes={concept.extras} />
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>

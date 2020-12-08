@@ -12,6 +12,7 @@ import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import PublicAccessChip from '../common/PublicAccessChip';
+import CustomAttributesPopup from '../common/CustomAttributesPopup';
 
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
@@ -58,6 +59,14 @@ const SourceHomeHeader = ({
             </span>
             <span>
               {source.source_type}
+            </span>
+          </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center'>
+            <span className='italic' style={{marginRight: '3px'}}>
+              Custom Attributes:
+            </span>
+            <span>
+              <CustomAttributesPopup attributes={source.extras} />
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
