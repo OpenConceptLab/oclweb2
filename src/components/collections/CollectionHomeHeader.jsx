@@ -1,9 +1,8 @@
 import React from 'react';
 import {
   Loyalty as LoyaltyIcon,
-  Public as PublicIcon,
 } from '@material-ui/icons';
-import { Tooltip, Chip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { includes } from 'lodash';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 import { GREEN } from '../../common/constants';
@@ -12,6 +11,7 @@ import CollectionButton from '../common/CollectionButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
+import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 
@@ -51,9 +51,7 @@ const CollectionHomeHeader = ({
             </span>
             {
               includes(['view', 'edit'], collection.public_access.toLowerCase()) &&
-              <span style={{marginTop: '-5px'}}>
-                <Chip label='Public' size='small' icon=<PublicIcon fontSize='inherit' /> />
-              </span>
+              <PublicAccessChip publicAccess={collection.public_access} />
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center'>

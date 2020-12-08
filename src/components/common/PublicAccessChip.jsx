@@ -9,7 +9,7 @@ const PublicAccessChip = props => {
   const publicAccess = props.public_access || props.publicAccess;
   return (
     <span style={{marginTop: '-5px'}}>
-      <Tooltip title={`Public Access: ${startCase(publicAccess)}`} placement="top-start">
+      <Tooltip title={`Public Access: ${startCase(publicAccess)}`} placement="top">
         <Chip label='Public' size='small' icon=<PublicIcon fontSize='inherit' /> />
       </Tooltip>
     </span>
