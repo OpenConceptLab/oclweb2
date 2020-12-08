@@ -2,7 +2,6 @@ import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { get } from 'lodash';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
-import CollectionHomeDetails from './CollectionHomeDetails';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
 import AboutAccordian from '../common/AboutAccordian';
 
@@ -15,7 +14,6 @@ const CollectionHomeTabs = props => {
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header' value={tab} onChange={onChange} aria-label="concept-home-tabs" indicatorColor='none'>
-        <Tab label="Details" />
         <Tab label="Concepts" />
         <Tab label="Mappings" />
         <Tab label="References" />
@@ -25,10 +23,6 @@ const CollectionHomeTabs = props => {
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         {
           tab === 0 &&
-          <CollectionHomeDetails collection={collection} />
-        }
-        {
-          tab === 1 &&
           <CollectionHomeChildrenList
             collection={collection}
             location={location}
@@ -39,7 +33,7 @@ const CollectionHomeTabs = props => {
           />
         }
         {
-          tab === 2 &&
+          tab === 1 &&
           <CollectionHomeChildrenList
             collection={collection}
             location={location}
@@ -50,7 +44,7 @@ const CollectionHomeTabs = props => {
           />
         }
         {
-          tab === 3 &&
+          tab === 2 &&
           <CollectionHomeChildrenList
             collection={collection}
             location={location}
@@ -62,11 +56,11 @@ const CollectionHomeTabs = props => {
           />
         }
         {
-          tab === 4 &&
+          tab === 3 &&
           <ConceptContainerVersionList versions={versions} resource='collection' />
         }
         {
-          tab === 5 &&
+          tab === 4 &&
           <AboutAccordian id={collection.id} about={about} />
         }
       </div>

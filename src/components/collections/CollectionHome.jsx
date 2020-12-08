@@ -5,7 +5,7 @@ import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
 
-const TABS = ['concepts', 'mappings', 'references', 'versions', 'about']
+const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
 
 class CollectionHome extends React.Component {
   constructor(props) {
@@ -22,15 +22,15 @@ class CollectionHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1)
-      return 5;
-    if(location.pathname.indexOf('/versions') > -1)
       return 4;
-    if(location.pathname.indexOf('/references') > -1)
+    if(location.pathname.indexOf('/versions') > -1)
       return 3;
-    if(location.pathname.indexOf('/mappings') > -1)
+    if(location.pathname.indexOf('/references') > -1)
       return 2;
-    if(location.pathname.indexOf('/concepts') > -1)
+    if(location.pathname.indexOf('/mappings') > -1)
       return 1;
+    if(location.pathname.indexOf('/concepts') > -1)
+      return 0;
 
     return 0;
   }

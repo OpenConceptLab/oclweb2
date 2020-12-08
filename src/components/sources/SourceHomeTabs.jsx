@@ -2,7 +2,6 @@ import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { get } from 'lodash';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
-import SourceHomeDetails from './SourceHomeDetails';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import AboutAccordian from '../common/AboutAccordian';
 
@@ -15,7 +14,6 @@ const SourceHomeTabs = props => {
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header' value={tab} onChange={onChange} aria-label="concept-home-tabs" indicatorColor='none'>
-        <Tab label="Details" />
         <Tab label="Concepts" />
         <Tab label="Mappings" />
         <Tab label="Versions" />
@@ -24,10 +22,6 @@ const SourceHomeTabs = props => {
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         {
           tab === 0 &&
-          <SourceHomeDetails source={source} />
-        }
-        {
-          tab === 1 &&
           <SourceHomeChildrenList
             source={source}
             location={location}
@@ -38,7 +32,7 @@ const SourceHomeTabs = props => {
           />
         }
         {
-          tab === 2 &&
+          tab === 1 &&
           <SourceHomeChildrenList
             source={source}
             location={location}
@@ -49,11 +43,11 @@ const SourceHomeTabs = props => {
           />
         }
         {
-          tab === 3 &&
+          tab === 2 &&
           <ConceptContainerVersionList versions={versions} resource='source' />
         }
         {
-          tab === 4 &&
+          tab === 3 &&
           <AboutAccordian id={source.id} about={about} />
         }
       </div>

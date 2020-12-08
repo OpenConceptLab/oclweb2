@@ -5,7 +5,7 @@ import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
 
-const TABS = ['concepts', 'mappings', 'versions', 'about']
+const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
 
 class SourceHome extends React.Component {
   constructor(props) {
@@ -22,13 +22,13 @@ class SourceHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1)
-      return 4;
-    if(location.pathname.indexOf('/versions') > -1)
       return 3;
-    if(location.pathname.indexOf('/mappings') > -1)
+    if(location.pathname.indexOf('/versions') > -1)
       return 2;
-    if(location.pathname.indexOf('/concepts') > -1)
+    if(location.pathname.indexOf('/mappings') > -1)
       return 1;
+    if(location.pathname.indexOf('/concepts') > -1)
+      return 0;
 
     return 0;
   }
@@ -109,7 +109,7 @@ class SourceHome extends React.Component {
   getCurrentVersion() {
     let version = this.props.match.params.version;
 
-    if(!includes(['mappings', 'concepts', 'versions', 'about'], version))
+    if(!includes(TABS, version))
       return version
   }
 
