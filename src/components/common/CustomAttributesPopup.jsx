@@ -10,10 +10,7 @@ import CustomAttributesFormatted from './CustomAttributesFormatted'
 const CustomAttributesPopup = ({attributes}) => {
   const [raw, setRaw] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-
-  const handleRawClose = () => setRaw(false)
   const handleClose = () => setOpen(false)
-  const onRawOpen = () => setRaw(true)
   const onOpen = () => setOpen(true)
 
   return (
@@ -23,7 +20,7 @@ const CustomAttributesPopup = ({attributes}) => {
         <span>None</span> :
         <span>
           <Chip
-            label="Expand"
+            label="Show"
             onClick={onOpen}
             color="primary"
             variant="outlined"
@@ -32,34 +29,20 @@ const CustomAttributesPopup = ({attributes}) => {
             onDelete={onOpen}
             style={{border: 'none'}}
           />
-          <Chip
-            label="Raw"
-            onClick={onRawOpen}
-            color="primary"
-            variant="outlined"
-            size="small"
-            deleteIcon={<ArrowRightIcon fontSize="inherit" /> }
-            onDelete={onRawOpen}
-            style={{marginLeft: '4px', border: 'none'}}
-          />
           <Dialog onClose={handleClose} open={open} fullWidth maxWidth="md">
             <DialogTitle>Custom Attributes</DialogTitle>
             <DialogContent>
-              <CustomAttributesFormatted attributes={attributes} />
+              {
+                raw ?
+                <CustomAttributes attributes={attributes} /> :
+                <CustomAttributesFormatted attributes={attributes} />
+              }
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose}>
-                Close
+              <Button color="primary" onClick={() => setRaw(!raw) }>
+                { raw ? 'Formatted' : 'Raw' }
               </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog onClose={handleRawClose} open={raw} fullWidth maxWidth="md">
-            <DialogTitle>Custom Attributes</DialogTitle>
-            <DialogContent>
-              <CustomAttributes attributes={attributes} />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleRawClose}>
+              <Button onClick={handleClose}>
                 Close
               </Button>
             </DialogActions>
