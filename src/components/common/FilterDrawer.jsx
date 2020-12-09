@@ -1,13 +1,18 @@
 import React from 'react';
 import {
-  Drawer, Divider, List, ListItem, ListItemText, ListItemIcon,
-  Checkbox, Typography, Button,
+  Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, InputBase, IconButton,
+  Checkbox, Typography, Button, Tooltip
 } from '@material-ui/core';
 import {
-  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter
+  Clear as ClearIcon,
+  Search as SearchIcon
+} from '@material-ui/icons';
+import {
+  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter,
 } from 'lodash';
 
 const FilterDrawer = props => {
+  const [input, setInput] = React.useState('');
   const { open, filters, onClose, onApply } = props;
   const uiFilters = omit(omitBy(filters, isEmpty), ['is_active', 'is_latest_version'])
 
@@ -22,6 +27,8 @@ const FilterDrawer = props => {
     return result
   }
 
+  const [searchStr, setSearchStr] = React.useState(null);
+  const [searchedFilters, setSearchedFilters] = React.useState({});
   const [appliedFilters, setFilters] = React.useState(existingFilters);
 
   const onApplyClick = () => {
@@ -50,12 +57,100 @@ const FilterDrawer = props => {
     return get(appliedFilters, `${field}.${facet}`, false);
   }
 
+  const handleInputChange = event => {
+    setInput(event.target.value || '')
+  }
+
+  const onSearch = event => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    setSearchStr(() => {return input || null;})
+  }
+
+  React.useEffect(() => {
+    if(!searchStr)
+      setSearchedFilters({})
+    else
+      setSearchedFilters(getSearchedFilters())
+  }, [searchStr]);
+
+  const getSearchedFilters = () => {
+    let val = searchStr
+    if(!val || isEmpty(uiFilters))
+      return uiFilters;
+
+    let result = {};
+
+
+    const searchCr = new RegExp(val, 'i')
+
+    forEach(uiFilters, (value, key) => {
+      if(key.search(searchCr) > -1)
+        result[key] = value
+      else if (map(value, '0').some(v => v.search(searchCr) > -1))
+        result[key] = value
+    })
+
+    return result
+  }
+
+  const getFilters = () => {
+    return (isEmpty(searchedFilters) && isEmpty(searchStr)) ? uiFilters : searchedFilters;
+  }
+
+  const onSearchClear = () => {
+    setInput('')
+    setSearchStr(null)
+  }
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter')
+      onSearch(event)
+  }
+
   return (
     <Drawer anchor='left' open={open} onClose={onClose}>
       <div className='col-md-12 no-side-padding' style={{width: '500px', height: 'calc(100% - 60px)', overflow: 'scroll'}}>
-        <List>
+        <div className="col-md-12" style={{padding: '0 5px', margin: '5px 0', marginBottom: '0px'}}>
+          <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
+            <InputBase
+              style={{flex: 1, marginLeft: '10px'}}
+              placeholder="Search Filters"
+              inputProps={{ 'aria-label': 'search ocl' }}
+              value={input}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              fullWidth
+            />
+            {
+              input &&
+              <Tooltip title='Clear'>
+                <IconButton
+                  type="submit"
+                  style={{padding: '10px'}}
+                  aria-label="clear"
+                  onClick={onSearchClear}
+                >
+                  <ClearIcon />
+                </IconButton>
+              </Tooltip>
+            }
+            <Tooltip title='Search'>
+              <IconButton
+                type="submit"
+                style={{padding: '10px'}}
+                aria-label="search"
+                onClick={onSearch}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </div>
+        <List className="col-md-12 no-side-padding">
           {
-            map(uiFilters, (facets, field) => (
+            map(getFilters(), (facets, field) => (
               <div key={field}>
                 <Typography style={{padding: '10px 10px 0px 10px', fontWeight: 'bold'}}>
                   {startCase(field)}

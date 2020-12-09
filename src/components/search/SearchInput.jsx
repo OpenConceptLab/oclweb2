@@ -103,7 +103,7 @@ class SearchInput extends React.Component {
           {
             input &&
             <Tooltip title='Clear'>
-              <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.clearSearch}>
+              <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
                 <ClearIcon />
               </IconButton>
             </Tooltip>
