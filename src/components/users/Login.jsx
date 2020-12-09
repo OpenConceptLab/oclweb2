@@ -15,10 +15,12 @@ class Login extends React.Component {
     }
   }
 
-  handleSubmit = () => {
+  handleSubmit = event => {
+    event.preventDefault()
     const { username, password } = this.state;
     if(username && password)
       this.handleLogin(username, password)
+    return false
   }
 
   onFieldChange = event => {
