@@ -89,6 +89,7 @@ const UserHomeTabs = props => {
               baseURL={user.sources_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="sources"
+              searchInputPlaceholder={`Search ${user.username} sources...`}
             /> :
             <CircularProgress color="primary" />
           )
@@ -103,6 +104,7 @@ const UserHomeTabs = props => {
               baseURL={user.collections_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="collections"
+              searchInputPlaceholder={`Search ${user.username} collections...`}
             /> :
             <CircularProgress color="primary" />
           )
@@ -117,6 +119,7 @@ const UserHomeTabs = props => {
               baseURL={user.organizations_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="organizations"
+              searchInputPlaceholder={`Search ${user.username} organizations...`}
             /> :
             <CircularProgress color="primary" />
           )

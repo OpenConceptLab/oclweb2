@@ -40,6 +40,7 @@ class CollectionHomeChildrenList extends React.Component {
   }
 
   render() {
+    const { collection, resource } = this.props;
     return (
       <Search
         {...this.props}
@@ -47,6 +48,7 @@ class CollectionHomeChildrenList extends React.Component {
         baseURL={this.getURL()}
         fixedFilters={{isTable: true, limit: 25}}
         extraControls={this.getExtraControls()}
+        searchInputPlaceholder={`Search ${collection.name} ${resource}...`}
       />
     )
   }
