@@ -8,7 +8,7 @@ const ConceptHomeTabs = props => {
   const { tab, onChange, concept, versions, currentURL } = props;
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header' value={tab} onChange={onChange} aria-label="concept-home-tabs" indicatorColor='none'>
+      <Tabs className='sub-tab-header' value={tab} onChange={onChange} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
         <Tab label="Details" />
         <Tab label="Mappings" />
         <Tab label="History" />

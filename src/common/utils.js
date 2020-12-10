@@ -1,7 +1,9 @@
 /*eslint no-process-env: 0*/
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
-import { filter, difference, compact, find, reject } from 'lodash';
+import {
+  filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
+} from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
 export const isAtGlobalSearch = () => {
@@ -119,3 +121,7 @@ export const getCurrentUser = () => {
 
   return null;
 };
+
+export const nonEmptyCount = (object, attributes) => {
+  return size(intersectionBy(keys(omitBy(object, isEmpty)), attributes));
+}

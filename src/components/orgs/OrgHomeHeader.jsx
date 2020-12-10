@@ -3,7 +3,7 @@ import {
   Home as HomeIcon,
 } from '@material-ui/icons';
 import { Tooltip } from '@material-ui/core';
-import { includes } from 'lodash';
+import { includes, isEmpty } from 'lodash';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -11,10 +11,10 @@ import ExternalIdLabel from '../common/ExternalIdLabel';
 import LocationLabel from '../common/LocationLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import PublicAccessChip from '../common/PublicAccessChip';
+import HeaderAttribute from '../common/HeaderAttribute';
 
 const OrgHomeHeader = ({ org, url }) => {
   const onIconClick = () => copyURL(toFullAPIURL(url));
-  const None = <span className="italic">None</span>;
 
   return (
     <header className='home-header col-md-12'>
@@ -37,34 +37,9 @@ const OrgHomeHeader = ({ org, url }) => {
               <PublicAccessChip publicAccess={org.public_access} />
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Company:
-            </span>
-            <span>
-              {org.company || None},
-            </span>
-            <span className='italic' style={{marginLeft: '10px', marginRight: '3px'}}>
-              Website:
-            </span>
-            <span>
-              {
-                org.website ?
-                <a href={org.website} target="_blank" rel="noopener noreferrer">
-                  {org.website}
-                </a> :
-                None
-              }
-            </span>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Custom Attributes:
-            </span>
-            <span>
-              <CustomAttributesPopup attributes={org.extras} />
-            </span>
-          </div>
+          <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
+          <HeaderAttribute label="Website" value={org.website} gridClass="col-md-12" type="url" />
+          <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             {
               org.location &&

@@ -3,8 +3,8 @@ import {
   List as ListIcon,
 } from '@material-ui/icons';
 import { Tooltip } from '@material-ui/core';
-import { includes } from 'lodash';
-import { toFullAPIURL, copyURL } from '../../common/utils';
+import { includes, isEmpty, keys, map, startCase, get } from 'lodash';
+import { toFullAPIURL, copyURL, nonEmptyCount } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
@@ -16,11 +16,23 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
 
+const HIDDEN_ATTRIBUTES = {
+  canonical_url: 'url',
+  publisher: 'text',
+  purpose: 'text',
+  copyright: 'text',
+  content_type: 'text',
+  revision_date: 'date',
+  identifier: 'json',
+  contact: 'json',
+  jurisdiction: 'json'
+}
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
 }) => {
   const isRetired = source.isRetired;
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
+  const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 4;
 
   return (
     <header className='home-header col-md-12'>
@@ -55,34 +67,32 @@ const SourceHomeHeader = ({
               <PublicAccessChip publicAccess={source.public_access} />
             }
           </div>
-          <div className="col-md-5 no-side-padding">
-            <HeaderAttribute label="Description" value={source.description} gridClass="col-md-12" />
-            <HeaderAttribute
-              label="Website"
-              value={
-                source.website ?
-                     <a href={source.website} target="_blank" rel="noopener noreferrer"> {source.website} </a> :
-                     'None'
+          <HeaderAttribute label="Description" value={source.description} gridClass="col-md-12" />
+          <HeaderAttribute label="Website" value={source.website} gridClass="col-md-12" type='url' />
+          <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
+          <HeaderAttribute label="Default Locale" value={source.default_locale} gridClass="col-md-12" />
+          <HeaderAttribute label="Supported Locale" value={source.supported_locales.join(', ')} gridClass="col-md-12" />
+          <HeaderAttribute label="Custom Validation Schema" value={source.custom_validation_schema} gridClass="col-md-12" />
+          <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
+          {
+            hasManyHiddenAttributes ?
+            <div className='col-md-12 no-side-padding'>
+              <CollapsibleAttributes
+                object={source}
+                urlAttrs={['canonical_url']}
+                textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
+                dateAttrs={['revision_date']}
+                jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+              />
+            </div> :
+            <React.Fragment>
+              {
+                map(HIDDEN_ATTRIBUTES, (type, attr) => (
+                  <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(source, attr)} gridClass="col-md-12" type={type} />
+                ))
               }
-              gridClass="col-md-12"
-            />
-            <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
-          </div>
-          <div className="col-md-7 no-side-padding">
-            <HeaderAttribute label="Default Locale" value={source.default_locale} gridClass="col-md-12" />
-            <HeaderAttribute label="Supported Locale" value={source.supported_locales.join(', ')} gridClass="col-md-12" />
-            <HeaderAttribute label="Custom Validation Schema" value={source.custom_validation_schema} gridClass="col-md-12" />
-          </div>
-          <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
-          <div className='col-md-12 no-side-padding'>
-            <CollapsibleAttributes
-              object={source}
-              urlAttrs={['canonical_url']}
-              textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
-              dateAttrs={['revision_date']}
-              jsonAttrs={['identifier', 'contact', 'jurisdiction']}
-            />
-          </div>
+            </React.Fragment>
+          }
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <span>
               <LastUpdatedOnLabel
