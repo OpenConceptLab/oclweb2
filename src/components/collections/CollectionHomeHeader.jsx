@@ -11,6 +11,7 @@ import CollectionButton from '../common/CollectionButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
+import LinkLabel from '../common/LinkLabel';
 import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
@@ -74,7 +75,6 @@ const CollectionHomeHeader = ({
             <HeaderAttribute label="Short Code" value={collection.short_code} gridClass="col-md-12" />
             <HeaderAttribute label="Name" value={collection.name} gridClass="col-md-12" />
             <HeaderAttribute label="Description" value={collection.description} gridClass="col-md-12" />
-            <HeaderAttribute label="Website" value={collection.website} gridClass="col-md-12" type="url" />
           </div>
           <div className="col-md-7 no-side-padding">
             <HeaderAttribute label="Collection Type" value={collection.collection_type} gridClass="col-md-12" />
@@ -104,6 +104,12 @@ const CollectionHomeHeader = ({
             </React.Fragment>
           }
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+            {
+              collection.website &&
+              <span>
+                <LinkLabel link={collection.website} iconSize='medium' noContainerClass />
+              </span>
+            }
             <span>
               <LastUpdatedOnLabel
                 date={collection.updated_on}

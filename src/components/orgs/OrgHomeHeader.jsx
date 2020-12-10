@@ -9,6 +9,7 @@ import OwnerButton from '../common/OwnerButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LocationLabel from '../common/LocationLabel';
+import LinkLabel from '../common/LinkLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import PublicAccessChip from '../common/PublicAccessChip';
 import HeaderAttribute from '../common/HeaderAttribute';
@@ -38,13 +39,18 @@ const OrgHomeHeader = ({ org, url }) => {
             }
           </div>
           <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
-          <HeaderAttribute label="Website" value={org.website} gridClass="col-md-12" type="url" />
           <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             {
               org.location &&
               <span style={{marginRight: '10px'}}>
                 <LocationLabel location={org.location} noContainerClass iconSize="medium" />
+              </span>
+            }
+            {
+              org.website &&
+              <span style={{marginRight: '10px'}}>
+                <LinkLabel link={org.website} iconSize='medium' noContainerClass />
               </span>
             }
             <span>

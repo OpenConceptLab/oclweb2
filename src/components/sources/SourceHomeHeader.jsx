@@ -11,6 +11,7 @@ import SourceButton from '../common/SourceButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
+import LinkLabel from '../common/LinkLabel';
 import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
@@ -68,7 +69,6 @@ const SourceHomeHeader = ({
             }
           </div>
           <HeaderAttribute label="Description" value={source.description} gridClass="col-md-12" />
-          <HeaderAttribute label="Website" value={source.website} gridClass="col-md-12" type='url' />
           <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
           <HeaderAttribute label="Default Locale" value={source.default_locale} gridClass="col-md-12" />
           <HeaderAttribute label="Supported Locale" value={source.supported_locales.join(', ')} gridClass="col-md-12" />
@@ -94,7 +94,13 @@ const SourceHomeHeader = ({
             </React.Fragment>
           }
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-            <span>
+            {
+              source.website &&
+              <span>
+                <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+              </span>
+            }
+            <span style={{marginLeft: '10px'}}>
               <LastUpdatedOnLabel
                 date={source.updated_on}
                 by={source.updated_by}
