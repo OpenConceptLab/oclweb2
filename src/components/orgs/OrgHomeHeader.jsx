@@ -2,9 +2,9 @@ import React from 'react';
 import {
   Home as HomeIcon,
 } from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
-import { includes, isEmpty } from 'lodash';
+import { includes, isEmpty, get } from 'lodash';
 import { toFullAPIURL, copyURL } from '../../common/utils';
+import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
@@ -13,17 +13,29 @@ import LinkLabel from '../common/LinkLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import PublicAccessChip from '../common/PublicAccessChip';
 import HeaderAttribute from '../common/HeaderAttribute';
+import HeaderLogo from '../common/HeaderLogo';
 
 const OrgHomeHeader = ({ org, url }) => {
+  const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const onIconClick = () => copyURL(toFullAPIURL(url));
 
+  const onLogoUpload = (base64, name) => {
+    APIService.new().overrideURL(url).appendToUrl('logo/')
+              .post({base64: base64, name: name})
+              .then(response => {
+                if(get(response, 'status') === 200)
+                  setLogoURL(get(response, 'data.logo_url', logoURL))
+              })
+  }
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon org'>
-          <Tooltip title='Copy URL'>
-            <HomeIcon onClick={onIconClick} />
-          </Tooltip>
+        <div className='no-side-padding col-md-1 home-icon'>
+          <HeaderLogo
+            logoURL={logoURL}
+            onUpload={onLogoUpload}
+            defaultIcon={<HomeIcon className='default-svg' onClick={onIconClick} />}
+          />
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>

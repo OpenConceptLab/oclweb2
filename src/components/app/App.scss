@@ -154,13 +154,14 @@ td.pagination-center {
     font-style: italic;
 }
 .home-icon {
-    width: 48px;
     color: #e5e5e5;
     cursor: pointer;
     &.concept {
+        width: 48px;
         color: rgb(51, 115, 170);
     }
     &.mapping {
+        width: 48px;
         color: rgb(51, 115, 170);
     }
     &.source {
@@ -173,16 +174,16 @@ td.pagination-center {
         color: rgb(253, 164, 41);
     }
     &.user {
+        width: 48px;
         color: rgb(253, 164, 41);
     }
-    svg {
-        font-size: 32pt;
-        width: 48px;
-        height: 48px;
+    .default-svg {
+        width: 60px;
+        height: 60px;
     }
 }
 .home-header {
-    background-color: rgb(252,252,252);
+    background-color: #fafbfc;
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #e5e5e5;
@@ -336,4 +337,47 @@ div.login-paper {
 }
 .hidden {
     display: none !important;
+}
+.header-logo {
+    width: 100px;
+    display: block;
+    max-height: 100px;
+}
+.logo-container {
+    text-align: center;
+    height: 130px;
+    position: relative;
+    width:100%;
+    max-width: 100px;
+
+    img {
+        display:block;
+    }
+    .logo-edit-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        opacity:0;
+        border: 1px solid black;
+    }
+}
+
+.logo-container:hover .logo-edit-button {
+    opacity: 1;
+}
+
+.logo-container:before {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;left:0;right:0;
+    background-color:rgba(0,0,0,0);
+}
+.logo-container:hover {
+    img {
+        opacity: 0.1;
+    }
 }
