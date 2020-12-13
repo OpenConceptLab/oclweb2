@@ -96,11 +96,11 @@ const SourceHomeHeader = ({
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             {
               source.website &&
-              <span>
+              <span style={{marginRight: '10px'}}>
                 <LinkLabel link={source.website} iconSize='medium' noContainerClass />
               </span>
             }
-            <span style={{marginLeft: '10px'}}>
+            <span>
               <LastUpdatedOnLabel
                 date={source.updated_on}
                 by={source.updated_by}
