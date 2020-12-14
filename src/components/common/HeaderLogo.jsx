@@ -24,7 +24,7 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon }) => {
     <React.Fragment>
       <div className='logo-container flex-vertical-center'>
         {
-          logoURL ?
+          (base64 || logoURL) ?
           <img className='header-logo' src={base64 || logoURL} /> :
           defaultIcon
         }
