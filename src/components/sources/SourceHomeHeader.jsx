@@ -89,7 +89,12 @@ const SourceHomeHeader = ({
               <PublicAccessChip publicAccess={source.public_access} />
             }
           </div>
-          <HeaderAttribute label="Description" value={source.description} gridClass="col-md-12" />
+          {
+            source.description &&
+            <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              {source.description}
+            </div>
+          }
           <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
           <HeaderAttribute label="Default Locale" value={source.default_locale} gridClass="col-md-12" />
           <HeaderAttribute label="Supported Locale" value={source.supported_locales.join(', ')} gridClass="col-md-12" />

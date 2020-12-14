@@ -91,18 +91,18 @@ const CollectionHomeHeader = ({
               <PublicAccessChip publicAccess={collection.public_access} />
             }
           </div>
-
-          <div className="col-md-5 no-side-padding">
-            <HeaderAttribute label="Short Code" value={collection.short_code} gridClass="col-md-12" />
-            <HeaderAttribute label="Name" value={collection.name} gridClass="col-md-12" />
-            <HeaderAttribute label="Description" value={collection.description} gridClass="col-md-12" />
-          </div>
-          <div className="col-md-7 no-side-padding">
-            <HeaderAttribute label="Collection Type" value={collection.collection_type} gridClass="col-md-12" />
-            <HeaderAttribute label="Default Locale" value={collection.default_locale} gridClass="col-md-12" />
-            <HeaderAttribute label="Supported Locale" value={collection.supported_locales.join(', ')} gridClass="col-md-12" />
-            <HeaderAttribute label="Custom Validation Schema" value={collection.custom_validation_schema} gridClass="col-md-12" />
-          </div>
+          {
+            collection.description &&
+            <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              {collection.description}
+            </div>
+          }
+          <HeaderAttribute label="Short Code" value={collection.short_code} gridClass="col-md-12" />
+          <HeaderAttribute label="Name" value={collection.name} gridClass="col-md-12" />
+          <HeaderAttribute label="Collection Type" value={collection.collection_type} gridClass="col-md-12" />
+          <HeaderAttribute label="Default Locale" value={collection.default_locale} gridClass="col-md-12" />
+          <HeaderAttribute label="Supported Locale" value={collection.supported_locales.join(', ')} gridClass="col-md-12" />
+          <HeaderAttribute label="Custom Validation Schema" value={collection.custom_validation_schema} gridClass="col-md-12" />
           <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-md-12" />
           {
             hasManyHiddenAttributes ?
