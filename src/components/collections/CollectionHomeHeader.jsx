@@ -1,11 +1,13 @@
 import React from 'react';
 import {
   Loyalty as LoyaltyIcon,
+  FileCopy as CopyIcon,
 } from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, IconButton } from '@material-ui/core';
 import { includes, keys, map, startCase, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount } from '../../common/utils';
 import { GREEN } from '../../common/constants';
+import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import CollectionButton from '../common/CollectionButton';
 import VersionButton from '../common/VersionButton';
@@ -16,6 +18,7 @@ import PublicAccessChip from '../common/PublicAccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
+import HeaderLogo from '../common/HeaderLogo';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -33,17 +36,28 @@ const HIDDEN_ATTRIBUTES = {
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const isRetired = collection.isRetired;
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
   const hasManyHiddenAttributes = nonEmptyCount(collection, keys(HIDDEN_ATTRIBUTES)) >= 4;
+  const onLogoUpload = (base64, name) => {
+    APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
+              .post({base64: base64, name: name})
+              .then(response => {
+                if(get(response, 'status') === 200)
+                  setLogoURL(get(response, 'data.logo_url', logoURL))
+              })
+  }
 
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon collection'>
-          <Tooltip title='Copy URL'>
-            <LoyaltyIcon onClick={onIconClick} />
-          </Tooltip>
+        <div className='no-side-padding col-md-1 home-icon'>
+          <HeaderLogo
+            logoURL={logoURL}
+            onUpload={onLogoUpload}
+            defaultIcon={<LoyaltyIcon className='default-svg' />}
+          />
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -60,6 +74,13 @@ const CollectionHomeHeader = ({
                 />
               </React.Fragment>
             }
+            <span style={{marginLeft: '10px'}}>
+              <Tooltip title="Copy URL" placement="right">
+                <IconButton onClick={onIconClick} color="primary">
+                  <CopyIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>

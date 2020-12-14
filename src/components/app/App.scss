@@ -157,11 +157,13 @@ td.pagination-center {
     color: #e5e5e5;
     cursor: pointer;
     &.concept {
-        width: 48px;
+        width: 70px;
+        height: 110px;
         color: rgb(51, 115, 170);
     }
     &.mapping {
-        width: 48px;
+        width: 70px;
+        height: 110px;
         color: rgb(51, 115, 170);
     }
     &.source {

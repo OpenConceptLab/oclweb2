@@ -1,7 +1,9 @@
 import React from 'react';
 import {
   Home as HomeIcon,
+  FileCopy as CopyIcon,
 } from '@material-ui/icons';
+import { Tooltip, IconButton } from '@material-ui/core';
 import { includes, isEmpty, get } from 'lodash';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -27,6 +29,7 @@ const OrgHomeHeader = ({ org, url }) => {
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
   }
+
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
@@ -34,7 +37,7 @@ const OrgHomeHeader = ({ org, url }) => {
           <HeaderLogo
             logoURL={logoURL}
             onUpload={onLogoUpload}
-            defaultIcon={<HomeIcon className='default-svg' onClick={onIconClick} />}
+            defaultIcon={<HomeIcon className='default-svg' />}
           />
         </div>
         <div className='col-md-11'>
@@ -49,6 +52,13 @@ const OrgHomeHeader = ({ org, url }) => {
               includes(['view', 'edit'], org.public_access.toLowerCase()) &&
               <PublicAccessChip publicAccess={org.public_access} />
             }
+            <span style={{marginLeft: '10px'}}>
+              <Tooltip title="Copy URL" placement="right">
+                <IconButton onClick={onIconClick} color="primary">
+                  <CopyIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </span>
           </div>
           <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
           <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
