@@ -26,7 +26,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, headFirst
+  formatDate, formatDateTime, headFirst, getCurrentUserUsername
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
@@ -35,8 +35,10 @@ import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
 import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
+import PinIcon from '../common/PinIcon';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
+const CURRENT_USER_ID = getCurrentUserUsername();
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -92,6 +94,7 @@ const RESOURCE_DEFINITIONS = {
     ],
     tabs: ['Versions',],
     expandible: true,
+    pinnable: true,
   },
   collections: {
     headBgColor: GREEN,
@@ -109,6 +112,7 @@ const RESOURCE_DEFINITIONS = {
     ],
     tabs: ['Versions',],
     expandible: true,
+    pinnable: true,
   },
   organizations: {
     headBgColor: ORANGE,
@@ -124,6 +128,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'collections_url'},
     ],
     expandible: false,
+    pinnable: true,
   },
   users: {
     headBgColor: ORANGE,
@@ -259,22 +264,32 @@ const LocalesTable = ({ locales, isDescription }) => {
 }
 
 const ExpandibleRow = props => {
-  const { item, resourceDefinition, resource, isSelected, isSelectable } = props;
+  const {
+    item, resourceDefinition, resource, isSelected, isSelectable, onCreatePin, onDeletePin, pins,
+    nested
+  } = props;
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
   const [names, setNames] = React.useState([]);
   const [descriptions, setDescriptions] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [pinned, setPin] = React.useState(() => includes(map(pins, 'resource_uri'), item.url));
   const [tab, setTab] = React.useState(0);
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
+  const shouldShowPin = CURRENT_USER_ID && resourceDefinition.pinnable;
+  const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(resourceDefinition, 'columns.length', 1) +
-                       (isConceptContainer ? 1 : 0) + //public column
-                          (isSelectable ? 1 : 0) + // select column
-                           (resourceDefinition.expandible ? 1 : 0) + // expand icon column
-                         (resourceDefinition.tags ? 1 : 0); //tags column
+                        (isConceptContainer ? 1 : 0) + //public column
+                           (isSelectable ? 1 : 0) + // select column
+                            ((resourceDefinition.expandible || shouldShowPin) ? 1 : 0) + // expand icon column
+                          (resourceDefinition.tags ? 1 : 0); //tags column
+
+  React.useEffect(() => {
+    setPin(includes(map(pins, 'resource_uri'), item.url))
+  }, [pins]);
 
   const onClick = event => {
     if(!resourceDefinition.expandible)
@@ -295,6 +310,22 @@ const ExpandibleRow = props => {
       }
       return newOpen
     })
+  }
+
+  const onPinClick = event => {
+    if(!shouldShowPin)
+      return;
+
+    event.stopPropagation()
+    event.preventDefault()
+
+    const newPinState = !pinned;
+    if(newPinState)
+      onCreatePin(item.type, item.uuid)
+    else
+      onDeletePin(pinId)
+
+    return false;
   }
 
   const onRowClick = event => {
@@ -432,11 +463,20 @@ const ExpandibleRow = props => {
           </TableCell>
         }
         {
-          resourceDefinition.expandible &&
-          <TableCell>
-            <IconButton aria-label="expand row" size="small" onClick={onClick}>
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
+          (resourceDefinition.expandible || shouldShowPin) &&
+          <TableCell align={nested ? 'center' : 'left'}>
+            {
+              resourceDefinition.expandible &&
+              <IconButton aria-label="expand row" size="small" onClick={onClick}>
+                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            }
+            {
+              shouldShowPin &&
+              <IconButton aria-label="expand row" size="small" onClick={onPinClick}>
+                {<PinIcon fontSize="small" pinned={pinned ? pinned.toString() : undefined} />}
+              </IconButton>
+            }
           </TableCell>
         }
       </TableRow>
@@ -494,7 +534,9 @@ const ExpandibleRow = props => {
   )
 }
 
-const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams}) => {
+const ResultsTable = (
+  { resource, results, onPageChange, onSortChange, sortParams, onCreatePin, onDeletePin, pins, nested}
+) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
   const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
   const theadTextColor = get(resourceDefinition, 'headTextColor', WHITE);
@@ -503,7 +545,8 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
     border: `1px solid ${theadBgColor}`,
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + (resourceDefinition.expandible ? 2 : 1) + (isConceptContainer ? 1 : 0);
+  const shouldShowPin = CURRENT_USER_ID && resourceDefinition.pinnable;
+  const columnsCount = get(resourceDefinition, 'columns.length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
   const defaultOrder = get(keys(sortParams), '0') === 'sortAsc' ? 'asc' : 'desc';
@@ -603,7 +646,7 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                     <TableCell />
                   }
                   {
-                    resourceDefinition.expandible &&
+                    (resourceDefinition.expandible || shouldShowPin) &&
                     <TableCell />
                   }
                 </TableRow>
@@ -619,6 +662,10 @@ const ResultsTable = ({resource, results, onPageChange, onSortChange, sortParams
                       isSelected={includes(selectedList, item.id)}
                       onSelectChange={updateSelected}
                       isSelectable={isSelectable}
+                      onCreatePin={onCreatePin}
+                      onDeletePin={onDeletePin}
+                      pins={pins}
+                      nested={nested}
                     />
                   ))
                 }

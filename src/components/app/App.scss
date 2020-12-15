@@ -387,3 +387,42 @@ div.login-paper {
     color: rgb(107,115,125);
     margin-bottom: 8px;
 }
+.pin-icon {
+    &.pinned {
+        transform: none;
+    }
+    transform: rotate(45deg);
+}
+.pinned-item-icon {
+    margin-right: 0 !important;
+}
+.pinned-item-action {
+    margin-top: 0px !important;
+    margin-right: 0px !important;
+}
+.pinned-item {
+    height: 160px;
+    min-height: 160px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    .pinned-item-header {
+        display: flex;
+        align-items: center;
+        span.icon {
+            display: flex;
+        }
+    }
+
+    .pinned-item-header, .pinned-item-content, .pinned-item-tags {
+        padding: 0 5px;
+    }
+
+    span {
+        padding: 5px;
+    }
+    .pinned-item-name {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}

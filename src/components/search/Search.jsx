@@ -1,12 +1,15 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
-import { get, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty } from 'lodash';
+import {
+  get, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, reject,
+} from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon
 } from '@material-ui/icons';
+import APIService from '../../services/APIService';
 import { BLUE, DEFAULT_LIMIT } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
 import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
@@ -23,6 +26,7 @@ import ResourcesHorizontal from './ResourcesHorizontal';
 import ResourceTabs from './ResourceTabs';
 //import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
+import { getCurrentUserUsername } from '../../common/utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 
@@ -38,6 +42,7 @@ const resourceResultStruct = {
   facets: {},
   items: [],
 }
+const CURRENT_USER_ID = getCurrentUserUsername();
 
 class Search extends React.Component {
   constructor(props) {
@@ -56,6 +61,7 @@ class Search extends React.Component {
       openFacetsDrawer: false,
       appliedFacets: {},
       includeRetired: false,
+      pins: [],
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -71,6 +77,7 @@ class Search extends React.Component {
     if(this.props.references)
       this.setState({results: {...this.state.results, references: cloneDeep(resourceResultStruct)}})
     this.setQueryParamsInState()
+    this.getUserPins()
   }
 
   setQueryParamsInState() {
@@ -93,6 +100,43 @@ class Search extends React.Component {
       this.setQueryParamsInState()
     if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL)
       this.setQueryParamsInState()
+
+    if(prevProps.lastDeletedPinId !== this.props.lastDeletedPinId && this.props.lastDeletedPinId)
+      this.deleteUserPin(this.props.lastDeletedPinId)
+  }
+
+  propogatePinChange = () => {
+    if(this.props.onPinChange)
+      this.props.onPinChange(this.state.pins)
+  }
+
+  getUserPins() {
+    if(CURRENT_USER_ID)
+      APIService.users(CURRENT_USER_ID).pins()
+                .get()
+                .then(response => this.setState({pins: response.data}, this.propogatePinChange))
+  }
+
+  createUserPin = (resourceType, resourceId) => {
+    APIService.users(CURRENT_USER_ID).pins()
+              .post({resource_type: resourceType, resource_id: resourceId})
+              .then(response => {
+                if(get(response, 'status') === 201) {
+                  this.setState({pins: [...this.state.pins, response.data]}, () => {
+                    this.propogatePinChange()
+                  })
+                }
+              })
+  }
+
+  deleteUserPin = pinId => {
+    if(pinId)
+      APIService.users(CURRENT_USER_ID).pins(pinId)
+                .delete()
+                .then(response => {
+                  if(get(response, 'status') === 204)
+                    this.setState({pins: reject(this.state.pins, {id: pinId})}, this.propogatePinChange)
+                })
   }
 
   prepareResponseForState(resource, response, resetItems) {
@@ -348,14 +392,14 @@ class Search extends React.Component {
   render() {
     const { nested } = this.props;
     const {
-      resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
+      resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite, pins
     } = this.state;
     const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-12 no-side-padding';
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
     return (
-      <div className='col-sm-12' style={nested ? {} : {paddingTop: '10px'}}>
+      <div className='col-sm-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
           <div className='col-sm-10 no-side-padding' style={{textAlign: 'center'}}>
             <SearchInput
@@ -404,7 +448,17 @@ class Search extends React.Component {
               }
               {
                 isTable &&
-                <ResultsTable resource={resource} results={resourceResults} onPageChange={this.onPageChange} onSortChange={this.onSortChange} sortParams={sortParams} />
+                <ResultsTable
+                  resource={resource}
+                  results={resourceResults}
+                  onPageChange={this.onPageChange}
+                  onSortChange={this.onSortChange}
+                  sortParams={sortParams}
+                  onCreatePin={this.createUserPin}
+                  onDeletePin={this.deleteUserPin}
+                  pins={pins}
+                  nested={nested}
+                />
               }
               {
                 !isTable && !isInfinite &&

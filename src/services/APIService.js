@@ -12,7 +12,7 @@ const RESOURCES = [
   { name: 'orgs', relations: [] },
   { name: 'sources', relations: [] },
   { name: 'collections', relations: [] },
-  { name: 'users', relations: ['login'] },
+  { name: 'users', relations: ['login', 'pins'] },
   { name: 'user', relations: [] },
   { name: 'new', relations: [] },
 ];

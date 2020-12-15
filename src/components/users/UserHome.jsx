@@ -2,6 +2,7 @@ import React from 'react';
 import APIService from '../../services/APIService';
 import UserHomeDetails from './UserHomeDetails';
 import UserHomeTabs from './UserHomeTabs';
+import UserPins from './UserPins';
 
 class UserHome extends React.Component {
   constructor(props) {
@@ -9,8 +10,19 @@ class UserHome extends React.Component {
     this.url = this.getURLFromPath(props);
     this.state = {
       user: {},
+      pins: [],
+      lastDeletedPinId: null,
       tab: this.getDefaultTabIndex()
     }
+  }
+
+  onPinDelete = pinId => {
+    if(pinId)
+      this.setState({lastDeletedPinId: pinId})
+  }
+
+  onPinChange = pins => {
+    this.setState({pins: pins})
   }
 
   getURLFromPath(props) {
@@ -55,14 +67,20 @@ class UserHome extends React.Component {
   }
 
   render() {
-    const { user } = this.state;
+    const { user, pins } = this.state;
     return (
       <div className="col-md-12">
         <div className="col-md-3 no-right-padding">
           <UserHomeDetails user={user} />
         </div>
         <div className='col-md-9 no-left-padding'>
-          <UserHomeTabs {...this.state} {...this.props} onChange={this.onTabChange} />
+          <UserPins pins={pins} onDelete={this.onPinDelete} />
+          <UserHomeTabs
+            {...this.state}
+            {...this.props}
+            onChange={this.onTabChange}
+            onPinChange={this.onPinChange}
+          />
         </div>
       </div>
     )

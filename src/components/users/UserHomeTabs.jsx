@@ -14,7 +14,7 @@ const ICON_STYLES = {marginRight: '10px', marginBottom: '0px'}
 const TAB_STYLES = {minHeight: HEIGHT, paddingTop: '6px', height: HEIGHT}
 
 const UserHomeTabs = props => {
-  const { tab, onChange, user } = props;
+  const { tab, user, onChange, onPinChange, lastDeletedPinId } = props;
 
   const indicatorColorClass = () => {
     if(tab == 2)
@@ -90,6 +90,8 @@ const UserHomeTabs = props => {
               fixedFilters={{isTable: true, limit: 25}}
               resource="sources"
               searchInputPlaceholder={`Search ${user.username} sources...`}
+              onPinChange={onPinChange}
+              lastDeletedPinId={lastDeletedPinId}
             /> :
             <CircularProgress color="primary" />
           )
@@ -105,6 +107,8 @@ const UserHomeTabs = props => {
               fixedFilters={{isTable: true, limit: 25}}
               resource="collections"
               searchInputPlaceholder={`Search ${user.username} collections...`}
+              onPinChange={onPinChange}
+              lastDeletedPinId={lastDeletedPinId}
             /> :
             <CircularProgress color="primary" />
           )
@@ -120,6 +124,8 @@ const UserHomeTabs = props => {
               fixedFilters={{isTable: true, limit: 25}}
               resource="organizations"
               searchInputPlaceholder={`Search ${user.username} organizations...`}
+              onPinChange={onPinChange}
+              lastDeletedPinId={lastDeletedPinId}
             /> :
             <CircularProgress color="primary" />
           )
