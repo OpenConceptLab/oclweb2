@@ -26,7 +26,6 @@ import ResourcesHorizontal from './ResourcesHorizontal';
 import ResourceTabs from './ResourceTabs';
 //import Resources from './Resources';
 import { fetchSearchResults, fetchCounts } from './utils';
-import { getCurrentUserUsername } from '../../common/utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 
@@ -42,11 +41,11 @@ const resourceResultStruct = {
   facets: {},
   items: [],
 }
-const CURRENT_USER_ID = getCurrentUserUsername();
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
+    this.CURRENT_USER_ID = get(props, 'match.params.user')
     this.state = {
       isTable: true,
       isInfinite: false,
@@ -96,10 +95,15 @@ class Search extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.search !== this.props.location.search)
+    this.CURRENT_USER_ID = get(this.props, 'match.params.user')
+    if(prevProps.location.search !== this.props.location.search) {
       this.setQueryParamsInState()
-    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL)
+      this.getUserPins()
+    }
+    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL) {
       this.setQueryParamsInState()
+      this.getUserPins()
+    }
 
     if(prevProps.lastDeletedPinId !== this.props.lastDeletedPinId && this.props.lastDeletedPinId)
       this.deleteUserPin(this.props.lastDeletedPinId)
@@ -111,14 +115,14 @@ class Search extends React.Component {
   }
 
   getUserPins() {
-    if(CURRENT_USER_ID)
-      APIService.users(CURRENT_USER_ID).pins()
+    if(this.CURRENT_USER_ID)
+      APIService.users(this.CURRENT_USER_ID).pins()
                 .get()
                 .then(response => this.setState({pins: response.data}, this.propogatePinChange))
   }
 
   createUserPin = (resourceType, resourceId) => {
-    APIService.users(CURRENT_USER_ID).pins()
+    APIService.users(this.CURRENT_USER_ID).pins()
               .post({resource_type: resourceType, resource_id: resourceId})
               .then(response => {
                 if(get(response, 'status') === 201) {
@@ -131,7 +135,7 @@ class Search extends React.Component {
 
   deleteUserPin = pinId => {
     if(pinId)
-      APIService.users(CURRENT_USER_ID).pins(pinId)
+      APIService.users(this.CURRENT_USER_ID).pins(pinId)
                 .delete()
                 .then(response => {
                   if(get(response, 'status') === 204)
