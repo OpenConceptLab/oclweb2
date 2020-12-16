@@ -4,7 +4,7 @@ import { Edit as EditIcon, CloudUpload as UploadIcon } from '@material-ui/icons'
 import { last } from 'lodash';
 import ImageUploader from './ImageUploader';
 
-const HeaderLogo = ({ logoURL, onUpload, defaultIcon }) => {
+const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle }) => {
   const [base64, setBase64] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const onLogoUpload = (base64, name) => {
@@ -41,7 +41,7 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon }) => {
       <Dialog onClose={() => setOpen(false)} open={open} fullWidth>
         <DialogTitle>{logoURL ? 'Edit Logo' : 'Upload Logo'}</DialogTitle>
         <DialogContent>
-          <ImageUploader onUpload={onLogoUpload} defaultImg={logoURL} defaultName={getExistingLogoName()} />
+          <ImageUploader onUpload={onLogoUpload} defaultImg={logoURL} defaultName={getExistingLogoName()} isCircle={isCircle} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>

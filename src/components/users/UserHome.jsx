@@ -57,7 +57,7 @@ class UserHome extends React.Component {
   refreshDataByURL() {
     this.setState(
       { isLoading: true },
-      () => APIService.new().overrideURL(this.url).get().then(
+      () => APIService.new().overrideURL(this.url).get(null, null, {verbose: true}).then(
         response => this.setState({ user: response.data })
       ))
   }

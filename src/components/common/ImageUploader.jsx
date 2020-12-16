@@ -60,7 +60,7 @@ const ImageUploader = props => {
   const [upImg, setUpImg] = useState(props.defaultImg);
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
-  const [crop, setCrop] = useState({ unit: "%", width: 30, aspect: 16 / 9 });
+  const [crop, setCrop] = useState({ unit: "%", width: 30, aspect: props.isCircle ? 1 : 16/9 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [base64, setBase64] = useState(null);
 
@@ -144,6 +144,7 @@ const ImageUploader = props => {
           onChange={(c) => setCrop(c)}
           onComplete={(c) => setCompletedCrop(c)}
           crossorigin='Anonymous'
+          circularCrop={props.isCircle}
         />
       </div>
       <div style={{display: 'none'}}>
