@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map,
+  get, includes, map, isArray, values
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
@@ -124,7 +124,7 @@ export const getCurrentUser = () => {
 };
 
 export const getCurrentUserOrgs = () => {
-  return get(getCurrentUser(), 'supported_orgs');
+  return get(getCurrentUser(), 'subscribed_orgs');
 };
 
 export const getCurrentUserUsername = () => {
@@ -136,5 +136,35 @@ export const nonEmptyCount = (object, attributes) => {
 }
 
 export const isCurrentUserMemberOf = orgId => {
-  return includes(map(getCurrentUserOrgs(), 'id'), orgId);
+  return orgId && includes(map(getCurrentUserOrgs(), 'id'), orgId);
+}
+
+export const defaultCreatePin = (resourceType, resourceId, service, callback) => {
+  if(service) {
+    service.post({resource_type: resourceType, resource_id: resourceId}).then(response => {
+      if(get(response, 'error')) {
+        let error;
+        if(isArray(response.error) && !isEmpty(compact(response.error)))
+          error = compact(response.error)[0];
+        else
+          error = get(values(response.error), '0') || 'Something bad happened.';
+        alertifyjs.error(error);
+      } else if(callback && get(response, 'status') === 201)
+        callback(response.data);
+    });
+  }
+}
+
+export const defaultDeletePin = (service, callback) => {
+  if(service) {
+    service.delete().then(response => {
+      if(callback && get(response, 'status') === 204)
+        callback();
+    });
+  }
+}
+
+export const isAdminUser = () => {
+  const currentUser = getCurrentUser();
+  return get(currentUser, 'is_staff') || get(currentUser, 'is_superuser');
 }

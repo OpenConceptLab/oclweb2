@@ -10,7 +10,6 @@ import {
   AccountTreeRounded as TreeIcon
 } from '@material-ui/icons';
 import { map, isEmpty, get, last, compact, orderBy } from 'lodash';
-import { isLoggedIn } from '../../common/utils';
 import { ORANGE, GREEN } from '../../common/constants';
 import PinIcon from '../common/PinIcon';
 
@@ -30,8 +29,7 @@ const getGridDivision = pinsCount => {
   return Math.floor(division/pinsCount);
 }
 
-const Pins = ({ pins, onDelete }) => {
-  const isAuthenticated = isLoggedIn();
+const Pins = ({ pins, onDelete, canDelete }) => {
   let gridDivision = getGridDivision(pins.length);
   const gridClassName = `col-md-${gridDivision}`
   return (
@@ -59,7 +57,7 @@ const Pins = ({ pins, onDelete }) => {
                     </Avatar>
                   }
                   action={
-                    isAuthenticated &&
+                    canDelete &&
                           <IconButton size='small' onClick={() => onDelete(pin.id)}>
                             <DeleteIcon fontSize='small' style={{width: '20px'}}/>
                           </IconButton>

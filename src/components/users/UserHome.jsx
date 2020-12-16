@@ -1,6 +1,9 @@
 import React from 'react';
 import { reject, get } from 'lodash';
 import APIService from '../../services/APIService';
+import {
+  defaultCreatePin, defaultDeletePin, getCurrentUserUsername, isAdminUser
+} from '../../common/utils';
 import Pins from '../common/Pins';
 import UserHomeDetails from './UserHomeDetails';
 import UserHomeTabs from './UserHomeTabs';
@@ -89,44 +92,39 @@ class UserHome extends React.Component {
 
   createPin = (resourceType, resourceId) => {
     const service = this.getPinsService()
-    if(service) {
-      service
-        .post({resource_type: resourceType, resource_id: resourceId})
-        .then(response => {
-          if(get(response, 'status') === 201) {
-            this.setState({pins: [...this.state.pins, response.data]})
-          }
-        })
-    }
+    defaultCreatePin(resourceType, resourceId, service, createdPin => {
+      this.setState({pins: [...this.state.pins, createdPin]})
+    })
   }
 
   deletePin = pinId => {
     const service = this.getPinsService(pinId)
-    if(service) {
-      service
-        .delete()
-        .then(response => {
-          if(get(response, 'status') === 204)
-            this.setState({pins: reject(this.state.pins, {id: pinId})})
-        })
-    }
+    defaultDeletePin(service, () => {
+      this.setState({pins: reject(this.state.pins, {id: pinId})})
+    })
+  }
+
+  canActOnPins() {
+    return isAdminUser() || (getCurrentUserUsername() === this.getUsername())
   }
 
   render() {
     const { user, pins } = this.state;
+    const canActOnPins = this.canActOnPins()
     return (
       <div className="col-md-12">
         <div className="col-md-3 no-right-padding">
           <UserHomeDetails user={user} />
         </div>
         <div className='col-md-9 no-left-padding'>
-          <Pins pins={pins} onDelete={this.deletePin} />
+          <Pins pins={pins} onDelete={this.deletePin} canDelete={canActOnPins} />
           <UserHomeTabs
             {...this.state}
             {...this.props}
             onTabChange={this.onTabChange}
             onPinCreate={this.createPin}
             onPinDelete={this.deletePin}
+            showPin={canActOnPins}
           />
         </div>
       </div>

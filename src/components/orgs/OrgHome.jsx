@@ -2,6 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { reject, get } from 'lodash';
 import APIService from '../../services/APIService';
+import { isCurrentUserMemberOf } from '../../common/utils';
 import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
 import OrgHomeTabs from './OrgHomeTabs';
@@ -119,6 +120,7 @@ class OrgHome extends React.Component {
   render() {
     const { org, isLoading, tab, pins } = this.state;
     const url = this.getURLFromPath()
+    const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId());
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -126,7 +128,11 @@ class OrgHome extends React.Component {
           <CircularProgress color='primary' /> :
           <div className='col-md-12 home-container no-side-padding'>
             <OrgHomeHeader org={org} url={url} />
-            <Pins pins={pins} onDelete={this.deletePin} />
+            <Pins
+              pins={pins}
+              onDelete={this.deletePin}
+              canDelete={isCurrentUserMemberOfOrg}
+            />
             <OrgHomeTabs
               tab={tab}
               onTabChange={this.onTabChange}
@@ -136,6 +142,7 @@ class OrgHome extends React.Component {
               pins={pins}
               onPinCreate={this.createPin}
               onPinDelete={this.deletePin}
+              showPin={isCurrentUserMemberOfOrg}
             />
           </div>
         }

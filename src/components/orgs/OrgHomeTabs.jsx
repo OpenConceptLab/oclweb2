@@ -5,7 +5,9 @@ import AboutAccordian from '../common/AboutAccordian';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 
 const OrgHomeTabs = props => {
-  const { tab, org, location, url, pins, onTabChange, onPinCreate, onPinDelete} = props;
+  const {
+    tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
+  } = props;
   const about = get(org, 'extras.about')
 
   return (
@@ -24,6 +26,7 @@ const OrgHomeTabs = props => {
             location={location}
             url={url}
             pins={pins}
+            showPin={showPin}
             onPinCreate={onPinCreate}
             onPinDelete={onPinDelete}
             resource='sources'
@@ -36,6 +39,7 @@ const OrgHomeTabs = props => {
             location={location}
             url={url}
             pins={pins}
+            showPin={showPin}
             onPinCreate={onPinCreate}
             onPinDelete={onPinDelete}
             resource='collections'

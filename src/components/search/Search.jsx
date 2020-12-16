@@ -350,7 +350,7 @@ class Search extends React.Component {
   }
 
   render() {
-    const { nested, pins, onPinCreate, onPinDelete } = this.props;
+    const { nested, pins, onPinCreate, onPinDelete, showPin } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
     } = this.state;
@@ -418,6 +418,7 @@ class Search extends React.Component {
                   onPinDelete={onPinDelete}
                   pins={pins}
                   nested={nested}
+                  showPin={showPin}
                 />
               }
               {

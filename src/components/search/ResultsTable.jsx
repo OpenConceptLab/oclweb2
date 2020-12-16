@@ -26,7 +26,8 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, headFirst, isLoggedIn
+  formatDate, formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
+  getCurrentUserUsername, isCurrentUserMemberOf,
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
@@ -264,7 +265,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested
+    nested, showPin
   } = props;
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
@@ -276,13 +277,12 @@ const ExpandibleRow = props => {
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
-  const shouldShowPin = isLoggedIn() && resourceDefinition.pinnable;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(resourceDefinition, 'columns.length', 1) +
                         (isConceptContainer ? 1 : 0) + //public column
                            (isSelectable ? 1 : 0) + // select column
-                            ((resourceDefinition.expandible || shouldShowPin) ? 1 : 0) + // expand icon column
+                            ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
                           (resourceDefinition.tags ? 1 : 0); //tags column
 
   React.useEffect(() => {
@@ -310,18 +310,44 @@ const ExpandibleRow = props => {
     })
   }
 
+  const getPinService = pinId => {
+    const username = get(props, 'match.params.user') || getCurrentUserUsername();
+    const orgId = get(props, 'match.params.org');
+    let service = null;
+    if(orgId && isCurrentUserMemberOf(orgId))
+      service = APIService.orgs(orgId)
+    else if(username && isLoggedIn())
+      service = APIService.users(username)
+
+    if(service) {
+      if(pinId)
+        return service.pins(pinId)
+      return service.pins()
+    }
+  }
+
+  const createPin = (resourceType, resourceId) => {
+    if(onPinCreate)
+      onPinCreate(resourceType, resourceId)
+    else
+      defaultCreatePin(resourceType, resourceId, getPinService())
+  }
+
+  const deletePin = pinId => {
+    if(onPinDelete)
+      onPinDelete(pinId)
+    else
+      defaultDeletePin(getPinService(pinId))
+  }
+
   const onPinClick = event => {
-    if(!shouldShowPin)
+    if(!showPin)
       return;
 
     event.stopPropagation()
     event.preventDefault()
 
-    const newPinState = !pinned;
-    if(newPinState)
-      onPinCreate(item.type, item.uuid)
-    else
-      onPinDelete(pinId)
+    pinned ? deletePin(pinId) : createPin(item.type, item.uuid);
 
     return false;
   }
@@ -461,7 +487,7 @@ const ExpandibleRow = props => {
           </TableCell>
         }
         {
-          (resourceDefinition.expandible || shouldShowPin) &&
+          (resourceDefinition.expandible || showPin) &&
           <TableCell align={nested ? 'center' : 'left'}>
             {
               resourceDefinition.expandible &&
@@ -470,7 +496,7 @@ const ExpandibleRow = props => {
               </IconButton>
             }
             {
-              shouldShowPin &&
+              showPin &&
               <IconButton aria-label="expand row" size="small" onClick={onPinClick}>
                 {<PinIcon fontSize="small" pinned={pinned ? pinned.toString() : undefined} />}
               </IconButton>
@@ -535,7 +561,7 @@ const ExpandibleRow = props => {
 const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
-    onPinCreate, onPinDelete, pins, nested
+    onPinCreate, onPinDelete, pins, nested, showPin
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -546,7 +572,7 @@ const ResultsTable = (
     border: `1px solid ${theadBgColor}`,
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
-  const shouldShowPin = isLoggedIn() && resourceDefinition.pinnable;
+  const shouldShowPin = showPin && resourceDefinition.pinnable;
   const columnsCount = get(resourceDefinition, 'columns.length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
@@ -667,6 +693,7 @@ const ResultsTable = (
                       onPinDelete={onPinDelete}
                       pins={pins}
                       nested={nested}
+                      showPin={shouldShowPin}
                     />
                   ))
                 }
