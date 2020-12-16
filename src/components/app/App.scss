@@ -144,6 +144,12 @@ td.pagination-center {
     overflow: hidden;
     max-width: 500px;
 }
+.ellipsis-text-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 .gray-italics-small {
     color: gray;
     font-style: italic;

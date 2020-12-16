@@ -70,7 +70,7 @@ const Pins = ({ pins, onDelete, canDelete }) => {
                     <div style={{textAlign: 'center'}}>
                       <CircularProgress color='primary' />
                     </div> :
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    <Typography variant="body2" color="textSecondary" component="p" className='ellipsis-text-2'>
                       {pin.resource.description || pin.resource.full_name || pin.resource.name}
                     </Typography>
                   }
