@@ -9,7 +9,7 @@ const APIServiceProvider = {};
 const RESOURCES = [
   { name: 'concepts', relations: [] },
   { name: 'mappings', relations: [] },
-  { name: 'orgs', relations: [] },
+  { name: 'orgs', relations: ['pins'] },
   { name: 'sources', relations: [] },
   { name: 'collections', relations: [] },
   { name: 'users', relations: ['login', 'pins'] },

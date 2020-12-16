@@ -26,7 +26,7 @@ import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
-  formatDate, formatDateTime, headFirst, getCurrentUserUsername
+  formatDate, formatDateTime, headFirst, isLoggedIn
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
@@ -38,8 +38,6 @@ import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
-const CURRENT_USER_ID = getCurrentUserUsername();
-
 const RESOURCE_DEFINITIONS = {
   references: {
     headBgColor: BLUE,
@@ -265,7 +263,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 
 const ExpandibleRow = props => {
   const {
-    item, resourceDefinition, resource, isSelected, isSelectable, onCreatePin, onDeletePin, pins,
+    item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
     nested
   } = props;
   const [mappings, setMappings] = React.useState([]);
@@ -278,7 +276,7 @@ const ExpandibleRow = props => {
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
-  const shouldShowPin = CURRENT_USER_ID && resourceDefinition.pinnable;
+  const shouldShowPin = isLoggedIn() && resourceDefinition.pinnable;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(resourceDefinition, 'columns.length', 1) +
@@ -321,9 +319,9 @@ const ExpandibleRow = props => {
 
     const newPinState = !pinned;
     if(newPinState)
-      onCreatePin(item.type, item.uuid)
+      onPinCreate(item.type, item.uuid)
     else
-      onDeletePin(pinId)
+      onPinDelete(pinId)
 
     return false;
   }
@@ -535,7 +533,10 @@ const ExpandibleRow = props => {
 }
 
 const ResultsTable = (
-  { resource, results, onPageChange, onSortChange, sortParams, onCreatePin, onDeletePin, pins, nested}
+  {
+    resource, results, onPageChange, onSortChange, sortParams,
+    onPinCreate, onPinDelete, pins, nested
+  }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
   const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
@@ -545,7 +546,7 @@ const ResultsTable = (
     border: `1px solid ${theadBgColor}`,
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
-  const shouldShowPin = CURRENT_USER_ID && resourceDefinition.pinnable;
+  const shouldShowPin = isLoggedIn() && resourceDefinition.pinnable;
   const columnsCount = get(resourceDefinition, 'columns.length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
@@ -662,8 +663,8 @@ const ResultsTable = (
                       isSelected={includes(selectedList, item.id)}
                       onSelectChange={updateSelected}
                       isSelectable={isSelectable}
-                      onCreatePin={onCreatePin}
-                      onDeletePin={onDeletePin}
+                      onPinCreate={onPinCreate}
+                      onPinDelete={onPinDelete}
                       pins={pins}
                       nested={nested}
                     />

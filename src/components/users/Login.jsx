@@ -47,7 +47,7 @@ class Login extends React.Component {
   }
 
   cacheUserData() {
-    APIService.user().get().then(response => {
+    APIService.user().get(null, null, {includeSubscribedOrgs: true}).then(response => {
       if(response.status === 200) {
         localStorage.setItem('user', JSON.stringify(response.data))
         alertifyjs.success(`Successfully signed in as ${this.state.username}.`)

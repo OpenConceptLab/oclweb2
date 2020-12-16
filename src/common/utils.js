@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get,
+  get, includes, map,
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
@@ -123,10 +123,18 @@ export const getCurrentUser = () => {
   return null;
 };
 
+export const getCurrentUserOrgs = () => {
+  return get(getCurrentUser(), 'supported_orgs');
+};
+
 export const getCurrentUserUsername = () => {
   return get(getCurrentUser(), 'username');
 };
 
 export const nonEmptyCount = (object, attributes) => {
   return size(intersectionBy(keys(omitBy(object, isEmpty)), attributes));
+}
+
+export const isCurrentUserMemberOf = orgId => {
+  return includes(map(getCurrentUserOrgs(), 'id'), orgId);
 }

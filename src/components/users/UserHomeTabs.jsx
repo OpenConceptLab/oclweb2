@@ -14,7 +14,7 @@ const ICON_STYLES = {marginRight: '10px', marginBottom: '0px'}
 const TAB_STYLES = {minHeight: HEIGHT, paddingTop: '6px', height: HEIGHT}
 
 const UserHomeTabs = props => {
-  const { tab, user, onChange, onPinChange, lastDeletedPinId } = props;
+  const { tab, user, onTabChange } = props;
 
   const indicatorColorClass = () => {
     if(tab == 2)
@@ -48,7 +48,7 @@ const UserHomeTabs = props => {
       <AppBar position="static" color="default" style={{backgroundColor: WHITE, boxShadow: 'none'}}>
         <Tabs
           value={tab}
-          onChange={onChange}
+          onChange={onTabChange}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
@@ -84,14 +84,11 @@ const UserHomeTabs = props => {
             loaded ?
             <Search
               {...props}
-              user={user}
               nested={true}
               baseURL={user.sources_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="sources"
               searchInputPlaceholder={`Search ${user.username} sources...`}
-              onPinChange={onPinChange}
-              lastDeletedPinId={lastDeletedPinId}
             /> :
             <CircularProgress color="primary" />
           )
@@ -107,8 +104,6 @@ const UserHomeTabs = props => {
               fixedFilters={{isTable: true, limit: 25}}
               resource="collections"
               searchInputPlaceholder={`Search ${user.username} collections...`}
-              onPinChange={onPinChange}
-              lastDeletedPinId={lastDeletedPinId}
             /> :
             <CircularProgress color="primary" />
           )
@@ -124,8 +119,6 @@ const UserHomeTabs = props => {
               fixedFilters={{isTable: true, limit: 25}}
               resource="organizations"
               searchInputPlaceholder={`Search ${user.username} organizations...`}
-              onPinChange={onPinChange}
-              lastDeletedPinId={lastDeletedPinId}
             /> :
             <CircularProgress color="primary" />
           )
