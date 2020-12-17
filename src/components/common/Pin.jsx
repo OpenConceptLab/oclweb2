@@ -21,11 +21,11 @@ const getIcon = resourceURI => {
     return <HomeIcon size='small' style={{color: ORANGE, width: '20px', marginRight: '0px'}} />;
 }
 
-const Pin = ({ pin, canDelete, onDelete }) => {
+const Pin = ({ pin, canDelete, onDelete, style }) => {
   const mnemonic = last(compact(pin.resource_uri.split('/')))
   const isOrg = pin.resource_uri.indexOf('/sources/') === -1 && pin.resource_uri.indexOf('/collections/') === -1;
   return (
-      <Card style={{height: '150px', position: 'relative', boxShadow: 'none', border: '1px solid lightgray', width: '100%', display: 'inline-block'}}>
+      <Card style={{height: '150px', position: 'relative', boxShadow: 'none', border: '1px solid lightgray', width: '100%', display: 'inline-block', ...style}}>
         <CardHeader
           style={{padding: '5px'}}
           classes={{avatar: 'pinned-item-icon', action: 'pinned-item-action'}}

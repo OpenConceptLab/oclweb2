@@ -10,12 +10,16 @@ const getGridDivision = pinsCount => {
     return 6
   return Math.floor(division/pinsCount);
 }
-const getItemStyle = (draggableStyle, isDragging) => ({
+const getPinStyle = isDragging => ({
+  backgroundColor: isDragging ? 'rgba(255,255,255,0.7)' : '#fff',
+  boxShadow: isDragging ? '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' : 'none',
+})
+const getItemStyle = draggableStyle => ({
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
-  opacity: isDragging ? 0.5 : 1,
   // styles we need to apply on draggables
-  ...draggableStyle
+  height: '150px',
+  ...draggableStyle,
 });
 const getListStyle = () => ({
   display: 'flex',
@@ -45,15 +49,15 @@ const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
       return;
     }
 
-    const items = reorder(
-      orderedPins,
-      result.source.index,
-      result.destination.index
-    );
-
-    onOrderUpdate(parseInt(result.draggableId), result.destination.index)
-
-    setPins(items);
+    if(result.source.index !== result.destination.index) {
+      const items = reorder(
+        orderedPins,
+        result.source.index,
+        result.destination.index
+      );
+      onOrderUpdate(parseInt(result.draggableId), result.destination.index)
+      setPins(items);
+    }
   }
 
   return (
@@ -93,12 +97,9 @@ const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
                                   ref={provided.innerRef}
                                   {...provided.dragHandleProps}
                                   {...provided.draggableProps}
-                                  style={getItemStyle(
-                                      provided.draggableProps.style,
-                                      snapshot.isDragging
-                                  )}
+                                  style={getItemStyle(provided.draggableProps.style)}
                                 >
-                                  <Pin pin={pin} onDelete={onDelete} canDelete={canDelete} />
+                                  <Pin pin={pin} onDelete={onDelete} canDelete={canDelete} style={getPinStyle(snapshot.isDragging)} />
                                 </div>
                                 {provided.placeholder}
                               </div>
