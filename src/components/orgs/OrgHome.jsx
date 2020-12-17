@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get } from 'lodash';
+import { reject, get, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -21,7 +21,7 @@ class OrgHome extends React.Component {
   getDefaultTabIndex() {
     const { location } = this.props;
 
-    if(location.pathname.indexOf('/about') > -1)
+    if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
       return 3;
     if(location.pathname.indexOf('/members') > -1)
       return 2;
@@ -122,10 +122,15 @@ class OrgHome extends React.Component {
     service.put({order: newOrder}).then(() => {})
   }
 
+  shouldShowAboutTab() {
+    return !isEmpty(get(this, 'state.org.extras.about'));
+  }
+
   render() {
     const { org, isLoading, tab, pins } = this.state;
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId());
+    const showAboutTab = this.shouldShowAboutTab()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -149,6 +154,7 @@ class OrgHome extends React.Component {
               onPinCreate={this.createPin}
               onPinDelete={this.deletePin}
               showPin={isCurrentUserMemberOfOrg}
+              aboutTab={showAboutTab}
             />
           </div>
         }

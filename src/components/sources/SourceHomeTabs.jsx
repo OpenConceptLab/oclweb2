@@ -8,6 +8,7 @@ import AboutAccordian from '../common/AboutAccordian';
 const SourceHomeTabs = props => {
   const {
     tab, onChange, source, versions, location, versionedObjectURL, currentVersion,
+    aboutTab
   } = props;
   const about = get(source, 'extras.about')
 
@@ -17,7 +18,7 @@ const SourceHomeTabs = props => {
         <Tab label="Concepts" />
         <Tab label="Mappings" />
         <Tab label="Versions" />
-        <Tab label="About" />
+        {aboutTab && <Tab label="About" />}
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         {
@@ -47,7 +48,7 @@ const SourceHomeTabs = props => {
           <ConceptContainerVersionList versions={versions} resource='source' />
         }
         {
-          tab === 3 &&
+          aboutTab && tab === 3 &&
           <AboutAccordian id={source.id} about={about} />
         }
       </div>

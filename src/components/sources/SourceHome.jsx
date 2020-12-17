@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes } from 'lodash';
+import { includes, isEmpty, get } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
@@ -21,7 +21,7 @@ class SourceHome extends React.Component {
   getDefaultTabIndex() {
     const { location } = this.props;
 
-    if(location.pathname.indexOf('/about') > -1)
+    if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
       return 3;
     if(location.pathname.indexOf('/versions') > -1)
       return 2;
@@ -113,10 +113,15 @@ class SourceHome extends React.Component {
       return version
   }
 
+  shouldShowAboutTab() {
+    return !isEmpty(get(this, 'state.source.extras.about'));
+  }
+
   render() {
     const { source, versions, isLoading, tab } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
+    const showAboutTab = this.shouldShowAboutTab();
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -137,6 +142,7 @@ class SourceHome extends React.Component {
               location={this.props.location}
               versionedObjectURL={versionedObjectURL}
               currentVersion={this.getCurrentVersion()}
+              aboutTab={showAboutTab}
             />
           </div>
         }

@@ -6,7 +6,7 @@ import OrgHomeChildrenList from './OrgHomeChildrenList';
 
 const OrgHomeTabs = props => {
   const {
-    tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
+    tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete, aboutTab
   } = props;
   const about = get(org, 'extras.about')
 
@@ -16,7 +16,7 @@ const OrgHomeTabs = props => {
         <Tab label="Sources" />
         <Tab label="Collections" />
         <Tab label="Members" />
-        <Tab label="About" />
+        {aboutTab && <Tab label="About" />}
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         {
@@ -56,7 +56,7 @@ const OrgHomeTabs = props => {
           />
         }
         {
-          tab === 3 &&
+          aboutTab && tab === 3 &&
           <AboutAccordian id={org.id} about={about} />
         }
       </div>

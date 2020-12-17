@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes } from 'lodash';
+import { includes, isEmpty, get } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
@@ -21,7 +21,7 @@ class CollectionHome extends React.Component {
   getDefaultTabIndex() {
     const { location } = this.props;
 
-    if(location.pathname.indexOf('/about') > -1)
+    if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
       return 4;
     if(location.pathname.indexOf('/versions') > -1)
       return 3;
@@ -117,10 +117,15 @@ class CollectionHome extends React.Component {
       return version
   }
 
+  shouldShowAboutTab() {
+    return !isEmpty(get(this, 'state.collection.extras.about'));
+  }
+
   render() {
     const { collection, versions, isLoading, tab } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
+    const showAboutTab = this.shouldShowAboutTab();
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -141,6 +146,7 @@ class CollectionHome extends React.Component {
               location={this.props.location}
               versionedObjectURL={versionedObjectURL}
               currentVersion={this.getCurrentVersion()}
+              aboutTab={showAboutTab}
             />
           </div>
         }
