@@ -9,6 +9,7 @@ import {
 } from '@material-ui/icons';
 import { headFirst } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
+import Tip from './Tip';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -75,21 +76,14 @@ const VersionList = ({ versions, resource }) => {
         </Accordion>
       </div>
       <div className='col-md-4 no-right-padding'>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Tip</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
+        <Tip
+          content={
             <p className="small">
               {`All changes to a ${resource} are automatically saved to its `}
-						  <strong>{`${startCase(resource)} Version History`}</strong>.
+					    <strong>{`${startCase(resource)} Version History`}</strong>.
             </p>
-          </AccordionDetails>
-        </Accordion>
+          }
+        />
       </div>
     </div>
   );

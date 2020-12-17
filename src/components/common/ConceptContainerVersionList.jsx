@@ -1,15 +1,16 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
-  IconButton
+  IconButton,
 } from '@material-ui/core';
 import { map, isEmpty, startCase } from 'lodash';
 import {
-  ExpandMore as ExpandMoreIcon, Search as SearchIcon
+  ExpandMore as ExpandMoreIcon, Search as SearchIcon,
 } from '@material-ui/icons';
 import { headFirst } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import ResourceVersionLabel from './ResourceVersionLabel';
+import ConceptContainerTip from './ConceptContainerTip';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -76,33 +77,7 @@ const ConceptContainerVersionList = ({ versions, resource }) => {
         </Accordion>
       </div>
       <div className='col-md-4 no-right-padding'>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Tip</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
-            <p className="small">
-              Create a new
-              <strong>{` ${startCase(resource)} Version `}</strong>
-              {
-                `to save the state of a ${resource}'s concepts and mappings at a specific point in time.`
-              }
-            </p>
-				    <p className="small">
-              A
-              <strong> Released </strong>
-              {
-                ` ${resource} version indicates to your users that a particular source version is prepared for public consumption, while a`
-              }
-              <strong> Retired </strong>
-              {`${resource} version indicates that it should no longer be used.`}
-            </p>
-          </AccordionDetails>
-        </Accordion>
+        <ConceptContainerTip resource={resource} />
       </div>
     </div>
   );
