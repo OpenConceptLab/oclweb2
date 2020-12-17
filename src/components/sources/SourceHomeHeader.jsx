@@ -72,13 +72,6 @@ const SourceHomeHeader = ({
                 />
               </React.Fragment>
             }
-            <span style={{marginLeft: '10px'}}>
-              <Tooltip title="Copy URL" placement="right">
-                <IconButton onClick={onIconClick} color="primary">
-                  <CopyIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
@@ -88,6 +81,13 @@ const SourceHomeHeader = ({
               includes(['view', 'edit'], source.public_access.toLowerCase()) &&
               <PublicAccessChip publicAccess={source.public_access} />
             }
+            <span style={{marginLeft: '10px'}}>
+              <Tooltip title="Copy URL" placement="right">
+                <IconButton onClick={onIconClick} color="primary">
+                  <CopyIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </span>
           </div>
           {
             source.description &&
