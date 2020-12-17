@@ -60,6 +60,12 @@ const OrgHomeHeader = ({ org, url }) => {
               </Tooltip>
             </span>
           </div>
+          {
+            org.description &&
+            <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              {org.description}
+            </div>
+          }
           <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
           <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
