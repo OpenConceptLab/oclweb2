@@ -104,6 +104,11 @@ class UserHome extends React.Component {
     })
   }
 
+  updatePinOrder = (pinId, newOrder) => {
+    const service = this.getPinsService(pinId)
+    service.put({order: newOrder}).then(() => {})
+  }
+
   canActOnPins() {
     return isAdminUser() || (getCurrentUserUsername() === this.getUsername())
   }
@@ -113,11 +118,19 @@ class UserHome extends React.Component {
     const canActOnPins = this.canActOnPins()
     return (
       <div className="col-md-12">
-        <div className="col-md-3 no-right-padding">
-          <UserHomeDetails user={user} />
-        </div>
+        {
+          user &&
+          <div className="col-md-3 no-right-padding">
+            <UserHomeDetails user={user} />
+          </div>
+        }
         <div className='col-md-9 no-left-padding'>
-          <Pins pins={pins} onDelete={this.deletePin} canDelete={canActOnPins} />
+          <Pins
+            pins={pins}
+            onDelete={this.deletePin}
+            canDelete={canActOnPins}
+            onOrderUpdate={this.updatePinOrder}
+          />
           <UserHomeTabs
             {...this.state}
             {...this.props}

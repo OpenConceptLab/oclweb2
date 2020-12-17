@@ -117,6 +117,11 @@ class OrgHome extends React.Component {
     }
   }
 
+  updatePinOrder = (pinId, newOrder) => {
+    const service = this.getPinsService(pinId)
+    service.put({order: newOrder}).then(() => {})
+  }
+
   render() {
     const { org, isLoading, tab, pins } = this.state;
     const url = this.getURLFromPath()
@@ -132,6 +137,7 @@ class OrgHome extends React.Component {
               pins={pins}
               onDelete={this.deletePin}
               canDelete={isCurrentUserMemberOfOrg}
+              onOrderUpdate={this.updatePinOrder}
             />
             <OrgHomeTabs
               tab={tab}
