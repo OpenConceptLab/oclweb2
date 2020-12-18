@@ -150,6 +150,11 @@ td.pagination-center {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.gray-italics {
+    color: gray;
+    font-style: italic;
+    margin-right: 5px;
+}
 .gray-italics-small {
     color: gray;
     font-style: italic;
@@ -431,4 +436,13 @@ div.login-paper {
         text-overflow: ellipsis;
         overflow: hidden;
     }
+}
+.diff-red {
+    background-color: rgba(232, 217, 218, 0.5);
+}
+.diff-green {
+    background-color: rgb(231, 255, 238);
+}
+.border-primary {
+    border: 1px solid rgb(51, 115, 170);
 }

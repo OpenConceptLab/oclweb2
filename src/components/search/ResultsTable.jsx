@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
+  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip, Button,
 } from '@material-ui/core';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -17,17 +17,18 @@ import {
   Person as PersonIcon,
   Home as HomeIcon,
   Loyalty as LoyaltyIcon,
+  CompareArrows as CompareArrowsIcon
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty,
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter,
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
   formatDate, formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
-  getCurrentUserUsername, isCurrentUserMemberOf,
+  getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser,
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
@@ -314,7 +315,7 @@ const ExpandibleRow = props => {
     const username = get(props, 'match.params.user') || getCurrentUserUsername();
     const orgId = get(props, 'match.params.org');
     let service = null;
-    if(orgId && isCurrentUserMemberOf(orgId))
+    if(orgId && (isCurrentUserMemberOf(orgId) || isAdminUser()))
       service = APIService.orgs(orgId)
     else if(username && isLoggedIn())
       service = APIService.users(username)
@@ -615,6 +616,22 @@ const ResultsTable = (
     onSortChange(sortQuery)
   }
 
+  const getSelectedItems = () => {
+    return filter(results.items, item => includes(selectedList, item.id))
+  }
+
+  const shouldShowCompareOption = resource === 'concepts' && selectedList.length === 2;
+  const selectionRowColumnsCount = shouldShowCompareOption ? columnsCount - 2 : columnsCount;
+  const onCompareClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
+    const urls = map(getSelectedItems(), 'url')
+    if(urls.length == 2) {
+      const url = `#/concepts/compare?lhs=${urls[0]}&rhs=${urls[1]}`
+      window.open(url, '_blank')
+    }
+  }
+
   return (
     <div className='col-sm-12 no-side-padding'>
       {
@@ -625,10 +642,24 @@ const ResultsTable = (
               <TableHead style={theadStyles}>
                 {
                   selectedList.length > 0 &&
-                  <TableRow colSpan={columnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
-                    <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
+                  <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
+                    <TableCell colSpan={selectionRowColumnsCount} align='left' style={{color: WHITE}}>
                       {selectedList.length} Selected
                     </TableCell>
+                    {
+                      shouldShowCompareOption &&
+                      <TableCell colSpan="2" align='center' style={{color: WHITE}}>
+                        <Button
+                          startIcon={<CompareArrowsIcon fontSize='small' />}
+                          variant='contained'
+                          size='small'
+                          color='secondary'
+                          onClick={onCompareClick}
+                        >
+                          Compare
+                        </Button>
+                      </TableCell>
+                    }
                   </TableRow>
                 }
                 <TableRow>

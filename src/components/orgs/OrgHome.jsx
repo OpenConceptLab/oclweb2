@@ -2,7 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { reject, get, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
-import { isCurrentUserMemberOf } from '../../common/utils';
+import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
 import OrgHomeTabs from './OrgHomeTabs';
@@ -129,7 +129,7 @@ class OrgHome extends React.Component {
   render() {
     const { org, isLoading, tab, pins } = this.state;
     const url = this.getURLFromPath()
-    const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId());
+    const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
     const showAboutTab = this.shouldShowAboutTab()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
