@@ -2,15 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Tooltip, CircularProgress
+  Tooltip, CircularProgress,
 } from '@material-ui/core';
-import { Flag as FlagIcon } from '@material-ui/icons';
+import {
+  Flag as FlagIcon, ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon
+} from '@material-ui/icons';
 import {
   get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, isObject, keys, values,
-  sortBy, findIndex, uniqBy
+  sortBy, findIndex, uniqBy, reduce
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDate, toObjectArray } from '../../common/utils';
+import {
+  DIFF_BG_RED, DIFF_BG_GREEN
+} from '../../common/constants';
 import ReactDiffViewer from 'react-diff-viewer';
 
 const ATTRIBUTES = {
@@ -98,16 +103,30 @@ class ConceptsComparison extends React.Component {
       isLoadingRHS: true,
       lhs: {},
       rhs: {},
+      collapsedAttrs: {},
     }
   }
 
   componentDidMount() {
+    const collapsedAttrs = reduce(ATTRIBUTES.list , (obj, key) => {
+      obj[key] = false
+      return obj
+    }, {});
+
+    this.setState({collapsedAttrs: collapsedAttrs})
     this.setObjectsForComparison()
   }
 
   componentDidUpdate(prevProps) {
     if(prevProps.location.search !== this.props.location.search)
       this.setObjectsForComparison()
+  }
+
+  onCollapseIconClick(attr) {
+    this.setState({collapsedAttrs: {
+      ...this.state.collapsedAttrs,
+      [attr]: !this.state.collapsedAttrs[attr],
+    }})
   }
 
   setObjectsForComparison() {
@@ -191,6 +210,8 @@ class ConceptsComparison extends React.Component {
         const mappings = get(concept, attr);
         if(isEmpty(mappings)) return '';
         return map(mappings, mapping => getMappingLabel(mapping, formatted));
+      } else {
+        return get(concept, attr)
       }
     } else if(type === 'date') {
       let date = get(concept, attr);
@@ -234,11 +255,8 @@ class ConceptsComparison extends React.Component {
     return `${keys(val)[0]}: ${JSON.stringify(values(val)[0])}`
   }
 
-  getAttributeDOM(attr, type) {
+  getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff) {
     const { lhs, rhs } = this.state;
-    const lhsValue = this.getValue(lhs, attr, type);
-    const rhsValue = this.getValue(rhs, attr, type);
-    const isDiff = !isEqual(lhsValue, rhsValue);
     const maxLengthAttr = type === 'list' ? this.maxArrayElement(get(lhs, attr), get(rhs, attr)) : [];
     const rowSpan = size(maxLengthAttr);
     return (
@@ -256,7 +274,7 @@ class ConceptsComparison extends React.Component {
                 {
                   index === 0 &&
                   <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-                    {startCase(attr)}
+                    {type !== 'list' && startCase(attr)}
                   </TableCell>
                 }
                 {
@@ -284,7 +302,7 @@ class ConceptsComparison extends React.Component {
           }) :
           <TableRow key={attr} colSpan='12'>
             <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-              {startCase(attr)}
+              {type !== 'list' && startCase(attr)}
             </TableCell>
             {
               isDiff ?
@@ -313,13 +331,13 @@ class ConceptsComparison extends React.Component {
   }
 
   render() {
-    const { lhs, rhs, isLoadingLHS, isLoadingRHS } = this.state;
+    const { lhs, rhs, isLoadingLHS, isLoadingRHS, collapsedAttrs } = this.state;
     const isLoading = isLoadingLHS || isLoadingRHS;
     return (
       <React.Fragment>
         {
           isLoading ?
-          <div style={{textAlign: 'center'}}>
+          <div style={{textAlign: 'center', marginTop: '30px'}}>
             <CircularProgress color='primary' />
           </div> :
           <div className='col-md-12' style={{paddingTop: '10px', paddingBottom: '10px'}}>
@@ -349,7 +367,36 @@ class ConceptsComparison extends React.Component {
                 <TableBody>
                   {
                     map(ATTRIBUTES, (attrs, type) => {
-                      return map(attrs, attr => this.getAttributeDOM(attr, type))
+                      return map(attrs, attr => {
+                        const isExpanded = get(collapsedAttrs, attr)
+                        const lhsValue = this.getValue(lhs, attr, type);
+                        const rhsValue = this.getValue(rhs, attr, type);
+                        const isDiff = !isEqual(lhsValue, rhsValue);
+                        const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
+                        const styles = isDiff ? {background: DIFF_BG_RED} : {background: DIFF_BG_GREEN}
+                        if(type === 'list') {
+                          return (
+                            <React.Fragment>
+                              <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
+                                <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
+                                  <span style={{marginRight: '5px'}}>{startCase(attr)}</span>
+                                  {
+                                    isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
+                                  }
+                                </TableCell>
+                              </TableRow>
+                              {
+                                isExpanded &&
+                                <React.Fragment>
+                                  {children}
+                                </React.Fragment>
+                              }
+                            </React.Fragment>
+                          )
+                        } else {
+                          return children;
+                        }
+                      })
                     })
                   }
                 </TableBody>

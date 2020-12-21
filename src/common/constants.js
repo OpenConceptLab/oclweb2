@@ -11,3 +11,7 @@ export const GREEN = '#5cb85c';
 export const RED = '#c33';
 export const ORANGE = 'rgb(253, 164, 41)';
 export const EMPTY_VALUE = '-';
+export const DIFF_BG_RED = '#ffeef0';
+export const DIFF_HIGHLIGHT_RED = '#fdb8c0';
+export const DIFF_BG_GREEN = '#e6ffed';
+export const DIFF_HIGHLIGHT_GREEN = '#acf2bd';
