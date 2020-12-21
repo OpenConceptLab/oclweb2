@@ -93,7 +93,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
             {
               isEmpty(indirectMappings) ?
               None() :
-              <NestedMappingsTable mappings={indirectMappings} />
+              <NestedMappingsTable mappings={indirectMappings} isIndirect />
             }
           </AccordionDetails>
         </Accordion>
