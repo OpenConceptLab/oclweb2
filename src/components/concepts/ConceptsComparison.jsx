@@ -375,13 +375,13 @@ class ConceptsComparison extends React.Component {
                         const rhsValue = this.getValue(rhs, attr, type);
                         const isDiff = !isEqual(lhsValue, rhsValue);
                         const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
-                        const styles = isDiff ? {background: DIFF_BG_RED} : {}
+                        const styles = isDiff ? {background: DIFF_BG_RED} : {};
                         if(type === 'list') {
                           return (
                             <React.Fragment key={attr}>
                               <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
                                 <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
-                                  <span style={{marginRight: '5px'}}>{startCase(attr)}</span>
+                                  <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhs[attr].length}/${rhs[attr].length})`}</span>
                                   {
                                     isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
                                   }
