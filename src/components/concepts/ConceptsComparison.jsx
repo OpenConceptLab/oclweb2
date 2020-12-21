@@ -199,7 +199,9 @@ class ConceptsComparison extends React.Component {
       return value ? 'True' : 'False'
     } else {
       if(includes(['created_by', 'updated_by'], attr))
-        value ||= get(concept, 'version_${attr}')
+        value ||= get(concept, `version_${attr}`)
+      if(attr === 'updated_by' && has(concept, 'version_created_by'))
+        value ||= concept.version_created_by
       return value || '';
     }
   }
