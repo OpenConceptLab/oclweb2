@@ -20,11 +20,11 @@ export const formatDateTime = date => {
 }
 
 export const getIndirectMappings = (mappings, concept) => {
-  return filter(mappings, {from_concept_code: concept});
+  return filter(mappings, {to_concept_code: concept});
 }
 
 export const getDirectMappings = (mappings, concept) => {
-  return filter(mappings, {to_concept_code: concept});
+  return filter(mappings, {from_concept_code: concept});
 }
 
 export const getDirectExternalMappings = (mappings, concept) => {
