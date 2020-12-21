@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map, isArray, values
+  get, includes, map, isArray, values, pick
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
@@ -167,4 +167,11 @@ export const defaultDeletePin = (service, callback) => {
 export const isAdminUser = () => {
   const currentUser = getCurrentUser();
   return get(currentUser, 'is_staff') || get(currentUser, 'is_superuser');
+}
+
+export const toObjectArray = obj => {
+  if(isEmpty(obj))
+    return [];
+
+  return map(keys(obj), k => pick(obj, k));
 }

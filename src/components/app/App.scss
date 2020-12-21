@@ -446,3 +446,20 @@ div.login-paper {
 .border-primary {
     border: 1px solid rgb(51, 115, 170);
 }
+.diff-row {
+    table tbody tr td:nth-child(odd) {
+        display: none;
+    }
+    table tbody tr {
+        td pre span {
+            padding: 0px;
+        }
+        td:nth-child(4) {
+            padding-left: 16px;
+            background: #fff;
+            pre {
+                background: #e6ffed;
+            }
+        }
+    }
+}
