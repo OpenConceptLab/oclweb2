@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Tooltip, CircularProgress,
+  CircularProgress,
 } from '@material-ui/core';
 import {
-  Flag as FlagIcon, ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon
+  ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon
 } from '@material-ui/icons';
 import {
   get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, isObject, keys, values,
-  sortBy, findIndex, uniqBy, reduce
+  sortBy, findIndex, uniqBy, reduce, has
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDate, toObjectArray, toParentURI } from '../../common/utils';
@@ -27,51 +27,26 @@ const ATTRIBUTES = {
   date: ['created_on', 'updated_on'],
 }
 
-const getLocaleLabelFormatted = locale => {
-  if(!locale)
-    return ''
-  const nameAttr = get(locale, 'name') ? 'name' : 'description';
-  const typeValue = get(locale, 'name_type') || get(locale, 'description_type');
-  return (
-    <React.Fragment key={locale.uuid}>
-      <div className='flex-vertical-center'>
-        {
-          (typeValue && typeValue.toLowerCase() !== 'description') &&
-          <span className='gray-italics' style={{marginRight: '5px'}}>
-            {typeValue}
-          </span>
-        }
-        <span>
-          {get(locale, 'name') || get(locale, 'description')}
-        </span>
-        <span className='gray-italics-small' style={{marginLeft: '5px'}}>
-          {`[${locale.locale}]`}
-        </span>
-        {
-          locale.locale_preferred &&
-          <span style={{marginLeft: '5px'}}>
-            <Tooltip title={`Preferred ${nameAttr} for this locale`} placement='top-start'>
-              <FlagIcon color='secondary' fontSize='small' style={{width: '18px', marginTop: '4px'}}/>
-            </Tooltip>
-          </span>
-        }
-      </div>
-    </React.Fragment>
-  )
-}
-
-const getLocaleLabel = locale => {
+const getLocaleLabelExpanded = (locale, formatted=false) => {
   if(!locale)
     return '';
 
-  let typeValue = get(locale, 'name_type') || get(locale, 'description_type') || '';
-  if(typeValue)
-    typeValue += ' | '
-
+  const nameAttr = has(locale, 'name') ? 'Name' : 'Description';
+  const typeValue = get(locale, 'name_type') || get(locale, 'description_type') || '';
   const nameValue = get(locale, 'name') || get(locale, 'description');
-  const preferredText = locale.locale_preferred ? '(preferred)' : '';
+  const preferredText = locale.locale_preferred ? 'True' : 'False';
 
-  return `[${locale.locale}] ${typeValue}${nameValue} ${preferredText}`
+  const label = [
+    `Type: ${typeValue}`,
+    `${nameAttr}: ${nameValue}`,
+    `Locale: ${locale.locale}`,
+    `Preferred: ${preferredText}`,
+  ].join('\n')
+
+  if(formatted)
+    return <div key={label} style={{whiteSpace: 'pre'}}>{label}</div>;
+
+  return label;
 }
 
 const getMappingLabel = (mapping, formatted=false) => {
@@ -205,9 +180,7 @@ class ConceptsComparison extends React.Component {
       if(includes(['names', 'descriptions'], attr)) {
         const locales = get(concept, attr)
         if(isEmpty(locales)) return '';
-        if(formatted)
-          return map(locales, getLocaleLabelFormatted)
-        return map(locales, getLocaleLabel).join('\n')
+        return map(locales, locale => getLocaleLabelExpanded(locale, formatted))
       } else if (attr === 'mappings') {
         const mappings = get(concept, attr);
         if(isEmpty(mappings)) return '';
@@ -244,7 +217,7 @@ class ConceptsComparison extends React.Component {
 
   getListAttrValue(attr, val, formatted=false) {
     if(includes(['names', 'descriptions'], attr))
-      return formatted ? getLocaleLabelFormatted(val) : getLocaleLabel(val)
+      return getLocaleLabelExpanded(val, formatted)
     if(includes(['mappings'], attr))
       return getMappingLabel(val, formatted)
     if(includes(['extras'], attr))
