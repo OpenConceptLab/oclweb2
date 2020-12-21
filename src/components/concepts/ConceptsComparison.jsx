@@ -234,6 +234,84 @@ class ConceptsComparison extends React.Component {
     return `${keys(val)[0]}: ${JSON.stringify(values(val)[0])}`
   }
 
+  getAttributeDOM(attr, type) {
+    const { lhs, rhs } = this.state;
+    const lhsValue = this.getValue(lhs, attr, type);
+    const rhsValue = this.getValue(rhs, attr, type);
+    const isDiff = !isEqual(lhsValue, rhsValue);
+    const maxLengthAttr = type === 'list' ? this.maxArrayElement(get(lhs, attr), get(rhs, attr)) : [];
+    const rowSpan = size(maxLengthAttr);
+    return (
+      <React.Fragment key={attr}>
+        {
+          type === 'list' ?
+          map(maxLengthAttr, (_attr, index) => {
+            const _lhsVal = get(lhs, `${attr}.${index}`, '')
+            const _rhsVal = get(rhs, `${attr}.${index}`, '')
+            const _lhsValCleaned = this.getListAttrValue(attr, _lhsVal)
+            const _rhsValCleaned = this.getListAttrValue(attr, _rhsVal)
+            const _isDiff = !isEqual(_lhsValCleaned, _rhsValCleaned);
+            return (
+              <TableRow key={_attr.uuid || index} colSpan='12'>
+                {
+                  index === 0 &&
+                  <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
+                    {startCase(attr)}
+                  </TableCell>
+                }
+                {
+                  _isDiff ?
+                  <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
+                    <ReactDiffViewer
+                      oldValue={_lhsValCleaned}
+                      newValue={_rhsValCleaned}
+                      showDiffOnly={false}
+                      splitView
+                      hideLineNumbers
+                    />
+                  </TableCell> :
+                  <React.Fragment>
+                    <TableCell colSpan='5' style={{width: '45%'}}>
+                      {this.getListAttrValue(attr, _lhsVal, true)}
+                    </TableCell>
+                    <TableCell colSpan='5' style={{width: '45%'}}>
+                      {this.getListAttrValue(attr, _rhsVal, true)}
+                    </TableCell>
+                  </React.Fragment>
+                }
+              </TableRow>
+            )
+          }) :
+          <TableRow key={attr} colSpan='12'>
+            <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
+              {startCase(attr)}
+            </TableCell>
+            {
+              isDiff ?
+              <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
+                <ReactDiffViewer
+                  oldValue={lhsValue}
+                  newValue={rhsValue}
+                  showDiffOnly={false}
+                  splitView
+                  hideLineNumbers
+                />
+              </TableCell> :
+              <React.Fragment>
+                <TableCell colSpan='5' style={{width: '45%'}}>
+                  {this.getValue(lhs, attr, type, true)}
+                </TableCell>
+                <TableCell colSpan='5' style={{width: '45%'}}>
+                  {this.getValue(rhs, attr, type, true)}
+                </TableCell>
+              </React.Fragment>
+            }
+          </TableRow>
+        }
+      </React.Fragment>
+    )
+  }
+
   render() {
     const { lhs, rhs, isLoadingLHS, isLoadingRHS } = this.state;
     const isLoading = isLoadingLHS || isLoadingRHS;
@@ -271,82 +349,7 @@ class ConceptsComparison extends React.Component {
                 <TableBody>
                   {
                     map(ATTRIBUTES, (attrs, type) => {
-                      return map(attrs, attr => {
-                        const lhsValue = this.getValue(lhs, attr, type);
-                        const rhsValue = this.getValue(rhs, attr, type);
-                        const isDiff = !isEqual(lhsValue, rhsValue);
-                        const maxLengthAttr = type === 'list' ? this.maxArrayElement(get(lhs, attr), get(rhs, attr)) : [];
-                        const rowSpan = size(maxLengthAttr);
-                        return (
-                          <React.Fragment key={attr}>
-                            {
-                              type === 'list' ?
-                              map(maxLengthAttr, (_attr, index) => {
-                                const _lhsVal = get(lhs, `${attr}.${index}`, '')
-                                const _rhsVal = get(rhs, `${attr}.${index}`, '')
-                                const _lhsValCleaned = this.getListAttrValue(attr, _lhsVal)
-                                const _rhsValCleaned = this.getListAttrValue(attr, _rhsVal)
-                                const _isDiff = !isEqual(_lhsValCleaned, _rhsValCleaned);
-                                return (
-                                  <TableRow key={_attr.uuid || index} colSpan='12'>
-                                    {
-                                      index === 0 &&
-                                      <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-                                        {startCase(attr)}
-                                      </TableCell>
-                                    }
-                                    {
-                                      _isDiff ?
-                                      <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
-                                        <ReactDiffViewer
-                                          oldValue={_lhsValCleaned}
-                                          newValue={_rhsValCleaned}
-                                          showDiffOnly={false}
-                                          splitView
-                                          hideLineNumbers
-                                        />
-                                      </TableCell> :
-                                      <React.Fragment>
-                                        <TableCell colSpan='5' style={{width: '45%'}}>
-                                          {this.getListAttrValue(attr, _lhsVal, true)}
-                                        </TableCell>
-                                        <TableCell colSpan='5' style={{width: '45%'}}>
-                                          {this.getListAttrValue(attr, _rhsVal, true)}
-                                        </TableCell>
-                                      </React.Fragment>
-                                    }
-                                  </TableRow>
-                                )
-                              }) :
-                              <TableRow key={attr} colSpan='12'>
-                                <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-                                  {startCase(attr)}
-                                </TableCell>
-                                {
-                                  isDiff ?
-                                  <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
-                                    <ReactDiffViewer
-                                      oldValue={lhsValue}
-                                      newValue={rhsValue}
-                                      showDiffOnly={false}
-                                      splitView
-                                      hideLineNumbers
-                                    />
-                                  </TableCell> :
-                                  <React.Fragment>
-                                    <TableCell colSpan='5' style={{width: '45%'}}>
-                                      {this.getValue(lhs, attr, type, true)}
-                                    </TableCell>
-                                    <TableCell colSpan='5' style={{width: '45%'}}>
-                                      {this.getValue(rhs, attr, type, true)}
-                                    </TableCell>
-                                  </React.Fragment>
-                                }
-                              </TableRow>
-                            }
-                          </React.Fragment>
-                        )
-                      })
+                      return map(attrs, attr => this.getAttributeDOM(attr, type))
                     })
                   }
                 </TableBody>
