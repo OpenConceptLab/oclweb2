@@ -89,7 +89,7 @@ const getMappingLabel = (mapping, formatted=false) => {
   ].join('\n')
 
   if(formatted)
-    return <div style={{whiteSpace: 'pre'}}>{label}</div>;
+    return <div key={label} style={{whiteSpace: 'pre'}}>{label}</div>;
 
   return label
 }
@@ -376,7 +376,7 @@ class ConceptsComparison extends React.Component {
                         const styles = isDiff ? {background: DIFF_BG_RED} : {background: DIFF_BG_GREEN}
                         if(type === 'list') {
                           return (
-                            <React.Fragment>
+                            <React.Fragment key={attr}>
                               <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
                                 <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
                                   <span style={{marginRight: '5px'}}>{startCase(attr)}</span>
