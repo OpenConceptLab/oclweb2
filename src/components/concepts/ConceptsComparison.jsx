@@ -8,8 +8,8 @@ import {
   ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon
 } from '@material-ui/icons';
 import {
-  get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, isObject, keys, values,
-  sortBy, findIndex, uniqBy, reduce, has
+  get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, keys, values,
+  sortBy, findIndex, uniqBy, reduce, has, maxBy
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDate, toObjectArray, toParentURI } from '../../common/utils';
@@ -176,43 +176,36 @@ class ConceptsComparison extends React.Component {
   }
 
   getValue(concept, attr, type, formatted=false) {
+    let value = get(concept, attr)
     if(type === 'list') {
-      if(includes(['names', 'descriptions'], attr)) {
-        const locales = get(concept, attr)
-        if(isEmpty(locales)) return '';
-        return map(locales, locale => getLocaleLabelExpanded(locale, formatted))
-      } else if (attr === 'mappings') {
-        const mappings = get(concept, attr);
-        if(isEmpty(mappings)) return '';
-        return map(mappings, mapping => getMappingLabel(mapping, formatted));
-      } else {
-        return get(concept, attr)
-      }
+      if(isEmpty(value)) return '';
+      if(includes(['names', 'descriptions'], attr))
+        return map(value, locale => getLocaleLabelExpanded(locale, formatted))
+      if (attr === 'mappings')
+        return map(value, mapping => getMappingLabel(mapping, formatted));
+      else
+        return value
     } else if(type === 'date') {
-      let date = get(concept, attr);
-
       if(attr === 'created_on')
-        date ||= get(concept, 'created_at')
+        value ||= get(concept, 'created_at')
       if(attr === 'updated_on')
-        date ||= get(concept, 'updated_at')
+        value ||= get(concept, 'updated_at')
 
-      return date ? formatDate(date) : '';
+      return value ? formatDate(value) : '';
     } else if (type === 'textFormatted') {
       if(attr === 'owner')
         return `${concept.owner_type}: ${concept.owner}`
     } else if (type === 'bool') {
-      return get(concept, attr) ? 'True' : 'False'
+      return value ? 'True' : 'False'
     } else {
       if(includes(['created_by', 'updated_by'], attr))
-        return get(concept, attr) || get(concept, `version_${attr}`) || ''
-      return get(concept, attr, '')
+        value ||= get(concept, 'version_${attr}')
+      return value || '';
     }
   }
 
   maxArrayElement(v1, v2) {
-    const v1Length = isObject(v1) ? size(v1) : 0
-    const v2Length = isObject(v2) ? size(v2) : 0
-    return v1Length > v2Length ? v1 : v2;
+    return maxBy([v1, v2], size)
   }
 
   getListAttrValue(attr, val, formatted=false) {
