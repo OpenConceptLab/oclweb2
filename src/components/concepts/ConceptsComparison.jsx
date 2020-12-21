@@ -370,19 +370,22 @@ class ConceptsComparison extends React.Component {
                   {
                     map(ATTRIBUTES, (attrs, type) => {
                       return map(attrs, attr => {
-                        const isExpanded = get(collapsedAttrs, attr)
                         const lhsValue = this.getValue(lhs, attr, type);
                         const rhsValue = this.getValue(rhs, attr, type);
                         const isDiff = !isEqual(lhsValue, rhsValue);
                         const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
-                        const styles = isDiff ? {background: DIFF_BG_RED} : {};
                         if(type === 'list') {
+                          const lhsCount = lhs[attr].length;
+                          const rhsCount = rhs[attr].length;
+                          const hasKids = Boolean(lhsCount || rhsCount);
+                          const styles = isDiff ? {background: DIFF_BG_RED} : {};
+                          const isExpanded = get(collapsedAttrs, attr) || !hasKids;
                           return (
                             <React.Fragment key={attr}>
                               <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
                                 <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
                                   <span className='flex-vertical-center'>
-                                    <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhs[attr].length}/${rhs[attr].length})`}</span>
+                                    <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhsCount}/${rhsCount})`}</span>
                                     {
                                       isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
                                     }
