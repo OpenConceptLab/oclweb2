@@ -12,9 +12,9 @@ import {
   sortBy, findIndex, uniqBy, reduce
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { formatDate, toObjectArray } from '../../common/utils';
+import { formatDate, toObjectArray, toParentURI } from '../../common/utils';
 import {
-  DIFF_BG_RED, DIFF_BG_GREEN
+  DIFF_BG_RED,
 } from '../../common/constants';
 import ReactDiffViewer from 'react-diff-viewer';
 
@@ -180,10 +180,12 @@ class ConceptsComparison extends React.Component {
   getConceptHeader(concept) {
     return (
       <React.Fragment>
-        <div style={{margin: '5px 2px'}}>
+        <div style={{margin: '5px 0px'}}>
           <span>
             <span className='gray-italics'>Source:</span>
-            <span>{concept.source}</span>
+            <Link to={toParentURI(concept.url)} target="_blank">
+              <span>{concept.source}</span>
+            </Link>
           </span>
           <span style={{marginLeft: '10px'}}>
             <span className='gray-italics'>Type:</span>
@@ -351,7 +353,7 @@ class ConceptsComparison extends React.Component {
                         {this.getConceptHeader(lhs)}
                       </div>
                       <div style={{fontSize: '18px'}}>
-                        <Link to={lhs.url}>{get(lhs, 'display_name')}</Link>
+                        <Link to={lhs.url} target="_blank">{get(lhs, 'display_name')}</Link>
                       </div>
                     </TableCell>
                     <TableCell colSpan="5" style={{width: '45%'}}>
@@ -359,7 +361,7 @@ class ConceptsComparison extends React.Component {
                         {this.getConceptHeader(rhs)}
                       </div>
                       <div style={{fontSize: '18px'}}>
-                        <Link to={rhs.url}>{get(rhs, 'display_name')}</Link>
+                        <Link to={rhs.url} target="_blank">{get(rhs, 'display_name')}</Link>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -373,7 +375,7 @@ class ConceptsComparison extends React.Component {
                         const rhsValue = this.getValue(rhs, attr, type);
                         const isDiff = !isEqual(lhsValue, rhsValue);
                         const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
-                        const styles = isDiff ? {background: DIFF_BG_RED} : {background: DIFF_BG_GREEN}
+                        const styles = isDiff ? {background: DIFF_BG_RED} : {}
                         if(type === 'list') {
                           return (
                             <React.Fragment key={attr}>
