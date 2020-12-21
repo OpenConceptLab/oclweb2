@@ -177,7 +177,7 @@ class ConceptsComparison extends React.Component {
     ]
   }
 
-  getConceptHeader(concept) {
+  getHeaderSubAttributes(concept) {
     return (
       <React.Fragment>
         <div style={{margin: '5px 0px'}}>
@@ -332,6 +332,19 @@ class ConceptsComparison extends React.Component {
     )
   }
 
+  getHeaderCell = concept => {
+    return (
+      <TableCell colSpan="5" style={{width: '45%'}} key={concept.id}>
+        <div style={{fontSize: '14px'}}>
+          {this.getHeaderSubAttributes(concept)}
+        </div>
+        <div style={{fontSize: '18px'}}>
+          <Link to={concept.url} target="_blank">{concept.display_name}</Link>
+        </div>
+      </TableCell>
+    )
+  }
+
   render() {
     const { lhs, rhs, isLoadingLHS, isLoadingRHS, collapsedAttrs } = this.state;
     const isLoading = isLoadingLHS || isLoadingRHS;
@@ -348,22 +361,9 @@ class ConceptsComparison extends React.Component {
                 <TableHead>
                   <TableRow colSpan="12">
                     <TableCell colSpan="2" style={{width: '10%'}}></TableCell>
-                    <TableCell colSpan="5" style={{width: '45%'}}>
-                      <div style={{fontSize: '14px'}}>
-                        {this.getConceptHeader(lhs)}
-                      </div>
-                      <div style={{fontSize: '18px'}}>
-                        <Link to={lhs.url} target="_blank">{get(lhs, 'display_name')}</Link>
-                      </div>
-                    </TableCell>
-                    <TableCell colSpan="5" style={{width: '45%'}}>
-                      <div style={{fontSize: '14px'}}>
-                        {this.getConceptHeader(rhs)}
-                      </div>
-                      <div style={{fontSize: '18px'}}>
-                        <Link to={rhs.url} target="_blank">{get(rhs, 'display_name')}</Link>
-                      </div>
-                    </TableCell>
+                    {
+                      map([lhs, rhs], this.getHeaderCell)
+                    }
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -381,10 +381,12 @@ class ConceptsComparison extends React.Component {
                             <React.Fragment key={attr}>
                               <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
                                 <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
-                                  <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhs[attr].length}/${rhs[attr].length})`}</span>
-                                  {
-                                    isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
-                                  }
+                                  <span className='flex-vertical-center'>
+                                    <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhs[attr].length}/${rhs[attr].length})`}</span>
+                                    {
+                                      isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
+                                    }
+                                  </span>
                                 </TableCell>
                               </TableRow>
                               {
