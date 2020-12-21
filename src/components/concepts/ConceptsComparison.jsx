@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Tooltip, CircularProgress
 } from '@material-ui/core';
 import { Flag as FlagIcon } from '@material-ui/icons';
 import {
-  get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, isObject, keys, values
+  get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, isObject, keys, values,
+  sortBy, findIndex, uniqBy
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDate, toObjectArray } from '../../common/utils';
@@ -14,7 +16,7 @@ import ReactDiffViewer from 'react-diff-viewer';
 const ATTRIBUTES = {
   text1: ['datatype', 'display_locale', 'external_id'],
   textFormatted: ['owner'],
-  list: ['names', 'descriptions', 'extras'],
+  list: ['names', 'descriptions', 'extras', 'mappings'],
   bool: ['retired'],
   text2: ['created_by', 'updated_by'],
   date: ['created_on', 'updated_on'],
@@ -29,12 +31,12 @@ const getLocaleLabelFormatted = locale => {
     <React.Fragment key={locale.uuid}>
       <div className='flex-vertical-center'>
         {
-          typeValue &&
-          <span className='gray-italics'>
+          (typeValue && typeValue.toLowerCase() !== 'description') &&
+          <span className='gray-italics' style={{marginRight: '5px'}}>
             {typeValue}
           </span>
         }
-        <span style={{marginLeft: '5px'}}>
+        <span>
           {get(locale, 'name') || get(locale, 'description')}
         </span>
         <span className='gray-italics-small' style={{marginLeft: '5px'}}>
@@ -67,6 +69,27 @@ const getLocaleLabel = locale => {
   return `[${locale.locale}] ${typeValue}${nameValue} ${preferredText}`
 }
 
+const getMappingLabel = (mapping, formatted=false) => {
+  if(!mapping)
+    return '';
+
+  const label = [
+    `UID: ${mapping.id}`,
+    `Relationship: ${mapping.map_type}`,
+    `Source: ${mapping.owner} / ${mapping.source}`,
+    `From Concept Code: ${mapping.from_concept_code}`,
+    `From Concept Name: ${mapping.from_concept_name}`,
+    `To Concept Code: ${mapping.to_concept_code}`,
+    `To Concept Name: ${mapping.to_concept_name}`,
+  ].join('\n')
+
+  if(formatted)
+    return <div style={{whiteSpace: 'pre'}}>{label}</div>;
+
+  return label
+}
+
+
 class ConceptsComparison extends React.Component {
   constructor(props) {
     super(props);
@@ -95,9 +118,9 @@ class ConceptsComparison extends React.Component {
 
   fetchConcept(uri, attr, loadingAttr) {
     if(uri && attr && loadingAttr) {
-      APIService.new().overrideURL(uri).get().then(response => {
+      APIService.new().overrideURL(uri).get(null, null, {includeInverseMappings: true}).then(response => {
         if(get(response, 'status') === 200)
-          this.setState({[attr]: this.formatConcept(response.data), [loadingAttr]: false})
+          this.setState({[attr]: this.formatConcept(response.data), [loadingAttr]: false}, this.sortMappings)
       })
     }
   }
@@ -107,6 +130,23 @@ class ConceptsComparison extends React.Component {
     concept.descriptions = this.sortLocales(concept.descriptions)
     concept.extras = toObjectArray(concept.extras)
     return concept
+  }
+
+  sortMappings() {
+    if(!isEmpty(get(this.state.lhs, 'mappings')) && !isEmpty(get(this.state.rhs, 'mappings'))) {
+      const newState = {...this.state};
+      if(newState.lhs.mappings.length > newState.rhs.mappings.length) {
+        newState.lhs.mappings = uniqBy([...sortBy(
+          newState.rhs.mappings, m1 => findIndex(newState.lhs.mappings, m2 => m1.id === m2.id)
+        ), ...newState.lhs.mappings], 'id')
+      } else {
+        newState.rhs.mappings = uniqBy([...sortBy(
+          newState.lhs.mappings, m1 => findIndex(newState.rhs.mappings, m2 => m1.id === m2.id)
+        ), ...newState.rhs.mappings], 'id')
+      }
+
+      this.setState(newState)
+    }
   }
 
   sortLocales = locales => {
@@ -147,6 +187,10 @@ class ConceptsComparison extends React.Component {
         if(formatted)
           return map(locales, getLocaleLabelFormatted)
         return map(locales, getLocaleLabel).join('\n')
+      } else if (attr === 'mappings') {
+        const mappings = get(concept, attr);
+        if(isEmpty(mappings)) return '';
+        return map(mappings, mapping => getMappingLabel(mapping, formatted));
       }
     } else if(type === 'date') {
       let date = get(concept, attr);
@@ -178,6 +222,8 @@ class ConceptsComparison extends React.Component {
   getListAttrValue(attr, val, formatted=false) {
     if(includes(['names', 'descriptions'], attr))
       return formatted ? getLocaleLabelFormatted(val) : getLocaleLabel(val)
+    if(includes(['mappings'], attr))
+      return getMappingLabel(val, formatted)
     if(includes(['extras'], attr))
       return this.getExtraAttributeLabel(val)
   }
@@ -209,7 +255,7 @@ class ConceptsComparison extends React.Component {
                         {this.getConceptHeader(lhs)}
                       </div>
                       <div style={{fontSize: '18px'}}>
-                        {get(lhs, 'display_name')}
+                        <Link to={lhs.url}>{get(lhs, 'display_name')}</Link>
                       </div>
                     </TableCell>
                     <TableCell colSpan="5" style={{width: '45%'}}>
@@ -217,7 +263,7 @@ class ConceptsComparison extends React.Component {
                         {this.getConceptHeader(rhs)}
                       </div>
                       <div style={{fontSize: '18px'}}>
-                        {get(rhs, 'display_name')}
+                        <Link to={rhs.url}>{get(rhs, 'display_name')}</Link>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -245,7 +291,7 @@ class ConceptsComparison extends React.Component {
                                   <TableRow key={_attr.uuid || index} colSpan='12'>
                                     {
                                       index === 0 &&
-                                      <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold'}}>
+                                      <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
                                         {startCase(attr)}
                                       </TableCell>
                                     }
@@ -253,8 +299,8 @@ class ConceptsComparison extends React.Component {
                                       _isDiff ?
                                       <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
                                         <ReactDiffViewer
-                                          oldValue={this.getListAttrValue(attr, _lhsVal)}
-                                          newValue={this.getListAttrValue(attr, _rhsVal)}
+                                          oldValue={_lhsValCleaned}
+                                          newValue={_rhsValCleaned}
                                           showDiffOnly={false}
                                           splitView
                                           hideLineNumbers
@@ -273,7 +319,7 @@ class ConceptsComparison extends React.Component {
                                 )
                               }) :
                               <TableRow key={attr} colSpan='12'>
-                                <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold'}}>
+                                <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
                                   {startCase(attr)}
                                 </TableCell>
                                 {
