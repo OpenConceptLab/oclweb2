@@ -132,7 +132,9 @@ export const getCurrentUserUsername = () => {
 };
 
 export const nonEmptyCount = (object, attributes) => {
-  return size(intersectionBy(keys(omitBy(object, isEmpty)), attributes));
+  return size(intersectionBy(keys(omitBy(
+    object, val => (isEmpty(val) || includes(['none', 'None'], val))
+  )), attributes));
 }
 
 export const isCurrentUserMemberOf = orgId => {

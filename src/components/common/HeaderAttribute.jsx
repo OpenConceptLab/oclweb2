@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, includes } from 'lodash';
 import { formatDate } from '../../common/utils';
 
 const getURLComponent = val => {
@@ -32,11 +32,12 @@ const HeaderAttribute = ({label, value, gridClass, type}) => {
 
     return value;
   }
+  const isValid = !isEmpty(value) && !includes(['none', 'None'], value);
 
   return (
     <React.Fragment>
       {
-        !isEmpty(value) &&
+        isValid &&
         <div className={className}>
           <span className='italic' style={{marginRight: '10px', color: 'rgba(0, 0, 0, 0.6)'}}>
             {label}:
