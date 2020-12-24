@@ -2,14 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  CircularProgress,
+  CircularProgress, Drawer, Checkbox, IconButton, Tooltip
 } from '@material-ui/core';
 import {
-  ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon
+  ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon,
+  Settings as SettingsIcon,
 } from '@material-ui/icons';
 import {
   get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, keys, values,
-  sortBy, findIndex, uniqBy, reduce, has, maxBy
+  sortBy, findIndex, uniqBy, has, maxBy, cloneDeep, pickBy
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDate, toObjectArray, toParentURI } from '../../common/utils';
@@ -17,15 +18,6 @@ import {
   DIFF_BG_RED,
 } from '../../common/constants';
 import ReactDiffViewer from 'react-diff-viewer';
-
-const ATTRIBUTES = {
-  text1: ['datatype', 'display_locale', 'external_id'],
-  textFormatted: ['owner'],
-  list: ['names', 'descriptions', 'extras', 'mappings'],
-  bool: ['retired'],
-  text2: ['created_by', 'updated_by'],
-  date: ['created_on', 'updated_on'],
-}
 
 const getLocaleLabelExpanded = (locale, formatted=false) => {
   if(!locale)
@@ -73,22 +65,32 @@ const getMappingLabel = (mapping, formatted=false) => {
 class ConceptsComparison extends React.Component {
   constructor(props) {
     super(props);
+    const attributeState = {show: true, type: 'text'}
     this.state = {
       isLoadingLHS: true,
       isLoadingRHS: true,
       lhs: {},
       rhs: {},
-      collapsedAttrs: {},
+      drawer: false,
+      attributes: {
+        datatype: cloneDeep(attributeState),
+        display_locale: cloneDeep(attributeState),
+        external_id: cloneDeep(attributeState),
+        owner: {...cloneDeep(attributeState), type: 'textFormatted'},
+        names: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
+        descriptions: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
+        mappings: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
+        extras: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
+        retired: {...cloneDeep(attributeState), type: 'bool'},
+        created_by: cloneDeep(attributeState),
+        updated_by: cloneDeep(attributeState),
+        created_on: {...cloneDeep(attributeState), type: 'date'},
+        updated_on: {...cloneDeep(attributeState), type: 'date'},
+      },
     }
   }
 
   componentDidMount() {
-    const collapsedAttrs = reduce(ATTRIBUTES.list , (obj, key) => {
-      obj[key] = false
-      return obj
-    }, {});
-
-    this.setState({collapsedAttrs: collapsedAttrs})
     this.setObjectsForComparison()
   }
 
@@ -97,11 +99,32 @@ class ConceptsComparison extends React.Component {
       this.setObjectsForComparison()
   }
 
+  onDrawerClick = () => {
+    this.setState({drawer: !this.state.drawer})
+  }
+
+  onToggleAttributeClick = attr => {
+    this.setState({
+      attributes: {
+        ...this.state.attributes,
+        [attr]: {
+          ...this.state.attributes[attr],
+          show: !this.state.attributes[attr].show
+        }
+      }
+    })
+  }
+
   onCollapseIconClick(attr) {
-    this.setState({collapsedAttrs: {
-      ...this.state.collapsedAttrs,
-      [attr]: !this.state.collapsedAttrs[attr],
-    }})
+    this.setState({
+      attributes: {
+        ...this.state.attributes,
+        [attr]: {
+          ...this.state.attributes[attr],
+          collapsed: !this.state.attributes[attr].collapsed
+        }
+      }
+    })
   }
 
   setObjectsForComparison() {
@@ -314,8 +337,9 @@ class ConceptsComparison extends React.Component {
   }
 
   render() {
-    const { lhs, rhs, isLoadingLHS, isLoadingRHS, collapsedAttrs } = this.state;
+    const { lhs, rhs, isLoadingLHS, isLoadingRHS, attributes, drawer } = this.state;
     const isLoading = isLoadingLHS || isLoadingRHS;
+    const visibleAttributes = pickBy(attributes, {show: true})
     return (
       <React.Fragment>
         {
@@ -328,7 +352,13 @@ class ConceptsComparison extends React.Component {
               <Table size='small'>
                 <TableHead>
                   <TableRow colSpan="12">
-                    <TableCell colSpan="2" style={{width: '10%'}}></TableCell>
+                    <TableCell colSpan="2" style={{width: '10%'}}>
+                      <Tooltip title='Customize attributes' placement='top'>
+                        <IconButton onClick={this.onDrawerClick}>
+                          <SettingsIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
                     {
                       map([lhs, rhs], this.getHeaderCell)
                     }
@@ -336,42 +366,41 @@ class ConceptsComparison extends React.Component {
                 </TableHead>
                 <TableBody>
                   {
-                    map(ATTRIBUTES, (attrs, type) => {
-                      return map(attrs, attr => {
-                        const lhsValue = this.getValue(lhs, attr, type);
-                        const rhsValue = this.getValue(rhs, attr, type);
-                        const isDiff = !isEqual(lhsValue, rhsValue);
-                        const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
-                        if(type === 'list') {
-                          const lhsCount = lhs[attr].length;
-                          const rhsCount = rhs[attr].length;
-                          const hasKids = Boolean(lhsCount || rhsCount);
-                          const styles = isDiff ? {background: DIFF_BG_RED} : {};
-                          const isExpanded = get(collapsedAttrs, attr) || !hasKids;
-                          return (
-                            <React.Fragment key={attr}>
-                              <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
-                                <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
-                                  <span className='flex-vertical-center'>
-                                    <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhsCount}/${rhsCount})`}</span>
-                                    {
-                                      isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
-                                    }
-                                  </span>
-                                </TableCell>
-                              </TableRow>
-                              {
-                                isExpanded &&
-                                <React.Fragment>
-                                  {children}
-                                </React.Fragment>
-                              }
-                            </React.Fragment>
-                          )
-                        } else {
-                          return children;
-                        }
-                      })
+                    map(visibleAttributes, (config, attr) => {
+                      const type = config.type;
+                      const lhsValue = this.getValue(lhs, attr, type);
+                      const rhsValue = this.getValue(rhs, attr, type);
+                      const isDiff = !isEqual(lhsValue, rhsValue);
+                      const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
+                      if(type === 'list') {
+                        const lhsCount = lhs[attr].length;
+                        const rhsCount = rhs[attr].length;
+                        const hasKids = Boolean(lhsCount || rhsCount);
+                        const styles = isDiff ? {background: DIFF_BG_RED} : {};
+                        const isExpanded = !config.collapsed || !hasKids;
+                        return (
+                          <React.Fragment key={attr}>
+                            <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
+                              <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
+                                <span className='flex-vertical-center'>
+                                  <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhsCount}/${rhsCount})`}</span>
+                                  {
+                                    isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
+                                  }
+                                </span>
+                              </TableCell>
+                            </TableRow>
+                            {
+                              isExpanded &&
+                              <React.Fragment>
+                                {children}
+                              </React.Fragment>
+                            }
+                          </React.Fragment>
+                        )
+                      } else {
+                        return children;
+                      }
                     })
                   }
                 </TableBody>
@@ -379,6 +408,21 @@ class ConceptsComparison extends React.Component {
             </TableContainer>
           </div>
         }
+        <Drawer anchor='left' open={drawer} onClose={this.onDrawerClick}>
+          <div className='col-md-4' style={{width: '300px'}}>
+            <h3>
+              Toggle Attributes:
+            </h3>
+            {
+              map(attributes, (config, attr) => (
+                  <div className='col-md-12' key={attr}>
+                  <Checkbox checked={config.show} onChange={() => this.onToggleAttributeClick(attr)} />
+                {attr}
+                  </div>
+              ))
+            }
+          </div>
+        </Drawer>
       </React.Fragment>
     )
   }
