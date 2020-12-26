@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  CircularProgress, Drawer, Checkbox, IconButton, Tooltip
+  CircularProgress, IconButton, Tooltip
 } from '@material-ui/core';
 import {
   ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon,
@@ -10,14 +10,15 @@ import {
 } from '@material-ui/icons';
 import {
   get, startCase, map, isEmpty, includes, isEqual, size, filter, reject, keys, values,
-  sortBy, findIndex, uniqBy, has, maxBy, cloneDeep, pickBy
+  sortBy, findIndex, uniqBy, has, maxBy, cloneDeep, pickBy, forEach
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { formatDate, toObjectArray, toParentURI } from '../../common/utils';
+import { formatDate, toObjectArray, toParentURI, sortObjectBy } from '../../common/utils';
 import {
   DIFF_BG_RED,
 } from '../../common/constants';
 import ReactDiffViewer from 'react-diff-viewer';
+import ComparisonAttributes from './ComparisonAttributes';
 
 const getLocaleLabelExpanded = (locale, formatted=false) => {
   if(!locale)
@@ -73,19 +74,19 @@ class ConceptsComparison extends React.Component {
       rhs: {},
       drawer: false,
       attributes: {
-        datatype: cloneDeep(attributeState),
-        display_locale: cloneDeep(attributeState),
-        external_id: cloneDeep(attributeState),
-        owner: {...cloneDeep(attributeState), type: 'textFormatted'},
-        names: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
-        descriptions: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
-        mappings: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
-        extras: {...cloneDeep(attributeState), collapsed: true, type: 'list'},
-        retired: {...cloneDeep(attributeState), type: 'bool'},
-        created_by: cloneDeep(attributeState),
-        updated_by: cloneDeep(attributeState),
-        created_on: {...cloneDeep(attributeState), type: 'date'},
-        updated_on: {...cloneDeep(attributeState), type: 'date'},
+        datatype: {...cloneDeep(attributeState), position: 1},
+        display_locale: {...cloneDeep(attributeState), position: 2},
+        external_id: {...cloneDeep(attributeState), position: 3},
+        owner: {...cloneDeep(attributeState), type: 'textFormatted', position: 4},
+        names: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 5},
+        descriptions: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 6},
+        mappings: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 7},
+        extras: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 8},
+        retired: {...cloneDeep(attributeState), type: 'bool', position: 9},
+        created_by: {...cloneDeep(attributeState), position: 10},
+        updated_by: {...cloneDeep(attributeState), position: 11},
+        created_on: {...cloneDeep(attributeState), type: 'date', position: 12},
+        updated_on: {...cloneDeep(attributeState), type: 'date', position: 13},
       },
     }
   }
@@ -101,6 +102,27 @@ class ConceptsComparison extends React.Component {
 
   onDrawerClick = () => {
     this.setState({drawer: !this.state.drawer})
+  }
+
+  reorder = (startIndex, endIndex) => {
+    const { attributes } = this.state;
+    const attrs = keys(attributes);
+    const result = Array.from(attrs);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    const orderedAttrs = {};
+    forEach(result, (attr, index) => {
+      orderedAttrs[attr] = attributes[attr]
+      orderedAttrs[attr].position = index + 1
+    })
+
+    return orderedAttrs;
+  };
+
+
+  onAttributeDragEnd = result => {
+    if(result.destination && result.source.index !== result.destination.index)
+      this.setState({attributes: this.reorder(result.source.index, result.destination.index)})
   }
 
   onToggleAttributeClick = attr => {
@@ -339,7 +361,7 @@ class ConceptsComparison extends React.Component {
   render() {
     const { lhs, rhs, isLoadingLHS, isLoadingRHS, attributes, drawer } = this.state;
     const isLoading = isLoadingLHS || isLoadingRHS;
-    const visibleAttributes = pickBy(attributes, {show: true})
+    const visibleAttributes = sortObjectBy(pickBy(attributes, {show: true}), config => config.position)
     return (
       <React.Fragment>
         {
@@ -408,21 +430,13 @@ class ConceptsComparison extends React.Component {
             </TableContainer>
           </div>
         }
-        <Drawer anchor='left' open={drawer} onClose={this.onDrawerClick}>
-          <div className='col-md-4' style={{width: '300px'}}>
-            <h3>
-              Toggle Attributes:
-            </h3>
-            {
-              map(attributes, (config, attr) => (
-                  <div className='col-md-12' key={attr}>
-                  <Checkbox checked={config.show} onChange={() => this.onToggleAttributeClick(attr)} />
-                {attr}
-                  </div>
-              ))
-            }
-          </div>
-        </Drawer>
+        <ComparisonAttributes
+          attributes={attributes}
+          open={drawer}
+          onClose={this.onDrawerClick}
+          onCheckboxClick={this.onToggleAttributeClick}
+          onDragEnd={this.onAttributeDragEnd}
+        />
       </React.Fragment>
     )
   }

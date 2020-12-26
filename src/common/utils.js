@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map, isArray, values, pick
+  get, includes, map, isArray, values, pick, sortBy, zipObject
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 
@@ -176,4 +176,9 @@ export const toObjectArray = obj => {
     return [];
 
   return map(keys(obj), k => pick(obj, k));
+}
+
+export const sortObjectBy = (obj, comparator) => {
+    const _keys = sortBy(keys(obj), key => comparator ? comparator(obj[key], key) : key);
+    return zipObject(_keys, map(_keys, key => obj[key]));
 }
