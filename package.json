@@ -10,11 +10,11 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "alertifyjs": "^1.13.1",
     "axios": "^0.20.0",
-    "core-js": "^3.8.1",
+    "core-js": "^3.8.2",
     "lodash": "^4.17.20",
     "moment": "2.24.0",
     "prop-types": "^15.7.2",
-    "query-string": "^6.13.7",
+    "query-string": "^6.13.8",
     "react": "^16.14.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-diff-viewer": "^3.1.1",
@@ -64,6 +64,6 @@
     "style-loader": "^0.19.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.1"
   }
 }
