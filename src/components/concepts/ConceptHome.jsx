@@ -61,7 +61,7 @@ class ConceptHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.getConceptURLFromPath())
-                .get(null, null, {includeInverseMappings: true, lookupConcepts: true})
+                .get(null, null, {includeInverseMappings: true})
                 .then(response => {
                   this.setState({isLoading: false, concept: response.data}, () => {
                     if(this.state.tab === 2)

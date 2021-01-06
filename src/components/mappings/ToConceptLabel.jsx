@@ -6,11 +6,12 @@ import ResourceLabel from '../common/ResourceLabel';
 import { DARKGRAY } from '../../common/constants';
 
 const ToConceptLabel = props => {
+  const conceptName = props.to_concept_name || props.to_concept_name_resolved || get(props, 'to_concept.display_name')
   const labelComponent = <ResourceLabel
                            owner={props.to_source_owner}
                            parent={props.to_source_name}
                            id={props.to_concept_code}
-                           name={props.to_concept_name || get(props, 'to_concept.display_name')}
+                           name={conceptName}
                            icon={
                              <LocalOfferIcon
                                fontSize='small'

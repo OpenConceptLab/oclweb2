@@ -43,7 +43,7 @@ const getLocaleLabelExpanded = (locale, formatted=false) => {
 }
 
 const getMappingConceptName = (mapping, rel) => {
-  return get(mapping, `${rel}_name`) || get(mapping, `${rel}.display_name`)
+  return get(mapping, `${rel}_name`) || get(mapping, `${rel}_name_resolved`) || get(mapping, `${rel}.display_name`)
 }
 
 const getMappingLabel = (mapping, formatted=false) => {
@@ -161,7 +161,7 @@ class ConceptsComparison extends React.Component {
 
   fetchConcept(uri, attr, loadingAttr) {
     if(uri && attr && loadingAttr) {
-      APIService.new().overrideURL(uri).get(null, null, {includeInverseMappings: true, lookupConcepts: true}).then(response => {
+      APIService.new().overrideURL(uri).get(null, null, {includeInverseMappings: true}).then(response => {
         if(get(response, 'status') === 200)
           this.setState({[attr]: this.formatConcept(response.data), [loadingAttr]: false}, this.sortMappings)
       })
