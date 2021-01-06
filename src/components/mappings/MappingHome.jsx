@@ -57,7 +57,7 @@ class MappingHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.getMappingURLFromPath())
-                .get()
+                .get(null, null, {lookupConcepts: true})
                 .then(response => {
                   this.setState({isLoading: false, mapping: response.data}, () => {
                     if(this.state.tab === 1)

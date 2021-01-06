@@ -204,6 +204,8 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
+      if(_resource === 'mappings')
+        queryParams['lookupConcepts'] = true
       fetchSearchResults(
         _resource,
         {...queryParams, ...sortParams},

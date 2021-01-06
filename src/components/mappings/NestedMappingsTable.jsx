@@ -5,7 +5,7 @@ import {
 import {
   ArrowForward as ForwardIcon
 } from '@material-ui/icons';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, get } from 'lodash';
 
 const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
@@ -13,6 +13,12 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const onRowClick = mapping => {
     if(mapping.url)
       window.location.hash = mapping.url
+  }
+
+  const getConceptName = (mapping, attr) => {
+    let name = get(mapping, attr);
+    if(name) return name;
+    return get(mapping, `${attr.split('_name')[0]}.display_name`)
   }
   return (
     <Table size="small" aria-label="versions">
@@ -73,7 +79,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
                 { mapping[conceptCodeAttr] }
               </TableCell>
               <TableCell align='left'>
-                { mapping[conceptCodeName] }
+                { getConceptName(mapping, conceptCodeName) }
               </TableCell>
             </TableRow>
           ))

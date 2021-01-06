@@ -42,6 +42,10 @@ const getLocaleLabelExpanded = (locale, formatted=false) => {
   return label;
 }
 
+const getMappingConceptName = (mapping, rel) => {
+  return get(mapping, `${rel}_name`) || get(mapping, `${rel}.display_name`)
+}
+
 const getMappingLabel = (mapping, formatted=false) => {
   if(!mapping)
     return '';
@@ -51,9 +55,9 @@ const getMappingLabel = (mapping, formatted=false) => {
     `Relationship: ${mapping.map_type}`,
     `Source: ${mapping.owner} / ${mapping.source}`,
     `From Concept Code: ${mapping.from_concept_code}`,
-    `From Concept Name: ${mapping.from_concept_name}`,
+    `From Concept Name: ${getMappingConceptName(mapping, 'from_concept')}`,
     `To Concept Code: ${mapping.to_concept_code}`,
-    `To Concept Name: ${mapping.to_concept_name}`,
+    `To Concept Name: ${getMappingConceptName(mapping, 'to_concept')}`,
   ].join('\n')
 
   if(formatted)
@@ -157,7 +161,7 @@ class ConceptsComparison extends React.Component {
 
   fetchConcept(uri, attr, loadingAttr) {
     if(uri && attr && loadingAttr) {
-      APIService.new().overrideURL(uri).get(null, null, {includeInverseMappings: true}).then(response => {
+      APIService.new().overrideURL(uri).get(null, null, {includeInverseMappings: true, lookupConcepts: true}).then(response => {
         if(get(response, 'status') === 200)
           this.setState({[attr]: this.formatConcept(response.data), [loadingAttr]: false}, this.sortMappings)
       })

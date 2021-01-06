@@ -404,7 +404,7 @@ const ExpandibleRow = props => {
     if(item) {
       APIService.new().overrideURL(item.url)
                 .appendToUrl('mappings/')
-                .get(null, null, {includeInverseMappings: true})
+                .get(null, null, {includeInverseMappings: true, lookupConcepts: true})
                 .then(response => {
                   if(response.status === 200)
                     setMappings(response.data)

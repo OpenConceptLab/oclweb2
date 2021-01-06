@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {LocalOffer as LocalOfferIcon} from '@material-ui/icons'
+import { get } from 'lodash';
 import ResourceLabel from '../common/ResourceLabel';
 import { DARKGRAY } from '../../common/constants';
 
@@ -9,7 +10,7 @@ const FromConceptLabel = props => {
                            owner={props.from_source_owner}
                            parent={props.from_source_name}
                            id={props.from_concept_code}
-                           name={props.from_concept_name}
+                           name={props.from_concept_name || get(props, 'from_concept.display_name')}
                            icon={
                              <LocalOfferIcon
                                fontSize='small'
