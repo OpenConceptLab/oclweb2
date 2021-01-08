@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Tooltip } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons';
 import { currentUserHasAccess } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
@@ -40,22 +40,19 @@ const ConceptHomeHeader = ({
             }
             {
               hasAccess && isVersionedObject &&
-              <span style={{marginLeft: '8px'}}>
-                <Tooltip title='Edit Concept'>
-                  <IconButton onClick={() => setConceptForm(true)}>
-                    <EditIcon fontSize='inherit' />
-                  </IconButton>
-                </Tooltip>
-              </span>
-            }
-            {
-              hasAccess && isVersionedObject &&
-              <span style={{marginLeft: '8px'}}>
-                <Tooltip title='Retire Concept'>
-                  <IconButton>
-                    <DeleteIcon fontSize='inherit' />
-                  </IconButton>
-                </Tooltip>
+              <span style={{marginLeft: '15px'}}>
+                <ButtonGroup variant='text' size='large'>
+                  <Tooltip title='Edit Concept'>
+                    <Button onClick={() => setConceptForm(true)}>
+                      <EditIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title='Retire Concept'>
+                    <Button>
+                      <DeleteIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
               </span>
             }
           </div>
