@@ -463,3 +463,12 @@ div.login-paper {
         }
     }
 }
+.custom-drawer {
+    &.large div:nth-child(3) {
+        width: 75%;
+    }
+    &.medium div:nth-child(3) {
+        width: 50%;
+        min-width: 50%;
+    }
+}

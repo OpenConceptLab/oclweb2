@@ -9,6 +9,7 @@ export const COLOR_SELECTED = 'rgb(170, 100, 123)';
 export const COLOR_ROW_SELECTED = 'rgba(119, 119, 119, 0.16)';
 export const GREEN = '#5cb85c';
 export const RED = '#c33';
+export const ERROR_RED = '#f44336';
 export const ORANGE = 'rgb(253, 164, 41)';
 export const EMPTY_VALUE = '-';
 export const DIFF_BG_RED = '#ffeef0';

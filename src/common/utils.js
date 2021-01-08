@@ -182,3 +182,14 @@ export const sortObjectBy = (obj, comparator) => {
     const _keys = sortBy(keys(obj), key => comparator ? comparator(obj[key], key) : key);
     return zipObject(_keys, map(_keys, key => obj[key]));
 }
+
+export const arrayToObject = arr => {
+  if(isEmpty(arr))
+    return {};
+
+  return arr.reduce((prev, curr) => {
+    if(curr.key)
+      prev[curr.key] = curr.value;
+    return prev;
+  }, {});
+}
