@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { get } from 'lodash';
+import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import AboutAccordian from '../common/AboutAccordian';
@@ -19,7 +20,7 @@ const SourceHomeTabs = props => {
     if(resource === 'concept')
       setConceptForm(true)
   }
-
+  const hasAccess = currentUserHasAccess()
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
@@ -28,9 +29,12 @@ const SourceHomeTabs = props => {
         <Tab label="Versions" />
         {aboutTab && <Tab label="About" />}
       </Tabs>
-      <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
-        <NewResourceButton onClick={onNewClick} />
-      </div>
+      {
+        hasAccess &&
+        <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+          <NewResourceButton onClick={onNewClick} />
+        </div>
+      }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
         {
           tab === 0 &&

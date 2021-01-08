@@ -193,3 +193,31 @@ export const arrayToObject = arr => {
     return prev;
   }, {});
 }
+
+export const currentUserHasAccess = url => {
+  if(!isLoggedIn())
+    return false;
+  if(isAdminUser())
+    return true;
+  if(!url)
+    return false;
+
+  const url_parts = compact(url.split('/'));
+
+  const ownerType = url_parts[0];
+  const owner = url_parts[1];
+  if(!owner || !ownerType)
+    return false;
+
+  const currentUser = getCurrentUser();
+  if(ownerType === 'users')
+    return currentUser.username === owner;
+  if(ownerType === 'orgs')
+    return isSubscribedTo(owner);
+
+  return false;
+}
+
+export const isSubscribedTo = org => {
+  return org && includes(get(getCurrentUser(), 'subscribed_orgs'), org);
+}
