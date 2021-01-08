@@ -1,10 +1,10 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, IconButton, Button } from '@material-ui/core';
+import { TextField, IconButton, Button, CircularProgress } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 import {
-  set, get, map, orderBy, cloneDeep, reject, pullAt, filter, isEmpty
+  set, get, map, orderBy, cloneDeep, reject, pullAt, filter, isEmpty, pick
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject } from '../../common/utils';
@@ -14,11 +14,11 @@ import ExtrasForm from './ExtrasForm';
 
 
 const NAME_MODEL = {
-  locale: '', type: '', name: '', external_id: '', locale_preferred: false
+  locale: '', name_type: '', name: '', external_id: '', locale_preferred: false
 }
 
 const DESC_MODEL = {
-  locale: '', type: '', description: '', external_id: '', locale_preferred: false
+  locale: '', description_type: '', description: '', external_id: '', locale_preferred: false
 }
 const EXTRAS_MODEL = {
   key: '', value: '',
@@ -37,10 +37,13 @@ class ConceptForm extends React.Component {
         names: [cloneDeep(NAME_MODEL)],
         descriptions: [cloneDeep(DESC_MODEL)],
         extras: [cloneDeep(EXTRAS_MODEL)],
+        comment: '',
       },
       fieldErrors: {},
       serverErrors: null,
       idHelperTexts: ['Alphanumeric characters, hyphens, periods, and underscores are allowed.'],
+      selected_concept_class: null,
+      selected_datatype: null,
       conceptClasses: [],
       datatypes: [],
       locales: [],
@@ -55,6 +58,23 @@ class ConceptForm extends React.Component {
     this.fetchLocales();
     this.fetchNameTypes();
     this.fetchDescriptionTypes();
+    if(this.props.edit)
+      this.setFieldsForEdit()
+  }
+
+  setFieldsForEdit() {
+    const { concept } = this.props;
+    const newState = {...this.state}
+    newState.fields.id = concept.id
+    newState.fields.concept_class = concept.concept_class
+    newState.selected_concept_class = {id: concept.concept_class, name: concept.concept_class}
+    newState.selected_datatype = {id: concept.datatype, name: concept.datatype}
+    newState.fields.datatype = concept.datatype
+    newState.fields.external_id = concept.external_id || ''
+    newState.fields.names = isEmpty(concept.names) ? newState.fields.names : map(concept.names, name => pick(name, ['locale', 'name_type', 'locale_preferred', 'external_id', 'name']))
+    newState.fields.descriptions = isEmpty(concept.descriptions) ? newState.fields.descriptions : map(concept.descriptions, desc => pick(desc, ['locale', 'description_type', 'locale_preferred', 'external_id', 'description']))
+    newState.fields.extras = isEmpty(concept.extras) ? newState.fields.extras : map(concept.extras, (v, k) => ({key: k, value: v}))
+    this.setState(newState);
   }
 
   getIdHelperText() {
@@ -116,7 +136,7 @@ class ConceptForm extends React.Component {
   }
 
   onAutoCompleteChange = (id, item) => {
-    this.setFieldValue(id, get(item, 'id', ''))
+    this.setFieldValue(id, get(item, 'id', ''), true)
   }
 
   onCheckboxChange = (id, value) => {
@@ -135,13 +155,15 @@ class ConceptForm extends React.Component {
     this.setFieldValue('fields.extras', [...this.state.fields.extras, cloneDeep(EXTRAS_MODEL)])
   }
 
-  setFieldValue(id, value) {
+  setFieldValue(id, value, setObject=false) {
     const newState = {...this.state}
     set(newState, id, value)
 
     const fieldName = get(id.split('fields.'), '1')
     if(fieldName && !isEmpty(value) && get(newState.fieldErrors, fieldName))
       newState.fieldErrors[fieldName] = null
+    if(setObject)
+      newState[`selected_${fieldName}`] = {id: value, name: value}
     this.setState(newState)
   }
 
@@ -173,16 +195,21 @@ class ConceptForm extends React.Component {
   }
 
   onSubmit = () => {
-    const { parentURL, reloadOnSuccess, onCancel } = this.props
+    const { parentURL, reloadOnSuccess, onCancel, edit } = this.props
     const fields = cloneDeep(this.state.fields);
     const isFormValid = document.getElementsByTagName('form')[0].checkValidity()
     if(parentURL && isFormValid) {
+      if(edit)
+        fields.update_comment = fields.comment
       fields.extras = arrayToObject(fields.extras)
       fields.names = this.cleanLocales(fields.names)
       fields.descriptions = this.cleanLocales(fields.descriptions)
-      APIService.new().overrideURL(parentURL).appendToUrl('concepts/').post(fields).then(response => {
-        if(response.status === 201) { // success
-          alertifyjs.success('Successfully created concept', 1, () => {
+      let service = APIService.new().overrideURL(parentURL)
+      service = edit ? service.put(fields) : service.appendToUrl('concepts/').post(fields)
+      service.then(response => {
+        if(response.status === 201 || response.status === 200) { // success
+          const verb = edit ? 'updated' : 'created'
+          alertifyjs.success(`Successfully ${verb} concept`, 1, () => {
             reloadOnSuccess ? window.location.reload() : onCancel()
           })
         } else { // error
@@ -202,163 +229,198 @@ class ConceptForm extends React.Component {
 
   cleanLocales(locales) {
     return filter(locales, locale => {
-      return locale.locale && locale.type && (get(locale, 'name') || get(locale, 'description'))
+      return locale.locale &&
+             (get(locale, 'name_type') || get(locale, 'description_type')) &&
+             (get(locale, 'name') || get(locale, 'description'))
     })
   }
 
   render() {
     const {
       fieldErrors, fields, conceptClasses, datatypes, locales, nameTypes,
-      descriptionTypes
+      descriptionTypes, selected_concept_class, selected_datatype
     } = this.state;
-    const { onCancel } = this.props;
+    const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(locales) || isEmpty(conceptClasses) || isEmpty(nameTypes);
+    const { onCancel, edit } = this.props;
+    const header = edit ? `Edit Concept: ${fields.id}` : 'New Concept'
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>
-          <h3>New Concept</h3>
+          <h2>{header}</h2>
         </div>
-        <div className='col-md-12 no-side-padding'>
-          <form>
-            <div style={{width: '100%'}}>
-              <TextField
-                error={Boolean(fieldErrors.id)}
-                id="fields.id"
-                label="Concept ID"
-                placeholder="e.g. A15.0"
-                helperText={this.getIdHelperText()}
-                variant="outlined"
-                fullWidth
-                required
-                onChange={this.onTextFieldChange}
-                value={fields.id}
-              />
-            </div>
-            <div style={{marginTop: '15px', width: '100%'}}>
-              <Autocomplete
-                id="fields.concept_class"
-                options={conceptClasses}
-                getOptionLabel={(option) => option.name}
-                fullWidth
-                required
-                renderInput={
-                  params => <TextField
-                              {...params}
-                              error={Boolean(fieldErrors.concept_class)}
-                                    required
-                                    label="Concept Class"
-                                    variant="outlined"
-                                    fullWidth
+        {
+          isLoading ?
+          <div style={{width: '100%', textAlign: 'center', marginTop: '100px'}}>
+            <CircularProgress />
+          </div>:
+          <div className='col-md-12 no-side-padding'>
+            <form>
+              {
+                !edit &&
+                <div style={{width: '100%'}}>
+                  <TextField
+                    error={Boolean(fieldErrors.id)}
+                    id="fields.id"
+                    label="Concept ID"
+                    placeholder="e.g. A15.0"
+                    helperText={this.getIdHelperText()}
+                    variant="outlined"
+                    fullWidth
+                    required
+                    onChange={this.onTextFieldChange}
+                    value={fields.id}
+                    disabled={edit}
                   />
+                </div>
+              }
+              <div style={{marginTop: '15px', width: '100%'}}>
+                <Autocomplete
+                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
+                  value={selected_concept_class}
+                  id="fields.concept_class"
+                  options={conceptClasses}
+                  getOptionLabel={(option) => option.name}
+                  fullWidth
+                  required
+                  renderInput={
+                    params => <TextField
+                                {...params}
+                                error={Boolean(fieldErrors.concept_class)}
+                                      required
+                                      label="Concept Class"
+                                      variant="outlined"
+                                      fullWidth
+                    />
+                  }
+                  onChange={(event, item) => this.onAutoCompleteChange('fields.concept_class', item)}
+                />
+              </div>
+              <div style={{marginTop: '15px', width: '100%'}}>
+                <Autocomplete
+                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
+                  id="fields.datatype"
+                  value={selected_datatype}
+                  options={datatypes}
+                  getOptionLabel={(option) => option.name}
+                  fullWidth
+                  required
+                  renderInput={(params) => <TextField {...params} error={Boolean(fieldErrors.datatype)} required label="Datatype" variant="outlined" fullWidth />}
+                  onChange={(event, item) => this.onAutoCompleteChange('fields.datatype', item)}
+                />
+              </div>
+              <div style={{marginTop: '15px', width: '100%'}}>
+                <TextField
+                  id="fields.external_id"
+                  label="External ID"
+                  placeholder="e.g. UUID from external system"
+                  variant="outlined"
+                  fullWidth
+                  onChange={this.onTextFieldChange}
+                  value={fields.external_id}
+                />
+              </div>
+              {
+                edit &&
+                <div style={{marginTop: '15px', width: '100%'}}>
+                  <TextField
+                    id="fields.comment"
+                    label="Update Comment"
+                    variant="outlined"
+                    fullWidth
+                    onChange={this.onTextFieldChange}
+                    value={fields.comment}
+                    required
+                  />
+                </div>
+              }
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <div className='col-md-8'>
+                  <h3 style={fieldErrors.names && isEmpty(fields.names) ? {color: ERROR_RED} : {}}>Names & Synonyms</h3>
+                </div>
+                <div className='col-md-4' style={{textAlign: 'right'}}>
+                  <IconButton color='primary' onClick={this.onAddNameLocale}>
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                {
+                  map(fields.names, (name, index) => (
+                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                      <LocaleForm
+                        error={Boolean(index === 0 && fieldErrors.name)}
+                        locale={name}
+                        index={index}
+                        localeAttr='fields.names'
+                        onTextFieldChange={this.onTextFieldChange}
+                        onAutoCompleteChange={this.onAutoCompleteChange}
+                        onCheckboxChange={this.onCheckboxChange}
+                        locales={locales}
+                        types={nameTypes}
+                        onDelete={this.onDeleteNameLocale}
+                      />
+                    </div>
+                  ))
                 }
-                onChange={(event, item) => this.onAutoCompleteChange('fields.concept_class', item)}
-              />
-            </div>
-            <div style={{marginTop: '15px', width: '100%'}}>
-              <Autocomplete
-                id="fields.datatype"
-                options={datatypes}
-                getOptionLabel={(option) => option.name}
-                fullWidth
-                required
-                renderInput={(params) => <TextField {...params} error={Boolean(fieldErrors.datatype)} required label="Datatype" variant="outlined" fullWidth />}
-                onChange={(event, item) => this.onAutoCompleteChange('fields.datatype', item)}
-              />
-            </div>
-            <div style={{marginTop: '15px', width: '100%'}}>
-              <TextField
-                id="fields.external_id"
-                label="External ID"
-                placeholder="e.g. UUID from external system"
-                variant="outlined"
-                fullWidth
-                onChange={this.onTextFieldChange}
-                value={fields.external_id}
-              />
-            </div>
-            <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
-              <div className='col-md-8'>
-                <h3 style={fieldErrors.names && isEmpty(fields.names) ? {color: ERROR_RED} : {}}>Names & Synonyms</h3>
               </div>
-              <div className='col-md-4' style={{textAlign: 'right'}}>
-                <IconButton color='primary' onClick={this.onAddNameLocale}>
-                  <AddIcon />
-                </IconButton>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <div className='col-md-8'>
+                  <h3>Descriptions</h3>
+                </div>
+                <div className='col-md-4' style={{textAlign: 'right'}}>
+                  <IconButton color='primary' onClick={this.onAddDescLocale}>
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                {
+                  map(fields.descriptions, (desc, index) => (
+                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                      <LocaleForm
+                        locale={desc}
+                        index={index}
+                        localeAttr='fields.descriptions'
+                        onTextFieldChange={this.onTextFieldChange}
+                        onAutoCompleteChange={this.onAutoCompleteChange}
+                        onCheckboxChange={this.onCheckboxChange}
+                        locales={locales}
+                        types={descriptionTypes}
+                        onDelete={this.onDeleteDescLocale}
+                      />
+                    </div>
+                  ))
+                }
               </div>
-              {
-                map(fields.names, (name, index) => (
-                  <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
-                    <LocaleForm
-                      error={Boolean(index === 0 && fieldErrors.name)}
-                      index={index}
-                      localeAttr='fields.names'
-                      onTextFieldChange={this.onTextFieldChange}
-                      onAutoCompleteChange={this.onAutoCompleteChange}
-                      onCheckboxChange={this.onCheckboxChange}
-                      locales={locales}
-                      types={nameTypes}
-                      onDelete={this.onDeleteNameLocale}
-                    />
-                  </div>
-                ))
-              }
-            </div>
-            <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
-              <div className='col-md-8'>
-                <h3>Descriptions</h3>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <div className='col-md-8'>
+                  <h3>Custom Attributes</h3>
+                </div>
+                <div className='col-md-4' style={{textAlign: 'right'}}>
+                  <IconButton color='primary' onClick={this.onAddExtras}>
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                {
+                  map(fields.extras, (extra, index) => (
+                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                      <ExtrasForm
+                        extra={extra}
+                        index={index}
+                        onChange={this.onExtrasChange}
+                        onDelete={this.onDeleteExtras}
+                      />
+                    </div>
+                  ))
+                }
               </div>
-              <div className='col-md-4' style={{textAlign: 'right'}}>
-                <IconButton color='primary' onClick={this.onAddDescLocale}>
-                  <AddIcon />
-                </IconButton>
+              <div className='col-md-12' style={{textAlign: 'center', margin: '20px 0'}}>
+                <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
+                  {edit ? 'Update' : 'Create'}
+                </Button>
+                <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
+                  Cancel
+                </Button>
               </div>
-              {
-                map(fields.descriptions, (desc, index) => (
-                  <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
-                    <LocaleForm
-                      index={index}
-                      localeAttr='fields.descriptions'
-                      onTextFieldChange={this.onTextFieldChange}
-                      onAutoCompleteChange={this.onAutoCompleteChange}
-                      onCheckboxChange={this.onCheckboxChange}
-                      locales={locales}
-                      types={descriptionTypes}
-                      onDelete={this.onDeleteDescLocale}
-                    />
-                  </div>
-                ))
-              }
-            </div>
-            <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
-              <div className='col-md-8'>
-                <h3>Custom Attributes</h3>
-              </div>
-              <div className='col-md-4' style={{textAlign: 'right'}}>
-                <IconButton color='primary' onClick={this.onAddExtras}>
-                  <AddIcon />
-                </IconButton>
-              </div>
-              {
-                map(fields.extras, (extra, index) => (
-                  <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
-                    <ExtrasForm
-                      index={index}
-                      onChange={this.onExtrasChange}
-                      onDelete={this.onDeleteExtras}
-                    />
-                  </div>
-                ))
-              }
-            </div>
-            <div className='col-md-12' style={{textAlign: 'center', margin: '20px 0'}}>
-              <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
-                Create
-              </Button>
-              <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </div>
+            </form>
+          </div>
+        }
       </div>
     )
   }

@@ -1,4 +1,7 @@
 import React from 'react';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import { currentUserHasAccess } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import ConceptButton from '../common/ConceptButton';
@@ -7,11 +10,14 @@ import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import ConceptIcon from './ConceptIcon';
+import ConceptFormDrawer from './ConceptFormDrawer';
 
 const ConceptHomeHeader = ({
   concept, isVersionedObject, versionedObjectURL, currentURL
 }) => {
   const isRetired = concept.retired;
+  const hasAccess = currentUserHasAccess();
+  const [conceptForm, setConceptForm] = React.useState(false);
 
   return (
     <header className='home-header col-md-12'>
@@ -24,7 +30,6 @@ const ConceptHomeHeader = ({
             <SourceButton label={concept.source} childURI={versionedObjectURL} />
             <span className='separator'>/</span>
             <ConceptButton label={concept.id} retired={isRetired} href={`#${versionedObjectURL}`} />
-
             {
               !isVersionedObject &&
               <React.Fragment>
@@ -32,6 +37,26 @@ const ConceptHomeHeader = ({
 
                 <VersionButton label={concept.version} retired={isRetired} href={`#${currentURL}`} />
               </React.Fragment>
+            }
+            {
+              hasAccess && isVersionedObject &&
+              <span style={{marginLeft: '8px'}}>
+                <Tooltip title='Edit Concept'>
+                  <IconButton onClick={() => setConceptForm(true)}>
+                    <EditIcon fontSize='inherit' />
+                  </IconButton>
+                </Tooltip>
+              </span>
+            }
+            {
+              hasAccess && isVersionedObject &&
+              <span style={{marginLeft: '8px'}}>
+                <Tooltip title='Retire Concept'>
+                  <IconButton>
+                    <DeleteIcon fontSize='inherit' />
+                  </IconButton>
+                </Tooltip>
+              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
@@ -61,7 +86,7 @@ const ConceptHomeHeader = ({
               Custom Attributes:
             </span>
             <span>
-                <CustomAttributesPopup attributes={concept.extras} />
+              <CustomAttributesPopup attributes={concept.extras} />
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
@@ -91,6 +116,7 @@ const ConceptHomeHeader = ({
           </div>
         </div>
       </div>
+      <ConceptFormDrawer reloadOnSuccess edit concept={concept} parentURL={versionedObjectURL} isOpen={conceptForm} onClose={() => setConceptForm(false) } />
     </header>
   )
 }
