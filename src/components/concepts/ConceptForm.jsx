@@ -194,10 +194,16 @@ class ConceptForm extends React.Component {
     this.setState(newState)
   }
 
-  onSubmit = () => {
-    const { parentURL, reloadOnSuccess, onCancel, edit } = this.props
+  onSubmit = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const { parentURL, edit } = this.props
     const fields = cloneDeep(this.state.fields);
-    const isFormValid = document.getElementsByTagName('form')[0].checkValidity()
+    const form = document.getElementsByTagName('form')[0];
+    form.reportValidity()
+
+    const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
       if(edit)
         fields.update_comment = fields.comment
@@ -205,25 +211,32 @@ class ConceptForm extends React.Component {
       fields.names = this.cleanLocales(fields.names)
       fields.descriptions = this.cleanLocales(fields.descriptions)
       let service = APIService.new().overrideURL(parentURL)
-      service = edit ? service.put(fields) : service.appendToUrl('concepts/').post(fields)
-      service.then(response => {
-        if(response.status === 201 || response.status === 200) { // success
-          const verb = edit ? 'updated' : 'created'
-          alertifyjs.success(`Successfully ${verb} concept`, 1, () => {
-            reloadOnSuccess ? window.location.reload() : onCancel()
-          })
-        } else { // error
-          const genericError = get(response, '__all__')
-          if(genericError) {
-            alertifyjs.error(genericError.join('\n'))
-          } else {
-            this.setState(
-              {fieldErrors: response || {}},
-              () => alertifyjs.error('Please fill mandatory fields.')
-            )
-          }
-        }
+      if(edit) {
+        service.put(fields).then(response => this.handleSubmitResponse(response))
+        return false;
+      } else {
+        service.appendToUrl('concepts/').post(fields).then(response => this.handleSubmitResponse(response))
+      }
+    }
+  }
+
+  handleSubmitResponse(response) {
+    const { edit, reloadOnSuccess, onCancel } = this.props
+    if(response.status === 201 || response.status === 200) { // success
+      const verb = edit ? 'updated' : 'created'
+      alertifyjs.success(`Successfully ${verb} concept`, 1, () => {
+        reloadOnSuccess ? window.location.reload() : onCancel();
       })
+    } else { // error
+      const genericError = get(response, '__all__')
+      if(genericError) {
+        alertifyjs.error(genericError.join('\n'))
+      } else {
+        this.setState(
+          {fieldErrors: response || {}},
+          () => alertifyjs.error('Please fill mandatory fields.')
+        )
+      }
     }
   }
 
