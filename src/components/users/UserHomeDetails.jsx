@@ -74,7 +74,9 @@ const UserHomeDetails = ({ user, isLoading }) => {
                 {showToken ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
               <br />
-              {showToken && token}
+              <span style={{fontFamily: 'Courier New', fontWeight: 'bold'}}>
+                {showToken && token}
+              </span>
             </p>
           }
         </div>
