@@ -3,9 +3,10 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map, isArray, values, pick, sortBy, zipObject
+  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
+import APIService from '../services/APIService';
 
 export const isAtGlobalSearch = () => {
   return window.location.hash.includes('#/search');
@@ -225,3 +226,47 @@ export const isSubscribedTo = org => {
 export const getCurrentURL = () => {
   return window.location.href.replace(new RegExp('/$'), '');
 }
+
+const handleLookupValuesResponse = (data, callback, attr) => {
+  const _attr = attr || 'id';
+  callback(orderBy(map(data, cc => ({id: get(cc, _attr), name: get(cc, _attr)})), 'name'));
+}
+
+export const fetchLocales = callback => {
+  APIService.sources('Locales').concepts()
+    .get(null, null, {limit: 1000})
+    .then(response => {
+      callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));
+    });
+}
+
+export const fetchConceptClasses = callback => {
+  APIService.sources('Classes').concepts()
+    .get(null, null, {limit: 1000})
+    .then(response => handleLookupValuesResponse(response.data, callback));
+}
+
+export const fetchMapTypes = callback => {
+  APIService.sources('MapTypes').concepts()
+    .get(null, null, {limit: 1000})
+    .then(response => handleLookupValuesResponse(response.data, callback));
+}
+
+export const fetchDatatypes = callback => {
+  APIService.sources('Datatypes').concepts()
+    .get(null, null, {limit: 1000})
+    .then(response => handleLookupValuesResponse(response.data, callback));
+}
+
+export const fetchNameTypes = callback => {
+  APIService.sources('NameTypes').concepts()
+    .get(null, null, {limit: 1000})
+    .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+}
+
+export const fetchDescriptionTypes = callback => {
+  APIService.sources('DescriptionTypes').concepts()
+    .get(null, null, {limit: 1000})
+    .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+}
+

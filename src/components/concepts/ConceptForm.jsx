@@ -4,26 +4,20 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, IconButton, Button, CircularProgress } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 import {
-  set, get, map, orderBy, cloneDeep, reject, pullAt, filter, isEmpty, pick
+  set, get, map, cloneDeep, pullAt, filter, isEmpty, pick
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, getCurrentURL } from '../../common/utils';
+import {
+  arrayToObject, getCurrentURL, fetchLocales, fetchConceptClasses, fetchDatatypes, fetchNameTypes,
+  fetchDescriptionTypes
+} from '../../common/utils';
 import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
-import ExtrasForm from './ExtrasForm';
+import ExtrasForm from '../common/ExtrasForm';
 
-
-const NAME_MODEL = {
-  locale: '', name_type: '', name: '', external_id: '', locale_preferred: false
-}
-
-const DESC_MODEL = {
-  locale: '', description_type: '', description: '', external_id: '', locale_preferred: false
-}
-const EXTRAS_MODEL = {
-  key: '', value: '',
-}
-
+const NAME_MODEL = {locale: '', name_type: '', name: '', external_id: '', locale_preferred: false}
+const DESC_MODEL = {locale: '', description_type: '', description: '', external_id: '', locale_preferred: false}
+const EXTRAS_MODEL = {key: '', value: ''}
 
 class ConceptForm extends React.Component {
   constructor(props) {
@@ -41,7 +35,6 @@ class ConceptForm extends React.Component {
       },
       fieldErrors: {},
       serverErrors: null,
-      idHelperTexts: ['Alphanumeric characters, hyphens, periods, and underscores are allowed.'],
       selected_concept_class: null,
       selected_datatype: null,
       conceptClasses: [],
@@ -53,11 +46,11 @@ class ConceptForm extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchConceptClasses();
-    this.fetchDatatypes();
-    this.fetchLocales();
-    this.fetchNameTypes();
-    this.fetchDescriptionTypes();
+    fetchLocales(data => this.setState({locales: data}))
+    fetchConceptClasses(data => this.setState({conceptClasses: data}))
+    fetchDatatypes(data => this.setState({datatypes: data}))
+    fetchNameTypes(data => this.setState({nameTypes: data}))
+    fetchDescriptionTypes(data => this.setState({descriptionTypes: data}))
     if(this.props.edit && this.props.concept)
       this.setFieldsForEdit()
   }
@@ -97,45 +90,6 @@ class ConceptForm extends React.Component {
 
   onTextFieldChange = event => {
     this.setFieldValue(event.target.id, event.target.value)
-  }
-
-  fetchConceptClasses() {
-    APIService.sources('Classes').concepts()
-              .get(null, null, {limit: 1000})
-              .then(response => this.setState({
-                conceptClasses: orderBy(map(response.data, cc => ({id: cc.id, name: cc.id})), 'name')
-              }))
-  }
-  fetchDatatypes() {
-    APIService.sources('Datatypes').concepts()
-              .get(null, null, {limit: 1000})
-              .then(response => this.setState({
-                datatypes: orderBy(map(response.data, dt => ({id: dt.id, name: dt.id})), 'name')
-              }))
-  }
-
-  fetchLocales() {
-    APIService.sources('Locales').concepts()
-              .get(null, null, {limit: 1000})
-              .then(response => this.setState({
-                locales: orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name')
-              }))
-  }
-
-  fetchNameTypes() {
-    APIService.sources('NameTypes').concepts()
-              .get(null, null, {limit: 1000})
-              .then(response => this.setState({
-                nameTypes: orderBy(map(response.data, nt => ({id: nt.display_name, name: nt.display_name})), 'name')
-              }))
-  }
-
-  fetchDescriptionTypes() {
-    APIService.sources('DescriptionTypes').concepts()
-              .get(null, null, {limit: 1000})
-              .then(response => this.setState({
-                descriptionTypes: orderBy(map(response.data, nt => ({id: nt.display_name, name: nt.display_name})), 'name')
-              }))
   }
 
   onAutoCompleteChange = (id, item) => {
@@ -216,7 +170,6 @@ class ConceptForm extends React.Component {
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
-        return false;
       } else {
         service.appendToUrl('concepts/').post(fields).then(response => this.handleSubmitResponse(response))
       }

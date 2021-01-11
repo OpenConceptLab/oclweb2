@@ -1,11 +1,18 @@
 import React from 'react';
-import { isEmpty, includes } from 'lodash';
+import { isEmpty, includes, isString } from 'lodash';
 import { formatDate } from '../../common/utils';
 
 const getURLComponent = val => {
   return <a href={val} target="_blank" rel="noopener noreferrer">{val}</a>;
 }
 const getJSONComponent = val => {
+  if(isString(val)) {
+    try {
+      val = JSON.parse(val)
+    } catch {
+      //do nothing
+    }
+  }
   return <pre style={{margin: '0px'}}>{JSON.stringify(val, undefined, 1)}</pre>;
 }
 const getBoolComponent = val => {

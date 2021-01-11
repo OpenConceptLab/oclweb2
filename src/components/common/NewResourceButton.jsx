@@ -5,11 +5,11 @@ import {
   Add as AddIcon,
 } from '@material-ui/icons'
 
-const NewResourceButton = ({onClick}) => {
+const NewResourceButton = ({resources, onClick}) => {
   return (
     <React.Fragment>
       {
-        map(['concept', 'mapping', 'version'], resource => (
+        map(resources, resource => (
           <Button
             key={resource}
             style={{marginRight: '5px'}}

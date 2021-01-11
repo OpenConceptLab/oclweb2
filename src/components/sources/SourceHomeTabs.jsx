@@ -38,7 +38,7 @@ const SourceHomeTabs = props => {
       {
         hasAccess &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
-          <NewResourceButton onClick={onNewClick} />
+          <NewResourceButton resources={['concept', 'mapping', 'version']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>

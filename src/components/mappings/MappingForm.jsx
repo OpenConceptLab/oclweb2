@@ -1,13 +1,16 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, Button, CircularProgress } from '@material-ui/core';
+import { TextField, Button, CircularProgress, IconButton } from '@material-ui/core';
+import { Add as AddIcon } from '@material-ui/icons';
 import {
-  set, get, map, orderBy, cloneDeep, isEmpty, pickBy
+  set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { getCurrentURL } from '../../common/utils';
+import { arrayToObject, getCurrentURL, fetchMapTypes } from '../../common/utils';
+import ExtrasForm from '../common/ExtrasForm';
 
+const EXTRAS_MODEL = {key: '', value: ''}
 class MappingForm extends React.Component {
   constructor(props) {
     super(props);
@@ -30,22 +33,15 @@ class MappingForm extends React.Component {
         to_source_url: '',
         to_source_version: '',
         comment: '',
+        extras: [cloneDeep(EXTRAS_MODEL)],
       }
     }
   }
 
   componentDidMount() {
-    this.fetchMapTypes();
+    fetchMapTypes(data => this.setState({mapTypes: data}))
     if(this.props.edit && this.props.mapping)
       this.setFieldsForEdit()
-  }
-
-  fetchMapTypes() {
-    APIService.sources('MapTypes').concepts()
-              .get(null, null, {limit: 1000})
-              .then(response => this.setState({
-                mapTypes: orderBy(map(response.data, mt => ({id: mt.id, name: mt.id})), 'name')
-              }))
   }
 
   setFieldsForEdit() {
@@ -58,8 +54,9 @@ class MappingForm extends React.Component {
       'to_source_url', 'to_source_version',
     ]
     const newState = {...this.state}
-    newState.selected_map_type = {id: mapping.map_type, name: mapping.map_type}
     attrs.forEach(attr => set(newState.fields, attr, get(mapping, attr, '') || ''))
+    newState.selected_map_type = {id: mapping.map_type, name: mapping.map_type}
+    newState.fields.extras = isEmpty(mapping.extras) ? newState.fields.extras : map(mapping.extras, (v, k) => ({key: k, value: v}))
 
     this.setState(newState);
   }
@@ -113,13 +110,13 @@ class MappingForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
+      fields.extras = arrayToObject(fields.extras)
       if(edit)
         fields.update_comment = fields.comment
       fields = pickBy(fields, value => value)
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
-        return false;
       } else {
         service.appendToUrl('mappings/').post(fields).then(response => this.handleSubmitResponse(response))
       }
@@ -148,6 +145,25 @@ class MappingForm extends React.Component {
         )
       }
     }
+  }
+
+  onAddExtras = () => {
+    this.setFieldValue('fields.extras', [...this.state.fields.extras, cloneDeep(EXTRAS_MODEL)])
+  }
+
+  onDeleteExtras = index => {
+    const newState = {...this.state}
+    pullAt(newState.fields.extras, index)
+    this.setState(newState)
+  }
+
+  onExtrasChange = (index, key, value) => {
+    const newState = {...this.state}
+    if(key !== '__')
+      newState.fields.extras[index].key = key
+    if(value !== '__')
+      newState.fields.extras[index].value = value
+    this.setState(newState)
   }
 
   render() {
@@ -358,6 +374,28 @@ class MappingForm extends React.Component {
                     value={fields.to_concept_code}
                   />
                 </div>
+              </div>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <div className='col-md-8'>
+                  <h3>Custom Attributes</h3>
+                </div>
+                <div className='col-md-4' style={{textAlign: 'right'}}>
+                  <IconButton color='primary' onClick={this.onAddExtras}>
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                {
+                  map(fields.extras, (extra, index) => (
+                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                      <ExtrasForm
+                        extra={extra}
+                        index={index}
+                        onChange={this.onExtrasChange}
+                        onDelete={this.onDeleteExtras}
+                      />
+                    </div>
+                  ))
+                }
               </div>
               <div className='col-md-12' style={{textAlign: 'center', margin: '20px 0'}}>
                 <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
