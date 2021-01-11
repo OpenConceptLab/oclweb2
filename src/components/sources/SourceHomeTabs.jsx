@@ -6,7 +6,8 @@ import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import AboutAccordian from '../common/AboutAccordian';
 import NewResourceButton from '../common/NewResourceButton';
-import ConceptFormDrawer from '../concepts/ConceptFormDrawer';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import ConceptForm from '../concepts/ConceptForm';
 
 const SourceHomeTabs = props => {
   const {
@@ -67,7 +68,13 @@ const SourceHomeTabs = props => {
           <AboutAccordian id={source.id} about={about} />
         }
       </div>
-      <ConceptFormDrawer reloadOnSuccess={tab == 0} parentURL={versionedObjectURL} isOpen={conceptForm} onClose={() => setConceptForm(false) } />
+      <CommonFormDrawer
+        isOpen={conceptForm}
+        onClose={() => setConceptForm(false)}
+        formComponent={
+          <ConceptForm onCancel={() => setConceptForm(false)} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
+        }
+      />
     </div>
   );
 }

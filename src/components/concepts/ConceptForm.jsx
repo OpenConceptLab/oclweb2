@@ -224,8 +224,12 @@ class ConceptForm extends React.Component {
     const { edit, reloadOnSuccess, onCancel } = this.props
     if(response.status === 201 || response.status === 200) { // success
       const verb = edit ? 'updated' : 'created'
-      alertifyjs.success(`Successfully ${verb} concept`, 1, () => {
-        reloadOnSuccess ? window.location.reload() : onCancel();
+      const successMsg = `Successfully ${verb} concept`;
+      const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
+      onCancel();
+      alertifyjs.success(message, 1, () => {
+        if(reloadOnSuccess)
+          window.location.reload()
       })
     } else { // error
       const genericError = get(response, '__all__')

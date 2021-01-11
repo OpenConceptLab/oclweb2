@@ -1,8 +1,7 @@
 import React from 'react';
 import { Drawer } from '@material-ui/core';
-import ConceptForm from './ConceptForm';
 
-const ConceptFormDrawer = ({isOpen, onClose, parentURL, ...rest}) => {
+const CommonFormDrawer = ({ isOpen, onClose, formComponent }) => {
   const [open, setOpen] = React.useState(isOpen);
   const onDrawerClose = () => {
     setOpen(() => {
@@ -17,9 +16,9 @@ const ConceptFormDrawer = ({isOpen, onClose, parentURL, ...rest}) => {
 
   return (
     <Drawer anchor='right' open={open} onClose={onDrawerClose} className="custom-drawer medium">
-      <ConceptForm onCancel={onDrawerClose} parentURL={parentURL} {...rest} />
+      { formComponent }
     </Drawer>
   )
 }
 
-export default ConceptFormDrawer;
+export default CommonFormDrawer;

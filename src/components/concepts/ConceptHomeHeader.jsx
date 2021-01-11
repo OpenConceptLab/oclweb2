@@ -13,7 +13,8 @@ import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import ConceptIcon from './ConceptIcon';
-import ConceptFormDrawer from './ConceptFormDrawer';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import ConceptForm from './ConceptForm';
 
 const ConceptHomeHeader = ({
   concept, isVersionedObject, versionedObjectURL, currentURL
@@ -169,7 +170,13 @@ const ConceptHomeHeader = ({
           </div>
         </div>
       </div>
-      <ConceptFormDrawer reloadOnSuccess edit concept={concept} parentURL={versionedObjectURL} isOpen={conceptForm} onClose={() => setConceptForm(false) } />
+      <CommonFormDrawer
+        isOpen={conceptForm}
+        onClose={() => setConceptForm(false)}
+        formComponent={
+          <ConceptForm edit reloadOnSuccess onCancel={() => setConceptForm(false)} concept={concept} parentURL={versionedObjectURL} />
+        }
+      />
     </header>
   )
 }
