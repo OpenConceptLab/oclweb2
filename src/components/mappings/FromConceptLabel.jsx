@@ -11,6 +11,7 @@ const FromConceptLabel = props => {
                            owner={props.from_source_owner}
                            parent={props.from_source_name}
                            id={props.from_concept_code}
+                           parentURL={props.from_source_url}
                            name={conceptName}
                            icon={
                              <LocalOfferIcon
