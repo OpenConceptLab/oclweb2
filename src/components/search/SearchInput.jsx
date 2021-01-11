@@ -87,10 +87,11 @@ class SearchInput extends React.Component {
 
   render() {
     const { input, exactMatch } = this.state
-    const { moreControls, searchInputPlaceholder } = this.props
+    const { moreControls, searchInputPlaceholder, nested } = this.props
+    const marginBottom = (isAtGlobalSearch() || nested) ? '10px' : '0px';
     return (
       <div className='col-sm-12 no-side-padding'>
-        <div className='col-sm-12 no-side-padding' style={{marginBottom: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
+        <div className='col-sm-12 no-side-padding' style={{marginBottom: marginBottom, display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
           <InputBase
             style={{flex: 1, marginLeft: '10px'}}
             placeholder={searchInputPlaceholder || "Search OCL"}

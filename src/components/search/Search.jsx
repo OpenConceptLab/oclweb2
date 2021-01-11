@@ -361,7 +361,7 @@ class Search extends React.Component {
     return (
       <div className='col-sm-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-10 no-side-padding' style={{textAlign: 'center'}}>
+          <div className='col-sm-10 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
             <SearchInput
               {...this.props}
               onSearch={this.onSearch}
