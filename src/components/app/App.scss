@@ -472,3 +472,14 @@ div.login-paper {
         min-width: 50%;
     }
 }
+.divider {
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    line-height: 0.1em;
+    margin: 15px 0;
+    padding-left: 7px;
+    .text {
+        background: #fff;
+        padding: 0 8px;
+    }
+}

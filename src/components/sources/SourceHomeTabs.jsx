@@ -8,6 +8,7 @@ import AboutAccordian from '../common/AboutAccordian';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptForm from '../concepts/ConceptForm';
+import MappingForm from '../mappings/MappingForm';
 
 const SourceHomeTabs = props => {
   const {
@@ -16,11 +17,15 @@ const SourceHomeTabs = props => {
   } = props;
   const about = get(source, 'extras.about')
   const [conceptForm, setConceptForm] = React.useState(false);
+  const [mappingForm, setMappingForm] = React.useState(false);
 
   const onNewClick = resource => {
     if(resource === 'concept')
       setConceptForm(true)
+    if(resource === 'mapping')
+      setMappingForm(true)
   }
+
   const hasAccess = currentUserHasAccess()
   return (
     <div className='col-md-12 sub-tab'>
@@ -73,6 +78,13 @@ const SourceHomeTabs = props => {
         onClose={() => setConceptForm(false)}
         formComponent={
           <ConceptForm onCancel={() => setConceptForm(false)} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
+        }
+      />
+      <CommonFormDrawer
+        isOpen={mappingForm}
+        onClose={() => setMappingForm(false)}
+        formComponent={
+          <MappingForm onCancel={() => setMappingForm(false)} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} />
         }
       />
     </div>

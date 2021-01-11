@@ -7,7 +7,7 @@ import {
   set, get, map, orderBy, cloneDeep, reject, pullAt, filter, isEmpty, pick
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject } from '../../common/utils';
+import { arrayToObject, getCurrentURL } from '../../common/utils';
 import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
 import ExtrasForm from './ExtrasForm';
@@ -58,7 +58,7 @@ class ConceptForm extends React.Component {
     this.fetchLocales();
     this.fetchNameTypes();
     this.fetchDescriptionTypes();
-    if(this.props.edit)
+    if(this.props.edit && this.props.concept)
       this.setFieldsForEdit()
   }
 
@@ -85,7 +85,10 @@ class ConceptForm extends React.Component {
         <br />
         <span>
           <span>Your new concept will live at: <br />
-            https://qa.openconceptlab.org/users/admin/sources/TDPWypR8FgY/concepts/</span>
+            {
+              `${getCurrentURL()}/concepts/`
+            }
+          </span>
           <span><b>{id}</b>/</span>
         </span>
       </span>
@@ -194,7 +197,7 @@ class ConceptForm extends React.Component {
     this.setState(newState)
   }
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
 

@@ -1,5 +1,11 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
+import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
+import { Edit as EditIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreIcon } from '@material-ui/icons';
+import { get } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
+import { currentUserHasAccess } from '../../common/utils';
+import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import MappingButton from '../common/MappingButton';
@@ -10,6 +16,8 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import MappingForm from './MappingForm';
 
 const LABEL_STYLES = {
   textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
@@ -20,6 +28,54 @@ const MappingHomeHeader = ({
   mapping, isVersionedObject, versionedObjectURL, currentURL
 }) => {
   const isRetired = mapping.retired;
+  const hasAccess = currentUserHasAccess();
+
+  const [mappingForm, setMappingForm] = React.useState(false);
+  const onRetire = () => {
+    const prompt = alertifyjs.prompt()
+    prompt.setContent('<form id="retireForm"> <p>Retire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+    prompt.set('onok', () => {
+      document.getElementById('retireForm').reportValidity();
+      const comment = document.getElementById('comment').value
+      if(!comment)
+        return false
+      retire(comment)
+    })
+    prompt.set('title', 'Retire Mapping')
+    prompt.show()
+  }
+  const onUnretire = () => {
+    const prompt = alertifyjs
+      .prompt()
+    prompt.setContent('<form id="retireForm"> <p>Unretire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+      .set('onok', () => {
+        document.getElementById('retireForm').reportValidity();
+        const comment = document.getElementById('comment').value
+        if(!comment)
+          return false
+        unretire(comment)
+      })
+      .set('title', 'Unretire Mapping')
+      .show()
+  }
+
+  const retire = comment => {
+    APIService.new().overrideURL(versionedObjectURL).delete({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Mapping Retired', 1, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  const unretire = comment => {
+    APIService.new().overrideURL(versionedObjectURL).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Mapping UnRetired', 1, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
 
   return (
     <header className='home-header col-md-12'>
@@ -39,6 +95,31 @@ const MappingHomeHeader = ({
 
                 <VersionButton label={mapping.version} retired={isRetired} href={`#${currentURL}`} />
               </React.Fragment>
+            }
+            {
+              hasAccess && isVersionedObject &&
+              <span style={{marginLeft: '15px'}}>
+                <ButtonGroup variant='text' size='large'>
+                  <Tooltip title='Edit Mapping'>
+                    <Button onClick={() => setMappingForm(true)}>
+                      <EditIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                  {
+                    isRetired ?
+                    <Tooltip title='Un-Retire Mapping'>
+                      <Button onClick={onUnretire}>
+                        <RestoreIcon fontSize='inherit' />
+                      </Button>
+                    </Tooltip> :
+                    <Tooltip title='Retire Mapping'>
+                      <Button onClick={onRetire}>
+                        <DeleteIcon fontSize='inherit' />
+                      </Button>
+                    </Tooltip>
+                  }
+                </ButtonGroup>
+              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
@@ -89,11 +170,16 @@ const MappingHomeHeader = ({
                 <ExternalIdLabel externalId={mapping.external_id} iconSize='medium' />
               </span>
             }
-
           </div>
-
         </div>
       </div>
+      <CommonFormDrawer
+        isOpen={mappingForm}
+        onClose={() => setMappingForm(false)}
+        formComponent={
+          <MappingForm edit reloadOnSuccess onCancel={() => setMappingForm(false)} mapping={mapping} parentURL={versionedObjectURL} />
+        }
+      />
     </header>
   );
 }

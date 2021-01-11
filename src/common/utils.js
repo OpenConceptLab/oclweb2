@@ -221,3 +221,7 @@ export const currentUserHasAccess = url => {
 export const isSubscribedTo = org => {
   return org && includes(get(getCurrentUser(), 'subscribed_orgs'), org);
 }
+
+export const getCurrentURL = () => {
+  return window.location.href.replace(new RegExp('/$'), '');
+}
