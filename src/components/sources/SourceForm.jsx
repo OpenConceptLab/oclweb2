@@ -6,7 +6,8 @@ import {
   TextField, IconButton, Button, CircularProgress, Select, MenuItem, FormControl, InputLabel,
 } from '@material-ui/core';
 import {
-  set, get, map, orderBy, cloneDeep, pullAt, isEmpty, startCase, pickBy
+  set, get, map, orderBy, cloneDeep, pullAt, isEmpty, startCase, pickBy, isObject, isArray,
+  find, intersectionBy
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, fetchLocales } from '../../common/utils';
@@ -56,31 +57,59 @@ class SourceForm extends React.Component {
   }
 
   componentDidUpdate() {
+    this.setSupportedLocales()
+  }
+
+  setSupportedLocales() {
     this.setSupportedLocalesValidation();
+    this.setSupportedLocalesDisplay();
   }
 
   setSupportedLocalesValidation() {
     const el = document.getElementById('fields.supported_locales')
+    if(!el) return;
     if(this.state.fields.supported_locales)
       el.removeAttribute('required')
     else
       el.setAttribute('required', 'true')
   }
 
+  setSupportedLocalesDisplay() {
+    if(this.props.edit && this.props.source && !isEmpty(this.state.locales)) {
+      if(find(this.state.selected_supported_locales, local => local.name.indexOf('[') === -1)) {
+        const newState = {...this.state}
+        newState.selected_supported_locales = intersectionBy(this.state.locales, newState.selected_supported_locales, 'id')
+        this.setState(newState)
+      }
+    }
+  }
+
   setFieldsForEdit() {
     const { source } = this.props;
     const attrs = [
       'id', 'source_type', 'external_id', 'name', 'full_name', 'description', 'revision_date',
-      'content_type', 'copyright', 'purpose', 'jurisdiction', 'contact', 'publisher', 'identifier',
-      'canonical_url', 'description', 'custom_validation_schema', 'public_access', 'website'
+      'content_type', 'copyright', 'purpose', 'publisher', 'canonical_url', 'description',
+      'custom_validation_schema', 'public_access', 'website', 'default_locale'
     ]
+    const jsonAttrs = ['jurisdiction', 'contact', 'identifier']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(source, attr, '') || ''))
+    jsonAttrs.forEach(attr => this.setJSONValue(source, newState, attr))
+    newState.fields.supported_locales = isArray(source.supported_locales) ? source.supported_locales.join(',') : source.supported_locales;
     newState.selected_source_type = {id: source.source_type, name: source.source_type}
     newState.selected_default_locale = {id: source.default_locale, name: source.default_locale}
     newState.selected_supported_locales = map(source.supported_locales, l => ({id: l, name: l}))
     newState.fields.extras = isEmpty(source.extras) ? newState.fields.extras : map(source.extras, (v, k) => ({key: k, value: v}))
-    this.setState(newState);
+    this.setState(newState, this.setSupportedLocales);
+  }
+
+  setJSONValue(source, state, field) {
+    const value = get(source, field);
+    if(isEmpty(value))
+      return
+
+    if(isObject(value)) set(state.fields, field, JSON.stringify(value))
+    else set(state.fields, field, value)
   }
 
   getIdHelperText() {
@@ -342,6 +371,7 @@ class SourceForm extends React.Component {
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
+                  className='multi-auto-select'
                   multiple
                   filterSelectedOptions
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}

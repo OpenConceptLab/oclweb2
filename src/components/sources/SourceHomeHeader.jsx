@@ -2,10 +2,11 @@ import React from 'react';
 import {
   List as ListIcon,
   FileCopy as CopyIcon,
+  Edit as EditIcon
 } from '@material-ui/icons';
-import { Tooltip, IconButton } from '@material-ui/core';
+import { Tooltip, IconButton, ButtonGroup, Button } from '@material-ui/core';
 import { includes, isEmpty, keys, map, startCase, get } from 'lodash';
-import { toFullAPIURL, copyURL, nonEmptyCount } from '../../common/utils';
+import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -19,6 +20,8 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import SourceForm from './SourceForm';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -34,7 +37,9 @@ const HIDDEN_ATTRIBUTES = {
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const hasAccess = currentUserHasAccess();
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
+  const [sourceForm, setSourceForm] = React.useState(false);
   const isRetired = source.isRetired;
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
   const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 4;
@@ -71,6 +76,18 @@ const SourceHomeHeader = ({
                   bgColor={GREEN}
                 />
               </React.Fragment>
+            }
+            {
+              hasAccess && isVersionedObject &&
+              <span style={{marginLeft: '15px'}}>
+                <ButtonGroup variant='text' size='large'>
+                  <Tooltip title='Edit Source'>
+                    <Button onClick={() => setSourceForm(true)}>
+                      <EditIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
+              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
@@ -152,6 +169,14 @@ const SourceHomeHeader = ({
           </div>
         </div>
       </div>
+      <CommonFormDrawer
+        isOpen={sourceForm}
+        onClose={() => setSourceForm(false)}
+        formComponent={
+          isVersionedObject &&
+          <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={source} parentURL={versionedObjectURL} />
+        }
+      />
     </header>
   )
 }

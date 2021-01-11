@@ -483,3 +483,9 @@ div.login-paper {
         padding: 0 8px;
     }
 }
+.multi-auto-select {
+    div[role=button] {
+        width: unset !important;
+        min-width: unset !important;
+    }
+}
