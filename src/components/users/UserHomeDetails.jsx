@@ -1,6 +1,10 @@
 import React from 'react';
-import { Divider, CircularProgress } from '@material-ui/core';
-import { Person as PersonIcon } from '@material-ui/icons';
+import { Divider, CircularProgress, IconButton } from '@material-ui/core';
+import {
+  Person as PersonIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+} from '@material-ui/icons';
 import { includes, startCase, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDate, currentUserToken} from '../../common/utils';
@@ -8,6 +12,7 @@ import HeaderLogo from '../common/HeaderLogo';
 
 const UserHomeDetails = ({ user, isLoading }) => {
   const [logoURL, setLogoURL] = React.useState(user.logo_url)
+  const [showToken, setShowToken] = React.useState(false);
 
   React.useEffect(() => {
     if(user.logo_url)
@@ -63,7 +68,14 @@ const UserHomeDetails = ({ user, isLoading }) => {
           <Divider style={{width: '100%'}} />
           {
             token &&
-            <p><strong>API Token:</strong><br />{token}</p>
+            <p>
+              <strong>API Token:</strong>
+              <IconButton onClick={() => setShowToken(!showToken)}>
+                {showToken ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </IconButton>
+              <br />
+              {showToken && token}
+            </p>
           }
         </div>
       }
