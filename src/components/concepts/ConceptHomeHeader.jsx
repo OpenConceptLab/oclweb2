@@ -1,7 +1,10 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import { Edit as EditIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreIcon } from '@material-ui/icons';
+import { get } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
+import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import ConceptButton from '../common/ConceptButton';
@@ -18,6 +21,51 @@ const ConceptHomeHeader = ({
   const isRetired = concept.retired;
   const hasAccess = currentUserHasAccess();
   const [conceptForm, setConceptForm] = React.useState(false);
+  const onRetire = () => {
+    const prompt = alertifyjs.prompt()
+    prompt.setContent('<form id="retireForm"> <p>Retire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+    prompt.set('onok', () => {
+      document.getElementById('retireForm').reportValidity();
+      const comment = document.getElementById('comment').value
+      if(!comment)
+        return false
+      retire(comment)
+    })
+    prompt.set('title', 'Retire Concept')
+    prompt.show()
+  }
+  const onUnretire = () => {
+    const prompt = alertifyjs
+      .prompt()
+    prompt.setContent('<form id="retireForm"> <p>Unretire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+      .set('onok', () => {
+        document.getElementById('retireForm').reportValidity();
+        const comment = document.getElementById('comment').value
+        if(!comment)
+          return false
+        unretire(comment)
+      })
+      .set('title', 'Unretire Concept')
+      .show()
+  }
+
+  const retire = comment => {
+    APIService.new().overrideURL(versionedObjectURL).delete({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Concept Retired', 1, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  const unretire = comment => {
+    APIService.new().overrideURL(versionedObjectURL).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Concept UnRetired', 1, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
 
   return (
     <header className='home-header col-md-12'>
@@ -47,11 +95,19 @@ const ConceptHomeHeader = ({
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
-                  <Tooltip title='Retire Concept'>
-                    <Button>
-                      <DeleteIcon fontSize='inherit' />
-                    </Button>
-                  </Tooltip>
+                  {
+                    isRetired ?
+                    <Tooltip title='Un-Retire Concept'>
+                      <Button onClick={onUnretire}>
+                        <RestoreIcon fontSize='inherit' />
+                      </Button>
+                    </Tooltip> :
+                    <Tooltip title='Retire Concept'>
+                      <Button onClick={onRetire}>
+                        <DeleteIcon fontSize='inherit' />
+                      </Button>
+                    </Tooltip>
+                  }
                 </ButtonGroup>
               </span>
             }

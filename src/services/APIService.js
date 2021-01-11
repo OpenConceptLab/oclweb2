@@ -65,8 +65,8 @@ class APIService {
     return this.sendRequest('PUT', data, token, headers, query);
   }
 
-  delete(token, headers = {}, query) {
-    return this.sendRequest('DELETE', null, token, headers, query);
+  delete(data, token, headers = {}, query) {
+    return this.sendRequest('DELETE', data, token, headers, query);
   }
 
   sendRequest(method, data, token, headers, query) {
