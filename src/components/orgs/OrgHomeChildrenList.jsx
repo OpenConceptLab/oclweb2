@@ -14,7 +14,7 @@ class OrgHomeChildrenList extends React.Component {
     return (
       <Search
         {...this.props}
-        nested={true}
+        nested
         baseURL={this.getURL()}
         fixedFilters={{isTable: true, limit: 25}}
         searchInputPlaceholder={`Search ${org.id} ${resource}...`}

@@ -537,7 +537,7 @@ const ExpandibleRow = props => {
                   {
                     tab === resourceDefinition.tabs.indexOf('Descriptions') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <LocalesTable locales={descriptions} isDescription={true} />
+                      <LocalesTable locales={descriptions} isDescription />
                     </div>
                   }
                   {

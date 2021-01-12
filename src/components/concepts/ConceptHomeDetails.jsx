@@ -58,7 +58,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
               isEmpty(descriptions) ?
               None() :
               map(descriptions, description => (
-                <ConceptDetailsLocale locale={description} isDescription={true} key={description.uuid} url={`${currentURL}descriptions/${description.uuid}/`} />
+                <ConceptDetailsLocale locale={description} isDescription key={description.uuid} url={`${currentURL}descriptions/${description.uuid}/`} />
               ))
             }
           </AccordionDetails>

@@ -41,7 +41,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
         <div className="col-md-12 no-side-padding">
           <div className='home-icon'>
             <HeaderLogo
-              isCircle={true}
+              isCircle
               logoURL={logoURL}
               onUpload={onLogoUpload}
               defaultIcon={<PersonIcon style={{width: '120px', height: '120px'}} />}

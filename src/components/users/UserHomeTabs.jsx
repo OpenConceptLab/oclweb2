@@ -84,7 +84,7 @@ const UserHomeTabs = props => {
             loaded ?
             <Search
               {...props}
-              nested={true}
+              nested
               baseURL={user.sources_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="sources"
@@ -99,7 +99,7 @@ const UserHomeTabs = props => {
             loaded ?
             <Search
               {...props}
-              nested={true}
+              nested
               baseURL={user.collections_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="collections"
@@ -114,7 +114,7 @@ const UserHomeTabs = props => {
             loaded ?
             <Search
               {...props}
-              nested={true}
+              nested
               baseURL={user.organizations_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="organizations"

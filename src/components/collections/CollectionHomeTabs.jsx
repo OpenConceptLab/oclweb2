@@ -53,7 +53,7 @@ const CollectionHomeTabs = props => {
             versions={versions}
             currentVersion={currentVersion}
             resource='references'
-            references={true}
+            references
           />
         }
         {
