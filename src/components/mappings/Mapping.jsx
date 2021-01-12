@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Link as LinkIcon,
 } from '@material-ui/icons'
+import { merge, get } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -26,7 +27,7 @@ const Mapping = props => {
                          <ToConceptLabel {...props} />;
 
   return (
-    <div className='col-sm-12 no-side-padding' style={{paddingTop: '10px'}}>
+    <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <Link to={props.url} style={{display: 'inline-block'}}>
         <ResourceLabel
           owner={props.owner} parent={props.source} id={props.id} name={props.map_type}

@@ -10,9 +10,9 @@ const Results = props => {
 
   const getComponentFor = data => {
     if(resource === 'concepts')
-      return <Concept {...data} />;
+      return <Concept {...data} style={{paddingLeft: '10px'}} />;
     if(resource === 'mappings')
-      return <Mapping {...data} />
+      return <Mapping {...data} style={{paddingLeft: '10px'}} />
   }
 
   const onPageChange = (event, page) => {

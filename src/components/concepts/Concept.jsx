@@ -1,13 +1,13 @@
 import React from 'react';
 import { LocalOffer as LocalOfferIcon } from '@material-ui/icons'
+import { merge, get } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 
 const Concept = props => {
-
   return (
-    <div className='col-sm-12 no-side-padding' style={{paddingTop: '10px'}}>
+    <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <ResourceLabel
         owner={props.owner} parent={props.source} id={props.display_name} name={props.id}
         icon={<LocalOfferIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
