@@ -9,6 +9,7 @@ import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptForm from '../concepts/ConceptForm';
 import MappingForm from '../mappings/MappingForm';
+import SourceVersionForm from './SourceVersionForm';
 
 const SourceHomeTabs = props => {
   const {
@@ -18,12 +19,15 @@ const SourceHomeTabs = props => {
   const about = get(source, 'extras.about')
   const [conceptForm, setConceptForm] = React.useState(false);
   const [mappingForm, setMappingForm] = React.useState(false);
+  const [versionForm, setVersionForm] = React.useState(false);
 
   const onNewClick = resource => {
     if(resource === 'concept')
       setConceptForm(true)
     if(resource === 'mapping')
       setMappingForm(true)
+    if(resource === 'version')
+      setVersionForm(true)
   }
 
   const hasAccess = currentUserHasAccess()
@@ -66,7 +70,7 @@ const SourceHomeTabs = props => {
         }
         {
           tab === 2 &&
-          <ConceptContainerVersionList versions={versions} resource='source' />
+          <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} />
         }
         {
           aboutTab && tab === 3 &&
@@ -85,6 +89,13 @@ const SourceHomeTabs = props => {
         onClose={() => setMappingForm(false)}
         formComponent={
           <MappingForm onCancel={() => setMappingForm(false)} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} />
+        }
+      />
+      <CommonFormDrawer
+        isOpen={versionForm}
+        onClose={() => setVersionForm(false)}
+        formComponent={
+          <SourceVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==2} parentURL={versionedObjectURL} version={source} />
         }
       />
     </div>
