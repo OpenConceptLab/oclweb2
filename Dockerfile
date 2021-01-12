@@ -32,7 +32,7 @@ EXPOSE ${PORT}
 CMD ["bash", "-c", "./start.sh"]
 
 # Stage-2 Production Environment
-FROM nginx:1.12-alpine
+FROM nginx:1.19-alpine
 
 # Add bash
 RUN apk add --no-cache bash
