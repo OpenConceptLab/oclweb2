@@ -15,7 +15,7 @@ class CollectionHomeChildrenList extends React.Component {
     const { selectedVersion } = this.state;
     const { versionedObjectURL, resource } = this.props;
     let url = versionedObjectURL;
-    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions'], selectedVersion))
+    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
       url += `${selectedVersion}/`
     url += `${resource}/`
 
@@ -44,7 +44,7 @@ class CollectionHomeChildrenList extends React.Component {
     return (
       <Search
         {...this.props}
-        nested={true}
+        nested
         baseURL={this.getURL()}
         fixedFilters={{isTable: true, limit: 25}}
         extraControls={this.getExtraControls()}

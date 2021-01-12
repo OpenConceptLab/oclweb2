@@ -44,7 +44,8 @@ class SourceHomeChildrenList extends React.Component {
     return (
       <Search
         {...this.props}
-        nested={true}
+        nested
+        essentialColumns
         baseURL={this.getURL()}
         fixedFilters={{isTable: true, limit: 25}}
         extraControls={this.getExtraControls()}

@@ -21,7 +21,7 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter,
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -52,8 +52,8 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: [
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />},
-      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />, essential: false},
+      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
       {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name', renderer: concept => (concept.retired ? <span className='retired'>{concept.display_name}</span> : <span>{concept.display_name}</span>)},
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
@@ -67,8 +67,8 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: [
-      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />},
-      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source'},
+      {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />, essential: false},
+      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
       {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
       {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabel {...mapping} noRedirect />},
       {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type'},
@@ -266,7 +266,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested, showPin
+    nested, showPin, columns
   } = props;
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
@@ -280,7 +280,7 @@ const ExpandibleRow = props => {
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) +
+  const columnsCount = get(columns, 'length', 1) +
                         (isConceptContainer ? 1 : 0) + //public column
                            (isSelectable ? 1 : 0) + // select column
                             ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
@@ -462,7 +462,7 @@ const ExpandibleRow = props => {
           </TableCell>
         }
         {
-          map(resourceDefinition.columns, column => (
+          map(columns, column => (
             <TableCell key={column.id} align={column.align || 'left'}>
               { getValue(item, column) || 'None' }
             </TableCell>
@@ -562,7 +562,7 @@ const ExpandibleRow = props => {
 const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
-    onPinCreate, onPinDelete, pins, nested, showPin
+    onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns,
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -632,6 +632,8 @@ const ResultsTable = (
     }
   }
 
+  const columns = essentialColumns ? reject(resourceDefinition.columns, c => c.essential === false) : resourceDefinition.columns;
+
   return (
     <div className='col-sm-12 no-side-padding'>
       {
@@ -674,7 +676,7 @@ const ResultsTable = (
                     </TableCell>
                   }
                   {
-                    map(resourceDefinition.columns, column => {
+                    map(columns, column => {
                       const isSortable = column.sortable !== false;
                       return isSortable ? (
                         <TableCell
@@ -725,6 +727,7 @@ const ResultsTable = (
                       pins={pins}
                       nested={nested}
                       showPin={shouldShowPin}
+                      columns={columns}
                     />
                   ))
                 }
