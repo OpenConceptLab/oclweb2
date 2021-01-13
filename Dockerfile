@@ -46,7 +46,7 @@ RUN chmod +x start-prod.sh
 COPY --from=build /app/dist/ /usr/share/nginx/html/
 
 # Copy nginx configuration
-ADD nginx /etc/nginx/templates/
+ADD ngnix /etc/nginx/templates/
 
 # Make port available to the world outside the container
 EXPOSE ${PORT}
