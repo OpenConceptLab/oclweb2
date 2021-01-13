@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PORT=${PORT:-4000}
-
 echo "Adding env-config.js"
 ENV_FILE="/usr/share/nginx/html/env-config.js"
 
