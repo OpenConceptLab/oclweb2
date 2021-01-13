@@ -34,6 +34,8 @@ CMD ["bash", "-c", "./start.sh"]
 # Stage-2 Production Environment
 FROM nginx:1.19-alpine
 
+ENV PORT=${PORT:-4000}
+
 # Add bash
 RUN apk add --no-cache bash
 
@@ -44,10 +46,10 @@ RUN chmod +x start-prod.sh
 COPY --from=build /app/dist/ /usr/share/nginx/html/
 
 # Copy nginx configuration
-ADD ngnix /etc/nginx/conf.d/
+ADD ngnix /etc/nginx/templates/
 
-# Make port 4000 available to the world outside the container
-EXPOSE 4000
+# Make port available to the world outside the container
+EXPOSE ${PORT}
 
 # Start the server
 CMD ["bash", "-c", "/start-prod.sh"]

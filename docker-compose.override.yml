@@ -15,5 +15,3 @@ services:
     restart: on-failure
     volumes:
       - .:/app:z
-    environment:
-      - PORT=${PORT-4000}
