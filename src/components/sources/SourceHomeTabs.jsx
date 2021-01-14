@@ -14,7 +14,7 @@ import SourceVersionForm from './SourceVersionForm';
 const SourceHomeTabs = props => {
   const {
     tab, onChange, source, versions, location, versionedObjectURL, currentVersion,
-    aboutTab
+    aboutTab, onVersionUpdate
   } = props;
   const about = get(source, 'extras.about')
   const [conceptForm, setConceptForm] = React.useState(false);
@@ -70,7 +70,7 @@ const SourceHomeTabs = props => {
         }
         {
           tab === 2 &&
-          <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} />
+          <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} />
         }
         {
           aboutTab && tab === 3 &&

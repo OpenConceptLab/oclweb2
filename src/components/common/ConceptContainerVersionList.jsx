@@ -4,12 +4,14 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton,
 } from '@material-ui/core';
-import { map, isEmpty, startCase, get } from 'lodash';
+import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
-  ExpandMore as ExpandMoreIcon, Search as SearchIcon, Edit as EditIcon, Delete as DeleteIcon
+  ExpandMore as ExpandMoreIcon, Search as SearchIcon, Edit as EditIcon,
+  DeleteForever as DeleteIcon,
+  NewReleases as ReleaseIcon, Delete as RetireIcon, FileCopy as CopyIcon,
 } from '@material-ui/icons';
 import APIService from '../../services/APIService';
-import { headFirst } from '../../common/utils';
+import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import ResourceVersionLabel from './ResourceVersionLabel';
 import ConceptContainerTip from './ConceptContainerTip';
@@ -27,32 +29,54 @@ const None = () => {
   return <div style={{margin: '5px', fontWeight: '300'}}>None</div>
 }
 
-const ConceptContainerVersionList = ({ versions, resource, canEdit }) => {
-  let sortedVersions = headFirst(versions);
+const onCopyClick = version => copyURL(toFullAPIURL(version.version_url));
+const handleResponse = (response, resource, action, successCallback) => {
+  if(includes([200, 204], get(response, 'status')))
+    alertifyjs.success(`${resource} Version ${action}`, 1, () => {
+      if(successCallback)
+        successCallback(response.data)
+      else
+        window.location.reload()
+    })
+  else
+    alertifyjs.error('Something bad happened!')
+}
+const getService = version => APIService.new().overrideURL(version.version_url)
+const deleteVersion = version => getService(version).delete().then(response => handleResponse(response, version.type, 'Deleted'))
+const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
+
+const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) => {
+  const sortedVersions = headFirst(versions);
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
   const onEditClick = version => {
     setSelectedVersion(version)
     setVersionForm(true)
   }
-  const deleteVersion = version => {
-    APIService.new().overrideURL(version.version_url).delete().then(response => {
-      if(get(response, 'status') === 204)
-        alertifyjs.success('Source Version Deleted', 1, () => window.location.reload())
-      else
-        alertifyjs.error('Something bad happened!')
-    })
-  }
   const onEditCancel = () => setVersionForm(false);
+  const onReleaseClick = version => onVersionUpdate(version, 'released', 'release', 'Released')
+  const onRetireClick = version => onVersionUpdate(version, 'retired', 'retire', 'Retired')
   const onDeleteClick = version => {
-    const title = `Delete Source Version : ${version.short_code} [${version.id}]`;
-    const message = `Are you sure you want to permanently delete this source version ${version.id}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this source version will not be affected.`
+    const title = `Delete ${startCase(resource)} Version : ${version.short_code} [${version.id}]`;
+    const message = `Are you sure you want to permanently delete this ${resource} version ${version.id}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this ${resource} version will not be affected.`
 
+    handleOnClick(title, message, () => deleteVersion(version))
+  }
+  const handleOnClick = (title, message, onOk) => {
     const confirm = alertifyjs.confirm()
     confirm.setHeader(title);
     confirm.setMessage(message);
-    confirm.set('onok', () => deleteVersion(version));
+    confirm.set('onok', onOk);
     confirm.show();
+  }
+  const onVersionUpdate = (version, attr, label, successLabel) => {
+    const newValue = !get(version, attr)
+    label = newValue ? label : `un-${label}`;
+    const resLabel = newValue ? successLabel : `Un${successLabel}`
+    const title = `Update ${startCase(resource)} Version : ${version.short_code} [${version.id}]`;
+    const message = `Are you sure you want to ${label} this ${resource} version ${version.id}?`
+
+    handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, onUpdate))
   }
 
   return (
@@ -73,7 +97,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit }) => {
               map(sortedVersions, (version, index) => (
                 <div className='col-md-12 no-side-padding' key={index}>
                   <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
-                    <div className='col-md-9 no-left-padding'>
+                    <div className='col-md-6 no-left-padding'>
                       <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
                         <ResourceVersionLabel {...version} />
                       </div>
@@ -88,13 +112,23 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit }) => {
                         />
                       </div>
                     </div>
-                    <div className='col-md-3 no-right-padding' style={{textAlign: 'right'}}>
+                    <div className='col-md-6 no-right-padding' style={{textAlign: 'right'}}>
                       {
                         canEdit && version.id.toLowerCase() !== 'head' &&
                         <React.Fragment>
                           <Tooltip title='Edit Version'>
                             <IconButton onClick={() => onEditClick(version)}>
                               <EditIcon fontSize='inherit' />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={version.released ? 'UnRelease Version' : 'Release Version'}>
+                            <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)}>
+                              <ReleaseIcon fontSize='inherit' />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
+                            <IconButton color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
+                              <RetireIcon fontSize='inherit' />
                             </IconButton>
                           </Tooltip>
                           <Tooltip title='Delete Version'>
@@ -107,6 +141,11 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit }) => {
                       <Tooltip title='Version Link'>
                         <IconButton href={`#${version.concepts_url}`} color='primary'>
                           <SearchIcon fontSize='inherit' />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Copy URL'>
+                        <IconButton onClick={() => onCopyClick(version)}>
+                          <CopyIcon fontSize='inherit' />
                         </IconButton>
                       </Tooltip>
                     </div>

@@ -23,10 +23,10 @@ class SourceVersionForm extends React.Component {
   }
 
   setFieldsForEdit() {
-    const { source } = this.props;
+    const { version } = this.props;
     const attrs = ['id', 'description', 'external_id']
     const newState = {...this.state}
-    attrs.forEach(attr => set(newState.fields, attr, get(source, attr, '') || ''))
+    attrs.forEach(attr => set(newState.fields, attr, get(version, attr, '') || ''))
     this.setState(newState);
   }
 

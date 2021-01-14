@@ -3,6 +3,7 @@ import {
   AccountTreeRounded as TreeIcon
 } from '@material-ui/icons';
 import ReleasedChip from './ReleasedChip';
+import RetiredChip from './RetiredChip';
 
 const SEPARATOR = '/'
 const ResourceVersionLabel = props => {
@@ -22,6 +23,12 @@ const ResourceVersionLabel = props => {
         props.released &&
         <span style={{marginLeft: '10px'}}>
           <ReleasedChip size='small' />
+        </span>
+      }
+      {
+        props.retired &&
+        <span style={{marginLeft: '10px'}}>
+          <RetiredChip size='small' />
         </span>
       }
     </div>
