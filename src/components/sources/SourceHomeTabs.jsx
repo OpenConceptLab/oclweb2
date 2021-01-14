@@ -16,11 +16,11 @@ const SourceHomeTabs = props => {
     tab, onChange, source, versions, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate
   } = props;
+  const hasAccess = currentUserHasAccess()
   const about = get(source, 'extras.about')
   const [conceptForm, setConceptForm] = React.useState(false);
   const [mappingForm, setMappingForm] = React.useState(false);
   const [versionForm, setVersionForm] = React.useState(false);
-
   const onNewClick = resource => {
     if(resource === 'concept')
       setConceptForm(true)
@@ -30,7 +30,6 @@ const SourceHomeTabs = props => {
       setVersionForm(true)
   }
 
-  const hasAccess = currentUserHasAccess()
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>

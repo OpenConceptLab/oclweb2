@@ -15,7 +15,7 @@ import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import ResourceVersionLabel from './ResourceVersionLabel';
 import ConceptContainerTip from './ConceptContainerTip';
-import SourceVersionForm from '../sources/SourceVersionForm';
+import ConceptContainerVersionForm from './ConceptContainerVersionForm';
 import CommonFormDrawer from './CommonFormDrawer';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -167,7 +167,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
         isOpen={versionForm}
         onClose={onEditCancel}
         formComponent={
-          <SourceVersionForm onCancel={onEditCancel} reloadOnSuccess edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} />
+          <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={onUpdate} />
         }
       />
     </div>

@@ -1,27 +1,43 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { get } from 'lodash';
+import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
 import AboutAccordian from '../common/AboutAccordian';
+import NewResourceButton from '../common/NewResourceButton';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import CollectionVersionForm from './CollectionVersionForm';
 
 const CollectionHomeTabs = props => {
   const {
     tab, onChange, collection, versions, location, versionedObjectURL, currentVersion,
-    aboutTab
+    aboutTab, onVersionUpdate
   } = props;
+  const hasAccess = currentUserHasAccess()
   const about = get(collection, 'extras.about')
+  const [versionForm, setVersionForm] = React.useState(false);
+  const onNewClick = resource => {
+    if(resource === 'version')
+      setVersionForm(true)
+  }
 
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header' value={tab} onChange={onChange} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
+      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onChange} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
         <Tab label="Concepts" />
         <Tab label="Mappings" />
         <Tab label="References" />
         <Tab label="Versions" />
         {aboutTab && <Tab label="About" />}
       </Tabs>
-      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
+      {
+        hasAccess &&
+        <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+          <NewResourceButton resources={['version']} onClick={onNewClick} />
+        </div>
+      }
+      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
         {
           tab === 0 &&
           <CollectionHomeChildrenList
@@ -58,13 +74,25 @@ const CollectionHomeTabs = props => {
         }
         {
           tab === 3 &&
-          <ConceptContainerVersionList versions={versions} resource='collection' />
+          <ConceptContainerVersionList
+            versions={versions}
+            resource='collection'
+            canEdit={hasAccess}
+            onUpdate={onVersionUpdate}
+          />
         }
         {
           aboutTab && tab === 4 &&
           <AboutAccordian id={collection.id} about={about} />
         }
       </div>
+      <CommonFormDrawer
+        isOpen={versionForm}
+        onClose={() => setVersionForm(false)}
+        formComponent={
+          <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} />
+        }
+      />
     </div>
   );
 }

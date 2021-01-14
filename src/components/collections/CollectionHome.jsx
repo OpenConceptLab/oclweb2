@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, isEmpty, get } from 'lodash';
+import { includes, isEmpty, get, findIndex } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
@@ -121,6 +121,13 @@ class CollectionHome extends React.Component {
     return !isEmpty(get(this, 'state.collection.extras.about'));
   }
 
+  onVersionUpdate = updatedVersion => {
+    const newState = {...this.state}
+    const index = findIndex(newState.versions, {uuid: updatedVersion.uuid})
+    newState.versions.splice(index, 1, updatedVersion)
+    this.setState(newState)
+  }
+
   render() {
     const { collection, versions, isLoading, tab } = this.state;
     const currentURL = this.getURLFromPath()
@@ -147,6 +154,7 @@ class CollectionHome extends React.Component {
               versionedObjectURL={versionedObjectURL}
               currentVersion={this.getCurrentVersion()}
               aboutTab={showAboutTab}
+              onVersionUpdate={this.onVersionUpdate}
             />
           </div>
         }
