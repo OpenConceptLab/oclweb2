@@ -22,4 +22,10 @@ export const SOURCE_TYPES = [
   'Indicator Registry',
   'External'
 ];
-
+export const COLLECTION_TYPES = [
+  'Dictionary',
+  'Interface Terminology',
+  'Indicator Registry',
+  'Value Set',
+  'Subset',
+];

@@ -1,11 +1,14 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import {
   Loyalty as LoyaltyIcon,
   FileCopy as CopyIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
 } from '@material-ui/icons';
-import { Tooltip, IconButton } from '@material-ui/core';
+import { Tooltip, IconButton, Button, ButtonGroup } from '@material-ui/core';
 import { includes, keys, map, startCase, get } from 'lodash';
-import { toFullAPIURL, copyURL, nonEmptyCount } from '../../common/utils';
+import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -19,6 +22,8 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import CollectionForm from './CollectionForm';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -36,7 +41,9 @@ const HIDDEN_ATTRIBUTES = {
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const hasAccess = currentUserHasAccess();
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
+  const [collectionForm, setCollectionForm] = React.useState(false);
   const isRetired = collection.isRetired;
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
   const hasManyHiddenAttributes = nonEmptyCount(collection, keys(HIDDEN_ATTRIBUTES)) >= 4;
@@ -47,6 +54,25 @@ const CollectionHomeHeader = ({
                 if(get(response, 'status') === 200)
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
+  }
+
+  const deleteCollection = () => {
+    APIService.new().overrideURL(collection.url).delete().then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Collection Deleted', 1, () => window.location.hash = collection.owner_url)
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  const onDelete = () => {
+    const title = `Delete Collection : ${collection.short_code}`;
+    const message = `Are you sure you want to permanently delete this collection ${collection.short_code}? This action cannot be undone! This action cannot be undone! This will delete the entire collection and all of its associated versions and references.`
+    const confirm = alertifyjs.confirm()
+    confirm.setHeader(title);
+    confirm.setMessage(message);
+    confirm.set('onok', deleteCollection);
+    confirm.show();
   }
 
   return (
@@ -73,6 +99,23 @@ const CollectionHomeHeader = ({
                   bgColor={GREEN}
                 />
               </React.Fragment>
+            }
+            {
+              hasAccess && isVersionedObject &&
+              <span style={{marginLeft: '15px'}}>
+                <ButtonGroup variant='text' size='large'>
+                  <Tooltip title='Edit Collection'>
+                    <Button onClick={() => setCollectionForm(true)}>
+                      <EditIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title='Delete Collection'>
+                    <Button onClick={onDelete}>
+                      <DeleteIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
+              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
@@ -157,6 +200,14 @@ const CollectionHomeHeader = ({
           </div>
         </div>
       </div>
+      <CommonFormDrawer
+        isOpen={collectionForm}
+        onClose={() => setCollectionForm(false)}
+        formComponent={
+          isVersionedObject &&
+                       <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={collection} parentURL={versionedObjectURL} />
+        }
+      />
     </header>
   )
 }

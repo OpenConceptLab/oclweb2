@@ -7,6 +7,7 @@ import OrgHomeChildrenList from './OrgHomeChildrenList';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import SourceForm from '../sources/SourceForm';
+import CollectionForm from '../collections/CollectionForm';
 
 const OrgHomeTabs = props => {
   const {
@@ -14,10 +15,13 @@ const OrgHomeTabs = props => {
   } = props;
   const about = get(org, 'extras.about')
   const [sourceForm, setSourceForm] = React.useState(false);
+  const [collectionForm, setCollectionForm] = React.useState(false);
 
   const onNewClick = resource => {
     if(resource === 'source')
       setSourceForm(true)
+    if(resource === 'collection')
+      setCollectionForm(true)
   }
 
   const hasAccess = currentUserHasAccess()
@@ -82,6 +86,13 @@ const OrgHomeTabs = props => {
         onClose={() => setSourceForm(false)}
         formComponent={
           <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={url} />
+        }
+      />
+      <CommonFormDrawer
+        isOpen={collectionForm}
+        onClose={() => setCollectionForm(false)}
+        formComponent={
+          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={url} />
         }
       />
     </div>
