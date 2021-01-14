@@ -45,7 +45,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit }) => {
   }
   const onEditCancel = () => setVersionForm(false);
   const onDeleteClick = version => {
-    const title = `Delete Version : ${version.short_code} [${version.id}]`;
+    const title = `Delete Source Version : ${version.short_code} [${version.id}]`;
     const message = `Are you sure you want to permanently delete this source version ${version.id}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this source version will not be affected.`
 
     const confirm = alertifyjs.confirm()

@@ -1,8 +1,10 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import {
   List as ListIcon,
   FileCopy as CopyIcon,
-  Edit as EditIcon
+  Edit as EditIcon,
+  Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { Tooltip, IconButton, ButtonGroup, Button } from '@material-ui/core';
 import { includes, isEmpty, keys, map, startCase, get } from 'lodash';
@@ -52,6 +54,25 @@ const SourceHomeHeader = ({
               })
   }
 
+  const deleteSource = () => {
+    APIService.new().overrideURL(source.url).delete().then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Source Deleted', 1, () => window.location.hash = source.owner_url)
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  const onDelete = () => {
+    const title = `Delete Source : ${source.short_code}`;
+    const message = `Are you sure you want to permanently delete this source ${source.short_code}? This action cannot be undone! This action cannot be undone! This will delete the entire source and all of its associated versions, concepts and mappings.`
+    const confirm = alertifyjs.confirm()
+    confirm.setHeader(title);
+    confirm.setMessage(message);
+    confirm.set('onok', deleteSource);
+    confirm.show();
+  }
+
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 container' style={{paddingTop: '10px'}}>
@@ -84,6 +105,11 @@ const SourceHomeHeader = ({
                   <Tooltip title='Edit Source'>
                     <Button onClick={() => setSourceForm(true)}>
                       <EditIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title='Delete Source'>
+                    <Button onClick={onDelete}>
+                      <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
                 </ButtonGroup>
@@ -174,7 +200,7 @@ const SourceHomeHeader = ({
         onClose={() => setSourceForm(false)}
         formComponent={
           isVersionedObject &&
-          <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={source} parentURL={versionedObjectURL} />
+                       <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={source} parentURL={versionedObjectURL} />
         }
       />
     </header>
