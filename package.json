@@ -28,7 +28,7 @@
     "uuid": "^3.4.0"
   },
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --mode ${NODE_ENV} --hot",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --mode ${NODE_ENV} --hot",
     "build": "./node_modules/webpack/bin/webpack.js -p --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --mode ${NODE_ENV}",
     "eslint": "./node_modules/.bin/eslint ./src",
     "storybook": "start-storybook -p 6006",
