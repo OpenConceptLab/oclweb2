@@ -24,6 +24,7 @@ import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from './CollectionForm';
+import SupportedLocales from '../common/SupportedLocales';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -143,8 +144,7 @@ const CollectionHomeHeader = ({
           <HeaderAttribute label="Short Code" value={collection.short_code} gridClass="col-md-12" />
           <HeaderAttribute label="Name" value={collection.name} gridClass="col-md-12" />
           <HeaderAttribute label="Collection Type" value={collection.collection_type} gridClass="col-md-12" />
-          <HeaderAttribute label="Default Locale" value={collection.default_locale} gridClass="col-md-12" />
-          <HeaderAttribute label="Supported Locale" value={collection.supported_locales.join(', ')} gridClass="col-md-12" />
+          <HeaderAttribute label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-md-12" type="component" />
           <HeaderAttribute label="Custom Validation Schema" value={collection.custom_validation_schema} gridClass="col-md-12" />
           <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-md-12" />
           {

@@ -24,6 +24,7 @@ import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import SourceForm from './SourceForm';
+import SupportedLocales from '../common/SupportedLocales';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -139,8 +140,7 @@ const SourceHomeHeader = ({
             </div>
           }
           <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
-          <HeaderAttribute label="Default Locale" value={source.default_locale} gridClass="col-md-12" />
-          <HeaderAttribute label="Supported Locale" value={source.supported_locales.join(', ')} gridClass="col-md-12" />
+          <HeaderAttribute label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-md-12" type="component" />
           <HeaderAttribute label="Custom Validation Schema" value={source.custom_validation_schema} gridClass="col-md-12" />
           <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
           {
