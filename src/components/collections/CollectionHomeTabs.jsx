@@ -8,6 +8,7 @@ import AboutAccordian from '../common/AboutAccordian';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionVersionForm from './CollectionVersionForm';
+import ReferenceForm from './ReferenceForm';
 
 const CollectionHomeTabs = props => {
   const {
@@ -17,9 +18,12 @@ const CollectionHomeTabs = props => {
   const hasAccess = currentUserHasAccess()
   const about = get(collection, 'extras.about')
   const [versionForm, setVersionForm] = React.useState(false);
+  const [referenceForm, setReferenceForm] = React.useState(false);
   const onNewClick = resource => {
     if(resource === 'version')
       setVersionForm(true)
+    if(resource === 'references')
+      setReferenceForm(true)
   }
 
   return (
@@ -34,7 +38,7 @@ const CollectionHomeTabs = props => {
       {
         hasAccess &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
-          <NewResourceButton resources={['version']} onClick={onNewClick} />
+          <NewResourceButton resources={['references', 'version']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
@@ -86,6 +90,13 @@ const CollectionHomeTabs = props => {
           <AboutAccordian id={collection.id} about={about} />
         }
       </div>
+      <CommonFormDrawer
+        isOpen={referenceForm}
+        onClose={() => setReferenceForm(false)}
+        formComponent={
+          <ReferenceForm onCancel={() => setReferenceForm(false)} reloadOnSuccess={tab < 3} parentURL={versionedObjectURL} collection={collection} />
+        }
+      />
       <CommonFormDrawer
         isOpen={versionForm}
         onClose={() => setVersionForm(false)}

@@ -29,3 +29,5 @@ export const COLLECTION_TYPES = [
   'Value Set',
   'Subset',
 ];
+/*eslint no-useless-escape: 0*/
+export const SOURCE_CHILD_URI_REGEX = /\/(orgs|users)\/([a-zA-Z0-9\-\.\_\@]+)\/(sources|collections)\/([a-zA-Z0-9\-\.\_\@]+)\/(concepts|mappings)\/([a-zA-Z0-9\-\.\_\@]+)?\/?([a-zA-Z0-9\-\.\_\@]+)?\/?/;
