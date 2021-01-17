@@ -23,8 +23,9 @@ import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
-import SourceForm from './SourceForm';
 import SupportedLocales from '../common/SupportedLocales';
+import DownloadButton from '../common/DownloadButton';
+import SourceForm from './SourceForm';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -40,6 +41,7 @@ const HIDDEN_ATTRIBUTES = {
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
@@ -113,6 +115,7 @@ const SourceHomeHeader = ({
                       <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
+                  <DownloadButton resource={source} filename={downloadFileName} includeCSV />
                 </ButtonGroup>
               </span>
             }

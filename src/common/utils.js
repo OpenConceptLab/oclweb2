@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy
+  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
@@ -270,3 +270,24 @@ export const fetchDescriptionTypes = callback => {
     .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
 }
 
+export const downloadObject = (obj, format, filename) => {
+  const data = new Blob([obj], {type: format});
+  downloadFromURL(window.URL.createObjectURL(data), filename);
+}
+
+export const downloadFromURL = (url, filename) => {
+  const tempLink = document.createElement('a');
+  tempLink.href = url;
+  tempLink.setAttribute('download', filename);
+  tempLink.click();
+}
+
+export const arrayToCSV = objArray => {
+  const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+  let str = `${Object.keys(array[0]).map(value => `"${value}"`).join(",")}` + '\r\n';
+
+  return array.reduce((str, next) => {
+    str += `${Object.values(next).map(value => isObject(value) ? `"${JSON.stringify(value)}"` : `"${value}"`).join(",")}` + '\r\n';
+    return str;
+  }, str);
+}
