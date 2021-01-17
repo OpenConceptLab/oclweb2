@@ -194,7 +194,7 @@ class Search extends React.Component {
         includeRetired,
       } = this.state;
       const queryParams = {
-        q: searchStr, page: page, exact_match: exactMatch, limit: limit,
+        q: searchStr || '', page: page, exact_match: exactMatch, limit: limit,
         includeRetired: includeRetired,
         verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
         ...this.getFacetQueryParam(),
