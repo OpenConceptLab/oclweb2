@@ -28,7 +28,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename}) => {
     <React.Fragment>
       <Tooltip title={tooltipTitle}>
         <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}}>
-          <DownloadIcon fontSize='inherit' />
+          <DownloadIcon fontSize='inherit' style={{marginTop: '3px'}} />
         </Button>
       </Tooltip>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
