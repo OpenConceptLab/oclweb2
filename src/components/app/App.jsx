@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import alertifyjs from 'alertifyjs';
-import { AppBar, Toolbar, Typography, Button, IconButton, Tooltip } from '@material-ui/core';
-import { Person as PersonIcon, ExitToApp as LogoutIcon } from '@material-ui/icons';
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import { Person as PersonIcon } from '@material-ui/icons';
 import { get } from 'lodash';
 import { WHITE, BLACK } from '../../common/constants';
 import './App.scss';
@@ -16,6 +15,7 @@ import CollectionHome from '../collections/CollectionHome';
 import OrgHome from '../orgs/OrgHome';
 import UserHome from '../users/UserHome';
 import Login from '../users/Login';
+import UserOptions from '../users/UserOptions';
 import { Link } from 'react-router-dom';
 import { isAtGlobalSearch, isLoggedIn, getCurrentUser } from '../../common/utils';
 
@@ -41,14 +41,6 @@ class App extends Component {
 
   onLoginClick() {
     window.location.hash = '#/accounts/login'
-  }
-
-  onLogoutClick() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    alertifyjs.success('You have signed out.')
-    window.location.hash = '#/'
-    window.location.reload()
   }
 
   toUserHome() {
@@ -78,11 +70,9 @@ class App extends Component {
                   <Button onClick={this.toUserHome} color='primary' variant='contained' startIcon={<PersonIcon />}>
                     {user.username}
                   </Button>
-                  <Tooltip title='logout' placement='top'>
-                    <IconButton component='span' onClick={this.onLogoutClick} style={{marginLeft: '10px'}}>
-                      <LogoutIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <span style={{marginLeft: '10px'}}>
+                    <UserOptions />
+                  </span>
                 </span>:
                 <Button onClick={this.onLoginClick} color='primary' variant='contained'>
                   Sign In
