@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import { TextField, Button, IconButton } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 import {
-  set, get, cloneDeep, isEmpty, pickBy, pullAt, map
+  set, get, cloneDeep, isEmpty, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, toFullURL } from '../../common/utils';
@@ -84,7 +84,6 @@ class OrgForm extends React.Component {
     const isFormValid = form.checkValidity()
     if(isFormValid) {
       fields.extras = arrayToObject(fields.extras)
-      fields = pickBy(fields, value => value)
       if(edit) {
         APIService.orgs(fields.id).put(fields).then(response => this.handleSubmitResponse(response))
       } else {

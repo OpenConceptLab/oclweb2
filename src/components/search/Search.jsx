@@ -354,7 +354,8 @@ class Search extends React.Component {
 
   render() {
     const {
-      nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete, isVersionedObject,
+      nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
+      isVersionedObject, parentResource, newResourceComponent
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -363,10 +364,12 @@ class Search extends React.Component {
     const resourceResults = get(results, resource, {});
     const hasPrev = this.hasPrev()
     const hasNext = this.hasNext()
+    const isUnderUserHome = nested && parentResource === 'user';
+    const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
     return (
       <div className='col-sm-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-10 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
+          <div className='col-sm-9 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
             <SearchInput
               {...this.props}
               onSearch={this.onSearch}
@@ -374,19 +377,23 @@ class Search extends React.Component {
               moreControls={this.getFilterControls()}
             />
           </div>
-          <div className='col-sm-2 no-side-padding' style={{textAlign: 'right', marginTop: '7px'}}>
-            <span className='col-sm-8 no-side-padding' style={{marginTop: '2px', textAlign: 'center'}}>
+          <div className='col-sm-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
+            <span style={{margin: '0 20px', marginTop: '-4px'}}>
               <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} />
             </span>
-            <span className='col-sm-4 no-side-padding'>
-              <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
-                <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
-                  <NavigateBeforeIcon width="10" />
-                </Button>
-                <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(true)} disabled={!hasNext}>
-                  <NavigateNextIcon width="10" />
-                </Button>
-              </ButtonGroup>
+            <span>
+              {
+                shouldShowNewResourceComponent ?
+                newResourceComponent :
+                <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
+                  <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
+                    <NavigateBeforeIcon width="10" />
+                  </Button>
+                  <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(true)} disabled={!hasNext}>
+                    <NavigateNextIcon width="10" />
+                  </Button>
+                </ButtonGroup>
+              }
             </span>
           </div>
           {
