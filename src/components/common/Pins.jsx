@@ -1,15 +1,9 @@
 import React from 'react';
-import { map, isEmpty, get } from 'lodash';
+import { map, isEmpty } from 'lodash';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import PinIcon from '../common/PinIcon';
 import Pin from './Pin';
 
-const getGridDivision = pinsCount => {
-  let division = 12;
-  if(pinsCount < 3)
-    return 6
-  return Math.floor(division/pinsCount);
-}
 const getPinStyle = isDragging => ({
   backgroundColor: isDragging ? 'rgba(255,255,255,0.7)' : '#fff',
   boxShadow: isDragging ? '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' : 'none',
@@ -37,8 +31,7 @@ const reorder = (list, startIndex, endIndex) => {
 
 const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
   const [orderedPins, setPins] = React.useState(pins)
-  let gridDivision = getGridDivision(get(orderedPins, 'length', 0));
-  const gridClassName = `col-md-${gridDivision}`
+  const gridClassName = `col-md-3`;
 
   React.useEffect(() => {
     setPins(pins)

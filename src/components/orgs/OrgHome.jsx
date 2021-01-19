@@ -1,6 +1,7 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, isEmpty } from 'lodash';
+import { reject, get, isEmpty, values } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -98,9 +99,12 @@ class OrgHome extends React.Component {
       service
         .post({resource_type: resourceType, resource_id: resourceId})
         .then(response => {
-          if(get(response, 'status') === 201) {
+          if(get(response, 'status') === 201)
             this.setState({pins: [...this.state.pins, response.data]})
-          }
+          else if (get(response, 'error'))
+            alertifyjs.error(values(response.error).join('\n'))
+          else
+            alertifyjs.error('Something bad happened')
         })
     }
   }
