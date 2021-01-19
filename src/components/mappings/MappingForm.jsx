@@ -147,9 +147,9 @@ class MappingForm extends React.Component {
     }
   }
 
-  onAddExtras = () => {
-    this.setFieldValue('fields.extras', [...this.state.fields.extras, cloneDeep(EXTRAS_MODEL)])
-  }
+  onAddExtras = () => this.setFieldValue(
+    'fields.extras', [...this.state.fields.extras, cloneDeep(EXTRAS_MODEL)]
+  )
 
   onDeleteExtras = index => {
     const newState = {...this.state}

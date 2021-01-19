@@ -2,10 +2,11 @@ import React from 'react';
 import {
   Home as HomeIcon,
   FileCopy as CopyIcon,
+  Edit as EditIcon,
 } from '@material-ui/icons';
-import { Tooltip, IconButton } from '@material-ui/core';
+import { Tooltip, IconButton, ButtonGroup, Button } from '@material-ui/core';
 import { includes, isEmpty, get } from 'lodash';
-import { toFullAPIURL, copyURL } from '../../common/utils';
+import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -16,9 +17,13 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import PublicAccessChip from '../common/PublicAccessChip';
 import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import OrgForm from './OrgForm';
 
 const OrgHomeHeader = ({ org, url }) => {
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
+  const [orgForm, setOrgForm] = React.useState(false);
+  const hasAccess = currentUserHasAccess();
   const onIconClick = () => copyURL(toFullAPIURL(url));
 
   const onLogoUpload = (base64, name) => {
@@ -43,6 +48,18 @@ const OrgHomeHeader = ({ org, url }) => {
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
+            {
+              hasAccess &&
+              <span style={{marginLeft: '15px'}}>
+                <ButtonGroup variant='text' size='large'>
+                  <Tooltip title='Edit Organization'>
+                    <Button onClick={() => setOrgForm(true)}>
+                      <EditIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                </ButtonGroup>
+              </span>
+            }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>
@@ -107,6 +124,13 @@ const OrgHomeHeader = ({ org, url }) => {
           </div>
         </div>
       </div>
+      <CommonFormDrawer
+        isOpen={orgForm}
+        onClose={() => setOrgForm(false)}
+        formComponent={
+          <OrgForm edit reloadOnSuccess onCancel={() => setOrgForm(false)} org={org} />
+        }
+      />
     </header>
   )
 }
