@@ -320,9 +320,12 @@ class Search extends React.Component {
         <span>
           <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
         </span>
-        <span style={{paddingLeft: '5px'}}>
+        {
+          resource !== 'references' &&
+         <span style={{paddingLeft: '5px'}}>
           <LayoutToggle isTable={isTable} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
-        </span>
+         </span>
+        }
         {
           !isTable &&
           <span style={{paddingLeft: '5px'}}>
