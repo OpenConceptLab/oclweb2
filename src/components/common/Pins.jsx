@@ -1,7 +1,7 @@
 import React from 'react';
 import { map, isEmpty } from 'lodash';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import PinIcon from '../common/PinIcon';
+import PinIcon from './PinIcon';
 import Pin from './Pin';
 
 const getPinStyle = isDragging => ({

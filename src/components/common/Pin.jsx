@@ -2,15 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Card, CardHeader, CardContent, CardActions, IconButton, Chip, Avatar, Typography,
-  CircularProgress,
+  CircularProgress, Tooltip
 } from '@material-ui/core';
 import {
   List as ListIcon, Loyalty as LoyaltyIcon, Home as HomeIcon,
-  Delete as DeleteIcon, LocalOffer as LocalOfferIcon, Link as LinkIcon,
+  LocalOffer as LocalOfferIcon, Link as LinkIcon,
   AccountTreeRounded as TreeIcon
 } from '@material-ui/icons';
 import { isEmpty, get, last, compact } from 'lodash';
 import { ORANGE, GREEN } from '../../common/constants';
+import PinIcon from './PinIcon';
 
 const getIcon = resourceURI => {
   if(resourceURI.indexOf('/sources/') >= 0)
@@ -36,9 +37,11 @@ const Pin = ({ pin, canDelete, onDelete, style }) => {
           }
           action={
             canDelete &&
+                  <Tooltip title='Remove Pin'>
                   <IconButton size='small' onClick={() => onDelete(pin.id)}>
-                    <DeleteIcon fontSize='small' style={{width: '20px'}}/>
+                    <PinIcon pinned='true' fontSize='small' style={{width: '20px'}}/>
                   </IconButton>
+                  </Tooltip>
           }
           title={<Link to={pin.resource_uri}>{mnemonic}</Link>}
         />
