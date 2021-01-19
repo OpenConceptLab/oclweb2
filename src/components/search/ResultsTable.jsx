@@ -17,7 +17,8 @@ import {
   Person as PersonIcon,
   Home as HomeIcon,
   Loyalty as LoyaltyIcon,
-  CompareArrows as CompareArrowsIcon
+  CompareArrows as CompareArrowsIcon,
+  Delete as DeleteIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -28,7 +29,7 @@ import {
 } from '../../common/constants';
 import {
   formatDate, formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
-  getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser,
+  getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser, currentUserHasAccess,
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
@@ -281,14 +282,13 @@ const ExpandibleRow = props => {
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(columns, 'length', 1) +
-                        (isConceptContainer ? 1 : 0) + //public column
-                           (isSelectable ? 1 : 0) + // select column
-                            ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                          (resourceDefinition.tags ? 1 : 0); //tags column
+                         (isConceptContainer ? 1 : 0) + //public column
+                            (isSelectable ? 1 : 0) + // select column
+                             ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                           (resourceDefinition.tags ? 1 : 0); //tags column
 
-  React.useEffect(() => {
-    setPin(includes(map(pins, 'resource_uri'), item.url))
-  }, [pins]);
+  React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
+  React.useEffect(() => setSelected(isSelected), [isSelected]);
 
   const onClick = event => {
     if(!resourceDefinition.expandible)
@@ -562,7 +562,8 @@ const ExpandibleRow = props => {
 const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
-    onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns,
+    onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
+    isVersionedObject,
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -581,26 +582,17 @@ const ResultsTable = (
   const [selectedList, setSelectedList] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
-  const isSelectable = includes(['concepts', 'mappings'], resource);
+  const hasAccess = currentUserHasAccess()
+  const isSelectable = (resource === 'references' && hasAccess && isVersionedObject) ||
+                       includes(['concepts', 'mappings'], resource);
 
-  const onAllSelect = event => {
-    if(event.target.checked)
-      setSelectedList(map(results.items, 'id'))
-    else
-      setSelectedList([])
-  }
-
-  const updateSelected = (id, selected) => {
-    if(selected)
-      setSelectedList(uniq([...selectedList, id]))
-    else
-      setSelectedList(without(selectedList, id))
-  }
-
-  const getOppositeOrder = order => {
-    return order === 'asc' ? 'desc' : 'asc';
-  }
-
+  const onAllSelect = event => event.target.checked ?
+                             setSelectedList(map(results.items, 'id')) :
+                             setSelectedList([]);
+  const updateSelected = (id, selected) => selected ?
+                                         setSelectedList(uniq([...selectedList, id])) :
+                                         setSelectedList(without(selectedList, id));
+  const getOppositeOrder = order => order === 'asc' ? 'desc' : 'asc';
   const onSort = (event, columnId) => {
     let newOrder = 'desc';
     if(orderBy === columnId)
@@ -616,12 +608,13 @@ const ResultsTable = (
     onSortChange(sortQuery)
   }
 
-  const getSelectedItems = () => {
-    return filter(results.items, item => includes(selectedList, item.id))
-  }
-
+  const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
   const shouldShowCompareOption = resource === 'concepts' && selectedList.length === 2;
-  const selectionRowColumnsCount = shouldShowCompareOption ? columnsCount - 2 : columnsCount;
+  const shouldShowDeleteOption = resource === 'references' && hasAccess && selectedList.length > 0;
+  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption) ? columnsCount - 2 : columnsCount;
+  const columns = essentialColumns ?
+                  reject(resourceDefinition.columns, c => c.essential === false) :
+                  resourceDefinition.columns;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
@@ -631,8 +624,13 @@ const ResultsTable = (
       window.open(url, '_blank')
     }
   }
+  const onReferenceDeleteClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
 
-  const columns = essentialColumns ? reject(resourceDefinition.columns, c => c.essential === false) : resourceDefinition.columns;
+    const expressions = map(filter(results.items, item => includes(selectedList, item.id)), 'expression');
+    onReferencesDelete(expressions)
+  }
 
   return (
     <div className='col-sm-12 no-side-padding'>
@@ -659,6 +657,20 @@ const ResultsTable = (
                           onClick={onCompareClick}
                         >
                           Compare
+                        </Button>
+                      </TableCell>
+                    }
+                    {
+                      shouldShowDeleteOption &&
+                      <TableCell colSpan="2" align='left' style={{color: WHITE}}>
+                        <Button
+                          startIcon={<DeleteIcon fontSize='small' />}
+                          variant='contained'
+                          size='small'
+                          color='secondary'
+                          onClick={onReferenceDeleteClick}
+                        >
+                          Delete
                         </Button>
                       </TableCell>
                     }

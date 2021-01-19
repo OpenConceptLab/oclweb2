@@ -1,7 +1,9 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
+import { map, includes, compact, isEmpty, get } from 'lodash';
 import Search from '../search/Search';
 import VersionFilter from '../common/VersionFilter';
-import { map, includes } from 'lodash';
+import APIService from '../../services/APIService';
 
 class CollectionHomeChildrenList extends React.Component {
   constructor(props) {
@@ -39,7 +41,20 @@ class CollectionHomeChildrenList extends React.Component {
     )
   }
 
+  onReferencesDelete = expressions => {
+    const references = compact(expressions)
+    if(!isEmpty(references))
+      APIService.new().overrideURL(this.getURL()).delete({references: references}).then(response => {
+        if(get(response, 'status') === 204)
+          alertifyjs.success('Successfully deleted references', 1, () => window.location.reload())
+        else
+          alertifyjs.error('Something bad happened!')
+      })
+
+  }
+
   render() {
+    const { selectedVersion } = this.state;
     const { collection, resource } = this.props;
     return (
       <Search
@@ -49,6 +64,8 @@ class CollectionHomeChildrenList extends React.Component {
         fixedFilters={{isTable: true, limit: 25}}
         extraControls={this.getExtraControls()}
         searchInputPlaceholder={`Search ${collection.name} ${resource}...`}
+        onReferencesDelete={this.onReferencesDelete}
+        isVersionedObject={selectedVersion === 'HEAD'}
       />
     )
   }

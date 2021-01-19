@@ -83,7 +83,7 @@ class CollectionHome extends React.Component {
 
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
-      if(includes([1, 2, 3, 4], value))
+      if(includes([0, 1, 2, 3, 4], value))
         this.getVersions()
     })
   }
@@ -95,7 +95,7 @@ class CollectionHome extends React.Component {
                 .get()
                 .then(response => {
                   this.setState({isLoading: false, collection: response.data}, () => {
-                    if(includes([1, 2, 3, 4], this.state.tab))
+                    if(includes([0, 1, 2, 3, 4], this.state.tab))
                       this.getVersions()
                   })
                 })
