@@ -195,11 +195,13 @@ export const arrayToObject = arr => {
   }, {});
 }
 
-export const currentUserHasAccess = url => {
+export const currentUserHasAccess = () => {
   if(!isLoggedIn())
     return false;
   if(isAdminUser())
     return true;
+
+  const url = window.location.hash.replace('#/', '');
   if(!url)
     return false;
 
@@ -220,7 +222,7 @@ export const currentUserHasAccess = url => {
 }
 
 export const isSubscribedTo = org => {
-  return org && includes(get(getCurrentUser(), 'subscribed_orgs'), org);
+  return org && includes(map(get(getCurrentUser(), 'subscribed_orgs'), 'id'), org);
 }
 
 export const getCurrentURL = () => {
@@ -290,4 +292,13 @@ export const arrayToCSV = objArray => {
     str += `${Object.values(next).map(value => isObject(value) ? `"${JSON.stringify(value)}"` : `"${value}"`).join(",")}` + '\r\n';
     return str;
   }, str);
+}
+
+export const refreshCurrentUserCache = callback => {
+  APIService.user().get(null, null, {includeSubscribedOrgs: true}).then(response => {
+    if(response.status === 200) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+      if(callback) callback(response);
+    }
+  });
 }

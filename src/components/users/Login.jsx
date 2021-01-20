@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import { Paper, TextField, Button } from '@material-ui/core';
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
-
+import { refreshCurrentUserCache } from '../../common/utils';
 
 class Login extends React.Component {
   constructor(props) {
@@ -47,13 +47,9 @@ class Login extends React.Component {
   }
 
   cacheUserData() {
-    APIService.user().get(null, null, {includeSubscribedOrgs: true}).then(response => {
-      if(response.status === 200) {
-        localStorage.setItem('user', JSON.stringify(response.data))
-        alertifyjs.success(`Successfully signed in as ${this.state.username}.`)
-        window.location.hash  = '#' + response.data.url
-      }
-
+    refreshCurrentUserCache(response => {
+      alertifyjs.success(`Successfully signed in as ${this.state.username}.`)
+      window.location.hash  = '#' + response.data.url
     })
   }
 

@@ -6,7 +6,7 @@ import {
   set, get, cloneDeep, isEmpty, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, toFullURL } from '../../common/utils';
+import { arrayToObject, toFullURL, refreshCurrentUserCache } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
 
 const EXTRAS_MODEL = {key: '', value: ''}
@@ -95,6 +95,7 @@ class OrgForm extends React.Component {
   handleSubmitResponse(response) {
     const { edit, reloadOnSuccess, onCancel } = this.props
     if(response.status === 201 || response.status === 200) { // success
+      refreshCurrentUserCache();
       const verb = edit ? 'updated' : 'created'
       const successMsg = `Successfully ${verb} organization`;
       const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
