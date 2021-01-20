@@ -6,6 +6,9 @@ import {
 import {
   MoreVert as MoreIcon, ExitToApp as LogoutIcon, Edit as EditIcon
 } from '@material-ui/icons';
+import { getCurrentUser } from '../../common/utils';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import UserForm from './UserForm';
 
 const onLogoutClick = () => {
   localStorage.removeItem('token');
@@ -15,7 +18,6 @@ const onLogoutClick = () => {
   window.location.reload()
 }
 
-
 const OPTIONS = [
   {id: 'edit', label: 'Edit Profile', icon: <EditIcon fontSize='small' style={{marginRight: '10px'}}/>},
   {id: 'logout', label: 'Logout', icon: <LogoutIcon fontSize='small' style={{marginRight: '10px'}} />},
@@ -23,6 +25,7 @@ const OPTIONS = [
 
 const UserOptions = () => {
   const [open, setOpen] = React.useState(false);
+  const [form, setForm] = React.useState(false);
   const anchorRef = React.useRef(null);
   const handleToggle = () => setOpen((prevOpen) => !prevOpen);
   const handleClose = event => {
@@ -34,6 +37,8 @@ const UserOptions = () => {
   const onOptionClick = option => {
     if(option === 'logout')
       onLogoutClick()
+    if(option === 'edit')
+      setForm(true)
   }
 
   return (
@@ -73,8 +78,19 @@ const UserOptions = () => {
           </Grow>
         )}
       </Popper>
+      <CommonFormDrawer
+        isOpen={form}
+        onClose={() => setForm(false)}
+        formComponent={
+          <UserForm
+            loggedIn
+            edit
+            reloadOnSuccess
+            onCancel={() => setForm(false)} user={getCurrentUser()}
+          />
+        }
+      />
     </React.Fragment>
-
   )
 }
 
