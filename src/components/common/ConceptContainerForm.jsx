@@ -348,6 +348,7 @@ class ConceptContainerForm extends React.Component {
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
+                  openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
                   value={selected_type}
                   id={`fields.${typeAttr}`}
@@ -386,6 +387,7 @@ class ConceptContainerForm extends React.Component {
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
+                  openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
                   value={selected_default_locale}
                   id="fields.default_locale"
@@ -410,6 +412,7 @@ class ConceptContainerForm extends React.Component {
                 <Autocomplete
                   className='multi-auto-select'
                   multiple
+                  openOnFocus
                   filterSelectedOptions
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
                   value={selected_supported_locales}

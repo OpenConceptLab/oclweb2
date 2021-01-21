@@ -8,6 +8,7 @@ import { ORANGE } from '../../common/constants';
 const MixedOwnersAutocomplete = ({onChange, owners, label, id, required, selected}) => {
   return (
     <Autocomplete
+      openOnFocus
       blurOnSelect
       getOptionSelected={(option, value) => option.id === get(value, 'id')}
       value={selected}

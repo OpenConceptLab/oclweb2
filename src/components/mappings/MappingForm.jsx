@@ -202,6 +202,7 @@ class MappingForm extends React.Component {
               }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
+                  openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
                   value={selected_map_type}
                   id="fields.map_type"

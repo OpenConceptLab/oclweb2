@@ -8,6 +8,7 @@ import { GREEN } from '../../common/constants';
 const ConceptContainersAutocomplete = ({onChange, items, label, id, required, selected}) => {
   return (
     <Autocomplete
+      openOnFocus
       blurOnSelect
       getOptionSelected={(option, value) => option.id === get(value, 'id')}
       value={selected}

@@ -248,6 +248,7 @@ class ConceptForm extends React.Component {
               }
               <div style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
+                  openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
                   value={selected_concept_class}
                   id="fields.concept_class"
@@ -270,6 +271,7 @@ class ConceptForm extends React.Component {
               </div>
               <div style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
+                  openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
                   id="fields.datatype"
                   value={selected_datatype}

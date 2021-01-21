@@ -22,6 +22,7 @@ const LocaleForm = ({
         <div className='col-md-10 no-side-padding'>
           <div className="col-md-6 no-left-padding">
             <Autocomplete
+              openOnFocus
               value={selectedLocale}
               id={`${idPrefix}.locale`}
               options={locales}
@@ -34,6 +35,7 @@ const LocaleForm = ({
           </div>
           <div className="col-md-6 no-left-padding">
             <Autocomplete
+              openOnFocus
               value={selectedLocaleType}
               id={`${idPrefix}.${typeAttr}`}
               options={types}
@@ -74,7 +76,7 @@ const LocaleForm = ({
               control={
                 <Checkbox
                   checked={get(locale, 'locale_preferred', false)}
-                  name="preferred"
+                          name="preferred"
                           onChange={event => onCheckboxChange(`${idPrefix}.locale_preferred`, event.target.checked)}
                 />
               }

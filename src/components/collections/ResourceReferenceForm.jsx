@@ -116,6 +116,7 @@ class ResourceReferenceForm extends React.Component {
         <div className='col-md-2 no-side-padding' style={{width: '16.66666%', minWidth: '16.66666%'}}>
           <Autocomplete
             blurOnSelect
+            openOnFocus
             getOptionSelected={(option, value) => option.version === get(value, 'version')}
             value={version}
             id='version'
