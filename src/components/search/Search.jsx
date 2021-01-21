@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
-  get, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty,
+  get, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has,
 } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
@@ -45,7 +45,7 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isTable: true,
+      isTable: has(props, 'fixedFilters.isTable') ? props.fixedFilters.isTable : true,
       isInfinite: false,
       page: 1,
       updatedSince: false,
@@ -76,7 +76,7 @@ class Search extends React.Component {
   }
 
   setQueryParamsInState() {
-    const queryParams = new URLSearchParams(this.props.location.search)
+    const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     const fixedFilters = this.props.fixedFilters;
     this.setState({
       isTable: queryParams.get('isTable') || get(fixedFilters, 'isTable') || this.state.isTable,
@@ -91,7 +91,7 @@ class Search extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.search !== this.props.location.search) {
+    if(get(prevProps, 'location.search') !== get(this.props, 'location.search')) {
       this.setQueryParamsInState()
     }
     if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL) {
@@ -322,9 +322,9 @@ class Search extends React.Component {
         </span>
         {
           resource !== 'references' &&
-         <span style={{paddingLeft: '5px'}}>
-          <LayoutToggle isTable={isTable} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
-         </span>
+          <span style={{paddingLeft: '5px'}}>
+            <LayoutToggle isTable={isTable} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
+          </span>
         }
         {
           !isTable &&
@@ -355,7 +355,7 @@ class Search extends React.Component {
   render() {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
-      isVersionedObject, parentResource, newResourceComponent
+      isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -374,7 +374,7 @@ class Search extends React.Component {
               {...this.props}
               onSearch={this.onSearch}
               exactMatchOnNewLine
-              moreControls={this.getFilterControls()}
+              moreControls={!noFilters && this.getFilterControls()}
             />
           </div>
           <div className='col-sm-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
@@ -383,16 +383,18 @@ class Search extends React.Component {
             </span>
             <span>
               {
-                shouldShowNewResourceComponent ?
-                newResourceComponent :
-                <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
-                  <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
-                    <NavigateBeforeIcon width="10" />
-                  </Button>
-                  <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(true)} disabled={!hasNext}>
-                    <NavigateNextIcon width="10" />
-                  </Button>
-                </ButtonGroup>
+                !noNav && (
+                  shouldShowNewResourceComponent ?
+                  newResourceComponent :
+                  <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
+                    <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
+                      <NavigateBeforeIcon width="10" />
+                    </Button>
+                    <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(true)} disabled={!hasNext}>
+                      <NavigateNextIcon width="10" />
+                    </Button>
+                  </ButtonGroup>
+                )
               }
             </span>
           </div>
@@ -410,10 +412,10 @@ class Search extends React.Component {
           }
           {
             isLoading ?
-            <div className='col-sm-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center'}}>
+            <div className='col-sm-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center', width: '100%'}}>
               <CircularProgress style={{color: BLUE}}/>
             </div> :
-            <div className='col-sm-12 no-side-padding' style={{marginTop: '5px'}}>
+            <div className='col-sm-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               {
                 isInfinite &&
                 <ResultsInfinite resource={resource} results={resourceResults} onLoadMore={this.loadMore} />
@@ -434,11 +436,17 @@ class Search extends React.Component {
                   essentialColumns={essentialColumns}
                   onReferencesDelete={onReferencesDelete}
                   isVersionedObject={isVersionedObject}
+                  onSelectChange={onSelectChange}
                 />
               }
               {
                 !isTable && !isInfinite &&
-                <Results resource={resource} results={resourceResults} onPageChange={this.onPageChange} />
+                <Results
+                  resource={resource}
+                  results={resourceResults}
+                  onPageChange={this.onPageChange}
+                  onSelectChange={onSelectChange}
+                />
               }
             </div>
           }

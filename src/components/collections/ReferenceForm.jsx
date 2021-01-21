@@ -1,10 +1,11 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { Button, Switch, FormControlLabel } from '@material-ui/core';
-import { set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map } from 'lodash';
+import { set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map, compact } from 'lodash';
 import APIService from '../../services/APIService';
 import { SOURCE_CHILD_URI_REGEX } from '../../common/constants';
 import URLReferenceForm from './URLReferenceForm';
+import ResourceReferenceForm from './ResourceReferenceForm';
 const EXPRESSION_MODEL = {uri: '', valid: false, count: undefined, error: ''}
 
 class ReferenceForm extends React.Component {
@@ -13,17 +14,36 @@ class ReferenceForm extends React.Component {
     this.expressionRegex = new RegExp(SOURCE_CHILD_URI_REGEX);
     this.state = {
       byURL: false,
+      owners: [],
       fields: {
         concepts: [],
         mappings: [],
         expressions: [cloneDeep(EXPRESSION_MODEL)],
-        expression: '',
       },
       fieldErrors: {},
     }
   }
 
-  onSwitchChange = event => this.setState({byURL: event.target.checked})
+  componentDidMount() {
+    this.fetchOwners();
+  }
+
+  fetchOwners() {
+    APIService.orgs().get().then(response => {
+      const orgs = map(response.data, org => ({...org, ownerType: 'org', name: org.id}))
+      this.setState({owners: [...this.state.owners, ...orgs]})
+    })
+
+    APIService.users().get().then(response => {
+      const users = map(response.data, user => ({...user, ownerType: 'user', name: user.username}))
+      this.setState({owners: [...this.state.owners, ...users]})
+    })
+  }
+
+  onSwitchChange = event => this.setState({
+    byURL: event.target.checked,
+    fields: {...this.state.fields, expressions: [cloneDeep(EXPRESSION_MODEL)]}
+  })
 
   onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
@@ -91,13 +111,15 @@ class ReferenceForm extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const form = document.getElementsByTagName('form')[0];
-    form.reportValidity()
-    const isFormValid = form.checkValidity()
-    if(isFormValid && !this.anyInvalidExpression()) {
+    const fields = cloneDeep(this.state.fields);
+    const expressions = compact(map(fields.expressions, 'uri'))
+    if(isEmpty(expressions)) {
+      alertifyjs.error('Please add/select reference(s) to add')
+      return
+    }
+
+    if(!this.anyInvalidExpression()) {
       const { parentURL } = this.props
-      const fields = cloneDeep(this.state.fields);
-      const expressions = map(fields.expressions, 'uri')
       APIService.new().overrideURL(parentURL).appendToUrl('references/').put({data: {expressions: expressions}}).then(response => this.handleSubmitResponse(response))
     }
   }
@@ -125,8 +147,13 @@ class ReferenceForm extends React.Component {
     }
   }
 
+  onExpressionChange = expressions => {
+    const refs = map(expressions, expression => ({...cloneDeep(EXPRESSION_MODEL), uri: expression}))
+    this.setState({fields: {...this.state.fields, expressions: refs}})
+  }
+
   render() {
-    const { byURL, fields } = this.state;
+    const { byURL, fields, owners } = this.state;
     const { onCancel } = this.props;
     const header = `Add Reference(s)`;
     return (
@@ -135,12 +162,20 @@ class ReferenceForm extends React.Component {
           <h2>{header}</h2>
         </div>
         <div className='col-md-12 no-side-padding'>
-          <div className='col-md-12'>
+          <div className='col-md-3'>
             <FormControlLabel
               control={<Switch checked={byURL} onChange={this.onSwitchChange} color='primary' name="byURL" />}
               label="Add by URL"
               style={{marginBottom: '20px'}}
             />
+          </div>
+          <div className='col-md-9' style={{textAlign: 'right'}}>
+            <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
+              Add
+            </Button>
+            <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
+              Cancel
+            </Button>
           </div>
           <form>
             {
@@ -152,16 +187,8 @@ class ReferenceForm extends React.Component {
                 onBlur={this.onExpressionBlur}
                 onDelete={this.onExpressionDelete}
               /> :
-              <div></div>
+              <ResourceReferenceForm owners={owners} onChange={this.onExpressionChange} />
             }
-            <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
-              <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
-                Add
-              </Button>
-              <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
-                Cancel
-              </Button>
-            </div>
           </form>
         </div>
       </div>

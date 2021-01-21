@@ -575,7 +575,6 @@ const ResultsTable = (
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
   const shouldShowPin = showPin && resourceDefinition.pinnable;
-  const columnsCount = get(resourceDefinition, 'columns.length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
   const defaultOrder = get(keys(sortParams), '0') === 'sortAsc' ? 'asc' : 'desc';
@@ -611,10 +610,11 @@ const ResultsTable = (
   const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
   const shouldShowCompareOption = resource === 'concepts' && selectedList.length === 2;
   const shouldShowDeleteOption = resource === 'references' && hasAccess && selectedList.length > 0;
-  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption) ? columnsCount - 2 : columnsCount;
   const columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
                   resourceDefinition.columns;
+  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
+  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption) ? columnsCount - 2 : columnsCount;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()

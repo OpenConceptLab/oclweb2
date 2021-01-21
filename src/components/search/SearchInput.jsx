@@ -5,6 +5,7 @@ import {
   Clear as ClearIcon,
 } from '@material-ui/icons';
 import { InputBase, Divider, IconButton, Tooltip  } from '@material-ui/core';
+import { get } from 'lodash';
 import { isAtGlobalSearch } from '../../common/utils';
 
 class SearchInput extends React.Component {
@@ -21,7 +22,7 @@ class SearchInput extends React.Component {
   getValueFromURL(attr, defaultValue, props) {
     if(!props)
       props = this.props
-    const queryParams = new URLSearchParams(props.location.search)
+    const queryParams = new URLSearchParams(get(props, 'location.search', ''))
     return queryParams.get(attr, defaultValue || '')
   }
 
@@ -96,7 +97,6 @@ class SearchInput extends React.Component {
             style={{flex: 1, marginLeft: '10px'}}
             placeholder={searchInputPlaceholder || "Search OCL"}
             inputProps={{ 'aria-label': 'search ocl' }}
-            onKeyPress={this.handleKeyPress}
             value={input || ''}
             fullWidth
             onChange={this.handleInputChange}

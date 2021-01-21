@@ -4,7 +4,7 @@ const SEPARATOR = '/'
 const ResourceLabel = props => {
   return (
     <div className='col-sm-12 no-side-padding'>
-      <span className='resource-label'>
+      <span className='resource-label ellipsis-text' style={{maxWidth: '100%'}}>
         <span style={{paddingTop: '5px'}}>{props.icon}</span>
         {
           (props.owner && props.parent) ?
@@ -19,9 +19,9 @@ const ResourceLabel = props => {
           )
         }
         <span>{SEPARATOR}</span>
-        <span className='resource-name'>{props.id || props.name}</span>
+        <span className='resource-name ellipsis-text' style={{maxWidth: '100%'}}>{props.id || props.name}</span>
       </span>
-      <span className='resource-label resource-id'>
+      <span className='resource-label resource-id ellipsis-text' style={{maxWidth: '100%'}}>
         <span>{props.name || 'None'}</span>
       </span>
     </div>
