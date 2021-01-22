@@ -18,9 +18,11 @@ import PublicAccessChip from '../common/PublicAccessChip';
 import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
+import DownloadButton from '../common/DownloadButton';
 import OrgForm from './OrgForm';
 
 const OrgHomeHeader = ({ org, url }) => {
+  const downloadFileName = `Org-${get(org, 'id')}`;
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
   const hasAccess = currentUserHasAccess();
@@ -57,6 +59,7 @@ const OrgHomeHeader = ({ org, url }) => {
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
+                  <DownloadButton resource={org} filename={downloadFileName} includeCSV />
                 </ButtonGroup>
               </span>
             }
