@@ -25,6 +25,7 @@ import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from './CollectionForm';
 import SupportedLocales from '../common/SupportedLocales';
+import DownloadButton from '../common/DownloadButton';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -42,6 +43,7 @@ const HIDDEN_ATTRIBUTES = {
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const hasAccess = currentUserHasAccess();
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
@@ -115,6 +117,7 @@ const CollectionHomeHeader = ({
                       <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
+                  <DownloadButton resource={collection} filename={downloadFileName} includeCSV />
                 </ButtonGroup>
               </span>
             }
