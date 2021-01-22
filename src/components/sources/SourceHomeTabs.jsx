@@ -18,6 +18,7 @@ const SourceHomeTabs = props => {
   } = props;
   const hasAccess = currentUserHasAccess()
   const about = get(source, 'extras.about')
+  const [selectedChild, setSelectedChild] = React.useState(null);
   const [conceptForm, setConceptForm] = React.useState(false);
   const [mappingForm, setMappingForm] = React.useState(false);
   const [versionForm, setVersionForm] = React.useState(false);
@@ -29,6 +30,24 @@ const SourceHomeTabs = props => {
     if(resource === 'version')
       setVersionForm(true)
   }
+
+  const onCreateSimilarClick = instance => {
+    setSelectedChild(instance)
+    if(instance) {
+      if(instance.map_type)
+        setMappingForm(true)
+      else if(instance.concept_class)
+        setConceptForm(true)
+    }
+  }
+
+  const closeDrawer = callback => {
+    setSelectedChild(null)
+    callback();
+  }
+  const closeMappingForm = () => closeDrawer(() => setMappingForm(false))
+  const closeConceptForm = () => closeDrawer(() => setConceptForm(false))
+  const closeVersionForm = () => closeDrawer(() => setVersionForm(false))
 
   return (
     <div className='col-md-12 sub-tab'>
@@ -54,6 +73,7 @@ const SourceHomeTabs = props => {
             versions={versions}
             currentVersion={currentVersion}
             resource='concepts'
+            onCreateSimilarClick={onCreateSimilarClick}
           />
         }
         {
@@ -65,6 +85,7 @@ const SourceHomeTabs = props => {
             versions={versions}
             currentVersion={currentVersion}
             resource='mappings'
+            onCreateSimilarClick={onCreateSimilarClick}
           />
         }
         {
@@ -78,23 +99,23 @@ const SourceHomeTabs = props => {
       </div>
       <CommonFormDrawer
         isOpen={conceptForm}
-        onClose={() => setConceptForm(false)}
+        onClose={closeConceptForm}
         formComponent={
-          <ConceptForm onCancel={() => setConceptForm(false)} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
+          <ConceptForm copyFrom={selectedChild} onCancel={closeConceptForm} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
         }
       />
       <CommonFormDrawer
         isOpen={mappingForm}
-        onClose={() => setMappingForm(false)}
+        onClose={closeMappingForm}
         formComponent={
-          <MappingForm onCancel={() => setMappingForm(false)} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} />
+          <MappingForm copyFrom={selectedChild} onCancel={closeMappingForm} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} />
         }
       />
       <CommonFormDrawer
         isOpen={versionForm}
-        onClose={() => setVersionForm(false)}
+        onClose={closeVersionForm}
         formComponent={
-          <SourceVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==2} parentURL={versionedObjectURL} version={source} />
+          <SourceVersionForm onCancel={closeVersionForm} reloadOnSuccess={tab==2} parentURL={versionedObjectURL} version={source} />
         }
       />
     </div>

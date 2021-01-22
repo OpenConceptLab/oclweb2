@@ -20,6 +20,7 @@ import {
   CompareArrows as CompareArrowsIcon,
   Delete as DeleteIcon,
   GetApp as DownloadIcon,
+  Repeat as RepeatIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -565,7 +566,7 @@ const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
-    isVersionedObject,
+    isVersionedObject, onCreateSimilarClick
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -614,6 +615,7 @@ const ResultsTable = (
   const shouldShowCompareOption = resource === 'concepts' && selectedList.length === 2;
   const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
   const shouldShowDeleteOption = resource === 'references' && hasAccess && selectedList.length > 0;
+  const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedList.length == 1 && onCreateSimilarClick;
   const columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
                   resourceDefinition.columns;
@@ -650,8 +652,8 @@ const ResultsTable = (
                   selectedList.length > 0 &&
                   <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
                     <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
-                      <span style={{margin: '0 15px'}}>{selectedList.length} Selected</span>
-                      <span style={{float: 'right'}}>
+                      <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
+                      <span>
                         {
                           shouldShowDownloadOption &&
                           <DownloadButton
@@ -665,6 +667,19 @@ const ResultsTable = (
                                 </Button>
                             }
                           />
+                        }
+                        {
+                          shouldShowCreateSimilarOption &&
+                          <Button
+                            startIcon={<RepeatIcon fontSize='small' />}
+                            variant='contained'
+                            size='small'
+                            color='secondary'
+                            onClick={() => onCreateSimilarClick(get(getSelectedItems(), '0'))}
+                            style={{marginLeft: '10px'}}
+                            >
+                            Create Similar
+                          </Button>
                         }
                         {
                           shouldShowCompareOption &&

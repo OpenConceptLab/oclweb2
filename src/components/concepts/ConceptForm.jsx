@@ -51,22 +51,25 @@ class ConceptForm extends React.Component {
     fetchDatatypes(data => this.setState({datatypes: data}))
     fetchNameTypes(data => this.setState({nameTypes: data}))
     fetchDescriptionTypes(data => this.setState({descriptionTypes: data}))
-    if(this.props.edit && this.props.concept)
+    if((this.props.edit && this.props.concept) || this.props.copyFrom)
       this.setFieldsForEdit()
   }
 
   setFieldsForEdit() {
-    const { concept } = this.props;
+    const { concept, edit, copyFrom } = this.props;
+    const instance = edit ? concept : copyFrom
     const newState = {...this.state}
-    newState.fields.id = concept.id
-    newState.fields.concept_class = concept.concept_class
-    newState.selected_concept_class = {id: concept.concept_class, name: concept.concept_class}
-    newState.selected_datatype = {id: concept.datatype, name: concept.datatype}
-    newState.fields.datatype = concept.datatype
-    newState.fields.external_id = concept.external_id || ''
-    newState.fields.names = isEmpty(concept.names) ? newState.fields.names : map(concept.names, name => pick(name, ['locale', 'name_type', 'locale_preferred', 'external_id', 'name']))
-    newState.fields.descriptions = isEmpty(concept.descriptions) ? newState.fields.descriptions : map(concept.descriptions, desc => pick(desc, ['locale', 'description_type', 'locale_preferred', 'external_id', 'description']))
-    newState.fields.extras = isEmpty(concept.extras) ? newState.fields.extras : map(concept.extras, (v, k) => ({key: k, value: v}))
+    if(edit)
+      newState.fields.id = instance.id
+
+    newState.fields.concept_class = instance.concept_class
+    newState.selected_concept_class = {id: instance.concept_class, name: instance.concept_class}
+    newState.selected_datatype = {id: instance.datatype, name: instance.datatype}
+    newState.fields.datatype = instance.datatype
+    newState.fields.external_id = instance.external_id || ''
+    newState.fields.names = isEmpty(instance.names) ? newState.fields.names : map(instance.names, name => pick(name, ['locale', 'name_type', 'locale_preferred', 'external_id', 'name']))
+    newState.fields.descriptions = isEmpty(instance.descriptions) ? newState.fields.descriptions : map(instance.descriptions, desc => pick(desc, ['locale', 'description_type', 'locale_preferred', 'external_id', 'description']))
+    newState.fields.extras = isEmpty(instance.extras) ? newState.fields.extras : map(instance.extras, (v, k) => ({key: k, value: v}))
     this.setState(newState);
   }
 

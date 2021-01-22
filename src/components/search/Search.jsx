@@ -355,7 +355,8 @@ class Search extends React.Component {
   render() {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
-      isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange
+      isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
+      onCreateSimilarClick,
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -437,6 +438,7 @@ class Search extends React.Component {
                   onReferencesDelete={onReferencesDelete}
                   isVersionedObject={isVersionedObject}
                   onSelectChange={onSelectChange}
+                  onCreateSimilarClick={onCreateSimilarClick}
                 />
               }
               {

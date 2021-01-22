@@ -40,12 +40,13 @@ class MappingForm extends React.Component {
 
   componentDidMount() {
     fetchMapTypes(data => this.setState({mapTypes: data}))
-    if(this.props.edit && this.props.mapping)
+    if((this.props.edit && this.props.mapping) || this.props.copyFrom)
       this.setFieldsForEdit()
   }
 
   setFieldsForEdit() {
-    const { mapping } = this.props;
+    const { mapping, edit, copyFrom } = this.props;
+    const instance = edit ? mapping : copyFrom
     const attrs = [
       'id', 'map_type', 'external_id',
       'from_concept_url', 'from_concept_code', 'from_concept_name',
@@ -54,9 +55,11 @@ class MappingForm extends React.Component {
       'to_source_url', 'to_source_version',
     ]
     const newState = {...this.state}
-    attrs.forEach(attr => set(newState.fields, attr, get(mapping, attr, '') || ''))
-    newState.selected_map_type = {id: mapping.map_type, name: mapping.map_type}
-    newState.fields.extras = isEmpty(mapping.extras) ? newState.fields.extras : map(mapping.extras, (v, k) => ({key: k, value: v}))
+    attrs.forEach(attr => set(newState.fields, attr, get(instance, attr, '') || ''))
+    if(!edit)
+      newState.fields.id = ''
+    newState.selected_map_type = {id: instance.map_type, name: instance.map_type}
+    newState.fields.extras = isEmpty(instance.extras) ? newState.fields.extras : map(instance.extras, (v, k) => ({key: k, value: v}))
 
     this.setState(newState);
   }
