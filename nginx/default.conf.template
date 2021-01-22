@@ -1,5 +1,6 @@
 server {
     listen       ${WEB_PORT};
+    gzip         on;
     server_name  localhost;
     location / {
         root   /usr/share/nginx/html;
