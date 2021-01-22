@@ -149,7 +149,7 @@ const MappingHomeHeader = ({
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <span>
               <LastUpdatedOnLabel
-                date={mapping.updated_at}
+                date={mapping.updated_on}
                 by={mapping.updated_by}
                 iconSize='medium'
                 noContainerClass
@@ -158,7 +158,7 @@ const MappingHomeHeader = ({
             <span style={{marginLeft: '10px'}}>
               <LastUpdatedOnLabel
                 label='Created'
-                date={mapping.created_at}
+                date={mapping.created_on}
                 by={mapping.created_by}
                 iconSize='medium'
                 noContainerClass

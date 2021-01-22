@@ -83,7 +83,7 @@ const MappingHomeDetails = ({ mapping }) => {
                 Updated On
               </div>
               <div className='col-md-8 no-right-padding'>
-                {moment(mapping.updated_at).format(DATETIME_FORMAT)}
+                {moment(mapping.updated_on).format(DATETIME_FORMAT)}
               </div>
             </div>
             <div className='col-md-12' style={{marginBottom: '5px'}}>
@@ -99,7 +99,7 @@ const MappingHomeDetails = ({ mapping }) => {
                 Created On
               </div>
               <div className='col-md-8 no-right-padding'>
-                {moment(mapping.created_at).format(DATETIME_FORMAT)}
+                {moment(mapping.created_on).format(DATETIME_FORMAT)}
               </div>
             </div>
           </AccordionDetails>
