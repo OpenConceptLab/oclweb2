@@ -19,6 +19,7 @@ import {
   Loyalty as LoyaltyIcon,
   CompareArrows as CompareArrowsIcon,
   Delete as DeleteIcon,
+  GetApp as DownloadIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -34,6 +35,7 @@ import {
 import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
 import ReleasedChip from '../common/ReleasedChip';
+import DownloadButton from '../common/DownloadButton';
 import ToConceptLabel from '../mappings/ToConceptLabel';
 import FromConceptLabel from '../mappings/FromConceptLabel';
 import AllMappingsTables from '../mappings/AllMappingsTables';
@@ -282,10 +284,10 @@ const ExpandibleRow = props => {
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(columns, 'length', 1) +
-                         (isConceptContainer ? 1 : 0) + //public column
-                            (isSelectable ? 1 : 0) + // select column
-                             ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                           (resourceDefinition.tags ? 1 : 0); //tags column
+                          (isConceptContainer ? 1 : 0) + //public column
+                             (isSelectable ? 1 : 0) + // select column
+                              ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                            (resourceDefinition.tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -582,8 +584,9 @@ const ResultsTable = (
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
   const hasAccess = currentUserHasAccess()
+  const isSourceChild = includes(['concepts', 'mappings'], resource);
   const isSelectable = (resource === 'references' && hasAccess && isVersionedObject) ||
-                       includes(['concepts', 'mappings'], resource);
+                       isSourceChild;
 
   const onAllSelect = event => event.target.checked ?
                              setSelectedList(map(results.items, 'id')) :
@@ -609,12 +612,15 @@ const ResultsTable = (
 
   const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
   const shouldShowCompareOption = resource === 'concepts' && selectedList.length === 2;
+  const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
   const shouldShowDeleteOption = resource === 'references' && hasAccess && selectedList.length > 0;
   const columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
                   resourceDefinition.columns;
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
-  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption) ? columnsCount - 2 : columnsCount;
+  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption) ?
+                                   columnsCount - 2 :
+                                   columnsCount;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
@@ -643,37 +649,51 @@ const ResultsTable = (
                 {
                   selectedList.length > 0 &&
                   <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
-                    <TableCell colSpan={selectionRowColumnsCount} align='left' style={{color: WHITE}}>
-                      {selectedList.length} Selected
+                    <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
+                      <span style={{margin: '0 15px'}}>{selectedList.length} Selected</span>
+                      <span style={{float: 'right'}}>
+                        {
+                          shouldShowDownloadOption &&
+                          <DownloadButton
+                            includeCSV
+                            formats={['json']}
+                            resource={getSelectedItems()}
+                            buttonFunc={
+                              attrs =>
+                                <Button startIcon={<DownloadIcon fontSize='small' />} variant='contained' size='small' color='secondary' {...attrs}>
+                                  Download
+                                </Button>
+                            }
+                          />
+                        }
+                        {
+                          shouldShowCompareOption &&
+                          <Button
+                            startIcon={<CompareArrowsIcon fontSize='small' />}
+                            variant='contained'
+                            size='small'
+                            color='secondary'
+                            onClick={onCompareClick}
+                            style={{marginLeft: '10px'}}
+                            >
+                            Compare
+                          </Button>
+                        }
+                        {
+                          shouldShowDeleteOption &&
+                          <Button
+                            startIcon={<DeleteIcon fontSize='small' />}
+                            variant='contained'
+                            size='small'
+                            color='secondary'
+                            onClick={onReferenceDeleteClick}
+                            style={{marginLeft: '10px'}}
+                            >
+                            Delete
+                          </Button>
+                        }
+                      </span>
                     </TableCell>
-                    {
-                      shouldShowCompareOption &&
-                      <TableCell colSpan="2" align='center' style={{color: WHITE}}>
-                        <Button
-                          startIcon={<CompareArrowsIcon fontSize='small' />}
-                          variant='contained'
-                          size='small'
-                          color='secondary'
-                          onClick={onCompareClick}
-                        >
-                          Compare
-                        </Button>
-                      </TableCell>
-                    }
-                    {
-                      shouldShowDeleteOption &&
-                      <TableCell colSpan="2" align='left' style={{color: WHITE}}>
-                        <Button
-                          startIcon={<DeleteIcon fontSize='small' />}
-                          variant='contained'
-                          size='small'
-                          color='secondary'
-                          onClick={onReferenceDeleteClick}
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
-                    }
                   </TableRow>
                 }
                 <TableRow>
