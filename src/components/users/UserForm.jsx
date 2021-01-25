@@ -1,8 +1,12 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button } from '@material-ui/core';
-import {set, get, isEmpty, cloneDeep, merge} from 'lodash';
+import { TextField, Button, IconButton } from '@material-ui/core';
+import { Add as AddIcon } from '@material-ui/icons';
+import {set, get, isEmpty, cloneDeep, merge, map, pullAt} from 'lodash';
 import APIService from '../../services/APIService';
+import {arrayToObject} from '../../common/utils';
+const EXTRAS_MODEL = {key: '', value: ''}
+import ExtrasForm from '../common/ExtrasForm';
 
 class UserForm extends React.Component {
   constructor(props) {
@@ -16,6 +20,7 @@ class UserForm extends React.Component {
         email: '',
         company: '',
         location: '',
+        extras: [cloneDeep(EXTRAS_MODEL)],
       }
     }
   }
@@ -34,6 +39,7 @@ class UserForm extends React.Component {
       newState.fields.first_name = ''
     if(newState.fields.last_name === '-')
       newState.fields.last_name = ''
+    newState.fields.extras = isEmpty(user.extras) ? newState.fields.extras : map(user.extras, (v, k) => ({key: k, value: v}))
     this.setState(newState);
   }
   onTextFieldChange = event => {
@@ -50,6 +56,25 @@ class UserForm extends React.Component {
     this.setState(newState)
   }
 
+  onAddExtras = () => {
+    this.setFieldValue('fields.extras', [...this.state.fields.extras, cloneDeep(EXTRAS_MODEL)])
+  }
+
+  onDeleteExtras = index => {
+    const newState = {...this.state}
+    pullAt(newState.fields.extras, index)
+    this.setState(newState)
+  }
+
+  onExtrasChange = (index, key, value) => {
+    const newState = {...this.state}
+    if(key !== '__')
+      newState.fields.extras[index].key = key
+    if(value !== '__')
+      newState.fields.extras[index].value = value
+    this.setState(newState)
+  }
+
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
@@ -61,6 +86,7 @@ class UserForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(isFormValid) {
+      fields.extras = arrayToObject(fields.extras)
       if(edit) {
         APIService.users(fields.username).put(fields).then(response => this.handleSubmitResponse(response))
       } else {
@@ -181,6 +207,28 @@ class UserForm extends React.Component {
                 onChange={this.onTextFieldChange}
                 value={fields.location}
               />
+            </div>
+            <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-8'>
+                <h3>Custom Attributes</h3>
+              </div>
+              <div className='col-md-4' style={{textAlign: 'right'}}>
+                <IconButton color='primary' onClick={this.onAddExtras}>
+                  <AddIcon />
+                </IconButton>
+              </div>
+              {
+                map(fields.extras, (extra, index) => (
+                  <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                    <ExtrasForm
+                      extra={extra}
+                      index={index}
+                      onChange={this.onExtrasChange}
+                      onDelete={this.onDeleteExtras}
+                    />
+                  </div>
+                ))
+              }
             </div>
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
               <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
