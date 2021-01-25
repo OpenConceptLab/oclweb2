@@ -15,6 +15,8 @@ import CollectionHome from '../collections/CollectionHome';
 import OrgHome from '../orgs/OrgHome';
 import UserHome from '../users/UserHome';
 import Login from '../users/Login';
+import SignupForm from '../users/SignupForm';
+import EmailVerification from '../users/EmailVerification';
 import UserOptions from '../users/UserOptions';
 import { Link } from 'react-router-dom';
 import { isAtGlobalSearch, isLoggedIn, getCurrentUser } from '../../common/utils';
@@ -202,6 +204,8 @@ class App extends Component {
             {/* User Home */}
             <Route path="/users/:user([a-zA-Z0-9\-\.\_]+)" component={UserHome} />
             <Route exact path="/accounts/login" component={Login} />
+            <Route exact path="/accounts/signup" component={SignupForm} />
+            <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
           </Switch>
         </div>
 

@@ -1,14 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
 import { Paper, TextField, Button } from '@material-ui/core';
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { refreshCurrentUserCache } from '../../common/utils';
+import VerifyEmailMessage from './VerifyEmailMessage';
 
 class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      email: null,
+      verificationMsg: null,
       username: '',
       password: '',
       serverError: null,
@@ -32,6 +36,8 @@ class Login extends React.Component {
       APIService.users().login().post({username: username, password: password}).then(response => {
         if(get(response, 'status') === 200 && get(response, 'data.token')) {
           this.afterLoginSuccess(response.data.token)
+        } else if(get(response, 'detail', '').match('verification email')) {
+          this.setState({verificationMsg: response.detail, email: get(response, 'email')})
         } else if(get(response, 'non_field_errors')) {
           this.setState({serverError: values(response)})
         } else {
@@ -54,50 +60,60 @@ class Login extends React.Component {
   }
 
   render() {
-    const { serverError } = this.state;
+    const { serverError, verificationMsg, email } = this.state;
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
-        <div className='col-md-4' />
-        <div className='col-md-4'>
+        <div className='col-md-3' />
+        <div className='col-md-6'>
           <Paper style={{padding: '10px'}} className='login-paper'>
-            <h1 style={{textAlign: 'center'}}>Sign In</h1>
             {
-              serverError &&
-              <div className='col-md-12 alert-danger'>
-                <ul> {map(serverError, error => (<li key={error}>{error}</li>))} </ul>
-              </div>
+
+              verificationMsg ?
+              <VerifyEmailMessage message={verificationMsg} email={email} />:
+              <React.Fragment>
+                <h1 style={{textAlign: 'center'}}>Sign In</h1>
+                {
+                  serverError &&
+                  <div className='col-md-12 alert-danger'>
+                    <ul> {map(serverError, error => (<li key={error}>{error}</li>))} </ul>
+                  </div>
+                }
+                <div className='col-md-12 no-side-padding'>
+                  <form>
+                    <div>
+                      <TextField
+                        required
+                        id="username"
+                        label="Username"
+                        variant="outlined"
+                        onChange={this.onFieldChange}
+                        fullWidth
+                      />
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                      <TextField
+                        required
+                        id="password"
+                        label="Password"
+                        variant="outlined"
+                        type="password"
+                        onChange={this.onFieldChange}
+                        fullWidth
+                      />
+                    </div>
+                    <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
+                      <Button onClick={this.handleSubmit} type='submit' color='primary' variant='contained'>Sign In</Button>
+                      <div style={{marginTop: '15px'}}>
+                        New User? <Link to="/accounts/signup">Sign Up</Link>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </React.Fragment>
             }
-            <div className='col-md-12 no-side-padding'>
-              <form>
-                <div>
-                  <TextField
-                    required
-                    id="username"
-                    label="Username"
-                    variant="outlined"
-                    onChange={this.onFieldChange}
-                    fullWidth
-                  />
-                </div>
-                <div style={{marginTop: '10px'}}>
-                  <TextField
-                    required
-                    id="password"
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    onChange={this.onFieldChange}
-                    fullWidth
-                  />
-                </div>
-                <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
-                  <Button onClick={this.handleSubmit} type='submit' color='primary' variant='contained'>Sign In</Button>
-                </div>
-              </form>
-            </div>
           </Paper>
         </div>
-        <div className='col-md-4' />
+        <div className='col-md-3' />
       </div>
     )
   }
