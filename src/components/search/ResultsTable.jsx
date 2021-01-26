@@ -13,6 +13,7 @@ import {
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
   Public as PublicIcon,
+  Lock as PrivateIcon,
   List as ListIcon,
   Person as PersonIcon,
   Home as HomeIcon,
@@ -285,10 +286,10 @@ const ExpandibleRow = props => {
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(columns, 'length', 1) +
-                          (isConceptContainer ? 1 : 0) + //public column
-                             (isSelectable ? 1 : 0) + // select column
-                              ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                            (resourceDefinition.tags ? 1 : 0); //tags column
+                             (isConceptContainer ? 1 : 0) + //public column
+                                (isSelectable ? 1 : 0) + // select column
+                                 ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                               (resourceDefinition.tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -449,13 +450,21 @@ const ExpandibleRow = props => {
         style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onRowClick}>
         {
-          isPublic &&
+          isConceptContainer &&
           <TableCell align='center'>
-            <Tooltip title='Public'>
-              <span className='flex-vertical-center'>
-                <PublicIcon fontSize='small' />
-              </span>
-            </Tooltip>
+            {
+              isPublic ?
+              <Tooltip title='Public'>
+                <span className='flex-vertical-center'>
+                  <PublicIcon fontSize='small' />
+                </span>
+              </Tooltip> :
+              <Tooltip title='Private'>
+                <span className='flex-vertical-center'>
+                  <PrivateIcon fontSize='small' />
+                </span>
+              </Tooltip>
+            }
           </TableCell>
         }
         {
