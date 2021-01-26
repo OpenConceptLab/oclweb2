@@ -6,7 +6,7 @@ import {set, get, isEmpty, cloneDeep, startCase, map, includes} from 'lodash';
 import APIService from '../../services/APIService';
 import VerifyEmailMessage from './VerifyEmailMessage';
 
-class SignupForm extends React.Component {
+class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -118,4 +118,4 @@ class SignupForm extends React.Component {
   }
 }
 
-export default SignupForm;
+export default Signup;
