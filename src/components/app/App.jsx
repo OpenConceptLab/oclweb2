@@ -17,6 +17,8 @@ import UserHome from '../users/UserHome';
 import Login from '../users/Login';
 import Signup from '../users/Signup';
 import EmailVerification from '../users/EmailVerification';
+import ForgotPasswordRequest from '../users/ForgotPasswordRequest';
+import ForgotPasswordForm from '../users/ForgotPasswordForm';
 import UserOptions from '../users/UserOptions';
 import { Link } from 'react-router-dom';
 import { isAtGlobalSearch, isLoggedIn, getCurrentUser } from '../../common/utils';
@@ -205,6 +207,8 @@ class App extends Component {
             <Route path="/users/:user([a-zA-Z0-9\-\.\_]+)" component={UserHome} />
             <Route exact path="/accounts/login" component={Login} />
             <Route exact path="/accounts/signup" component={Signup} />
+            <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
+            <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/password/reset/:token([a-zA-Z0-9\-\.\_]+)" component={ForgotPasswordForm} />
             <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
           </Switch>
         </div>

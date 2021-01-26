@@ -11,6 +11,7 @@ class EmailVerification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      validToken: true,
       user: null,
       isLoading: true,
       username: props.match.params.user,
@@ -27,11 +28,11 @@ class EmailVerification extends React.Component {
 
   fetchUser() {
     const { username } = this.state
-    APIService.users(username).get().then(response => {
+    APIService.users(username).get(null, null, {includeVerificationToken: true}).then(response => {
       if(get(response, 'detail') === 'Not found.')
         this.setState({notFound: true, isLoading: false})
       else
-        this.setState({user: response.data, isLoading: false})
+        this.setState({user: response.data, isLoading: false, validToken: this.state.token === response.data.verification_token})
     })
   }
 
@@ -104,8 +105,8 @@ class EmailVerification extends React.Component {
   }
 
   getDOM() {
-    const { user, notFound, failureMsg } = this.state;
-    if(notFound)
+    const { user, notFound, failureMsg, validToken } = this.state;
+    if(notFound || !validToken)
       return this.getNotFoundDOM()
     if(user.verified)
       return this.getAlreadyVerifiedDOM()

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
-import { Paper, TextField, Button } from '@material-ui/core';
+import { Paper, TextField, Button, Divider } from '@material-ui/core';
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { refreshCurrentUserCache } from '../../common/utils';
@@ -80,7 +80,7 @@ class Login extends React.Component {
                 }
                 <div className='col-md-12 no-side-padding'>
                   <form>
-                    <div>
+                    <div className='col-md-12 no-side-padding'>
                       <TextField
                         required
                         id="username"
@@ -90,7 +90,7 @@ class Login extends React.Component {
                         fullWidth
                       />
                     </div>
-                    <div style={{marginTop: '10px'}}>
+                    <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
                       <TextField
                         required
                         id="password"
@@ -101,11 +101,13 @@ class Login extends React.Component {
                         fullWidth
                       />
                     </div>
-                    <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
+                    <div className='col-md-12 no-side-padding' style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
                       <Button onClick={this.handleSubmit} type='submit' color='primary' variant='contained'>Sign In</Button>
-                      <div style={{marginTop: '15px'}}>
-                        New User? <Link to="/accounts/signup">Sign Up</Link>
-                      </div>
+                    </div>
+                    <div className='col-md-12 no-side-padding flex-vertical-center' style={{justifyContent: 'center'}}>
+                      <Link to="/accounts/signup">Sign Up</Link>
+                      <Divider orientation="vertical" style={{height: '16px', margin: '0 10px'}}/>
+                      <Link to="/accounts/password/reset">Forgot Password?</Link>
                     </div>
                   </form>
                 </div>
