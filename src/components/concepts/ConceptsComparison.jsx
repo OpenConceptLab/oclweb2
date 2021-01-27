@@ -13,7 +13,10 @@ import {
   sortBy, findIndex, uniqBy, has, maxBy, cloneDeep, pickBy, forEach
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { formatDate, toObjectArray, toParentURI, sortObjectBy } from '../../common/utils';
+import {
+  formatDate, toObjectArray, toParentURI, sortObjectBy,
+  memorySizeOf, formatByteSize
+} from '../../common/utils';
 import {
   DIFF_BG_RED,
 } from '../../common/constants';
@@ -226,6 +229,8 @@ class ConceptsComparison extends React.Component {
 
   getValue(concept, attr, type, formatted=false) {
     let value = get(concept, attr)
+    if (attr === 'extras')
+      return JSON.stringify(value, undefined, 2)
     if(type === 'list') {
       if(isEmpty(value)) return '';
       if(includes(['names', 'descriptions'], attr))
@@ -278,10 +283,11 @@ class ConceptsComparison extends React.Component {
     const { lhs, rhs } = this.state;
     const maxLengthAttr = type === 'list' ? this.maxArrayElement(get(lhs, attr), get(rhs, attr)) : [];
     const rowSpan = size(maxLengthAttr);
+    const isExtras = attr === 'extras';
     return (
       <React.Fragment key={attr}>
         {
-          type === 'list' ?
+          !isExtras && type === 'list' ?
           map(maxLengthAttr, (_attr, index) => {
             const _lhsVal = get(lhs, `${attr}.${index}`, '')
             const _rhsVal = get(rhs, `${attr}.${index}`, '')
@@ -305,6 +311,7 @@ class ConceptsComparison extends React.Component {
                       showDiffOnly={false}
                       splitView
                       hideLineNumbers
+                      compareMethod='diffWords'
                     />
                   </TableCell> :
                   <React.Fragment>
@@ -321,7 +328,7 @@ class ConceptsComparison extends React.Component {
           }) :
           <TableRow key={attr} colSpan='12'>
             <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-              {type !== 'list' && startCase(attr)}
+              {startCase(attr)}
             </TableCell>
             {
               isDiff ?
@@ -332,6 +339,7 @@ class ConceptsComparison extends React.Component {
                   showDiffOnly={false}
                   splitView
                   hideLineNumbers
+                  compareMethod={isExtras ? 'diffLines' : 'diffWords'}
                 />
               </TableCell> :
               <React.Fragment>
@@ -404,12 +412,22 @@ class ConceptsComparison extends React.Component {
                         const hasKids = Boolean(lhsCount || rhsCount);
                         const styles = isDiff ? {background: DIFF_BG_RED} : {};
                         const isExpanded = !config.collapsed || !hasKids;
+                        const isExtras = attr === 'extras';
+                        let lhsSize, rhsSize;
+                        let size = '';
+                        if(isExtras) {
+                          lhsSize = memorySizeOf(lhsValue, false)
+                          rhsSize = memorySizeOf(rhsValue, false)
+                          size = lhsSize > rhsSize ? formatByteSize(lhsSize) : formatByteSize(rhsSize);
+                          size = `~${size}`
+                        }
                         return (
                           <React.Fragment key={attr}>
                             <TableRow colSpan='12' onClick={() => this.onCollapseIconClick(attr)} style={{cursor: 'pointer'}}>
                               <TableCell colSpan='12' style={{ fontWeight: 'bold', fontSize: '0.875rem', ...styles }}>
                                 <span className='flex-vertical-center'>
                                   <span style={{marginRight: '5px'}}>{`${startCase(attr)} (${lhsCount}/${rhsCount})`}</span>
+                                  { size && <span className='byte-size'>{size}</span> }
                                   {
                                     isExpanded ? <ArrowUpIcon fontSize='inherit' /> : <ArrowDownIcon fontSize='inherit' />
                                   }
