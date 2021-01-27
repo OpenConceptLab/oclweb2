@@ -92,7 +92,7 @@ class CollectionHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.getURLFromPath())
-                .get()
+                .get(null, null, {includeSummary: true})
                 .then(response => {
                   this.setState({isLoading: false, collection: response.data}, () => {
                     if(includes([0, 1, 2, 3, 4], this.state.tab))

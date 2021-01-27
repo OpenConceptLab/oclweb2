@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip, Button,
+  CircularProgress,
 } from '@material-ui/core';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -25,7 +26,7 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -92,6 +93,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'sourceType', label: 'Type', value: 'source_type', sortOn: 'source_type'},
     ],
+    tagWaitAttribute: 'summary',
     tags: [
       {id: 'activeConcepts', value: 'summary.active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
       {id: 'activeMappings', value: 'summary.active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
@@ -110,6 +112,7 @@ const RESOURCE_DEFINITIONS = {
       {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
       {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},
     ],
+    tagWaitAttribute: 'summary',
     tags: [
       {id: 'activeConcepts', value: 'summary.active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
       {id: 'activeMappings', value: 'summary.active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
@@ -484,6 +487,8 @@ const ExpandibleRow = props => {
           !isSelectable &&
           <TableCell align='left' style={{width: '120px', padding: '2px'}}>
             {
+              resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
+              <CircularProgress style={{width: '20px', height: '20px'}} /> :
               map(resourceDefinition.tags, tag => (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
                   <Tooltip title={tag.label}>

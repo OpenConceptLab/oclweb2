@@ -88,7 +88,7 @@ class SourceHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.getURLFromPath())
-                .get()
+                .get(null, null, {includeSummary: true})
                 .then(response => {
                   this.setState({isLoading: false, source: response.data}, () => {
                     if(includes([1, 2, 3], this.state.tab))

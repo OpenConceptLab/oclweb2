@@ -2,13 +2,14 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
-  get, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has,
+  get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find,
 } from 'lodash';
 import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon
 } from '@material-ui/icons';
+import APIService from '../../services/APIService'
 import { BLUE, DEFAULT_LIMIT } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
 import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
@@ -99,6 +100,24 @@ class Search extends React.Component {
     }
   }
 
+  updateSummaryOnResult(resource, summary) {
+    const newState = {...this.state}
+    set(find(newState.results[resource].items, {uuid: summary.uuid}), 'summary', summary)
+    this.setState(newState)
+
+  }
+
+  loadSummary(resource) {
+    const resourceState = this.state.results[resource];
+    if(!resourceState.tagsLoaded) {
+      forEach(resourceState.items, item => {
+        APIService.new().overrideURL(item.url).appendToUrl('summary/').get().then(response => {
+          this.updateSummaryOnResult(resource, response.data)
+        })
+      })
+    }
+  }
+
   prepareResponseForState(resource, response, resetItems) {
     const numFound = parseInt(get(response, 'headers.num_found', 0))
     const numReturned = parseInt(get(response, 'headers.num_returned', 0))
@@ -128,6 +147,9 @@ class Search extends React.Component {
           ...this.state.results,
           [resource]: this.prepareResponseForState(resource, response, resetItems)
         }
+      }, () => {
+        if(includes(['sources', 'collections'], resource))
+          this.loadSummary(resource)
       })
     } else {
       this.setState({isLoading: false}, () => {
@@ -204,9 +226,6 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
-      if(includes(['sources', 'collections'], _resource))
-        queryParams['includeSummary'] = true
-
       fetchSearchResults(
         _resource,
         {...queryParams, ...sortParams},
