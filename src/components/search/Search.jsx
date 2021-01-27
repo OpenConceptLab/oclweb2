@@ -204,6 +204,9 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
+      if(includes(['sources', 'collections'], _resource))
+        queryParams['includeSummary'] = true
+
       fetchSearchResults(
         _resource,
         {...queryParams, ...sortParams},
