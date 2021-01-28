@@ -61,8 +61,6 @@ class AddToCollection extends React.Component {
     }
   }
 
-  toggleOpen = () => this.setState({open: !this.state.open})
-
   handleClose = event => {
     if (this.anchorRef.current && this.anchorRef.current.contains(event.target)) {
       return;
@@ -70,42 +68,40 @@ class AddToCollection extends React.Component {
     this.toggleOpen()
   };
 
-  handleMenuItemClick(event, collection) {
-    this.setState({selectedCollection: collection})
-    this.handleClose(event)
-  }
+  toggleOpen = () => this.setState({open: !this.state.open})
 
-  handleDialogClose = () => {
-    this.setState({selectedCollection: null, notAdded: []})
-  }
+  handleDialogClose = () => this.setState({selectedCollection: null, notAdded: []})
 
+  onCheckboxChange = event => this.setState({cascadeMappings: event.target.checked})
+
+  handleMenuItemClick = (event, collection) => this.setState({selectedCollection: collection}, () => this.handleClose(event))
 
   handleAdd = () => {
-    const { selectedCollection } = this.state
+    const { selectedCollection, cascadeMappings } = this.state
     const { references } = this.props
     this.setState({isAdding: true}, () => {
       const expressions = map(references, 'url')
-      APIService.new().overrideURL(selectedCollection.url).appendToUrl('references/').put({data: {expressions: expressions}}).then(response => {
-        this.setState({isAdding: false}, () => {
-          if(response.status === 200) {
-            const notAddedReferences = filter(response.data, {added: false})
-            const addedReferences = filter(response.data, {added: true})
-            this.setState({notAdded: notAddedReferences, added: addedReferences})
-            if(isEmpty(notAddedReferences)) {
-              alertifyjs.success('Successfully added reference(s)')
-              this.handleDialogClose()
-            }
-          } else {
-            alertifyjs.error('Something bad happened')
-            this.handleDialogClose()
-          }
-        })
-      })
+      const queryParams = cascadeMappings ? {cascade: 'sourcemappings'} : {}
+      APIService.new().overrideURL(selectedCollection.url)
+                .appendToUrl('references/')
+                .put({data: {expressions: expressions}}, null, null, queryParams)
+                .then(response => {
+                  this.setState({isAdding: false}, () => {
+                    if(response.status === 200) {
+                      const notAddedReferences = filter(response.data, {added: false})
+                      const addedReferences = filter(response.data, {added: true})
+                      this.setState({notAdded: notAddedReferences, added: addedReferences})
+                      if(isEmpty(notAddedReferences)) {
+                        alertifyjs.success('Successfully added reference(s)')
+                        this.handleDialogClose()
+                      }
+                    } else {
+                      alertifyjs.error('Something bad happened')
+                      this.handleDialogClose()
+                    }
+                  })
+                })
     })
-  }
-
-  onCheckboxChange = event => {
-    this.setState({cascadeMappings: event.target.checked})
   }
 
   render() {
