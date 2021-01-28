@@ -44,6 +44,7 @@ import FromConceptLabel from '../mappings/FromConceptLabel';
 import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
+import AddToCollection from '../common/AddToCollection';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
 const RESOURCE_DEFINITIONS = {
@@ -632,14 +633,14 @@ const ResultsTable = (
   const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
   const shouldShowDeleteOption = isReferenceResource && hasAccess && selectedList.length > 0;
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedList.length == 1 && onCreateSimilarClick;
+  const shouldShowAddToCollection = isSourceChild && hasAccess && selectedList.length > 0;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && selectedList.length > 0 && selectedList.length <= 2 && onCreateMappingClick;
   const columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
                   resourceDefinition.columns;
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
-  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption || shouldShowCreateMappingOption) ?
-                                   columnsCount - 2 :
-                                   columnsCount;
+  const hasSelectionOptions = Boolean(shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption || shouldShowCreateMappingOption || shouldShowAddToCollection)
+  const selectionRowColumnsCount = hasSelectionOptions ? columnsCount - 2 : columnsCount;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
@@ -710,6 +711,14 @@ const ResultsTable = (
                             >
                             Create Mapping
                           </Button>
+                        }
+                        {
+                          shouldShowAddToCollection &&
+                          <span style={{marginLeft: '10px'}}>
+                            <AddToCollection
+                              variant='contained' color='secondary' size='small' references={getSelectedItems()}
+                            />
+                          </span>
                         }
                         {
                           shouldShowCompareOption &&
