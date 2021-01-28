@@ -300,7 +300,7 @@ class ConceptContainerForm extends React.Component {
                 <TextField
                   error={Boolean(fieldErrors.name)}
                   id="fields.name"
-                  label="Name"
+                  label="Short Name"
                   placeholder={get(placeholders, 'name', '')}
                   variant="outlined"
                   fullWidth
