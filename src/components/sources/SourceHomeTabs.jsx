@@ -19,6 +19,7 @@ const SourceHomeTabs = props => {
   const hasAccess = currentUserHasAccess()
   const about = get(source, 'extras.about')
   const [selectedChild, setSelectedChild] = React.useState(null);
+  const [selectedConcepts, setSelectedConcepts] = React.useState([]);
   const [conceptForm, setConceptForm] = React.useState(false);
   const [mappingForm, setMappingForm] = React.useState(false);
   const [versionForm, setVersionForm] = React.useState(false);
@@ -39,6 +40,11 @@ const SourceHomeTabs = props => {
       else if(instance.concept_class)
         setConceptForm(true)
     }
+  }
+
+  const onCreateMappingFromSelectedConceptsClick = concepts => {
+    setSelectedConcepts(concepts)
+    setMappingForm(true)
   }
 
   const closeDrawer = callback => {
@@ -74,6 +80,7 @@ const SourceHomeTabs = props => {
             currentVersion={currentVersion}
             resource='concepts'
             onCreateSimilarClick={onCreateSimilarClick}
+            onCreateMappingClick={onCreateMappingFromSelectedConceptsClick}
           />
         }
         {
@@ -108,7 +115,7 @@ const SourceHomeTabs = props => {
         isOpen={mappingForm}
         onClose={closeMappingForm}
         formComponent={
-          <MappingForm copyFrom={selectedChild} onCancel={closeMappingForm} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} />
+          <MappingForm copyFrom={selectedChild} onCancel={closeMappingForm} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} selectedConcepts={selectedConcepts} />
         }
       />
       <CommonFormDrawer

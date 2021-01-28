@@ -580,7 +580,7 @@ const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
-    isVersionedObject, onCreateSimilarClick
+    isVersionedObject, onCreateSimilarClick, onCreateMappingClick
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -600,7 +600,9 @@ const ResultsTable = (
   const [order, setOrder] = React.useState(defaultOrder)
   const hasAccess = currentUserHasAccess()
   const isSourceChild = includes(['concepts', 'mappings'], resource);
-  const isSelectable = (resource === 'references' && hasAccess && isVersionedObject) ||
+  const isConceptResource = resource === 'concepts';
+  const isReferenceResource = resource === 'references';
+  const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
 
   const onAllSelect = event => event.target.checked ?
@@ -626,15 +628,16 @@ const ResultsTable = (
   }
 
   const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
-  const shouldShowCompareOption = resource === 'concepts' && selectedList.length === 2;
+  const shouldShowCompareOption = isConceptResource && selectedList.length === 2;
   const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
-  const shouldShowDeleteOption = resource === 'references' && hasAccess && selectedList.length > 0;
+  const shouldShowDeleteOption = isReferenceResource && hasAccess && selectedList.length > 0;
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedList.length == 1 && onCreateSimilarClick;
+  const shouldShowCreateMappingOption = isConceptResource && hasAccess && selectedList.length > 0 && selectedList.length <= 2 && onCreateMappingClick;
   const columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
                   resourceDefinition.columns;
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
-  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption) ?
+  const selectionRowColumnsCount = (shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption || shouldShowCreateMappingOption) ?
                                    columnsCount - 2 :
                                    columnsCount;
   const onCompareClick = event => {
@@ -693,6 +696,19 @@ const ResultsTable = (
                             style={{marginLeft: '10px'}}
                             >
                             Create Similar
+                          </Button>
+                        }
+                        {
+                          shouldShowCreateMappingOption &&
+                          <Button
+                            startIcon={<LinkIcon fontSize='small' />}
+                            variant='contained'
+                            size='small'
+                            color='secondary'
+                            onClick={() => onCreateMappingClick(getSelectedItems())}
+                            style={{marginLeft: '10px'}}
+                            >
+                            Create Mapping
                           </Button>
                         }
                         {

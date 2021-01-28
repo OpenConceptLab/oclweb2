@@ -1,13 +1,16 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, Button, CircularProgress, IconButton } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { TextField, Button, CircularProgress, IconButton, Tooltip } from '@material-ui/core';
+import {
+  Add as AddIcon,
+  SwapVert as SwapIcon,
+} from '@material-ui/icons';
 import {
   set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, getCurrentURL, fetchMapTypes } from '../../common/utils';
+import { arrayToObject, getCurrentURL, fetchMapTypes, toParentURI } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
 
 const EXTRAS_MODEL = {key: '', value: ''}
@@ -42,6 +45,8 @@ class MappingForm extends React.Component {
     fetchMapTypes(data => this.setState({mapTypes: data}))
     if((this.props.edit && this.props.mapping) || this.props.copyFrom)
       this.setFieldsForEdit()
+    if(this.props.selectedConcepts)
+      this.setFieldsFromSelectedConcepts()
   }
 
   setFieldsForEdit() {
@@ -62,6 +67,46 @@ class MappingForm extends React.Component {
     newState.fields.extras = isEmpty(instance.extras) ? newState.fields.extras : map(instance.extras, (v, k) => ({key: k, value: v}))
 
     this.setState(newState);
+  }
+
+  setFieldsFromSelectedConcepts() {
+    const { selectedConcepts } = this.props;
+    const fromConcept = get(selectedConcepts, '0')
+    const toConcept = get(selectedConcepts, '1')
+    const newState = {...this.state}
+
+    if(fromConcept) {
+      newState.fields.from_concept_url = fromConcept.url
+      newState.fields.from_concept_code = fromConcept.id
+      newState.fields.from_concept_name = fromConcept.display_name
+      newState.fields.from_source_url = toParentURI(fromConcept.url) + '/'
+    }
+    if(toConcept) {
+      newState.fields.to_concept_url = toConcept.url
+      newState.fields.to_concept_code = toConcept.id
+      newState.fields.to_concept_name = toConcept.display_name
+      newState.fields.to_source_url = toParentURI(toConcept.url) + '/'
+    }
+    this.setState(newState)
+  }
+
+  swapConcepts = () => {
+    const fields = cloneDeep(this.state.fields)
+    const newState = {...this.state}
+
+    newState.fields.from_concept_url = fields.to_concept_url
+    newState.fields.from_concept_code = fields.to_concept_code
+    newState.fields.from_concept_name = fields.to_concept_name
+    newState.fields.from_source_url = fields.to_source_url
+    newState.fields.from_source_version = fields.to_source_version
+
+    newState.fields.to_concept_url = fields.from_concept_url
+    newState.fields.to_concept_code = fields.from_concept_code
+    newState.fields.to_concept_name = fields.from_concept_name
+    newState.fields.to_source_url = fields.from_source_url
+    newState.fields.to_source_version = fields.from_source_version
+
+    this.setState(newState)
   }
 
   getIdHelperText() {
@@ -315,7 +360,14 @@ class MappingForm extends React.Component {
                   />
                 </div>
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%', textAlign: 'center'}}>
+                <Tooltip title="Swap From and To Concepts">
+                  <IconButton color="primary" onClick={this.swapConcepts}>
+                    <SwapIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div className='col-md-12 no-side-padding' style={{width: '100%'}}>
                 <h3 className='divider'>
                   <span className='text'>To Concept</span>
                 </h3>
