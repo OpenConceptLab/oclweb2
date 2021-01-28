@@ -51,13 +51,20 @@ class ConceptForm extends React.Component {
     fetchDatatypes(data => this.setState({datatypes: data}))
     fetchNameTypes(data => this.setState({nameTypes: data}))
     fetchDescriptionTypes(data => this.setState({descriptionTypes: data}))
-    if((this.props.edit && this.props.concept) || this.props.copyFrom)
+    if(this.props.edit && this.props.concept)
       this.setFieldsForEdit()
+    if(this.props.copyFrom)
+      this.fetchConceptToCreate()
   }
 
-  setFieldsForEdit() {
-    const { concept, edit, copyFrom } = this.props;
-    const instance = edit ? concept : copyFrom
+  fetchConceptToCreate() {
+    const { copyFrom } = this.props;
+    APIService.new().overrideURL(copyFrom.url).get().then(response => this.setFieldsForEdit(response.data))
+  }
+
+  setFieldsForEdit(data) {
+    const { concept, edit } = this.props;
+    const instance = data || concept
     const newState = {...this.state}
     if(edit)
       newState.fields.id = instance.id
