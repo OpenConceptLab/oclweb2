@@ -51,8 +51,12 @@ class SearchInput extends React.Component {
   }
 
   handleKeyPress = event => {
-    if (event.key === 'Enter')
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
       this.performSearch()
+    }
+    return false
   }
 
   performSearch = () => {
@@ -100,6 +104,7 @@ class SearchInput extends React.Component {
             value={input || ''}
             fullWidth
             onChange={this.handleInputChange}
+            onKeyPress={this.handleKeyPress}
           />
           {
             input &&
