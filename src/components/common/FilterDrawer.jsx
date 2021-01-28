@@ -8,7 +8,7 @@ import {
   Search as SearchIcon
 } from '@material-ui/icons';
 import {
-  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter,
+  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter
 } from 'lodash';
 
 const FilterDrawer = props => {
@@ -109,6 +109,16 @@ const FilterDrawer = props => {
       onSearch(event)
   }
 
+  const formattedName = name => {
+    if(name) {
+      name = name.trim()
+      if(name === 'n/a')
+        return name.toUpperCase()
+      return startCase(name)
+    }
+    return 'None';
+  }
+
   return (
     <Drawer anchor='left' open={open} onClose={onClose}>
       <div className='col-md-12 no-side-padding' style={{width: '500px', height: 'calc(100% - 60px)', overflow: 'scroll'}}>
@@ -164,7 +174,7 @@ const FilterDrawer = props => {
                       <ListItemText
                         primary={
                           <span className='col-md-12 no-side-padding'>
-                            <span className='col-md-9 no-left-padding' style={{textAlign: 'left'}}>{facet[0] || 'None'}</span>
+                            <span className='col-md-9 no-left-padding' style={{textAlign: 'left'}}>{formattedName(facet[0])}</span>
                             <span className='col-md-3 no-right-padding' style={{textAlign: 'right'}}>{facet[1]}</span>
                           </span>
                         }
