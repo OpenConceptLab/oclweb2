@@ -11,15 +11,14 @@ import {
   Loyalty as LoyaltyIcon,
   Help as HelpIcon,
 } from '@material-ui/icons'
-import { map, isArray, isEmpty, get, filter } from 'lodash';
-import { getCurrentUserUsername } from '../../common/utils';
+import { map, isEmpty, get, filter } from 'lodash';
+import { getCurrentUserCollections } from '../../common/utils';
 import APIService from '../../services/APIService';
 
 class AddToCollection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: getCurrentUserUsername(),
       open: false,
       lockedCollection: null,
       selectedCollection: null,
@@ -39,26 +38,9 @@ class AddToCollection extends React.Component {
   }
 
   fetchCollections() {
-    const { username } = this.state;
-    if(username) {
-      APIService.users(username)
-                .collections()
-                .get()
-                .then(response => this.setState({
-                  collections: isArray(response.data) ?
-                               [...this.state.collections, ...response.data] :
-                               this.state.collections
-                }))
-      APIService.users(username)
-                .orgs()
-                .appendToUrl('collections/')
-                .get()
-                .then(response => this.setState({
-                  collections: isArray(response.data) ?
-                               [...this.state.collections, ...response.data] :
-                               this.state.collections
-                }))
-    }
+    getCurrentUserCollections(collections => this.setState({
+      collections: [...this.state.collections, ...collections]
+    }))
   }
 
   handleClose = event => {
@@ -130,7 +112,7 @@ class AddToCollection extends React.Component {
                 >
                 <Paper>
                   <ClickAwayListener onClickAway={this.handleClose}>
-                    <MenuList id="split-button-menu">
+                    <MenuList id="split-button-menu" style={{maxHeight: '300px', overflow: 'scroll'}}>
                       {
                         map(collections, (collection, index) => (
                           <MenuItem

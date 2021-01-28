@@ -600,6 +600,7 @@ const ResultsTable = (
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
   const hasAccess = currentUserHasAccess()
+  const isAuthenticated = isLoggedIn();
   const isSourceChild = includes(['concepts', 'mappings'], resource);
   const isConceptResource = resource === 'concepts';
   const isReferenceResource = resource === 'references';
@@ -633,7 +634,7 @@ const ResultsTable = (
   const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
   const shouldShowDeleteOption = isReferenceResource && hasAccess && selectedList.length > 0;
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedList.length == 1 && onCreateSimilarClick;
-  const shouldShowAddToCollection = isSourceChild && hasAccess && selectedList.length > 0;
+  const shouldShowAddToCollection = isSourceChild && isAuthenticated && selectedList.length > 0;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && selectedList.length > 0 && selectedList.length <= 2 && onCreateMappingClick;
   const columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
