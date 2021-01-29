@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
-import { Paper, TextField, Button, Divider } from '@material-ui/core';
+import { Paper, TextField, Button, Divider, InputAdornment, IconButton } from '@material-ui/core';
+import {
+  PermIdentity as UserIcon, LockOutlined as LockIcon,
+  Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon,
+} from '@material-ui/icons';
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { refreshCurrentUserCache } from '../../common/utils';
@@ -16,6 +20,7 @@ class Login extends React.Component {
       username: '',
       password: '',
       serverError: null,
+      showPassword: false,
     }
   }
 
@@ -59,8 +64,10 @@ class Login extends React.Component {
     })
   }
 
+  handleClickShowPassword = () => this.setState({showPassword: !this.state.showPassword})
+
   render() {
-    const { serverError, verificationMsg, email } = this.state;
+    const { serverError, verificationMsg, email, showPassword } = this.state;
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
@@ -88,6 +95,13 @@ class Login extends React.Component {
                         variant="outlined"
                         onChange={this.onFieldChange}
                         fullWidth
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <UserIcon style={{color: "#999999"}} />
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     </div>
                     <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
@@ -96,9 +110,23 @@ class Login extends React.Component {
                         id="password"
                         label="Password"
                         variant="outlined"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         onChange={this.onFieldChange}
                         fullWidth
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LockIcon style={{color: "#999999"}} />
+                            </InputAdornment>
+                          ),
+                          endAdornment:(
+                            <InputAdornment position="end">
+                              <IconButton aria-label="Toggle password visibility" onClick={this.handleClickShowPassword}>
+                                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
                       />
                     </div>
                     <div className='col-md-12 no-side-padding' style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
