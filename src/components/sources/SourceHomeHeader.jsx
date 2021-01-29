@@ -29,6 +29,7 @@ import SourceForm from './SourceForm';
 import ReleasedChip from '../common/ReleasedChip';
 import RetiredChip from '../common/RetiredChip';
 import ProcessingChip from '../common/ProcessingChip';
+import ConceptContainerDelete from '../common/ConceptContainerDelete';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -46,6 +47,7 @@ const SourceHomeHeader = ({
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
@@ -66,16 +68,6 @@ const SourceHomeHeader = ({
       else
         alertifyjs.error('Something bad happened!')
     })
-  }
-
-  const onDelete = () => {
-    const title = `Delete Source : ${source.short_code}`;
-    const message = `Are you sure you want to permanently delete this source ${source.short_code}? This action cannot be undone! This action cannot be undone! This will delete the entire source and all of its associated versions, concepts and mappings.`
-    const confirm = alertifyjs.confirm()
-    confirm.setHeader(title);
-    confirm.setMessage(message);
-    confirm.set('onok', deleteSource);
-    confirm.show();
   }
 
   return (
@@ -128,7 +120,7 @@ const SourceHomeHeader = ({
                     </Button>
                   </Tooltip>
                   <Tooltip title='Delete Source'>
-                    <Button onClick={onDelete}>
+                    <Button onClick={() => setDeleteDialog(true) }>
                       <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -223,6 +215,10 @@ const SourceHomeHeader = ({
                        <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={source} parentURL={versionedObjectURL} />
         }
       />
+      {
+      isVersionedObject && hasAccess && source &&
+        <ConceptContainerDelete open={deleteDialog} resource={source} onClose={() => setDeleteDialog(false)} onDelete={() => deleteSource() } />
+      }
     </header>
   )
 }

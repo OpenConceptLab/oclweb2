@@ -29,6 +29,7 @@ import DownloadButton from '../common/DownloadButton';
 import ReleasedChip from '../common/ReleasedChip';
 import RetiredChip from '../common/RetiredChip';
 import ProcessingChip from '../common/ProcessingChip';
+import ConceptContainerDelete from '../common/ConceptContainerDelete';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -48,6 +49,7 @@ const CollectionHomeHeader = ({
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const hasAccess = currentUserHasAccess();
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
@@ -68,16 +70,6 @@ const CollectionHomeHeader = ({
       else
         alertifyjs.error('Something bad happened!')
     })
-  }
-
-  const onDelete = () => {
-    const title = `Delete Collection : ${collection.short_code}`;
-    const message = `Are you sure you want to permanently delete this collection ${collection.short_code}? This action cannot be undone! This action cannot be undone! This will delete the entire collection and all of its associated versions and references.`
-    const confirm = alertifyjs.confirm()
-    confirm.setHeader(title);
-    confirm.setMessage(message);
-    confirm.set('onok', deleteCollection);
-    confirm.show();
   }
 
   return (
@@ -130,7 +122,7 @@ const CollectionHomeHeader = ({
                     </Button>
                   </Tooltip>
                   <Tooltip title='Delete Collection'>
-                    <Button onClick={onDelete}>
+                    <Button onClick={() => setDeleteDialog(true) }>
                       <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -228,6 +220,10 @@ const CollectionHomeHeader = ({
                        <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={collection} parentURL={versionedObjectURL} />
         }
       />
+      {
+        isVersionedObject && hasAccess && collection &&
+        <ConceptContainerDelete open={deleteDialog} resource={collection} onClose={() => setDeleteDialog(false)} onDelete={() => deleteCollection() } />
+      }
     </header>
   )
 }
