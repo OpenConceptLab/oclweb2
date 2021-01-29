@@ -1,29 +1,34 @@
 import React from 'react';
-import { Divider, CircularProgress } from '@material-ui/core';
-import { map, startCase} from 'lodash';
-import Concept from '../concepts/Concept';
-import Mapping from '../mappings/Mapping';
+import { CircularProgress } from '@material-ui/core';
+import { map, startCase, get, includes, uniq, without } from 'lodash';
 import { BLUE } from '../../common/constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import RowComponent from './RowComponent';
 
 const ResultsInfinite = props => {
-  const getComponentFor = data => {
-    const { resource } = props;
-    if(resource === 'concepts')
-      return <Concept {...data} />;
-    if(resource === 'mappings')
-      return <Mapping {...data} />
+  const { results, onLoadMore, resource } = props;
+  const [selectedList, setSelectedList] = React.useState([]);
+  const onSelectChange = (event, id) => {
+    const newSelectedList = event.target.checked ? uniq([...selectedList, id]) : without(selectedList, id);
+
+    setSelectedList(newSelectedList)
+
+    if (props.onSelectChange) props.onSelectChange(newSelectedList);
   }
+
+  const items = get(results, 'items', [])
+  const count = get(items, 'length', 0)
+  const total = get(results, 'total', 0)
 
   return (
     <div className='col-sm-12 no-side-padding'>
       {
-        props.results.total ?
+        total ?
         <div className='col-sm-12 no-side-padding'>
           <InfiniteScroll
-            dataLength={props.results.items.length}
-            next={props.onLoadMore}
-            hasMore={props.results.items.length !== props.results.total}
+            dataLength={count}
+            next={onLoadMore}
+            hasMore={count !== total}
             loader={<CircularProgress style={{color: BLUE}}/>}
             endMessage={
               <p style={{ textAlign: "center" }}>
@@ -32,12 +37,13 @@ const ResultsInfinite = props => {
             }
           >
             {
-              map(props.results.items, item => (
-                <div className='col-sm-12 no-side-padding' key={item.id}>
-                  {getComponentFor(item)}
-                  <Divider style={{width: '100%'}} />
-                </div>
-              ))
+              includes(['concepts', 'mappings'], resource) ?
+              map(results.items, item => (
+                <RowComponent key={item.id} onSelect={onSelectChange} item={item} resource={resource} />
+              )) :
+              <div className="col-sm-12 no-side-padding" style={{textAlign: 'center', margin: '10px 0', width: '100%'}}>
+                {`This view is not implemented yet for ${startCase(resource)}`}
+              </div>
             }
           </InfiniteScroll>
         </div> :
