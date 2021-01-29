@@ -138,7 +138,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                           </Tooltip>
                         </React.Fragment>
                       }
-                      <Tooltip title='Version Link'>
+                      <Tooltip title='Explore Version'>
                         <IconButton href={`#${version.concepts_url}`} color='primary'>
                           <SearchIcon fontSize='inherit' />
                         </IconButton>
@@ -151,8 +151,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                     </div>
                   </div>
                   {
-                    (index + 1) < versions.length &&
-                    <Divider style={{width: '100%'}} />
+                    (index + 1) < versions.length && <Divider style={{width: '100%'}} />
                   }
                 </div>
               ))
