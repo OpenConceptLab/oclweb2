@@ -16,6 +16,7 @@ const SourceHomeTabs = props => {
     tab, onChange, source, versions, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate
   } = props;
+  const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
   const about = get(source, 'extras.about')
   const [selectedChild, setSelectedChild] = React.useState(null);
@@ -64,7 +65,7 @@ const SourceHomeTabs = props => {
         {aboutTab && <Tab label="About" />}
       </Tabs>
       {
-        hasAccess &&
+        hasAccess && isVersionedObject &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
           <NewResourceButton resources={['concept', 'mapping', 'version']} onClick={onNewClick} />
         </div>

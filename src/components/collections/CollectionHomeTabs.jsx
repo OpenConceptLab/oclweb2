@@ -15,6 +15,7 @@ const CollectionHomeTabs = props => {
     tab, onChange, collection, versions, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate
   } = props;
+  const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
   const about = get(collection, 'extras.about')
   const [versionForm, setVersionForm] = React.useState(false);
@@ -36,7 +37,7 @@ const CollectionHomeTabs = props => {
         {aboutTab && <Tab label="About" />}
       </Tabs>
       {
-        hasAccess &&
+        hasAccess && isVersionedObject &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
           <NewResourceButton resources={['references', 'version']} onClick={onNewClick} />
         </div>
