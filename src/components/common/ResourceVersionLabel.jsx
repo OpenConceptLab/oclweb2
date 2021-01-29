@@ -4,6 +4,7 @@ import {
 } from '@material-ui/icons';
 import ReleasedChip from './ReleasedChip';
 import RetiredChip from './RetiredChip';
+import ProcessingChip from './ProcessingChip';
 
 const SEPARATOR = '/'
 const ResourceVersionLabel = props => {
@@ -29,6 +30,12 @@ const ResourceVersionLabel = props => {
         props.retired &&
         <span style={{marginLeft: '10px'}}>
           <RetiredChip size='small' />
+        </span>
+      }
+      {
+        props.is_processing &&
+        <span style={{marginLeft: '10px'}}>
+          <ProcessingChip size='small' />
         </span>
       }
     </div>
