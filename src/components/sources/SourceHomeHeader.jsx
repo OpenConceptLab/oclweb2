@@ -26,6 +26,9 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import SupportedLocales from '../common/SupportedLocales';
 import DownloadButton from '../common/DownloadButton';
 import SourceForm from './SourceForm';
+import ReleasedChip from '../common/ReleasedChip';
+import RetiredChip from '../common/RetiredChip';
+import ProcessingChip from '../common/ProcessingChip';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -45,7 +48,6 @@ const SourceHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
-  const isRetired = source.isRetired;
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
   const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 4;
   const onLogoUpload = (base64, name) => {
@@ -95,11 +97,26 @@ const SourceHomeHeader = ({
               !isVersionedObject &&
               <React.Fragment>
                 <span className='separator'>/</span>
-                <VersionButton
-                  label={source.version} retired={isRetired} href={`#${currentURL}`}
-                  bgColor={GREEN}
-                />
+                <VersionButton label={source.version} href={`#${currentURL}`} bgColor={GREEN} />
               </React.Fragment>
+            }
+            {
+              source.retired &&
+              <span style={{marginLeft: '10px'}}>
+                <RetiredChip size='small' />
+              </span>
+            }
+            {
+              source.released &&
+              <span style={{marginLeft: '10px'}}>
+                <ReleasedChip size='small' />
+              </span>
+            }
+            {
+              source.is_processing &&
+              <span style={{marginLeft: '10px'}}>
+                <ProcessingChip size='small' />
+              </span>
             }
             {
               hasAccess && isVersionedObject &&
@@ -121,7 +138,7 @@ const SourceHomeHeader = ({
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
+            <span style={{marginRight: '10px'}}>
               {source.full_name}
             </span>
             {

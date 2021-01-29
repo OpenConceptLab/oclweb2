@@ -26,6 +26,9 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from './CollectionForm';
 import SupportedLocales from '../common/SupportedLocales';
 import DownloadButton from '../common/DownloadButton';
+import ReleasedChip from '../common/ReleasedChip';
+import RetiredChip from '../common/RetiredChip';
+import ProcessingChip from '../common/ProcessingChip';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -47,7 +50,6 @@ const CollectionHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
-  const isRetired = collection.isRetired;
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
   const hasManyHiddenAttributes = nonEmptyCount(collection, keys(HIDDEN_ATTRIBUTES)) >= 4;
   const onLogoUpload = (base64, name) => {
@@ -97,11 +99,26 @@ const CollectionHomeHeader = ({
               !isVersionedObject &&
               <React.Fragment>
                 <span className='separator'>/</span>
-                <VersionButton
-                  label={collection.version} retired={isRetired} href={`#${currentURL}`}
-                  bgColor={GREEN}
-                />
+                <VersionButton label={collection.version} href={`#${currentURL}`} bgColor={GREEN} />
               </React.Fragment>
+            }
+            {
+              collection.retired &&
+              <span style={{marginLeft: '10px'}}>
+                <RetiredChip size='small' />
+              </span>
+            }
+            {
+              collection.released &&
+              <span style={{marginLeft: '10px'}}>
+                <ReleasedChip size='small' />
+              </span>
+            }
+            {
+              collection.is_processing &&
+              <span style={{marginLeft: '10px'}}>
+                <ProcessingChip size='small' />
+              </span>
             }
             {
               hasAccess && isVersionedObject &&
@@ -123,7 +140,7 @@ const CollectionHomeHeader = ({
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
+            <span style={{marginRight: '10px'}}>
               {collection.full_name}
             </span>
             {
