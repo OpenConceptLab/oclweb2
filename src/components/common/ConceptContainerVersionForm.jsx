@@ -60,6 +60,7 @@ class ConceptContainerVersionForm extends React.Component {
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
+      this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
@@ -73,6 +74,8 @@ class ConceptContainerVersionForm extends React.Component {
   handleSubmitResponse(response) {
     const { edit, reloadOnSuccess, onCancel, resourceType, onSubmit } = this.props
     if(response.status === 201 || response.status === 200) { // success
+      if(this.alert)
+        this.alert.dismiss();
       const verb = edit ? 'updated' : 'created'
       const successMsg = `Successfully ${verb} ${resourceType} version`;
       const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
