@@ -79,7 +79,7 @@ class SourceHome extends React.Component {
 
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
-      if(includes([1, 2, 3], value))
+      if(includes([0, 1, 2, 3], value))
         this.getVersions()
     })
   }
@@ -91,7 +91,7 @@ class SourceHome extends React.Component {
                 .get(null, null, {includeSummary: true})
                 .then(response => {
                   this.setState({isLoading: false, source: response.data}, () => {
-                    if(includes([1, 2, 3], this.state.tab))
+                    if(includes([0, 1, 2, 3], this.state.tab))
                       this.getVersions()
                   })
                 })
