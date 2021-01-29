@@ -86,12 +86,8 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         <div className="content">
-          {
-            isAtGlobalSearch() &&
-            <Search {...this.props} />
-          }
           <Switch>
-
+            <Route path="/search" component={Search} />
             { /* Concept Home */ }
             <Route
               path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
