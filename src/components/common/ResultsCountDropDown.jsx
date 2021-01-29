@@ -59,7 +59,7 @@ class ResultsCountDropDown extends React.Component {
             variant="outlined"
             color='primary'
             icon={<NumberListIcon fontSize='inherit' />}
-            label={`PageSize : ${limit}`}
+            label={`Page Size : ${limit}`}
             onClick={this.toggleOpen}
             size={size || 'medium'}
             style={{minWidth: '80px'}}
