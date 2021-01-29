@@ -7,8 +7,8 @@ import {
 import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
   ExpandMore as ExpandMoreIcon, Search as SearchIcon, Edit as EditIcon,
-  DeleteForever as DeleteIcon,
-  NewReleases as ReleaseIcon, Delete as RetireIcon, FileCopy as CopyIcon,
+  Delete as DeleteIcon, Block as RetireIcon,
+  NewReleases as ReleaseIcon, FileCopy as CopyIcon,
 } from '@material-ui/icons';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
@@ -127,12 +127,12 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                             </IconButton>
                           </Tooltip>
                           <Tooltip title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
-                            <IconButton color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
+                            <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
                               <RetireIcon fontSize='inherit' />
                             </IconButton>
                           </Tooltip>
                           <Tooltip title='Delete Version'>
-                            <IconButton onClick={() => onDeleteClick(version)}>
+                            <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)}>
                               <DeleteIcon fontSize='inherit' />
                             </IconButton>
                           </Tooltip>
