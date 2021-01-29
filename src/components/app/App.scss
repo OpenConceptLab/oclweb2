@@ -274,9 +274,12 @@ div.bottom-fixed-center {
     background: white;
     border-top: 1px solid lightgray;
 }
+.retired-red {
+    color: #c33 !important;
+}
 .retired {
     text-decoration: line-through;
-    color: red;
+    color: #c33;
     text-decoration-color: black;
 }
 .text-muted {
