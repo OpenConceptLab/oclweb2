@@ -9,7 +9,11 @@ import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
 
 export const isAtGlobalSearch = () => {
-  return window.location.hash.includes('#/search');
+  return window.location.hash.includes('#/search') || isAtRoot();
+}
+
+export const isAtRoot = () => {
+  return window.location.hash === '#/';
 }
 
 export const formatDate = date => {

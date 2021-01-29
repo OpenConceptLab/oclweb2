@@ -5,6 +5,7 @@ import { Person as PersonIcon } from '@material-ui/icons';
 import { get } from 'lodash';
 import { WHITE, BLACK } from '../../common/constants';
 import './App.scss';
+import RootView from './RootView';
 import SearchInput from '../search/SearchInput';
 import Search from '../search/Search';
 import ConceptHome from '../concepts/ConceptHome';
@@ -87,7 +88,9 @@ class App extends Component {
         </AppBar>
         <div className="content">
           <Switch>
+            <Route exact path="/" component={RootView} />
             <Route path="/search" component={Search} />
+
             { /* Concept Home */ }
             <Route
               path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
