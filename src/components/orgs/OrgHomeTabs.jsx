@@ -13,12 +13,12 @@ import ConfigSelect from '../common/ConfigSelect';
 
 const OrgHomeTabs = props => {
   const {
-    tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete, aboutTab,
+    tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
     selectedConfig, customConfigs, onConfigChange
   } = props;
   const tabConfigs = selectedConfig.config.tabs
   const selectedTabConfig = tabConfigs[tab];
-  const about = get(org, 'extras.about')
+  const about = get(org, 'text')
   const [sourceForm, setSourceForm] = React.useState(false);
   const [collectionForm, setCollectionForm] = React.useState(false);
   const hasAccess = currentUserHasAccess()
@@ -54,19 +54,23 @@ const OrgHomeTabs = props => {
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
-        <OrgHomeChildrenList
-          org={org}
-          location={location}
-          url={url}
-          pins={pins}
-          showPin={showPin}
-          onPinCreate={onPinCreate}
-          onPinDelete={onPinDelete}
-          resource={selectedTabConfig.type}
-          viewFilters={selectedTabConfig.filters}
-          viewFields={selectedTabConfig.fields}
-          fixedFilters={{limit: selectedTabConfig.page_size}}
-        />
+        {
+          selectedTabConfig.type === 'about' ?
+          <AboutAccordian id={org.id} about={about} /> :
+          <OrgHomeChildrenList
+            org={org}
+            location={location}
+            url={url}
+            pins={pins}
+            showPin={showPin}
+            onPinCreate={onPinCreate}
+            onPinDelete={onPinDelete}
+            resource={selectedTabConfig.type}
+            viewFilters={selectedTabConfig.filters}
+            viewFields={selectedTabConfig.fields}
+            fixedFilters={{limit: selectedTabConfig.page_size}}
+          />
+        }
       </div>
       <CommonFormDrawer
         isOpen={sourceForm}

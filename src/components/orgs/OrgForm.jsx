@@ -8,6 +8,7 @@ import {
 import APIService from '../../services/APIService';
 import { arrayToObject, toFullURL, refreshCurrentUserCache } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
+import RTEditor from '../common/RTEditor';
 
 const EXTRAS_MODEL = {key: '', value: ''}
 class OrgForm extends React.Component {
@@ -19,6 +20,7 @@ class OrgForm extends React.Component {
         id: '',
         name: '',
         description: '',
+        text: '',
         website: '',
         company: '',
         location: '',
@@ -34,7 +36,7 @@ class OrgForm extends React.Component {
 
   setFieldsForEdit() {
     const { org } = this.props;
-    const attrs = ['id', 'name', 'description', 'website', 'company', 'location',]
+    const attrs = ['id', 'name', 'description', 'website', 'company', 'location', 'text']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(org, attr, '') || ''))
     newState.fields.extras = isEmpty(org.extras) ? newState.fields.extras : map(org.extras, (v, k) => ({key: k, value: v}))
@@ -244,6 +246,14 @@ class OrgForm extends React.Component {
                   </div>
                 ))
               }
+            </div>
+            <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <RTEditor
+                label='About Org'
+                onChange={value => this.setFieldValue('fields.text', value)}
+                defaultValue={fields.text}
+                placeholder='About Org'
+              />
             </div>
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
               <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>

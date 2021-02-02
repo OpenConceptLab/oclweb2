@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, isEmpty, values, find, findIndex, isEqual } from 'lodash';
+import { reject, get, values, find, findIndex, isEqual } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -16,6 +16,7 @@ const DEFAULT_CONFIG = {
       {type: "sources", label: "Sources", page_size: 25, "default": true},
       {type: "collections", label: "Collections", page_size: 25},
       {type: "users", label: "Members", page_size: 25},
+      {type: "about", label: "About"},
     ]
   }
 }
@@ -37,7 +38,7 @@ class OrgHome extends React.Component {
   getDefaultTabIndex() {
     const { location } = this.props;
 
-    if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
+    if(location.pathname.indexOf('/about') > -1)
       return 3;
     if(location.pathname.indexOf('/members') > -1)
       return 2;
@@ -86,7 +87,6 @@ class OrgHome extends React.Component {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.refreshDataByURL()
       this.getPins()
-      //this.onTabChange(null, this.getDefaultTabIndex())
     }
   }
 
@@ -168,15 +168,10 @@ class OrgHome extends React.Component {
     service.put({order: newOrder}).then(() => {})
   }
 
-  shouldShowAboutTab() {
-    return !isEmpty(get(this, 'state.org.extras.about'));
-  }
-
   render() {
     const { org, isLoading, tab, pins, selectedConfig, customConfigs } = this.state;
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
-    const showAboutTab = this.shouldShowAboutTab()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -202,7 +197,6 @@ class OrgHome extends React.Component {
                 onPinCreate={this.createPin}
                 onPinDelete={this.deletePin}
                 showPin={isCurrentUserMemberOfOrg}
-                aboutTab={showAboutTab}
                 customConfigs={[...customConfigs, DEFAULT_CONFIG]}
                 onConfigChange={this.onConfigChange}
                 selectedConfig={selectedConfig}

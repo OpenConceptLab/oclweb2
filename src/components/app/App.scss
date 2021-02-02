@@ -526,3 +526,10 @@ td.large {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+.rte-editor {
+    min-height: 200px;
+    div:nth-child(3) {
+        width: unset !important;
+        min-width: unset !important;
+    }
+}
