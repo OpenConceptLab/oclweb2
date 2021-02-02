@@ -32,7 +32,7 @@ const ConfigSelect = ({configs, selected, onChange, color}) => {
           label={`Layout : ${selected.name}`}
           onClick={toggleOpen}
           onDelete={toggleOpen}
-          style={{backgroundColor: color, borderColor: color}}
+          style={{backgroundColor: color, borderColor: color, maxWidth: '200px'}}
         />
       </Tooltip>
       <Menu
