@@ -11,7 +11,8 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, fetchLocales } from '../../common/utils';
-import ExtrasForm from '../common/ExtrasForm';
+import ExtrasForm from './ExtrasForm';
+import RTEditor from './RTEditor';
 const JSON_MODEL = {key: '', value: ''}
 
 
@@ -46,6 +47,7 @@ class ConceptContainerForm extends React.Component {
         identifier: '', //json
         contact: '', //json
         jurisdiction: '', //json
+        text: '',
       },
       typeAttr: '',
       fieldErrors: {},
@@ -104,7 +106,7 @@ class ConceptContainerForm extends React.Component {
     const attrs = [
       'id', 'external_id', 'name', 'full_name', 'description', 'revision_date',
       'content_type', 'copyright', 'purpose', 'publisher', 'canonical_url', 'description',
-      'custom_validation_schema', 'public_access', 'website', 'default_locale'
+      'custom_validation_schema', 'public_access', 'website', 'default_locale', 'text'
     ]
     const jsonAttrs = ['jurisdiction', 'contact', 'identifier']
     const newState = {...this.state}
@@ -524,6 +526,14 @@ class ConceptContainerForm extends React.Component {
                     </div>
                   ))
                 }
+              </div>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <RTEditor
+                  label={`About ${resourceTypeLabel}`}
+                  onChange={value => this.setFieldValue('fields.text', value)}
+                  defaultValue={fields.text}
+                  placeholder={`About ${resourceTypeLabel}`}
+                />
               </div>
               <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
                 <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>

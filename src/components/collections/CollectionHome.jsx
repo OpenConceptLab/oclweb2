@@ -118,7 +118,7 @@ class CollectionHome extends React.Component {
   }
 
   shouldShowAboutTab() {
-    return !isEmpty(get(this, 'state.collection.extras.about'));
+    return !isEmpty(get(this, 'state.collection.text'));
   }
 
   onVersionUpdate = updatedVersion => {

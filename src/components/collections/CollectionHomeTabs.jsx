@@ -17,7 +17,7 @@ const CollectionHomeTabs = props => {
   } = props;
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
-  const about = get(collection, 'extras.about')
+  const about = get(collection, 'text')
   const [versionForm, setVersionForm] = React.useState(false);
   const [referenceForm, setReferenceForm] = React.useState(false);
   const onNewClick = resource => {

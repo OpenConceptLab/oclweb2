@@ -18,7 +18,7 @@ const SourceHomeTabs = props => {
   } = props;
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
-  const about = get(source, 'extras.about')
+  const about = get(source, 'text')
   const [selectedChild, setSelectedChild] = React.useState(null);
   const [selectedConcepts, setSelectedConcepts] = React.useState([]);
   const [conceptForm, setConceptForm] = React.useState(false);

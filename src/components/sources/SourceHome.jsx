@@ -114,7 +114,7 @@ class SourceHome extends React.Component {
   }
 
   shouldShowAboutTab() {
-    return !isEmpty(get(this, 'state.source.extras.about'));
+    return !isEmpty(get(this, 'state.source.text'));
   }
 
   onVersionUpdate = updatedVersion => {
