@@ -26,7 +26,8 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
+  forEach
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -61,8 +62,8 @@ const RESOURCE_DEFINITIONS = {
     columns: [
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />, essential: false},
       {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
-      {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
-      {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name', renderer: concept => (concept.retired ? <span className='retired'>{concept.display_name}</span> : <span>{concept.display_name}</span>)},
+      {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
+      {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name', renderer: concept => (concept.retired ? <span className='retired'>{concept.display_name}</span> : <span>{concept.display_name}</span>), className: 'medium'},
       {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
       {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
       {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
@@ -75,12 +76,12 @@ const RESOURCE_DEFINITIONS = {
     headTextColor: WHITE,
     columns: [
       {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />, essential: false},
-      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
-      {id: 'id', label: 'ID', value: 'id', sortOn: 'id'},
-      {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabel {...mapping} noRedirect />},
-      {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type'},
-      {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabel {...mapping} noRedirect />},
-      {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
+      {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},
+      {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
+      {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabel {...mapping} noRedirect />, className: 'medium'},
+      {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall'},
+      {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabel {...mapping} noRedirect />, className: 'medium'},
+      {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
     ],
     tabs: ['History',],
     expandible: true,
@@ -479,7 +480,7 @@ const ExpandibleRow = props => {
         }
         {
           map(columns, column => (
-            <TableCell key={column.id} align={column.align || 'left'}>
+            <TableCell key={column.id} align={column.align || 'left'} className={column.className}>
               { getValue(item, column) || 'None' }
             </TableCell>
           ))
@@ -581,7 +582,7 @@ const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
-    isVersionedObject, onCreateSimilarClick, onCreateMappingClick
+    isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -629,6 +630,17 @@ const ResultsTable = (
     onSortChange(sortQuery)
   }
 
+  const filterColumnsFromViewFields = columns => {
+    let result = [];
+    forEach(viewFields, (label, attr) => {
+      const column = find(columns, {value: attr})
+      if(column)
+        result.push({...column, label: label})
+    })
+
+    return result
+  }
+
   const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
   const shouldShowCompareOption = isConceptResource && selectedList.length === 2;
   const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
@@ -636,9 +648,11 @@ const ResultsTable = (
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedList.length == 1 && onCreateSimilarClick;
   const shouldShowAddToCollection = isSourceChild && isAuthenticated && selectedList.length > 0;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && selectedList.length > 0 && selectedList.length <= 2 && onCreateMappingClick;
-  const columns = essentialColumns ?
+  let columns = essentialColumns ?
                   reject(resourceDefinition.columns, c => c.essential === false) :
                   resourceDefinition.columns;
+
+  columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields(columns)
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const hasSelectionOptions = Boolean(shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption || shouldShowCreateMappingOption || shouldShowAddToCollection)
   const selectionRowColumnsCount = hasSelectionOptions ? columnsCount - 2 : columnsCount;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { merge } from 'lodash';
 import Search from '../search/Search';
 
 class OrgHomeChildrenList extends React.Component {
@@ -10,13 +11,13 @@ class OrgHomeChildrenList extends React.Component {
   }
 
   render() {
-    const { org, resource } = this.props;
+    const { org, resource, fixedFilters } = this.props;
     return (
       <Search
         {...this.props}
         nested
         baseURL={this.getURL()}
-        fixedFilters={{isTable: true, limit: 25}}
+        fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         searchInputPlaceholder={`Search ${org.id} ${resource}...`}
       />
     )

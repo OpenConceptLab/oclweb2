@@ -2,9 +2,10 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
-  get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find,
+  get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
+  map
 } from 'lodash';
-import { CircularProgress, ButtonGroup, Button } from '@material-ui/core';
+import { CircularProgress, ButtonGroup, Button, Chip } from '@material-ui/core';
 import {
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon
@@ -58,6 +59,7 @@ class Search extends React.Component {
       limit: DEFAULT_LIMIT,
       openFacetsDrawer: false,
       appliedFacets: {},
+      viewFilters: {},
       includeRetired: false,
       results: {
         concepts: cloneDeep(resourceResultStruct),
@@ -88,6 +90,7 @@ class Search extends React.Component {
       searchStr: queryParams.get('q') || '',
       exactMatch: queryParams.get('exactMatch') || 'off',
       limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
+      viewFilters: this.props.viewFilters || {},
     }, this.fetchNewResults)
   }
 
@@ -96,6 +99,9 @@ class Search extends React.Component {
       this.setQueryParamsInState()
     }
     if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL) {
+      this.setQueryParamsInState()
+    }
+    if(!isEqual(prevProps.viewFilters, this.props.viewFilters)) {
       this.setQueryParamsInState()
     }
   }
@@ -184,7 +190,7 @@ class Search extends React.Component {
   }
 
   getFacetQueryParam() {
-    const { appliedFacets } = this.state;
+    const { appliedFacets, viewFilters } = this.state;
     const queryParam = {}
     forEach(
       appliedFacets, (value, field) => {
@@ -192,7 +198,7 @@ class Search extends React.Component {
       }
     )
 
-    return queryParam
+    return {...queryParam, ...viewFilters}
   }
 
   fetchNewResults(attrsToSet, counts=true, resetItems=true) {
@@ -307,6 +313,7 @@ class Search extends React.Component {
     const { nested, extraControls } = this.props;
     const {
       updatedSince, limit, appliedFacets, resource, includeRetired, isTable, isInfinite,
+      viewFilters
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
     return (
@@ -354,6 +361,14 @@ class Search extends React.Component {
             <InfiniteScrollChip isInfinite={isInfinite} size={nested ? 'small' : 'medium'} onClick={this.onInfiniteToggle} />
           </span>
         }
+        {
+          !isEmpty(viewFilters) &&
+          map(viewFilters, (value, attr) => (
+            <span style={{paddingLeft: '5px'}} key={attr}>
+              <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
+            </span>
+          ))
+        }
       </span>
     )
   }
@@ -378,7 +393,7 @@ class Search extends React.Component {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
-      onCreateSimilarClick, onCreateMappingClick
+      onCreateSimilarClick, onCreateMappingClick, viewFields,
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -462,6 +477,7 @@ class Search extends React.Component {
                   onSelectChange={onSelectChange}
                   onCreateSimilarClick={onCreateSimilarClick}
                   onCreateMappingClick={onCreateMappingClick}
+                  viewFields={viewFields}
                 />
               }
               {

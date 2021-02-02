@@ -9,20 +9,20 @@ const ResourceLabel = props => {
         {
           (props.owner && props.parent) ?
           <React.Fragment>
-            <span>{props.owner}</span>
+            <span className='ellipsis-text-3'>{props.owner}</span>
             <span>{SEPARATOR}</span>
-            <span>{props.parent}</span>
+            <span className='ellipsis-text-3'>{props.parent}</span>
           </React.Fragment> :
           (
             props.parentURL &&
-            <span>{props.parentURL}</span>
+            <span className='ellipsis-text-3'>{props.parentURL}</span>
           )
         }
         <span>{SEPARATOR}</span>
-        <span className='resource-name ellipsis-text' style={{maxWidth: '100%'}}>{props.id || props.name}</span>
+        <span className='resource-name ellipsis-text-3' style={{maxWidth: '100%'}}>{props.id || props.name}</span>
       </span>
-      <span className='resource-label resource-id ellipsis-text' style={{maxWidth: '100%'}}>
-        <span>{props.name || 'None'}</span>
+      <span className='resource-label resource-id' style={{maxWidth: '100%'}}>
+        <span className='ellipsis-text'>{props.name || 'None'}</span>
       </span>
     </div>
   )

@@ -150,6 +150,10 @@ td.pagination-center {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.ellipsis-text-3 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 .gray-italics {
     color: gray;
     font-style: italic;
@@ -496,4 +500,29 @@ div.login-paper {
     font-size: 12px;
     color: gray;
     font-style: italic;
+}
+td.xxsmall {
+    max-width: 50px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+td.xsmall {
+    max-width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+td.small {
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+td.medium {
+    max-width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+td.large {
+    max-width: 400px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
