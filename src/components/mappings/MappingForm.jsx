@@ -113,7 +113,7 @@ class MappingForm extends React.Component {
     const id = this.state.fields.id || "[generated-mapping-id]"
     return (
       <span>
-        <span>Alphanumeric characters, hyphens, periods, and underscores are allowed.</span>
+        <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
         <span>
           <span>Your new mapping will live at: <br />

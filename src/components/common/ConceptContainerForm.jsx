@@ -137,13 +137,13 @@ class ConceptContainerForm extends React.Component {
     const id = this.state.fields.id || `[${defaultIdText}]`
     return (
       <span>
-        <span>Allowed characters are : Alphabets(a-z,A-Z), Numbers(0-9) and Hyphen(-).</span>
+        <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
         <span>
           <span>{`Your new ${resourceType} will live at: `}<br />
-            {
-              `${getCurrentURL()}/${urlPath}/`
-            }
+      {
+        `${getCurrentURL()}/${urlPath}/`
+      }
           </span>
           <span><b>{id}</b>/</span>
         </span>

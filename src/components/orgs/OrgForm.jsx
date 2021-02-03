@@ -48,7 +48,7 @@ class OrgForm extends React.Component {
     const url = toFullURL("/orgs/")
     return (
       <span>
-        <span>Alphanumeric characters, hyphens, periods, and underscores are allowed.</span>
+        <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
         <span>
           <span>Your new organization will live at: <br />

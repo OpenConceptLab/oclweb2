@@ -84,7 +84,7 @@ class ConceptForm extends React.Component {
     const id = this.state.fields.id || "[concept-id]"
     return (
       <span>
-        <span>Alphanumeric characters, hyphens, periods, and underscores are allowed.</span>
+        <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
         <span>
           <span>Your new concept will live at: <br />
