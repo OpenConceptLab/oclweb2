@@ -119,7 +119,7 @@ const FilterDrawer = props => {
     <Drawer anchor='left' open={open} onClose={onClose}>
       <div className='col-md-12 no-side-padding' style={{width: '350px', height: 'calc(100% - 60px)', overflow: 'scroll'}}>
         <div className="col-md-12" style={{padding: '0 5px', margin: '5px 0', marginBottom: '0px'}}>
-          <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
+          <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px', height: '40px'}}>
             <InputBase
               style={{flex: 1, marginLeft: '10px'}}
               placeholder="Search Filters"
@@ -127,6 +127,7 @@ const FilterDrawer = props => {
               value={input}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
+              size="small"
               fullWidth
             />
             {
