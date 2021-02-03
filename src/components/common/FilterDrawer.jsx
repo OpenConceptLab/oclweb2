@@ -168,7 +168,7 @@ const FilterDrawer = props => {
                 {
                   map(facets, facet => (
                     <ListItem style={{padding: '0px 16px 0px 6px'}} key={facet[0]}>
-                      <ListItemIcon>
+                      <ListItemIcon style={{minWidth: 'auto'}}>
                         <Checkbox checked={isChecked(field, facet[0])} size='small' onChange={event => onCheckboxChange(event, field, facet)} style={{padding: '0px 9px'}} />
                       </ListItemIcon>
                       <ListItemText
