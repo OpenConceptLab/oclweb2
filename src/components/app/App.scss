@@ -532,4 +532,7 @@ td.large {
         width: unset !important;
         min-width: unset !important;
     }
+    .public-DraftEditor-content {
+        min-height: 110px;
+    }
 }

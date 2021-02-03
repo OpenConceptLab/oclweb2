@@ -1,6 +1,25 @@
 import React from 'react';
 import RichTextEditor from 'react-rte';
 
+const getTextAlignClassName = (contentBlock) => {
+  switch (contentBlock.getData().get('textAlign')) {
+    case 'ALIGN_LEFT':
+      return 'text-align--left';
+
+    case 'ALIGN_CENTER':
+      return 'text-align--center';
+
+    case 'ALIGN_RIGHT':
+      return 'text-align--right';
+
+    case 'ALIGN_JUSTIFY':
+      return 'text-align--justify';
+
+    default:
+      return '';
+  }
+};
+
 class RTEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +57,9 @@ class RTEditor extends React.Component {
             onChange={this.onChange}
             className='rte-editor'
             placeholder={placeholder}
+            toolbarClassName="demo-toolbar"
+            editorClassName="demo-editor"
+            blockStyleFn={getTextAlignClassName}
           />
         </div>
       </React.Fragment>
