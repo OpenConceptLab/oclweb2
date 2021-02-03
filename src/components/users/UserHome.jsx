@@ -49,8 +49,10 @@ class UserHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/organizations') > -1)
-      return 1;
+      return 2;
     if(location.pathname.indexOf('/orgs') > -1)
+      return 2;
+    if(location.pathname.indexOf('/collections') > -1)
       return 1;
     return 0;
   }

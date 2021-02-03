@@ -160,7 +160,7 @@ const UserHomeTabs = props => {
         isOpen={orgForm}
         onClose={() => setOrgForm(false)}
         formComponent={
-          <OrgForm onCancel={() => setOrgForm(false)} reloadOnSuccess={tab==2} />
+          <OrgForm onCancel={() => setOrgForm(false)} reloadOnSuccess={tab==2} successURI={user.organizations_url} />
         }
       />
     </div>

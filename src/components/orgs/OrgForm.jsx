@@ -95,7 +95,7 @@ class OrgForm extends React.Component {
   }
 
   handleSubmitResponse(response) {
-    const { edit, reloadOnSuccess, onCancel } = this.props
+    const { edit, reloadOnSuccess, onCancel, successURI } = this.props
     if(response.status === 201 || response.status === 200) { // success
       refreshCurrentUserCache();
       const verb = edit ? 'updated' : 'created'
@@ -103,6 +103,8 @@ class OrgForm extends React.Component {
       const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
       onCancel();
       alertifyjs.success(message, 1, () => {
+        if(successURI)
+          window.location.hash = successURI
         if(reloadOnSuccess)
           window.location.reload()
       })
