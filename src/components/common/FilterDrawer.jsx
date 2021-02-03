@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Drawer, List, ListItem, ListItemText, ListItemIcon, InputBase, IconButton,
-  Checkbox, Typography, Button, Tooltip
+  Checkbox, Typography, Button, Tooltip, Divider
 } from '@material-ui/core';
 import {
   Clear as ClearIcon,
@@ -158,7 +158,7 @@ const FilterDrawer = props => {
           {
             map(getFilters(), (facets, field) => (
               <div key={field}>
-                <Typography style={{padding: '5px 10px 0', fontWeight: 'bold'}}>
+                <Typography style={{padding: '0 10px 0', fontWeight: 'bold'}}>
                   {startCase(field)}
                 </Typography>
                 {
@@ -173,7 +173,7 @@ const FilterDrawer = props => {
                           primary={
                             <span className='col-md-12 no-side-padding flex-vertical-center'>
                               <span
-                                onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '14px'}}>
+              onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '14px'}}>
                                 {formattedName(facet[0])}
                               </span>
                               <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '14px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100'}}>
@@ -187,6 +187,7 @@ const FilterDrawer = props => {
                     )
                   })
                 }
+                <Divider style={{margin: '8px 5px 5px'}} />
               </div>
             ))
           }
