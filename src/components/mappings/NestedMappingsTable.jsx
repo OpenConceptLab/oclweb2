@@ -20,14 +20,15 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
     if(name) return name;
     return get(mapping, `${attr.split('_name')[0]}.display_name`)
   }
+
   return (
     <Table size="small" aria-label="versions">
       <TableHead>
         <TableRow>
-          <TableCell align='center'>Relationship</TableCell>
-          <TableCell align='left'>Source</TableCell>
-          <TableCell align='left'>Code</TableCell>
-          <TableCell align='left'>Name</TableCell>
+          <TableCell align='center'><b>Relationship</b></TableCell>
+          <TableCell align='left'><b>Source</b></TableCell>
+          <TableCell align='left'><b>Code</b></TableCell>
+          <TableCell align='left'><b>Name</b></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
