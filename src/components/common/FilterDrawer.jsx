@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Drawer, Divider, List, ListItem, ListItemText, ListItemIcon, InputBase, IconButton,
+  Drawer, List, ListItem, ListItemText, ListItemIcon, InputBase, IconButton,
   Checkbox, Typography, Button, Tooltip
 } from '@material-ui/core';
 import {
@@ -51,10 +51,6 @@ const FilterDrawer = props => {
     else {
       setFilters(omitBy(omit(newFilters, `${field}.${facet[0]}`), isEmpty))
     }
-  }
-
-  const isChecked = (field, facet) => {
-    return get(appliedFilters, `${field}.${facet}`, false);
   }
 
   const handleInputChange = event => {
@@ -121,7 +117,7 @@ const FilterDrawer = props => {
 
   return (
     <Drawer anchor='left' open={open} onClose={onClose}>
-      <div className='col-md-12 no-side-padding' style={{width: '500px', height: 'calc(100% - 60px)', overflow: 'scroll'}}>
+      <div className='col-md-12 no-side-padding' style={{width: '350px', height: 'calc(100% - 60px)', overflow: 'scroll'}}>
         <div className="col-md-12" style={{padding: '0 5px', margin: '5px 0', marginBottom: '0px'}}>
           <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
             <InputBase
@@ -162,34 +158,41 @@ const FilterDrawer = props => {
           {
             map(getFilters(), (facets, field) => (
               <div key={field}>
-                <Typography style={{padding: '10px 10px 0px 10px', fontWeight: 'bold'}}>
+                <Typography style={{padding: '5px 10px 0', fontWeight: 'bold'}}>
                   {startCase(field)}
                 </Typography>
                 {
-                  map(facets, facet => (
-                    <ListItem style={{padding: '0px 16px 0px 6px'}} key={facet[0]}>
-                      <ListItemIcon style={{minWidth: 'auto'}}>
-                        <Checkbox checked={isChecked(field, facet[0])} size='small' onChange={event => onCheckboxChange(event, field, facet)} style={{padding: '0px 9px'}} />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <span className='col-md-12 no-side-padding'>
-                            <span className='col-md-9 no-left-padding' style={{textAlign: 'left'}}>{formattedName(facet[0])}</span>
-                            <span className='col-md-3 no-right-padding' style={{textAlign: 'right'}}>{facet[1]}</span>
-                          </span>
-                        }
-                        style={{margin: 0}}
-                      />
-                    </ListItem>
-                  ))
+                  map(facets, facet => {
+                    const isChecked = get(appliedFilters, `${field}.${facet[0]}`, false);
+                    return (
+                      <ListItem className="flex-vertical-start" style={{padding: '0px 16px 0px 6px'}} key={facet[0]}>
+                        <ListItemIcon style={{minWidth: 'auto'}}>
+                          <Checkbox checked={isChecked} size='small' onChange={event => onCheckboxChange(event, field, facet)} style={{padding: '0px 9px'}} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <span className='col-md-12 no-side-padding flex-vertical-center'>
+                              <span
+                                onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '14px'}}>
+                                {formattedName(facet[0])}
+                              </span>
+                              <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '14px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100'}}>
+                                {facet[1].toLocaleString()}
+                              </span>
+                            </span>
+                          }
+                          style={{margin: 0}}
+                        />
+                      </ListItem>
+                    )
+                  })
                 }
-                <Divider />
               </div>
             ))
           }
         </List>
       </div>
-      <div className='col-md-12 no-side-padding bottom-fixed-center' style={{height: '60px', width: '500px'}}>
+      <div className='col-md-12 no-side-padding bottom-fixed-center' style={{height: '60px', width: '350px'}}>
         <Button onClick={onApplyClick} variant='contained' color='primary' style={{margin: 'auto 5px'}}>
           Apply
         </Button>
