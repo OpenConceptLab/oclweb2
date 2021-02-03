@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, map } from 'lodash';
+import { get, map, reject } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import AboutAccordian from '../common/AboutAccordian';
@@ -14,9 +14,10 @@ import ConfigSelect from '../common/ConfigSelect';
 const OrgHomeTabs = props => {
   const {
     tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
-    selectedConfig, customConfigs, onConfigChange
+    selectedConfig, customConfigs, onConfigChange, aboutTab,
   } = props;
-  const tabConfigs = selectedConfig.config.tabs
+
+  const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
   const about = get(org, 'text')
   const [sourceForm, setSourceForm] = React.useState(false);

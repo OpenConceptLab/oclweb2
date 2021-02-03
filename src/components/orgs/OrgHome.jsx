@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, values, find, findIndex, isEqual } from 'lodash';
+import { reject, get, values, find, findIndex, isEqual, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -9,6 +9,8 @@ import OrgHomeHeader from './OrgHomeHeader';
 import OrgHomeTabs from './OrgHomeTabs';
 const DEFAULT_CONFIG = {
   name: 'OCL Default',
+  web_default: true,
+  is_default: false,
   page_size: 25,
   layout: 'table',
   config: {
@@ -38,7 +40,7 @@ class OrgHome extends React.Component {
   getDefaultTabIndex() {
     const { location } = this.props;
 
-    if(location.pathname.indexOf('/about') > -1)
+    if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
       return 3;
     if(location.pathname.indexOf('/members') > -1)
       return 2;
@@ -163,13 +165,17 @@ class OrgHome extends React.Component {
     }
   }
 
-  updatePinOrder = (pinId, newOrder) => {
-    const service = this.getPinsService(pinId)
-    service.put({order: newOrder}).then(() => {})
+  updatePinOrder = (pinId, newOrder) => this.getPinsService(pinId)
+                                            .put({order: newOrder})
+                                            .then(() => {})
+
+  shouldShowAboutTab() {
+    return !isEmpty(get(this, 'state.org.text'));
   }
 
   render() {
     const { org, isLoading, tab, pins, selectedConfig, customConfigs } = this.state;
+    const showAboutTab = this.shouldShowAboutTab();
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
     return (
@@ -200,6 +206,7 @@ class OrgHome extends React.Component {
                 customConfigs={[...customConfigs, DEFAULT_CONFIG]}
                 onConfigChange={this.onConfigChange}
                 selectedConfig={selectedConfig}
+                aboutTab={showAboutTab}
               />
             }
           </div>
