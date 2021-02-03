@@ -7,10 +7,11 @@ const CommonFormDrawer = ({ isOpen, onClose, formComponent, size }) => {
   const onDrawerClose = () => setOpen(() => {
     onClose(); return false;
   })
+
   React.useEffect(() => setOpen(isOpen), [isOpen])
 
   return (
-    <Drawer anchor='right' open={open} onClose={onDrawerClose} className={className}>
+    <Drawer anchor='right' open={open} onClose={onDrawerClose} classes={{paper: className}}>
       { formComponent }
     </Drawer>
   )
