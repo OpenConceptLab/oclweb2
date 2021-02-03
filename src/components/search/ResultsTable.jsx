@@ -278,6 +278,7 @@ const ExpandibleRow = props => {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
     nested, showPin, columns
   } = props;
+  const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
   const [names, setNames] = React.useState([]);
@@ -415,6 +416,7 @@ const ExpandibleRow = props => {
                 .appendToUrl('mappings/')
                 .get(null, null, {includeInverseMappings: true})
                 .then(response => {
+                  setIsFetchingMappings(false)
                   if(response.status === 200)
                     setMappings(response.data)
                 })
@@ -544,7 +546,7 @@ const ExpandibleRow = props => {
                   {
                     tab === resourceDefinition.tabs.indexOf('Mappings') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <AllMappingsTables mappings={mappings} concept={item.id}/>
+                      <AllMappingsTables mappings={mappings} concept={item.id} isLoading={isFetchingMappings} />
                     </div>
                   }
                   {

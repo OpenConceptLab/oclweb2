@@ -1,9 +1,10 @@
 import React from 'react';
+import { CircularProgress } from '@material-ui/core';
 import { isEmpty } from 'lodash';
 import NestedMappingsTable from './NestedMappingsTable';
 import { getIndirectMappings, getDirectMappings } from '../../common/utils';
 
-const AllMappingsTables = ({concept, mappings}) => {
+const AllMappingsTables = ({concept, mappings, isLoading}) => {
   const getMappingsHeader = (mappings, isDirect) => {
     const count = mappings.length;
     return `${isDirect ? 'Direct' : 'Inverse'} Mappings (${count})`
@@ -31,10 +32,18 @@ const AllMappingsTables = ({concept, mappings}) => {
   }
 
   return (
-    <div>
-      { getMappingsDom(directMappings, directMappingsHeader) }
-      { getMappingsDom(indirectMappings, indirectMappingsHeader) }
-    </div>
+    <React.Fragment>
+      {
+        isLoading ?
+        <div style={{margin: '10px 0', textAlign: 'center'}}>
+          <CircularProgress />
+        </div>:
+        <div>
+          { getMappingsDom(directMappings, directMappingsHeader) }
+          { getMappingsDom(indirectMappings, indirectMappingsHeader) }
+        </div>
+      }
+    </React.Fragment>
   )
 }
 
