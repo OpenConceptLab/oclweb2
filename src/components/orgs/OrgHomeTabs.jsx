@@ -48,6 +48,7 @@ const OrgHomeTabs = props => {
                 configs={customConfigs}
                 onChange={onConfigChange}
                 color={ORANGE}
+                resourceURL={url}
               />
             </span>
           }

@@ -11,8 +11,6 @@ const DEFAULT_CONFIG = {
   name: 'OCL Default',
   web_default: true,
   is_default: false,
-  page_size: 25,
-  layout: 'table',
   config: {
     tabs: [
       {type: "sources", label: "Sources", page_size: 25, "default": true},

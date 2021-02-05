@@ -1,10 +1,13 @@
 import React from 'react';
 import { Tooltip, Chip, MenuItem, Menu } from '@material-ui/core'
-import SettingsIcon from '@material-ui/icons/SettingsOverscan';
+import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { map } from 'lodash';
+import CommonFormDrawer from './CommonFormDrawer';
+import ViewConfigForm from './ViewConfigForm';
 
-const ConfigSelect = ({configs, selected, onChange, color}) => {
+const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
+  const [drawer, setDrawer] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -21,13 +24,20 @@ const ConfigSelect = ({configs, selected, onChange, color}) => {
     onChange(config)
     toggleOpen(event)
   }
+
+  const onIconClick = event => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    setDrawer(true)
+  }
   return (
     <span>
       <Tooltip title='Change View Layout'>
         <Chip
           variant="default"
           color='secondary'
-          icon={<SettingsIcon style={{width: '18px', marginLeft: '8px'}} />}
+          icon={<SettingsIcon style={{width: '18px', marginLeft: '8px'}} onClick={ onIconClick } />}
           deleteIcon={<ArrowDropDownIcon style={{width: '18px'}} />}
           label={`Layout : ${selected.name}`}
           onClick={toggleOpen}
@@ -50,6 +60,16 @@ const ConfigSelect = ({configs, selected, onChange, color}) => {
           ))
         }
       </Menu>
+
+      <CommonFormDrawer
+        isOpen={drawer} onClose={() => setDrawer(false)}
+        formComponent={
+          <ViewConfigForm
+            reloadOnSuccess
+            selected={selected} configs={configs} onCancel={() => setDrawer(false)} resourceURL={resourceURL}
+          />
+        }
+      />
     </span>
   )
 }
