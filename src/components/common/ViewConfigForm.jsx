@@ -21,6 +21,7 @@ class ViewConfigForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialConfig: get(props.selected, 'config', {}),
       selected: props.selected,
       selectedConfig: findIndex(props.configs, props.selected),
       fields: cloneDeep(DEFAULT_STATE),
@@ -37,6 +38,7 @@ class ViewConfigForm extends React.Component {
     const newState = {...this.state}
     const attrs = ['name', 'layout', 'page_size', 'config', 'is_default']
     attrs.forEach(attr => set(newState, `fields.${attr}`, get(selected, attr)))
+    newState.initialConfig = get(selected, 'config', {})
     this.setState(newState)
   }
 
@@ -148,7 +150,7 @@ class ViewConfigForm extends React.Component {
 
   render() {
     const { configs } = this.props;
-    const { selected, fields } = this.state;
+    const { selected, fields, initialConfig } = this.state;
     const isOCLDefaultConfigSelected = get(selected, 'web_default');
     const configOptions = [...configs, NEW_CONFIG];
     const isNew = get(selected, 'id') === 'new';
@@ -223,7 +225,7 @@ class ViewConfigForm extends React.Component {
             </div>
             <div className='col-md-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               <JSONEditor
-                placeholder={fields.config || {}}
+                placeholder={initialConfig}
                 viewOnly={isOCLDefaultConfigSelected}
                 onChange={value => this.setFieldValue('fields.config', value.jsObject) }
               />
