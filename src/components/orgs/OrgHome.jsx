@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, values, find, findIndex, isEqual, isEmpty } from 'lodash';
+import { reject, get, values, find, findIndex, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -31,8 +31,11 @@ class OrgHome extends React.Component {
       tab: null,
       selectedConfig: null,
       customConfigs: [],
-      isCustomConfigSelected: false,
     }
+  }
+
+  customConfigFeatureApplicable() {
+    return this.props.location.search.indexOf('configs=true') > -1;
   }
 
   getDefaultTabIndex() {
@@ -84,7 +87,10 @@ class OrgHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname) {
+    if(
+      (prevProps.location.pathname !== this.props.location.pathname) ||
+      (prevProps.location.search !== this.props.location.search)
+    ) {
       this.refreshDataByURL()
       this.getPins()
     }
@@ -98,11 +104,12 @@ class OrgHome extends React.Component {
 
   refreshDataByURL() {
     const service = this.getOrgService()
+    const customConfigFeatureApplicable = this.customConfigFeatureApplicable();
     if(service) {
       this.setState(
         {isLoading: true},
         () => service
-          .get(null, null, {includeClientConfigs: true})
+          .get(null, null, {includeClientConfigs: customConfigFeatureApplicable})
           .then(response => {
             const org = response.data;
             const customConfigs = get(response.data, 'client_configs', [])
@@ -112,17 +119,13 @@ class OrgHome extends React.Component {
               org: org,
               selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
               customConfigs: customConfigs,
-              isCustomConfigSelected: Boolean(defaultCustomConfig),
             }, this.setTab)
           }))
     }
   }
 
   onConfigChange = config => {
-    this.setState({
-      selectedConfig: config,
-      isCustomConfigSelected: !isEqual(config, DEFAULT_CONFIG)
-    })
+    this.setState({selectedConfig: config})
   }
 
   onTabChange = (event, value) => {
@@ -205,6 +208,7 @@ class OrgHome extends React.Component {
                 onConfigChange={this.onConfigChange}
                 selectedConfig={selectedConfig}
                 aboutTab={showAboutTab}
+                showConfigSelection={this.customConfigFeatureApplicable()}
               />
             }
           </div>

@@ -14,7 +14,7 @@ import ConfigSelect from '../common/ConfigSelect';
 const OrgHomeTabs = props => {
   const {
     tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
-    selectedConfig, customConfigs, onConfigChange, aboutTab,
+    selectedConfig, customConfigs, onConfigChange, aboutTab, showConfigSelection,
   } = props;
 
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
@@ -41,7 +41,7 @@ const OrgHomeTabs = props => {
         hasAccess &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
           {
-            customConfigs.length > 1 &&
+            showConfigSelection &&
             <span style={{marginRight: '10px'}}>
               <ConfigSelect
                 selected={selectedConfig}
