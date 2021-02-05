@@ -21,7 +21,7 @@ class ViewConfigForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      initialConfig: get(props.selected, 'config', {}),
+      initialConfig: cloneDeep(get(props.selected, 'config', {})),
       selected: props.selected,
       selectedConfig: findIndex(props.configs, props.selected),
       fields: cloneDeep(DEFAULT_STATE),
@@ -38,7 +38,7 @@ class ViewConfigForm extends React.Component {
     const newState = {...this.state}
     const attrs = ['name', 'layout', 'page_size', 'config', 'is_default']
     attrs.forEach(attr => set(newState, `fields.${attr}`, get(selected, attr)))
-    newState.initialConfig = get(selected, 'config', {})
+    newState.initialConfig = cloneDeep(get(selected, 'config', {}))
     this.setState(newState)
   }
 
@@ -135,8 +135,13 @@ class ViewConfigForm extends React.Component {
   }
 
   onConfigurationChange(config) {
-    this.setFieldValue('errors', null)
-    this.setFieldValue('selected', config)
+    const newState = {...this.state}
+    newState.errors = null
+    newState.initialConfig = {}
+    newState.selected = config
+    this.setState(newState, () => {
+      this.setState({initialConfig: cloneDeep(get(config, 'config', {}))})
+    })
   }
 
   onDelete() {
