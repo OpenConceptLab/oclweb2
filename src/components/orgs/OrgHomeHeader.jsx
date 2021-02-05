@@ -50,19 +50,19 @@ const OrgHomeHeader = ({ org, url }) => {
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
-            {
-              hasAccess &&
-              <span style={{marginLeft: '15px'}}>
-                <ButtonGroup variant='text' size='large'>
+            <span style={{marginLeft: '15px'}}>
+              <ButtonGroup variant='text' size='large'>
+                {
+                  hasAccess &&
                   <Tooltip title='Edit Organization'>
                     <Button onClick={() => setOrgForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
-                  <DownloadButton resource={org} filename={downloadFileName} includeCSV />
-                </ButtonGroup>
-              </span>
-            }
+                }
+                <DownloadButton resource={org} filename={downloadFileName} includeCSV />
+              </ButtonGroup>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>

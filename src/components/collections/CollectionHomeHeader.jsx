@@ -112,24 +112,27 @@ const CollectionHomeHeader = ({
                 <ProcessingChip size='small' />
               </span>
             }
-            {
-              hasAccess && isVersionedObject &&
-              <span style={{marginLeft: '15px'}}>
-                <ButtonGroup variant='text' size='large'>
+            <span style={{marginLeft: '15px'}}>
+              <ButtonGroup variant='text' size='large'>
+                {
+                  hasAccess && isVersionedObject &&
                   <Tooltip title='Edit Collection'>
                     <Button onClick={() => setCollectionForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
+                }
+                {
+                  hasAccess && isVersionedObject &&
                   <Tooltip title='Delete Collection'>
                     <Button onClick={() => setDeleteDialog(true) }>
                       <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
-                  <DownloadButton resource={collection} filename={downloadFileName} includeCSV />
-                </ButtonGroup>
-              </span>
-            }
+                }
+                <DownloadButton resource={collection} filename={downloadFileName} includeCSV />
+              </ButtonGroup>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>
