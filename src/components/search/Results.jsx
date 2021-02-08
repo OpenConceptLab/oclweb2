@@ -21,11 +21,18 @@ const Results = props => {
         results.total ?
         <div className='col-sm-12 no-side-padding' style={{width: '100%'}}>
           {
-            includes(['concepts', 'mappings', 'sources'], resource) ?
-            map(results.items, item => (
-              <RowComponent key={item.id} onSelect={onSelectChange} item={item} resource={resource} />
-            )) :
-            <div className="col-sm-12 no-side-padding" style={{textAlign: 'center', margin: '10px 0', width: '100%'}}>
+            includes(['concepts', 'mappings', 'sources', 'collections'], resource) ?
+            map(
+              results.items,
+              item => <RowComponent
+                        key={item.uuid || item.id}
+                        onSelect={onSelectChange}
+                        item={item}
+                        resource={resource} />
+            ) :
+            <div
+              className="col-sm-12 no-side-padding"
+              style={{textAlign: 'center', margin: '10px 0', width: '100%'}}>
               {`This view is not implemented yet for ${startCase(props.resource)}`}
             </div>
           }

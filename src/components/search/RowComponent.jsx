@@ -3,6 +3,7 @@ import { Divider, Checkbox } from '@material-ui/core';
 import Concept from '../concepts/Concept';
 import Mapping from '../mappings/Mapping';
 import Source from '../sources/Source';
+import Collection from '../collections/Collection';
 
 const RowComponent = ({resource, item, onSelect}) => {
   const getComponent = () => {
@@ -12,10 +13,12 @@ const RowComponent = ({resource, item, onSelect}) => {
       return <Mapping {...item} style={{paddingLeft: '10px'}} />;
     if(resource === 'sources')
       return <Source {...item} style={{paddingLeft: '10px'}} />;
+    if(resource === 'collections')
+      return <Collection {...item} style={{paddingLeft: '10px'}} />;
   }
 
   return (
-    <div className='col-sm-12 no-side-padding' key={item.id} style={{width: '100%'}}>
+    <div className='col-sm-12 no-side-padding' key={item.uuid || item.id} style={{width: '100%'}}>
       <div className='col-sm-1 no-left-padding' style={{textAlign: 'right', width: '2%'}}>
         <Checkbox onChange={event => onSelect(event, item.url)} />
       </div>

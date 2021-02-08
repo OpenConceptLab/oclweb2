@@ -1,24 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import { List as ListIcon } from '@material-ui/icons'
+import { Loyalty as LoyaltyIcon } from '@material-ui/icons'
 import { merge, get } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 
-const Source = props => {
+const Collection = props => {
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <Link to={props.url} style={{display: 'inline-block'}} target="_blank">
         <ResourceLabel
           owner={props.owner} id={props.id} name={props.name}
-          icon={<ListIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
-          colorClass="source-bg"
+          icon={<LoyaltyIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
+          colorClass="collection-bg"
         />
       </Link>
       <div className='col-sm-12 no-side-padding resource-attributes'>
-        <span className='resource-attr'>Source Type:</span>
-        <span className='resource-value'>{props.source_type || 'None'}</span>
+        <span className='resource-attr'>Collection Type:</span>
+        <span className='resource-value'>{props.collection_type || 'None'}</span>
         {
           props.description &&
           <React.Fragment>
@@ -32,4 +32,4 @@ const Source = props => {
   )
 }
 
-export default Source;
+export default Collection;
