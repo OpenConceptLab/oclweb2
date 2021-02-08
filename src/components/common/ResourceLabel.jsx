@@ -11,11 +11,12 @@ const ResourceLabel = props => {
           <span className='ellipsis-text-3'>{props.owner}</span>
         }
         {
+          props.owner && props.parent &&
+          <span>{SEPARATOR}</span>
+        }
+        {
           props.parent &&
-          <React.Fragment>
-            <span>{SEPARATOR}</span>
-            <span className='ellipsis-text-3'>{props.parent}</span>
-          </React.Fragment>
+          <span className='ellipsis-text-3'>{props.parent}</span>
         }
         {
           (!props.owner && !props.parent && props.parentURL) &&

@@ -14,14 +14,13 @@ const Results = props => {
 
     if (props.onSelectChange) props.onSelectChange(newSelectedList);
   }
-
   return (
     <div className='col-sm-12 no-side-padding' style={{width: '100%'}}>
       {
         results.total ?
         <div className='col-sm-12 no-side-padding' style={{width: '100%'}}>
           {
-            includes(['concepts', 'mappings', 'sources', 'collections'], resource) ?
+            includes(['concepts', 'mappings', 'sources', 'collections', 'organizations'], resource) ?
             map(
               results.items,
               item => <RowComponent
