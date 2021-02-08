@@ -12,13 +12,17 @@ import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
-import ConceptIcon from './ConceptIcon';
 import CommonFormDrawer from '../common/CommonFormDrawer';
+import DownloadButton from '../common/DownloadButton';
+import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 
 const ConceptHomeHeader = ({
   concept, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const downloadFileName = isVersionedObject ?
+                           `concept-${concept.id}` :
+                           `concept-${concept.id}-version-${concept.version}`;
   const isRetired = concept.retired;
   const hasAccess = currentUserHasAccess();
   const [conceptForm, setConceptForm] = React.useState(false);
@@ -87,16 +91,19 @@ const ConceptHomeHeader = ({
                 <VersionButton label={concept.version} retired={isRetired} href={`#${currentURL}`} />
               </React.Fragment>
             }
-            {
-              hasAccess && isVersionedObject &&
-              <span style={{marginLeft: '15px'}}>
-                <ButtonGroup variant='text' size='large'>
+            <span style={{marginLeft: '15px'}}>
+              <ButtonGroup variant='text' size='large'>
+                {
+                  hasAccess && isVersionedObject &&
                   <Tooltip title='Edit Concept'>
                     <Button onClick={() => setConceptForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
-                  {
+                }
+                {
+                  hasAccess && isVersionedObject &&
+                  (
                     isRetired ?
                     <Tooltip title='Un-Retire Concept'>
                       <Button onClick={onUnretire}>
@@ -108,10 +115,11 @@ const ConceptHomeHeader = ({
                         <DeleteIcon fontSize='inherit' />
                       </Button>
                     </Tooltip>
-                  }
-                </ButtonGroup>
-              </span>
-            }
+                  )
+                }
+                <DownloadButton resource={concept} filename={downloadFileName} />
+              </ButtonGroup>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
             <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
