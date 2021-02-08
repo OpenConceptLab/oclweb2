@@ -13,10 +13,11 @@ import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import DownloadButton from '../common/DownloadButton';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
-import CommonFormDrawer from '../common/CommonFormDrawer';
 import MappingForm from './MappingForm';
 
 const LABEL_STYLES = {
@@ -27,6 +28,9 @@ const LABEL_STYLES = {
 const MappingHomeHeader = ({
   mapping, isVersionedObject, versionedObjectURL, currentURL
 }) => {
+  const downloadFileName = isVersionedObject ?
+                           `mapping-${mapping.id}` :
+                           `mapping-${mapping.id}-version-${mapping.version}`;
   const isRetired = mapping.retired;
   const hasAccess = currentUserHasAccess();
 
@@ -96,16 +100,19 @@ const MappingHomeHeader = ({
                 <VersionButton label={mapping.version} retired={isRetired} href={`#${currentURL}`} />
               </React.Fragment>
             }
-            {
-              hasAccess && isVersionedObject &&
-              <span style={{marginLeft: '15px'}}>
-                <ButtonGroup variant='text' size='large'>
+            <span style={{marginLeft: '15px'}}>
+              <ButtonGroup variant='text' size='large'>
+                {
+                  hasAccess && isVersionedObject &&
                   <Tooltip title='Edit Mapping'>
                     <Button onClick={() => setMappingForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
-                  {
+                }
+                {
+                  hasAccess && isVersionedObject &&
+                  (
                     isRetired ?
                     <Tooltip title='Un-Retire Mapping'>
                       <Button onClick={onUnretire}>
@@ -117,10 +124,11 @@ const MappingHomeHeader = ({
                         <DeleteIcon fontSize='inherit' />
                       </Button>
                     </Tooltip>
-                  }
-                </ButtonGroup>
-              </span>
-            }
+                  )
+                }
+                <DownloadButton resource={mapping} filename={downloadFileName} />
+              </ButtonGroup>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
