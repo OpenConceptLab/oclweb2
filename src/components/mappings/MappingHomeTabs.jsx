@@ -9,8 +9,8 @@ const MappingHomeTabs = props => {
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header' value={tab} aria-label="mapping-home-tabs"  classes={{indicator: 'hidden'}}>
-        <Tab label="Details" component="a" href={`#${resourceRelativeURL}details`} />
-        <Tab label="History" component="a" href={`#${resourceRelativeURL}history`} />
+        <Tab label="Details" component="a" href={`#${resourceRelativeURL}details/`} />
+        <Tab label="History" component="a" href={`#${resourceRelativeURL}history/`} />
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
         { tab === 0 && <MappingHomeDetails mapping={mapping} /> }
