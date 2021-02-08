@@ -12,7 +12,7 @@ import ReferenceForm from './ReferenceForm';
 
 const CollectionHomeTabs = props => {
   const {
-    tab, onChange, collection, versions, location, versionedObjectURL, currentVersion,
+    tab, collection, versions, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate
   } = props;
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
@@ -26,15 +26,16 @@ const CollectionHomeTabs = props => {
     if(resource === 'references')
       setReferenceForm(true)
   }
+  const currentResourceURL = isVersionedObject ? collection.url : collection.version_url
 
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onChange} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
-        <Tab label="Concepts" />
-        <Tab label="Mappings" />
-        <Tab label="References" />
-        <Tab label="Versions" />
-        {aboutTab && <Tab label="About" />}
+      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
+        <Tab label="Concepts" component="a" href={`#${collection.concepts_url}`} />
+        <Tab label="Mappings" component="a" href={`#${collection.mappings_url}`} />
+        <Tab label="References" component="a" href={`#${currentResourceURL}references/`} />
+        <Tab label="Versions" component="a" href={isVersionedObject ? `#${collection.versions_url}` : `#${currentResourceURL}versions/`} />
+        {aboutTab && <Tab label="About" component="a" href={`#${currentResourceURL}about/`} />}
       </Tabs>
       {
         hasAccess && isVersionedObject &&
