@@ -25,7 +25,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   return (
-    <div className='col-md-12'>
+    <React.Fragment>
       <div className='col-md-6 no-left-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
@@ -98,7 +98,7 @@ const ConceptHomeDetails = ({ concept, currentURL }) => {
           </AccordionDetails>
         </Accordion>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

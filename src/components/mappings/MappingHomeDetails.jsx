@@ -18,7 +18,7 @@ const ACCORDIAN_DETAILS_STYLES = {
 const MappingHomeDetails = ({ mapping }) => {
   return (
     <div className='col-md-12'>
-      <div className='col-md-8 no-side-padding'>
+      <div className='col-md-12 no-side-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'

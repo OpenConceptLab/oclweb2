@@ -172,12 +172,12 @@ td.pagination-center {
     color: #e5e5e5;
     cursor: pointer;
     &.concept {
-        width: 70px;
+        justify-content: center;
         height: 110px;
         color: rgb(51, 115, 170);
     }
     &.mapping {
-        width: 70px;
+        justify-content: center;
         height: 110px;
         color: rgb(51, 115, 170);
     }
@@ -546,5 +546,6 @@ a:focus {
 table.nested-mappings {
     td {
         font-size: 0.75rem;
+        padding: 2px;
     }
 }
