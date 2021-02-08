@@ -20,7 +20,7 @@ const ICON_STYLES = {marginRight: '10px', marginBottom: '0px'}
 const TAB_STYLES = {minHeight: HEIGHT, paddingTop: '6px', height: HEIGHT}
 
 const UserHomeTabs = props => {
-  const { tab, user, onTabChange } = props;
+  const { tab, user } = props;
   const [orgForm, setOrgForm] = React.useState(false);
   const [sourceForm, setSourceForm] = React.useState(false);
   const [collectionForm, setCollectionForm] = React.useState(false);
@@ -60,7 +60,6 @@ const UserHomeTabs = props => {
       <AppBar position="static" color="default" style={{backgroundColor: WHITE, boxShadow: 'none'}}>
         <Tabs
           value={tab}
-          onChange={onTabChange}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
@@ -74,18 +73,21 @@ const UserHomeTabs = props => {
             label="User Sources"
             icon={<ListIcon fontSize='small' style={getIconStyles(0, GREEN)} />}
             style={getTabStyles(0, GREEN)}
+            component="a" href={`#${user.url}sources/`}
           />
           <Tab
             className='material-tab'
             label="User Collections"
             icon={<LoyaltyIcon fontSize='small' style={getIconStyles(1, GREEN)} />}
             style={getTabStyles(1, GREEN)}
+            component="a" href={`#${user.url}collections/`}
           />
           <Tab
             className='material-tab'
             label="Organization Membership"
             icon={<HomeIcon fontSize='small' style={getIconStyles(2, ORANGE)} />}
             style={getTabStyles(2, ORANGE)}
+            component="a" href={`#${user.url}orgs/`}
           />
         </Tabs>
       </AppBar>
