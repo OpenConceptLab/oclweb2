@@ -539,3 +539,7 @@ td.large {
 .form-subheading {
     margin: 8px 0 0;
 }
+a:focus {
+    outline: unset !important;
+    outline-offset: none !important;
+}
