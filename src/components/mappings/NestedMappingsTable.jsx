@@ -33,7 +33,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
   }
 
   return (
-    <Table size="small" aria-label="versions">
+    <Table size="small" aria-label="nested-mappings" className='nested-mappings'>
       <TableHead>
         <TableRow>
           <TableCell align='center'><b>Relationship</b></TableCell>
@@ -88,7 +88,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
               <TableCell align='left'>
                 { `${mapping.owner} / ${mapping.source}` }
               </TableCell>
-              <TableCell align='left'>
+              <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
                 { mapping[conceptCodeAttr] }
               </TableCell>
               <TableCell align='left'>

@@ -543,3 +543,8 @@ a:focus {
     outline: unset !important;
     outline-offset: none !important;
 }
+table.nested-mappings {
+    td {
+        font-size: 0.75rem;
+    }
+}
