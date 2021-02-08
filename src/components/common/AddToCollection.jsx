@@ -3,13 +3,14 @@ import alertifyjs from 'alertifyjs';
 import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-  FormControlLabel, Checkbox, Divider
+  FormControlLabel, Checkbox, Divider, TextField, InputAdornment
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
 import {
   ArrowDropDown as ArrowDropDownIcon,
   Loyalty as LoyaltyIcon,
   Help as HelpIcon,
+  Search as SearchIcon,
 } from '@material-ui/icons'
 import { map, isEmpty, get, filter } from 'lodash';
 import { getCurrentUserCollections } from '../../common/utils';
@@ -24,6 +25,7 @@ class AddToCollection extends React.Component {
       selectedCollection: null,
       isLoading: true,
       isAdding: false,
+      allCollections: [],
       collections: [],
       cascadeMappings: true,
       notAdded: [],
@@ -39,7 +41,8 @@ class AddToCollection extends React.Component {
 
   fetchCollections() {
     getCurrentUserCollections(collections => this.setState({
-      collections: [...this.state.collections, ...collections]
+      collections: [...this.state.collections, ...collections],
+      allCollections: [...this.state.collections, ...collections],
     }))
   }
 
@@ -86,6 +89,20 @@ class AddToCollection extends React.Component {
     })
   }
 
+  getFilteredCollections(value) {
+    return filter(this.state.allCollections, collection => {
+      const name = collection.short_code + '/' + collection.owner;
+      return name.toLowerCase().match(value.trim())
+    })
+  }
+
+  onSearchValueChange = event => this.setState({
+    searchedValue: event.target.value,
+    collections: event.target.value.trim() ?
+                 this.getFilteredCollections(event.target.value) :
+                 this.state.allCollections
+  })
+
   render() {
     const {
       open, collections, selectedCollection, cascadeMappings, notAdded, added, isAdding
@@ -112,7 +129,23 @@ class AddToCollection extends React.Component {
                 >
                 <Paper>
                   <ClickAwayListener onClickAway={this.handleClose}>
-                    <MenuList id="split-button-menu" style={{maxHeight: '300px', overflow: 'scroll'}}>
+                    <MenuList variant='menu' id="split-button-menu" style={{maxHeight: '300px', overflow: 'scroll'}}>
+                      <TextField
+                        id='collection-search-input'
+                        placeholder='Search Collection...'
+                        variant='outlined'
+                        size='small'
+                        style={{padding: '10px', width: '100%'}}
+                        autoFocus
+                        onChange={this.onSearchValueChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <SearchIcon />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
                       {
                         map(collections, (collection, index) => (
                           <MenuItem
