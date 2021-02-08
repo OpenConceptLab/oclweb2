@@ -46,6 +46,9 @@ import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
 import AddToCollection from '../common/AddToCollection';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import ConceptHome from '../concepts/ConceptHome';
+import MappingHome from '../mappings/MappingHome';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
 const RESOURCE_DEFINITIONS = {
@@ -278,6 +281,7 @@ const ExpandibleRow = props => {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
     nested, showPin, columns
   } = props;
+  const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
@@ -371,6 +375,13 @@ const ExpandibleRow = props => {
     window.open('#' + item.url, '_blank')
   }
 
+  const onContextMenu = event => {
+    if(item.concept_class || item.map_type) {
+      event.preventDefault()
+      setDetails(true)
+    }
+  }
+
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
@@ -455,6 +466,7 @@ const ExpandibleRow = props => {
       <TableRow
         hover
         style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
+        onContextMenu={onContextMenu}
         onClick={onRowClick}>
         {
           isConceptContainer &&
@@ -575,6 +587,23 @@ const ExpandibleRow = props => {
             </Collapse>
           </TableCell>
         </TableRow>
+      }
+      {
+        details &&
+        <CommonFormDrawer
+          size='large'
+          isOpen={details}
+          onClose={() => setDetails(false)}
+          formComponent={
+            item.concept_class ?
+                         <ConceptHome
+                           concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: null}}}
+                         /> :
+                         <MappingHome
+                           mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: null}}}
+                         />
+          }
+        />
       }
     </React.Fragment>
   )
