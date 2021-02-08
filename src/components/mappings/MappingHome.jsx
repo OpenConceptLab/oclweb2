@@ -5,7 +5,7 @@ import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeTabs from './MappingHomeTabs';
 import { includes } from 'lodash';
 
-const TABS = ['history'];
+const TABS = ['details', 'history'];
 
 class MappingHome extends React.Component {
   constructor(props) {
@@ -40,6 +40,8 @@ class MappingHome extends React.Component {
 
   getMappingURLFromPath() {
     const { location, match } = this.props;
+    if(location.pathname.indexOf('/details') > -1)
+      return location.pathname.split('/details')[0] + '/'
     if(location.pathname.indexOf('/history') > -1)
       return location.pathname.split('/history')[0] + '/'
     if(match.params.mappingVersion)
@@ -94,6 +96,7 @@ class MappingHome extends React.Component {
   render() {
     const { mapping, versions, isLoading, tab } = this.state;
     const currentURL = this.getMappingURLFromPath()
+    const isVersionedObject = this.isVersionedObject()
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -102,11 +105,17 @@ class MappingHome extends React.Component {
           <div className='col-md-12 home-container no-side-padding'>
             <MappingHomeHeader
               mapping={mapping}
-              isVersionedObject={this.isVersionedObject()}
+              isVersionedObject={isVersionedObject}
               versionedObjectURL={this.getVersionedObjectURLFromPath()}
               currentURL={currentURL}
             />
-            <MappingHomeTabs tab={tab} onChange={this.onTabChange} mapping={mapping} versions={versions} />
+            <MappingHomeTabs
+              tab={tab}
+              onChange={this.onTabChange}
+              mapping={mapping}
+              versions={versions}
+              isVersionedObject={isVersionedObject}
+            />
           </div>
         }
       </div>
