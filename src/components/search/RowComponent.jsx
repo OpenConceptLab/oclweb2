@@ -2,13 +2,16 @@ import React from 'react';
 import { Divider, Checkbox } from '@material-ui/core';
 import Concept from '../concepts/Concept';
 import Mapping from '../mappings/Mapping';
+import Source from '../sources/Source';
 
 const RowComponent = ({resource, item, onSelect}) => {
   const getComponent = () => {
     if(resource === 'concepts')
       return <Concept {...item} style={{paddingLeft: '10px'}} />;
     if(resource === 'mappings')
-      return <Mapping {...item} style={{paddingLeft: '10px'}} />
+      return <Mapping {...item} style={{paddingLeft: '10px'}} />;
+    if(resource === 'sources')
+      return <Source {...item} style={{paddingLeft: '10px'}} />;
   }
 
   return (
@@ -23,5 +26,4 @@ const RowComponent = ({resource, item, onSelect}) => {
     </div>
   )
 }
-
 export default RowComponent;

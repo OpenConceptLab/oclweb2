@@ -21,7 +21,7 @@ const Results = props => {
         results.total ?
         <div className='col-sm-12 no-side-padding' style={{width: '100%'}}>
           {
-            includes(['concepts', 'mappings'], resource) ?
+            includes(['concepts', 'mappings', 'sources'], resource) ?
             map(results.items, item => (
               <RowComponent key={item.id} onSelect={onSelectChange} item={item} resource={resource} />
             )) :
