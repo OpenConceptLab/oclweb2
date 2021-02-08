@@ -13,7 +13,7 @@ import SourceVersionForm from './SourceVersionForm';
 
 const SourceHomeTabs = props => {
   const {
-    tab, onChange, source, versions, location, versionedObjectURL, currentVersion,
+    tab, source, versions, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate
   } = props;
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
@@ -56,13 +56,15 @@ const SourceHomeTabs = props => {
   const closeConceptForm = () => closeDrawer(() => setConceptForm(false))
   const closeVersionForm = () => closeDrawer(() => setVersionForm(false))
 
+  const currentResourceURL = isVersionedObject ? source.url : source.version_url
+
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
-        <Tab label="Concepts" />
-        <Tab label="Mappings" />
-        <Tab label="Versions" />
-        {aboutTab && <Tab label="About" />}
+      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
+        <Tab label="Concepts" component="a" href={`#${source.concepts_url}`} />
+        <Tab label="Mappings" component="a" href={`#${source.mappings_url}`} />
+        <Tab label="Versions" component="a" href={isVersionedObject ? `#${source.versions_url}` : `#${currentResourceURL}versions/`} />
+        {aboutTab && <Tab label="About" component="a" href={`#${currentResourceURL}about/`} />}
       </Tabs>
       {
         hasAccess && isVersionedObject &&
