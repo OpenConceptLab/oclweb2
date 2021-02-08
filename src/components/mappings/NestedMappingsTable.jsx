@@ -1,18 +1,29 @@
 import React from 'react';
 import {
-  Table, TableHead, TableRow, TableCell, TableBody, Chip, Tooltip,
+  Table, TableHead, TableRow, TableCell, TableBody, Chip, Tooltip, IconButton,
 } from '@material-ui/core';
 import {
-  ArrowForward as ForwardIcon
+  ArrowForward as ForwardIcon, Search as SearchIcon
 } from '@material-ui/icons';
 import { map, isEmpty, get } from 'lodash';
 
 const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
   const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
-  const onRowClick = mapping => {
+  const onRowClick = (event, mapping) => {
+    event.stopPropagation()
+    event.preventDefault()
     if(mapping.url)
       window.location.hash = mapping.url
+  }
+
+  const onDefaultClick = (event, mapping) => {
+    event.stopPropagation()
+    event.preventDefault()
+    if(isIndirect && mapping.from_concept_url)
+      window.location.hash = mapping.from_concept_url
+    if(!isIndirect && mapping.to_concept_url)
+      window.location.hash = mapping.to_concept_url
   }
 
   const getConceptName = (mapping, attr) => {
@@ -29,18 +40,19 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
           <TableCell align='left'><b>Source</b></TableCell>
           <TableCell align='left'><b>Code</b></TableCell>
           <TableCell align='left'><b>Name</b></TableCell>
+          <TableCell align='left' />
         </TableRow>
       </TableHead>
       <TableBody>
         {
           isEmpty(mappings) ?
-          <TableRow colSpan='4'>
-            <TableCell colSpan='4'>
+          <TableRow colSpan='5'>
+            <TableCell colSpan='5'>
               None
             </TableCell>
           </TableRow> :
           map(mappings, mapping => (
-            <TableRow hover key={mapping.uuid} onClick={() => onRowClick(mapping)} style={{cursor: 'pointer'}}>
+            <TableRow hover key={mapping.uuid} onClick={event => onDefaultClick(event, mapping)} style={{cursor: 'pointer'}}>
               <TableCell align='center'>
                 {
                   mapping.external_id ?
@@ -81,6 +93,11 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
               </TableCell>
               <TableCell align='left'>
                 { getConceptName(mapping, conceptCodeName) }
+              </TableCell>
+              <TableCell align='left'>
+                <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
+                  <SearchIcon fontSize='inherit' />
+                </IconButton>
               </TableCell>
             </TableRow>
           ))
