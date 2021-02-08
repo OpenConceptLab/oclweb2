@@ -5,7 +5,7 @@ import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
 import { includes } from 'lodash';
 
-const TABS = ['history'];
+const TABS = ['details', 'mappings', 'history'];
 
 class ConceptHome extends React.Component {
   constructor(props) {
@@ -42,6 +42,8 @@ class ConceptHome extends React.Component {
 
   getConceptURLFromPath() {
     const { location, match } = this.props;
+    if(location.pathname.indexOf('/details') > -1)
+      return location.pathname.split('/details')[0] + '/'
     if(location.pathname.indexOf('/history') > -1)
       return location.pathname.split('/history')[0] + '/'
     if(location.pathname.indexOf('/mappings') > -1)
@@ -98,6 +100,8 @@ class ConceptHome extends React.Component {
   render() {
     const { concept, versions, isLoading, tab } = this.state;
     const currentURL = this.getConceptURLFromPath()
+    const isVersionedObject = this.isVersionedObject()
+
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -106,11 +110,18 @@ class ConceptHome extends React.Component {
           <div className='col-md-12 home-container no-side-padding'>
             <ConceptHomeHeader
               concept={concept}
-              isVersionedObject={this.isVersionedObject()}
+              isVersionedObject={isVersionedObject}
               versionedObjectURL={this.getVersionedObjectURLFromPath()}
               currentURL={currentURL}
             />
-            <ConceptHomeTabs tab={tab} onChange={this.onTabChange} concept={concept} versions={versions} currentURL={currentURL} />
+            <ConceptHomeTabs
+              tab={tab}
+              onChange={this.onTabChange}
+              concept={concept}
+              versions={versions}
+              currentURL={currentURL}
+              isVersionedObject={isVersionedObject}
+            />
           </div>
         }
       </div>
