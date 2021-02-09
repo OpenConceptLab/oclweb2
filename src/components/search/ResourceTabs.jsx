@@ -73,7 +73,7 @@ const ResourceTabs = props => {
         {
           isLoading ?
           inProgress(index, color) :
-          <span className="resource-count-bubble">
+          <span className="resource-count-bubble" style={index === value ? {backgroundColor: color, color: WHITE} : {}}>
             {get(props.results, `${resource}.total`, 0).toLocaleString()}
           </span>
         }
