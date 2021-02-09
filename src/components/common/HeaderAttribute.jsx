@@ -1,10 +1,10 @@
 import React from 'react';
 import { isEmpty, includes, isString } from 'lodash';
-import { formatDate } from '../../common/utils';
+import { formatDate, formatWebsiteLink } from '../../common/utils';
 
-const getURLComponent = val => {
-  return <a href={val} target="_blank" rel="noopener noreferrer">{val}</a>;
-}
+const getURLComponent = val => formatWebsiteLink(val);
+const getBoolComponent = val => val ? 'True' : 'False';
+const getDateComponent = val => formatDate(val);
 const getJSONComponent = val => {
   if(isString(val)) {
     try {
@@ -14,12 +14,6 @@ const getJSONComponent = val => {
     }
   }
   return <pre style={{margin: '0px'}}>{JSON.stringify(val, undefined, 1)}</pre>;
-}
-const getBoolComponent = val => {
-  return val ? 'True' : 'False';
-}
-const getDateComponent = val => {
-  return formatDate(val);
 }
 
 const HeaderAttribute = ({label, value, gridClass, type}) => {

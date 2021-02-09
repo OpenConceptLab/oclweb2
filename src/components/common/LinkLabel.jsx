@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link as LinkIcon } from '@material-ui/icons';
+import { formatWebsiteLink } from '../../common/utils';
 
 const STYLES = {
   medium: {
@@ -21,7 +22,7 @@ const LinkLabel = props => {
         <LinkIcon style={styles.icon} />
       </span>
       <span className='ellipsis-text' style={{maxWidth: '300px'}}>
-        <a style={{color: 'inherit'}} href={props.link} target='_blank' rel='noreferrer noopener'>{props.link}</a>
+        {formatWebsiteLink(props.link, {color: 'inherit'})}
       </span>
     </div>
   )

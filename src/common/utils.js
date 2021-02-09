@@ -4,7 +4,7 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject
+  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
@@ -25,13 +25,19 @@ export const formatDateTime = date => {
   return moment(date).format(DATETIME_FORMAT);
 }
 
-export const formatWebsiteLink = value => {
+export const formatWebsiteLink = (value, style) => {
   if(value && value.trim()) {
     let href = value.trim();
     if(!href.startsWith('http://') && !href.startsWith('https://'))
       href = 'https://' + href;
+
     return (
-        <a target='_blank' rel="noopener noreferrer" href={href} className="ellipsis-text" style={{maxWidth: '100px'}}>
+      <a
+        target='_blank'
+        rel="noopener noreferrer"
+        href={href}
+        className="ellipsis-text"
+        style={merge({maxWidth: '100px'}, (style || {}))}>
         {value.trim()}
       </a>
     );

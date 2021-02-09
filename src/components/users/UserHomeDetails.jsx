@@ -7,7 +7,7 @@ import {
 } from '@material-ui/icons';
 import { includes, startCase, get } from 'lodash';
 import APIService from '../../services/APIService';
-import { formatDate, currentUserToken} from '../../common/utils';
+import { formatDate, currentUserToken, formatWebsiteLink} from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
 
 const UserHomeDetails = ({ user, isLoading }) => {
@@ -60,7 +60,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
             <p>
               <strong>Website:</strong>
               <br />
-              <a href={user.website} target="_blank" rel="noopener noreferrer">{user.website}</a>
+              {formatWebsiteLink(user.website)}
             </p>
           }
           <p><strong>Email:</strong><br />{user.email}</p>
