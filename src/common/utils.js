@@ -1,4 +1,5 @@
 /*eslint no-process-env: 0*/
+import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
@@ -22,6 +23,20 @@ export const formatDate = date => {
 
 export const formatDateTime = date => {
   return moment(date).format(DATETIME_FORMAT);
+}
+
+export const formatWebsiteLink = value => {
+  if(value && value.trim()) {
+    let href = value.trim();
+    if(!href.startsWith('http://') && !href.startsWith('https://'))
+      href = 'https://' + href;
+    return (
+        <a target='_blank' rel="noopener noreferrer" href={href} className="ellipsis-text" style={{maxWidth: '100px'}}>
+        {value.trim()}
+      </a>
+    );
+  }
+  return '';
 }
 
 export const getIndirectMappings = (mappings, concept) => {
