@@ -8,17 +8,11 @@ import {
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
-  LocalOffer as LocalOfferIcon,
   Link as LinkIcon,
-  AccountTreeRounded as TreeIcon,
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
   Public as PublicIcon,
   Lock as PrivateIcon,
-  List as ListIcon,
-  Person as PersonIcon,
-  Home as HomeIcon,
-  Loyalty as LoyaltyIcon,
   CompareArrows as CompareArrowsIcon,
   Delete as DeleteIcon,
   GetApp as DownloadIcon,
@@ -45,9 +39,8 @@ import AddToCollection from '../common/AddToCollection';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
-import { ALL_COLUMNS } from './ResultColumns';
+import { ALL_COLUMNS, TAGS } from './ResultConstants';
 
-const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
 const RESOURCE_DEFINITIONS = {
   references: {
     headBgColor: BLUE,
@@ -73,11 +66,7 @@ const RESOURCE_DEFINITIONS = {
     headTextColor: WHITE,
     columns: ALL_COLUMNS.sources.slice(0, 4),
     tagWaitAttribute: 'summary',
-    tags: [
-      {id: 'activeConcepts', value: 'summary.active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
-      {id: 'activeMappings', value: 'summary.active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
-      {id: 'versions', value: 'summary.versions', label: 'Versions', icon: <TreeIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
-    ],
+    tags: TAGS.sources,
     tabs: ['Versions',],
     expandible: true,
     pinnable: true,
@@ -87,11 +76,7 @@ const RESOURCE_DEFINITIONS = {
     headTextColor: WHITE,
     columns: ALL_COLUMNS.collections.slice(0, 4),
     tagWaitAttribute: 'summary',
-    tags: [
-      {id: 'activeConcepts', value: 'summary.active_concepts', label: 'Concepts', icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'concepts_url'},
-      {id: 'activeMappings', value: 'summary.active_mappings', label: 'Mappings', icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'mappings_url'},
-      {id: 'versions', value: 'summary.versions', label: 'Versions', icon: <TreeIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'versions_url'},
-    ],
+    tags: TAGS.collections,
     tabs: ['Versions'],
     expandible: true,
     pinnable: true,
@@ -100,11 +85,7 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: ORANGE,
     headTextColor: WHITE,
     columns: ALL_COLUMNS.organizations.slice(0, 3),
-    tags: [
-      {id: 'members', value: 'members', label: 'Members', icon: <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'url'},
-      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'sources_url'},
-      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'collections_url'},
-    ],
+    tags: TAGS.organizations,
     expandible: false,
     pinnable: true,
   },
@@ -112,11 +93,7 @@ const RESOURCE_DEFINITIONS = {
     headBgColor: ORANGE,
     headTextColor: WHITE,
     columns: ALL_COLUMNS.users.slice(0, 3),
-    tags: [
-      {id: 'orgs', value: 'orgs', label: 'Organizations', icon: <HomeIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'organizations_url'},
-      {id: 'sources', value: 'public_sources', label: 'Public Sources', icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'sources_url'},
-      {id: 'collections', value: 'public_collections', label: 'Public Collections', icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />, hrefAttr: 'collections_url'},
-    ],
+    tags: TAGS.users,
     expandible: false,
   },
 }

@@ -1,5 +1,14 @@
 import React from 'react';
 import {
+  LocalOffer as LocalOfferIcon,
+  Link as LinkIcon,
+  AccountTreeRounded as TreeIcon,
+  List as ListIcon,
+  Person as PersonIcon,
+  Home as HomeIcon,
+  Loyalty as LoyaltyIcon,
+} from '@material-ui/icons'
+import {
   formatDate, formatWebsiteLink, formatDateTime
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
@@ -82,3 +91,68 @@ export const ALL_COLUMNS = {
     {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
   ]
 };
+
+const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
+const CONCEPT_CONTAINER_TAGS = [
+  {
+    id: 'activeConcepts',
+    value: 'summary.active_concepts',
+    label: 'Concepts',
+    icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
+    hrefAttr: 'concepts_url'
+  },
+  {
+    id: 'activeMappings',
+    value: 'summary.active_mappings',
+    label: 'Mappings',
+    icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />,
+    hrefAttr: 'mappings_url'
+  },
+  {
+    id: 'versions',
+    value: 'summary.versions',
+    label: 'Versions',
+    icon: <TreeIcon fontSize='small' style={TAG_ICON_STYLES} />,
+    hrefAttr: 'versions_url'
+  },
+]
+const SOURCE_TAG = {
+  id: 'sources',
+  value: 'public_sources',
+  label: 'Public Sources',
+  icon: <ListIcon fontSize='small' style={TAG_ICON_STYLES} />,
+  hrefAttr: 'sources_url'
+}
+const COLLECTION_TAG = {
+  id: 'collections',
+  value: 'public_collections',
+  label: 'Public Collections',
+  icon: <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />,
+  hrefAttr: 'collections_url'
+}
+export const TAGS = {
+  sources: [...CONCEPT_CONTAINER_TAGS],
+  collections: [...CONCEPT_CONTAINER_TAGS],
+  organizations: [
+    {
+      id: 'members',
+      value: 'members',
+      label: 'Members',
+      icon: <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />,
+      hrefAttr: 'url'
+    },
+    SOURCE_TAG,
+    COLLECTION_TAG,
+  ],
+  users: [
+    {
+      id: 'orgs',
+      value: 'orgs',
+      label: 'Organizations',
+      icon: <HomeIcon fontSize='small' style={TAG_ICON_STYLES} />,
+      hrefAttr: 'organizations_url'
+    },
+    SOURCE_TAG,
+    COLLECTION_TAG,
+  ]
+}
