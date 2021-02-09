@@ -9,21 +9,13 @@ import {
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
 
-export const isAtGlobalSearch = () => {
-  return window.location.hash.includes('#/search') || isAtRoot();
-}
+export const isAtGlobalSearch = () => window.location.hash.includes('#/search') || isAtRoot();
 
-export const isAtRoot = () => {
-  return window.location.hash === '#/';
-}
+export const isAtRoot = () => window.location.hash === '#/';
 
-export const formatDate = date => {
-  return moment(date).format(DATE_FORMAT);
-}
+export const formatDate = date => moment(date).format(DATE_FORMAT);
 
-export const formatDateTime = date => {
-  return moment(date).format(DATETIME_FORMAT);
-}
+export const formatDateTime = date => moment(date).format(DATETIME_FORMAT);
 
 export const formatWebsiteLink = (value, style) => {
   if(value && value.trim()) {
@@ -45,33 +37,19 @@ export const formatWebsiteLink = (value, style) => {
   return '';
 }
 
-export const getIndirectMappings = (mappings, concept) => {
-  return filter(mappings, {to_concept_code: concept});
-}
+export const getIndirectMappings = (mappings, concept) => filter(mappings, {to_concept_code: concept});
 
-export const getDirectMappings = (mappings, concept) => {
-  return filter(mappings, {from_concept_code: concept});
-}
+export const getDirectMappings = (mappings, concept) => filter(mappings, {from_concept_code: concept});
 
-export const getDirectExternalMappings = (mappings, concept) => {
-  return filter(mappings, mapping => Boolean(mapping.from_concept_code === concept && mapping.external_id));
-}
+export const getDirectExternalMappings = (mappings, concept) => filter(mappings, mapping => Boolean(mapping.from_concept_code === concept && mapping.external_id));
 
-export const getLinkedQuestions = (mappings, concept) => {
-  return filter(mappings, {to_concept_code: concept, map_type: 'Q-AND-A'});
-}
+export const getLinkedQuestions = (mappings, concept) => filter(mappings, {to_concept_code: concept, map_type: 'Q-AND-A'});
 
-export const getLinkedAnswers = (mappings, concept) => {
-  return filter(mappings, {from_concept_code: concept, map_type: 'Q-AND-A'});
-}
+export const getLinkedAnswers = (mappings, concept) => filter(mappings, {from_concept_code: concept, map_type: 'Q-AND-A'});
 
-export const getSetParents = (mappings, concept) => {
-  return filter(mappings, {to_concept_code: concept, map_type: 'CONCEPT-SET'});
-}
+export const getSetParents = (mappings, concept) => filter(mappings, {to_concept_code: concept, map_type: 'CONCEPT-SET'});
 
-export const getSetMembers = (mappings, concept) => {
-  return filter(mappings, {from_concept_code: concept, map_type: 'CONCEPT-SET'});
-}
+export const getSetMembers = (mappings, concept) => filter(mappings, {from_concept_code: concept, map_type: 'CONCEPT-SET'});
 
 export const getMappingsDistributionByMapType = (mappings, concept) => {
   const linkedQuestions = getLinkedQuestions(mappings, concept);
@@ -102,9 +80,7 @@ export const getMappingsDistributionByMapType = (mappings, concept) => {
   }
 }
 
-export const toFullURL = uri => {
-  return window.location.origin + '/#' + uri;
-}
+export const toFullURL = uri => window.location.origin + '/#' + uri;
 
 export const toFullAPIURL = uri => {
   /*eslint no-undef: 0*/
@@ -119,27 +95,15 @@ export const copyURL = url => {
   }
 }
 
-export const toParentURI = uri => {
-  return uri.split('/').splice(0, 5).join('/');
-};
+export const toParentURI = uri => uri.split('/').splice(0, 5).join('/');
 
-export const toOwnerURI = uri => {
-  return uri.split('/').splice(0, 3).join('/');
-};
+export const toOwnerURI = uri => uri.split('/').splice(0, 3).join('/');
 
-export const headFirst = versions => {
-  return compact([
-    find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})
-  ]);
-};
+export const headFirst = versions => compact([find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})]);
 
-export const currentUserToken = () => {
-  return localStorage.token;
-};
+export const currentUserToken = () => localStorage.token;
 
-export const isLoggedIn = () => {
-  return Boolean(currentUserToken());
-};
+export const isLoggedIn = () => Boolean(currentUserToken());
 
 export const getCurrentUser = () => {
   const data = localStorage.user;
@@ -149,23 +113,13 @@ export const getCurrentUser = () => {
   return null;
 };
 
-export const getCurrentUserOrgs = () => {
-  return get(getCurrentUser(), 'subscribed_orgs');
-};
+export const getCurrentUserOrgs = () => get(getCurrentUser(), 'subscribed_orgs');
 
-export const getCurrentUserUsername = () => {
-  return get(getCurrentUser(), 'username');
-};
+export const getCurrentUserUsername = () => get(getCurrentUser(), 'username');
 
-export const nonEmptyCount = (object, attributes) => {
-  return size(intersectionBy(keys(omitBy(
-    object, val => (isEmpty(val) || includes(['none', 'None'], val))
-  )), attributes));
-}
+export const nonEmptyCount = (object, attributes) => size(intersectionBy(keys(omitBy(object, val => (isEmpty(val) || includes(['none', 'None'], val)))), attributes));
 
-export const isCurrentUserMemberOf = orgId => {
-  return orgId && includes(map(getCurrentUserOrgs(), 'id'), orgId);
-}
+export const isCurrentUserMemberOf = orgId => Boolean(orgId && includes(map(getCurrentUserOrgs(), 'id'), orgId));
 
 export const defaultCreatePin = (resourceType, resourceId, service, callback) => {
   if(service) {
@@ -197,12 +151,7 @@ export const isAdminUser = () => {
   return get(currentUser, 'is_staff') || get(currentUser, 'is_superuser');
 }
 
-export const toObjectArray = obj => {
-  if(isEmpty(obj))
-    return [];
-
-  return map(keys(obj), k => pick(obj, k));
-}
+export const toObjectArray = obj => isEmpty(obj) ? [] : map(keys(obj), k => pick(obj, k));
 
 export const sortObjectBy = (obj, comparator) => {
     const _keys = sortBy(keys(obj), key => comparator ? comparator(obj[key], key) : key);
@@ -246,13 +195,9 @@ export const currentUserHasAccess = () => {
   return false;
 }
 
-export const isSubscribedTo = org => {
-  return org && includes(map(get(getCurrentUser(), 'subscribed_orgs'), 'id'), org);
-}
+export const isSubscribedTo = org => Boolean(org && includes(map(get(getCurrentUser(), 'subscribed_orgs'), 'id'), org));
 
-export const getCurrentURL = () => {
-  return window.location.href.replace(new RegExp('/$'), '');
-}
+export const getCurrentURL = () => window.location.href.replace(new RegExp('/$'), '');
 
 const handleLookupValuesResponse = (data, callback, attr) => {
   const _attr = attr || 'id';
@@ -260,11 +205,8 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = callback => {
-  APIService.sources('Locales').concepts()
-    .get(null, null, {limit: 1000})
-    .then(response => {
-      callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));
-    });
+  APIService.sources('Locales').concepts().get(null, null, {limit: 1000}).then(response => {
+    callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
