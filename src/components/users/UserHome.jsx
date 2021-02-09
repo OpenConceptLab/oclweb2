@@ -122,11 +122,11 @@ class UserHome extends React.Component {
       <div className="col-md-12">
         {
           user &&
-          <div className="col-md-3 no-right-padding">
+          <div className="col-md-2 no-right-padding" style={{width: '20%'}}>
             <UserHomeDetails user={user} />
           </div>
         }
-        <div className='col-md-9 no-left-padding'>
+        <div className='col-md-10 no-left-padding' style={{width: '80%'}}>
           <Pins
             pins={pins}
             onDelete={this.deletePin}
