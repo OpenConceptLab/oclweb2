@@ -730,6 +730,7 @@ const ResultsTable = (
                                   Download
                                 </Button>
                             }
+                            queryParams={{verbose: true, includeInverseMappings: true, includeSummary: true }}
                           />
                         }
                         {
