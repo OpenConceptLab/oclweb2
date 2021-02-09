@@ -5,6 +5,7 @@ import Mapping from '../mappings/Mapping';
 import Source from '../sources/Source';
 import Collection from '../collections/Collection';
 import Organization from '../orgs/Organization';
+import User from '../users/User';
 
 const RowComponent = ({resource, item, onSelect}) => {
   const getComponent = () => {
@@ -18,6 +19,8 @@ const RowComponent = ({resource, item, onSelect}) => {
       return <Collection {...item} style={{paddingLeft: '10px'}} />;
     if(resource === 'organizations')
       return <Organization {...item} style={{paddingLeft: '10px'}} />;
+    if(resource === 'users')
+      return <User {...item} style={{paddingLeft: '10px'}} />;
   }
 
   return (

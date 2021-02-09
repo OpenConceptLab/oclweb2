@@ -20,7 +20,7 @@ const Results = props => {
         results.total ?
         <div className='col-sm-12 no-side-padding' style={{width: '100%'}}>
           {
-            includes(['concepts', 'mappings', 'sources', 'collections', 'organizations'], resource) ?
+            includes(['concepts', 'mappings', 'sources', 'collections', 'organizations', 'users'], resource) ?
             map(
               results.items,
               item => <RowComponent
