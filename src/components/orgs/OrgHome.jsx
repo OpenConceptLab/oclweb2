@@ -13,9 +13,9 @@ const DEFAULT_CONFIG = {
   is_default: false,
   config: {
     tabs: [
-      {type: "sources", label: "Sources", page_size: 25, "default": true},
-      {type: "collections", label: "Collections", page_size: 25},
-      {type: "users", label: "Members", page_size: 25},
+      {type: "sources", label: "Sources", page_size: 25, "default": true, layout: 'table'},
+      {type: "collections", label: "Collections", page_size: 25, layout: 'table'},
+      {type: "users", label: "Members", page_size: 25, layout: 'table'},
       {type: "about", label: "About"},
     ]
   }

@@ -70,7 +70,7 @@ const OrgHomeTabs = props => {
             resource={selectedTabConfig.type}
             viewFilters={selectedTabConfig.filters}
             viewFields={selectedTabConfig.fields}
-            fixedFilters={{limit: selectedTabConfig.page_size}}
+            fixedFilters={{limit: selectedTabConfig.page_size, isTable: selectedTabConfig.layout !== 'list' }}
           />
         }
       </div>
