@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { get, map, set, findIndex, cloneDeep, find, reject } from 'lodash';
+import { get, map, set, findIndex, cloneDeep, find, reject, values, isEmpty } from 'lodash';
 import {
   TextField, Button, Select, MenuItem, FormControl, InputLabel,
   FormHelperText
@@ -102,7 +102,10 @@ class ViewConfigForm extends React.Component {
           if(reloadOnSuccess)
             window.location.reload()
         })
-      } else this.setState({errors: response})
+      } else this.setState(
+        {errors: response},
+        () => alertifyjs.error('Invalid Configurations')
+      )
     })
   }
 
@@ -116,7 +119,10 @@ class ViewConfigForm extends React.Component {
           if(reloadOnSuccess)
             window.location.reload()
         })
-      } else this.setState({errors: response})
+      } else this.setState(
+        {errors: response},
+        () => alertifyjs.error('Invalid Configurations')
+      )
     })
   }
 
@@ -153,9 +159,14 @@ class ViewConfigForm extends React.Component {
     )
   }
 
+  getErrorHelperText() {
+    const { errors } = this.state
+    return isEmpty(errors) ? '' : values(errors).join('\n')
+  }
+
   render() {
     const { configs } = this.props;
-    const { selected, fields, initialConfig } = this.state;
+    const { selected, fields, initialConfig, errors } = this.state;
     const isOCLDefaultConfigSelected = get(selected, 'web_default');
     const configOptions = [...configs, NEW_CONFIG];
     const isNew = get(selected, 'id') === 'new';
@@ -217,6 +228,7 @@ class ViewConfigForm extends React.Component {
             </div>
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
               <TextField
+                error={!isEmpty(errors)}
                 id="fields.name"
                 label="Name"
                 placeholder="Give a name to this configuration"
@@ -226,6 +238,7 @@ class ViewConfigForm extends React.Component {
                 onChange={this.onTextFieldChange}
                 value={fields.name}
                 disabled={isOCLDefaultConfigSelected}
+                helperText={this.getErrorHelperText()}
               />
             </div>
             <div className='col-md-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
