@@ -122,9 +122,9 @@ const HistoryTable = ({ versions }) => {
       <TableBody>
         {
           map(headFirst(versions), version => (
-            <TableRow hover key={version.uuid || version.id}>
+            <TableRow hover key={version.version || version.uuid || version.id}>
               <TableCell align='center'>
-                { version.uuid || version.id }
+                { version.version || version.uuid || version.id }
               </TableCell>
               <TableCell align='left'>
                 { version.update_comment || version.description }
