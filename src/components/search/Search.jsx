@@ -320,7 +320,7 @@ class Search extends React.Component {
       <span style={{display: 'inline-flex', alignItems: 'center'}}>
         {
           extraControls &&
-          <span style={{paddingRight: '5px'}}>
+          <span style={{paddingRight: '4px'}}>
             {
               extraControls
             }
@@ -329,17 +329,17 @@ class Search extends React.Component {
         {
           resource !== 'references' &&
           <span>
-            <span style={{paddingRight: '5px'}}>
+            <span style={{paddingRight: '4px'}}>
               <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
             </span>
-            <span style={{paddingRight: '5px'}}>
+            <span style={{paddingRight: '4px'}}>
               <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
             </span>
-            <span style={{paddingRight: '5px'}}>
+            <span style={{paddingRight: '4px'}}>
               <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
             </span>
             {
-              !isTable && <span style={{paddingRight: '5px'}}>
+              !isTable && <span style={{paddingRight: '4px'}}>
                 <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} />
               </span>
             }
@@ -351,20 +351,20 @@ class Search extends React.Component {
         </span>
         {
           resource !== 'references' &&
-          <span style={{paddingLeft: '5px'}}>
+          <span style={{paddingLeft: '4px'}}>
             <LayoutToggle isTable={isTable} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
           </span>
         }
         {
           !isTable &&
-          <span style={{paddingLeft: '5px'}}>
+          <span style={{paddingLeft: '4px'}}>
             <InfiniteScrollChip isInfinite={isInfinite} size={nested ? 'small' : 'medium'} onClick={this.onInfiniteToggle} />
           </span>
         }
         {
           !isEmpty(viewFilters) &&
           map(viewFilters, (value, attr) => (
-            <span style={{paddingLeft: '5px'}} key={attr}>
+            <span style={{paddingLeft: '4px'}} key={attr}>
               <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
             </span>
           ))

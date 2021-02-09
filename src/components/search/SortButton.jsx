@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  Button, ButtonGroup, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip
+  Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
+  Chip,
 } from '@material-ui/core'
 import {
   ArrowDropDown as ArrowDropDownIcon,
@@ -16,7 +17,7 @@ const OPTIONS = {
 }
 const ASC = 'asc';
 const DESC = 'desc';
-const SORT_ICON_STYLES = {fontSize: '1.1em', marginRight: '4px', marginTop: '-2px'};
+const SORT_ICON_STYLES = {width: '14px', height: '14px'};
 
 class SortButton extends React.Component {
   constructor(props) {
@@ -84,31 +85,26 @@ class SortButton extends React.Component {
 
   render() {
     const { open, selectedOption } = this.state;
+    const { size } = this.props;
     const isAsc = this.isAsc();
     return (
       <span>
         <Tooltip title='Sort By'>
-          <ButtonGroup variant="outlined" color="primary" ref={this.anchorRef} aria-label="split button">
-            <Button onClick={this.handleClick} style={{fontSize: '0.8125em'}}>
-              {
-                isAsc ?
-                <ArrowUpwardIcon style={SORT_ICON_STYLES} /> :
-                <ArrowDownwardIcon style={SORT_ICON_STYLES} />
-              }
-              {OPTIONS[selectedOption].name}
-            </Button>
-            <Button
-              color="primary"
-              aria-controls={open ? 'split-button-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-label="select merge strategy"
-              aria-haspopup="menu"
-              onClick={this.toggleOpen}
-              style={{padding: '0px', minWidth: '30px'}}
-            >
-              <ArrowDropDownIcon />
-            </Button>
-          </ButtonGroup>
+          <Chip
+            ref={this.anchorRef}
+            variant="outlined"
+            icon={
+              isAsc ?
+                  <ArrowUpwardIcon fontSize="inherit" style={SORT_ICON_STYLES} /> :
+                  <ArrowDownwardIcon fontSize="inherit" style={SORT_ICON_STYLES} />
+            }
+            color="primary"
+            label={OPTIONS[selectedOption].name}
+            onClick={this.handleClick}
+            size={size || 'medium'}
+            deleteIcon={<ArrowDropDownIcon fontSize="inherit" />}
+            onDelete={this.toggleOpen}
+          />
         </Tooltip>
         <Popper open={open} anchorEl={this.anchorRef.current} transition disablePortal style={{zIndex: 1000}}>
           {({ TransitionProps, placement }) => (
