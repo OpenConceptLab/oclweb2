@@ -528,10 +528,6 @@ td.large {
 }
 .rte-editor {
     min-height: 200px;
-    div:nth-child(3) {
-        width: unset !important;
-        min-width: unset !important;
-    }
     .public-DraftEditor-content {
         min-height: 110px;
     }
@@ -558,4 +554,11 @@ table.nested-mappings {
 }
 .org-bg {
     background-color: rgb(253, 164, 41) !important;
+}
+
+.ql-tooltip {   //rich-text-editor - react-quill
+    left: 0 !important;
+}
+.ql-editor {
+    min-height: 80px;
 }

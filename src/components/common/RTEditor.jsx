@@ -1,47 +1,21 @@
 import React from 'react';
-import RichTextEditor from 'react-rte';
-
-const getTextAlignClassName = (contentBlock) => {
-  switch (contentBlock.getData().get('textAlign')) {
-    case 'ALIGN_LEFT':
-      return 'text-align--left';
-
-    case 'ALIGN_CENTER':
-      return 'text-align--center';
-
-    case 'ALIGN_RIGHT':
-      return 'text-align--right';
-
-    case 'ALIGN_JUSTIFY':
-      return 'text-align--justify';
-
-    default:
-      return '';
-  }
-};
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 class RTEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.defaultValue ?
-             this.getValueFromDefault() :
-             RichTextEditor.createEmptyValue(),
+      value: props.defaultValue || '',
     }
   }
 
   componentDidUpdate(prevProps) {
     if(!prevProps.defaultValue && this.props.defaultValue)
-      this.setState({value: this.getValueFromDefault()})
+      this.setState({value: this.props.defaultValue})
   }
 
-  getValueFromDefault() {
-    return RichTextEditor.createValueFromString(this.props.defaultValue, 'html')
-  }
-
-  onChange = value => this.setState(
-    {value: value}, () => this.props.onChange(value.toString('html'))
-  )
+  onChange = value => this.setState({value: value}, () => this.props.onChange(value))
 
   render() {
     const { value } = this.state;
@@ -52,19 +26,42 @@ class RTEditor extends React.Component {
           <h3>{label}</h3>
         </div>
         <div className='col-md-12 no-side-padding'>
-          <RichTextEditor
+          <ReactQuill
+            theme="snow"
             value={value}
+            modules={RTEditor.modules}
             onChange={this.onChange}
-            className='rte-editor'
             placeholder={placeholder}
-            toolbarClassName="demo-toolbar"
-            editorClassName="demo-editor"
-            blockStyleFn={getTextAlignClassName}
           />
         </div>
       </React.Fragment>
     )
   }
 }
+
+RTEditor.modules = {
+  toolbar: [
+    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    ['link',],
+    ['clean'],
+    [{ 'align': [] }]
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  }
+};
+/*
+ * Quill editor formats
+ * See https://quilljs.com/docs/formats/
+ */
+RTEditor.formats = [
+  'header', 'font', 'size',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'video'
+];
 
 export default RTEditor;
