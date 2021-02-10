@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import RowComponent from './RowComponent';
 
 const ResultsInfinite = props => {
-  const { results, onLoadMore, resource } = props;
+  const { results, onLoadMore, resource, viewFields } = props;
   const [selectedList, setSelectedList] = React.useState([]);
   const onSelectChange = (event, id) => {
     const newSelectedList = event.target.checked ? uniq([...selectedList, id]) : without(selectedList, id);
@@ -40,6 +40,7 @@ const ResultsInfinite = props => {
               map(results.items, item => (
                 <RowComponent
                   key={item.id} onSelect={onSelectChange} item={item} resource={resource}
+                  viewFields={viewFields}
                 />
               ))
             }

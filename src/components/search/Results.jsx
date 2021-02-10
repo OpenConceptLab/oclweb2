@@ -4,7 +4,7 @@ import { map, startCase, uniq, without } from 'lodash';
 import RowComponent from './RowComponent';
 
 const Results = props => {
-  const { resource, results, onPageChange } = props;
+  const { resource, results, viewFields, onPageChange } = props;
   const [selectedList, setSelectedList] = React.useState([]);
 
   const onSelectChange = (event, id) => {
@@ -26,7 +26,9 @@ const Results = props => {
                         key={item.uuid || item.id}
                         onSelect={onSelectChange}
                         item={item}
-                        resource={resource} />
+                        resource={resource}
+                        viewFields={viewFields}
+              />
             )
           }
           <div className='col-sm-12 no-side-padding pagination' style={{textAlign: 'center', marginTop: '10px', width: '100%'}}>

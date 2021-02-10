@@ -467,7 +467,12 @@ class Search extends React.Component {
             <div className='col-sm-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               {
                 isInfinite &&
-                <ResultsInfinite resource={resource} results={resourceResults} onLoadMore={this.loadMore} />
+                <ResultsInfinite
+                  resource={resource}
+                  results={resourceResults}
+                  onLoadMore={this.loadMore}
+                  viewFields={viewFields}
+                />
               }
               {
                 isTable &&
@@ -498,6 +503,7 @@ class Search extends React.Component {
                   results={resourceResults}
                   onPageChange={this.onPageChange}
                   onSelectChange={onSelectChange}
+                  viewFields={viewFields}
                 />
               }
             </div>
