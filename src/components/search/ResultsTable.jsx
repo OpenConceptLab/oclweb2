@@ -20,8 +20,7 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  forEach
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -600,15 +599,10 @@ const ResultsTable = (
   }
 
   const filterColumnsFromViewFields = () => {
-    let result = [];
-    forEach(viewFields, (label, attr) => {
+    const result = map(viewFields, (label, attr) => {
       const column = find(ALL_COLUMNS[resource], {value: attr})
-      if(column)
-        result.push({...column, label: label})
-      else
-        result.push({label: label, id: attr, value: attr, sortable: false})
+      return column ? {...column, label: label} : {label: label, id: attr, value: attr, sortable: false}
     })
-
     return result
   }
 

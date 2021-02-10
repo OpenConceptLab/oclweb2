@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { map, startCase, get, includes, uniq, without } from 'lodash';
+import { map, startCase, get, uniq, without } from 'lodash';
 import { BLUE } from '../../common/constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import RowComponent from './RowComponent';
@@ -37,15 +37,11 @@ const ResultsInfinite = props => {
             }
           >
             {
-              includes(['concepts', 'mappings', 'sources', 'collections', 'users', 'organizations'], resource) ?
               map(results.items, item => (
                 <RowComponent
                   key={item.id} onSelect={onSelectChange} item={item} resource={resource}
                 />
-              )) :
-              <div className="col-sm-12 no-side-padding" style={{textAlign: 'center', margin: '10px 0', width: '100%'}}>
-                {`This view is not implemented yet for ${startCase(resource)}`}
-              </div>
+              ))
             }
           </InfiniteScroll>
         </div> :

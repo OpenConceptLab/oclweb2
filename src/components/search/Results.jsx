@@ -1,10 +1,10 @@
 import React from 'react';
 import { Pagination } from '@material-ui/lab'
-import { map, startCase, includes, uniq, without } from 'lodash';
+import { map, startCase, uniq, without } from 'lodash';
 import RowComponent from './RowComponent';
 
 const Results = props => {
-  const { resource, results } = props;
+  const { resource, results, onPageChange } = props;
   const [selectedList, setSelectedList] = React.useState([]);
 
   const onSelectChange = (event, id) => {
@@ -20,7 +20,6 @@ const Results = props => {
         results.total ?
         <div className='col-sm-12 no-side-padding' style={{width: '100%'}}>
           {
-            includes(['concepts', 'mappings', 'sources', 'collections', 'organizations', 'users'], resource) ?
             map(
               results.items,
               item => <RowComponent
@@ -28,16 +27,11 @@ const Results = props => {
                         onSelect={onSelectChange}
                         item={item}
                         resource={resource} />
-            ) :
-            <div
-              className="col-sm-12 no-side-padding"
-              style={{textAlign: 'center', margin: '10px 0', width: '100%'}}>
-              {`This view is not implemented yet for ${startCase(props.resource)}`}
-            </div>
+            )
           }
           <div className='col-sm-12 no-side-padding pagination' style={{textAlign: 'center', marginTop: '10px', width: '100%'}}>
             <Pagination
-              onChange={(event, page) => props.onPageChange(page)}
+              onChange={(event, page) => onPageChange(page)}
               count={results.pages}
               variant="outlined"
               shape="rounded"
