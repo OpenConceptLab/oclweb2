@@ -78,12 +78,23 @@ class Search extends React.Component {
     this.setQueryParamsInState()
   }
 
+  getLayoutAttrValue(attr) {
+    const queryParams = new URLSearchParams(get(this.props, 'location.search'))
+    const { fixedFilters } = this.props;
+    if(has(queryParams, attr))
+      return queryParams.get(attr)
+    if(has(fixedFilters, attr))
+      return fixedFilters[attr]
+
+    return this.state[attr]
+  }
+
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     const fixedFilters = this.props.fixedFilters;
     this.setState({
-      isTable: queryParams.get('isTable') || get(fixedFilters, 'isTable') || this.state.isTable,
-      isInfinite: queryParams.get('isInfinite') || get(fixedFilters, 'isInfinite'),
+      isTable: this.getLayoutAttrValue('isTable'),
+      isInfinite: this.getLayoutAttrValue('isInfinite'),
       resource: queryParams.get('type') || this.props.resource || 'concepts',
       page: queryParams.get('page') || 1,
       isLoading: true,
