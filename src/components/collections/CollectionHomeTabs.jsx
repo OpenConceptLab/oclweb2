@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
-import AboutAccordian from '../common/AboutAccordian';
+import About from '../common/About';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionVersionForm from './CollectionVersionForm';
@@ -89,7 +89,7 @@ const CollectionHomeTabs = props => {
         }
         {
           aboutTab && tab === 4 &&
-          <AboutAccordian id={collection.id} about={about} />
+          <About id={collection.id} about={about} />
         }
       </div>
       <CommonFormDrawer

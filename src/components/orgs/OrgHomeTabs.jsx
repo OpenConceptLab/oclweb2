@@ -3,7 +3,7 @@ import { Tabs, Tab } from '@material-ui/core';
 import { get, map, reject } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
-import AboutAccordian from '../common/AboutAccordian';
+import About from '../common/About';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -58,7 +58,7 @@ const OrgHomeTabs = props => {
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
         {
           selectedTabConfig.type === 'about' ?
-          <AboutAccordian id={org.id} about={about} /> :
+          <About id={org.id} about={about} /> :
           <OrgHomeChildrenList
             org={org}
             location={location}

@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
-import AboutAccordian from '../common/AboutAccordian';
+import About from '../common/About';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptForm from '../concepts/ConceptForm';
@@ -104,7 +104,7 @@ const SourceHomeTabs = props => {
         }
         {
           aboutTab && tab === 3 &&
-          <AboutAccordian id={source.id} about={about} />
+          <About id={source.id} about={about} />
         }
       </div>
       <CommonFormDrawer
