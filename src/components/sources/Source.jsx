@@ -3,19 +3,21 @@ import { Link } from 'react-router-dom'
 import {
   List as ListIcon,
 } from '@material-ui/icons'
-import { merge, get, isEmpty, map, isObject } from 'lodash'
+import { merge, get, isEmpty, map, isObject, omitBy, includes } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import Summary from '../common/ConceptContainerSummaryHorizontal';
 
 const DEFAULT_FIELDS = {source_type: 'Source Type'}
+const LABEL_FIELDS = ['id', 'short_code', 'name', 'owner']
 
 const Source = props => {
   const { summary, viewFields } = props;
   const hasSummary = !isEmpty(summary);
   const mainClass = 'no-left-padding ' + hasSummary ? 'col-sm-9': 'col-sm-12';
-  const fields = (isEmpty(viewFields) || !isObject(viewFields)) ? DEFAULT_FIELDS : viewFields;
+  const customFields = isObject(viewFields) ? omitBy(viewFields, (label, attr) => includes(LABEL_FIELDS, attr)) : {};
+  const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
 
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
@@ -39,10 +41,7 @@ const Source = props => {
           }
           {
             props.description &&
-            <React.Fragment>
-              <br/>
-              <span className='resource-value'>{props.description}</span>
-            </React.Fragment>
+            <span className='resource-value'>{props.description}</span>
           }
         </div>
         <LastUpdatedOnLabel date={props.updated_on} />
