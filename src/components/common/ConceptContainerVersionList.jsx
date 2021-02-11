@@ -97,7 +97,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
               map(sortedVersions, (version, index) => (
                 <div className='col-md-12 no-side-padding' key={index}>
                   <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
-                    <div className='col-md-6 no-left-padding'>
+                    <div className='col-md-7 no-left-padding'>
                       <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
                         <ResourceVersionLabel {...version} />
                       </div>
@@ -112,7 +112,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                         />
                       </div>
                     </div>
-                    <div className='col-md-6 no-right-padding' style={{textAlign: 'right'}}>
+                    <div className='col-md-5 no-right-padding' style={{textAlign: 'right'}}>
                       {
                         canEdit && version.id.toLowerCase() !== 'head' &&
                         <React.Fragment>
