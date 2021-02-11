@@ -73,27 +73,28 @@ const getMappingLabel = (mapping, formatted=false) => {
 class ConceptsComparison extends React.Component {
   constructor(props) {
     super(props);
-    const attributeState = {show: true, type: 'text'}
+    this.attributeState = {show: true, type: 'text'}
     this.state = {
+      isVersion: false,
       isLoadingLHS: true,
       isLoadingRHS: true,
       lhs: {},
       rhs: {},
       drawer: false,
       attributes: {
-        datatype: {...cloneDeep(attributeState), position: 1},
-        display_locale: {...cloneDeep(attributeState), position: 2},
-        external_id: {...cloneDeep(attributeState), position: 3},
-        owner: {...cloneDeep(attributeState), type: 'textFormatted', position: 4},
-        names: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 5},
-        descriptions: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 6},
-        mappings: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 7},
-        extras: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 8},
-        retired: {...cloneDeep(attributeState), type: 'bool', position: 9},
-        created_by: {...cloneDeep(attributeState), position: 10},
-        updated_by: {...cloneDeep(attributeState), position: 11},
-        created_on: {...cloneDeep(attributeState), type: 'date', position: 12},
-        updated_on: {...cloneDeep(attributeState), type: 'date', position: 13},
+        datatype: {...cloneDeep(this.attributeState), position: 1},
+        display_locale: {...cloneDeep(this.attributeState), position: 2},
+        external_id: {...cloneDeep(this.attributeState), position: 3},
+        owner: {...cloneDeep(this.attributeState), type: 'textFormatted', position: 4},
+        names: {...cloneDeep(this.attributeState), collapsed: true, type: 'list', position: 5},
+        descriptions: {...cloneDeep(this.attributeState), collapsed: true, type: 'list', position: 6},
+        mappings: {...cloneDeep(this.attributeState), collapsed: true, type: 'list', position: 7},
+        extras: {...cloneDeep(this.attributeState), collapsed: true, type: 'list', position: 8},
+        retired: {...cloneDeep(this.attributeState), type: 'bool', position: 9},
+        created_by: {...cloneDeep(this.attributeState), position: 10},
+        updated_by: {...cloneDeep(this.attributeState), position: 11},
+        created_on: {...cloneDeep(this.attributeState), type: 'date', position: 12},
+        updated_on: {...cloneDeep(this.attributeState), type: 'date', position: 13},
       },
     }
   }
@@ -164,9 +165,20 @@ class ConceptsComparison extends React.Component {
 
   fetchConcept(uri, attr, loadingAttr) {
     if(uri && attr && loadingAttr) {
+      const { isVersion } = this.state;
+      const isAnyVersion = isVersion || uri.match(/\//g).length === 8;
       APIService.new().overrideURL(uri).get(null, null, {includeInverseMappings: true}).then(response => {
-        if(get(response, 'status') === 200)
-          this.setState({[attr]: this.formatConcept(response.data), [loadingAttr]: false}, this.sortMappings)
+        if(get(response, 'status') === 200) {
+          const newState = {...this.state}
+          newState[attr] = this.formatConcept(response.data)
+          newState[loadingAttr] = false
+          newState.isVersion = isAnyVersion
+          if(isAnyVersion) {
+            newState.attributes['is_latest_version'] = {...cloneDeep(this.attributeState), type: 'bool', position: 14}
+            newState.attributes['update_comment'] = {...cloneDeep(this.attributeState), position: 15}
+          }
+          this.setState(newState, this.sortMappings)
+        }
       })
     }
   }
@@ -222,6 +234,13 @@ class ConceptsComparison extends React.Component {
             <span className='gray-italics'>UID:</span>
             <span>{concept.id}</span>
           </span>
+          {
+            this.state.isVersion &&
+            <span style={{marginLeft: '10px'}}>
+              <span className='gray-italics'>VERSION:</span>
+              <span>{concept.version}</span>
+            </span>
+          }
         </div>
       </React.Fragment>
     )
@@ -359,7 +378,7 @@ class ConceptsComparison extends React.Component {
 
   getHeaderCell = concept => {
     return (
-      <TableCell colSpan="5" style={{width: '45%'}} key={concept.id}>
+      <TableCell colSpan="5" style={{width: '45%'}} key={concept.uuid || concept.id}>
         <div style={{fontSize: '14px'}}>
           {this.getHeaderSubAttributes(concept)}
         </div>
