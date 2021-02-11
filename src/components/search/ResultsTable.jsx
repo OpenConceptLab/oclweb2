@@ -599,7 +599,9 @@ const ResultsTable = (
   }
 
   const filterColumnsFromViewFields = () => {
-    const result = map(viewFields, (label, attr) => {
+    const result = map(viewFields, fieldConfig => {
+      const attr = keys(fieldConfig)[0]
+      const label = fieldConfig[attr];
       const column = find(ALL_COLUMNS[resource], {value: attr})
       return column ? {...column, label: label} : {label: label, id: attr, value: attr, sortable: false}
     })
