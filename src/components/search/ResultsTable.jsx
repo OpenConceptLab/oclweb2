@@ -67,7 +67,7 @@ const RESOURCE_DEFINITIONS = {
     tagWaitAttribute: 'summary',
     tags: TAGS.sources,
     tabs: ['Versions',],
-    expandible: true,
+    expandible: false,
     pinnable: true,
   },
   collections: {
@@ -77,7 +77,7 @@ const RESOURCE_DEFINITIONS = {
     tagWaitAttribute: 'summary',
     tags: TAGS.collections,
     tabs: ['Versions'],
-    expandible: true,
+    expandible: false,
     pinnable: true,
   },
   organizations: {
