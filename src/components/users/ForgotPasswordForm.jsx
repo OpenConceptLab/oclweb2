@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TextField, Button, Paper, CircularProgress } from '@material-ui/core';
-import {set, get, startCase, map, values} from 'lodash';
+import { Button, Paper, CircularProgress } from '@material-ui/core';
+import {set, get, map, values} from 'lodash';
 import APIService from '../../services/APIService';
 import ForgotPasswordSuccessMessage from './ForgotPasswordSuccessMessage';
+import PasswordFields from '../common/PasswordFields';
 
 class ForgotPasswordForm extends React.Component {
   constructor(props) {
@@ -109,7 +110,7 @@ class ForgotPasswordForm extends React.Component {
   }
 
   render() {
-    const { serverError, success, notFound, validToken, isLoading } = this.state;
+    const { serverError, success, notFound, validToken, isLoading, new_password } = this.state;
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
@@ -121,6 +122,7 @@ class ForgotPasswordForm extends React.Component {
               {
                 (success || notFound || !validToken) ?
                 this.getDOM() :
+
                 <React.Fragment>
                   <h1>Change Password</h1>
                   {
@@ -131,21 +133,12 @@ class ForgotPasswordForm extends React.Component {
                   }
                   <div className='col-md-12 no-side-padding'>
                     <form>
-                      {
-                        map(['new_password', 'confirm_password'], (attr, index) => (
-                          <div style={index !== 0 ? {marginTop: '10px'} : {}} key={attr}>
-                            <TextField
-                              required
-                              id='email'
-                              label={startCase(attr)}
-                              variant="outlined"
-                              onChange={event => this.setFieldValue(attr, event.target.value)}
-                              type='password'
-                              fullWidth
-                            />
-                          </div>
-                        ))
-                      }
+                      <PasswordFields
+                        onChange={event => this.setFieldValue(event.target.id, event.target.value)}
+                        passwordFieldId="new_password"
+                        confirmPasswordFieldId="confirm_password"
+                        password={new_password}
+                      />
                       <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
                         <Button onClick={this.onSubmit} type='submit' color='primary' variant='contained'>
                           Change Password
