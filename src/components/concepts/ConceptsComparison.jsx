@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDiffViewer from 'react-diff-viewer';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
@@ -20,8 +21,8 @@ import {
 import {
   DIFF_BG_RED,
 } from '../../common/constants';
-import ReactDiffViewer from 'react-diff-viewer';
 import ComparisonAttributes from './ComparisonAttributes';
+import ExtrasDiff from '../common/ExtrasDiff';
 
 const getLocaleLabelExpanded = (locale, formatted=false) => {
   if(!locale)
@@ -186,6 +187,7 @@ class ConceptsComparison extends React.Component {
   formatConcept(concept) {
     concept.names = this.sortLocales(concept.names)
     concept.descriptions = this.sortLocales(concept.descriptions)
+    concept.originalExtras = concept.extras
     concept.extras = toObjectArray(concept.extras)
     return concept
   }
@@ -306,71 +308,75 @@ class ConceptsComparison extends React.Component {
     return (
       <React.Fragment key={attr}>
         {
-          !isExtras && type === 'list' ?
-          map(maxLengthAttr, (_attr, index) => {
-            const _lhsVal = get(lhs, `${attr}.${index}`, '')
-            const _rhsVal = get(rhs, `${attr}.${index}`, '')
-            const _lhsValCleaned = this.getListAttrValue(attr, _lhsVal)
-            const _rhsValCleaned = this.getListAttrValue(attr, _rhsVal)
-            const _isDiff = !isEqual(_lhsValCleaned, _rhsValCleaned);
-            return (
-              <TableRow key={_attr.uuid || index} colSpan='12'>
-                {
-                  index === 0 &&
-                  <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-                    {type !== 'list' && startCase(attr)}
+          isExtras ?
+          <ExtrasDiff lhs={lhs.originalExtras} rhs={rhs.originalExtras}  /> :
+          (
+            type === 'list' ?
+            map(maxLengthAttr, (_attr, index) => {
+              const _lhsVal = get(lhs, `${attr}.${index}`, '')
+              const _rhsVal = get(rhs, `${attr}.${index}`, '')
+              const _lhsValCleaned = this.getListAttrValue(attr, _lhsVal)
+              const _rhsValCleaned = this.getListAttrValue(attr, _rhsVal)
+              const _isDiff = !isEqual(_lhsValCleaned, _rhsValCleaned);
+              return (
+                <TableRow key={_attr.uuid || index} colSpan='12'>
+                  {
+                    index === 0 &&
+                    <TableCell colSpan='2' rowSpan={rowSpan} style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
+                      {type !== 'list' && startCase(attr)}
+                    </TableCell>
+                  }
+                  {
+                    _isDiff ?
+                    <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
+                      <ReactDiffViewer
+                        oldValue={_lhsValCleaned}
+                        newValue={_rhsValCleaned}
+                        showDiffOnly={false}
+                        splitView
+                        hideLineNumbers
+                        compareMethod='diffWords'
+                      />
+                    </TableCell> :
+                    <React.Fragment>
+                      <TableCell colSpan='5' style={{width: '45%'}}>
+                        {this.getListAttrValue(attr, _lhsVal, true)}
+                      </TableCell>
+                      <TableCell colSpan='5' style={{width: '45%'}}>
+                        {this.getListAttrValue(attr, _rhsVal, true)}
+                      </TableCell>
+                    </React.Fragment>
+                  }
+                </TableRow>
+              )
+            }) :
+            <TableRow key={attr} colSpan='12'>
+              <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
+                {startCase(attr)}
+              </TableCell>
+              {
+                isDiff ?
+                <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
+                  <ReactDiffViewer
+                    oldValue={lhsValue}
+                    newValue={rhsValue}
+                    showDiffOnly={false}
+                    splitView
+                    hideLineNumbers
+                    compareMethod={isExtras ? 'diffLines' : 'diffWords'}
+                  />
+                </TableCell> :
+                <React.Fragment>
+                  <TableCell colSpan='5' style={{width: '45%'}}>
+                    {this.getValue(lhs, attr, type, true)}
                   </TableCell>
-                }
-                {
-                  _isDiff ?
-                  <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
-                    <ReactDiffViewer
-                      oldValue={_lhsValCleaned}
-                      newValue={_rhsValCleaned}
-                      showDiffOnly={false}
-                      splitView
-                      hideLineNumbers
-                      compareMethod='diffWords'
-                    />
-                  </TableCell> :
-                  <React.Fragment>
-                    <TableCell colSpan='5' style={{width: '45%'}}>
-                      {this.getListAttrValue(attr, _lhsVal, true)}
-                    </TableCell>
-                    <TableCell colSpan='5' style={{width: '45%'}}>
-                      {this.getListAttrValue(attr, _rhsVal, true)}
-                    </TableCell>
-                  </React.Fragment>
-                }
-              </TableRow>
-            )
-          }) :
-          <TableRow key={attr} colSpan='12'>
-            <TableCell colSpan='2' style={{width: '10%', fontWeight: 'bold', verticalAlign: 'top'}}>
-              {startCase(attr)}
-            </TableCell>
-            {
-              isDiff ?
-              <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
-                <ReactDiffViewer
-                  oldValue={lhsValue}
-                  newValue={rhsValue}
-                  showDiffOnly={false}
-                  splitView
-                  hideLineNumbers
-                  compareMethod={isExtras ? 'diffLines' : 'diffWords'}
-                />
-              </TableCell> :
-              <React.Fragment>
-                <TableCell colSpan='5' style={{width: '45%'}}>
-                  {this.getValue(lhs, attr, type, true)}
-                </TableCell>
-                <TableCell colSpan='5' style={{width: '45%'}}>
-                  {this.getValue(rhs, attr, type, true)}
-                </TableCell>
-              </React.Fragment>
-            }
-          </TableRow>
+                  <TableCell colSpan='5' style={{width: '45%'}}>
+                    {this.getValue(rhs, attr, type, true)}
+                  </TableCell>
+                </React.Fragment>
+              }
+            </TableRow>
+          )
         }
       </React.Fragment>
     )
@@ -426,19 +432,23 @@ class ConceptsComparison extends React.Component {
                       const isDiff = !isEqual(lhsValue, rhsValue);
                       const children = this.getAttributeDOM(attr, type, lhsValue, rhsValue, isDiff);
                       if(type === 'list') {
-                        const lhsCount = lhs[attr].length;
-                        const rhsCount = rhs[attr].length;
+                        const lhsRawValue = lhs[attr];
+                        const rhsRawValue = rhs[attr];
+                        const lhsCount = lhsRawValue.length;
+                        const rhsCount = rhsRawValue.length;
                         const hasKids = Boolean(lhsCount || rhsCount);
                         const styles = isDiff ? {background: DIFF_BG_RED} : {};
                         const isExpanded = !config.collapsed || !hasKids;
                         const isExtras = attr === 'extras';
                         let lhsSize, rhsSize;
                         let size = '';
-                        if(isExtras) {
-                          lhsSize = memorySizeOf(lhsValue, false)
-                          rhsSize = memorySizeOf(rhsValue, false)
-                          size = lhsSize > rhsSize ? formatByteSize(lhsSize) : formatByteSize(rhsSize);
-                          size = `~${size}`
+                        if(isExtras && (!isEmpty(lhsRawValue) || !isEmpty(rhsRawValue))) {
+                          lhsSize = memorySizeOf(lhsRawValue, false)
+                          rhsSize = memorySizeOf(rhsRawValue, false)
+                          const totalSize = lhsSize + rhsSize;
+                          const tooMany = totalSize/1024 >= 99; // More than 95KB
+                          size = `${formatByteSize(totalSize)}`;
+                          size = tooMany ? `${size} (this may take some time)` : size
                         }
                         return (
                           <React.Fragment key={attr}>
