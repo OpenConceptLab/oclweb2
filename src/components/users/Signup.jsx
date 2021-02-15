@@ -5,6 +5,7 @@ import { TextField, Button, Paper } from '@material-ui/core';
 import {set, get, isEmpty, cloneDeep, startCase, map, includes} from 'lodash';
 import APIService from '../../services/APIService';
 import VerifyEmailMessage from './VerifyEmailMessage';
+import PasswordFields from '../common/PasswordFields';
 
 class Signup extends React.Component {
   constructor(props) {
@@ -34,6 +35,11 @@ class Signup extends React.Component {
     this.setState(newState)
   }
 
+  isPasswordValid() {
+    const { password } = this.state.fields;
+    return Boolean(password && password.length >=8 && password.match(new RegExp(/[a-zA-Z]/g)))
+  }
+
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
@@ -47,6 +53,11 @@ class Signup extends React.Component {
       this.setState({serverError: ['Password and Confirm Password must match.']})
       return
     }
+    if(!this.isPasswordValid()) {
+      this.setState({serverError: ['Invalid Password']})
+      return
+    }
+
 
     if(isFormValid && isConfirmPasswordSameAsPassword) {
       this.setState({serverError: null}, () => {
@@ -84,7 +95,7 @@ class Signup extends React.Component {
                 <div className='col-md-12 no-side-padding'>
                   <form>
                     {
-                      map(['first_name', 'last_name', 'username', 'email', 'password', 'confirm_password'], (attr, index) => (
+                      map(['first_name', 'last_name', 'username', 'email'], (attr, index) => (
                         <div style={index !== 0 ? {marginTop: '10px'} : {}} key={attr}>
                           <TextField
                             required
@@ -100,6 +111,13 @@ class Signup extends React.Component {
                         </div>
                       ))
                     }
+                    <PasswordFields
+                      onChange={event => this.setFieldValue(event.target.id, event.target.value)}
+                      passwordErrors={get(fieldErrors, 'password')}
+                      passwordFieldId="fields.password"
+                      confirmPasswordFieldId="fields.confirm_password"
+                      password={fields.password}
+                    />
                     <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
                       <Button onClick={this.onSubmit} type='submit' color='primary' variant='contained'>Sign Up</Button>
                       <div style={{marginTop: '15px'}}>
