@@ -9,7 +9,7 @@ const PasswordFields = ({
   onChange, password, passwordErrors, passwordFieldId, confirmPasswordFieldId
 }) => {
   const [tooltip, setTooltip] = React.useState(false);
-  const onBlur = () => setTooltip(true);
+  const onBlur = () => setTooltip(false);
   const onFocus = () => setTooltip(true)
   return (
     <React.Fragment>
