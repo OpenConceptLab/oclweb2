@@ -10,6 +10,7 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import SourceForm from '../sources/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConfigSelect from '../common/ConfigSelect';
+import MembersForm from './MembersForm'
 
 const OrgHomeTabs = props => {
   const {
@@ -22,12 +23,15 @@ const OrgHomeTabs = props => {
   const about = get(org, 'text')
   const [sourceForm, setSourceForm] = React.useState(false);
   const [collectionForm, setCollectionForm] = React.useState(false);
+  const [membersForm, setMembersForm] = React.useState(false);
   const hasAccess = currentUserHasAccess()
   const onNewClick = resource => {
     if(resource === 'source')
       setSourceForm(true)
     if(resource === 'collection')
       setCollectionForm(true)
+    if(resource === 'editMembership')
+      setMembersForm(true)
   }
 
   return (
@@ -52,7 +56,7 @@ const OrgHomeTabs = props => {
               />
             </span>
           }
-          <NewResourceButton resources={['source', 'collection']} onClick={onNewClick} />
+          <NewResourceButton resources={['source', 'collection', 'editMembership']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
@@ -86,6 +90,13 @@ const OrgHomeTabs = props => {
         onClose={() => setCollectionForm(false)}
         formComponent={
           <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={url} />
+        }
+      />
+      <CommonFormDrawer
+        isOpen={membersForm}
+        onClose={() => setMembersForm(false)}
+        formComponent={
+          <MembersForm onCancel={() => setMembersForm(false)} reloadOnSuccess={tab==2} parentURL={url} />
         }
       />
     </div>
