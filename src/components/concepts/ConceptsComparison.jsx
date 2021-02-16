@@ -335,7 +335,7 @@ class ConceptsComparison extends React.Component {
                         showDiffOnly={false}
                         splitView
                         hideLineNumbers
-                        compareMethod='diffWords'
+                        compareMethod='diffLines'
                       />
                     </TableCell> :
                     <React.Fragment>
@@ -363,7 +363,7 @@ class ConceptsComparison extends React.Component {
                     showDiffOnly={false}
                     splitView
                     hideLineNumbers
-                    compareMethod={isExtras ? 'diffLines' : 'diffWords'}
+                    compareMethod='diffLines'
                   />
                 </TableCell> :
                 <React.Fragment>
