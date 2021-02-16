@@ -49,31 +49,34 @@ class APIService {
     return this;
   }
 
-  head(token, headers = {}, query) {
-    return this.sendRequest('HEAD', null, token, headers, query);
+  head(token, headers = {}, query, raw=false) {
+    return this.sendRequest('HEAD', null, token, headers, query, raw);
   }
 
-  get(token, headers = {}, query) {
-    return this.sendRequest('GET', null, token, headers, query);
+  get(token, headers = {}, query, raw=false) {
+    return this.sendRequest('GET', null, token, headers, query, raw);
   }
 
-  post(data, token, headers = {}, query) {
-    return this.sendRequest('POST', data, token, headers, query);
+  post(data, token, headers = {}, query, raw=false) {
+    return this.sendRequest('POST', data, token, headers, query, raw);
   }
 
-  put(data, token, headers = {}, query) {
-    return this.sendRequest('PUT', data, token, headers, query);
+  put(data, token, headers = {}, query, raw=false) {
+    return this.sendRequest('PUT', data, token, headers, query, raw);
   }
 
-  delete(data, token, headers = {}, query) {
-    return this.sendRequest('DELETE', data, token, headers, query);
+  delete(data, token, headers = {}, query, raw=false) {
+    return this.sendRequest('DELETE', data, token, headers, query, raw);
   }
 
-  sendRequest(method, data, token, headers, query) {
+  sendRequest(method, data, token, headers, query, raw=false) {
     const request = this.getRequest(method, data, token, headers, query);
     return axios(request)
       .then(response => response || null)
       .catch(error => {
+        if(raw)
+          return error;
+
         return error.response ? error.response.data : error.message;
       });
   }

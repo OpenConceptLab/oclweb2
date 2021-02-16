@@ -17,6 +17,7 @@ import ResourceVersionLabel from './ResourceVersionLabel';
 import ConceptContainerTip from './ConceptContainerTip';
 import ConceptContainerVersionForm from './ConceptContainerVersionForm';
 import CommonFormDrawer from './CommonFormDrawer';
+import ConceptContainerExport from './ConceptContainerExport';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -94,67 +95,78 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
             {
               isEmpty(sortedVersions) ?
               None() :
-              map(sortedVersions, (version, index) => (
-                <div className='col-md-12 no-side-padding' key={index}>
-                  <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
-                    <div className='col-md-7 no-left-padding'>
-                      <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
-                        <ResourceVersionLabel {...version} />
+              map(sortedVersions, (version, index) => {
+                const isHEAD = version.id.toLowerCase() === 'head';
+                return (
+                  <div className='col-md-12 no-side-padding' key={index}>
+                    <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
+                      <div className='col-md-7 no-left-padding'>
+                        <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
+                          <ResourceVersionLabel {...version} />
+                        </div>
+                        <div className='col-md-12'>
+                          <span>{version.description}</span>
+                        </div>
+                        <div className='col-md-12'>
+                          <LastUpdatedOnLabel
+                            by={version.created_by}
+                            date={version.created_on}
+                            label='Created on'
+                          />
+                        </div>
                       </div>
-                      <div className='col-md-12'>
-                        <span>{version.description}</span>
-                      </div>
-                      <div className='col-md-12'>
-                        <LastUpdatedOnLabel
-                          by={version.created_by}
-                          date={version.created_on}
-                          label='Created on'
-                        />
+                      <div className='col-md-5 no-right-padding' style={{textAlign: 'right'}}>
+                        {
+                          canEdit && !isHEAD &&
+                          <React.Fragment>
+                            <Tooltip title='Edit Version'>
+                              <IconButton onClick={() => onEditClick(version)}>
+                                <EditIcon fontSize='inherit' />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={version.released ? 'UnRelease Version' : 'Release Version'}>
+                              <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)}>
+                                <ReleaseIcon fontSize='inherit' />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
+                              <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
+                                <RetireIcon fontSize='inherit' />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title='Delete Version'>
+                              <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)}>
+                                <DeleteIcon fontSize='inherit' />
+                              </IconButton>
+                            </Tooltip>
+                          </React.Fragment>
+                        }
+                        {
+                          version &&
+                          <ConceptContainerExport
+                            isHEAD={isHEAD}
+                            title={`Export Version ${version.id}`}
+                            version={version}
+                          />
+                        }
+                        <Tooltip title='Explore Version'>
+                          <IconButton href={`#${version.concepts_url}`} color='primary'>
+                            <SearchIcon fontSize='inherit' />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Copy URL'>
+                          <IconButton onClick={() => onCopyClick(version)}>
+                            <CopyIcon fontSize='inherit' />
+                          </IconButton>
+                        </Tooltip>
                       </div>
                     </div>
-                    <div className='col-md-5 no-right-padding' style={{textAlign: 'right'}}>
-                      {
-                        canEdit && version.id.toLowerCase() !== 'head' &&
-                        <React.Fragment>
-                          <Tooltip title='Edit Version'>
-                            <IconButton onClick={() => onEditClick(version)}>
-                              <EditIcon fontSize='inherit' />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title={version.released ? 'UnRelease Version' : 'Release Version'}>
-                            <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)}>
-                              <ReleaseIcon fontSize='inherit' />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
-                            <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
-                              <RetireIcon fontSize='inherit' />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title='Delete Version'>
-                            <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)}>
-                              <DeleteIcon fontSize='inherit' />
-                            </IconButton>
-                          </Tooltip>
-                        </React.Fragment>
-                      }
-                      <Tooltip title='Explore Version'>
-                        <IconButton href={`#${version.concepts_url}`} color='primary'>
-                          <SearchIcon fontSize='inherit' />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title='Copy URL'>
-                        <IconButton onClick={() => onCopyClick(version)}>
-                          <CopyIcon fontSize='inherit' />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
+                    {
+                      (index + 1) < versions.length && <Divider style={{width: '100%'}} />
+                    }
                   </div>
-                  {
-                    (index + 1) < versions.length && <Divider style={{width: '100%'}} />
-                  }
-                </div>
-              ))
+                )
+              })
             }
           </AccordionDetails>
         </Accordion>
