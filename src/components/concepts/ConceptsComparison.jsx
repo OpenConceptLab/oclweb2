@@ -41,7 +41,7 @@ const getLocaleLabelExpanded = (locale, formatted=false) => {
   ].join('\n')
 
   if(formatted)
-    return <div key={label} style={{whiteSpace: 'pre'}}>{label}</div>;
+    return <div key={label}>{label}</div>;
 
   return label;
 }
@@ -65,7 +65,7 @@ const getMappingLabel = (mapping, formatted=false) => {
   ].join('\n')
 
   if(formatted)
-    return <div key={label} style={{whiteSpace: 'pre'}}>{label}</div>;
+    return <div key={label}>{label}</div>;
 
   return label
 }
