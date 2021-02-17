@@ -17,7 +17,6 @@ import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
 import FilterButton from '../common/FilterButton';
 import FilterDrawer from '../common/FilterDrawer';
 import Results from './Results';
-import ResultsInfinite from './ResultsInfinite';
 import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
@@ -467,18 +466,7 @@ class Search extends React.Component {
             </div> :
             <div className='col-sm-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               {
-                isInfinite &&
-                <ResultsInfinite
-                  resource={resource}
-                  results={resourceResults}
-                  onLoadMore={this.loadMore}
-                  viewFields={viewFields}
-                  onCreateSimilarClick={onCreateSimilarClick}
-                  onCreateMappingClick={onCreateMappingClick}
-                />
-              }
-              {
-                isTable &&
+                isTable ?
                 <ResultsTable
                   resource={resource}
                   results={resourceResults}
@@ -497,10 +485,7 @@ class Search extends React.Component {
                   onCreateSimilarClick={onCreateSimilarClick}
                   onCreateMappingClick={onCreateMappingClick}
                   viewFields={viewFields}
-                />
-              }
-              {
-                !isTable && !isInfinite &&
+                /> :
                 <Results
                   resource={resource}
                   results={resourceResults}
@@ -509,6 +494,8 @@ class Search extends React.Component {
                   viewFields={viewFields}
                   onCreateSimilarClick={onCreateSimilarClick}
                   onCreateMappingClick={onCreateMappingClick}
+                  isInfinite={isInfinite}
+                  onLoadMore={this.loadMore}
                 />
               }
             </div>
