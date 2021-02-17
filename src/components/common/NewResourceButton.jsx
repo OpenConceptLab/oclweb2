@@ -1,9 +1,8 @@
 import React from 'react';
 import { startCase, map } from 'lodash';
-import { Button, ButtonGroup, Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import {
   Settings as SettingsIcon,
-  ArrowDropDown as DropDownIcon
 } from '@material-ui/icons'
 
 const NewResourceButton = ({resources, onClick}) => {
@@ -19,11 +18,10 @@ const NewResourceButton = ({resources, onClick}) => {
 
   return (
     <React.Fragment>
-      <Tooltip title='Manage Org Content'>
-      <ButtonGroup color='primary' size='small' onClick={toggleAnchorEl}>
-        <Button><SettingsIcon /></Button>
-        <Button><DropDownIcon /></Button>
-      </ButtonGroup>
+      <Tooltip title='Manage Content'>
+        <IconButton color='primary' onClick={toggleAnchorEl}>
+          <SettingsIcon />
+        </IconButton>
       </Tooltip>
       <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={toggleAnchorEl}>
         {
