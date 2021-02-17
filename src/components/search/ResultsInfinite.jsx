@@ -1,12 +1,13 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { map, startCase, get, uniq, without } from 'lodash';
+import { map, startCase, get, uniq, without, filter, includes, isEmpty } from 'lodash';
 import { BLUE } from '../../common/constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import RowComponent from './RowComponent';
+import SelectedResourceControls from './SelectedResourceControls';
 
 const ResultsInfinite = props => {
-  const { results, onLoadMore, resource, viewFields } = props;
+  const { results, onLoadMore, resource, viewFields, onCreateSimilarClick, onCreateMappingClick } = props;
   const [selectedList, setSelectedList] = React.useState([]);
   const onSelectChange = (event, id) => {
     const newSelectedList = event.target.checked ? uniq([...selectedList, id]) : without(selectedList, id);
@@ -19,9 +20,21 @@ const ResultsInfinite = props => {
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
   const total = get(results, 'total', 0)
+  const selectedItemObjects = filter(items, item => includes(selectedList, item.url));
 
   return (
     <div className='col-sm-12 no-side-padding'>
+      {
+        !isEmpty(selectedItemObjects) &&
+        <div className='col-sm-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
+          <SelectedResourceControls
+            selectedItems={selectedItemObjects}
+            resource={resource}
+            onCreateSimilarClick={onCreateSimilarClick}
+            onCreateMappingClick={onCreateMappingClick}
+          />
+        </div>
+      }
       {
         total ?
         <div className='col-sm-12 no-side-padding'>

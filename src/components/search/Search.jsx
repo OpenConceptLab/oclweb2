@@ -473,6 +473,8 @@ class Search extends React.Component {
                   results={resourceResults}
                   onLoadMore={this.loadMore}
                   viewFields={viewFields}
+                  onCreateSimilarClick={onCreateSimilarClick}
+                  onCreateMappingClick={onCreateMappingClick}
                 />
               }
               {
@@ -505,6 +507,8 @@ class Search extends React.Component {
                   onPageChange={this.onPageChange}
                   onSelectChange={onSelectChange}
                   viewFields={viewFields}
+                  onCreateSimilarClick={onCreateSimilarClick}
+                  onCreateMappingClick={onCreateMappingClick}
                 />
               }
             </div>

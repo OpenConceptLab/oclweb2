@@ -8,15 +8,11 @@ import {
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
-  Link as LinkIcon,
   Flag as FlagIcon,
   ArrowForward as ForwardIcon,
   Public as PublicIcon,
   Lock as PrivateIcon,
-  CompareArrows as CompareArrowsIcon,
   Delete as DeleteIcon,
-  GetApp as DownloadIcon,
-  Repeat as RepeatIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -30,15 +26,14 @@ import {
   getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser, currentUserHasAccess,
 } from '../../common/utils';
 import ReleasedChip from '../common/ReleasedChip';
-import DownloadButton from '../common/DownloadButton';
 import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
-import AddToCollection from '../common/AddToCollection';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
-import { ALL_COLUMNS, TAGS } from './ResultConstants';
+import { ALL_COLUMNS, TAGS } from './ResultConstants'
+import SelectedResourceControls from './SelectedResourceControls';
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -233,10 +228,10 @@ const ExpandibleRow = props => {
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(columns, 'length', 1) +
-                             (isConceptContainer ? 1 : 0) + //public column
-                                (isSelectable ? 1 : 0) + // select column
-                                 ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                               (resourceDefinition.tags ? 1 : 0); //tags column
+                               (isConceptContainer ? 1 : 0) + //public column
+                                  (isSelectable ? 1 : 0) + // select column
+                                   ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                 (resourceDefinition.tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -569,9 +564,7 @@ const ResultsTable = (
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
   const hasAccess = currentUserHasAccess()
-  const isAuthenticated = isLoggedIn();
   const isSourceChild = includes(['concepts', 'mappings'], resource);
-  const isConceptResource = resource === 'concepts';
   const isReferenceResource = resource === 'references';
   const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
@@ -609,29 +602,14 @@ const ResultsTable = (
   }
 
   const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
-  const shouldShowCompareOption = isConceptResource && selectedList.length === 2;
-  const shouldShowDownloadOption = isSourceChild && selectedList.length > 0;
   const shouldShowDeleteOption = isReferenceResource && hasAccess && selectedList.length > 0;
-  const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedList.length == 1 && onCreateSimilarClick;
-  const shouldShowAddToCollection = isSourceChild && isAuthenticated && selectedList.length > 0;
-  const shouldShowCreateMappingOption = isConceptResource && hasAccess && selectedList.length > 0 && selectedList.length <= 2 && onCreateMappingClick;
   let columns = essentialColumns ?
-                  reject(resourceDefinition.columns, c => c.essential === false) :
-                  resourceDefinition.columns;
+                reject(resourceDefinition.columns, c => c.essential === false) :
+                resourceDefinition.columns;
 
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
-  const hasSelectionOptions = Boolean(shouldShowCompareOption || shouldShowDeleteOption || shouldShowDownloadOption || shouldShowCreateMappingOption || shouldShowAddToCollection)
-  const selectionRowColumnsCount = hasSelectionOptions ? columnsCount - 2 : columnsCount;
-  const onCompareClick = event => {
-    event.stopPropagation()
-    event.preventDefault()
-    const urls = map(getSelectedItems(), 'url')
-    if(urls.length == 2) {
-      const url = `#/concepts/compare?lhs=${urls[0]}&rhs=${urls[1]}`
-      window.open(url, '_blank')
-    }
-  }
+  const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
   const onReferenceDeleteClick = event => {
     event.stopPropagation()
     event.preventDefault()
@@ -653,83 +631,17 @@ const ResultsTable = (
                   <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
                     <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
                       <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
-                      <span>
-                        {
-                          shouldShowDownloadOption &&
-                          <DownloadButton
-                            includeCSV
-                            formats={['json']}
-                            resource={getSelectedItems()}
-                            buttonFunc={
-                              attrs =>
-                                <Button startIcon={<DownloadIcon fontSize='small' />} variant='contained' size='small' color='secondary' {...attrs}>
-                                  Download
-                                </Button>
-                            }
-                            queryParams={{verbose: true, includeInverseMappings: true, includeSummary: true }}
-                          />
-                        }
-                        {
-                          shouldShowCreateSimilarOption &&
-                          <Button
-                            startIcon={<RepeatIcon fontSize='small' />}
-                            variant='contained'
-                            size='small'
-                            color='secondary'
-                            onClick={() => onCreateSimilarClick(get(getSelectedItems(), '0'))}
-                            style={{marginLeft: '10px'}}
-                            >
-                            Create Similar
-                          </Button>
-                        }
-                        {
-                          shouldShowCreateMappingOption &&
-                          <Button
-                            startIcon={<LinkIcon fontSize='small' />}
-                            variant='contained'
-                            size='small'
-                            color='secondary'
-                            onClick={() => onCreateMappingClick(getSelectedItems())}
-                            style={{marginLeft: '10px'}}
-                            >
-                            Create Mapping
-                          </Button>
-                        }
-                        {
-                          shouldShowAddToCollection &&
-                          <span style={{marginLeft: '10px'}}>
-                            <AddToCollection
-                              variant='contained' color='secondary' size='small' references={getSelectedItems()}
-                            />
-                          </span>
-                        }
-                        {
-                          shouldShowCompareOption &&
-                          <Button
-                            startIcon={<CompareArrowsIcon fontSize='small' />}
-                            variant='contained'
-                            size='small'
-                            color='secondary'
-                            onClick={onCompareClick}
-                            style={{marginLeft: '10px'}}
-                            >
-                            Compare
-                          </Button>
-                        }
-                        {
+                      <SelectedResourceControls
+                        selectedItems={getSelectedItems()}
+                        resource={resource}
+                        onCreateSimilarClick={onCreateSimilarClick}
+                        onCreateMappingClick={onCreateMappingClick}
+                        extraControls={
                           shouldShowDeleteOption &&
-                          <Button
-                            startIcon={<DeleteIcon fontSize='small' />}
-                            variant='contained'
-                            size='small'
-                            color='secondary'
-                            onClick={onReferenceDeleteClick}
-                            style={{marginLeft: '10px'}}
-                            >
-                            Delete
-                          </Button>
+                                       <Button
+                                         startIcon={<DeleteIcon fontSize='small' />} variant='contained' size='small' color='secondary' onClick={onReferenceDeleteClick} style={{marginLeft: '10px'}} >Delete</Button>
                         }
-                      </span>
+                      />
                     </TableCell>
                   </TableRow>
                 }
