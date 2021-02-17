@@ -156,3 +156,12 @@ export const TAGS = {
     COLLECTION_TAG,
   ]
 }
+export const FACET_ORDER = {
+  concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership'],
+  mappings: [
+    'owner', 'ownerType', 'source', 'mapType',
+    'fromConceptOwner', 'fromConceptOwnerType', 'fromConceptSource', 'fromConcept',
+    'toConceptOwner', 'toConceptOwnerType', 'toConceptSource', 'toConcept',
+    'retired', 'collection_membership',
+  ]
+}

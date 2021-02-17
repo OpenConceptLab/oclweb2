@@ -8,13 +8,21 @@ import {
   Search as SearchIcon
 } from '@material-ui/icons';
 import {
-  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter
+  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has
 } from 'lodash';
 
 const FilterDrawer = props => {
   const [input, setInput] = React.useState('');
-  const { open, filters, onClose, onApply } = props;
-  const uiFilters = omit(omitBy(filters, isEmpty), ['is_active', 'is_latest_version'])
+  const { open, filters, onClose, onApply, facetOrder } = props;
+  let uiFilters = omit(omitBy(filters, isEmpty), ['is_active', 'is_latest_version'])
+  if(!isEmpty(facetOrder) && !isEmpty(uiFilters)) {
+    const orderedUIFilters = {}
+    forEach(facetOrder, attr => {
+      if(has(uiFilters, attr))
+        orderedUIFilters[attr] = uiFilters[attr]
+    })
+    uiFilters = orderedUIFilters
+  }
 
   const existingFilters = () => {
     let result = {}

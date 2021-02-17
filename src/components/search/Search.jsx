@@ -29,6 +29,7 @@ import ResourceTabs from './ResourceTabs';
 import { fetchSearchResults, fetchCounts } from './utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
+import { FACET_ORDER } from './ResultConstants';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -513,6 +514,7 @@ class Search extends React.Component {
           open={openFacetsDrawer}
           onClose={this.onCloseFacetsDrawer}
           filters={get(results[resource], 'facets.fields', {})}
+          facetOrder={get(FACET_ORDER, resource)}
           onApply={this.onApplyFacets}
         />
       </div>
