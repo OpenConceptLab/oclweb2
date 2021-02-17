@@ -6,6 +6,7 @@ import {set, get, isEmpty, cloneDeep, startCase, map, includes} from 'lodash';
 import APIService from '../../services/APIService';
 import VerifyEmailMessage from './VerifyEmailMessage';
 import PasswordFields from '../common/PasswordFields';
+import Captcha from '../common/Captcha';
 
 class Signup extends React.Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class Signup extends React.Component {
       fieldErrors: {},
       serverError: null,
       successMsg: null,
+      captcha: null,
       fields: {
         username: '',
         first_name: '',
@@ -73,8 +75,10 @@ class Signup extends React.Component {
     }
   }
 
+  onCaptchaChange = value => this.setState({captcha: value})
+
   render() {
-    const { fields, fieldErrors, serverError, successMsg } = this.state;
+    const { fields, fieldErrors, serverError, successMsg, captcha } = this.state;
 
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
@@ -118,8 +122,11 @@ class Signup extends React.Component {
                       confirmPasswordFieldId="fields.confirm_password"
                       password={fields.password}
                     />
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                      <Captcha onChange={this.onCaptchaChange} />
+                    </div>
                     <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
-                      <Button onClick={this.onSubmit} type='submit' color='primary' variant='contained'>Sign Up</Button>
+                      <Button disabled={!captcha} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>Sign Up</Button>
                       <div style={{marginTop: '15px'}}>
                         Already have an account? <Link to="/accounts/login">Sign In</Link>
                       </div>

@@ -14,3 +14,4 @@ services:
       - API_URL=${API_URL-http://127.0.0.1:8000}
       - NODE_ENV=${NODE_ENV-development}
       - WEB_PORT=4000
+      - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}

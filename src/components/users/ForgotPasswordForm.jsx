@@ -5,11 +5,13 @@ import {set, get, map, values} from 'lodash';
 import APIService from '../../services/APIService';
 import ForgotPasswordSuccessMessage from './ForgotPasswordSuccessMessage';
 import PasswordFields from '../common/PasswordFields';
+import Captcha from '../common/Captcha';
 
 class ForgotPasswordForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      captcha: null,
       username: props.match.params.user,
       token: props.match.params.token,
       user: null,
@@ -109,8 +111,10 @@ class ForgotPasswordForm extends React.Component {
       return <ForgotPasswordSuccessMessage />;
   }
 
+  onCaptchaChange = value => this.setState({captcha: value})
+
   render() {
-    const { serverError, success, notFound, validToken, isLoading, new_password } = this.state;
+    const { serverError, success, notFound, validToken, isLoading, new_password, captcha } = this.state;
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
@@ -139,8 +143,11 @@ class ForgotPasswordForm extends React.Component {
                         confirmPasswordFieldId="confirm_password"
                         password={new_password}
                       />
+                      <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Captcha onChange={this.onCaptchaChange} />
+                      </div>
                       <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
-                        <Button onClick={this.onSubmit} type='submit' color='primary' variant='contained'>
+                        <Button disabled={!captcha} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>
                           Change Password
                         </Button>
                       </div>

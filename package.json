@@ -14,11 +14,12 @@
     "lodash": "^4.17.20",
     "moment": "2.24.0",
     "prop-types": "^15.7.2",
-    "query-string": "^6.13.8",
+    "query-string": "^6.14.0",
     "react": "^16.14.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^16.14.0",
+    "react-google-recaptcha": "^2.1.0",
     "react-image-crop": "^8.6.6",
     "react-infinite-scroll-component": "^5.1.0",
     "react-json-editor-ajrm": "^2.5.13",
@@ -31,18 +32,16 @@
     "uuid": "^3.4.0"
   },
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --mode ${NODE_ENV} --hot",
-    "build": "./node_modules/webpack/bin/webpack.js -p --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --mode ${NODE_ENV}",
-    "eslint": "./node_modules/.bin/eslint ./src",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --mode ${NODE_ENV} --hot",
+    "build": "./node_modules/webpack/bin/webpack.js -p --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --mode ${NODE_ENV}",
+    "eslint": "./node_modules/.bin/eslint ./src"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.13",
+    "@babel/core": "^7.12.16",
     "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/plugin-proposal-object-rest-spread": "^7.12.13",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
     "@babel/runtime": "7.0.0-beta.42",
     "babel-eslint": "^10.1.0",
