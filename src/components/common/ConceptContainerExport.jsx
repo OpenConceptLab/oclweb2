@@ -120,7 +120,7 @@ class ConceptContainerExport extends React.Component {
     const url = type === 'concepts' ? version.concepts_url : version.mappings_url
     if(url) {
       alertifyjs.warning('Requesting CSV. This may take few seconds...')
-      APIService.new().overrideURL(url).get(null, null, {csv: true}).then(response => {
+      APIService.new().overrideURL(url).get(null, null, {csv: true, limit: 1000}).then(response => {
         if(get(response, 'status') === 200) {
           const url = response.data.url
           if(url) {
