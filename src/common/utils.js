@@ -330,3 +330,12 @@ export const getCurrentUserCollections = callback => {
       .then(response => isArray(response.data) ? callback(response.data) : false);
   }
 }
+
+export const isValidPassword = (password, strength, minStrength = 3) => {
+  return Boolean(
+    password &&
+      strength >= minStrength &&
+      password.length >= 8 &&
+      password.match(new RegExp(/(?=.*[0-9])(?=.*[a-zA-Z])(?=\S+$)./g))
+  );
+}

@@ -16,6 +16,7 @@ class Signup extends React.Component {
       serverError: null,
       successMsg: null,
       captcha: null,
+      validPassword: false,
       fields: {
         username: '',
         first_name: '',
@@ -37,11 +38,6 @@ class Signup extends React.Component {
     this.setState(newState)
   }
 
-  isPasswordValid() {
-    const { password } = this.state.fields;
-    return Boolean(password && password.length >=8 && password.match(new RegExp(/[a-zA-Z]/g)))
-  }
-
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
@@ -55,7 +51,7 @@ class Signup extends React.Component {
       this.setState({serverError: ['Password and Confirm Password must match.']})
       return
     }
-    if(!this.isPasswordValid()) {
+    if(this.state.isValidPassword) {
       this.setState({serverError: ['Invalid Password']})
       return
     }
@@ -78,8 +74,7 @@ class Signup extends React.Component {
   onCaptchaChange = value => this.setState({captcha: value})
 
   render() {
-    const { fields, fieldErrors, serverError, successMsg, captcha } = this.state;
-
+    const { fields, fieldErrors, serverError, successMsg, captcha, validPassword } = this.state;
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
@@ -121,12 +116,13 @@ class Signup extends React.Component {
                       passwordFieldId="fields.password"
                       confirmPasswordFieldId="fields.confirm_password"
                       password={fields.password}
+                      onBlur={valid => this.setFieldValue('validPassword', valid)}
                     />
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                       <Captcha onChange={this.onCaptchaChange} />
                     </div>
                     <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
-                      <Button disabled={!captcha} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>Sign Up</Button>
+                      <Button disabled={!captcha || !validPassword} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>Sign Up</Button>
                       <div style={{marginTop: '15px'}}>
                         Already have an account? <Link to="/accounts/login">Sign In</Link>
                       </div>

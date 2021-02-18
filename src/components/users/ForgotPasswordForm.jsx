@@ -22,6 +22,7 @@ class ForgotPasswordForm extends React.Component {
       new_password: '',
       confirm_password: '',
       success: false,
+      validPassword: false,
     }
   }
 
@@ -55,7 +56,7 @@ class ForgotPasswordForm extends React.Component {
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-    const { new_password, confirm_password, token } = this.state;
+    const { new_password, confirm_password, token, validPassword } = this.state;
 
     const isConfirmPasswordSameAsPassword = confirm_password === new_password;
     if(!isConfirmPasswordSameAsPassword) {
@@ -65,7 +66,7 @@ class ForgotPasswordForm extends React.Component {
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
-    if(isFormValid && isConfirmPasswordSameAsPassword && new_password && token)
+    if(isFormValid && isConfirmPasswordSameAsPassword && new_password && token && validPassword)
       this.setState({serverError: null}, () => {
         APIService.users().password().appendToUrl('reset/')
                   .put({token: token, new_password: new_password})
@@ -114,7 +115,7 @@ class ForgotPasswordForm extends React.Component {
   onCaptchaChange = value => this.setState({captcha: value})
 
   render() {
-    const { serverError, success, notFound, validToken, isLoading, new_password, captcha } = this.state;
+    const { serverError, success, notFound, validToken, isLoading, new_password, captcha, validPassword } = this.state;
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
@@ -142,12 +143,13 @@ class ForgotPasswordForm extends React.Component {
                         passwordFieldId="new_password"
                         confirmPasswordFieldId="confirm_password"
                         password={new_password}
+                        onBlur={valid => this.setFieldValue('validPassword', valid)}
                       />
                       <div style={{display: 'flex', justifyContent: 'center'}}>
                         <Captcha onChange={this.onCaptchaChange} />
                       </div>
                       <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
-                        <Button disabled={!captcha} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>
+                        <Button disabled={!captcha || !validPassword} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>
                           Change Password
                         </Button>
                       </div>

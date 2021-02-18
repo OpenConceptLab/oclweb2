@@ -565,3 +565,8 @@ table.nested-mappings {
 .ql-editor {
     min-height: 80px;
 }
+.password-strength {
+    div {
+        height: 5px !important;
+    }
+}
