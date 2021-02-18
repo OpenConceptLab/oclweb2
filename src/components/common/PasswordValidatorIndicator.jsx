@@ -32,13 +32,13 @@ const PasswordValidatorIndicator = ({password, strength, minStrength, minStrengt
     <React.Fragment>
       <div className='col-md-12 no-side-padding' style={{fontSize: '12px'}}>
         {
-          Indicator(hasMinLength, 'Must be min 8 Characters.')
+          Indicator(hasMinLength, 'Must be 8 or more characters.')
         }
         {
-          Indicator(hasNumber, 'Must have atleast one number (0-9).')
+          Indicator(hasNumber, 'Must have at least one number (0-9).')
         }
         {
-          Indicator(hasAlphabet, 'Must have atleast one alphabet (a-zA-Z).')
+          Indicator(hasAlphabet, 'Must have at least one letter (a-z, A-Z).')
         }
         {
           minStrength && Indicator(isMinStrength, `Must be of ${minStrengthLabel} strength.`)
