@@ -44,7 +44,7 @@ class CollectionHomeChildrenList extends React.Component {
   onReferencesDelete = expressions => {
     const references = compact(expressions)
     if(!isEmpty(references))
-      APIService.new().overrideURL(this.getURL()).delete({references: references}).then(response => {
+      APIService.new().overrideURL(this.getURL()).appendToUrl('?cascade=sourcemappings').delete({references: references}).then(response => {
         if(get(response, 'status') === 204)
           alertifyjs.success('Successfully deleted references', 1, () => window.location.reload())
         else
