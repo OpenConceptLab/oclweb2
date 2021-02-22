@@ -115,6 +115,9 @@ class Search extends React.Component {
     if(!isEqual(prevProps.viewFilters, this.props.viewFilters)) {
       this.setQueryParamsInState()
     }
+    if(!isEqual(prevProps.fixedFilters, this.props.fixedFilters)) {
+      this.setQueryParamsInState()
+    }
   }
 
   updateSummaryOnResult(resource, summary) {
