@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { map, includes, compact, isEmpty, get } from 'lodash';
+import { map, includes, compact, isEmpty, get, merge } from 'lodash';
 import Search from '../search/Search';
 import VersionFilter from '../common/VersionFilter';
 import APIService from '../../services/APIService';
@@ -55,13 +55,13 @@ class CollectionHomeChildrenList extends React.Component {
 
   render() {
     const { selectedVersion } = this.state;
-    const { collection, resource } = this.props;
+    const { collection, resource, fixedFilters } = this.props;
     return (
       <Search
         {...this.props}
         nested
         baseURL={this.getURL()}
-        fixedFilters={{isTable: true, limit: 25}}
+        fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         extraControls={this.getExtraControls()}
         searchInputPlaceholder={`Search ${collection.name} ${resource}...`}
         onReferencesDelete={this.onReferencesDelete}

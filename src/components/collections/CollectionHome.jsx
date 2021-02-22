@@ -1,11 +1,25 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, isEmpty, get, findIndex } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
+const DEFAULT_CONFIG = {
+  name: 'OCL Default (Collection)',
+  web_default: true,
+  is_default: false,
+  config: {
+    tabs: [
+      {type: "concepts", label: "Concepts", page_size: 25, "default": true, layout: 'table'},
+      {type: "mappings", label: "Mappings", page_size: 25, layout: 'table'},
+      {type: "references", label: "References", page_size: 25, layout: 'table'},
+      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
+      {type: "about", label: "About"},
+    ]
+  }
+}
 
 class CollectionHome extends React.Component {
   constructor(props) {
@@ -14,8 +28,23 @@ class CollectionHome extends React.Component {
       isLoading: true,
       collection: {},
       versions: [],
-      tab: this.getDefaultTabIndex()
+      tab: this.getDefaultTabIndex(),
+      selectedConfig: null,
+      customConfigs: [],
     }
+  }
+
+  customConfigFeatureApplicable() {
+    return this.props.location.search.indexOf('configs=true') > -1;
+  }
+
+  getDefaultTabIndexFromConfig() {
+    const index = findIndex(this.state.selectedConfig.config.tabs, {"default": true});
+    return index > -1 ? index : 0;
+  }
+
+  setTab() {
+    this.setState({tab: this.getDefaultTabIndexFromConfig()});
   }
 
   getDefaultTabIndex() {
@@ -40,7 +69,10 @@ class CollectionHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname) {
+    if(
+      (prevProps.location.pathname !== this.props.location.pathname) ||
+      (prevProps.location.search !== this.props.location.search)
+    ) {
       this.refreshDataByURL()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
@@ -83,7 +115,7 @@ class CollectionHome extends React.Component {
 
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
-      if(includes([0, 1, 2, 3, 4], value))
+      if(isEmpty(this.state.versions))
         this.getVersions()
     })
   }
@@ -92,16 +124,26 @@ class CollectionHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.getURLFromPath())
-                .get(null, null, {includeSummary: true})
+                .get(null, null, {includeSummary: true, includeClientConfigs: true})
                 .then(response => {
-                  this.setState({isLoading: false, collection: response.data}, () => {
-                    if(includes([0, 1, 2, 3, 4], this.state.tab))
+                  const collection = response.data;
+                  const customConfigs = get(collection, 'client_configs', [])
+                  const defaultCustomConfig = find(customConfigs, {is_default: true});
+                  this.setState({
+                    isLoading: false,
+                    collection: collection,
+                    selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
+                    customConfigs: customConfigs,
+                  }, () => {
+                    if(isEmpty(this.state.versions))
                       this.getVersions()
                   })
                 })
 
     })
   }
+
+  onConfigChange = config => this.setState({selectedConfig: config})
 
   isVersionedObject() {
     const version = this.props.match.params.version;
@@ -129,7 +171,7 @@ class CollectionHome extends React.Component {
   }
 
   render() {
-    const { collection, versions, isLoading, tab } = this.state;
+    const { collection, versions, isLoading, tab, selectedConfig, customConfigs } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
     const showAboutTab = this.shouldShowAboutTab();
@@ -147,7 +189,7 @@ class CollectionHome extends React.Component {
             />
             <CollectionHomeTabs
               tab={tab}
-              onChange={this.onTabChange}
+              onTabChange={this.onTabChange}
               collection={collection}
               versions={versions}
               location={this.props.location}
@@ -155,6 +197,11 @@ class CollectionHome extends React.Component {
               currentVersion={this.getCurrentVersion()}
               aboutTab={showAboutTab}
               onVersionUpdate={this.onVersionUpdate}
+              customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+              onConfigChange={this.onConfigChange}
+              selectedConfig={selectedConfig}
+              showConfigSelection={this.customConfigFeatureApplicable()}
+              isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
             />
           </div>
         }

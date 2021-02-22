@@ -1,20 +1,25 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, reject, includes, map } from 'lodash';
+import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
 import About from '../common/About';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
+import ConfigSelect from '../common/ConfigSelect';
 import CollectionVersionForm from './CollectionVersionForm';
 import ReferenceForm from './ReferenceForm';
 
 const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, location, versionedObjectURL, currentVersion,
-    aboutTab, onVersionUpdate
+    aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
+    onTabChange, isOCLDefaultConfigSelected
   } = props;
+  const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
+  const selectedTabConfig = tabConfigs[tab];
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
   const about = get(collection, 'text')
@@ -27,69 +32,77 @@ const CollectionHomeTabs = props => {
       setReferenceForm(true)
   }
   const currentResourceURL = isVersionedObject ? collection.url : collection.version_url
+  const getTABHref = tabConfig => {
+    let href = '';
+    if(tabConfig.type === 'about')
+      href = `#${currentResourceURL}about`
+    if(tabConfig.type === 'references')
+      href = `#${currentResourceURL}references`
+    else if(tabConfig.href)
+      href = `#${currentResourceURL}${tabConfig.href}`
+    else {
+      const urlAttr = tabConfig.type + '_url'
+      href = `#${collection[urlAttr]}`
+    }
+    return href + location.search
+  }
 
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
-        <Tab label="Concepts" component="a" href={`#${collection.concepts_url}`} />
-        <Tab label="Mappings" component="a" href={`#${collection.mappings_url}`} />
-        <Tab label="References" component="a" href={`#${currentResourceURL}references/`} />
-        <Tab label="Versions" component="a" href={isVersionedObject ? `#${collection.versions_url}` : `#${currentResourceURL}versions/`} />
-        {aboutTab && <Tab label="About" component="a" href={`#${currentResourceURL}about/`} />}
+      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="collection-home-tabs"  classes={{indicator: 'hidden'}}>
+        {
+          map(
+            tabConfigs,
+            config => {
+              if(isOCLDefaultConfigSelected)
+                return (<Tab key={config.label} label={config.label} component="a" href={getTABHref(config)}/>)
+              else
+                return (<Tab key={config.label} label={config.label} />)
+            }
+          )
+        }
       </Tabs>
       {
         hasAccess && isVersionedObject &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+          {
+            showConfigSelection &&
+            <span style={{marginRight: '10px'}}>
+              <ConfigSelect
+                selected={selectedConfig}
+                configs={customConfigs}
+                onChange={onConfigChange}
+                color={GREEN}
+                resourceURL={collection.url}
+              />
+            </span>
+          }
           <NewResourceButton resources={['references', 'version']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
         {
-          tab === 0 &&
-          <CollectionHomeChildrenList
-            collection={collection}
-            location={location}
-            versionedObjectURL={versionedObjectURL}
-            versions={versions}
-            currentVersion={currentVersion}
-            resource='concepts'
-          />
-        }
-        {
-          tab === 1 &&
-          <CollectionHomeChildrenList
-            collection={collection}
-            location={location}
-            versionedObjectURL={versionedObjectURL}
-            versions={versions}
-            currentVersion={currentVersion}
-            resource='mappings'
-          />
-        }
-        {
-          tab === 2 &&
-          <CollectionHomeChildrenList
-            collection={collection}
-            location={location}
-            versionedObjectURL={versionedObjectURL}
-            versions={versions}
-            currentVersion={currentVersion}
-            resource='references'
-            references
-          />
-        }
-        {
-          tab === 3 &&
-          <ConceptContainerVersionList
-            versions={versions}
-            resource='collection'
-            canEdit={hasAccess}
-            onUpdate={onVersionUpdate}
-          />
-        }
-        {
-          aboutTab && tab === 4 &&
+          selectedTabConfig.type === 'about' &&
           <About id={collection.id} about={about} />
+        }
+        {
+          selectedTabConfig.type === 'versions' &&
+          <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} />
+        }
+        {
+          includes(['concepts', 'mappings', 'references'], selectedTabConfig.type) &&
+          <CollectionHomeChildrenList
+            collection={collection}
+            location={location}
+            versionedObjectURL={versionedObjectURL}
+            versions={versions}
+            currentVersion={currentVersion}
+            resource={selectedTabConfig.type}
+            references={selectedTabConfig.type === 'references'}
+            viewFilters={selectedTabConfig.filters}
+            viewFields={selectedTabConfig.fields}
+            fixedFilters={{limit: selectedTabConfig.page_size, isTable: selectedTabConfig.layout !== 'list' }}
+          />
         }
       </div>
       <CommonFormDrawer
