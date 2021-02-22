@@ -34,7 +34,7 @@ const RowComponent = ({resource, item, onSelect, viewFields}) => {
           <Checkbox onChange={event => onSelect(event, item.url)} />
         </div>
       }
-      <div className='col-sm-11 no-right-padding'>
+      <div className='col-sm-11 no-right-padding' style={{width: '97%', overflow: 'scroll'}}>
         {getComponent()}
       </div>
       <Divider style={{width: '100%'}} />

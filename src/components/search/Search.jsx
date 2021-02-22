@@ -404,7 +404,7 @@ class Search extends React.Component {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
-      onCreateSimilarClick, onCreateMappingClick, viewFields,
+      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -485,6 +485,7 @@ class Search extends React.Component {
                   onCreateSimilarClick={onCreateSimilarClick}
                   onCreateMappingClick={onCreateMappingClick}
                   viewFields={viewFields}
+                  noControls={noControls}
                 /> :
                 <Results
                   resource={resource}
@@ -496,6 +497,7 @@ class Search extends React.Component {
                   onCreateMappingClick={onCreateMappingClick}
                   isInfinite={isInfinite}
                   onLoadMore={this.loadMore}
+                  noControls={noControls}
                 />
               }
             </div>

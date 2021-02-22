@@ -144,6 +144,7 @@ class ResourceReferenceForm extends React.Component {
                 searchInputPlaceholder={`Search concepts...`}
                 noFilters
                 noNav
+                noControls
                 onSelectChange={selectedList => this.onSelectChange('concepts', selectedList)}
               />
             </div>
@@ -158,6 +159,7 @@ class ResourceReferenceForm extends React.Component {
                 searchInputPlaceholder={`Search mappings...`}
                 noFilters
                 noNav
+                noControls
                 onSelectChange={selectedList => this.onSelectChange('mappings', selectedList)}
               />
             </div>

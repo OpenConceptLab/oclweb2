@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
-    onLoadMore, isInfinite,
+    onLoadMore, isInfinite, noControls,
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
@@ -68,7 +68,7 @@ const Results = props => {
   return (
     <div className='col-sm-12 no-side-padding'>
       {
-        !isEmpty(selectedItemObjects) &&
+        !isEmpty(selectedItemObjects) && !noControls &&
         <div className='col-sm-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
           <SelectedResourceControls
             selectedItems={selectedItemObjects}
