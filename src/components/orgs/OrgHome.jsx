@@ -8,7 +8,7 @@ import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
 import OrgHomeTabs from './OrgHomeTabs';
 const DEFAULT_CONFIG = {
-  name: 'OCL Default',
+  name: 'OCL Default (Org)',
   web_default: true,
   is_default: false,
   config: {
