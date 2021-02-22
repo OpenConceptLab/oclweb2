@@ -1,12 +1,14 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, reject, includes, map } from 'lodash';
+import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import About from '../common/About';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
+import ConfigSelect from '../common/ConfigSelect';
 import ConceptForm from '../concepts/ConceptForm';
 import MappingForm from '../mappings/MappingForm';
 import SourceVersionForm from './SourceVersionForm';
@@ -14,8 +16,11 @@ import SourceVersionForm from './SourceVersionForm';
 const SourceHomeTabs = props => {
   const {
     tab, source, versions, location, versionedObjectURL, currentVersion,
-    aboutTab, onVersionUpdate
+    aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
+    onTabChange, isOCLDefaultConfigSelected
   } = props;
+  const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
+  const selectedTabConfig = tabConfigs[tab];
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
   const about = get(source, 'text')
@@ -55,56 +60,77 @@ const SourceHomeTabs = props => {
   const closeMappingForm = () => closeDrawer(() => setMappingForm(false))
   const closeConceptForm = () => closeDrawer(() => setConceptForm(false))
   const closeVersionForm = () => closeDrawer(() => setVersionForm(false))
-
   const currentResourceURL = isVersionedObject ? source.url : source.version_url
+  const getTABHref = tabConfig => {
+    let href = '';
+    if(tabConfig.type === 'about')
+      href = `#${currentResourceURL}about`
+    else if(tabConfig.href)
+      href = `#${currentResourceURL}${tabConfig.href}`
+    else {
+      const urlAttr = tabConfig.type + '_url'
+      href = `#${source[urlAttr]}`
+    }
+    return href + location.search
+  }
 
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
-        <Tab label="Concepts" component="a" href={`#${source.concepts_url}`} />
-        <Tab label="Mappings" component="a" href={`#${source.mappings_url}`} />
-        <Tab label="Versions" component="a" href={isVersionedObject ? `#${source.versions_url}` : `#${currentResourceURL}versions/`} />
-        {aboutTab && <Tab label="About" component="a" href={`#${currentResourceURL}about/`} />}
+      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
+        {
+          map(
+            tabConfigs,
+            config => {
+              if(isOCLDefaultConfigSelected)
+                return (<Tab key={config.label} label={config.label} component="a" href={getTABHref(config)}/>)
+              else
+                return (<Tab key={config.label} label={config.label} />)
+            }
+          )
+        }
       </Tabs>
       {
         hasAccess && isVersionedObject &&
         <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+          {
+            showConfigSelection &&
+            <span style={{marginRight: '10px'}}>
+              <ConfigSelect
+                selected={selectedConfig}
+                configs={customConfigs}
+                onChange={onConfigChange}
+                color={GREEN}
+                resourceURL={source.url}
+              />
+            </span>
+          }
           <NewResourceButton resources={['concept', 'mapping', 'version']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
         {
-          tab === 0 &&
-          <SourceHomeChildrenList
-            source={source}
-            location={location}
-            versionedObjectURL={versionedObjectURL}
-            versions={versions}
-            currentVersion={currentVersion}
-            resource='concepts'
-            onCreateSimilarClick={onCreateSimilarClick}
-            onCreateMappingClick={onCreateMappingFromSelectedConceptsClick}
-          />
+          selectedTabConfig.type === 'about' &&
+          <About id={source.id} about={about} />
         }
         {
-          tab === 1 &&
-          <SourceHomeChildrenList
-            source={source}
-            location={location}
-            versionedObjectURL={versionedObjectURL}
-            versions={versions}
-            currentVersion={currentVersion}
-            resource='mappings'
-            onCreateSimilarClick={onCreateSimilarClick}
-          />
-        }
-        {
-          tab === 2 &&
+          selectedTabConfig.type === 'versions' &&
           <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} />
         }
         {
-          aboutTab && tab === 3 &&
-          <About id={source.id} about={about} />
+          includes(['concepts', 'mappings'], selectedTabConfig.type) &&
+          <SourceHomeChildrenList
+            source={source}
+            location={location}
+            versionedObjectURL={versionedObjectURL}
+            versions={versions}
+            currentVersion={currentVersion}
+            resource={selectedTabConfig.type}
+            onCreateSimilarClick={onCreateSimilarClick}
+            onCreateMappingClick={onCreateMappingFromSelectedConceptsClick}
+            viewFilters={selectedTabConfig.filters}
+            viewFields={selectedTabConfig.fields}
+            fixedFilters={{limit: selectedTabConfig.page_size, isTable: selectedTabConfig.layout !== 'list' }}
+          />
         }
       </div>
       <CommonFormDrawer

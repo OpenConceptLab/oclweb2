@@ -1,7 +1,7 @@
 import React from 'react';
 import Search from '../search/Search';
 import VersionFilter from '../common/VersionFilter';
-import { map, includes } from 'lodash';
+import { map, includes, merge } from 'lodash';
 
 class SourceHomeChildrenList extends React.Component {
   constructor(props) {
@@ -40,14 +40,14 @@ class SourceHomeChildrenList extends React.Component {
   }
 
   render() {
-    const { source, resource } = this.props
+    const { source, resource, fixedFilters } = this.props
     return (
       <Search
         {...this.props}
         nested
         essentialColumns
         baseURL={this.getURL()}
-        fixedFilters={{isTable: true, limit: 25}}
+        fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         extraControls={this.getExtraControls()}
         searchInputPlaceholder={`Search ${source.name} ${resource}...`}
       />
