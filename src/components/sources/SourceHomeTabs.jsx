@@ -130,6 +130,7 @@ const SourceHomeTabs = props => {
             viewFilters={selectedTabConfig.filters}
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: selectedTabConfig.layout !== 'list' }}
+            configQueryParams={selectedTabConfig.query_params}
           />
         }
       </div>

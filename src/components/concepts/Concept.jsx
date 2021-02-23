@@ -1,12 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import { LocalOffer as LocalOfferIcon } from '@material-ui/icons'
-import { merge, get } from 'lodash'
+import { merge, get, isArray, reject, keys, isEmpty, includes, map } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 
+const DEFAULT_FIELDS = [{concept_class: 'Class'}, {datatype: 'Datatype'}]
+const LABEL_FIELDS = ['id', 'display_name', 'name', 'owner', 'source']
+
 const Concept = props => {
+  const { viewFields } = props;
+  const customFields = isArray(viewFields) ? reject(viewFields, fieldConfig => includes(LABEL_FIELDS, keys(fieldConfig)[0])) : [];
+  const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
+
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <Link to={props.url} style={{display: 'inline-block'}} target="_blank">
@@ -16,10 +23,19 @@ const Concept = props => {
         />
       </Link>
       <div className='col-sm-12 no-side-padding resource-attributes'>
-        <span className='resource-attr'>Class:</span>
-        <span className='resource-value'>{props.concept_class},</span>
-        <span className='resource-attr'>Datatype:</span>
-        <span className='resource-value'>{props.datatype}</span>
+        {
+          map(fields, field => {
+            const attr = keys(field)[0]
+            const label = field[attr];
+            return (
+              <React.Fragment key={attr}>
+                <span className='resource-attr'>{label}:</span>
+                <span className='resource-value'>{get(props, attr, 'None')}</span>
+                <br/>
+              </React.Fragment>
+            )
+          })
+        }
       </div>
       <LastUpdatedOnLabel date={props.version_created_on} />
     </div>
