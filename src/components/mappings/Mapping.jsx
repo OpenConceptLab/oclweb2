@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Link as LinkIcon,
 } from '@material-ui/icons'
-import { merge, get } from 'lodash'
+import { merge, get, isArray, map, isEmpty, keys } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -17,6 +17,9 @@ const LABEL_STYLES = {
 };
 
 const Mapping = props => {
+  const { viewFields } = props;
+  const customFields = isArray(viewFields) ? viewFields : [];
+
   const isFromConceptInContext = props.conceptContext === props.from_concept_code;
   const isToConceptInContext = !isFromConceptInContext && (props.conceptContext === props.to_concept_code);
   const fromConceptLabel = isFromConceptInContext ?
@@ -50,6 +53,24 @@ const Mapping = props => {
           {toConceptLabel}
         </div>
       </div>
+      {
+        !isEmpty(customFields) &&
+        <div className='col-sm-12 no-side-padding resource-attributes'>
+          {
+            map(customFields, field => {
+              const attr = keys(field)[0]
+              const label = field[attr];
+              return (
+                <React.Fragment key={attr}>
+                  <span className='resource-attr'>{label}:</span>
+                  <span className='resource-value'>{get(props, attr, 'None')}</span>
+                  <br/>
+                </React.Fragment>
+              )
+            })
+          }
+        </div>
+      }
       <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '5px'}}>
         {
           props.external_id &&
