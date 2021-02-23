@@ -145,6 +145,9 @@ class ViewConfigForm extends React.Component {
     newState.errors = null
     newState.initialConfig = {}
     newState.selected = config
+    newState.fields.name = config.name
+    newState.fields.config = config.config
+    newState.fields.is_default = config.is_default
     this.setState(newState, () => {
       this.setState({initialConfig: cloneDeep(get(config, 'config', {}))})
     })
