@@ -5,6 +5,7 @@ import {
   GetApp as DownloadIcon,
   Repeat as RepeatIcon,
   Link as LinkIcon,
+  Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { map, includes, get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn } from '../../common/utils'
@@ -12,10 +13,11 @@ import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
 
 const SelectedResourceControls = ({
-  selectedItems, resource, onCreateSimilarClick, onCreateMappingClick, extraControls
+  selectedItems, resource, onCreateSimilarClick, onCreateMappingClick, onReferencesDelete, extraControls
 }) => {
   const hasAccess = currentUserHasAccess()
   const isAuthenticated = isLoggedIn();
+  const isReferenceResource = resource === 'references';
   const isConceptResource = resource === 'concepts';
   const isSourceChild = includes(['concepts', 'mappings'], resource);
   const hasSelectedItems = selectedItems.length > 0;
@@ -24,6 +26,15 @@ const SelectedResourceControls = ({
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedItems.length == 1 && onCreateSimilarClick;
   const shouldShowAddToCollection = isSourceChild && isAuthenticated && hasSelectedItems;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && hasSelectedItems && selectedItems.length <= 2 && onCreateMappingClick;
+  const shouldShowDeleteReferenceOption = (isReferenceResource || isSourceChild) && onReferencesDelete && hasAccess && hasSelectedItems;
+
+  const onReferenceDeleteClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
+    onReferencesDelete(
+      isSourceChild ? map(selectedItems, 'version_url') : map(selectedItems, 'expression')
+    )
+  }
 
   const onCompareClick = event => {
     event.stopPropagation()
@@ -97,6 +108,19 @@ const SelectedResourceControls = ({
           style={{marginLeft: '10px'}}
           >
           Compare
+        </Button>
+      }
+      {
+        shouldShowDeleteReferenceOption &&
+        <Button
+          startIcon={<DeleteIcon fontSize='small' />}
+          variant='contained'
+          size='small'
+          color='secondary'
+          onClick={onReferenceDeleteClick}
+          style={{marginLeft: '10px'}}
+          >
+          Delete
         </Button>
       }
       { extraControls }

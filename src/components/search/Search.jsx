@@ -499,6 +499,7 @@ class Search extends React.Component {
                   viewFields={viewFields}
                   onCreateSimilarClick={onCreateSimilarClick}
                   onCreateMappingClick={onCreateMappingClick}
+                  onReferencesDelete={onReferencesDelete}
                   isInfinite={isInfinite}
                   onLoadMore={this.loadMore}
                   noControls={noControls}

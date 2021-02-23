@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
-    onLoadMore, isInfinite, noControls,
+    onLoadMore, isInfinite, noControls, onReferencesDelete
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
@@ -75,6 +75,7 @@ const Results = props => {
             resource={resource}
             onCreateSimilarClick={onCreateSimilarClick}
             onCreateMappingClick={onCreateMappingClick}
+          onReferencesDelete={onReferencesDelete}
           />
         </div>
       }

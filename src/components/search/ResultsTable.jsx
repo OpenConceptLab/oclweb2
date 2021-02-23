@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
-  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip, Button,
+  Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
   CircularProgress,
 } from '@material-ui/core';
 import {
@@ -12,7 +12,6 @@ import {
   ArrowForward as ForwardIcon,
   Public as PublicIcon,
   Lock as PrivateIcon,
-  Delete as DeleteIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -602,7 +601,6 @@ const ResultsTable = (
   }
 
   const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
-  const shouldShowDeleteOption = isReferenceResource && hasAccess && selectedList.length > 0;
   let columns = essentialColumns ?
                 reject(resourceDefinition.columns, c => c.essential === false) :
                 resourceDefinition.columns;
@@ -610,13 +608,6 @@ const ResultsTable = (
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
   const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
-  const onReferenceDeleteClick = event => {
-    event.stopPropagation()
-    event.preventDefault()
-
-    const expressions = map(filter(results.items, item => includes(selectedList, item.id)), 'expression');
-    onReferencesDelete(expressions)
-  }
 
   return (
     <div className='col-sm-12 no-side-padding'>
@@ -636,11 +627,7 @@ const ResultsTable = (
                         resource={resource}
                         onCreateSimilarClick={onCreateSimilarClick}
                         onCreateMappingClick={onCreateMappingClick}
-                        extraControls={
-                          shouldShowDeleteOption &&
-                                       <Button
-                                         startIcon={<DeleteIcon fontSize='small' />} variant='contained' size='small' color='secondary' onClick={onReferenceDeleteClick} style={{marginLeft: '10px'}} >Delete</Button>
-                        }
+                        onReferencesDelete={onReferencesDelete}
                       />
                     </TableCell>
                   </TableRow>

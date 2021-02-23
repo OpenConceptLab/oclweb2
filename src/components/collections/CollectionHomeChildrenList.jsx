@@ -43,8 +43,9 @@ class CollectionHomeChildrenList extends React.Component {
 
   onReferencesDelete = expressions => {
     const references = compact(expressions)
+    const url = this.props.versionedObjectURL + 'references/'
     if(!isEmpty(references))
-      APIService.new().overrideURL(this.getURL()).appendToUrl('?cascade=sourcemappings').delete({references: references}).then(response => {
+      APIService.new().overrideURL(url).appendToUrl('?cascade=sourcemappings').delete({references: references}).then(response => {
         if(get(response, 'status') === 204)
           alertifyjs.success('Successfully deleted references', 1, () => window.location.reload())
         else
@@ -56,6 +57,7 @@ class CollectionHomeChildrenList extends React.Component {
   render() {
     const { selectedVersion } = this.state;
     const { collection, resource, fixedFilters } = this.props;
+    const isVersionedObject = !selectedVersion || selectedVersion === 'HEAD'
     return (
       <Search
         {...this.props}
@@ -64,8 +66,8 @@ class CollectionHomeChildrenList extends React.Component {
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         extraControls={this.getExtraControls()}
         searchInputPlaceholder={`Search ${collection.name} ${resource}...`}
-        onReferencesDelete={this.onReferencesDelete}
-        isVersionedObject={selectedVersion === 'HEAD'}
+        onReferencesDelete={isVersionedObject && this.onReferencesDelete}
+        isVersionedObject={isVersionedObject}
       />
     )
   }
