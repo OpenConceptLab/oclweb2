@@ -332,7 +332,7 @@ class Search extends React.Component {
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
     return (
-      <span style={{display: 'inline-flex', alignItems: 'center', width: '200%'}}>
+      <span style={{display: 'inline-flex', alignItems: 'center', width: 'max-content'}}>
         {
           extraControls &&
           <span style={{paddingRight: '4px'}}>
