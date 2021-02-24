@@ -52,7 +52,7 @@ module.exports = (env) => {
       new DefinePlugin({
         'process.env.API_URL': JSON.stringify(env.API_URL),
         'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV) || 'development',
-        'process.env.RECAPTCHA_SITE_KEY': JSON.stringify(env.RECAPTCHA_SITE_KEY) || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+        'process.env.RECAPTCHA_SITE_KEY': JSON.stringify(env.RECAPTCHA_SITE_KEY),
       }),
       new IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
