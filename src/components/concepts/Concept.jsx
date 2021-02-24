@@ -22,16 +22,20 @@ const Concept = props => {
           icon={<LocalOfferIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
         />
       </Link>
-      <div className='col-sm-12 no-side-padding resource-attributes'>
+      <div className='col-sm-11 no-side-padding resource-attributes'>
         {
-          map(fields, field => {
+          map(fields, (field, i) => {
             const attr = keys(field)[0]
             const label = field[attr];
             return (
               <React.Fragment key={attr}>
-                <span className='resource-attr'>{label}:</span>
-                <span className='resource-value'>{get(props, attr, 'None')}</span>
-                <br/>
+                <span className='resource-attr'>
+                  {label}:
+                </span>
+                <span className='resource-value' style={{marginRight: '0px'}}>
+                  {get(props, attr, 'None')}
+                </span>
+                {i < fields.length - 1 && <span style={{marginRight: '5px'}}>, </span>}
               </React.Fragment>
             )
           })
