@@ -10,7 +10,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import { get, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { downloadFromURL } from '../../common/utils';
+import { downloadFromURL, isLoggedIn } from '../../common/utils';
 import { WHITE } from '../../common/constants';
 
 const DOWNLOAD_OPTIONS = [
@@ -36,7 +36,7 @@ class ConceptContainerExport extends React.Component {
   }
 
   componentDidMount() {
-    if(!this.props.isHEAD)
+    if(!this.props.isHEAD && isLoggedIn())
       this.setState({options: [...this.state.options, EXPORT_OPTION]})
   }
 
