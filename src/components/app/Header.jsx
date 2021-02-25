@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
 import {
   AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, Divider, IconButton,
   ListItem, ListItemText, Collapse
@@ -19,7 +18,7 @@ import { isAtGlobalSearch, isLoggedIn, getCurrentUser } from '../../common/utils
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
-import { OPTIONS } from './MenuOptions';
+import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions';
 
 const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
@@ -126,7 +125,9 @@ const Header = props => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 10px'}}>
-            <Link className="no-anchor-styles" to="/">OCL</Link>
+            <a className="no-anchor-styles" href={MARKETING_SITE_URL} rel="noopener noreferrer">
+              OCL
+            </a>
           </Typography>
           <div className="col-sm-8">
             {

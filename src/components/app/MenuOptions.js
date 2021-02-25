@@ -1,16 +1,16 @@
-const ROOT_URL = 'https://aws.openconceptlab.org/';
+export const MARKETING_SITE_URL = 'https://aws.openconceptlab.org/';
 const COMMUNITY_OPTIONS = [
   {
     label: 'Architecture Community Call',
-    href: ROOT_URL + 'community-resources/ocl-architecture-call/'
+    href: MARKETING_SITE_URL + 'community-resources/ocl-architecture-call/'
   },
   {
     label: 'Developer Community Call',
-    href: ROOT_URL + 'community-resources/ocl-dev-community/'
+    href: MARKETING_SITE_URL + 'community-resources/ocl-dev-community/'
   },
   {
     label: 'OpenHIE Terminology Service Call',
-    href: ROOT_URL + 'community-resources/community-calls/'
+    href: MARKETING_SITE_URL + 'community-resources/community-calls/'
   },
   {
     label: 'Github',
@@ -22,35 +22,35 @@ const COMMUNITY_OPTIONS = [
   },
   {
     label: 'OCL for OpenMRS',
-    href: ROOT_URL + 'community-resources/ocl-for-openmrs/'
+    href: MARKETING_SITE_URL + 'community-resources/ocl-for-openmrs/'
   },
   {
     label: 'OCL Mailing List',
-    href: ROOT_URL + 'list/'
+    href: MARKETING_SITE_URL + 'list/'
   },
 ];
 const TOOLS_OPTIONS = [
   {
     label: 'Metadata Browser',
-    href: ROOT_URL + 'ocl-tools/metadata-browser/'
+    href: MARKETING_SITE_URL + 'ocl-tools/metadata-browser/'
   },
   {
     label: 'Authoring Interface',
-    href: ROOT_URL + 'ocl-tools/authoring-interface/'
+    href: MARKETING_SITE_URL + 'ocl-tools/authoring-interface/'
   },
   {
     label: 'Terminology Service',
-    href: ROOT_URL + 'ocl-tools/terminology-service/'
+    href: MARKETING_SITE_URL + 'ocl-tools/terminology-service/'
   },
 ];
 export const OPTIONS = [
   {
     label: 'About',
-    href: ROOT_URL + 'about/'
+    href: MARKETING_SITE_URL + 'about/'
   },
   {
     label: 'Blog',
-    href: ROOT_URL + 'blog/'
+    href: MARKETING_SITE_URL + 'blog/'
   },
   {
     label: 'Community',
