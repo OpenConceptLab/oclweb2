@@ -10,15 +10,13 @@ const CustomAttributesFormatted = ({attributes}) => {
     return isArray(value) && Boolean(find(value, isObject))
   }
 
-  const getNestedValueDom = value => {
+  const getNestedValueDom = (value, index) => {
     return isObject(value) ?
-           <details>
+           <details key={index}>
              <summary>{`${JSON.stringify(value).slice(0, 50)}...`}</summary>
-             <p>
-               <pre style={{fontSize: '12px'}}>{JSON.stringify(value, undefined, 2)}</pre>
-             </p>
+             <pre style={{fontSize: '12px'}}>{JSON.stringify(value, undefined, 2)}</pre>
            </details> :
-           <code>{JSON.stringify(value)}</code>
+           <code key={index}>{JSON.stringify(value)}</code>
   }
 
   return (
@@ -41,14 +39,18 @@ const CustomAttributesFormatted = ({attributes}) => {
                 }
                 {
                   needNesting &&
-                  map(value, val => getNestedValueDom(val))
+                  map(value, (val, index) => getNestedValueDom(val, index))
                 }
                 {
                   isArr && !needNesting &&
                   <pre style={{margin: '0'}}>{JSON.stringify(value)}</pre>
                 }
                 {
-                  !isBool && !needNesting && !isArr &&
+                  !isBool && !needNesting && !isArr && isObject(value) &&
+                  getNestedValueDom(value)
+                }
+                {
+                  !isBool && !needNesting && !isArr && !isObject(value) &&
                   value
                 }
               </div>
