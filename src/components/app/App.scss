@@ -591,3 +591,13 @@ table.nested-mappings {
 .btn:focus {
     color: unset !important;
 }
+.version-button-controls-container {
+    text-align: right;
+    padding-left: 2px;
+    button, a {
+        margin-right: 3px;
+    }
+    button:last-child {
+        margin-right: 0px;
+    }
+}

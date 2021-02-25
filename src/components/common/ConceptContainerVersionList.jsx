@@ -100,7 +100,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                 return (
                   <div className='col-md-12 no-side-padding' key={index}>
                     <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
-                      <div className='col-md-7 no-left-padding'>
+                      <div className='col-md-9 no-side-padding'>
                         <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
                           <ResourceVersionLabel {...version} />
                         </div>
@@ -115,27 +115,27 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                           />
                         </div>
                       </div>
-                      <div className='col-md-5 no-right-padding' style={{textAlign: 'right'}}>
+                      <div className='col-md-3 no-right-padding version-button-controls-container'>
                         {
                           canEdit && !isHEAD &&
                           <React.Fragment>
                             <Tooltip title='Edit Version'>
-                              <IconButton onClick={() => onEditClick(version)}>
+                              <IconButton onClick={() => onEditClick(version)} size='small'>
                                 <EditIcon fontSize='inherit' />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title={version.released ? 'UnRelease Version' : 'Release Version'}>
-                              <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)}>
+                              <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)} size='small'>
                                 <ReleaseIcon fontSize='inherit' />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
-                              <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
+                              <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)} size='small'>
                                 <RetireIcon fontSize='inherit' />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title='Delete Version'>
-                              <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)}>
+                              <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)} size='small'>
                                 <DeleteIcon fontSize='inherit' />
                               </IconButton>
                             </Tooltip>
@@ -150,12 +150,12 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                           />
                         }
                         <Tooltip title='Explore Version'>
-                          <IconButton href={`#${version.concepts_url}`} color='primary'>
+                          <IconButton href={`#${version.concepts_url}`} color='primary' size='small'>
                             <SearchIcon fontSize='inherit' />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title='Copy URL'>
-                          <IconButton onClick={() => onCopyClick(version)}>
+                          <IconButton onClick={() => onCopyClick(version)} size='small'>
                             <CopyIcon fontSize='inherit' />
                           </IconButton>
                         </Tooltip>
