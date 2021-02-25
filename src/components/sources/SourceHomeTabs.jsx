@@ -65,6 +65,8 @@ const SourceHomeTabs = props => {
     let href = '';
     if(tabConfig.type === 'about')
       href = `#${currentResourceURL}about`
+    else if(tabConfig.type === 'versions')
+      href = `#${currentResourceURL}versions`
     else if(tabConfig.href)
       href = `#${currentResourceURL}${tabConfig.href}`
     else {

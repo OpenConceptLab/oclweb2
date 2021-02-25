@@ -36,8 +36,10 @@ const CollectionHomeTabs = props => {
     let href = '';
     if(tabConfig.type === 'about')
       href = `#${currentResourceURL}about`
-    if(tabConfig.type === 'references')
+    else if(tabConfig.type === 'references')
       href = `#${currentResourceURL}references`
+    else if(tabConfig.type === 'versions')
+      href = `#${currentResourceURL}versions`
     else if(tabConfig.href)
       href = `#${currentResourceURL}${tabConfig.href}`
     else {
