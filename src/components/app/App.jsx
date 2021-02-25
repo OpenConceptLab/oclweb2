@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.scss';
 import RootView from './RootView';
@@ -17,153 +17,148 @@ import ForgotPasswordRequest from '../users/ForgotPasswordRequest';
 import ForgotPasswordForm from '../users/ForgotPasswordForm';
 import Header from './Header';
 
-class App extends Component {
-  componentDidMount() {
-    this.addLogoutListenerForAllTabs()
-  }
-
-  addLogoutListenerForAllTabs() {
-    window.addEventListener("storage", function(event) {
+const App = props => {
+  const addLogoutListenerForAllTabs = () => window.addEventListener(
+    "storage",
+    event => {
       if(event.key === 'token' && !event.newValue) {
-        localStorage.clear()
+        localStorage.clear();
         window.location = '/';
       }
     });
-  }
 
-  render() {
-    return (
-      <div>
-        <Header {...this.props} />
-        <div className="content">
-          <Switch>
-            <Route exact path="/" component={RootView} />
-            <Route path="/search" component={Search} />
+  React.useEffect(addLogoutListenerForAllTabs)
 
-            { /* Concept Home */ }
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
-              component={ConceptHome}
-            />
-            <Route
-              exact
-              path="/concepts/compare"
-              component={ConceptsComparison}
-            />
+  return (
+    <div>
+      <Header {...props} />
+      <main className='content'>
+        <Switch>
+          <Route exact path="/" component={RootView} />
+          <Route path="/search" component={Search} />
 
-            { /* Mapping Home */ }
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
-              component={MappingHome}
-            />
+          { /* Concept Home */ }
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)/:conceptVersion([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/concepts/:concept([a-zA-Z0-9\-\.\_]+)"
+            component={ConceptHome}
+          />
+          <Route
+            exact
+            path="/concepts/compare"
+            component={ConceptsComparison}
+          />
 
-            { /* Source Home */ }
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
-              component={SourceHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
-              component={SourceHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)"
-              component={SourceHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)"
-              component={SourceHome}
-            />
-            { /* Collection Home */ }
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
-              component={CollectionHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
-              component={CollectionHome}
-            />
-            <Route
-              path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)"
-              component={CollectionHome}
-            />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)"
-              component={CollectionHome}
-            />
+          { /* Mapping Home */ }
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)/:mappingVersion([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)/mappings/:mapping([a-zA-Z0-9\-\.\_]+)"
+            component={MappingHome}
+          />
 
-            {/* Organization Home */}
-            <Route path="/orgs/:org([a-zA-Z0-9\-\.\_]+)" component={OrgHome} />
+          { /* Source Home */ }
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
+            component={SourceHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
+            component={SourceHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)"
+            component={SourceHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/sources/:source([a-zA-Z0-9\-\.\_]+)"
+            component={SourceHome}
+          />
+          { /* Collection Home */ }
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
+            component={CollectionHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)/:version([a-zA-Z0-9\-\.\_]+)"
+            component={CollectionHome}
+          />
+          <Route
+            path="/orgs/:org([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)"
+            component={CollectionHome}
+          />
+          <Route
+            path="/users/:user([a-zA-Z0-9\-\.\_]+)/collections/:collection([a-zA-Z0-9\-\.\_]+)"
+            component={CollectionHome}
+          />
 
-            {/* User Home */}
-            <Route path="/users/:user([a-zA-Z0-9\-\.\_]+)" component={UserHome} />
-            <Route exact path="/accounts/login" component={Login} />
-            <Route exact path="/accounts/signup" component={Signup} />
-            <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
-            <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/password/reset/:token([a-zA-Z0-9\-\.\_]+)" component={ForgotPasswordForm} />
-            <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
-          </Switch>
-        </div>
+          {/* Organization Home */}
+          <Route path="/orgs/:org([a-zA-Z0-9\-\.\_]+)" component={OrgHome} />
 
-      </div>
-    );
-  }
+          {/* User Home */}
+          <Route path="/users/:user([a-zA-Z0-9\-\.\_]+)" component={UserHome} />
+          <Route exact path="/accounts/login" component={Login} />
+          <Route exact path="/accounts/signup" component={Signup} />
+          <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
+          <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/password/reset/:token([a-zA-Z0-9\-\.\_]+)" component={ForgotPasswordForm} />
+          <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
+        </Switch>
+      </main>
+    </div>
+  );
 }
 
 export default App;

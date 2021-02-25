@@ -1,3 +1,6 @@
+.content {
+    margin-top: 65px;
+}
 .search-input input {
     height: 0.3em;
 }
@@ -577,4 +580,14 @@ table.nested-mappings {
 .primary-btn {
     color: #fff !important;
     text-decoration: none !important;
+}
+.btn:hover {
+    color: unset !important;
+    text-decoration: none !important;
+}
+.btn {
+    text-decoration: none !important;
+}
+.btn:focus {
+    color: unset !important;
 }

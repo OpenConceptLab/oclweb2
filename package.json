@@ -10,6 +10,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "alertifyjs": "^1.13.1",
     "axios": "^0.20.0",
+    "clsx": "^1.1.1",
     "core-js": "^3.9.0",
     "lodash": "^4.17.21",
     "moment": "2.24.0",
