@@ -59,9 +59,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
+    height: '65px',
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
   },
   content: {
     flexGrow: 1,
@@ -111,7 +111,7 @@ const Header = props => {
       <AppBar
         position="fixed"
         variant="outlined"
-        style={{backgroundColor: WHITE, color: BLACK}}
+        style={{backgroundColor: WHITE, color: BLACK, borderLeft: 'none'}}
         className={clsx(classes.appBar, {[classes.appBarShift]: open})}
       >
         <Toolbar>
@@ -124,11 +124,14 @@ const Header = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 10px'}}>
-            <a className="no-anchor-styles" href={MARKETING_SITE_URL} rel="noopener noreferrer">
-              OCL
-            </a>
-          </Typography>
+          {
+            !open &&
+            <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 10px'}}>
+              <a className="no-anchor-styles" href={MARKETING_SITE_URL} rel="noopener noreferrer">
+                OCL
+              </a>
+            </Typography>
+          }
           <div className="col-sm-8">
             {
               !isAtGlobalSearch() &&
@@ -163,9 +166,16 @@ const Header = props => {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={onClose}>
-            {theme.direction === 'ltr' ? <LeftIcon color='primary' /> : <RightIcon color='primary' />}
+          <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 10px'}}>
+            <a className="no-anchor-styles" href={MARKETING_SITE_URL} rel="noopener noreferrer">
+              OCL
+            </a>
+          </Typography>
+          <span style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+          <IconButton onClick={onClose} color="primary">
+            {theme.direction === 'ltr' ? <LeftIcon /> : <RightIcon />}
           </IconButton>
+          </span>
         </div>
         <Divider />
         <List>
