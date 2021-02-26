@@ -6,7 +6,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from '@material-ui/icons';
-import { Tooltip, IconButton, Button, ButtonGroup } from '@material-ui/core';
+import { Tooltip, Button, ButtonGroup } from '@material-ui/core';
 import { includes, keys, map, startCase, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
@@ -74,7 +74,7 @@ const CollectionHomeHeader = ({
 
   return (
     <header className='home-header col-md-12'>
-      <div className='col-md-12 container' style={{paddingTop: '10px'}}>
+      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <div className='no-side-padding col-md-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
@@ -114,6 +114,11 @@ const CollectionHomeHeader = ({
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
+                <Tooltip title="Copy URL">
+                  <Button onClick={onIconClick}>
+                    <CopyIcon fontSize="inherit" />
+                  </Button>
+                </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip title='Edit Collection'>
@@ -142,13 +147,6 @@ const CollectionHomeHeader = ({
               includes(['view', 'edit'], collection.public_access.toLowerCase()) &&
               <PublicAccessChip publicAccess={collection.public_access} />
             }
-            <span style={{marginLeft: '10px'}}>
-              <Tooltip title="Copy URL" placement="right">
-                <IconButton onClick={onIconClick} color="primary">
-                  <CopyIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </span>
           </div>
           {
             collection.description &&

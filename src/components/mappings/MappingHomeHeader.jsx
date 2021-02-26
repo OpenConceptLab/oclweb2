@@ -1,10 +1,15 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
-import { Edit as EditIcon, Delete as DeleteIcon, RestoreFromTrash as RestoreIcon } from '@material-ui/icons';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  RestoreFromTrash as RestoreIcon,
+  FileCopy as CopyIcon,
+} from '@material-ui/icons';
 import { get } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
-import { currentUserHasAccess } from '../../common/utils';
+import { currentUserHasAccess, copyURL, toFullAPIURL } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
@@ -81,11 +86,13 @@ const MappingHomeHeader = ({
     })
   }
 
+  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
+
   return (
     <header className='home-header col-md-12'>
-      <div className='col-md-12 container' style={{paddingTop: '10px'}}>
-        <MappingIcon url={currentURL} />
-        <div className='col-md-11'>
+      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
+        <MappingIcon />
+        <div className='col-md-11' style={{width: '95%'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...mapping} href={versionedObjectURL} />
             <span className='separator'>/</span>
@@ -102,6 +109,11 @@ const MappingHomeHeader = ({
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
+                <Tooltip title="Copy URL">
+                  <Button onClick={onIconClick}>
+                    <CopyIcon fontSize="inherit" />
+                  </Button>
+                </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip title='Edit Mapping'>

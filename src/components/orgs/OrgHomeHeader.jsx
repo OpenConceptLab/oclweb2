@@ -4,7 +4,7 @@ import {
   FileCopy as CopyIcon,
   Edit as EditIcon,
 } from '@material-ui/icons';
-import { Tooltip, IconButton, ButtonGroup, Button } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
 import { includes, isEmpty, get } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -39,7 +39,7 @@ const OrgHomeHeader = ({ org, url }) => {
 
   return (
     <header className='home-header col-md-12'>
-      <div className='col-md-12 container' style={{paddingTop: '10px'}}>
+      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <div className='no-side-padding col-md-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
@@ -52,6 +52,11 @@ const OrgHomeHeader = ({ org, url }) => {
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
+                <Tooltip title="Copy URL">
+                  <Button onClick={onIconClick}>
+                    <CopyIcon fontSize="inherit" />
+                  </Button>
+                </Tooltip>
                 {
                   hasAccess &&
                   <Tooltip title='Edit Organization'>
@@ -72,13 +77,6 @@ const OrgHomeHeader = ({ org, url }) => {
               includes(['view', 'edit'], org.public_access.toLowerCase()) &&
               <PublicAccessChip publicAccess={org.public_access} />
             }
-            <span style={{marginLeft: '10px'}}>
-              <Tooltip title="Copy URL" placement="right">
-                <IconButton onClick={onIconClick} color="primary">
-                  <CopyIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </span>
           </div>
           {
             org.description &&
