@@ -1,22 +1,22 @@
 import React from 'react';
-import { Divider, CircularProgress, IconButton } from '@material-ui/core';
+import { Divider, CircularProgress, IconButton, Tooltip } from '@material-ui/core';
 import {
   Person as PersonIcon,
-  Visibility as VisibilityIcon,
-  VisibilityOff as VisibilityOffIcon,
+  FileCopy as CopyIcon,
 } from '@material-ui/icons';
 import { includes, startCase, get } from 'lodash';
 import APIService from '../../services/APIService';
-import { formatDate, currentUserToken, formatWebsiteLink} from '../../common/utils';
+import {
+  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard
+} from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
 
 const UserHomeDetails = ({ user, isLoading }) => {
   const [logoURL, setLogoURL] = React.useState(user.logo_url)
-  const [showToken, setShowToken] = React.useState(false);
 
   React.useEffect(() => {
     if(user.logo_url)
-     setLogoURL(user.logo_url)
+      setLogoURL(user.logo_url)
   }, [user.logo_url])
 
   let name = user.name || '';
@@ -70,13 +70,11 @@ const UserHomeDetails = ({ user, isLoading }) => {
             token &&
             <p>
               <strong>API Token:</strong>
-              <IconButton onClick={() => setShowToken(!showToken)}>
-                {showToken ? <VisibilityOffIcon /> : <VisibilityIcon />}
-              </IconButton>
-              <br />
-              <span style={{fontFamily: 'Courier New', fontWeight: 'bold'}}>
-                {showToken && token}
-              </span>
+              <Tooltip title="Click to copy Token">
+                <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
+                  <CopyIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
             </p>
           }
         </div>

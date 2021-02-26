@@ -89,10 +89,15 @@ export const toFullAPIURL = uri => {
 }
 
 export const copyURL = url => {
-  if(url) {
-    navigator.clipboard.writeText(url);
-    alertifyjs.success('Copied URL to clipboard!')
-  }
+  copyToClipboard(url, 'Copied URL to clipboard!');
+}
+
+export const copyToClipboard = (copyText, message) => {
+  if(copyText)
+    navigator.clipboard.writeText(copyText);
+
+  if(message)
+    alertifyjs.success(message);
 }
 
 export const toParentURI = uri => uri.split('/').splice(0, 5).join('/');
