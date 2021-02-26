@@ -63,5 +63,9 @@ export const OPTIONS = [
   {
     label: 'Tools',
     nested: [...TOOLS_OPTIONS]
+  },
+  {
+    label: 'Contact',
+    href: MARKETING_SITE_URL + 'contact/'
   }
-]
+];
