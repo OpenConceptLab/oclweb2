@@ -12,7 +12,7 @@ const MappingHomeTabs = props => {
         <Tab label="Details" component="a" href={`#${resourceRelativeURL}details/`} />
         <Tab label="History" component="a" href={`#${resourceRelativeURL}history/`} />
       </Tabs>
-      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto'}}>
         { tab === 0 && <MappingHomeDetails mapping={mapping} /> }
         { tab === 1 && <VersionList versions={versions} resource='mapping' /> }
       </div>

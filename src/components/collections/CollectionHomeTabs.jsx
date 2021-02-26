@@ -82,7 +82,7 @@ const CollectionHomeTabs = props => {
           <NewResourceButton resources={['references', 'version']} onClick={onNewClick} />
         </div>
       }
-      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px', width: '100%'}}>
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
         {
           selectedTabConfig.type === 'about' &&
           <About id={collection.id} about={about} />

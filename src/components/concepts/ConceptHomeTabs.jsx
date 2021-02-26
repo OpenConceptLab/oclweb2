@@ -14,7 +14,7 @@ const ConceptHomeTabs = props => {
         <Tab label="Mappings" component="a" href={`#${resourceRelativeURL}mappings/`} />
         <Tab label="History" component="a" href={`#${resourceRelativeURL}history/`} />
       </Tabs>
-      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto'}}>
         { tab === 0 && <ConceptHomeDetails concept={concept} currentURL={currentURL} /> }
         { tab === 1 && <ConceptHomeMappings concept={concept} /> }
         { tab === 2 && <VersionList versions={versions} resource='concept' /> }

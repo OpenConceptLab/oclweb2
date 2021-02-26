@@ -91,7 +91,7 @@ const UserHomeTabs = props => {
           />
         </Tabs>
       </AppBar>
-      <div className='sub-tab-container' style={{display: 'flex', minHeight: '500px'}}>
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto'}}>
         {
           tab === 0 &&
           (
