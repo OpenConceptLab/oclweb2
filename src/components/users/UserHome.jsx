@@ -126,7 +126,7 @@ class UserHome extends React.Component {
             <UserHomeDetails user={user} />
           </div>
         }
-        <div className='col-md-10 no-left-padding' style={{width: '80%'}}>
+        <div className='col-md-10 no-side-padding' style={{width: '80%'}}>
           <Pins
             pins={pins}
             onDelete={this.deletePin}

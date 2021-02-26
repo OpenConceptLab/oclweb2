@@ -16,6 +16,7 @@ import EmailVerification from '../users/EmailVerification';
 import ForgotPasswordRequest from '../users/ForgotPasswordRequest';
 import ForgotPasswordForm from '../users/ForgotPasswordForm';
 import Header from './Header';
+import Footer from './Footer';
 
 const App = props => {
   const addLogoutListenerForAllTabs = () => window.addEventListener(
@@ -157,6 +158,7 @@ const App = props => {
           <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
         </Switch>
       </main>
+      <Footer {...props} />
     </div>
   );
 }
