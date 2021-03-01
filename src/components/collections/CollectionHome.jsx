@@ -192,6 +192,7 @@ class CollectionHome extends React.Component {
               onTabChange={this.onTabChange}
               collection={collection}
               versions={versions}
+              match={this.props.match}
               location={this.props.location}
               versionedObjectURL={versionedObjectURL}
               currentVersion={this.getCurrentVersion()}

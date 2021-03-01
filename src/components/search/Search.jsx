@@ -514,6 +514,8 @@ class Search extends React.Component {
           filters={get(results[resource], 'facets.fields', {})}
           facetOrder={get(FACET_ORDER, resource)}
           onApply={this.onApplyFacets}
+          kwargs={get(this.props, 'match.params')}
+          resource={resource}
         />
       </div>
     );

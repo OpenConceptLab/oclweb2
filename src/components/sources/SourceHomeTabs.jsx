@@ -15,7 +15,7 @@ import SourceVersionForm from './SourceVersionForm';
 
 const SourceHomeTabs = props => {
   const {
-    tab, source, versions, location, versionedObjectURL, currentVersion,
+    tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
     onTabChange, isOCLDefaultConfigSelected
   } = props;
@@ -122,6 +122,7 @@ const SourceHomeTabs = props => {
           includes(['concepts', 'mappings'], selectedTabConfig.type) &&
           <SourceHomeChildrenList
             source={source}
+            match={match}
             location={location}
             versionedObjectURL={versionedObjectURL}
             versions={versions}

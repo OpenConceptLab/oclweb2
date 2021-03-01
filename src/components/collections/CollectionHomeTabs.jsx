@@ -14,7 +14,7 @@ import ReferenceForm from './ReferenceForm';
 
 const CollectionHomeTabs = props => {
   const {
-    tab, collection, versions, location, versionedObjectURL, currentVersion,
+    tab, collection, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
     onTabChange, isOCLDefaultConfigSelected
   } = props;
@@ -95,6 +95,7 @@ const CollectionHomeTabs = props => {
           includes(['concepts', 'mappings', 'references'], selectedTabConfig.type) &&
           <CollectionHomeChildrenList
             collection={collection}
+            match={match}
             location={location}
             versionedObjectURL={versionedObjectURL}
             versions={versions}

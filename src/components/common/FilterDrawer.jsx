@@ -8,13 +8,34 @@ import {
   Search as SearchIcon
 } from '@material-ui/icons';
 import {
-  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has
+  set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has, includes,
+  isObject
 } from 'lodash';
 
 const FilterDrawer = props => {
   const [input, setInput] = React.useState('');
-  const { open, filters, onClose, onApply, facetOrder } = props;
-  let uiFilters = omit(omitBy(filters, isEmpty), ['is_active', 'is_latest_version'])
+  const { kwargs, open, filters, onClose, onApply, facetOrder, resource } = props;
+  let blacklisted = ['is_active', 'is_latest_version'];
+  const isSourceChild = includes(['concepts', 'mappings'], resource)
+  const hasValidKwargs = !isEmpty(kwargs) && isObject(kwargs);
+  if(hasValidKwargs) {
+    if(kwargs.user || kwargs.org)
+      blacklisted = [...blacklisted, 'owner', 'ownerType']
+    if(kwargs.source)
+      blacklisted = [...blacklisted, 'source']
+    if(kwargs.collection)
+      blacklisted = [...blacklisted, 'collection']
+    if(isSourceChild)
+      blacklisted = [...blacklisted, 'concept', 'conceptOwner', 'conceptOwnerType', 'conceptSource']
+  }
+
+  let uiFilters = omit(omitBy(filters, isEmpty), blacklisted)
+
+  if(isObject(kwargs) && !kwargs.collection && isSourceChild && !isEmpty(uiFilters)){
+    uiFilters['collection_membership'] = uiFilters.collection
+    delete uiFilters.collection
+  }
+
   if(!isEmpty(facetOrder) && !isEmpty(uiFilters)) {
     const orderedUIFilters = {}
     forEach(facetOrder, attr => {

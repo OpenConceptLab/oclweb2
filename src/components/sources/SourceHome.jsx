@@ -189,6 +189,7 @@ class SourceHome extends React.Component {
               source={source}
               versions={versions}
               location={this.props.location}
+              match={this.props.match}
               versionedObjectURL={versionedObjectURL}
               currentVersion={this.getCurrentVersion()}
               aboutTab={showAboutTab}

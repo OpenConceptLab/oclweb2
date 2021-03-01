@@ -14,7 +14,7 @@ import MembersForm from './MembersForm'
 
 const OrgHomeTabs = props => {
   const {
-    tab, org, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
+    tab, org, match, location, url, pins, showPin, onTabChange, onPinCreate, onPinDelete,
     selectedConfig, customConfigs, onConfigChange, aboutTab, showConfigSelection,
   } = props;
 
@@ -66,6 +66,7 @@ const OrgHomeTabs = props => {
           <OrgHomeChildrenList
             org={org}
             location={location}
+            match={match}
             url={url}
             pins={pins}
             showPin={showPin}

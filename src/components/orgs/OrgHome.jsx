@@ -199,6 +199,7 @@ class OrgHome extends React.Component {
                 onTabChange={this.onTabChange}
                 org={org}
                 location={this.props.location}
+                match={this.props.match}
                 url={url}
                 pins={pins}
                 onPinCreate={this.createPin}
