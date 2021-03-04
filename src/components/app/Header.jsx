@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import {
   AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, Divider, IconButton,
-  ListItem, ListItemText, Collapse
+  ListItem, ListItemText, Collapse, ListItemIcon
 } from '@material-ui/core';
 import {
   Person as PersonIcon,
@@ -18,7 +18,7 @@ import { isAtGlobalSearch, isLoggedIn, getCurrentUser } from '../../common/utils
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
-import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions';
+import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions.jsx';
 
 const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
@@ -172,16 +172,16 @@ const Header = props => {
             </a>
           </Typography>
           <span style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-          <IconButton onClick={onClose} color="primary">
-            {theme.direction === 'ltr' ? <LeftIcon /> : <RightIcon />}
-          </IconButton>
+            <IconButton onClick={onClose} color="primary">
+              {theme.direction === 'ltr' ? <LeftIcon /> : <RightIcon />}
+            </IconButton>
           </span>
         </div>
         <Divider />
         <List>
           {
             map(OPTIONS, option => {
-              const { href, label, nested, selected } = option;
+              const { href, label, nested, selected, icon } = option;
               const hasNested = !isEmpty(nested);
               const isCommunity = label === 'Community';
               const toggleFunc = isCommunity ? toggleNestedCommunity : toggleNestedTools;
@@ -197,6 +197,9 @@ const Header = props => {
                     href={!hasNested ? href : undefined}
                     onClick={hasNested ? toggleFunc : undefined}
                   >
+                    <ListItemIcon>
+                      {icon}
+                    </ListItemIcon>
                     <ListItemText primary={label} />
                     {
                       hasNested && (
@@ -221,6 +224,9 @@ const Header = props => {
                               href={nestedOption.href}
                               style={{paddingLeft: '32px'}}
                               >
+                              <ListItemIcon>
+                                {nestedOption.icon}
+                              </ListItemIcon>
                               <ListItemText primary={nestedOption.label} />
                             </ListItem>
                           ))
