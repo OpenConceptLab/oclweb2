@@ -98,6 +98,7 @@ const Header = props => {
   const toggleOpen = () => setOpen(prevOpen => {
     const newOpen = !prevOpen
     props.onOpen(newOpen)
+    setTimeout(() => window.dispatchEvent(new CustomEvent("resize")), 300)
     return newOpen
   })
 
