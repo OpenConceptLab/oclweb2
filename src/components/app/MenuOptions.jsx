@@ -15,6 +15,7 @@ import {
   ImportExport as TerminologyServiceIcon,
   Help as ContactIcon
 } from '@material-ui/icons';
+import OpenMRSLogo from '../common/OpenMRSLogo';
 
 export const MARKETING_SITE_URL = 'https://aws.openconceptlab.org/';
 const COMMUNITY_OPTIONS = [
@@ -46,7 +47,7 @@ const COMMUNITY_OPTIONS = [
   {
     label: 'OCL for OpenMRS',
     href: MARKETING_SITE_URL + 'community-resources/ocl-for-openmrs/',
-    icon: <GitHubIcon />
+    icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />
   },
   {
     label: 'OCL Mailing List',
