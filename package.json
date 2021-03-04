@@ -20,6 +20,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^16.14.0",
+    "react-ga": "^3.3.0",
     "react-google-recaptcha": "^2.1.0",
     "react-image-crop": "^8.6.6",
     "react-infinite-scroll-component": "^5.1.0",
