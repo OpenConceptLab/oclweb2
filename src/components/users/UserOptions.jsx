@@ -1,12 +1,12 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Paper, IconButton, Popper, MenuItem, MenuList, Grow, ClickAwayListener
+  Paper, IconButton, Popper, MenuItem, MenuList, Grow, ClickAwayListener, Tooltip
 } from '@material-ui/core';
 import {
-  MoreVert as MoreIcon, ExitToApp as LogoutIcon, Edit as EditIcon
+  ExitToApp as LogoutIcon, Edit as EditIcon, Person as PersonIcon
 } from '@material-ui/icons';
-import { getCurrentUser } from '../../common/utils';
+import { getCurrentUser, getUserInitials } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
 
@@ -19,11 +19,14 @@ const onLogoutClick = () => {
 }
 
 const OPTIONS = [
+  {id: 'home', label: 'Home', icon: <PersonIcon fontSize='small' style={{marginRight: '10px'}}/>},
   {id: 'edit', label: 'Edit Profile', icon: <EditIcon fontSize='small' style={{marginRight: '10px'}}/>},
   {id: 'logout', label: 'Logout', icon: <LogoutIcon fontSize='small' style={{marginRight: '10px'}} />},
 ]
 
 const UserOptions = () => {
+  const initials = getUserInitials()
+  const user = getCurrentUser()
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -39,20 +42,26 @@ const UserOptions = () => {
       onLogoutClick()
     if(option === 'edit')
       setForm(true)
+    if(option === 'home')
+      window.location.hash = `${user.url}`
   }
 
   return (
     <React.Fragment>
-      <IconButton
-        ref={anchorRef}
-        aria-controls={open ? 'split-button-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-label="select merge strategy"
-        aria-haspopup="menu"
-        onClick={handleToggle}
-      >
-        <MoreIcon />
-      </IconButton>
+      <Tooltip title='Profile'>
+        <IconButton
+          ref={anchorRef}
+          aria-controls={open ? 'split-button-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-label="select merge strategy"
+          aria-haspopup="menu"
+          onClick={handleToggle}
+          touch='true'
+          className='user-info-icon'
+        >
+          {initials}
+        </IconButton>
+      </Tooltip>
       <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex: 1}}>
         {({ TransitionProps, placement }) => (
           <Grow
@@ -86,7 +95,7 @@ const UserOptions = () => {
             loggedIn
             edit
             reloadOnSuccess
-            onCancel={() => setForm(false)} user={getCurrentUser()}
+            onCancel={() => setForm(false)} user={user}
           />
         }
       />

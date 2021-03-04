@@ -344,3 +344,22 @@ export const isValidPassword = (password, strength, minStrength = 3) => {
       password.match(new RegExp(/(?=.*[0-9])(?=.*[a-zA-Z])(?=\S+$)./g))
   );
 }
+
+export const getUserInitials = user => {
+  user = user || getCurrentUser();
+
+  let result = '';
+  const first_name = get(user, 'first_name', '').trim();
+  const last_name = get(user, 'last_name', '').trim();
+  const username = user.username;
+  const hasValidFirstName = first_name && first_name !== '-';
+  const hasValidLastName = last_name && last_name !== '-';
+  if(!hasValidFirstName && !hasValidLastName && username)
+    result = username.slice(0, 2);
+  if(hasValidFirstName)
+    result = first_name[0];
+  if(hasValidLastName)
+    result += last_name[0];
+
+  return result.toUpperCase();
+}

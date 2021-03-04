@@ -21,6 +21,7 @@ import Header from './Header';
 import Footer from './Footer';
 
 const App = props => {
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const setupGA = () => {
     /*eslint no-undef: 0*/
     ReactGA.initialize(process.env.GA_ACCOUNT_ID);
@@ -43,8 +44,8 @@ const App = props => {
 
   return (
     <div>
-      <Header {...props} />
-      <main className='content'>
+      <Header {...props} onOpen={setMenuOpen} />
+      <main className={menuOpen ? 'content menu-open' : 'content'}>
         <Switch>
           <Route exact path="/" component={RootView} />
           <Route path="/search" component={Search} />

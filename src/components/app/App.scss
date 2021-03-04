@@ -2,8 +2,14 @@
     margin-top: 65px;
     margin-bottom: 50px;
     display: inline-block;
-    width: 100%;
+    width: calc(100% - 55px);
     height: auto;
+    margin-left: 55px;
+    transition: width 0.5s;
+    &.menu-open {
+        width: calc(100% - 300px) !important;
+        margin-left: 300px !important;
+    }
 }
 .search-input input {
     height: 0.3em;
@@ -620,4 +626,20 @@ footer.footer-container {
 }
 .pagination-center {
     padding: 6px !important;
+}
+.menu-collapsed-paper {
+    min-height: 100%;
+    height: auto;
+    overflow: auto;
+    width: 60px;
+}
+.user-info-icon {
+    background: rgb(51, 115, 170) !important;
+    font-size: 1.2rem !important;
+    font-weight: 300 !important;
+    color: #fff !important;
+
+    &:hover {
+        background: rgb(51, 115, 170) !important;
+    }
 }

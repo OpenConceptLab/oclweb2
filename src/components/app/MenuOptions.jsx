@@ -71,7 +71,7 @@ export const OPTIONS = [
   {
     label: 'About',
     href: MARKETING_SITE_URL + 'about/',
-    icon: <AboutIcon />
+    icon: <AboutIcon />,
   },
   {
     label: 'Blog',
@@ -81,7 +81,8 @@ export const OPTIONS = [
   {
     label: 'Community',
     nested: [...COMMUNITY_OPTIONS],
-    icon: <CommunityIcon />
+    icon: <CommunityIcon />,
+    href: MARKETING_SITE_URL + 'community-resources/'
   },
   {
     label: 'Metadata Clearinghouse',
@@ -91,7 +92,8 @@ export const OPTIONS = [
   {
     label: 'Tools',
     nested: [...TOOLS_OPTIONS],
-    icon: <ToolsIcon />
+    icon: <ToolsIcon />,
+    href: MARKETING_SITE_URL + 'ocl-tools/'
   },
   {
     label: 'Contact',
