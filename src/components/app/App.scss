@@ -7,8 +7,8 @@
     margin-left: 55px;
     transition: width 0.5s;
     &.menu-open {
-        width: calc(100% - 300px) !important;
-        margin-left: 300px !important;
+        width: calc(100% - 250px) !important;
+        margin-left: 250px !important;
     }
 }
 .search-input input {

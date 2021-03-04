@@ -17,7 +17,7 @@ import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
 import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions.jsx';
 
-const drawerWidth = 300;
+const drawerWidth = 250;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -177,7 +177,7 @@ const Header = props => {
                         onClick={hasNested ? toggleFunc : undefined}
                         style={selected ? {padding: '12px 16px', backgroundColor: 'rgba(51, 115, 170, 0.1)'} : {padding: '12px 16px'}}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon style={{minWidth: '35px'}}>
                           {icon}
                         </ListItemIcon>
                         <ListItemText primary={label} />
@@ -202,9 +202,9 @@ const Header = props => {
                                   target='_blank'
                                   key={nestedOption.label}
                                   href={nestedOption.href}
-                                  style={{padding: '12px 16px 12px 32px'}}
+                                  style={{padding: '12px 16px 12px 30px'}}
                                   >
-                                  <ListItemIcon>
+                                  <ListItemIcon style={{minWidth: '35px'}}>
                                     {nestedOption.icon}
                                   </ListItemIcon>
                                   <ListItemText primary={nestedOption.label} />
