@@ -121,7 +121,7 @@ const Header = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 10px'}}>
+          <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
             <a className="no-anchor-styles" href={MARKETING_SITE_URL} rel="noopener noreferrer">
               OCL
             </a>
