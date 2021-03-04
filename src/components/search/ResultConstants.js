@@ -80,7 +80,7 @@ export const ALL_COLUMNS = {
   users: [
     {id: 'username', label: 'Username', value: 'username', sortOn: 'username', renderer: user => <OwnerChip ownerType='user' owner={user.username} />},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name'},
-    {id: 'createdOn', label: 'Joined On', value: 'created_on', formatter: formatDate, sortOn: 'date_joined'},
+    {id: 'date_joined', label: 'Joined On', value: 'date_joined', formatter: formatDate, sortOn: 'date_joined'},
     {id: 'email', label: 'Email', value: 'email', sortable: false},
     {id: 'company', label: 'Company', value: 'company'},
     {id: 'location', label: 'Location', value: 'location'},
