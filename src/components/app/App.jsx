@@ -1,5 +1,7 @@
+/*eslint no-process-env: 0*/
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import './App.scss';
 import RootView from './RootView';
 import Search from '../search/Search';
@@ -19,6 +21,12 @@ import Header from './Header';
 import Footer from './Footer';
 
 const App = props => {
+  const setupGA = () => {
+    /*eslint no-undef: 0*/
+    ReactGA.initialize(process.env.GA_ACCOUNT_ID);
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }
+
   const addLogoutListenerForAllTabs = () => window.addEventListener(
     "storage",
     event => {
@@ -28,7 +36,10 @@ const App = props => {
       }
     });
 
-  React.useEffect(addLogoutListenerForAllTabs)
+  React.useEffect(() => {
+    addLogoutListenerForAllTabs()
+    setupGA()
+  })
 
   return (
     <div>
