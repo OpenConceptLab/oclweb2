@@ -48,7 +48,7 @@ const UserOptions = () => {
 
   return (
     <React.Fragment>
-      <Tooltip title='Profile'>
+      <Tooltip title={user.username}>
         <IconButton
           ref={anchorRef}
           aria-controls={open ? 'split-button-menu' : undefined}
