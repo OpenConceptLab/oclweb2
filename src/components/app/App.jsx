@@ -24,7 +24,7 @@ const App = props => {
   const setupGA = () => {
     /*eslint no-undef: 0*/
     ReactGA.initialize(process.env.GA_ACCOUNT_ID);
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.pageview(window.location.pathname + window.location.hash);
   }
 
   const addLogoutListenerForAllTabs = () => window.addEventListener(
