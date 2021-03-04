@@ -28,6 +28,7 @@ RUN chmod +x start.sh
 RUN npm run build
 RUN cp public/bootstrap.min.css dist/
 RUN cp public/favicon.ico dist/
+RUN cp public/openmrs_logo_white.gif dist/
 
 EXPOSE ${WEB_PORT}
 
