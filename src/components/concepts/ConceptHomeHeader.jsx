@@ -23,7 +23,7 @@ import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 
 const ConceptHomeHeader = ({
-  concept, isVersionedObject, versionedObjectURL, currentURL
+  concept, mappings, isVersionedObject, versionedObjectURL, currentURL
 }) => {
   const downloadFileName = isVersionedObject ?
                            `concept-${concept.id}` :
@@ -129,7 +129,7 @@ const ConceptHomeHeader = ({
                     </Tooltip>
                   )
                 }
-                <DownloadButton resource={concept} filename={downloadFileName} />
+                <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} />
               </ButtonGroup>
             </span>
           </div>

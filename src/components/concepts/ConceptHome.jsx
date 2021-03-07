@@ -12,8 +12,10 @@ class ConceptHome extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
+      isLoadingMappings: false,
       concept: {},
       versions: [],
+      mappings: [],
       tab: this.getDefaultTabIndex(),
     }
   }
@@ -63,11 +65,13 @@ class ConceptHome extends React.Component {
     this.setState({isLoading: true}, () => {
       APIService.new()
                 .overrideURL(this.getConceptURLFromPath())
-                .get(null, null, {includeInverseMappings: true})
+                .get()
                 .then(response => {
                   this.setState({isLoading: false, concept: response.data}, () => {
                     if(this.state.tab === 2)
                       this.getVersions()
+                    else
+                      this.getMappings()
                   })
                 })
 
@@ -81,6 +85,17 @@ class ConceptHome extends React.Component {
               .then(response => {
                 this.setState({versions: response.data})
               })
+  }
+
+  getMappings() {
+    this.setState({isLoadingMappings: true}, () => {
+      APIService.new()
+                .overrideURL(this.getConceptURLFromPath() + 'mappings/?includeInverseMappings=true&limit=1000')
+                .get()
+                .then(response => {
+                  this.setState({mappings: response.data, isLoadingMappings: false})
+                })
+    })
   }
 
   onTabChange = (event, value) => {
@@ -98,7 +113,7 @@ class ConceptHome extends React.Component {
   }
 
   render() {
-    const { concept, versions, isLoading, tab } = this.state;
+    const { concept, versions, mappings, isLoadingMappings, isLoading, tab } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
 
@@ -110,6 +125,7 @@ class ConceptHome extends React.Component {
           <div className='col-md-12 home-container no-side-padding'>
             <ConceptHomeHeader
               concept={concept}
+              mappings={mappings}
               isVersionedObject={isVersionedObject}
               versionedObjectURL={this.getVersionedObjectURLFromPath()}
               currentURL={currentURL}
@@ -119,6 +135,8 @@ class ConceptHome extends React.Component {
               onChange={this.onTabChange}
               concept={concept}
               versions={versions}
+              mappings={mappings}
+              isLoadingMappings={isLoadingMappings}
               currentURL={currentURL}
               isVersionedObject={isVersionedObject}
             />

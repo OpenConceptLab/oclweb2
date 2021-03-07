@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography, Divider
+  Accordion, AccordionSummary, AccordionDetails, Typography, Divider, CircularProgress
 } from '@material-ui/core';
-import { map, isEmpty, omitBy } from 'lodash';
+import { map, isEmpty, omitBy, get } from 'lodash';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { getMappingsDistributionByMapType } from '../../common/utils';
 import Mapping from '../mappings/Mapping';
@@ -18,8 +18,9 @@ const None = () => {
   return <div style={{margin: '5px', fontWeight: '300'}}>None</div>
 }
 
-const ConceptHomeMappings = ({ concept }) => {
+const ConceptHomeMappings = ({ concept, isLoadingMappings }) => {
   const mappingsDistribution = omitBy(getMappingsDistributionByMapType(concept.mappings, concept.id), isEmpty);
+  const count = isLoadingMappings ? '' : `(${get(concept.mappings, 'length', 0)})`
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-left-padding'>
@@ -29,35 +30,41 @@ const ConceptHomeMappings = ({ concept }) => {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Mappings</Typography>
+            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Mappings ${count}`}</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
-              isEmpty(mappingsDistribution) ?
-              None() :
-              map(mappingsDistribution, (mappings, category) => (
-                <div className='col-md-12 no-side-padding' key={category}>
-                  <div className='col-md-12'>
-                    <div className='col-md-2 no-left-padding text-muted small' style={{paddingTop: '15px'}}>
-                      {category}
+              isLoadingMappings ?
+              <div className='col-md-12' style={{textAlign: 'center', padding: '10px'}}>
+                <CircularProgress />
+              </div> :
+              (
+                isEmpty(mappingsDistribution) ?
+                None() :
+                map(mappingsDistribution, (mappings, category) => (
+                  <div className='col-md-12 no-side-padding' key={category}>
+                    <div className='col-md-12'>
+                      <div className='col-md-2 no-left-padding text-muted small' style={{paddingTop: '15px'}}>
+                        {category}
+                      </div>
+                      <div className='col-md-10 no-right-padding'>
+                        {
+                          map(mappings, (mapping, index) => (
+                            <div className='col-md-12 no-side-padding' key={index}>
+                              <Mapping key={mapping.uuid} {...mapping} conceptContext={concept.id} />
+                              {
+                                (index + 1) < mappings.length &&
+                                <Divider style={{width: '100%'}} />
+                              }
+                            </div>
+                          ))
+                        }
+                      </div>
                     </div>
-                    <div className='col-md-10 no-right-padding'>
-                      {
-                        map(mappings, (mapping, index) => (
-                          <div className='col-md-12 no-side-padding' key={index}>
-                            <Mapping key={mapping.uuid} {...mapping} conceptContext={concept.id} />
-                            {
-                              (index + 1) < mappings.length &&
-                              <Divider style={{width: '100%'}} />
-                            }
-                          </div>
-                        ))
-                      }
-                    </div>
+                    <Divider style={{width: '100%'}} />
                   </div>
-                  <Divider style={{width: '100%'}} />
-                </div>
-              ))
+                ))
+              )
             }
           </AccordionDetails>
         </Accordion>
