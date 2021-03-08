@@ -43,6 +43,7 @@ class AddToCollection extends React.Component {
     getCurrentUserCollections(collections => this.setState({
       collections: [...this.state.collections, ...collections],
       allCollections: [...this.state.collections, ...collections],
+      isLoading: false,
     }))
   }
 
@@ -105,13 +106,14 @@ class AddToCollection extends React.Component {
 
   render() {
     const {
-      open, collections, selectedCollection, cascadeMappings, notAdded, added, isAdding
+      open, allCollections, collections, selectedCollection, cascadeMappings, notAdded, added, isAdding, isLoading, searchedValue
     } = this.state;
     const { references, ...restProps } = this.props
     const openDialog = Boolean(selectedCollection)
     const collectionName = openDialog ? `${selectedCollection.owner}/${selectedCollection.short_code}`: '';
     const unableToAdd = !isEmpty(notAdded)
-
+    const noOverallCollections = !isLoading && allCollections.length === 0;
+    const noSearchResults = !isLoading && searchedValue && collections.length === 0;
     return (
       <React.Fragment>
         <span>
@@ -129,40 +131,46 @@ class AddToCollection extends React.Component {
                 >
                 <Paper>
                   <ClickAwayListener onClickAway={this.handleClose}>
-                    <MenuList variant='menu' id="split-button-menu" style={{maxHeight: '300px', overflow: 'scroll'}}>
-                      <TextField
-                        id='collection-search-input'
-                        placeholder='Search Collection...'
-                        variant='outlined'
-                        size='small'
-                        style={{padding: '10px', width: '100%'}}
-                        autoFocus
-                        onChange={this.onSearchValueChange}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <SearchIcon />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                      {
-                        map(collections, (collection, index) => (
-                          <MenuItem
-                            id={collection.url}
-                            key={index}
-                            onClick={event => this.handleMenuItemClick(event, collection)}
-                            style={{padding: '10px 15px'}}
-                            >
-                            <span className='flex-vertical-center'>
-                              <span>{collection.owner}</span>
-                              <span style={{margin: '0 2px'}}>/</span>
-                              <span><b>{collection.short_code}</b></span>
-                            </span>
-                          </MenuItem>
-                        ))
-                      }
-                    </MenuList>
+                    {
+                      noOverallCollections ?
+                      <p style={{padding: '20px'}}>You do not have any collections.</p> :
+                      <MenuList variant='menu' id="split-button-menu" style={{maxHeight: '300px', overflow: 'scroll'}}>
+                        <TextField
+                          id='collection-search-input'
+                          placeholder='Search Collection...'
+                          variant='outlined'
+                          size='small'
+                          style={{padding: '10px', width: '100%'}}
+                          autoFocus
+                          onChange={this.onSearchValueChange}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <SearchIcon />
+                              </InputAdornment>
+                            )
+                          }}
+                        />
+                        {
+                          noSearchResults ?
+                          <p style={{padding: '0 20px'}}>No Matches</p> :
+                          map(collections, (collection, index) => (
+                            <MenuItem
+                              id={collection.url}
+                              key={index}
+                              onClick={event => this.handleMenuItemClick(event, collection)}
+                              style={{padding: '10px 15px'}}
+                              >
+                              <span className='flex-vertical-center'>
+                                <span>{collection.owner}</span>
+                                <span style={{margin: '0 2px'}}>/</span>
+                                <span><b>{collection.short_code}</b></span>
+                              </span>
+                            </MenuItem>
+                          ))
+                        }
+                      </MenuList>
+                    }
                   </ClickAwayListener>
                 </Paper>
               </Grow>
