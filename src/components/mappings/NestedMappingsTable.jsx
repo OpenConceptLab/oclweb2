@@ -36,7 +36,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
     <Table size="small" aria-label="nested-mappings" className='nested-mappings'>
       <TableHead>
         <TableRow>
-          <TableCell align='center'><b>Relationship</b></TableCell>
+          <TableCell align='left'><b>Relationship</b></TableCell>
           <TableCell align='left'><b>Source</b></TableCell>
           <TableCell align='left'><b>Code</b></TableCell>
           <TableCell align='left'><b>Name</b></TableCell>
@@ -53,7 +53,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
           </TableRow> :
           map(mappings, mapping => (
             <TableRow hover key={mapping.uuid} onClick={event => onDefaultClick(event, mapping)} style={{cursor: 'pointer'}}>
-              <TableCell align='center'>
+              <TableCell align='left'>
                 {
                   mapping.external_id ?
                   <Tooltip placement='top-start' title='External Mapping'>

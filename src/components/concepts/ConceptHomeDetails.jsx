@@ -12,11 +12,11 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'scroll', display: 'inline-block', width: '100%',
+  maxHeight: '300px', overflow: 'scroll', display: 'inline-block', width: '100%', padding: '0px'
 }
 
 const None = () => {
-  return <div style={{margin: '5px', fontWeight: '300'}}>None</div>
+  return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
 }
 
 const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
