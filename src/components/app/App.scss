@@ -646,3 +646,44 @@ footer.footer-container {
 .menu-popper-right {
     top: 55px !important;
 }
+div.list-item-text-bold-primary {
+    span {
+        font-weight: bold;
+    }
+}
+.manage-account-chip {
+    background-color: white !important;
+    border: 1px solid lightgray !important;
+    &:hover {
+        background-color: rgba(51, 115, 170, 0.1) !important;
+    }
+}
+.user-option-list-item {
+    padding: 12px 33px;
+    cursor: pointer;
+    &:hover {
+        background-color: rgba(51, 115, 170, 0.1) !important;
+    }
+    .list-item-text {
+        span {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        p {
+            font-size: 12px;
+        }
+    }
+}
+.user-img-medium {
+    width: 80px;
+    height: 80px;
+    border: 1px solid lightgray;
+    border-radius: 50%;
+}
+
+.user-img-small {
+    width: 45px;
+    height: 45px;
+    border: 1px solid lightgray;
+    border-radius: 50%;
+}
