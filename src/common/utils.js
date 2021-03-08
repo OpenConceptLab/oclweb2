@@ -347,6 +347,8 @@ export const isValidPassword = (password, strength, minStrength = 3) => {
 
 export const getUserInitials = user => {
   user = user || getCurrentUser();
+  if(!user)
+    return '';
 
   let result = '';
   const first_name = get(user, 'first_name', '').trim();

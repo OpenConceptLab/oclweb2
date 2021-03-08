@@ -42,11 +42,6 @@ const UserOptions = () => {
     handleClose(event);
     setForm(true);
   }
-  const onLogout = event => {
-    event.persist();
-    handleClose(event);
-    onLogoutClick();
-  }
   const displayName = user.name || user.username;
 
   return (
@@ -106,7 +101,7 @@ const UserOptions = () => {
                   </Tooltip>
                   <Divider />
                   <ListItem style={{display: 'flex', justifyContent: 'center', padding: '16px'}}>
-                    <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={onLogout}>
+                    <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={onLogoutClick}>
                       Sign Out
                     </Button>
                   </ListItem>
