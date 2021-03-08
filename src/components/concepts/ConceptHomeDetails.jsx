@@ -26,6 +26,8 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
   const descriptions = get(concept, 'descriptions', [])
   const directMappingsCountLabel = isLoadingMappings ? '' : `(${get(directMappings, 'length', 0)})`;
   const indirectMappingsCountLabel = isLoadingMappings ? '' : `(${get(indirectMappings, 'length', 0)})`;
+  const namesCount = names.length;
+  const descCount = descriptions.length;
   return (
     <React.Fragment>
       <div className='col-md-6 no-left-padding'>
@@ -35,7 +37,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Names & Synonyms</Typography>
+            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Names & Synonyms (${namesCount})`}</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
@@ -53,7 +55,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>Descriptions</Typography>
+            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Descriptions (${descCount})`}</Typography>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
