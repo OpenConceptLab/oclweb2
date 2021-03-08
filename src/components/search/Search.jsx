@@ -291,7 +291,14 @@ class Search extends React.Component {
 
   onResourceChange = resource => {
     const shouldGetCounts = !isEmpty(this.state.appliedFacets);
-    this.setState({resource: resource, appliedFacets: {}}, () => this.fetchNewResults(null, shouldGetCounts, true))
+    let sortParams = this.state.sortParams;
+    if(resource === 'users')
+      sortParams = {sortDesc: 'date_joined'}
+
+    this.setState(
+      {resource: resource, appliedFacets: {}, sortParams: sortParams},
+      () => this.fetchNewResults(null, shouldGetCounts, true)
+    )
   }
 
   onDateChange = date => {
