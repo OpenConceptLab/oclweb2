@@ -10,6 +10,8 @@ import { map, isEmpty, get } from 'lodash';
 const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
   const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
+  const ownerAttr = isIndirect ? 'from_source_owner' : 'to_source_owner';
+  const sourceAttr = isIndirect ? 'from_source_name' : 'to_source_name';
   const onRowClick = (event, mapping) => {
     event.stopPropagation()
     event.preventDefault()
@@ -86,7 +88,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
                 }
               </TableCell>
               <TableCell align='left'>
-                { `${mapping.owner} / ${mapping.source}` }
+                { `${get(mapping, ownerAttr)} / ${get(mapping, sourceAttr)}` }
               </TableCell>
               <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
                 { mapping[conceptCodeAttr] }
