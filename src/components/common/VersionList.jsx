@@ -32,7 +32,10 @@ const VersionList = ({ versions, resource }) => {
 
     setSelectedList(newSelectedList)
   }
-  const showCompareOption = resource === 'concept' && selectedList.length === 2;
+  const isConcept = resource === 'concept';
+  const canSelect = isConcept && sortedVersions.length > 1;
+  const gridClass = canSelect ? 'col-md-11' : 'col-md-12'
+  const showCompareOption = isConcept && selectedList.length === 2;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
@@ -78,10 +81,13 @@ const VersionList = ({ versions, resource }) => {
               map(sortedVersions, (version, index) => (
                 <React.Fragment key={index}>
                   <div className='col-md-12 flex-vertical-center'>
-                    <div className='col-md-1 no-side-padding'>
-                      <Checkbox size='small' onChange={event => onSelectChange(event, version.version_url)} />
-                    </div>
-                    <div className='col-md-11 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
+                    {
+                      canSelect &&
+                      <div className='col-md-1 no-side-padding'>
+                        <Checkbox size='small' onChange={event => onSelectChange(event, version.version_url)} />
+                      </div>
+                    }
+                    <div className={`${gridClass} no-side-padding flex-vertical-center`} style={{margin: '10px 0'}}>
                       <div className='col-md-11 no-left-padding'>
                         <div className='col-md-12 no-side-padding'>
                           {
