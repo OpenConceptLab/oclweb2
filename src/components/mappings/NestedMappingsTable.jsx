@@ -36,10 +36,10 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
     <Table size="small" aria-label="nested-mappings" className='nested-mappings'>
       <TableHead>
         <TableRow>
-          <TableCell align='left'><b>Relationship</b></TableCell>
-          <TableCell align='left'><b>Source</b></TableCell>
-          <TableCell align='left'><b>Code</b></TableCell>
-          <TableCell align='left'><b>Name</b></TableCell>
+          <TableCell align='left' style={{padding: '8px'}}><b>Relationship</b></TableCell>
+          <TableCell align='left' style={{padding: '8px'}}><b>Source</b></TableCell>
+          <TableCell align='left' style={{padding: '8px'}}><b>Code</b></TableCell>
+          <TableCell align='left' style={{padding: '8px'}}><b>Name</b></TableCell>
           <TableCell align='left' />
         </TableRow>
       </TableHead>
