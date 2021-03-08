@@ -5,7 +5,6 @@
     width: calc(100% - 55px);
     height: auto;
     margin-left: 55px;
-    transition: width 0.5s;
     &.menu-open {
         width: calc(100% - 250px) !important;
         margin-left: 250px !important;
