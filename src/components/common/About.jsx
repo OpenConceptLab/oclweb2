@@ -8,7 +8,7 @@ const About = ({id, about}) => {
       </h3>
       {
         about ?
-        <div className='col-md-12' dangerouslySetInnerHTML={{__html: about}} /> :
+        <div className='col-md-12' dangerouslySetInnerHTML={{__html: about.replaceAll('href="/', 'href="/#/')}} /> :
         <p>No about entry</p>
       }
     </div>
