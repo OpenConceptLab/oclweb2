@@ -7,6 +7,8 @@ import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
 import OrgHomeTabs from './OrgHomeTabs';
+import NotFound from '../common/NotFound';
+
 const DEFAULT_CONFIG = {
   name: 'OCL Default (Org)',
   web_default: true,
@@ -25,6 +27,7 @@ class OrgHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      notFound: false,
       isLoading: true,
       org: {},
       pins: [],
@@ -107,19 +110,23 @@ class OrgHome extends React.Component {
     const customConfigFeatureApplicable = this.customConfigFeatureApplicable();
     if(service) {
       this.setState(
-        {isLoading: true},
+        {isLoading: true, notFound: false},
         () => service
           .get(null, null, {includeClientConfigs: customConfigFeatureApplicable})
           .then(response => {
-            const org = response.data;
-            const customConfigs = get(response.data, 'client_configs', [])
-            const defaultCustomConfig = find(customConfigs, {is_default: true});
-            this.setState({
-              isLoading: false,
-              org: org,
-              selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
-              customConfigs: customConfigs,
-            }, this.setTab)
+            if(get(response, 'detail') === "Not found.") {
+              this.setState({isLoading: false, notFound: true, org: {}})
+            } else {
+              const org = response.data;
+              const customConfigs = get(response.data, 'client_configs', [])
+              const defaultCustomConfig = find(customConfigs, {is_default: true});
+              this.setState({
+                isLoading: false,
+                org: org,
+                selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
+                customConfigs: customConfigs,
+              }, this.setTab)
+            }
           }))
     }
   }
@@ -175,7 +182,7 @@ class OrgHome extends React.Component {
   }
 
   render() {
-    const { org, isLoading, tab, pins, selectedConfig, customConfigs } = this.state;
+    const { org, isLoading, tab, pins, selectedConfig, customConfigs, notFound } = this.state;
     const showAboutTab = this.shouldShowAboutTab();
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
@@ -184,35 +191,39 @@ class OrgHome extends React.Component {
         {
           isLoading ?
           <CircularProgress color='primary' /> :
-          <div className='col-md-12 home-container no-side-padding'>
-            <OrgHomeHeader org={org} url={url} />
-            <Pins
-              pins={pins}
-              onDelete={this.deletePin}
-              canDelete={isCurrentUserMemberOfOrg}
-              onOrderUpdate={this.updatePinOrder}
-            />
-            {
-              tab !== null &&
-              <OrgHomeTabs
-                tab={tab}
-                onTabChange={this.onTabChange}
-                org={org}
-                location={this.props.location}
-                match={this.props.match}
-                url={url}
+          (
+            notFound ?
+            <NotFound /> :
+            <div className='col-md-12 home-container no-side-padding'>
+              <OrgHomeHeader org={org} url={url} />
+              <Pins
                 pins={pins}
-                onPinCreate={this.createPin}
-                onPinDelete={this.deletePin}
-                showPin={isCurrentUserMemberOfOrg}
-                customConfigs={[...customConfigs, DEFAULT_CONFIG]}
-                onConfigChange={this.onConfigChange}
-                selectedConfig={selectedConfig}
-                aboutTab={showAboutTab}
-                showConfigSelection={this.customConfigFeatureApplicable()}
+                onDelete={this.deletePin}
+                canDelete={isCurrentUserMemberOfOrg}
+                onOrderUpdate={this.updatePinOrder}
               />
-            }
-          </div>
+              {
+                tab !== null &&
+                <OrgHomeTabs
+                  tab={tab}
+                  onTabChange={this.onTabChange}
+                  org={org}
+                  location={this.props.location}
+                  match={this.props.match}
+                  url={url}
+                  pins={pins}
+                  onPinCreate={this.createPin}
+                  onPinDelete={this.deletePin}
+                  showPin={isCurrentUserMemberOfOrg}
+                  customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                  onConfigChange={this.onConfigChange}
+                  selectedConfig={selectedConfig}
+                  aboutTab={showAboutTab}
+                  showConfigSelection={this.customConfigFeatureApplicable()}
+                />
+              }
+            </div>
+          )
         }
       </div>
     )
