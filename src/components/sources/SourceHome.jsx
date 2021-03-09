@@ -4,6 +4,7 @@ import { includes, isEmpty, get, findIndex, isEqual, find } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
+import NotFound from '../common/NotFound';
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
 
@@ -25,6 +26,7 @@ class SourceHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      notFound: false,
       isLoading: true,
       source: {},
       versions: [],
@@ -117,23 +119,27 @@ class SourceHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true}, () => {
+    this.setState({isLoading: true, notFound: false}, () => {
       APIService.new()
                 .overrideURL(this.getURLFromPath())
                 .get(null, null, {includeSummary: true, includeClientConfigs: true})
                 .then(response => {
-                  const source = response.data;
-                  const customConfigs = get(source, 'client_configs', [])
-                  const defaultCustomConfig = find(customConfigs, {is_default: true});
-                  this.setState({
-                    isLoading: false,
-                    source: source,
-                    selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
-                    customConfigs: customConfigs,
-                  }, () => {
-                    if(isEmpty(this.state.versions))
-                      this.getVersions()
-                  })
+                  if(get(response, 'detail') === "Not found.") {
+                    this.setState({isLoading: false, notFound: true, source: {}})
+                  } else {
+                    const source = response.data;
+                    const customConfigs = get(source, 'client_configs', [])
+                    const defaultCustomConfig = find(customConfigs, {is_default: true});
+                    this.setState({
+                      isLoading: false,
+                      source: source,
+                      selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
+                      customConfigs: customConfigs,
+                    }, () => {
+                      if(isEmpty(this.state.versions))
+                        this.getVersions()
+                    })
+                  }
                 })
 
     })
@@ -167,7 +173,7 @@ class SourceHome extends React.Component {
   }
 
   render() {
-    const { source, versions, isLoading, tab, selectedConfig, customConfigs } = this.state;
+    const { source, versions, isLoading, tab, selectedConfig, customConfigs, notFound } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
     const showAboutTab = this.shouldShowAboutTab();
@@ -176,31 +182,35 @@ class SourceHome extends React.Component {
         {
           isLoading ?
           <CircularProgress color='primary' /> :
-          <div className='col-md-12 home-container no-side-padding'>
-            <SourceHomeHeader
-              source={source}
-              isVersionedObject={this.isVersionedObject()}
-              versionedObjectURL={versionedObjectURL}
-              currentURL={currentURL}
-            />
-            <SourceHomeTabs
-              tab={tab}
-              onTabChange={this.onTabChange}
-              source={source}
-              versions={versions}
-              location={this.props.location}
-              match={this.props.match}
-              versionedObjectURL={versionedObjectURL}
-              currentVersion={this.getCurrentVersion()}
-              aboutTab={showAboutTab}
-              onVersionUpdate={this.onVersionUpdate}
-              customConfigs={[...customConfigs, DEFAULT_CONFIG]}
-              onConfigChange={this.onConfigChange}
-              selectedConfig={selectedConfig}
-              showConfigSelection={this.customConfigFeatureApplicable()}
-              isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
-            />
-          </div>
+          (
+            notFound ?
+            <NotFound /> :
+            <div className='col-md-12 home-container no-side-padding'>
+              <SourceHomeHeader
+                source={source}
+                isVersionedObject={this.isVersionedObject()}
+                versionedObjectURL={versionedObjectURL}
+                currentURL={currentURL}
+              />
+              <SourceHomeTabs
+                tab={tab}
+                onTabChange={this.onTabChange}
+                source={source}
+                versions={versions}
+                location={this.props.location}
+                match={this.props.match}
+                versionedObjectURL={versionedObjectURL}
+                currentVersion={this.getCurrentVersion()}
+                aboutTab={showAboutTab}
+                onVersionUpdate={this.onVersionUpdate}
+                customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                onConfigChange={this.onConfigChange}
+                selectedConfig={selectedConfig}
+                showConfigSelection={this.customConfigFeatureApplicable()}
+                isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
+              />
+            </div>
+          )
         }
       </div>
     )
