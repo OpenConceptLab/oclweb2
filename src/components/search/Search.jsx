@@ -294,6 +294,8 @@ class Search extends React.Component {
     let sortParams = this.state.sortParams;
     if(resource === 'users')
       sortParams = {sortDesc: 'date_joined'}
+    else
+      sortParams = {sortDesc: 'last_update'}
 
     this.setState(
       {resource: resource, appliedFacets: {}, sortParams: sortParams},
