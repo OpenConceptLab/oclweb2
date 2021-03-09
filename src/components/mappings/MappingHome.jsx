@@ -1,9 +1,10 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
+import { includes, get } from 'lodash';
 import APIService from '../../services/APIService';
 import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeTabs from './MappingHomeTabs';
-import { includes } from 'lodash';
+import NotFound from '../common/NotFound';
 
 const TABS = ['details', 'history'];
 
@@ -11,6 +12,7 @@ class MappingHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      notFound: false,
       isLoading: true,
       mapping: {},
       versions: [],
@@ -56,15 +58,19 @@ class MappingHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true}, () => {
+    this.setState({isLoading: true, notFound: false}, () => {
       APIService.new()
                 .overrideURL(this.getMappingURLFromPath())
                 .get()
                 .then(response => {
-                  this.setState({isLoading: false, mapping: response.data}, () => {
-                    if(this.state.tab === 1)
-                      this.getVersions()
-                  })
+                  if(get(response, 'detail') === "Not found.") {
+                    this.setState({isLoading: false, mapping: {}, notFound: true})
+                  } else {
+                    this.setState({isLoading: false, mapping: response.data}, () => {
+                      if(this.state.tab === 1)
+                        this.getVersions()
+                    })
+                  }
                 })
 
     })
@@ -94,7 +100,7 @@ class MappingHome extends React.Component {
   }
 
   render() {
-    const { mapping, versions, isLoading, tab } = this.state;
+    const { mapping, versions, isLoading, tab, notFound } = this.state;
     const currentURL = this.getMappingURLFromPath()
     const isVersionedObject = this.isVersionedObject()
     return (
@@ -102,21 +108,25 @@ class MappingHome extends React.Component {
         {
           isLoading ?
           <CircularProgress color='primary' /> :
-          <div className='col-md-12 home-container no-side-padding'>
-            <MappingHomeHeader
-              mapping={mapping}
-              isVersionedObject={isVersionedObject}
-              versionedObjectURL={this.getVersionedObjectURLFromPath()}
-              currentURL={currentURL}
-            />
-            <MappingHomeTabs
-              tab={tab}
-              onChange={this.onTabChange}
-              mapping={mapping}
-              versions={versions}
-              isVersionedObject={isVersionedObject}
-            />
-          </div>
+          (
+            notFound ?
+            <NotFound /> :
+            <div className='col-md-12 home-container no-side-padding'>
+              <MappingHomeHeader
+                mapping={mapping}
+                isVersionedObject={isVersionedObject}
+                versionedObjectURL={this.getVersionedObjectURLFromPath()}
+                currentURL={currentURL}
+              />
+              <MappingHomeTabs
+                tab={tab}
+                onChange={this.onTabChange}
+                mapping={mapping}
+                versions={versions}
+                isVersionedObject={isVersionedObject}
+              />
+            </div>
+          )
         }
       </div>
     )

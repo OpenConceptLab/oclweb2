@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider } from '@material-ui/core'
 
-const NotFound = props => {
+const NotFound = () => {
   return (
     <div className='not-found'>
       <h1>404</h1>
