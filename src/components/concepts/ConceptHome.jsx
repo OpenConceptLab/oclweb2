@@ -1,9 +1,10 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
+import { includes, get } from 'lodash';
 import APIService from '../../services/APIService';
 import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
-import { includes } from 'lodash';
+import NotFound from '../common/NotFound';
 
 const TABS = ['details', 'mappings', 'history'];
 
@@ -11,6 +12,7 @@ class ConceptHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      notFound: false,
       isLoading: true,
       isLoadingMappings: false,
       concept: {},
@@ -62,17 +64,21 @@ class ConceptHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true}, () => {
+    this.setState({isLoading: true, notFound: false}, () => {
       APIService.new()
                 .overrideURL(this.getConceptURLFromPath())
                 .get()
                 .then(response => {
-                  this.setState({isLoading: false, concept: response.data}, () => {
-                    if(this.state.tab === 2)
-                      this.getVersions()
-                    else
-                      this.getMappings()
-                  })
+                  if(get(response, 'detail') === "Not found.") {
+                    this.setState({isLoading: false, concept: {}, notFound: true})
+                  } else {
+                    this.setState({isLoading: false, concept: response.data}, () => {
+                      if(this.state.tab === 2)
+                        this.getVersions()
+                      else
+                        this.getMappings()
+                    })
+                  }
                 })
 
     })
@@ -113,7 +119,7 @@ class ConceptHome extends React.Component {
   }
 
   render() {
-    const { concept, versions, mappings, isLoadingMappings, isLoading, tab } = this.state;
+    const { concept, versions, mappings, isLoadingMappings, isLoading, tab, notFound } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
 
@@ -122,25 +128,29 @@ class ConceptHome extends React.Component {
         {
           isLoading ?
           <CircularProgress color='primary' /> :
-          <div className='col-md-12 home-container no-side-padding'>
-            <ConceptHomeHeader
-              concept={concept}
-              mappings={mappings}
-              isVersionedObject={isVersionedObject}
-              versionedObjectURL={this.getVersionedObjectURLFromPath()}
-              currentURL={currentURL}
-            />
-            <ConceptHomeTabs
-              tab={tab}
-              onChange={this.onTabChange}
-              concept={concept}
-              versions={versions}
-              mappings={mappings}
-              isLoadingMappings={isLoadingMappings}
-              currentURL={currentURL}
-              isVersionedObject={isVersionedObject}
-            />
-          </div>
+          (
+            notFound ?
+            <NotFound /> :
+            <div className='col-md-12 home-container no-side-padding'>
+              <ConceptHomeHeader
+                concept={concept}
+                mappings={mappings}
+                isVersionedObject={isVersionedObject}
+                versionedObjectURL={this.getVersionedObjectURLFromPath()}
+                currentURL={currentURL}
+              />
+              <ConceptHomeTabs
+                tab={tab}
+                onChange={this.onTabChange}
+                concept={concept}
+                versions={versions}
+                mappings={mappings}
+                isLoadingMappings={isLoadingMappings}
+                currentURL={currentURL}
+                isVersionedObject={isVersionedObject}
+              />
+            </div>
+          )
         }
       </div>
     )

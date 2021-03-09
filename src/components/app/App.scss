@@ -688,3 +688,37 @@ div.list-item-text-bold-primary {
     border: 1px solid lightgray;
     border-radius: 50%;
 }
+div.not-found {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 500px;
+    hr {
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    h1 {
+        display: inline-block;
+        margin: 0;
+        padding: 10px 15px 10px 0;
+        font-size: 24px;
+        font-weight: 500;
+        vertical-align: top;
+    }
+    div.not-found-text {
+        padding-left: 15px;
+        display: inline-block;
+        text-align: left;
+        line-height: 49px;
+        height: 49px;
+        vertical-align: middle;
+        h2 {
+            font-size: 14px;
+            font-weight: normal;
+            line-height: inherit;
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
