@@ -7,7 +7,7 @@ const NotFound = () => {
       <h1>404</h1>
       <Divider orientation="vertical" />
       <div className='not-found-text'>
-        <h2>This page could not be found.</h2>
+        <h2>This is not the page you are looking for.</h2>
       </div>
     </div>
   )
