@@ -17,6 +17,7 @@ import Signup from '../users/Signup';
 import EmailVerification from '../users/EmailVerification';
 import ForgotPasswordRequest from '../users/ForgotPasswordRequest';
 import ForgotPasswordForm from '../users/ForgotPasswordForm';
+import NotFound from '../common/NotFound';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -168,6 +169,7 @@ const App = props => {
           <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
           <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/password/reset/:token([a-zA-Z0-9\-\.\_]+)" component={ForgotPasswordForm} />
           <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
+          <Route component={NotFound} />
         </Switch>
       </main>
       <Footer {...props} />
