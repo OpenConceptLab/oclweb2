@@ -362,6 +362,8 @@ export const getUserInitials = user => {
     result = first_name[0];
   if(hasValidLastName)
     result += last_name[0];
+  if(result.length == 1 && hasValidFirstName)
+    result += first_name[1];
 
   return result.toUpperCase();
 }
