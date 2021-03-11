@@ -62,23 +62,23 @@ const UserHomeDetails = ({ user, isLoading }) => {
             <small>{user.username}</small>
           </h2>
           <Divider style={{width: '100%'}} />
-          <p><strong>Company:</strong><br />{user.company || 'N/A'}</p>
-          <p><strong>Location:</strong><br />{user.location || 'N/A'}</p>
+          <p><strong>Company</strong><br />{user.company || 'N/A'}</p>
+          <p><strong>Location</strong><br />{user.location || 'N/A'}</p>
           {
             user.website &&
             <p>
-              <strong>Website:</strong>
+              <strong>Website</strong>
               <br />
               {formatWebsiteLink(user.website)}
             </p>
           }
-          <p><strong>Email:</strong><br />{user.email}</p>
-          <p><strong>Joined:</strong><br />{formatDate(user.created_on)}</p>
+          <p><strong>Email</strong><br />{user.email}</p>
+          <p><strong>Joined</strong><br />{formatDate(user.created_on)}</p>
           <Divider style={{width: '100%'}} />
           {
             token &&
             <p>
-              <strong>API Token:</strong>
+              <strong>API Token</strong>
               <Tooltip title="Click to copy Token">
                 <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
                   <CopyIcon fontSize="small" />
