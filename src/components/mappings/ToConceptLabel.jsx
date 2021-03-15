@@ -7,7 +7,10 @@ import { DARKGRAY } from '../../common/constants';
 
 const ToConceptLabel = props => {
   const conceptName = props.to_concept_name || props.to_concept_name_resolved || get(props, 'to_concept.display_name')
+  const hasLink = props.to_concept_url && !props.noRedirect;
   const labelComponent = <ResourceLabel
+                           resource='concept'
+                           existsInOCL={Boolean(props.to_concept_url)}
                            owner={props.to_source_owner}
                            parent={props.to_source_name}
                            id={props.to_concept_code}
@@ -22,7 +25,7 @@ const ToConceptLabel = props => {
   return (
     <React.Fragment>
       {
-        !props.noRedirect && props.to_concept_url ?
+        hasLink ?
         <Link to={props.to_concept_url}  style={{display: 'inline-block'}}>{labelComponent}</Link>:
         <span>{labelComponent}</span>
       }

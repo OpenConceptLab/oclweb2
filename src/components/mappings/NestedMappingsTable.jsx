@@ -1,17 +1,20 @@
 import React from 'react';
 import {
-  Table, TableHead, TableRow, TableCell, TableBody, Chip, Tooltip, IconButton,
+  Table, TableHead, TableRow, TableCell, TableBody, Chip, IconButton,
 } from '@material-ui/core';
 import {
-  ArrowForward as ForwardIcon, Search as SearchIcon
+  Search as SearchIcon,
 } from '@material-ui/icons';
 import { map, isEmpty, get } from 'lodash';
+import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
+import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 
 const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
   const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
   const ownerAttr = isIndirect ? 'from_source_owner' : 'to_source_owner';
   const sourceAttr = isIndirect ? 'from_source_name' : 'to_source_name';
+
   const onRowClick = (event, mapping) => {
     event.stopPropagation()
     event.preventDefault()
@@ -19,13 +22,12 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
       window.location.hash = mapping.url
   }
 
-  const onDefaultClick = (event, mapping) => {
+  const onDefaultClick = (event, targetURL) => {
     event.stopPropagation()
     event.preventDefault()
-    if(isIndirect && mapping.from_concept_url)
-      window.location.hash = mapping.from_concept_url
-    if(!isIndirect && mapping.to_concept_url)
-      window.location.hash = mapping.to_concept_url
+
+    if(targetURL)
+      window.location.hash = targetURL
   }
 
   const getConceptName = (mapping, attr) => {
@@ -53,56 +55,44 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
               None
             </TableCell>
           </TableRow> :
-          map(mappings, mapping => (
-            <TableRow hover key={mapping.uuid} onClick={event => onDefaultClick(event, mapping)} style={{cursor: 'pointer'}}>
-              <TableCell align='left'>
-                {
-                  mapping.external_id ?
-                  <Tooltip placement='top-start' title='External Mapping'>
-                    <Chip
-                      size='small'
-                      variant='outlined'
-                      color='default'
-                      icon={
-                        <ForwardIcon
-                          fontSize='small'
-                                    color='inherit'
-                                    style={{
-                                      border: '1px solid', borderRadius: '10px',
-                                      background: 'black', color: 'white',
-                                      margin: '0px'
-                                    }}
-                        />
-                      }
-                      label={mapping.map_type}
-                      style={{border: 'none'}}
-                    />
-                  </Tooltip> :
+          map(mappings, mapping => {
+            const targetURL = isIndirect ? get(mapping, 'from_concept_url') : get(mapping, 'to_concept_url');
+            const title = targetURL ? 'Target Concept exists in OCL' : "Target concept doesn't exists in OCL";
+            const cursor = targetURL ? 'pointer' : 'not-allowed'
+            return (
+              <TableRow
+                hover key={mapping.uuid} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}}>
+                <TableCell align='left'>
                   <Chip
                     size='small'
                     variant='outlined'
                     color='default'
-                    style={{border: 'none'}}
+                    icon={
+                      targetURL ?
+                          <ExistsInOCLIcon title={title} /> :
+                          <DoesnotExistsInOCLIcon title={title} />
+                    }
                     label={mapping.map_type}
+                    style={{border: 'none', cursor: cursor}}
                   />
-                }
-              </TableCell>
-              <TableCell align='left'>
-                { `${get(mapping, ownerAttr)} / ${get(mapping, sourceAttr)}` }
-              </TableCell>
-              <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
-                { mapping[conceptCodeAttr] }
-              </TableCell>
-              <TableCell align='left'>
-                { getConceptName(mapping, conceptCodeName) }
-              </TableCell>
-              <TableCell align='left'>
-                <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
-                  <SearchIcon fontSize='inherit' />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))
+                </TableCell>
+                <TableCell align='left'>
+                  { `${get(mapping, ownerAttr)} / ${get(mapping, sourceAttr)}` }
+                </TableCell>
+                <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
+                  { mapping[conceptCodeAttr] }
+                </TableCell>
+                <TableCell align='left'>
+                  { getConceptName(mapping, conceptCodeName) }
+                </TableCell>
+                <TableCell align='left'>
+                  <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
+                    <SearchIcon fontSize='inherit' />
+                  </IconButton>
+          </TableCell>
+        </TableRow>
+          )
+          })
         }
       </TableBody>
     </Table>
