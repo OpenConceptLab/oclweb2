@@ -17,7 +17,7 @@ const FilterButton = ({tooltipTitle, label, count, disabled, onClick, size}) => 
         color={color}
         icon={<FilterListIcon fontSize='small' />}
         label={buttonLabel}
-        style={{minWidth: '100px'}}
+        style={{minWidth: '100px', cursor: disabled ? 'not-allowed' : 'pointer'}}
         disabled={disabled}
         size={size || 'medium'}
       />
