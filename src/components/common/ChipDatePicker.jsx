@@ -19,7 +19,7 @@ class ChipDatePicker extends React.Component {
               className='hidden-date'
               type="date" value={defaultValue || ''}
               onChange={this.onChange}
-            style={date ? {height: '30px', width: '170px'} : {}}
+              style={date ? {height: '30px', width: '170px'} : {}}
             />
             <Chip
               icon={<Schedule />}
