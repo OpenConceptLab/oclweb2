@@ -132,7 +132,7 @@ const SourceHomeTabs = props => {
             onCreateMappingClick={onCreateMappingFromSelectedConceptsClick}
             viewFilters={selectedTabConfig.filters}
             viewFields={selectedTabConfig.fields}
-            fixedFilters={{limit: selectedTabConfig.page_size, isTable: selectedTabConfig.layout !== 'list' }}
+            fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list' }}
             configQueryParams={selectedTabConfig.query_params}
           />
         }
