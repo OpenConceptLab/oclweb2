@@ -210,37 +210,37 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = callback => {
-  APIService.sources('Locales').concepts().get(null, null, {limit: 1000}).then(response => {
+  APIService.sources('Locales').concepts().get(null, null, {limit: 1000, is_latest: true}).then(response => {
     callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
   APIService.sources('Classes').concepts()
-    .get(null, null, {limit: 1000})
+    .get(null, null, {limit: 1000, is_latest: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
   APIService.sources('MapTypes').concepts()
-    .get(null, null, {limit: 1000})
+    .get(null, null, {limit: 1000, is_latest: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
   APIService.sources('Datatypes').concepts()
-    .get(null, null, {limit: 1000})
+    .get(null, null, {limit: 1000, is_latest: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
   APIService.sources('NameTypes').concepts()
-    .get(null, null, {limit: 1000})
+    .get(null, null, {limit: 1000, is_latest: true})
     .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
 }
 
 export const fetchDescriptionTypes = callback => {
   APIService.sources('DescriptionTypes').concepts()
-    .get(null, null, {limit: 1000})
+    .get(null, null, {limit: 1000, is_latest: true})
     .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
 }
 
