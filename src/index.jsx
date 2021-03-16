@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 import { Route, HashRouter, Switch } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import alertifyjs from 'alertifyjs';
@@ -37,10 +39,12 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <HashRouter>
     <MuiThemeProvider theme={theme}>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <App />
-      </Switch>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <App />
+        </Switch>
+      </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </HashRouter>,
   document.getElementById('root')
