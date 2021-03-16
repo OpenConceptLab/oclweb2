@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, MenuItem, Menu } from '@material-ui/core';
+import { Chip, MenuItem, Menu, Tooltip } from '@material-ui/core';
 import { AccountTreeRounded as TreeIcon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 import { map, without } from 'lodash';
 
@@ -22,6 +22,7 @@ const VersionFilter = props => {
 
   return (
     <React.Fragment>
+      <Tooltip title='Change Version'>
       <Chip
         variant="outlined"
         color='primary'
@@ -33,6 +34,7 @@ const VersionFilter = props => {
         deleteIcon={<ArrowDropDownIcon fontSize="inherit" />}
         onDelete={onOpen}
       />
+      </Tooltip>
       <Menu
         id="versions-menu"
         anchorEl={anchorEl}
