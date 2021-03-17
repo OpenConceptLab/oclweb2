@@ -12,10 +12,17 @@ const LocaleForm = ({
   const isName = localeAttr === 'fields.names';
   const nameAttr = isName ? 'name' : 'description';
   const typeAttr = `${nameAttr}_type`;
+  const localeType = get(locale, typeAttr);
   const selectedLocale = get(locale, 'locale') ? find(locales, {id: locale.locale}) : null;
-  const selectedLocaleType = get(locale, typeAttr) ? find(types, {id: locale[typeAttr]}) : null;
+  let selectedLocaleType = localeType ? find(types, {id: locale[typeAttr]}) : null;
   const idPrefix = `${localeAttr}.${index}`;
   const borderColor = error ? ERROR_RED : 'lightgray'
+  let formattedTypes = types;
+  if(localeType && !selectedLocaleType) {
+    const _type = {id: localeType, name: localeType}
+    selectedLocaleType = _type
+    formattedTypes = [_type, ...types]
+  }
   return (
     <div className='col-md-12' style={{border: `1px solid ${borderColor}`, borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
       <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
@@ -38,7 +45,7 @@ const LocaleForm = ({
               openOnFocus
               value={selectedLocaleType}
               id={`${idPrefix}.${typeAttr}`}
-              options={types}
+              options={formattedTypes}
               getOptionLabel={(option) => option.name}
               fullWidth
               required
