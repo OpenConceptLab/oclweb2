@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Table, TableHead, TableRow, TableCell, TableBody, Chip, IconButton,
+  Table, TableHead, TableRow, TableCell, TableBody, Chip, IconButton, Tooltip
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
@@ -57,11 +57,15 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
           </TableRow> :
           map(mappings, mapping => {
             const targetURL = isIndirect ? get(mapping, 'from_concept_url') : get(mapping, 'to_concept_url');
-            const title = targetURL ? 'Target Concept exists in OCL' : "Target concept doesn't exists in OCL";
+            let title;
+            if(targetURL)
+              title = isIndirect ? 'Source concept is defined in OCL' : 'Target concept is defined in OCL'
+            else
+              title = isIndirect ? 'Source concept is not defined in OCL' : 'Target concept is not defined in OCL'
             const cursor = targetURL ? 'pointer' : 'not-allowed'
             return (
               <TableRow
-                hover key={mapping.uuid} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}}>
+                hover key={mapping.uuid} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
                 <TableCell align='left'>
                   <Chip
                     size='small'
@@ -86,12 +90,14 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
                   { getConceptName(mapping, conceptCodeName) }
                 </TableCell>
                 <TableCell align='left'>
-                  <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
-                    <SearchIcon fontSize='inherit' />
-                  </IconButton>
-          </TableCell>
-        </TableRow>
-          )
+                  <Tooltip title='View mapping details'>
+                    <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
+                      <SearchIcon fontSize='inherit' />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            )
           })
         }
       </TableBody>
