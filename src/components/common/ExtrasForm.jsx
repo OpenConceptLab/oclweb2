@@ -1,9 +1,12 @@
 import React from 'react';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { TextField, IconButton } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, isObject } from 'lodash';
+import { jsonifySafe } from '../../common/utils';
 
 const ExtrasForm = ({ extra, index, onChange, onDelete }) => {
+  const value = get(extra, 'value', '');
+
   return (
     <div className='col-md-12' style={{border: '1px solid lightgray', borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
       <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
@@ -24,11 +27,11 @@ const ExtrasForm = ({ extra, index, onChange, onDelete }) => {
             label='Value'
             variant="outlined"
             fullWidth
-            onChange={event => onChange(index, '__', event.target.value)}
+            onChange={event => onChange(index, '__', jsonifySafe(event.target.value))}
             size='small'
             multiline
             rows={2}
-            value={get(extra, 'value', '')}
+            value={isObject(value) ? JSON.stringify(value) : value}
           />
         </div>
         <div className='col-md-1 no-left-padding' style={{textAlign: 'right', minWidth: '8.33%', width: '8.33%'}}>

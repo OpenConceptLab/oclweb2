@@ -367,3 +367,14 @@ export const getUserInitials = user => {
 
   return result.toUpperCase();
 }
+
+export const jsonifySafe = data => {
+  if(!data)
+    return data;
+
+  try {
+    return JSON.parse(data);
+  } catch (err) {
+    return data;
+  }
+}
