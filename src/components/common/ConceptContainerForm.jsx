@@ -60,12 +60,14 @@ class ConceptContainerForm extends React.Component {
 
   componentDidMount() {
     fetchLocales(locales => this.setState({locales: locales}))
-    const { edit, resource } = this.props
+    const { edit, resource, newCollectionProps } = this.props
 
     this.setState({typeAttr: this.isSource() ? 'source_type' : 'collection_type'}, () => {
       if(edit && resource)
         this.setFieldsForEdit()
     })
+    if(get(newCollectionProps, 'name'))
+      this.setState({fields: {...this.state.fields, name: newCollectionProps.name}})
   }
 
   isSource() {
@@ -215,7 +217,7 @@ class ConceptContainerForm extends React.Component {
   }
 
   handleSubmitResponse(response) {
-    const { edit, reloadOnSuccess, onCancel, resourceType } = this.props
+    const { edit, reloadOnSuccess, onCancel, resourceType, onSuccess } = this.props
     if(response.status === 201 || response.status === 200) { // success
       const verb = edit ? 'updated' : 'created'
       const successMsg = `Successfully ${verb} ${resourceType}`;
@@ -224,6 +226,8 @@ class ConceptContainerForm extends React.Component {
       alertifyjs.success(message, 1, () => {
         if(reloadOnSuccess)
           window.location.reload()
+        if(onSuccess)
+          onSuccess(response.data)
       })
     } else { // error
       const genericError = get(response, '__all__')
