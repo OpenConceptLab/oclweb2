@@ -286,7 +286,6 @@ class AddToCollection extends React.Component {
           formComponent={
             <CollectionForm
               newCollectionProps={{
-                references: references,
                 name: (searchedValue || '').trim()
               }}
               onCancel={this.toggleCollectionForm}
