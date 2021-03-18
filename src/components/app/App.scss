@@ -726,3 +726,42 @@ div.not-found {
 .underline-text:hover {
     text-decoration: underline;
 }
+div.feedback-div {
+    a {
+        padding: 16px 0;
+        margin-left: -3px;
+    }
+    a:hover {
+        color: initial;
+    }
+    svg {
+        color: rgba(0, 0, 0, 0.54);
+    }
+    a:focus {
+        color: initial;
+        text-decoration: unset !important
+    }
+}
+div.feedback-div-open {
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        padding: 16px;
+    }
+    a:hover {
+        color: initial;
+    }
+    a:focus {
+        color: initial;
+        text-decoration: unset !important
+    }
+    svg {
+        color: rgba(0, 0, 0, 0.54);
+        margin-right: 10px;
+    }
+    span.nav-text {
+        text-transform: capitalize;
+        font-size: 1rem;
+    }
+}
