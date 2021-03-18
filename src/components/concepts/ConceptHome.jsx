@@ -37,9 +37,9 @@ class ConceptHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/mappings') > -1)
-      return 1;
+      return 0;
     if(location.pathname.indexOf('/history') > -1)
-      return 2;
+      return 1;
 
     return 0;
   }
@@ -73,7 +73,7 @@ class ConceptHome extends React.Component {
                     this.setState({isLoading: false, concept: {}, notFound: true})
                   } else {
                     this.setState({isLoading: false, concept: response.data}, () => {
-                      if(this.state.tab === 2)
+                      if(this.state.tab === 1)
                         this.getVersions()
                       else
                         this.getMappings()
@@ -106,7 +106,7 @@ class ConceptHome extends React.Component {
 
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
-      if(value === 2)
+      if(value === 1)
         this.getVersions()
     })
   }
