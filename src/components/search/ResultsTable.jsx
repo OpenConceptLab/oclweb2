@@ -576,11 +576,12 @@ const ResultsTable = (
                                          setSelectedList(without(selectedList, id));
   const getOppositeOrder = order => order === 'asc' ? 'desc' : 'asc';
   const onSort = (event, columnId) => {
-    let newOrder = 'desc';
+    const column = find(resourceDefinition.columns, {id: columnId})
+    let newOrder = get(column, 'sortBy') || 'desc';
     if(orderBy === columnId)
       newOrder = getOppositeOrder(order)
 
-    const sortOn = get(find(resourceDefinition.columns, {id: columnId}), 'sortOn', 'last_update')
+    const sortOn = get(column, 'sortOn', 'last_update')
     let sortQuery = {sortDesc: sortOn}
     if(newOrder === 'asc')
       sortQuery = {sortAsc: sortOn}
@@ -655,7 +656,7 @@ const ResultsTable = (
                           <TableSortLabel
                             className='table-sort-label-white'
                             active={orderBy === column.id}
-                            direction={orderBy === column.id ? order : 'desc'}
+                            direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
                             onClick={(event) => onSort(event, column.id)}
                             style={{color: theadTextColor}}
                           >
