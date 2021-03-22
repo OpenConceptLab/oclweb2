@@ -102,6 +102,7 @@ class Search extends React.Component {
       exactMatch: queryParams.get('exactMatch') || 'off',
       limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
       viewFilters: this.props.viewFilters || {},
+      sortParams: get(fixedFilters, 'sortParams') || this.state.sortParams,
     }, this.fetchNewResults)
   }
 
@@ -337,9 +338,13 @@ class Search extends React.Component {
     const { nested, extraControls } = this.props;
     const {
       updatedSince, limit, appliedFacets, resource, includeRetired, isTable, isInfinite,
-      viewFilters
+      viewFilters, sortParams
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
+    const sortDesc = get(sortParams, 'sortDesc')
+    const sortAsc = get(sortParams, 'sortAsc')
+    const sortOn = sortDesc || sortAsc;
+    const sortBy = sortDesc ? 'desc' : 'asc'
     return (
       <span style={{display: 'inline-flex', alignItems: 'center', width: 'max-content'}}>
         {
@@ -364,7 +369,7 @@ class Search extends React.Component {
             </span>
             {
               !isTable && <span style={{paddingRight: '4px'}}>
-                <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} />
+                <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={sortOn} sortBy={sortBy} />
               </span>
             }
           </span>

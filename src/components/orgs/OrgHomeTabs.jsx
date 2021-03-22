@@ -34,6 +34,15 @@ const OrgHomeTabs = props => {
       setMembersForm(true)
   }
 
+  const getSortParams = () => {
+    if(selectedTabConfig) {
+      if(selectedTabConfig.sortAsc)
+        return {sortAsc: selectedTabConfig.sortAsc}
+      if(selectedTabConfig.sortDesc)
+        return {sortDesc: selectedTabConfig.sortDesc}
+    }
+  }
+
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
@@ -75,7 +84,7 @@ const OrgHomeTabs = props => {
             resource={selectedTabConfig.type}
             viewFilters={selectedTabConfig.filters}
             viewFields={selectedTabConfig.fields}
-            fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list' }}
+            fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
           />
         }
       </div>

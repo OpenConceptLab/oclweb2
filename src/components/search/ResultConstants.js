@@ -165,3 +165,12 @@ export const FACET_ORDER = {
     'retired', 'collection_membership',
   ]
 }
+
+export const SORT_ATTRS = {
+  concepts: ['score', 'last_update', 'id', 'name', 'concept_class', 'datatype', 'source', 'owner'],
+  mappings: ['score', 'last_update', 'id', 'map_type', 'source', 'owner'],
+  users: ['score', 'username', 'date_joined', 'company', 'location'],
+  organizations: ['score', 'last_update', 'name', 'mnemonic'],
+  sources: ['score', 'last_update', 'mnemonic', 'source_type', 'name', 'owner', 'canonical_url'],
+  collections: ['score', 'last_update', 'mnemonic', 'collection_type', 'name', 'owner', 'canonical_url'],
+}

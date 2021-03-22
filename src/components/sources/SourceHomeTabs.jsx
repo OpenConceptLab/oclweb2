@@ -76,6 +76,15 @@ const SourceHomeTabs = props => {
     return href + location.search
   }
 
+  const getSortParams = () => {
+    if(selectedTabConfig) {
+      if(selectedTabConfig.sortAsc)
+        return {sortAsc: selectedTabConfig.sortAsc}
+      if(selectedTabConfig.sortDesc)
+        return {sortDesc: selectedTabConfig.sortDesc}
+    }
+  }
+
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
@@ -132,7 +141,7 @@ const SourceHomeTabs = props => {
             onCreateMappingClick={onCreateMappingFromSelectedConceptsClick}
             viewFilters={selectedTabConfig.filters}
             viewFields={selectedTabConfig.fields}
-            fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list' }}
+            fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
             configQueryParams={selectedTabConfig.query_params}
           />
         }

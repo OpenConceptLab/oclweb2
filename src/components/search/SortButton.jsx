@@ -8,13 +8,9 @@ import {
   ArrowDownward as ArrowDownwardIcon,
   ArrowUpward as ArrowUpwardIcon,
 } from '@material-ui/icons'
-import { map } from 'lodash';
+import { map, startCase, get, includes } from 'lodash';
+import { SORT_ATTRS } from './ResultConstants'
 
-const OPTIONS = {
-  '1': {name: 'Best Match', id: 'score'},
-  '2': {name: 'Last Updated', id: 'last_update'},
-  '3': {name: 'Name', id: 'name'},
-}
 const ASC = 'asc';
 const DESC = 'desc';
 const SORT_ICON_STYLES = {width: '14px', height: '14px'};
@@ -24,11 +20,41 @@ class SortButton extends React.Component {
     super(props);
     this.state = {
       open: false,
-      selectedOption: '2',
+      selectedOption: 'last_update',
       sortBy: 'desc',
     }
 
     this.anchorRef = React.createRef(null);
+  }
+
+  componentDidMount() {
+    this.setState({
+      selectedOption: this.props.sortOn || this.state.selectedOption,
+      sortBy: this.props.sortBy || this.state.sortBy
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if(
+      prevProps.sortOn !== this.props.sortOn &&
+      this.props.sortOn &&
+      (this.props.sortOn !== this.state.selectedOption ||
+       this.props.sortBy !== this.state.sortBy)
+    )
+    this.setState({
+      selectedOption: this.props.sortOn,
+      sortBy: this.props.sortBy || this.state.sortBy
+    })
+  }
+
+  getOptions() {
+    const { resource } = this.props;
+    const sortables = get(SORT_ATTRS, resource) || []
+    return map(sortables, attr => {
+      if(attr === 'score')
+        return {name: 'Best Match', id: 'score'}
+      return {name: startCase(attr), id: attr}
+    })
   }
 
   isAsc() {
@@ -56,16 +82,17 @@ class SortButton extends React.Component {
   }
 
   handleMenuItemClick = value => {
-    this.setSelectedOption(value || '1');
+    if(includes(['name', 'username'], value) && value !== this.state.selectedOption)
+      this.setState({sortBy: ASC, selectedOption: value}, this.propogate)
+    else
+      this.setSelectedOption(value || 'score');
+
     this.toggleOpen();
   };
 
   toQueryParams() {
-    const { selectedOption} = this.state;
-    const option = OPTIONS[selectedOption].id
-    if(this.isAsc())
-      return {sortAsc: option}
-    return {sortDesc: option}
+    const { selectedOption } = this.state;
+    return this.isAsc() ? {sortAsc: selectedOption} : {sortDesc: selectedOption}
   }
 
   propogate() {
@@ -83,10 +110,17 @@ class SortButton extends React.Component {
     this.toggleOrder();
   }
 
+  getSelectedOptionName() {
+    const { selectedOption } = this.state;
+    return selectedOption === 'score' ? 'Best Match' : startCase(selectedOption)
+  }
+
   render() {
     const { open, selectedOption } = this.state;
     const { size } = this.props;
     const isAsc = this.isAsc();
+    const selectedOptionName = this.getSelectedOptionName()
+    const options = this.getOptions()
     return (
       <span>
         <Tooltip title='Sort By'>
@@ -99,7 +133,7 @@ class SortButton extends React.Component {
                   <ArrowDownwardIcon fontSize="inherit" style={SORT_ICON_STYLES} />
             }
             color="primary"
-            label={OPTIONS[selectedOption].name}
+            label={selectedOptionName}
             onClick={this.handleClick}
             size={size || 'medium'}
             deleteIcon={<ArrowDropDownIcon fontSize="inherit" />}
@@ -119,12 +153,12 @@ class SortButton extends React.Component {
                 <ClickAwayListener onClickAway={this.handleClose}>
                   <MenuList id="split-button-menu">
                     {
-                      map(OPTIONS, (option, id) => (
+                      map(options, (option, index) => (
                         <MenuItem
-                          id={id}
-                          key={id}
-                          selected={id === selectedOption}
-                          onClick={() => this.handleMenuItemClick(id)}
+                          id={option.id}
+                          key={index}
+                          selected={option.id === selectedOption}
+                          onClick={() => this.handleMenuItemClick(option.id)}
                           >
                           {option.name}
                         </MenuItem>
