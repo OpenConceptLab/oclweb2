@@ -1,7 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import alertifyjs from 'alertifyjs';
-import ReactSuggestionBox from 'react-suggestion-box';
 import {
   AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, Divider, IconButton,
   ListItem, ListItemText, Collapse, ListItemIcon, Tooltip, Paper,
@@ -11,16 +9,15 @@ import {
   Menu as MenuIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
-  ReportProblem as FeedbackIcon,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { map, isEmpty } from 'lodash';
-import APIService from '../../services/APIService';
 import { isAtGlobalSearch, isLoggedIn } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
 import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions.jsx';
+import Feedback from '../common/Feedback';
 
 const drawerWidth = 250;
 const useStyles = makeStyles((theme) => ({
@@ -120,7 +117,6 @@ const Header = props => {
     }
     return newOpen
   })
-  const onFeedbackSubmit = data => APIService.feedback().post(data).then(() => alertifyjs.success('Successfully submit feedback!'));
 
   return (
     <React.Fragment>
@@ -239,14 +235,7 @@ const Header = props => {
                   )
                 })
               }
-              <ReactSuggestionBox
-                buttonTooltipText='Feedback'
-                onSubmit={onFeedbackSubmit}
-                mainButtonLabel='Feedback'
-                icon={<FeedbackIcon />}
-                title='Provide Feedback/Suggestion'
-                containerClassName='feedback-div-open'
-              />
+              <Feedback mainButtonLabel='Feedback' containerClassName='feedback-div-open' />
             </List>
           </div>
         </Drawer> :
@@ -349,14 +338,7 @@ const Header = props => {
                 )
               })
             }
-            <ReactSuggestionBox
-              buttonTooltipText='Feedback'
-              onSubmit={onFeedbackSubmit}
-              mainButtonLabel={false}
-              icon={<FeedbackIcon />}
-              title='Provide Feedback/Suggestion'
-              containerClassName='feedback-div'
-            />
+            <Feedback mainButtonLabel={false} containerClassName='feedback-div' />
           </List>
         </Drawer>
 
