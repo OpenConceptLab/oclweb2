@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
@@ -174,7 +173,7 @@ class Search extends React.Component {
       })
     } else {
       this.setState({isLoading: false}, () => {
-        alertifyjs.error('System encountered an error.')
+        throw response
       })
     }
   }

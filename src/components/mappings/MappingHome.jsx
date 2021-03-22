@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, get } from 'lodash';
+import { includes, get, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeTabs from './MappingHomeTabs';
@@ -63,14 +63,15 @@ class MappingHome extends React.Component {
                 .overrideURL(this.getMappingURLFromPath())
                 .get()
                 .then(response => {
-                  if(get(response, 'detail') === "Not found.") {
+                  if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, mapping: {}, notFound: true})
-                  } else {
+                  else if(!isObject(response))
+                    this.setState({isLoading: false}, () => {throw response})
+                  else
                     this.setState({isLoading: false, mapping: response.data}, () => {
                       if(this.state.tab === 1)
                         this.getVersions()
                     })
-                  }
                 })
 
     })

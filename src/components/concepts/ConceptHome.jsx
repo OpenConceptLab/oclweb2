@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, get } from 'lodash';
+import { includes, get, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
@@ -69,16 +69,17 @@ class ConceptHome extends React.Component {
                 .overrideURL(this.getConceptURLFromPath())
                 .get()
                 .then(response => {
-                  if(get(response, 'detail') === "Not found.") {
+                  if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, concept: {}, notFound: true})
-                  } else {
+                  else if(!isObject(response))
+                    this.setState({isLoading: false}, () => {throw response})
+                  else
                     this.setState({isLoading: false, concept: response.data}, () => {
                       if(this.state.tab === 1)
                         this.getVersions()
                       else
                         this.getMappings()
                     })
-                  }
                 })
 
     })

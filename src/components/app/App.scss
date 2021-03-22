@@ -765,3 +765,19 @@ div.feedback-div-open {
         font-size: 1rem;
     }
 }
+
+.no-border {
+    border: none !important;
+}
+
+.error-chip {
+    color: rgb(244,67,54) !important;
+    &:focus, &:hover {
+        background-color: transparent !important;
+    }
+}
+.collapsed-error-details {
+    background-color: rgba(244,67,54, 0.1);
+    padding: 10px;
+    border-radius: 4px;
+}

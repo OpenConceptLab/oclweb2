@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, values, find, findIndex, isEmpty } from 'lodash';
+import { reject, get, values, find, findIndex, isEmpty, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -114,9 +114,11 @@ class OrgHome extends React.Component {
         () => service
           .get(null, null, {includeClientConfigs: customConfigFeatureApplicable})
           .then(response => {
-            if(get(response, 'detail') === "Not found.") {
+            if(get(response, 'detail') === "Not found.")
               this.setState({isLoading: false, notFound: true, org: {}})
-            } else {
+            else if(!isObject(response))
+              this.setState({isLoading: false}, () => {throw response})
+            else {
               const org = response.data;
               const customConfigs = get(response.data, 'client_configs', [])
               const defaultCustomConfig = find(customConfigs, {is_default: true});

@@ -1,5 +1,5 @@
 import React from 'react';
-import { reject, get } from 'lodash';
+import { reject, get, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import {
   defaultCreatePin, defaultDeletePin, getCurrentUserUsername, isAdminUser
@@ -83,6 +83,8 @@ class UserHome extends React.Component {
           .then(response => {
             if(get(response, 'detail') === "Not found.")
               this.setState({isLoading: false, notFound: true, user: {}})
+            else if(!isObject(response))
+              this.setState({isLoading: false}, () => {throw response})
             else
               this.setState({ user: response.data, isLoading: false })
           }))

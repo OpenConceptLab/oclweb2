@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, isEmpty, get, findIndex, isEqual, find } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
@@ -128,9 +128,11 @@ class CollectionHome extends React.Component {
                 .overrideURL(this.getURLFromPath())
                 .get(null, null, {includeSummary: true, includeClientConfigs: true})
                 .then(response => {
-                  if(get(response, 'detail') === "Not found.") {
+                  if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, notFound: true, collection: {}})
-                  } else {
+                  else if(!isObject(response))
+                    this.setState({isLoading: false}, () => {throw response})
+                  else {
                     const collection = response.data;
                     const customConfigs = get(collection, 'client_configs', [])
                     const defaultCustomConfig = find(customConfigs, {is_default: true});

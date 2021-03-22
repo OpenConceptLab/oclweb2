@@ -18,6 +18,7 @@ import EmailVerification from '../users/EmailVerification';
 import ForgotPasswordRequest from '../users/ForgotPasswordRequest';
 import ForgotPasswordForm from '../users/ForgotPasswordForm';
 import NotFound from '../common/NotFound';
+import ErrorBoundary from '../common/ErrorBoundary';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -46,6 +47,7 @@ const App = props => {
   return (
     <div>
       <Header {...props} onOpen={setMenuOpen} />
+      <ErrorBoundary>
       <main className={menuOpen ? 'content menu-open' : 'content'}>
         <Switch>
           <Route exact path="/" component={RootView} />
@@ -172,6 +174,7 @@ const App = props => {
           <Route component={NotFound} />
         </Switch>
       </main>
+      </ErrorBoundary>
       <Footer {...props} />
     </div>
   );
