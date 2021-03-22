@@ -16,9 +16,9 @@ class ErrorBoundary extends React.Component {
   }
 
   render() {
-    const { hasError, error, errorInfo } = this.state;
+    const { hasError } = this.state;
     return hasError ?
-           <ErrorUI header='Error' message='Something went wrong.' error={error} errorInfo={errorInfo} /> :
+           <ErrorUI header='Error' message='Something went wrong.' /> :
            this.props.children;
   }
 }
