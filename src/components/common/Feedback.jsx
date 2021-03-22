@@ -23,7 +23,6 @@ const Feedback = props => {
         <TextField
           id='feedback-name'
           style={{marginBottom: '10px', background: WHITE}}
-          size='small'
           required
           label="Name"
           variant="outlined"
@@ -33,7 +32,6 @@ const Feedback = props => {
         <TextField
           id='feedback-email'
           style={{marginBottom: '10px', background: WHITE}}
-          size='small'
           label="Email"
           variant="outlined"
           fullWidth
