@@ -15,11 +15,19 @@ class ErrorBoundary extends React.Component {
     this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)})
   }
 
+  getErrorUIProps() {
+    const props = {header: 'Error', message: 'Something went wrong.'}
+
+    if(window.location.hash.match(/debug=true/))
+      return {...props, error: this.state.error, errorInfo: this.state.errorInfo}
+
+    return props
+  }
+
   render() {
+    const props = this.getErrorUIProps()
     const { hasError } = this.state;
-    return hasError ?
-           <ErrorUI header='Error' message='Something went wrong.' /> :
-           this.props.children;
+    return hasError ? <ErrorUI {...props} /> : this.props.children;
   }
 }
 
