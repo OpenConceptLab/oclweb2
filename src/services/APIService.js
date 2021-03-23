@@ -1,10 +1,8 @@
 /*eslint no-process-env: 0*/
 import axios from 'axios';
 import {get, omit, isPlainObject, isString, defaults } from 'lodash';
-import { currentUserToken } from '../common/utils';
+import { currentUserToken, getSelectedServerConfig } from '../common/utils';
 
-/*eslint no-undef: 0*/
-const APIURL = window.API_URL || process.env.API_URL;
 const APIServiceProvider = {};
 const RESOURCES = [
   { name: 'concepts', relations: [] },
@@ -18,13 +16,20 @@ const RESOURCES = [
   { name: 'new', relations: [] },
 ];
 
+const getAPIURL = () => {
+  const savedConfigs = getSelectedServerConfig();
+  /*eslint no-undef: 0*/
+  return get(savedConfigs, 'url') || window.API_URL || process.env.API_URL;
+}
+
 class APIService {
   constructor(name, id, relations) {
-    if (name === 'empty') this.URL = `${APIURL}/`;
-    else this.URL = `${APIURL}/${name}/`;
+    const apiURL = getAPIURL();
+    if (name === 'empty') this.URL = `${apiURL}/`;
+    else this.URL = `${apiURL}/${name}/`;
     this.headers = {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      Accept: 'application/json'
     };
 
     if (id) {
@@ -46,7 +51,7 @@ class APIService {
   }
 
   overrideURL(url) {
-    this.URL = `${APIURL}${url}`;
+    this.URL = `${getAPIURL()}${url}`;
     return this;
   }
 

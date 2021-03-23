@@ -12,14 +12,16 @@ import {
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { map, isEmpty } from 'lodash';
-import { isAtGlobalSearch, isLoggedIn } from '../../common/utils';
+import { isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
 import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions.jsx';
 import Feedback from '../common/Feedback';
+import ServerConfigsChip from '../common/ServerConfigsChip';
 
 const drawerWidth = 250;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -148,16 +150,20 @@ const Header = props => {
               <SearchInput {...props} />
             }
           </div>
-          <div className='col-sm-4 pull-right no-side-padding' style={{textAlign: 'right'}}>
+          <div className='col-sm-4 pull-right no-side-padding'style={{textAlign: 'right'}}>
             {
-              authenticated ?
-              <span style={{marginLeft: '10px'}}>
-                <UserOptions />
-              </span>:
-              <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
-                Sign In
-              </Button>
+              canSwitchServer() && isServerSwitched() &&
+              <ServerConfigsChip style={{marginRight: '20px'}} />
             }
+              {
+                authenticated ?
+                <span style={{marginLeft: '10px'}}>
+                  <UserOptions />
+                </span>:
+                <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
+                  Sign In
+                </Button>
+              }
           </div>
         </Toolbar>
       </AppBar>

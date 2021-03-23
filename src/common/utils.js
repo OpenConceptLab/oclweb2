@@ -8,6 +8,7 @@ import {
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
+import { SERVER_CONFIGS } from './serverConfigs';
 
 export const isAtGlobalSearch = () => window.location.hash.includes('#/search') || isAtRoot();
 
@@ -378,3 +379,26 @@ export const jsonifySafe = data => {
     return data;
   }
 }
+
+export const getSelectedServerConfig = () => {
+  const serverConfig = localStorage.getItem('server');
+  if(serverConfig)
+    return JSON.parse(serverConfig);
+}
+
+export const getAppliedServerConfig = () => {
+  const selectedConfig = getSelectedServerConfig();
+
+  if(selectedConfig)
+    return selectedConfig;
+
+  const APIURL = window.API_URL || process.env.API_URL;
+  return find(SERVER_CONFIGS, {url: APIURL});
+}
+
+export const isServerSwitched = () => {
+  const selectedConfig = getSelectedServerConfig();
+  return selectedConfig && selectedConfig.url !== (window.API_URL || process.env.API_URL);
+};
+
+export const canSwitchServer = () => Boolean(getSelectedServerConfig() || get(getCurrentUser(), 'is_staff'));

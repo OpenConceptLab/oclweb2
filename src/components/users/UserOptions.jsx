@@ -2,28 +2,32 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Paper, IconButton, Popper, Grow, ClickAwayListener, Tooltip,
-  List, ListItem, ListItemIcon, ListItemText, Chip, Divider, Button
+  List, ListItem, ListItemIcon, ListItemText, Chip, Divider, Button, Collapse
 } from '@material-ui/core';
 import {
-  ExitToApp as LogoutIcon, Edit as EditIcon, AccountCircle as AccountIcon
+  ExitToApp as LogoutIcon, Edit as EditIcon, AccountCircle as AccountIcon,
+  Storage as ServerIcon, ExpandLess as LessIcon, ExpandMore as MoreIcon,
 } from '@material-ui/icons';
-import { getCurrentUser, getUserInitials } from '../../common/utils';
+import { get } from 'lodash';
+import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
+import ServerConfigList from '../common/ServerConfigList';
 
-const onLogoutClick = () => {
+const onLogoutClick = msg => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-  alertifyjs.success('You have signed out.')
+  alertifyjs.success(msg || 'You have signed out.')
   window.location.hash = '#/'
   window.location.reload()
 }
 
 const UserOptions = () => {
   const initials = getUserInitials()
-  const user = getCurrentUser()
+  const user = getCurrentUser() || {}
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = React.useState(false);
+  const [serverOpen, setServerOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const handleToggle = () => setOpen((prevOpen) => !prevOpen);
   const handleClose = event => {
@@ -42,11 +46,13 @@ const UserOptions = () => {
     handleClose(event);
     setForm(true);
   }
-  const displayName = user.name || user.username;
+  const username = get(user, 'username');
+  const displayName = get(user, 'name') || username;
+  const serverConfig = getAppliedServerConfig();
 
   return (
     <React.Fragment>
-      <Tooltip title={user.username}>
+      <Tooltip title={username || ''}>
         {
           user.logo_url ?
           <IconButton touch='true' onClick={handleToggle} ref={anchorRef}>
@@ -99,6 +105,22 @@ const UserOptions = () => {
                       <ListItemText className='list-item-text' primary={displayName} secondary={user.email} />
                     </ListItem>
                   </Tooltip>
+                  <Divider />
+                  {
+                    canSwitchServer() &&
+                    <Tooltip placement='left' title='Switch Server'>
+                      <ListItem className='user-option-list-item' onClick={() => setServerOpen(!serverOpen)}>
+                        <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
+                          <ServerIcon fontSize='small' />
+                        </ListItemIcon>
+                        <ListItemText className='list-item-text' primary='Switch Server' secondary={get(serverConfig, 'name')} />
+                        {serverOpen ? <LessIcon /> : <MoreIcon />}
+                      </ListItem>
+                    </Tooltip>
+                  }
+                  <Collapse in={serverOpen}>
+                    <ServerConfigList />
+                  </Collapse>
                   <Divider />
                   <ListItem style={{display: 'flex', justifyContent: 'center', padding: '16px'}}>
                     <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={onLogoutClick}>
