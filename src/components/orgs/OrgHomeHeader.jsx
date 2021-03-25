@@ -21,7 +21,7 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import OrgForm from './OrgForm';
 
-const OrgHomeHeader = ({ org, url }) => {
+const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
@@ -50,31 +50,34 @@ const OrgHomeHeader = ({ org, url }) => {
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
-            <span style={{marginLeft: '15px'}}>
-              <ButtonGroup variant='text' size='large'>
-                <Tooltip title="Copy URL">
-                  <Button onClick={onIconClick}>
-                    <CopyIcon fontSize="inherit" />
-                  </Button>
-                </Tooltip>
-                {
-                  hasAccess &&
-                  <Tooltip title='Edit Organization'>
-                    <Button onClick={() => setOrgForm(true)}>
-                      <EditIcon fontSize='inherit' />
+            {
+              !fhir &&
+              <span style={{marginLeft: '15px'}}>
+                <ButtonGroup variant='text' size='large'>
+                  <Tooltip title="Copy URL">
+                    <Button onClick={onIconClick}>
+                      <CopyIcon fontSize="inherit" />
                     </Button>
                   </Tooltip>
-                }
-                <DownloadButton resource={org} filename={downloadFileName} includeCSV />
-              </ButtonGroup>
-            </span>
+                  {
+                    hasAccess &&
+                    <Tooltip title='Edit Organization'>
+                      <Button onClick={() => setOrgForm(true)}>
+                        <EditIcon fontSize='inherit' />
+                      </Button>
+                    </Tooltip>
+                  }
+                  <DownloadButton resource={org} filename={downloadFileName} includeCSV />
+                </ButtonGroup>
+              </span>
+            }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>
               {org.name}
             </span>
             {
-              includes(['view', 'edit'], org.public_access.toLowerCase()) &&
+              includes(['view', 'edit'], get(org, 'public_access', '').toLowerCase()) &&
               <PublicAccessChip publicAccess={org.public_access} />
             }
           </div>
@@ -99,23 +102,29 @@ const OrgHomeHeader = ({ org, url }) => {
                 <LinkLabel link={org.website} iconSize='medium' noContainerClass />
               </span>
             }
-            <span>
-              <LastUpdatedOnLabel
-                label='Created'
-                date={org.created_on}
-                by={org.created_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            <span style={{marginLeft: '10px'}}>
-              <LastUpdatedOnLabel
-                date={org.updated_on}
-                by={org.updated_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
+            {
+              org.created_on &&
+              <span>
+                <LastUpdatedOnLabel
+                  label='Created'
+                  date={org.created_on}
+                  by={org.created_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
+              </span>
+            }
+            {
+              org.updated_on &&
+              <span style={{marginLeft: '10px'}}>
+                <LastUpdatedOnLabel
+                  date={org.updated_on}
+                  by={org.updated_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
+              </span>
+            }
             {
               org.external_id &&
               <span style={{marginLeft: '10px', marginTop: '-8px'}}>
@@ -123,6 +132,7 @@ const OrgHomeHeader = ({ org, url }) => {
               </span>
             }
           </div>
+          {extraComponents}
         </div>
       </div>
       <CommonFormDrawer

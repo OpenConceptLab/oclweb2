@@ -34,6 +34,13 @@ export const SERVER_CONFIGS = [
     name: 'FHIR QA',
     type: 'fhir',
     url: 'https://fhir.qa.aws.openconceptlab.org',
-    disabled: true
+    info: {
+      type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
+      org: {
+        id: 'PEPFAR',
+        name: "The United States President's Emergency Plan for AIDS Relief",
+        logo_url: '/fhir.svg'
+      }
+    }
   },
 ]

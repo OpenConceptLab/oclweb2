@@ -23,10 +23,12 @@ const ServerConfigList = () => {
       localStorage.removeItem('server')
 
     alertifyjs.success('Switching Server! This might take few seconds...', 2, () => {
+      const isOCLServer = config.type === 'ocl';
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.hash = '#/'
-      window.location.reload()
+      window.location.hash = isOCLServer ? '#/' : '#/fhir'
+      if(isOCLServer)
+        window.location.reload()
     })
   }
 

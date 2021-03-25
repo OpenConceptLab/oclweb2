@@ -21,6 +21,7 @@ import NotFound from '../common/NotFound';
 import ErrorBoundary from '../common/ErrorBoundary';
 import Header from './Header';
 import Footer from './Footer';
+import Fhir from '../fhir/Fhir';
 
 const App = props => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -171,6 +172,7 @@ const App = props => {
           <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
           <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/password/reset/:token([a-zA-Z0-9\-\.\_]+)" component={ForgotPasswordForm} />
           <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
+          <Route path="/fhir" component={Fhir} />
           <Route component={NotFound} />
         </Switch>
       </main>
