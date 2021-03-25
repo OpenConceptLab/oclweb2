@@ -235,21 +235,27 @@ class Search extends React.Component {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
         includeRetired,
       } = this.state;
-      const { configQueryParams } = this.props;
-      const queryParams = {
-        q: searchStr || '', page: page, exact_match: exactMatch, limit: limit,
-        includeRetired: includeRetired,
-        verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
-        ...this.getFacetQueryParam(),
-      };
-      if(updatedSince)
-        queryParams['updatedSince'] = updatedSince
+      const { configQueryParams, noQuery } = this.props;
+      let queryParams = {};
+      if(!noQuery) {
+        queryParams = {
+          q: searchStr || '', page: page, exact_match: exactMatch, limit: limit,
+          includeRetired: includeRetired,
+          verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
+          ...this.getFacetQueryParam(),
+        };
+        if(updatedSince)
+          queryParams['updatedSince'] = updatedSince
+      }
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
+      let params = {}
+      if(!noQuery)
+        params = {...queryParams, ...sortParams, ...(configQueryParams || {})}
       fetchSearchResults(
         _resource,
-        {...queryParams, ...sortParams, ...(configQueryParams || {})},
+        params,
         this.props.baseURL,
         null,
         (response) => this.onSearchResultsLoad(resource, response, resetItems)
