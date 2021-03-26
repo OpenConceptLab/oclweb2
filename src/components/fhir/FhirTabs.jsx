@@ -1,12 +1,12 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { map } from 'lodash';
-/* import { ORANGE } from '../../common/constants';
- * import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
- *  */
+import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
 
-const FhirTabs = ({ tab, onTabChange, selectedConfig  }) => {
+
+const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url  }) => {
   const tabConfigs = selectedConfig.config.tabs;
+  const selectedTabConfig = tabConfigs[tab];
 
   return (
     <div className='col-md-12 sub-tab'>
@@ -15,8 +15,8 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig  }) => {
           map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
         }
       </Tabs>
-      {/* <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
-          <OrgHomeChildrenList
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
+        <OrgHomeChildrenList
           org={org}
           location={location}
           match={match}
@@ -26,9 +26,11 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig  }) => {
           viewFields={selectedTabConfig.fields}
           fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list' }}
           noQuery
+          noHeaders
           nested
-          />
-          </div> */}
+          fhir
+        />
+      </div>
     </div>
   )
 }

@@ -89,6 +89,13 @@ const RESOURCE_DEFINITIONS = {
     tags: TAGS.users,
     expandible: false,
   },
+  CodeSystem: {
+    headBgColor: GREEN,
+    headTextColor: WHITE,
+    columns: ALL_COLUMNS.CodeSystem.slice(0, 8),
+    tagWaitAttribute: 'resource',
+    tags: TAGS.CodeSystem,
+  }
 }
 
 const getValue = (item, column) => {
@@ -299,7 +306,7 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(resource === 'references')
+    if(includes(['references', 'CodeSystem'], resource))
       return
     event.stopPropagation();
     event.preventDefault()
@@ -392,6 +399,19 @@ const ExpandibleRow = props => {
     window.open('#' + _url, '_blank')
   }
 
+  const getTag = (tag, item) => {
+    return (
+      <Tooltip title={tag.label} key={tag.id}>
+        <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
+          <div className='flex-vertical-center'>
+            <span>{tag.icon}</span>
+            <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
+          </div>
+        </div>
+      </Tooltip>
+    )
+  }
+
   return (
     <React.Fragment>
       <TableRow
@@ -436,16 +456,9 @@ const ExpandibleRow = props => {
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
               <CircularProgress style={{width: '20px', height: '20px'}} /> :
-              map(resourceDefinition.tags, tag => (
+              map(resourceDefinition.tags, tag => tag.text ? getTag(tag, item) : (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
-                  <Tooltip title={tag.label}>
-                    <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
-                      <div className='flex-vertical-center'>
-                        <span>{tag.icon}</span>
-                        <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
-                      </div>
-                    </div>
-                  </Tooltip>
+                  {getTag(tag, item)}
                 </Link>
               ))
             }
@@ -682,9 +695,9 @@ const ResultsTable = (
               </TableHead>
               <TableBody>
                 {
-                  map(results.items, item => (
+                  map(results.items, (item, index) => (
                     <ExpandibleRow
-                      key={item.uuid || item.id}
+                      key={item.uuid || item.id || index}
                       item={item}
                       resource={resource}
                       resourceDefinition={resourceDefinition}

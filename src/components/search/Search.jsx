@@ -138,6 +138,30 @@ class Search extends React.Component {
     }
   }
 
+  prepareFhirResponseForState(resource, response, resetItems) {
+    const data = response.data
+    const numFound = parseInt(get(data, 'total')) || 0;
+    const numReturned = numFound;
+    let next = find(data.link, {relation: 'next'})
+    if(next === 'null')
+      next = null
+    let previous = find(data.link, {relation: 'prev'})
+    if(previous === 'null')
+      previous = null
+    let items = get(data, 'entry', [])
+    if(this.state.isInfinite && !resetItems)
+      items = [...this.state.results[resource].items, ...items]
+    return {
+      total: numFound,
+      pageCount: numReturned,
+      pageNumber: 1,
+      pages: 1,
+      next: next,
+      prev: previous,
+      items: items,
+    }
+  }
+
   prepareResponseForState(resource, response, resetItems) {
     const numFound = parseInt(get(response, 'headers.num_found', 0))
     const numReturned = parseInt(get(response, 'headers.num_returned', 0))
@@ -165,7 +189,7 @@ class Search extends React.Component {
         isLoading: false,
         results: {
           ...this.state.results,
-          [resource]: this.prepareResponseForState(resource, response, resetItems)
+          [resource]: this.props.fhir ? this.prepareFhirResponseForState(resource, response, resetItems) : this.prepareResponseForState(resource, response, resetItems)
         }
       }, () => {
         if(includes(['sources', 'collections'], resource))
@@ -235,7 +259,7 @@ class Search extends React.Component {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
         includeRetired,
       } = this.state;
-      const { configQueryParams, noQuery } = this.props;
+      const { configQueryParams, noQuery, noHeaders } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
@@ -256,9 +280,10 @@ class Search extends React.Component {
       fetchSearchResults(
         _resource,
         params,
+        !noHeaders,
         this.props.baseURL,
         null,
-        (response) => this.onSearchResultsLoad(resource, response, resetItems)
+        response => this.onSearchResultsLoad(resource, response, resetItems)
       )
       if(counts && !this.props.nested)
         fetchCounts(resource, queryParams, this.onCountsLoad)
@@ -340,7 +365,7 @@ class Search extends React.Component {
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const totalResults = this.getCurrentResourceTotalResults();
-    const { nested, extraControls } = this.props;
+    const { nested, extraControls, fhir } = this.props;
     const {
       updatedSince, limit, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams
@@ -361,7 +386,7 @@ class Search extends React.Component {
           </span>
         }
         {
-          resource !== 'references' &&
+          resource !== 'references' && !fhir &&
           <span>
             <span style={{paddingRight: '4px'}}>
               <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
@@ -380,11 +405,14 @@ class Search extends React.Component {
           </span>
 
         }
-        <span>
-          <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
-        </span>
         {
-          resource !== 'references' &&
+          !fhir &&
+          <span>
+            <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
+          </span>
+        }
+        {
+          resource !== 'references' && !fhir &&
           <span style={{paddingLeft: '4px'}}>
             <LayoutToggle isTable={isTable} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
           </span>

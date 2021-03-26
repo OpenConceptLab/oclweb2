@@ -1,17 +1,17 @@
 import APIService from '../../services/APIService';
 import { without, forEach } from 'lodash';
 
-export const fetchSearchResults = (resource, queryParams, baseURL, beforeCallback, afterCallback) => {
+export const fetchSearchResults = (resource, queryParams, hasHeaders, baseURL, beforeCallback, afterCallback) => {
   if(!resource)
     resource = 'concepts';
 
   if(beforeCallback)
-    beforeCallback(__fetchSearchResults(resource, queryParams, baseURL, afterCallback));
+    beforeCallback(__fetchSearchResults(resource, queryParams, hasHeaders, baseURL, afterCallback));
   else
-    __fetchSearchResults(resource, queryParams, baseURL, afterCallback);
+    __fetchSearchResults(resource, queryParams, hasHeaders, baseURL, afterCallback);
 };
 
-const __fetchSearchResults = (resource, queryParams, baseURL, callback, method='get') => {
+const __fetchSearchResults = (resource, queryParams, hasHeaders, baseURL, callback, method='get') => {
   if(!queryParams)
     queryParams = {};
 
@@ -22,13 +22,17 @@ const __fetchSearchResults = (resource, queryParams, baseURL, callback, method='
   else if(resource)
     service = APIService[resource]();
 
+  let headers = {}
+  if(hasHeaders)
+    headers = {INCLUDEFACETS: true}
+
   if(method === 'get')
     service
-    .get(null, {INCLUDEFACETS: true}, queryParams)
+    .get(null, headers, queryParams)
     .then(response => callback(response, resource));
   if(method === 'head')
     service
-    .head(null, {INCLUDEFACETS: true}, queryParams)
+    .head(null, headers, queryParams)
     .then(response => callback(response, resource));
 };
 
@@ -38,6 +42,6 @@ export const fetchCounts = (excludeResource, queryParams, callback) => {
     queryParams = {};
 
   forEach(resources, resource => {
-    __fetchSearchResults(resource, queryParams, null, callback, 'head')
+    __fetchSearchResults(resource, queryParams, true, null, callback, 'head')
   });
 }

@@ -89,6 +89,16 @@ export const ALL_COLUMNS = {
   ],
   references: [
     {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
+  ],
+  CodeSystem: [
+    {id: 'id', label: 'ID', value: 'resource.id', sortable: false},
+    {id: 'canonicalUrl', label: 'Canonical URL', value: 'resource.canonicalUrl', sortable: false},
+    {id: 'name', label: 'Name', value: 'resource.name', sortable: false},
+    {id: 'version', label: 'Latest Version', value: 'resource.version', sortable: false},
+    {id: 'status', label: 'Status', value: 'resource.status', sortable: false},
+    {id: 'content', label: 'Content', value: 'resource.content', sortable: false},
+    {id: 'releaseDate', label: 'Release Date', value: 'resource.releaseDate', sortable: false},
+    {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortable: false},
   ]
 };
 
@@ -114,6 +124,15 @@ const CONCEPT_CONTAINER_TAGS = [
     label: 'Versions',
     icon: <TreeIcon fontSize='small' style={TAG_ICON_STYLES} />,
     hrefAttr: 'versions_url'
+  },
+]
+const CODE_SYSTEM_TAGS = [
+  {
+    id: 'count',
+    value: 'resource.count',
+    label: 'Concepts',
+    icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
+    text: true
   },
 ]
 const SOURCE_TAG = {
@@ -154,7 +173,8 @@ export const TAGS = {
     },
     SOURCE_TAG,
     COLLECTION_TAG,
-  ]
+  ],
+  CodeSystem: [...CODE_SYSTEM_TAGS],
 }
 export const FACET_ORDER = {
   concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership'],

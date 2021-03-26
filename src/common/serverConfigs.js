@@ -15,13 +15,13 @@ export const SERVER_CONFIGS = [
     id: 3,
     name: 'OCL DEMO',
     type: 'ocl',
-    url: 'https://demo.qa.aws.openconceptlab.org'
+    url: 'https://api.demo.aws.openconceptlab.org'
   },
   {
     id: 4,
     name: 'OCL Staging',
     type: 'ocl',
-    url: 'https://staging.qa.aws.openconceptlab.org'
+    url: 'https://api.staging.aws.openconceptlab.org'
   },
   // {
   //   id: 5,
@@ -34,6 +34,20 @@ export const SERVER_CONFIGS = [
     name: 'FHIR QA',
     type: 'fhir',
     url: 'https://fhir.qa.aws.openconceptlab.org',
+    info: {
+      type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
+      org: {
+        id: 'PEPFAR',
+        name: "The United States President's Emergency Plan for AIDS Relief",
+        logo_url: '/fhir.svg'
+      }
+    }
+  },
+  {
+    id: 7,
+    name: 'FHIR Staging',
+    type: 'fhir',
+    url: 'https://fhir.staging.aws.openconceptlab.org',
     info: {
       type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
       org: {
