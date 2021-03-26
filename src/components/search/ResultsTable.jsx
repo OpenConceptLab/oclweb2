@@ -33,6 +33,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import { ALL_COLUMNS, TAGS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
+import CodeSystem from '../fhir/CodeSystem';
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -95,6 +96,8 @@ const RESOURCE_DEFINITIONS = {
     columns: ALL_COLUMNS.CodeSystem.slice(0, 8),
     tagWaitAttribute: 'resource',
     tags: TAGS.CodeSystem,
+    expandible: true,
+    tabs: ['Details', 'Copyright'],
   }
 }
 
@@ -230,6 +233,7 @@ const ExpandibleRow = props => {
   const [tab, setTab] = React.useState(0);
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
+  const isCodeSystem = resource === 'CodeSystem';
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
@@ -515,6 +519,18 @@ const ExpandibleRow = props => {
                     tab === resourceDefinition.tabs.indexOf('Descriptions') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       <LocalesTable locales={descriptions} isDescription />
+                    </div>
+                  }
+                  {
+                    isCodeSystem && tab === resourceDefinition.tabs.indexOf('Copyright') &&
+                    <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                      <div className="col-md-12" style={{padding: '20px'}} dangerouslySetInnerHTML={{__html: item.resource.copyright}} />
+                    </div>
+                  }
+                  {
+                    isCodeSystem && tab === resourceDefinition.tabs.indexOf('Details') &&
+                    <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
+                      <CodeSystem {...item} style={{padding: '20px'}} />
                     </div>
                   }
                   {
