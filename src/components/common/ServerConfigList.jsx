@@ -10,7 +10,7 @@ import { get, map } from 'lodash';
 import { SERVER_CONFIGS } from '../../common/serverConfigs';
 import { getAppliedServerConfig, isServerSwitched } from '../../common/utils';
 
-const ServerConfigList = () => {
+const ServerConfigList = ({ onClose }) => {
   const selectedConfig = getAppliedServerConfig();
 
   const onChange = (event, config) => {
@@ -22,13 +22,14 @@ const ServerConfigList = () => {
     if(!isServerSwitched())
       localStorage.removeItem('server')
 
+    onClose();
+
     alertifyjs.success('Switching Server! This might take few seconds...', 2, () => {
       const isOCLServer = config.type === 'ocl';
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.hash = isOCLServer ? '#/' : '#/fhir'
-      if(isOCLServer)
-        window.location.reload()
+      window.location.reload()
     })
   }
 

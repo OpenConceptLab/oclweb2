@@ -35,7 +35,7 @@ const ServerConfigsChip = props => {
       {
         open &&
         <Menu open={open} anchorEl={anchorRef.current} onClose={() => setOpen(false)} style={{marginTop: '35px'}}>
-          <ServerConfigList />
+          <ServerConfigList onClose={() => setOpen(false)} />
         </Menu>
       }
     </React.Fragment>
