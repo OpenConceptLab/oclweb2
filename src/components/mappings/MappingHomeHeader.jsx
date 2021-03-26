@@ -9,7 +9,7 @@ import {
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
-import { currentUserHasAccess, copyURL, toFullAPIURL } from '../../common/utils';
+import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
@@ -20,6 +20,7 @@ import ExternalIdLabel from '../common/ExternalIdLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
+import AddToCollection from '../common/AddToCollection';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
@@ -29,7 +30,6 @@ const LABEL_STYLES = {
   textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
 };
 
-
 const MappingHomeHeader = ({
   mapping, isVersionedObject, versionedObjectURL, currentURL
 }) => {
@@ -38,7 +38,8 @@ const MappingHomeHeader = ({
                            `mapping-${mapping.id}-version-${mapping.version}`;
   const isRetired = mapping.retired;
   const hasAccess = currentUserHasAccess();
-
+  const isAuthenticated = isLoggedIn();
+  const resourceRelativeURL = isVersionedObject ? mapping.url : mapping.version_url;
   const [mappingForm, setMappingForm] = React.useState(false);
   const onRetire = () => {
     const prompt = alertifyjs.prompt()
@@ -137,6 +138,13 @@ const MappingHomeHeader = ({
                       </Button>
                     </Tooltip>
                   )
+                }
+                {
+                  isAuthenticated &&
+                  <AddToCollection
+                    references={[{...mapping, url: resourceRelativeURL}]}
+                    iconButton
+                  />
                 }
                 <DownloadButton resource={mapping} filename={downloadFileName} />
               </ButtonGroup>
