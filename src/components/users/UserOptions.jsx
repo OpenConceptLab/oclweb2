@@ -119,7 +119,7 @@ const UserOptions = () => {
                     </Tooltip>
                   }
                   <Collapse in={serverOpen}>
-                    <ServerConfigList onClose={() => setServerOpen(false)}/>
+                    <ServerConfigList onClose={() => setOpen(false)}/>
                   </Collapse>
                   <Divider />
                   <ListItem style={{display: 'flex', justifyContent: 'center', padding: '16px'}}>
