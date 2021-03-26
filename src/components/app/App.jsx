@@ -27,7 +27,7 @@ const App = props => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const setupGA = () => {
     /*eslint no-undef: 0*/
-    ReactGA.initialize(process.env.GA_ACCOUNT_ID);
+    ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
     ReactGA.pageview(window.location.pathname + window.location.hash);
   }
 

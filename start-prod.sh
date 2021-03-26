@@ -11,6 +11,12 @@ touch ${ENV_FILE}
 if [[ ! -z "${API_URL}" ]]; then
     echo "var API_URL = \"${API_URL}\";" >> ${ENV_FILE}
 fi
+if [[ ! -z "${GA_ACCOUNT_ID}" ]]; then
+    echo "var GA_ACCOUNT_ID = \"${GA_ACCOUNT_ID}\";" >> ${ENV_FILE}
+fi
+if [[ ! -z "${RECAPTCHA_SITE_KEY}" ]]; then
+    echo "var RECAPTCHA_SITE_KEY = \"${RECAPTCHA_SITE_KEY}\";" >> ${ENV_FILE}
+fi
 
 echo "Adjusting nginx configuration"
 envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
