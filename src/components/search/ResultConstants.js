@@ -92,12 +92,12 @@ export const ALL_COLUMNS = {
   ],
   CodeSystem: [
     {id: 'id', label: 'ID', value: 'resource.id', sortable: false},
-    {id: 'canonicalUrl', label: 'Canonical URL', value: 'resource.canonicalUrl', sortable: false},
+    {id: 'url', label: 'Canonical URL', value: 'resource.url', sortable: false},
     {id: 'name', label: 'Name', value: 'resource.name', sortable: false},
     {id: 'version', label: 'Latest Version', value: 'resource.version', sortable: false},
     {id: 'status', label: 'Status', value: 'resource.status', sortable: false},
     {id: 'content', label: 'Content', value: 'resource.content', sortable: false},
-    {id: 'releaseDate', label: 'Release Date', value: 'resource.releaseDate', sortable: false},
+    {id: 'date', label: 'Release Date', value: 'resource.date', sortable: false},
     {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortable: false},
   ]
 };

@@ -140,8 +140,6 @@ class Search extends React.Component {
 
   prepareFhirResponseForState(resource, response, resetItems) {
     const data = response.data
-    const numFound = parseInt(get(data, 'total')) || 0;
-    const numReturned = numFound;
     let next = find(data.link, {relation: 'next'})
     if(next === 'null')
       next = null
@@ -151,6 +149,8 @@ class Search extends React.Component {
     let items = get(data, 'entry', [])
     if(this.state.isInfinite && !resetItems)
       items = [...this.state.results[resource].items, ...items]
+    const numFound = parseInt(get(data, 'total')) || get(items, 'length') || 0;
+    const numReturned = numFound;
     return {
       total: numFound,
       pageCount: numReturned,

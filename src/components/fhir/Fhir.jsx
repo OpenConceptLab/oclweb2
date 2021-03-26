@@ -38,7 +38,7 @@ class Fhir extends React.Component {
         <OrgHomeHeader
           fhir
           org={org}
-          url='/fhir'
+          url={info.baseURI}
           extraComponents={
             <React.Fragment>
               <HeaderAttribute label="Base URL" type='url' value={url} gridClass="col-md-12" />
@@ -54,7 +54,7 @@ class Fhir extends React.Component {
             org={org}
             location={this.props.location}
             match={this.props.match}
-            url='/fhir/'
+            url={info.baseURI}
             selectedConfig={DEFAULT_CONFIG}
           />
         }
