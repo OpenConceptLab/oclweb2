@@ -8,10 +8,11 @@ import {
 } from '@material-ui/icons';
 import { get, map } from 'lodash';
 import { SERVER_CONFIGS } from '../../common/serverConfigs';
-import { getAppliedServerConfig, isServerSwitched } from '../../common/utils';
+import { getAppliedServerConfig, getDefaultServerConfig,  isServerSwitched } from '../../common/utils';
 
 const ServerConfigList = ({ onClose }) => {
   const selectedConfig = getAppliedServerConfig();
+  const defaultConfig = getDefaultServerConfig();
 
   const onChange = (event, config) => {
     event.preventDefault();
@@ -38,12 +39,26 @@ const ServerConfigList = ({ onClose }) => {
       {
         map(SERVER_CONFIGS, config => {
           const selected = get(selectedConfig, 'url') === config.url;
+          const isDefault = config.url === defaultConfig.url;
           return (
             <ListItem disabled={config.disabled} selected={selected} className='btn' button key={config.id} onClick={event => onChange(event, config)} style={{cursor: config.disabled ? 'not-allowed' : 'pointer'}}>
               <ListItemIcon style={{minWidth: 'auto', marginRight: '15px', width: '22px', height: '22px'}}>
                 <img src={config.type === 'ocl' ? '/favicon.ico' : '/fhir.svg'} />
               </ListItemIcon>
-              <ListItemText primary={config.name} secondary={config.url}/>
+              <ListItemText primary={
+                <span>
+                  <span>
+                    {config.name}
+                  </span>
+                  {
+                    isDefault &&
+                    <span style={{fontStyle: 'italic', marginLeft: '5px'}}>
+                    (default)
+                    </span>
+                  }
+                </span>
+              }
+                            secondary={config.url}/>
               {selected && <CheckIcon />}
             </ListItem>
           )

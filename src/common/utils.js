@@ -401,4 +401,9 @@ export const isServerSwitched = () => {
   return selectedConfig && selectedConfig.url !== (window.API_URL || process.env.API_URL);
 };
 
+export const getDefaultServerConfig = () => {
+  const APIURL = window.API_URL || process.env.API_URL;
+  return find(SERVER_CONFIGS, {url: APIURL});
+}
+
 export const canSwitchServer = () => Boolean(getSelectedServerConfig() || get(getCurrentUser(), 'is_staff'));
