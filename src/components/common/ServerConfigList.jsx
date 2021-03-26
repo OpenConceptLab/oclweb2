@@ -17,6 +17,10 @@ const ServerConfigList = ({ onClose }) => {
   const onChange = (event, config) => {
     event.preventDefault();
     event.stopPropagation();
+    if(get(selectedConfig, 'url') === config.url){
+      onClose();
+      return;
+    }
 
     localStorage.setItem('server', JSON.stringify(config));
 
