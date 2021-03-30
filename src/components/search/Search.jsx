@@ -18,7 +18,6 @@ import FilterDrawer from '../common/FilterDrawer';
 import Results from './Results';
 import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
-import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
 import SearchByAttributeInput from './SearchByAttributeInput';
@@ -229,11 +228,6 @@ class Search extends React.Component {
 
   onFhirSearch = params => this.setState({fhirParams: params}, this.fetchNewResults)
 
-  getCurrentResourceTotalResults() {
-    const { resource, results } = this.state
-    return get(results, `${resource}.total`, 0)
-  }
-
   getFacetQueryParam() {
     const { appliedFacets, viewFilters } = this.state;
     const queryParam = {}
@@ -373,7 +367,6 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const totalResults = this.getCurrentResourceTotalResults();
     const { nested, extraControls, fhir } = this.props;
     const {
       updatedSince, limit, appliedFacets, resource, includeRetired, isTable, isInfinite,
@@ -413,12 +406,6 @@ class Search extends React.Component {
             }
           </span>
 
-        }
-        {
-          !fhir &&
-          <span>
-            <ResultsCountDropDown onChange={this.onLimitChange} defaultLimit={limit} total={totalResults} size={nested ? 'small' : 'medium'} />
-          </span>
         }
         {
           resource !== 'references' && !fhir &&
@@ -495,7 +482,7 @@ class Search extends React.Component {
           </div>
           <div className='col-sm-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
             <span style={{margin: '0 20px', marginTop: '-4px'}}>
-              <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} />
+              <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} />
             </span>
             <span>
               {
