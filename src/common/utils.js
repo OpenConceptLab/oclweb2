@@ -25,12 +25,12 @@ export const formatWebsiteLink = (value, style) => {
       href = 'https://' + href;
 
     return (
-      <a
-        target='_blank'
-        rel="noopener noreferrer"
-        href={href}
-        className="ellipsis-text"
-        style={merge({maxWidth: '100px'}, (style || {}))}>
+        <a
+      target='_blank'
+      rel="noopener noreferrer"
+      href={href}
+      className="ellipsis-text"
+      style={merge({maxWidth: '100px'}, (style || {}))}>
         {value.trim()}
       </a>
     );
@@ -160,8 +160,8 @@ export const isAdminUser = () => {
 export const toObjectArray = obj => isEmpty(obj) ? [] : map(keys(obj), k => pick(obj, k));
 
 export const sortObjectBy = (obj, comparator) => {
-    const _keys = sortBy(keys(obj), key => comparator ? comparator(obj[key], key) : key);
-    return zipObject(_keys, map(_keys, key => obj[key]));
+  const _keys = sortBy(keys(obj), key => comparator ? comparator(obj[key], key) : key);
+  return zipObject(_keys, map(_keys, key => obj[key]));
 }
 
 export const arrayToObject = arr => {
@@ -285,33 +285,33 @@ export const formatByteSize = bytes => {
 
 
 export const memorySizeOf = (obj, format=true) => {
-    var bytes = 0;
+  var bytes = 0;
 
-    const sizeOf = obj => {
-        if(obj !== null && obj !== undefined) {
-            switch(typeof obj) {
-            case 'number':
-                bytes += 8;
-                break;
-            case 'string':
-                bytes += obj.length * 2;
-                break;
-            case 'boolean':
-                bytes += 4;
-                break;
-            case 'object':
-                var objClass = Object.prototype.toString.call(obj).slice(8, -1);
-                if(objClass === 'Object' || objClass === 'Array') {
-                    for(var key in obj) {
-                        if(!obj.hasOwnProperty(key)) continue;
-                        sizeOf(obj[key]);
-                    }
-                } else bytes += obj.toString().length * 2;
-                break;
-            }
-        }
-        return bytes;
-    };
+  const sizeOf = obj => {
+    if(obj !== null && obj !== undefined) {
+      switch(typeof obj) {
+      case 'number':
+        bytes += 8;
+        break;
+      case 'string':
+        bytes += obj.length * 2;
+        break;
+      case 'boolean':
+        bytes += 4;
+        break;
+      case 'object':
+        var objClass = Object.prototype.toString.call(obj).slice(8, -1);
+        if(objClass === 'Object' || objClass === 'Array') {
+          for(var key in obj) {
+            if(!obj.hasOwnProperty(key)) continue;
+            sizeOf(obj[key]);
+          }
+        } else bytes += obj.toString().length * 2;
+        break;
+      }
+    }
+    return bytes;
+  };
 
 
   const byteSize = sizeOf(obj);
@@ -407,3 +407,5 @@ export const getDefaultServerConfig = () => {
 }
 
 export const canSwitchServer = () => Boolean(getSelectedServerConfig() || get(getCurrentUser(), 'is_staff'));
+
+export const isFHIRServer = () => get(getAppliedServerConfig(), 'type') === 'fhir';
