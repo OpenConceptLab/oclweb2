@@ -116,7 +116,7 @@ class ConceptContainerForm extends React.Component {
     jsonAttrs.forEach(attr => this.setJSONValue(resource, newState, attr))
     newState.fields.supported_locales = isArray(resource.supported_locales) ? resource.supported_locales.join(',') : resource.supported_locales;
 
-    newState.custom_validation_schema = get(resource, 'custom_validation_schema') || 'None';
+    newState.fields.custom_validation_schema = get(resource, 'custom_validation_schema') || 'None';
     newState.fields[typeAttr] = get(resource, typeAttr, '') || '';
     newState[`selected_${typeAttr}`] = {id: resource[typeAttr], name: resource[typeAttr]}
     newState.selected_default_locale = {id: resource.default_locale, name: resource.default_locale}
