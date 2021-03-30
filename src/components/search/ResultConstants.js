@@ -97,7 +97,7 @@ export const ALL_COLUMNS = {
     {id: 'version', label: 'Latest Version', value: 'resource.version', sortable: false},
     {id: 'status', label: 'Status', value: 'resource.status', sortable: false},
     {id: 'content', label: 'Content', value: 'resource.content', sortable: false},
-    {id: 'date', label: 'Release Date', value: 'resource.date', sortable: false},
+    {id: 'date', label: 'Release Date', value: 'resource.date', sortable: false, formatter: formatDate},
     {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortable: false},
   ]
 };
