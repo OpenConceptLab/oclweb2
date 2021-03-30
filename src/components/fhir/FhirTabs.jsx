@@ -29,6 +29,7 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url 
           noHeaders
           nested
           fhir
+          staticParams={{_total: 'accurate', _summary: true}}
         />
       </div>
     </div>

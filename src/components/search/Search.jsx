@@ -21,6 +21,7 @@ import SortButton from './SortButton';
 import ResultsCountDropDown from '../common/ResultsCountDropDown';
 import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
+import SearchByAttributeInput from './SearchByAttributeInput';
 import ResourcesHorizontal from './ResourcesHorizontal';
 import ResourceTabs from './ResourceTabs';
 //import Resources from './Resources';
@@ -59,6 +60,8 @@ class Search extends React.Component {
       openFacetsDrawer: false,
       appliedFacets: {},
       viewFilters: {},
+      fhirParams: {},
+      staticParams: {},
       includeRetired: false,
       results: {
         concepts: cloneDeep(resourceResultStruct),
@@ -102,6 +105,8 @@ class Search extends React.Component {
       limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
       viewFilters: this.props.viewFilters || {},
       sortParams: get(fixedFilters, 'sortParams') || this.state.sortParams,
+      fhirParams: this.props.fhirParams || {},
+      staticParams: this.props.staticParams || {},
     }, this.fetchNewResults)
   }
 
@@ -222,6 +227,8 @@ class Search extends React.Component {
     this.fetchNewResults({searchStr: value, page: 1, exactMatch: exactMatch}, true, true)
   }
 
+  onFhirSearch = params => this.setState({fhirParams: params}, this.fetchNewResults)
+
   getCurrentResourceTotalResults() {
     const { resource, results } = this.state
     return get(results, `${resource}.total`, 0)
@@ -257,9 +264,9 @@ class Search extends React.Component {
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
-        includeRetired,
+        includeRetired, fhirParams, staticParams
       } = this.state;
-      const { configQueryParams, noQuery, noHeaders } = this.props;
+      const { configQueryParams, noQuery, noHeaders, fhir } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
@@ -274,9 +281,11 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
-      let params = {}
+      let params = {...staticParams}
       if(!noQuery)
-        params = {...queryParams, ...sortParams, ...(configQueryParams || {})}
+        params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
+      if(fhir)
+        params = {...params, ...fhirParams}
       fetchSearchResults(
         _resource,
         params,
@@ -455,7 +464,7 @@ class Search extends React.Component {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
-      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls
+      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -470,12 +479,19 @@ class Search extends React.Component {
       <div className='col-sm-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
           <div className='col-sm-9 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
-            <SearchInput
-              {...this.props}
-              onSearch={this.onSearch}
-              exactMatchOnNewLine
-              moreControls={!noFilters && this.getFilterControls()}
-            />
+            {
+              fhir ?
+              <SearchByAttributeInput
+                {...this.props}
+                onSearch={this.onFhirSearch}
+              /> :
+              <SearchInput
+                {...this.props}
+                onSearch={this.onSearch}
+                exactMatchOnNewLine
+                moreControls={!noFilters && this.getFilterControls()}
+              />
+            }
           </div>
           <div className='col-sm-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
             <span style={{margin: '0 20px', marginTop: '-4px'}}>
