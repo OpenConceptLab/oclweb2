@@ -153,13 +153,17 @@ class Search extends React.Component {
     let items = get(data, 'entry', [])
     if(this.state.isInfinite && !resetItems)
       items = [...this.state.results[resource].items, ...items]
-    const numFound = parseInt(get(data, 'total')) || get(items, 'length') || 0;
-    const numReturned = numFound;
+    const numFound = parseInt(get(data, 'total')) || get(items, 'length') || 0; //1000
+    const numReturned = parseInt(get(items, 'length')) || 0; //10
+    const pageOffset = get(this.state.fhirParams, '_getpagesoffset') || 0; //10
+    const limit = this.state.limit || DEFAULT_LIMIT; //10
+    const pages = Math.ceil(numFound / limit) // 100
+    const pageNumber = pageOffset ? ((pageOffset/limit) + 1) : 1
     return {
       total: numFound,
       pageCount: numReturned,
-      pageNumber: 1,
-      pages: 1,
+      pageNumber: pageNumber,
+      pages: pages,
       next: next,
       prev: previous,
       items: items,
@@ -298,8 +302,19 @@ class Search extends React.Component {
   }
 
   onPageChange = page => {
-    if(page !== this.state.page)
-      this.fetchNewResults({page: page}, false, false)
+    if(page !== this.state.page) {
+      if(this.props.fhir)
+        this.setState({
+          page: page,
+          fhirParams: {
+            ...this.state.fhirParams,
+            _getpagesoffset: ((parseInt(page) - 1) * this.state.limit)
+          }
+        }, () => this.fetchNewResults(null, false, false))
+      else
+        this.fetchNewResults({page: page}, false, false)
+
+    }
   }
 
   onSortChange = params => {
@@ -432,7 +447,10 @@ class Search extends React.Component {
   }
 
   onLimitChange = limit => {
-    this.fetchNewResults({limit: limit}, false, true)
+    if(this.props.fhir)
+      this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false))
+    else
+      this.fetchNewResults({limit: limit}, false, true)
   }
 
   toggleFacetsDrawer = () => {

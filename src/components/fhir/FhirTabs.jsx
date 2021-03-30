@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { map } from 'lodash';
 import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
+import { DEFAULT_LIMIT } from '../../common/constants';
 
 
 const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url  }) => {
@@ -29,6 +30,7 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url 
           noHeaders
           nested
           fhir
+          fhirParams={{_getpagesoffset: 0, _count: DEFAULT_LIMIT, _sort: '_id'}}
           staticParams={{_total: 'accurate', _summary: true}}
         />
       </div>
