@@ -91,14 +91,14 @@ export const ALL_COLUMNS = {
     {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
   ],
   CodeSystem: [
-    {id: 'id', label: 'ID', value: 'resource.id', sortable: false},
+    {id: '_id', label: 'ID', value: 'resource.id', sortOn: '_id', sortBy: 'asc'},
     {id: 'url', label: 'Canonical URL', value: 'resource.url', sortable: false},
-    {id: 'name', label: 'Name', value: 'resource.name', sortable: false},
-    {id: 'version', label: 'Latest Version', value: 'resource.version', sortable: false},
-    {id: 'status', label: 'Status', value: 'resource.status', sortable: false},
-    {id: 'content', label: 'Content', value: 'resource.content', sortable: false},
-    {id: 'date', label: 'Release Date', value: 'resource.date', sortable: false, formatter: formatDate},
-    {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortable: false},
+    {id: 'name', label: 'Name', value: 'resource.name', sortOn: 'name', sortBy: 'asc'},
+    {id: 'version', label: 'Latest Version', value: 'resource.version', sortOn: 'version', sortBy: 'asc'},
+    {id: 'status', label: 'Status', value: 'resource.status', sortOn: 'status', sortBy: 'asc'},
+    {id: 'content', label: 'Content', value: 'resource.content', sortOn: 'content', sortBy: 'asc'},
+    {id: 'date', label: 'Release Date', value: 'resource.date', sortOn: 'date', formatter: formatDate},
+    {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortOn: 'publisher', sortBy: 'asc'},
   ]
 };
 

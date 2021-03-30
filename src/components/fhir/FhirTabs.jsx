@@ -25,13 +25,24 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url 
           resource={selectedTabConfig.type}
           viewFilters={selectedTabConfig.filters}
           viewFields={selectedTabConfig.fields}
-          fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list' }}
+          fixedFilters={{
+            limit: selectedTabConfig.page_size,
+            isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list',
+            sortParams: {sortAsc: '_id'}
+          }}
+          fhirParams={{
+            _getpagesoffset: 0,
+            _count: DEFAULT_LIMIT,
+            _sort: '_id'
+          }}
+          staticParams={{
+            _total: 'accurate',
+            _summary: true
+          }}
           noQuery
           noHeaders
           nested
           fhir
-          fhirParams={{_getpagesoffset: 0, _count: DEFAULT_LIMIT, _sort: '_id'}}
-          staticParams={{_total: 'accurate', _summary: true}}
         />
       </div>
     </div>

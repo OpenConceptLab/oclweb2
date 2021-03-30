@@ -318,7 +318,15 @@ class Search extends React.Component {
   }
 
   onSortChange = params => {
-    this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true))
+    if(this.props.fhir) {
+      const _sort = params.sortAsc ? params.sortAsc : '-' + params.sortDesc;
+      this.setState({
+        sortParams: params,
+        fhirParams: {...this.state.fhirParams, _sort: _sort}
+      }, () => this.fetchNewResults(null, false, true))
+    }
+    else
+      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true))
   }
 
   hasPrev() {
@@ -384,7 +392,7 @@ class Search extends React.Component {
     const updatedSinceText = this.getUpdatedSinceText();
     const { nested, extraControls, fhir } = this.props;
     const {
-      updatedSince, limit, appliedFacets, resource, includeRetired, isTable, isInfinite,
+      updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);

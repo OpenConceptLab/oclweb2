@@ -23,7 +23,7 @@ class SearchByAttributeInput extends React.Component {
     this.state = {
       input: '',
       attrs: FHIR_ATTRIBUTES,
-      selectedAttribute: null,
+      selectedAttribute: DEFAULT_FHIR_ATTRIBUTE,
       anchorEl: null,
     }
   }
@@ -37,7 +37,7 @@ class SearchByAttributeInput extends React.Component {
     this.props.onSearch(params)
   }
 
-  clearSearch = () => this.setState({input: '', selectedAttribute: null, anchorEl: null}, this.performSearch)
+  clearSearch = () => this.setState({input: '', anchorEl: null}, this.performSearch)
 
   handleInputChange = event => this.setState({input: event.target.value || ''})
 
