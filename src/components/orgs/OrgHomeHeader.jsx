@@ -5,7 +5,7 @@ import {
   Edit as EditIcon,
 } from '@material-ui/icons';
 import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
-import { includes, isEmpty, get } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -14,7 +14,7 @@ import ExternalIdLabel from '../common/ExternalIdLabel';
 import LocationLabel from '../common/LocationLabel';
 import LinkLabel from '../common/LinkLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
-import PublicAccessChip from '../common/PublicAccessChip';
+import AccessChip from '../common/AccessChip';
 import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -76,10 +76,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
             <span style={{marginRight: '10px'}}>
               {org.name}
             </span>
-            {
-              includes(['view', 'edit'], get(org, 'public_access', '').toLowerCase()) &&
-              <PublicAccessChip publicAccess={org.public_access} />
-            }
+            <AccessChip publicAccess={org.public_access} />
           </div>
           {
             org.description &&

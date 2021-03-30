@@ -7,7 +7,7 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
-import { includes, isEmpty, keys, map, startCase, get } from 'lodash';
+import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
@@ -17,7 +17,7 @@ import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
-import PublicAccessChip from '../common/PublicAccessChip';
+import AccessChip from '../common/AccessChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
@@ -141,10 +141,7 @@ const SourceHomeHeader = ({
             <span style={{marginRight: '10px'}}>
               {source.full_name}
             </span>
-            {
-              includes(['view', 'edit'], source.public_access.toLowerCase()) &&
-              <PublicAccessChip publicAccess={source.public_access} />
-            }
+            <AccessChip publicAccess={source.public_access} />
           </div>
           {
             source.description &&
