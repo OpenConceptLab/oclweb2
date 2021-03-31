@@ -7,7 +7,7 @@ import { Tooltip, Chip } from '@material-ui/core';
 import { startCase, includes } from 'lodash';
 
 const AccessChip = props => {
-  const publicAccess = props.public_access || props.publicAccess;
+  const publicAccess = props.public_access || props.publicAccess || '';
   const isPublic = includes(['view', 'edit'], publicAccess.toLowerCase())
   const label = isPublic ? 'Public' : 'Private';
   const title = isPublic ? `Public Access: ${startCase(publicAccess)}` : 'Private';
