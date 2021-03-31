@@ -93,7 +93,7 @@ export const ALL_COLUMNS = {
   CodeSystem: [
     {id: '_id', label: 'ID', value: 'resource.id', sortOn: '_id', sortBy: 'asc'},
     {id: 'url', label: 'Canonical URL', value: 'resource.url', sortable: false},
-    {id: 'name', label: 'Name', value: 'resource.name', sortOn: 'name', sortBy: 'asc'},
+    {id: 'name', label: 'Name', value: 'resource.name', renderer: codeSystem => <span className={codeSystem.resource.status}>{codeSystem.resource.name}</span>, sortOn: 'name', sortBy: 'asc'},
     {id: 'version', label: 'Latest Version', value: 'resource.version', sortOn: 'version', sortBy: 'asc'},
     {id: 'status', label: 'Status', value: 'resource.status', sortOn: 'status', sortBy: 'asc'},
     {id: 'content', label: 'Content', value: 'resource.content', sortOn: 'content', sortBy: 'asc'},
