@@ -297,7 +297,7 @@ class Search extends React.Component {
         response => this.onSearchResultsLoad(resource, response, resetItems)
       )
       if(counts && !this.props.nested)
-        fetchCounts(resource, queryParams, this.onCountsLoad)
+        fetchCounts(_resource, queryParams, this.onCountsLoad)
     })
   }
 
