@@ -76,7 +76,10 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
             <span style={{marginRight: '10px'}}>
               {org.name}
             </span>
-            <AccessChip publicAccess={org.public_access} />
+            {
+              !fhir &&
+              <AccessChip publicAccess={org.public_access} />
+            }
           </div>
           {
             org.description &&
