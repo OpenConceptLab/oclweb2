@@ -5,10 +5,9 @@ import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
 
-const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url  }) => {
+const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit  , hapi}) => {
   const tabConfigs = selectedConfig.config.tabs;
   const selectedTabConfig = tabConfigs[tab];
-
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="fhir-home-tabs" classes={{indicator: 'hidden'}}>
@@ -26,13 +25,13 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url 
           viewFilters={selectedTabConfig.filters}
           viewFields={selectedTabConfig.fields}
           fixedFilters={{
-            limit: selectedTabConfig.page_size,
+            limit: selectedTabConfig.page_size || limit || DEFAULT_LIMIT,
             isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list',
             sortParams: {sortAsc: '_id'}
           }}
           fhirParams={{
             _getpagesoffset: 0,
-            _count: DEFAULT_LIMIT,
+            _count: limit || DEFAULT_LIMIT,
             _sort: '_id'
           }}
           staticParams={{
@@ -43,6 +42,7 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url 
           noHeaders
           nested
           fhir
+          hapi={hapi}
         />
       </div>
     </div>

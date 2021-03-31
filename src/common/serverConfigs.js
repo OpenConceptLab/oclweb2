@@ -50,6 +50,7 @@ export const SERVER_CONFIGS = [
     type: 'fhir',
     url: 'https://fhir.staging.aws.openconceptlab.org',
     info: {
+      pageSize: 10,
       baseURI: '/fhir/',
       type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
       org: {
@@ -63,6 +64,7 @@ export const SERVER_CONFIGS = [
     id: 8,
     name: 'HAPI FHIR',
     type: 'fhir',
+    hapi: true,
     url: 'https://hapi.fhir.org',
     info: {
       baseURI: '/baseR4/',

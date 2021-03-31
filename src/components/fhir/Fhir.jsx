@@ -11,8 +11,7 @@ const DEFAULT_CONFIG = {
   config: {
     tabs: [
       {
-        type: "CodeSystem", label: "Code Systems", page_size: 25,
-        "default": true, layout: 'table'
+        type: "CodeSystem", label: "Code Systems", "default": true, layout: 'table'
       },
     ]
   }
@@ -31,8 +30,8 @@ class Fhir extends React.Component {
 
   render() {
     const { tab } = this.state;
-    const { info, url } = this.serverConfig;
-    const { org } = info;
+    const { info, url, hapi } = this.serverConfig;
+    const { org, pageSize } = info;
     return (
       <div className='col-md-12 home-container no-side-padding'>
         <OrgHomeHeader
@@ -56,6 +55,8 @@ class Fhir extends React.Component {
             match={this.props.match}
             url={info.baseURI}
             selectedConfig={DEFAULT_CONFIG}
+            limit={pageSize}
+            hapi={hapi}
           />
         }
       </div>

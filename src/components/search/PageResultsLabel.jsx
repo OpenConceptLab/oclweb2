@@ -10,7 +10,7 @@ const OPTIONS = [
   {id: '100', count: 100},
 ]
 
-const PageResultsLabel = ({ results, limit, isInfinite, onChange }) => {
+const PageResultsLabel = ({ results, limit, isInfinite, onChange, disabled }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const getPageRange = () => {
     const total = get(results, 'total', 0)
@@ -42,10 +42,10 @@ const PageResultsLabel = ({ results, limit, isInfinite, onChange }) => {
   return (
     <React.Fragment>
       <Chip
+        disabled={disabled}
         id='results-chip'
         onMouseOver={event => setAnchorEl(event.currentTarget)}
         onMouseOut={() => setAnchorEl(null)}
-        style={{border: 'none'}}
         variant='outlined'
         onClick={event => setAnchorEl(event.currentTarget)}
         label={

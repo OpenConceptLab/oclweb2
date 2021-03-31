@@ -147,7 +147,7 @@ class Search extends React.Component {
     let next = find(data.link, {relation: 'next'})
     if(next === 'null')
       next = null
-    let previous = find(data.link, {relation: 'prev'})
+    let previous = find(data.link, {relation: 'prev'}) || find(data.link, {relation: 'previous'})
     if(previous === 'null')
       previous = null
     let items = get(data, 'entry', [])
@@ -264,7 +264,7 @@ class Search extends React.Component {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
         includeRetired, fhirParams, staticParams
       } = this.state;
-      const { configQueryParams, noQuery, noHeaders, fhir } = this.props;
+      const { configQueryParams, noQuery, noHeaders, fhir, hapi } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
@@ -282,8 +282,12 @@ class Search extends React.Component {
       let params = {...staticParams}
       if(!noQuery)
         params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
-      if(fhir)
-        params = {...params, ...fhirParams}
+      if(fhir) {
+        if(hapi)
+          params = {...params, ...fhirParams}
+        else
+          params = {...params, page: page, _sort: fhirParams._sort}
+      }
       fetchSearchResults(
         _resource,
         params,
@@ -331,12 +335,20 @@ class Search extends React.Component {
 
   hasPrev() {
     const { resource, results } = this.state;
-    return Boolean(get(results, `${resource}.prev`))
+    const { fhir } = this.props;
+    const prev = get(results, `${resource}.prev`);
+    return fhir ?
+           (get(prev, 'url') && Boolean(get(prev, 'url') !== 'null')) :
+           Boolean(prev);
   }
 
   hasNext() {
     const { resource, results } = this.state;
-    return Boolean(get(results, `${resource}.next`))
+    const { fhir } = this.props;
+    const next = get(results, `${resource}.next`);
+    return fhir ?
+           (get(next, 'url') && Boolean(get(next, 'url') !== 'null')) :
+           Boolean(next);
   }
 
   onPageNavButtonClick = isNext => {
@@ -477,7 +489,7 @@ class Search extends React.Component {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
-      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir
+      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -508,7 +520,7 @@ class Search extends React.Component {
           </div>
           <div className='col-sm-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
             <span style={{margin: '0 20px', marginTop: '-4px'}}>
-              <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} />
+              <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} disabled={fhir && !hapi} />
             </span>
             <span>
               {
