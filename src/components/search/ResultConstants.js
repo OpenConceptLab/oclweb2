@@ -135,6 +135,9 @@ const CODE_SYSTEM_TAGS = [
     text: true
   },
 ]
+
+export const CODE_SYSTEM_VERSION_TAGS = [...CODE_SYSTEM_TAGS]
+
 const SOURCE_TAG = {
   id: 'sources',
   value: 'public_sources',

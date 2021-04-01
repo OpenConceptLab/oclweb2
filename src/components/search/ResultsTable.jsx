@@ -31,7 +31,7 @@ import PinIcon from '../common/PinIcon';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
-import { ALL_COLUMNS, TAGS } from './ResultConstants'
+import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
 import CodeSystem from '../fhir/CodeSystem';
 
@@ -97,7 +97,7 @@ const RESOURCE_DEFINITIONS = {
     tagWaitAttribute: 'resource',
     tags: TAGS.CodeSystem,
     expandible: true,
-    tabs: ['Details', 'Copyright'],
+    tabs: ['Details', 'Versions', 'Copyright'],
   }
 }
 
@@ -109,6 +109,58 @@ const getValue = (item, column) => {
     return column.renderer(item)
   return value
 }
+
+const getTag = (tag, item) => {
+  return (
+    <Tooltip title={tag.label} key={tag.id}>
+      <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
+        <div className='flex-vertical-center'>
+          <span>{tag.icon}</span>
+          <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
+        </div>
+      </div>
+    </Tooltip>
+  )
+}
+
+const HAPIFHIRHistoryTable = ({ versions }) => (
+  <Table size="small" aria-label="versions">
+    <TableHead>
+      <TableRow>
+        <TableCell align='center'>Version</TableCell>
+        <TableCell align='left'>Status</TableCell>
+        <TableCell align='left'>Content</TableCell>
+        <TableCell align='left'>Release Date</TableCell>
+        <TableCell />
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {
+        map(versions, version => (
+          <TableRow hover key={version.resource.version || version.resource.meta.versionId}>
+            <TableCell align='center'>
+              { version.resource.version || version.resource.meta.versionId }
+            </TableCell>
+            <TableCell align='left'>
+              { version.resource.status }
+            </TableCell>
+            <TableCell align='left'>
+              { version.resource.content }
+            </TableCell>
+            <TableCell align='left'>
+              { formatDateTime(version.resource.date) }
+            </TableCell>
+            <TableCell align='left'>
+              {
+                map(CODE_SYSTEM_VERSION_TAGS, tag => getTag(tag, version))
+              }
+            </TableCell>
+          </TableRow>
+        ))
+      }
+    </TableBody>
+  </Table>
+)
 
 const HistoryTable = ({ versions }) => {
   return (
@@ -220,7 +272,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested, showPin, columns
+    nested, showPin, columns, hapi, fhir
   } = props;
   const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
@@ -329,14 +381,27 @@ const ExpandibleRow = props => {
   };
 
   const fetchVersions = () => {
-    if(item.url) {
-      APIService.new().overrideURL(item.url)
-                .appendToUrl('versions/')
-                .get()
-                .then(response => {
-                  if(response.status === 200)
-                    setVersions(response.data)
-                })
+    if(fhir) {
+      if(hapi) {
+        const resourceType = get(item, 'resource.resourceType')
+        const resourceId = get(item, 'resource.id')
+        if(resourceType && resourceId)
+          APIService.new().overrideURL(`/baseR4/${resourceType}/${resourceId}/_history/?_total=accurate&_sort=-date`).get().then(response => {
+            if(response.status === 200)
+              setVersions(response.data.entry)
+          })
+
+      }
+    } else {
+      if(item.url) {
+        APIService.new().overrideURL(item.url)
+                  .appendToUrl('versions/')
+                  .get()
+                  .then(response => {
+                    if(response.status === 200)
+                      setVersions(response.data)
+                  })
+      }
     }
   }
   const fetchNames = () => {
@@ -401,19 +466,6 @@ const ExpandibleRow = props => {
     event.stopPropagation()
     event.preventDefault()
     window.open('#' + _url, '_blank')
-  }
-
-  const getTag = (tag, item) => {
-    return (
-      <Tooltip title={tag.label} key={tag.id}>
-        <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
-          <div className='flex-vertical-center'>
-            <span>{tag.icon}</span>
-            <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
-          </div>
-        </div>
-      </Tooltip>
-    )
   }
 
   return (
@@ -539,7 +591,11 @@ const ExpandibleRow = props => {
                       tab === resourceDefinition.tabs.indexOf('Versions')
                     ) &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <HistoryTable versions={versions} />
+                      {
+                        (fhir && hapi) ?
+                        <HAPIFHIRHistoryTable versions={versions} /> :
+                        <HistoryTable versions={versions} />
+                      }
                     </div>
                   }
                 </Paper>
@@ -573,7 +629,7 @@ const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
-    isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields
+    isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -726,6 +782,8 @@ const ResultsTable = (
                       nested={nested}
                       showPin={shouldShowPin}
                       columns={columns}
+                      hapi={hapi}
+                      fhir={fhir}
                     />
                   ))
                 }

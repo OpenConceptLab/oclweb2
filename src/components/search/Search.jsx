@@ -578,6 +578,8 @@ class Search extends React.Component {
                   onCreateMappingClick={onCreateMappingClick}
                   viewFields={viewFields}
                   noControls={noControls}
+                  fhir={fhir}
+                  hapi={hapi}
                 /> :
                 <Results
                   resource={resource}

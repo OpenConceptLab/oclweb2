@@ -36,7 +36,6 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url,
           }}
           staticParams={{
             _total: 'accurate',
-            _summary: true
           }}
           noQuery
           noHeaders
