@@ -123,7 +123,7 @@ const getTag = (tag, item) => {
   )
 }
 
-const HAPIFHIRHistoryTable = ({ versions }) => (
+const FHIRHistoryTable = ({ versions }) => (
   <Table size="small" aria-label="versions">
     <TableHead>
       <TableRow>
@@ -391,6 +391,13 @@ const ExpandibleRow = props => {
               setVersions(response.data.entry)
           })
 
+      } else {
+        const uri = get(get(item, 'resource.identifier.0.value', '').split('/version/'), '0')
+        if(uri)
+          APIService.new().overrideURL(uri).appendToUrl('/version/').get().then(response => {
+            if(response.status === 200)
+              setVersions(response.data.entry)
+          })
       }
     } else {
       if(item.url) {
@@ -592,8 +599,8 @@ const ExpandibleRow = props => {
                     ) &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       {
-                        (fhir && hapi) ?
-                        <HAPIFHIRHistoryTable versions={versions} /> :
+                        fhir ?
+                        <FHIRHistoryTable versions={versions} /> :
                         <HistoryTable versions={versions} />
                       }
                     </div>
