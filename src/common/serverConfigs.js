@@ -23,6 +23,12 @@ export const SERVER_CONFIGS = [
     type: 'ocl',
     url: 'https://api.staging.aws.openconceptlab.org'
   },
+  {
+    id: 5,
+    name: 'OCL Production',
+    type: 'ocl',
+    url: 'https://api.aws.openconceptlab.org'
+  },
   // {
   //   id: 5,
   //   name: 'OCL Bad Server',
