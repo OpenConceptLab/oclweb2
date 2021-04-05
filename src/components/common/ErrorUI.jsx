@@ -17,7 +17,7 @@ const ErrorUI = ({header, message, error, errorInfo}) => {
         <h1>{header}</h1>
         <Divider orientation="vertical" />
         <div className='not-found-text'>
-          <h2>{message}</h2>
+          <h2 dangerouslySetInnerHTML={{__html: message}} />
         </div>
       </div>
       {

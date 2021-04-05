@@ -8,6 +8,8 @@ import Pins from '../common/Pins';
 import UserHomeDetails from './UserHomeDetails';
 import UserHomeTabs from './UserHomeTabs';
 import NotFound from '../common/NotFound';
+import AccessDenied from '../common/AccessDenied';
+import PermissionDenied from '../common/PermissionDenied';
 
 class UserHome extends React.Component {
   constructor(props) {
@@ -15,6 +17,8 @@ class UserHome extends React.Component {
     this.url = this.getURLFromPath(props);
     this.state = {
       notFound: false,
+      accessDenied: false,
+      permissionDenied: false,
       user: {},
       pins: [],
       tab: this.getDefaultTabIndex()
@@ -77,12 +81,16 @@ class UserHome extends React.Component {
     const service = this.getUserService()
     if(service) {
       this.setState(
-        { isLoading: true, notFound: false },
+        { isLoading: true, notFound: false, accessDenied: false, permissionDenied: false },
         () => service
           .get(null, null, {verbose: true})
           .then(response => {
             if(get(response, 'detail') === "Not found.")
-              this.setState({isLoading: false, notFound: true, user: {}})
+              this.setState({isLoading: false, notFound: true, user: {}, accessDenied: false, permissionDenied: false})
+            else if(get(response, 'detail') === "Authentication credentials were not provided.")
+              this.setState({isLoading: false, notFound: false, user: {}, accessDenied: true, permissionDenied: false})
+            else if(get(response, 'detail') === "You do not have permission to perform this action.")
+              this.setState({isLoading: false, notFound: false, user: {}, accessDenied: false, permissionDenied: true})
             else if(!isObject(response))
               this.setState({isLoading: false}, () => {throw response})
             else
@@ -125,13 +133,16 @@ class UserHome extends React.Component {
   }
 
   render() {
-    const { user, pins, notFound } = this.state;
+    const { user, pins, notFound, accessDenied, permissionDenied } = this.state;
     const canActOnPins = this.canActOnPins()
+    const hasError = notFound || accessDenied || permissionDenied;
     return (
       <React.Fragment>
+        { notFound && <NotFound /> }
+        { accessDenied && <AccessDenied /> }
+        { permissionDenied && <PermissionDenied /> }
         {
-          notFound ?
-          <NotFound /> :
+          !hasError &&
           <div className="col-md-12">
             {
               user &&
