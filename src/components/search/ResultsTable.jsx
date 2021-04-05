@@ -362,11 +362,15 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['references', 'CodeSystem'], resource))
+    if(includes(['references'], resource))
       return
     event.stopPropagation();
     event.preventDefault()
-    window.open('#' + item.url, '_blank')
+
+    if(resource === 'CodeSystem')
+      window.location.hash = `/fhir/CodeSystem/${item.resource.id}`;
+    else
+      window.open('#' + item.url, '_blank')
   }
 
   const onContextMenu = event => {

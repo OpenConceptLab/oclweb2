@@ -6,12 +6,13 @@ import {
 import { startCase } from 'lodash';
 
 const OwnerChip = ({owner, ownerType, ...rest}) => {
-  const icon = ownerType.toLowerCase() === 'user' ?
+  const type = ownerType || 'Organization';
+  const icon = (type.toLowerCase() === 'user') ?
                <PersonIcon fontSize='small' color='primary' /> :
                <HomeIcon fontSize='small' color='primary' />;
 
   return (
-    <Tooltip placement='top-start' title={`${startCase(ownerType.toLowerCase())}: ${owner}`}>
+    <Tooltip placement='top-start' title={`${startCase(type.toLowerCase())}: ${owner}`}>
       <Chip icon={icon} label={owner} variant='outlined' color='default' {...rest} />
     </Tooltip>
   )

@@ -46,7 +46,7 @@ const getService = version => APIService.new().overrideURL(version.version_url)
 const deleteVersion = version => getService(version).delete().then(response => handleResponse(response, version.type, 'Deleted'))
 const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
 
-const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) => {
+const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fhir }) => {
   const sortedVersions = headFirst(versions);
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
@@ -102,7 +102,11 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                     <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
                       <div className='col-md-9 no-side-padding'>
                         <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
-                          <ResourceVersionLabel {...version} />
+                          {
+                            fhir ?
+                            <ResourceVersionLabel {...version} short_code={version.id} /> :
+                            <ResourceVersionLabel {...version} />
+                          }
                         </div>
                         <div className='col-md-12'>
                           <span>{version.description}</span>
@@ -110,8 +114,8 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                         <div className='col-md-12'>
                           <LastUpdatedOnLabel
                             by={version.created_by}
-                            date={version.created_on}
-                            label='Created on'
+                            date={fhir ? version.date : version.created_on}
+                            label={fhir ? 'Released on ' : 'Created on'}
                           />
                         </div>
                       </div>
@@ -142,23 +146,28 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate }) 
                           </React.Fragment>
                         }
                         {
-                          version &&
+                          version && !fhir &&
                           <ConceptContainerExport
                             isHEAD={isHEAD}
                             title={`Export Version ${version.id}`}
                             version={version}
                           />
                         }
-                        <Tooltip title='Explore Version'>
-                          <IconButton href={`#${version.concepts_url}`} color='primary' size='small'>
-                            <SearchIcon fontSize='inherit' />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title='Copy URL'>
-                          <IconButton onClick={() => onCopyClick(version)} size='small'>
-                            <CopyIcon fontSize='inherit' />
-                          </IconButton>
-                        </Tooltip>
+                        {
+                          !fhir &&
+                          <React.Fragment>
+                            <Tooltip title='Explore Version'>
+                              <IconButton href={`#${version.concepts_url}`} color='primary' size='small'>
+                                <SearchIcon fontSize='inherit' />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title='Copy URL'>
+                              <IconButton onClick={() => onCopyClick(version)} size='small'>
+                                <CopyIcon fontSize='inherit' />
+                              </IconButton>
+                            </Tooltip>
+                          </React.Fragment>
+                        }
                       </div>
                     </div>
                     {
