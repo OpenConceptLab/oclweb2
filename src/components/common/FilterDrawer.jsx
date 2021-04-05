@@ -204,7 +204,7 @@ const FilterDrawer = props => {
                             <span className='col-md-12 no-side-padding flex-vertical-center'>
                               <span
               onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '14px'}}>
-                                {formattedName(facet[0])}
+                                {includes(['locale', 'version'], field) ? facet[0] : formattedName(facet[0])}
                               </span>
                               <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '14px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100'}}>
                                 {facet[1].toLocaleString()}
