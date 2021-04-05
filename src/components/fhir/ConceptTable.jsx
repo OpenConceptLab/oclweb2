@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Table, TableHead, TableBody, TableCell, TableRow,
 } from '@material-ui/core';
-import { find, get, map } from 'lodash';
+import { find, get, map, isEmpty } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants';
 
 const ConceptTable = ({ concepts }) => {
@@ -28,6 +28,10 @@ const ConceptTable = ({ concepts }) => {
       </TableHead>
       <TableBody>
         {
+          isEmpty(concepts) ?
+          <TableRow hover>
+            <TableCell align='center' colSpan={4}>We found 0 codes.</TableCell>
+          </TableRow> :
           map(concepts, concept => {
             const datatype = getValue(concept, 'datatype', 'valueString');
             const conceptClass = getValue(concept, 'conceptclass', 'valueString');

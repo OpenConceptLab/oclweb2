@@ -26,6 +26,7 @@ class CodeSystemHome extends React.Component {
     const server = getAppliedServerConfig()
     const isHAPI = get(server, 'hapi', false);
     const currentURL = `/fhir/CodeSystem/${props.match.params.id}`
+    const codeSystemServerURL = isHAPI ? `${server.info.baseURI}/CodeSystem/${props.match.params.id}` : '';
     this.state = {
       server: server,
       isHAPI: isHAPI,
@@ -37,7 +38,7 @@ class CodeSystemHome extends React.Component {
       codes: [],
       tab: this.getDefaultTabIndex(),
       url: currentURL,
-      serverUrl: isHAPI ? `${server.info.baseURI}/CodeSystem/${props.match.params.id}` : currentURL
+      serverUrl: codeSystemServerURL,
     }
   }
 

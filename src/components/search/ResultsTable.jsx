@@ -15,7 +15,8 @@ import {
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
-  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has
+  map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
+  isFunction,
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -362,7 +363,7 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['references'], resource))
+    if(includes(['references'], resource) || (fhir && !hapi))
       return
     event.stopPropagation();
     event.preventDefault()
@@ -468,10 +469,10 @@ const ExpandibleRow = props => {
     )
   }
 
-  const navigateTo = (event, url) => {
-    let _url = url;
+  const navigateTo = (event, item, url) => {
+    let _url = isFunction(url) ? url(item) : url;
 
-    if(!isConceptContainer)
+    if(!isConceptContainer && !fhir)
       _url = url.replace('/versions', '/history')
 
     event.stopPropagation()
@@ -523,8 +524,8 @@ const ExpandibleRow = props => {
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
               <CircularProgress style={{width: '20px', height: '20px'}} /> :
-              map(resourceDefinition.tags, tag => tag.text ? getTag(tag, item) : (
-                <Link key={tag.id} to='' onClick={event => navigateTo(event, get(item, tag.hrefAttr))}>
+              map(resourceDefinition.tags, tag => (tag.text || (fhir && !hapi)) ? getTag(tag, item) : (
+                <Link key={tag.id} to='' onClick={event => navigateTo(event, item, isFunction(tag.hrefAttr) ? tag.hrefAttr : get(item, tag.hrefAttr))}>
                   {getTag(tag, item)}
                 </Link>
               ))

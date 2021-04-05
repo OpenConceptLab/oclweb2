@@ -132,7 +132,7 @@ const CODE_SYSTEM_TAGS = [
     value: 'resource.count',
     label: 'Concepts',
     icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
-    text: true
+    hrefAttr: item => `/fhir/CodeSystem/${item.resource.id}/`
   },
 ]
 
