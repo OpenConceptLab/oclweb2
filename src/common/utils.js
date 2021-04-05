@@ -4,7 +4,8 @@ import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
-  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge
+  get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
+  uniqBy
 } from 'lodash';
 import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
@@ -207,7 +208,7 @@ export const getCurrentURL = () => window.location.href.replace(new RegExp('/$')
 
 const handleLookupValuesResponse = (data, callback, attr) => {
   const _attr = attr || 'id';
-  callback(orderBy(map(data, cc => ({id: get(cc, _attr), name: get(cc, _attr)})), 'name'));
+  callback(orderBy(uniqBy(map(data, cc => ({id: get(cc, _attr), name: get(cc, _attr)})), 'name')), 'name');
 }
 
 export const fetchLocales = callback => {
