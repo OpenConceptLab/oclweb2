@@ -8,6 +8,8 @@ import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
 import OrgHomeTabs from './OrgHomeTabs';
 import NotFound from '../common/NotFound';
+import AccessDenied from '../common/AccessDenied';
+import PermissionDenied from '../common/PermissionDenied';
 
 const DEFAULT_CONFIG = {
   name: 'OCL Default (Org)',
@@ -28,6 +30,8 @@ class OrgHome extends React.Component {
     super(props);
     this.state = {
       notFound: false,
+      accessDenied: false,
+      permissionDenied: false,
       isLoading: true,
       org: {},
       pins: [],
@@ -110,12 +114,16 @@ class OrgHome extends React.Component {
     const customConfigFeatureApplicable = this.customConfigFeatureApplicable();
     if(service) {
       this.setState(
-        {isLoading: true, notFound: false},
+        {isLoading: true, notFound: false, accessDenied: false, permissionDenied: false},
         () => service
           .get(null, null, {includeClientConfigs: customConfigFeatureApplicable})
           .then(response => {
             if(get(response, 'detail') === "Not found.")
-              this.setState({isLoading: false, notFound: true, org: {}})
+              this.setState({isLoading: false, notFound: true, org: {}, accessDenied: false, permissionDenied: false})
+            else if(get(response, 'detail') === "Authentication credentials were not provided.")
+              this.setState({isLoading: false, notFound: false, org: {}, accessDenied: true, permissionDenied: false})
+            else if(get(response, 'detail') === "You do not have permission to perform this action.")
+              this.setState({isLoading: false, notFound: false, org: {}, accessDenied: false, permissionDenied: true})
             else if(!isObject(response))
               this.setState({isLoading: false}, () => {throw response})
             else {
@@ -184,48 +192,51 @@ class OrgHome extends React.Component {
   }
 
   render() {
-    const { org, isLoading, tab, pins, selectedConfig, customConfigs, notFound } = this.state;
+    const {
+      org, isLoading, tab, pins, selectedConfig, customConfigs,
+      notFound, accessDenied, permissionDenied
+    } = this.state;
     const showAboutTab = this.shouldShowAboutTab();
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
+    const hasError = notFound || accessDenied || permissionDenied;
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
+        { isLoading && <CircularProgress color='primary' /> }
+        { notFound && <NotFound /> }
+        { accessDenied && <AccessDenied /> }
+        { permissionDenied && <PermissionDenied /> }
         {
-          isLoading ?
-          <CircularProgress color='primary' /> :
-          (
-            notFound ?
-            <NotFound /> :
-            <div className='col-md-12 home-container no-side-padding'>
-              <OrgHomeHeader org={org} url={url} />
-              <Pins
+          !isLoading && !hasError &&
+          <div className='col-md-12 home-container no-side-padding'>
+            <OrgHomeHeader org={org} url={url} />
+            <Pins
+              pins={pins}
+              onDelete={this.deletePin}
+              canDelete={isCurrentUserMemberOfOrg}
+              onOrderUpdate={this.updatePinOrder}
+            />
+            {
+              tab !== null &&
+              <OrgHomeTabs
+                tab={tab}
+                onTabChange={this.onTabChange}
+                org={org}
+                location={this.props.location}
+                match={this.props.match}
+                url={url}
                 pins={pins}
-                onDelete={this.deletePin}
-                canDelete={isCurrentUserMemberOfOrg}
-                onOrderUpdate={this.updatePinOrder}
+                onPinCreate={this.createPin}
+                onPinDelete={this.deletePin}
+                showPin={isCurrentUserMemberOfOrg}
+                customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                onConfigChange={this.onConfigChange}
+                selectedConfig={selectedConfig}
+                aboutTab={showAboutTab}
+                showConfigSelection={this.customConfigFeatureApplicable()}
               />
-              {
-                tab !== null &&
-                <OrgHomeTabs
-                  tab={tab}
-                  onTabChange={this.onTabChange}
-                  org={org}
-                  location={this.props.location}
-                  match={this.props.match}
-                  url={url}
-                  pins={pins}
-                  onPinCreate={this.createPin}
-                  onPinDelete={this.deletePin}
-                  showPin={isCurrentUserMemberOfOrg}
-                  customConfigs={[...customConfigs, DEFAULT_CONFIG]}
-                  onConfigChange={this.onConfigChange}
-                  selectedConfig={selectedConfig}
-                  aboutTab={showAboutTab}
-                  showConfigSelection={this.customConfigFeatureApplicable()}
-                />
-              }
-            </div>
-          )
+            }
+          </div>
         }
       </div>
     )
