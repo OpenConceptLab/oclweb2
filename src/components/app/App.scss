@@ -570,6 +570,10 @@ table.nested-mappings {
 .user-bg {
     background-color: rgb(253, 164, 41) !important;
 }
+.concept-bg, mapping-bg {
+    background-color: rgb(51, 115, 170) !important;
+}
+
 
 .ql-tooltip {   //rich-text-editor - react-quill
     left: 0 !important;
