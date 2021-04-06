@@ -31,7 +31,7 @@ const FilterDrawer = props => {
 
   let uiFilters = omit(omitBy(filters, isEmpty), blacklisted)
 
-  if(isObject(kwargs) && !kwargs.collection && isSourceChild && !isEmpty(uiFilters)){
+  if(isObject(kwargs) && !kwargs.collection && isSourceChild && !isEmpty(uiFilters) && !isEmpty(uiFilters.collection)){
     uiFilters['collection_membership'] = uiFilters.collection
     delete uiFilters.collection
   }
@@ -82,23 +82,16 @@ const FilterDrawer = props => {
     }
   }
 
-  const handleInputChange = event => {
-    setInput(event.target.value || '')
-  }
+  const handleInputChange = event => setInput(event.target.value || '')
 
   const onSearch = event => {
     event.preventDefault()
     event.stopPropagation()
 
-    setSearchStr(() => {return input || null;})
+    setSearchStr(() => (input || null))
   }
 
-  React.useEffect(() => {
-    if(!searchStr)
-      setSearchedFilters({})
-    else
-      setSearchedFilters(getSearchedFilters())
-  }, [searchStr]);
+  React.useEffect(() => setSearchedFilters(searchStr ? getSearchedFilters() : {}), [searchStr]);
 
   const getSearchedFilters = () => {
     let val = searchStr
@@ -120,9 +113,7 @@ const FilterDrawer = props => {
     return result
   }
 
-  const getFilters = () => {
-    return (isEmpty(searchedFilters) && isEmpty(searchStr)) ? uiFilters : searchedFilters;
-  }
+  const getFilters = () => (isEmpty(searchedFilters) && isEmpty(searchStr)) ? uiFilters : searchedFilters;
 
   const onSearchClear = () => {
     setInput('')
