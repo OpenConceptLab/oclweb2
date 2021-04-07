@@ -4,6 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Add as AddIcon } from '@material-ui/icons';
 import {
   TextField, IconButton, Button, CircularProgress, Select, MenuItem, FormControl, InputLabel,
+  FormControlLabel, Checkbox
 } from '@material-ui/core';
 import {
   set, get, map, cloneDeep, pullAt, isEmpty, startCase, pickBy, isObject, isArray,
@@ -48,6 +49,14 @@ class ConceptContainerForm extends React.Component {
         contact: '', //json
         jurisdiction: '', //json
         text: '',
+        collection_reference: '', //only source
+        hierarchy_meaning: '', //only source
+        case_sensitive: null, //only source
+        compositional: null, //only source
+        version_needed: null, //only source
+        experimental: null, //only source
+        immutable: null, //only collection
+        locked_date: '', // only collection - datetime
       },
       typeAttr: '',
       fieldErrors: {},
@@ -108,12 +117,15 @@ class ConceptContainerForm extends React.Component {
     const attrs = [
       'id', 'external_id', 'name', 'full_name', 'description', 'revision_date',
       'content_type', 'copyright', 'purpose', 'publisher', 'canonical_url', 'description',
-      'custom_validation_schema', 'public_access', 'website', 'default_locale', 'text'
+      'custom_validation_schema', 'public_access', 'website', 'default_locale', 'text',
+      'locked_date', 'collection_reference', 'hierarchy_meaning',
     ]
     const jsonAttrs = ['jurisdiction', 'contact', 'identifier']
+    const booleanAttrs = ['immutable', 'case_sensitive', 'compositional', 'version_needed', 'experimental']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(resource, attr, '') || ''))
     jsonAttrs.forEach(attr => this.setJSONValue(resource, newState, attr))
+    booleanAttrs.forEach(attr => set(newState.fields, attr, get(resource, attr)))
     newState.fields.supported_locales = isArray(resource.supported_locales) ? resource.supported_locales.join(',') : resource.supported_locales;
 
     newState.fields.custom_validation_schema = get(resource, 'custom_validation_schema') || 'None';
@@ -155,6 +167,10 @@ class ConceptContainerForm extends React.Component {
 
   onTextFieldChange = event => {
     this.setFieldValue(event.target.id, event.target.value)
+  }
+
+  onCheckboxChange = event => {
+    this.setFieldValue(event.target.name, event.target.checked)
   }
 
   onAutoCompleteChange = (id, item) => {
@@ -202,9 +218,15 @@ class ConceptContainerForm extends React.Component {
     if(this.isSource()) {
       delete fields.collection_type;
       delete fields.immutable;
+      delete fields.locked_date;
     } else {
       delete fields.content_type;
       delete fields.source_type;
+      delete fields.collection_reference;
+      delete fields.hierarchy_meaning;
+      delete fields.case_sensitive;
+      delete fields.compositional;
+      delete fields.version_needed;
     }
 
     fields.extras = arrayToObject(fields.extras)
@@ -266,7 +288,10 @@ class ConceptContainerForm extends React.Component {
       fields, fieldErrors, locales, selected_default_locale, selected_supported_locales, typeAttr,
       selected_source_type, selected_collection_type,
     } = this.state;
-    const { onCancel, edit, types, resourceType, placeholders, extraFields } = this.props;
+    const {
+      onCancel, edit, types, resourceType, placeholders,
+      extraFields, extraBooleanFields, extraDateTimeFields
+    } = this.props;
     const isSource = this.isSource()
     const selected_type = isSource ? selected_source_type : selected_collection_type;
     const isLoading = isEmpty(locales);
@@ -279,14 +304,14 @@ class ConceptContainerForm extends React.Component {
         </div>
         {
           isLoading ?
-          <div style={{width: '100%', textAlign: 'center', marginTop: '100px'}}>
+          <div style={{textAlign: 'center', marginTop: '100px'}}>
             <CircularProgress />
           </div>:
           <div className='col-md-12 no-side-padding'>
             <form>
               {
                 !edit &&
-                <div className='col-md-12 no-side-padding' style={{width: '100%'}}>
+                <div className='col-md-12 no-side-padding'>
                   <TextField
                     error={Boolean(fieldErrors.id)}
                     id="fields.id"
@@ -302,7 +327,7 @@ class ConceptContainerForm extends React.Component {
                   />
                 </div>
               }
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.name)}
                   id="fields.name"
@@ -315,7 +340,7 @@ class ConceptContainerForm extends React.Component {
                   value={fields.name}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.full_name)}
                   id="fields.full_name"
@@ -328,7 +353,7 @@ class ConceptContainerForm extends React.Component {
                   value={fields.full_name}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.description)}
                   id="fields.description"
@@ -339,7 +364,7 @@ class ConceptContainerForm extends React.Component {
                   value={fields.description}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.website)}
                   id="fields.website"
@@ -352,7 +377,7 @@ class ConceptContainerForm extends React.Component {
                   type='url'
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <Autocomplete
                   openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
@@ -375,7 +400,7 @@ class ConceptContainerForm extends React.Component {
                   onChange={(event, item) => this.onAutoCompleteChange(`fields.${typeAttr}`, item)}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <FormControl variant="outlined" fullWidth>
                   <InputLabel>Public Access</InputLabel>
                   <Select
@@ -391,7 +416,7 @@ class ConceptContainerForm extends React.Component {
                   </Select>
                 </FormControl>
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <Autocomplete
                   openOnFocus
                   getOptionSelected={(option, value) => option.id === get(value, 'id')}
@@ -414,7 +439,7 @@ class ConceptContainerForm extends React.Component {
                   onChange={(event, item) => this.onAutoCompleteChange('fields.default_locale', item)}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <Autocomplete
                   className='multi-auto-select'
                   multiple
@@ -441,7 +466,7 @@ class ConceptContainerForm extends React.Component {
                   onChange={this.onMultiAutoCompleteChange}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <FormControl variant="outlined" fullWidth>
                   <InputLabel>Custom Validation Schema</InputLabel>
                   <Select
@@ -456,7 +481,7 @@ class ConceptContainerForm extends React.Component {
                   </Select>
                 </FormControl>
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.external_id)}
                   id="fields.external_id"
@@ -468,7 +493,7 @@ class ConceptContainerForm extends React.Component {
                   value={fields.external_id}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.canonical_url)}
                   id="fields.canonical_url"
@@ -483,7 +508,7 @@ class ConceptContainerForm extends React.Component {
               </div>
               {
                 map(extraFields, attr => (
-                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}} key={attr}>
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr}>
                     <TextField
                       error={Boolean(get(fieldErrors, attr))}
                       id={`fields.${attr}`}
@@ -496,7 +521,34 @@ class ConceptContainerForm extends React.Component {
                   </div>
                 ))
               }
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              {
+                map(extraBooleanFields, attr => (
+                  <div className='col-md-6 no-right-padding' style={{marginTop: '15px'}} key={attr}>
+                    <FormControlLabel
+                      control={<Checkbox checked={fields[attr]} onChange={this.onCheckboxChange} name={`fields.${attr}`} />}
+                      label={startCase(attr)}
+                    />
+                  </div>
+                ))
+              }
+              {
+                map(extraDateTimeFields, attr => (
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr}>
+                    <TextField
+                      error={Boolean(get(fieldErrors, attr))}
+                      id={`fields.${attr}`}
+                      label={startCase(attr)}
+                      variant="outlined"
+                      fullWidth
+                      onChange={this.onTextFieldChange}
+                      value={fields[attr]}
+                      type='datetime-local'
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </div>
+                ))
+              }
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <TextField
                   error={Boolean(fieldErrors.revision_date)}
                   id="fields.revision_date"
@@ -509,7 +561,7 @@ class ConceptContainerForm extends React.Component {
                   InputLabelProps={{ shrink: true }}
                 />
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <div className='col-md-8'>
                   <h3>Custom Attributes</h3>
                 </div>
@@ -520,7 +572,7 @@ class ConceptContainerForm extends React.Component {
                 </div>
                 {
                   map(fields.extras, (extra, index) => (
-                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px'} : {}}>
                       <ExtrasForm
                         extra={extra}
                         index={index}
@@ -531,7 +583,7 @@ class ConceptContainerForm extends React.Component {
                   ))
                 }
               </div>
-              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <RTEditor
                   label={`About ${resourceTypeLabel}`}
                   onChange={value => this.setFieldValue('fields.text', value)}

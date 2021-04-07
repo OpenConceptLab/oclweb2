@@ -16,7 +16,8 @@ const CONFIGS = {
     external_id: "e.g. UUID from external system",
     canonical_url: "e.g. http://who.int/ICPC-2",
   },
-  extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction']
+  extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction', 'collection_reference', 'hierarchy_meaning'],
+  extraBooleanFields: ['experimental', 'case_sensitive', 'compositional', 'version_needed'],
 }
 
 const SourceForm = props => {

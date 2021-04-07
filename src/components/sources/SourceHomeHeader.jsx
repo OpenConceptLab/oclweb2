@@ -40,7 +40,13 @@ const HIDDEN_ATTRIBUTES = {
   revision_date: 'date',
   identifier: 'json',
   contact: 'json',
-  jurisdiction: 'json'
+  jurisdiction: 'json',
+  collection_reference: 'text',
+  hierarchy_meaning: 'text',
+  experimental: 'boolean',
+  case_sensitive: 'boolean',
+  compositional: 'boolean',
+  version_needed: 'boolean',
 }
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL
@@ -159,9 +165,10 @@ const SourceHomeHeader = ({
               <CollapsibleAttributes
                 object={source}
                 urlAttrs={['canonical_url']}
-                textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
+                textAttrs={['publisher', 'purpose', 'copyright', 'content_type', 'collection_reference', 'hierarchy_meaning']}
                 dateAttrs={['revision_date']}
                 jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+                booleanAttrs={['experimental', 'case_sensitive', 'compositional', 'version_needed']}
               />
             </div> :
             <React.Fragment>
