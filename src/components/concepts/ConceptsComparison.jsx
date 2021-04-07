@@ -224,7 +224,7 @@ class ConceptsComparison extends React.Component {
         <div style={{margin: '5px 0px'}}>
           <span>
             <span className='gray-italics'>Source:</span>
-            <Link to={toParentURI(concept.url)} target="_blank">
+            <Link to={toParentURI(concept.url)}>
               <span>{concept.source}</span>
             </Link>
           </span>
@@ -389,7 +389,7 @@ class ConceptsComparison extends React.Component {
           {this.getHeaderSubAttributes(concept)}
         </div>
         <div style={{fontSize: '18px'}}>
-          <Link to={concept.url} target="_blank">{concept.display_name}</Link>
+          <Link to={concept.url}>{concept.display_name}</Link>
         </div>
       </TableCell>
     )

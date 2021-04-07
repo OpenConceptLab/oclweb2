@@ -20,7 +20,7 @@ const Collection = props => {
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <div className={mainClass}>
-        <Link to={props.url} style={{display: 'inline-block'}} target="_blank">
+        <Link to={props.url} style={{display: 'inline-block'}}>
           <ResourceLabel
             owner={props.owner} id={props.id} name={props.name}
             icon={<LoyaltyIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}

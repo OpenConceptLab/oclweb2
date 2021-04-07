@@ -371,7 +371,7 @@ const ExpandibleRow = props => {
     if(resource === 'CodeSystem')
       window.location.hash = `/fhir/CodeSystem/${item.resource.id}`;
     else
-      window.open('#' + item.url, '_blank')
+      window.location.hash = item.url;
   }
 
   const onContextMenu = event => {
@@ -477,7 +477,7 @@ const ExpandibleRow = props => {
 
     event.stopPropagation()
     event.preventDefault()
-    window.open('#' + _url, '_blank')
+    window.location.hash = _url
   }
 
   return (

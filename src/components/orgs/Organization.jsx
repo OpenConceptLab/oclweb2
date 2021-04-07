@@ -17,7 +17,7 @@ const Organization = props => {
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <div className="col-sm-9 no-left-padding">
-        <Link to={props.url} style={{display: 'inline-block'}} target="_blank">
+        <Link to={props.url} style={{display: 'inline-block'}}>
           <div className='col-sm-12 no-side-padding'>
             <span className='resource-label ellipsis-text' style={{maxWidth: '100%'}}>
               <span style={{paddingTop: '5px'}}>
@@ -49,7 +49,7 @@ const Organization = props => {
         </div>
       </div>
       <div className="col-sm-3" style={{textAlign: 'right'}}>
-        <Link to={props.url + 'members'} target='_blank'>
+        <Link to={props.url + 'members'}>
           <Tooltip title='Members'>
             <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
               <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />
@@ -57,7 +57,7 @@ const Organization = props => {
             </span>
           </Tooltip>
         </Link>
-        <Link to={props.sources_url} target='_blank'>
+        <Link to={props.sources_url}>
           <Tooltip title='Sources'>
             <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
               <ListIcon fontSize='small' style={TAG_ICON_STYLES} />
@@ -65,7 +65,7 @@ const Organization = props => {
             </span>
           </Tooltip>
         </Link>
-        <Link to={props.collections_url} target='_blank'>
+        <Link to={props.collections_url}>
           <Tooltip title='Collections'>
             <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
               <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />
