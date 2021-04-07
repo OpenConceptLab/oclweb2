@@ -541,7 +541,7 @@ class ConceptContainerForm extends React.Component {
                       variant="outlined"
                       fullWidth
                       onChange={this.onTextFieldChange}
-                      value={fields[attr]}
+                      value={fields[attr].replace('Z', '')}
                       type='datetime-local'
                       InputLabelProps={{ shrink: true }}
                     />
