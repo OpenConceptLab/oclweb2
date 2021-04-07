@@ -33,12 +33,16 @@ const HeaderAttribute = ({label, value, gridClass, type}) => {
 
     return value;
   }
-  const isValid = !isEmpty(value) && !includes(['none', 'None'], value);
+  const isValid = () => {
+    if(type === 'boolean')
+      return !includes([null, undefined], value)
+    return !isEmpty(value) && !includes(['none', 'None'], value);
+  }
 
   return (
     <React.Fragment>
       {
-        isValid &&
+        isValid() &&
         <div className={className}>
           <span className='italic' style={{marginRight: '10px', color: 'rgba(0, 0, 0, 0.6)'}}>
             {label}:
