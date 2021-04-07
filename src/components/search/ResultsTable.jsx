@@ -23,7 +23,7 @@ import {
 } from '../../common/constants';
 import {
   formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
-  getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser, currentUserHasAccess,
+  getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser, currentUserHasAccess, getAppliedServerConfig,
 } from '../../common/utils';
 import ReleasedChip from '../common/ReleasedChip';
 import AllMappingsTables from '../mappings/AllMappingsTables';
@@ -388,10 +388,11 @@ const ExpandibleRow = props => {
   const fetchVersions = () => {
     if(fhir) {
       if(hapi) {
+        const baseURI = get(getAppliedServerConfig(), 'info.baseURI')
         const resourceType = get(item, 'resource.resourceType')
         const resourceId = get(item, 'resource.id')
         if(resourceType && resourceId)
-          APIService.new().overrideURL(`/baseR4/${resourceType}/${resourceId}/_history/?_total=accurate&_sort=-date`).get().then(response => {
+          APIService.new().overrideURL(`${baseURI}${resourceType}/${resourceId}/_history/?_total=accurate&_sort=-date`).get().then(response => {
             if(response.status === 200)
               setVersions(response.data.entry)
           })

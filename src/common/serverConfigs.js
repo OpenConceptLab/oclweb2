@@ -82,4 +82,20 @@ export const SERVER_CONFIGS = [
       }
     }
   },
+  {
+    id: 8,
+    name: 'PEPFAR’s test FHIR HAPI',
+    type: 'fhir',
+    hapi: true,
+    url: 'https://test.ohie.datim.org/hapi-fhir-jpaserver',
+    info: {
+      baseURI: '/fhir/',
+      type: 'HAPI FHIR 4.2.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
+      org: {
+        id: 'PEPFAR',
+        name: "The United States President's Emergency Plan for AIDS Relief",
+        logo_url: '/fhir.svg'
+      }
+    }
+  },
 ]
