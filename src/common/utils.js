@@ -26,12 +26,12 @@ export const formatWebsiteLink = (value, style) => {
       href = 'https://' + href;
 
     return (
-        <a
-      target='_blank'
-      rel="noopener noreferrer"
-      href={href}
-      className="ellipsis-text"
-      style={merge({maxWidth: '100px'}, (style || {}))}>
+      <a
+        target='_blank'
+        rel="noopener noreferrer"
+        href={href}
+        className="ellipsis-text"
+        style={merge({maxWidth: '100px'}, (style || {}))}>
         {value.trim()}
       </a>
     );
@@ -218,32 +218,32 @@ export const fetchLocales = callback => {
 
 export const fetchConceptClasses = callback => {
   APIService.sources('Classes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true})
-    .then(response => handleLookupValuesResponse(response.data, callback));
+            .get(null, null, {limit: 1000, is_latest: true})
+            .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
   APIService.sources('MapTypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true})
-    .then(response => handleLookupValuesResponse(response.data, callback));
+            .get(null, null, {limit: 1000, is_latest: true})
+            .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
   APIService.sources('Datatypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true})
-    .then(response => handleLookupValuesResponse(response.data, callback));
+            .get(null, null, {limit: 1000, is_latest: true})
+            .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
   APIService.sources('NameTypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true})
-    .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+            .get(null, null, {limit: 1000, is_latest: true})
+            .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
 }
 
 export const fetchDescriptionTypes = callback => {
   APIService.sources('DescriptionTypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true})
-    .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+            .get(null, null, {limit: 1000, is_latest: true})
+            .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
 }
 
 export const downloadObject = (obj, format, filename) => {
@@ -291,24 +291,24 @@ export const memorySizeOf = (obj, format=true) => {
   const sizeOf = obj => {
     if(obj !== null && obj !== undefined) {
       switch(typeof obj) {
-      case 'number':
-        bytes += 8;
-        break;
-      case 'string':
-        bytes += obj.length * 2;
-        break;
-      case 'boolean':
-        bytes += 4;
-        break;
-      case 'object':
-        var objClass = Object.prototype.toString.call(obj).slice(8, -1);
-        if(objClass === 'Object' || objClass === 'Array') {
-          for(var key in obj) {
-            if(!obj.hasOwnProperty(key)) continue;
-            sizeOf(obj[key]);
-          }
-        } else bytes += obj.toString().length * 2;
-        break;
+        case 'number':
+          bytes += 8;
+          break;
+        case 'string':
+          bytes += obj.length * 2;
+          break;
+        case 'boolean':
+          bytes += 4;
+          break;
+        case 'object':
+          var objClass = Object.prototype.toString.call(obj).slice(8, -1);
+          if(objClass === 'Object' || objClass === 'Array') {
+            for(var key in obj) {
+              if(!obj.hasOwnProperty(key)) continue;
+              sizeOf(obj[key]);
+            }
+          } else bytes += obj.toString().length * 2;
+          break;
       }
     }
     return bytes;
@@ -327,23 +327,23 @@ export const getCurrentUserCollections = callback => {
   const username = getCurrentUserUsername();
   if(username) {
     APIService.users(username)
-      .collections()
-      .get(null, null, {limit: 1000})
-      .then(response => isArray(response.data) ? callback(response.data) : false);
+              .collections()
+              .get(null, null, {limit: 1000})
+              .then(response => isArray(response.data) ? callback(response.data) : false);
     APIService.users(username)
-      .orgs()
-      .appendToUrl('collections/')
-      .get(null, null, {limit: 1000})
-      .then(response => isArray(response.data) ? callback(response.data) : false);
+              .orgs()
+              .appendToUrl('collections/')
+              .get(null, null, {limit: 1000})
+              .then(response => isArray(response.data) ? callback(response.data) : false);
   }
 }
 
 export const isValidPassword = (password, strength, minStrength = 3) => {
   return Boolean(
     password &&
-      strength >= minStrength &&
-      password.length >= 8 &&
-      password.match(new RegExp(/(?=.*[0-9])(?=.*[a-zA-Z])(?=\S+$)./g))
+    strength >= minStrength &&
+    password.length >= 8 &&
+    password.match(new RegExp(/(?=.*[0-9])(?=.*[a-zA-Z])(?=\S+$)./g))
   );
 }
 
