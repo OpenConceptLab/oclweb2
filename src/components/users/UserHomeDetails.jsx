@@ -1,8 +1,9 @@
 import React from 'react';
-import { Divider, CircularProgress, IconButton, Tooltip } from '@material-ui/core';
+import { Divider, CircularProgress, IconButton, Tooltip, Chip } from '@material-ui/core';
 import {
   Person as PersonIcon,
   FileCopy as CopyIcon,
+  Edit as EditIcon,
 } from '@material-ui/icons';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
@@ -10,10 +11,15 @@ import {
   formatDate, currentUserToken, formatWebsiteLink, copyToClipboard
 } from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
+import CommonFormDrawer from '../common/CommonFormDrawer';
+import UserForm from './UserForm';
 
 const UserHomeDetails = ({ user, isLoading }) => {
   const [logoURL, setLogoURL] = React.useState(user.logo_url)
   const [uploading, setUploading] = React.useState(false);
+  const [editForm, setEditForm] = React.useState(false);
+  const onEditClick = () => setEditForm(true);
+  const onEditClose = () => setEditForm(false);
 
   React.useEffect(() => {
     if(user.logo_url)
@@ -56,11 +62,23 @@ const UserHomeDetails = ({ user, isLoading }) => {
               defaultIcon={<PersonIcon style={{width: '120px', height: '120px'}} />}
             />
           </div>
-          <h2>
+          <h2 style={{marginBottom: '5px'}}>
             {startCase(name)}
             <br />
             <small>{user.username}</small>
           </h2>
+          <div>
+            <Chip
+              className='underline-text'
+              icon={<EditIcon fontSize='small' style={{width: '14px'}} />}
+              size='small'
+              label="Edit Profile"
+              style={{border: 'none'}}
+              variant='outlined'
+              color='primary'
+              onClick={onEditClick}
+            />
+          </div>
           <Divider style={{width: '100%'}} />
           <p><strong>Company</strong><br />{user.company || 'N/A'}</p>
           <p><strong>Location</strong><br />{user.location || 'N/A'}</p>
@@ -88,6 +106,18 @@ const UserHomeDetails = ({ user, isLoading }) => {
           }
         </div>
       }
+      <CommonFormDrawer
+        isOpen={editForm}
+        onClose={onEditClick}
+        formComponent={
+          <UserForm
+            loggedIn
+            edit
+            reloadOnSuccess
+            onCancel={onEditClose} user={user}
+          />
+        }
+      />
     </div>
   )
 }

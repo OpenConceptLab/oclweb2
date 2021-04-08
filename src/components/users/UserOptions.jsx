@@ -5,13 +5,11 @@ import {
   List, ListItem, ListItemIcon, ListItemText, Chip, Divider, Button, Collapse
 } from '@material-ui/core';
 import {
-  ExitToApp as LogoutIcon, Edit as EditIcon, AccountCircle as AccountIcon,
+  ExitToApp as LogoutIcon, AccountCircle as AccountIcon,
   Storage as ServerIcon, ExpandLess as LessIcon, ExpandMore as MoreIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer } from '../../common/utils';
-import CommonFormDrawer from '../common/CommonFormDrawer';
-import UserForm from './UserForm';
 import ServerConfigList from '../common/ServerConfigList';
 
 const onLogoutClick = msg => {
@@ -26,7 +24,6 @@ const UserOptions = () => {
   const initials = getUserInitials()
   const user = getCurrentUser() || {}
   const [open, setOpen] = React.useState(false);
-  const [form, setForm] = React.useState(false);
   const [serverOpen, setServerOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const handleToggle = () => setOpen((prevOpen) => !prevOpen);
@@ -41,11 +38,6 @@ const UserOptions = () => {
     handleClose(event);
     window.location.hash = user.url
   };
-  const onEditClick = event => {
-    event.persist();
-    handleClose(event);
-    setForm(true);
-  }
   const username = get(user, 'username');
   const displayName = get(user, 'name') || username;
   const serverConfig = getAppliedServerConfig();
@@ -93,18 +85,9 @@ const UserOptions = () => {
                         }
                       </div>
                       <ListItemText className='list-item-text-bold-primary' primary={displayName} secondary={user.email} />
-                      <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>Manage your OCL Account</span>} onClick={onHomeClick} />
+                      <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} />
                     </ListItemText>
                   </ListItem>
-                  <Divider />
-                  <Tooltip placement='left' title='Edit Profile'>
-                    <ListItem className='user-option-list-item' onClick={onEditClick}>
-                      <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
-                        <EditIcon fontSize='small' />
-                      </ListItemIcon>
-                      <ListItemText className='list-item-text' primary={displayName} secondary={user.email} />
-                    </ListItem>
-                  </Tooltip>
                   <Divider />
                   {
                     canSwitchServer() &&
@@ -133,18 +116,6 @@ const UserOptions = () => {
           </Grow>
         )}
       </Popper>
-      <CommonFormDrawer
-        isOpen={form}
-        onClose={() => setForm(false)}
-        formComponent={
-          <UserForm
-            loggedIn
-            edit
-            reloadOnSuccess
-            onCancel={() => setForm(false)} user={user}
-          />
-        }
-      />
     </React.Fragment>
   )
 }
