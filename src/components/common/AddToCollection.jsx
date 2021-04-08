@@ -175,7 +175,7 @@ class AddToCollection extends React.Component {
                         Create New Collection?
                       </a>
                     </p> :
-                    <MenuList variant='menu' id="split-button-menu" style={{maxHeight: '100%', overflow: 'scroll'}}>
+                    <MenuList variant='menu' id="split-button-menu" style={{maxHeight: '100%', overflow: 'auto'}}>
                       <TextField
                         id='collection-search-input'
                         placeholder='Search Collection...'

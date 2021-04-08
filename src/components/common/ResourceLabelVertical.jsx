@@ -14,7 +14,7 @@ const ResourceLabelVertical = props => {
     padding: '0 5px',
     textAlign: 'center',
     borderRadius: '2px',
-    overflowX: 'scroll',
+    overflowX: 'auto',
   }
   const separatorStyles = {
     padding: '0 4px',

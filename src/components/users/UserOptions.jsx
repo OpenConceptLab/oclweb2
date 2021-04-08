@@ -101,7 +101,7 @@ const UserOptions = () => {
                       </ListItem>
                     </Tooltip>
                   }
-                  <Collapse in={serverOpen} style={{maxHeight: '250px', overflow: 'scroll'}}>
+                  <Collapse in={serverOpen} style={{maxHeight: '250px', overflow: 'auto'}}>
                     <ServerConfigList onClose={() => setOpen(false)}/>
                   </Collapse>
                   <Divider />

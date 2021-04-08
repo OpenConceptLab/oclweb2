@@ -11,7 +11,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '525px', overflow: 'scroll', display: 'inline-block', width: '100%', textAlign: 'left',
+  maxHeight: '525px', overflow: 'auto', display: 'inline-block', width: '100%', textAlign: 'left',
 }
 
 const UserHomeOrgs = ({ isLoadingOrgs, orgs }) => {
