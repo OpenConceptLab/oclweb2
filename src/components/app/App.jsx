@@ -37,8 +37,10 @@ const App = props => {
     "storage",
     event => {
       if(event.key === 'token' && !event.newValue) {
-        localStorage.clear();
-        window.location = '/';
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        if(!get(localstorage, 'server'))
+          window.location = '/';
       }
     });
 
