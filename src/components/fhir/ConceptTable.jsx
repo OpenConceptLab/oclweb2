@@ -5,7 +5,7 @@ import {
 import { find, get, map, isEmpty } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants';
 
-const ConceptTable = ({ concepts }) => {
+const ConceptTable = ({ concepts, hapi }) => {
   const theadStyles = {
     backgroundColor: BLUE,
     border: `1px solid ${BLUE}`,
@@ -22,8 +22,13 @@ const ConceptTable = ({ concepts }) => {
         <TableRow>
           <TableCell align='left' style={headCellStyles}>Code</TableCell>
           <TableCell align='left' style={headCellStyles}>Display</TableCell>
-          <TableCell align='left' style={headCellStyles}>Concept Class</TableCell>
-          <TableCell align='left' style={headCellStyles}>Data Type</TableCell>
+          {
+            !hapi &&
+            <React.Fragment>
+              <TableCell align='left' style={headCellStyles}>Concept Class</TableCell>
+              <TableCell align='left' style={headCellStyles}>Data Type</TableCell>
+            </React.Fragment>
+          }
         </TableRow>
       </TableHead>
       <TableBody>
@@ -33,16 +38,19 @@ const ConceptTable = ({ concepts }) => {
             <TableCell align='center' colSpan={4}>We found 0 codes.</TableCell>
           </TableRow> :
           map(concepts, concept => {
-            const datatype = getValue(concept, 'datatype', 'valueString');
-            const conceptClass = getValue(concept, 'conceptclass', 'valueString');
             const isInactive = getValue(concept, 'inactive', 'valueBoolean')
             const className = isInactive ? 'retired' : '';
             return (
               <TableRow hover key={concept.code}>
                 <TableCell>{concept.code}</TableCell>
                 <TableCell className={className}>{concept.display}</TableCell>
-                <TableCell>{conceptClass}</TableCell>
-                <TableCell>{datatype}</TableCell>
+                {
+                  !hapi &&
+                  <React.Fragment>
+                    <TableCell>{getValue(concept, 'conceptclass', 'valueString')}</TableCell>
+                    <TableCell>{getValue(concept, 'datatype', 'valueString')}</TableCell>
+                  </React.Fragment>
+                }
               </TableRow>
             )
           })

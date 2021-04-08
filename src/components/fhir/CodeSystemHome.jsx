@@ -144,7 +144,7 @@ class CodeSystemHome extends React.Component {
                 aboutTab
                 selectedConfig={selectedConfig}
                 isOCLDefaultConfigSelected
-                fhir
+                hapi={isHAPI}
               />
             </div>
           )

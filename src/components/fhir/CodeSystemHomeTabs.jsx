@@ -8,7 +8,7 @@ import ConceptTable from './ConceptTable';
 const CodeSystemHomeTabs = props => {
   const {
     tab, source, versions, location, versionedObjectURL, aboutTab, selectedConfig, onTabChange,
-    isOCLDefaultConfigSelected, codes,
+    isOCLDefaultConfigSelected, codes, hapi
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -57,7 +57,7 @@ const CodeSystemHomeTabs = props => {
         }
         {
           selectedTabConfig.type === 'codes' &&
-          <ConceptTable concepts={codes} />
+          <ConceptTable concepts={codes} hapi={hapi} />
         }
       </div>
     </div>
