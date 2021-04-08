@@ -83,7 +83,7 @@ export const SERVER_CONFIGS = [
     }
   },
   {
-    id: 8,
+    id: 9,
     name: 'PEPFAR’s test FHIR HAPI',
     type: 'fhir',
     hapi: true,
