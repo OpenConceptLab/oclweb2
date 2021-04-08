@@ -112,12 +112,13 @@ const getValue = (item, column) => {
 }
 
 const getTag = (tag, item) => {
+  const value = isFunction(tag.getValue) ? tag.getValue(item) : get(item, tag.value, '0').toLocaleString();
   return (
     <Tooltip title={tag.label} key={tag.id}>
       <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
         <div className='flex-vertical-center'>
           <span>{tag.icon}</span>
-          <span style={{padding: '2px'}}>{`${get(item, tag.value, '0').toLocaleString()}`}</span>
+          <span style={{padding: '2px'}}>{value}</span>
         </div>
       </div>
     </Tooltip>

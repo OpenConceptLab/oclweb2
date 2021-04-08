@@ -8,6 +8,7 @@ import {
   Home as HomeIcon,
   Loyalty as LoyaltyIcon,
 } from '@material-ui/icons'
+import { get } from 'lodash';
 import {
   formatDate, formatWebsiteLink, formatDateTime
 } from '../../common/utils';
@@ -129,7 +130,7 @@ const CONCEPT_CONTAINER_TAGS = [
 const CODE_SYSTEM_TAGS = [
   {
     id: 'count',
-    value: 'resource.count',
+    getValue: item => (get(item, 'resource.count') || (get(item, 'resource.concept', []) || []).length).toLocaleString(),
     label: 'Concepts',
     icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
     hrefAttr: item => `/fhir/CodeSystem/${item.resource.id}/`
