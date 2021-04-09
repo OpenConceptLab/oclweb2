@@ -87,7 +87,8 @@ export const OPTIONS = [
   {
     label: 'OCL Online',
     icon: <MetadataClearinghouseIcon color='primary' />,
-    selected: true
+    selected: true,
+    tooltip: 'OCL Online: Hosted terminology service'
   },
   {
     label: 'Tools',

@@ -155,15 +155,15 @@ const Header = props => {
               canSwitchServer() && isServerSwitched() &&
               <ServerConfigsChip style={{marginRight: '20px'}} />
             }
-              {
-                authenticated ?
-                <span style={{marginLeft: '10px'}}>
-                  <UserOptions />
-                </span>:
-                <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
-                  Sign In
-                </Button>
-              }
+            {
+              authenticated ?
+              <span style={{marginLeft: '10px'}}>
+                <UserOptions />
+              </span>:
+              <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
+                Sign In
+              </Button>
+            }
           </div>
         </Toolbar>
       </AppBar>
@@ -270,7 +270,7 @@ const Header = props => {
           <List>
             {
               map(OPTIONS, option => {
-                const { href, label, selected, icon, nested } = option;
+                const { href, label, selected, icon, nested, tooltip } = option;
                 const hasNested = !isEmpty(nested);
                 const isCommunity = label === 'Community';
                 const isTools = label === 'Tools';
@@ -284,7 +284,7 @@ const Header = props => {
 
                 return (
                   <React.Fragment key={label}>
-                    <Tooltip title={label} placement='right'>
+                    <Tooltip title={tooltip || label} placement='right'>
                       <ListItem
                         className='btn'
                         button
