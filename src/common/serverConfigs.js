@@ -21,7 +21,7 @@ export const SERVER_CONFIGS = [
     id: 4,
     name: 'OCL Staging',
     type: 'ocl',
-    url: 'https://api.staging.aws.openconceptlab.org'
+    url: 'https://api.staging.openconceptlab.org'
   },
   {
     id: 5,
