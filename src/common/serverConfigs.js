@@ -9,13 +9,13 @@ export const SERVER_CONFIGS = [
     id: 2,
     name: 'OCL QA',
     type: 'ocl',
-    url: 'https://api.qa.aws.openconceptlab.org'
+    url: 'https://api.qa.openconceptlab.org'
   },
   {
     id: 3,
     name: 'OCL DEMO',
     type: 'ocl',
-    url: 'https://api.demo.aws.openconceptlab.org'
+    url: 'https://api.demo.openconceptlab.org'
   },
   {
     id: 4,
@@ -33,13 +33,13 @@ export const SERVER_CONFIGS = [
   //   id: 5,
   //   name: 'OCL Bad Server',
   //   type: 'ocl',
-  //   url: 'https://api.foo.aws.openconceptlab.org'
+  //   url: 'https://api.foo.openconceptlab.org'
   // },
   {
     id: 6,
     name: 'FHIR QA',
     type: 'fhir',
-    url: 'https://fhir.qa.aws.openconceptlab.org',
+    url: 'https://fhir.qa.openconceptlab.org',
     info: {
       baseURI: '/fhir/',
       type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
@@ -54,7 +54,7 @@ export const SERVER_CONFIGS = [
     id: 7,
     name: 'FHIR Staging',
     type: 'fhir',
-    url: 'https://fhir.staging.aws.openconceptlab.org',
+    url: 'https://fhir.staging.openconceptlab.org',
     info: {
       pageSize: 10,
       baseURI: '/fhir/',
