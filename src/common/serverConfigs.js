@@ -27,7 +27,7 @@ export const SERVER_CONFIGS = [
     id: 5,
     name: 'OCL Production',
     type: 'ocl',
-    url: 'https://api.aws.openconceptlab.org'
+    url: 'https://api.openconceptlab.org'
   },
   // {
   //   id: 5,
