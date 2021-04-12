@@ -17,7 +17,7 @@ import {
 } from '@material-ui/icons';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 
-export const MARKETING_SITE_URL = 'https://aws.openconceptlab.org/';
+export const MARKETING_SITE_URL = 'https://openconceptlab.org/';
 const COMMUNITY_OPTIONS = [
   {
     label: 'Architecture Community Call',
