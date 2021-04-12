@@ -178,6 +178,12 @@ const App = props => {
             <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
             <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/password/reset/:token([a-zA-Z0-9\-\.\_]+)" component={ForgotPasswordForm} />
             <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
+
+            {/* FHIR */}
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={CodeSystemHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={CodeSystemHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/versions" component={CodeSystemHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)" component={CodeSystemHome} />
             <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/versions" component={CodeSystemHome} />
             <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={CodeSystemHome} />
             <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={CodeSystemHome} />

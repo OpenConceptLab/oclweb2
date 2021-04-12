@@ -133,7 +133,7 @@ const CODE_SYSTEM_TAGS = [
     getValue: item => (get(item, 'resource.count') || (get(item, 'resource.concept', []) || []).length).toLocaleString(),
     label: 'Concepts',
     icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
-    hrefAttr: item => `/fhir/CodeSystem/${item.resource.id}/`
+    hrefAttr: (item, hapi) => hapi ? `/fhir/CodeSystem/${item.resource.id}/` : `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
   },
 ]
 

@@ -364,13 +364,17 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
-    if(includes(['references'], resource) || (fhir && !hapi))
+    if(includes(['references'], resource))
       return
     event.stopPropagation();
     event.preventDefault()
 
-    if(resource === 'CodeSystem')
-      window.location.hash = `/fhir/CodeSystem/${item.resource.id}`;
+    if(resource === 'CodeSystem'){
+      if(hapi)
+        window.location.hash = `/fhir/CodeSystem/${item.resource.id}`;
+      else
+        window.location.hash = `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
+    }
     else
       window.location.hash = item.url;
   }
@@ -472,7 +476,7 @@ const ExpandibleRow = props => {
   }
 
   const navigateTo = (event, item, url) => {
-    let _url = isFunction(url) ? url(item) : url;
+    let _url = isFunction(url) ? url(item, hapi) : url;
 
     if(!isConceptContainer && !fhir)
       _url = url.replace('/versions', '/history')
@@ -526,7 +530,7 @@ const ExpandibleRow = props => {
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
               <CircularProgress style={{width: '20px', height: '20px'}} /> :
-              map(resourceDefinition.tags, tag => (tag.text || (fhir && !hapi)) ? getTag(tag, item) : (
+              map(resourceDefinition.tags, tag => tag.text ? getTag(tag, item) : (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, item, isFunction(tag.hrefAttr) ? tag.hrefAttr : get(item, tag.hrefAttr))}>
                   {getTag(tag, item)}
                 </Link>

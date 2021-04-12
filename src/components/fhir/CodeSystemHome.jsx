@@ -25,8 +25,12 @@ class CodeSystemHome extends React.Component {
     super(props);
     const server = getAppliedServerConfig()
     const isHAPI = get(server, 'hapi', false);
-    const currentURL = `/fhir/CodeSystem/${props.match.params.id}`
-    const codeSystemServerURL = isHAPI ? `${server.info.baseURI}/CodeSystem/${props.match.params.id}` : '';
+    const currentURL = isHAPI ?
+                       `/fhir/CodeSystem/${props.match.params.id}` :
+                       window.location.hash.split('?')[0].replace('#', '');
+    const codeSystemServerURL = isHAPI ?
+                                `${server.info.baseURI}/CodeSystem/${props.match.params.id}` :
+                                window.location.hash.split('?')[0].replace('#/fhir', '');
     this.state = {
       server: server,
       isHAPI: isHAPI,
@@ -98,7 +102,7 @@ class CodeSystemHome extends React.Component {
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else {
-                    const codeSystem = response.data;
+                    const codeSystem = this.state.isHAPI ? response.data : get(response, 'data.entry.0.resource');
                     this.setState({
                       isLoading: false,
                       codeSystem: codeSystem,
@@ -117,7 +121,7 @@ class CodeSystemHome extends React.Component {
     const {
       codeSystem, codes, versions, isLoading, tab, notFound, server, isHAPI, url, selectedConfig,
     } = this.state;
-    const source = {...(isHAPI ? codeSystem : get(codeSystem, 'entry.0.resource')), owner: server.info.org.id, canonical_url: codeSystem.url, release_date: codeSystem.date};
+    const source = {...codeSystem, owner: server.info.org.id, canonical_url: codeSystem.url, release_date: codeSystem.date};
 
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
