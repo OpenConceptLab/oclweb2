@@ -11,9 +11,11 @@ import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
 
+export const currentPath = () => window.location.hash.split('?')[0];
+
 export const isAtGlobalSearch = () => window.location.hash.includes('#/search') || isAtRoot();
 
-export const isAtRoot = () => window.location.hash === '#/';
+export const isAtRoot = () => currentPath() === '#/';
 
 export const formatDate = date => moment(date).format(DATE_FORMAT);
 
