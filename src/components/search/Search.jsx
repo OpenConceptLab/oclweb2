@@ -286,7 +286,7 @@ class Search extends React.Component {
         if(hapi)
           params = {...params, ...fhirParams}
         else
-          params = {...params, page: page, _sort: fhirParams._sort}
+          params = {...params, page: page, ...fhirParams}
       }
       fetchSearchResults(
         _resource,

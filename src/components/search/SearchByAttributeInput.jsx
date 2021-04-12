@@ -7,23 +7,29 @@ import {
 } from '@material-ui/icons';
 import { map, get } from 'lodash';
 
-const DEFAULT_FHIR_ATTRIBUTE = {id: 'name', label: 'Name'}
+const DEFAULT_HAPI_FHIR_ATTRIBUTE = {id: 'name', label: 'Name'}
+const DEFAULT_OCL_FHIR_ATTRIBUTE =  {id: 'status', label: 'Status'}
 
-const FHIR_ATTRIBUTES = [
+const HAPI_FHIR_ATTRIBUTES = [
   {id: '_id', label: 'id'},
   {id: 'date', label: 'Release Date'},
   {id: 'status', label: 'Status'},
-  DEFAULT_FHIR_ATTRIBUTE,
+  DEFAULT_HAPI_FHIR_ATTRIBUTE,
   {id: 'version', label: 'Version'},
   {id: 'description', label: 'Description'},
+]
+const OCL_FHIR_ATTRIBUTESS = [
+  DEFAULT_OCL_FHIR_ATTRIBUTE,
+  {id: 'content-mode', label: 'Content Mode'},
+  {id: 'publisher', label: 'Publisher'},
 ]
 class SearchByAttributeInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       input: '',
-      attrs: FHIR_ATTRIBUTES,
-      selectedAttribute: DEFAULT_FHIR_ATTRIBUTE,
+      attrs: props.hapi ? HAPI_FHIR_ATTRIBUTES : OCL_FHIR_ATTRIBUTESS,
+      selectedAttribute: props.hapi ? DEFAULT_HAPI_FHIR_ATTRIBUTE : DEFAULT_OCL_FHIR_ATTRIBUTE,
       anchorEl: null,
     }
   }
@@ -72,12 +78,12 @@ class SearchByAttributeInput extends React.Component {
           {
             input &&
             <React.Fragment>
-            <Tooltip title='Clear'>
-              <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
-                <ClearIcon />
-              </IconButton>
-            </Tooltip>
-            <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
+              <Tooltip title='Clear'>
+                <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
+                  <ClearIcon />
+                </IconButton>
+              </Tooltip>
+              <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
             </React.Fragment>
           }
           <Tooltip title='Search'>
