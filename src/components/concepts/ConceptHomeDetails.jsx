@@ -20,8 +20,8 @@ const None = () => {
 }
 
 const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
-  const directMappings = getDirectMappings(concept.mappings, concept.id);
-  const indirectMappings = getIndirectMappings(concept.mappings, concept.id);
+  const directMappings = getDirectMappings(concept.mappings, concept.url);
+  const indirectMappings = getIndirectMappings(concept.mappings, concept.url);
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   const directMappingsCountLabel = isLoadingMappings ? '' : `(${get(directMappings, 'length', 0)})`;

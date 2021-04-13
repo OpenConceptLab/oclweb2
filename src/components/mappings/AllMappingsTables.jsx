@@ -4,13 +4,13 @@ import { isEmpty } from 'lodash';
 import NestedMappingsTable from './NestedMappingsTable';
 import { getIndirectMappings, getDirectMappings } from '../../common/utils';
 
-const AllMappingsTables = ({concept, mappings, isLoading}) => {
+const AllMappingsTables = ({concept_url, mappings, isLoading}) => {
   const getMappingsHeader = (mappings, isDirect) => {
     const count = mappings.length;
     return `${isDirect ? 'Direct' : 'Inverse'} Mappings (${count})`
   }
-  const directMappings = getDirectMappings(mappings, concept);
-  const indirectMappings = getIndirectMappings(mappings, concept);
+  const directMappings = getDirectMappings(mappings, concept_url);
+  const indirectMappings = getIndirectMappings(mappings, concept_url);
   const directMappingsHeader = getMappingsHeader(directMappings, true);
   const indirectMappingsHeader = getMappingsHeader(indirectMappings);
   const zeroMappings = isEmpty(mappings);

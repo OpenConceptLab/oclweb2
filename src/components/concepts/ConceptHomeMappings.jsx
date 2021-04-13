@@ -19,7 +19,7 @@ const None = () => {
 }
 
 const ConceptHomeMappings = ({ concept, isLoadingMappings }) => {
-  const mappingsDistribution = omitBy(getMappingsDistributionByMapType(concept.mappings, concept.id), isEmpty);
+  const mappingsDistribution = omitBy(getMappingsDistributionByMapType(concept.mappings, concept.url), isEmpty);
   const count = isLoadingMappings ? '' : `(${get(concept.mappings, 'length', 0)})`
   return (
     <div className='col-md-12'>

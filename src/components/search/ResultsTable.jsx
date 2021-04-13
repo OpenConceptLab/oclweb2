@@ -576,7 +576,7 @@ const ExpandibleRow = props => {
                   {
                     tab === resourceDefinition.tabs.indexOf('Mappings') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <AllMappingsTables mappings={mappings} concept={item.id} isLoading={isFetchingMappings} />
+                      <AllMappingsTables mappings={mappings} concept_url={item.url} isLoading={isFetchingMappings} />
                     </div>
                   }
                   {

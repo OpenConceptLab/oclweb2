@@ -41,36 +41,36 @@ export const formatWebsiteLink = (value, style) => {
   return '';
 }
 
-export const getIndirectMappings = (mappings, concept) => filter(mappings, {to_concept_code: concept});
+export const getIndirectMappings = (mappings, concept_url) => filter(mappings, {to_concept_url: concept_url});
 
-export const getDirectMappings = (mappings, concept) => filter(mappings, {from_concept_code: concept});
+export const getDirectMappings = (mappings, concept_url) => filter(mappings, {from_concept_url: concept_url});
 
-export const getDirectExternalMappings = (mappings, concept) => filter(mappings, mapping => Boolean(mapping.from_concept_code === concept && mapping.external_id));
+export const getDirectExternalMappings = (mappings, concept_url) => filter(mappings, mapping => Boolean(mapping.from_concept_url === concept_url && mapping.external_id));
 
-export const getLinkedQuestions = (mappings, concept) => filter(mappings, {to_concept_code: concept, map_type: 'Q-AND-A'});
+export const getLinkedQuestions = (mappings, concept_url) => filter(mappings, {to_concept_url: concept_url, map_type: 'Q-AND-A'});
 
-export const getLinkedAnswers = (mappings, concept) => filter(mappings, {from_concept_code: concept, map_type: 'Q-AND-A'});
+export const getLinkedAnswers = (mappings, concept_url) => filter(mappings, {from_concept_url: concept_url, map_type: 'Q-AND-A'});
 
-export const getSetParents = (mappings, concept) => filter(mappings, {to_concept_code: concept, map_type: 'CONCEPT-SET'});
+export const getSetParents = (mappings, concept_url) => filter(mappings, {to_concept_url: concept_url, map_type: 'CONCEPT-SET'});
 
-export const getSetMembers = (mappings, concept) => filter(mappings, {from_concept_code: concept, map_type: 'CONCEPT-SET'});
+export const getSetMembers = (mappings, concept_url) => filter(mappings, {from_concept_url: concept_url, map_type: 'CONCEPT-SET'});
 
-export const getMappingsDistributionByMapType = (mappings, concept) => {
-  const linkedQuestions = getLinkedQuestions(mappings, concept);
-  const linkedAnswers = getLinkedAnswers(mappings, concept);
-  const setParents = getSetParents(mappings, concept);
-  const setMembers = getSetMembers(mappings, concept);
+export const getMappingsDistributionByMapType = (mappings, concept_url) => {
+  const linkedQuestions = getLinkedQuestions(mappings, concept_url);
+  const linkedAnswers = getLinkedAnswers(mappings, concept_url);
+  const setParents = getSetParents(mappings, concept_url);
+  const setMembers = getSetMembers(mappings, concept_url);
   const directExternalMappings = getDirectExternalMappings(
     difference(mappings, [...linkedAnswers, ...linkedQuestions, ...setParents, ...setMembers]),
-    concept
+    concept_url
   );
   const directInternalMappings = getDirectMappings(
     difference(mappings, [...linkedAnswers, ...linkedQuestions, ...setParents, ...setMembers, ...directExternalMappings]),
-    concept
+    concept_url
   );
   const indirectMappings = getIndirectMappings(
     difference(mappings, [...linkedAnswers, ...linkedQuestions, ...setParents, ...setMembers, ...directExternalMappings, ...directInternalMappings]),
-    concept
+    concept_url
   );
 
   return {
