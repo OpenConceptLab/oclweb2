@@ -425,9 +425,12 @@ class Search extends React.Component {
         {
           resource !== 'references' && !fhir &&
           <span>
-            <span style={{paddingRight: '4px'}}>
-              <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
-            </span>
+            {
+              includes(['concepts', 'mappings'], resource) &&
+              <span style={{paddingRight: '4px'}}>
+                <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
+              </span>
+            }
             <span style={{paddingRight: '4px'}}>
               <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
             </span>
