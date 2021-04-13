@@ -165,17 +165,11 @@ class ConceptContainerForm extends React.Component {
     )
   }
 
-  onTextFieldChange = event => {
-    this.setFieldValue(event.target.id, event.target.value)
-  }
+  onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
-  onCheckboxChange = event => {
-    this.setFieldValue(event.target.name, event.target.checked)
-  }
+  onCheckboxChange = event => this.setFieldValue(event.target.name, event.target.checked)
 
-  onAutoCompleteChange = (id, item) => {
-    this.setFieldValue(id, get(item, 'id', ''), true)
-  }
+  onAutoCompleteChange = (id, item) => this.setFieldValue(id, get(item, 'id', ''), true)
 
   onMultiAutoCompleteChange = (event, items) => {
     this.setFieldValue('fields.supported_locales', map(items, 'id').join(','))

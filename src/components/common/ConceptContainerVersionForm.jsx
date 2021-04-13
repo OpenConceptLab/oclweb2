@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core';
 import { set, get, cloneDeep, isEmpty, pickBy, startCase } from 'lodash';
 import APIService from '../../services/APIService';
 
@@ -12,6 +12,7 @@ class ConceptContainerVersionForm extends React.Component {
         id: '',
         description: '',
         external_id: '',
+        released: false,
       },
       fieldErrors: {},
     }
@@ -24,19 +25,17 @@ class ConceptContainerVersionForm extends React.Component {
 
   setFieldsForEdit() {
     const { version } = this.props;
-    const attrs = ['id', 'description', 'external_id']
+    const attrs = ['id', 'description', 'external_id', 'released']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(version, attr, '') || ''))
     this.setState(newState);
   }
 
-  onTextFieldChange = event => {
-    this.setFieldValue(event.target.id, event.target.value)
-  }
+  onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
-  onAutoCompleteChange = (id, item) => {
-    this.setFieldValue(id, get(item, 'id', ''), true)
-  }
+  onCheckboxChange = event => this.setFieldValue(event.target.name, event.target.checked)
+
+  onAutoCompleteChange = (id, item) => this.setFieldValue(id, get(item, 'id', ''), true)
 
   setFieldValue(id, value, setObject=false) {
     const newState = {...this.state}
@@ -62,6 +61,7 @@ class ConceptContainerVersionForm extends React.Component {
     if(parentURL && isFormValid) {
       this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
+      fields.released = this.state.fields.released
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
@@ -157,6 +157,12 @@ class ConceptContainerVersionForm extends React.Component {
                 fullWidth
                 onChange={this.onTextFieldChange}
                 value={fields.external_id}
+              />
+            </div>
+            <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
+              <FormControlLabel
+                control={<Checkbox checked={fields.released} onChange={this.onCheckboxChange} name="fields.released" />}
+                label="Release"
               />
             </div>
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
