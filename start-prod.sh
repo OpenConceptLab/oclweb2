@@ -19,7 +19,7 @@ if [[ ! -z "${RECAPTCHA_SITE_KEY}" ]]; then
 fi
 
 echo "Adjusting nginx configuration"
-envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
+envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
 echo "Starting up the production server"
 nginx -g "daemon off;"
