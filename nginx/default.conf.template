@@ -5,6 +5,10 @@ server {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
     }
+    location /search {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
 
     gzip on;
     gzip_vary on;
