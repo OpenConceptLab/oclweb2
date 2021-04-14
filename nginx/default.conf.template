@@ -1,11 +1,11 @@
 server {
     listen       ${WEB_PORT};
     server_name  localhost;
-    location / {
+    location /search {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
     }
-    location /search {
+    location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
     }
