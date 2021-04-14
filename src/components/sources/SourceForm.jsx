@@ -18,6 +18,7 @@ const CONFIGS = {
   },
   extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction', 'collection_reference', 'hierarchy_meaning'],
   extraBooleanFields: ['experimental', 'case_sensitive', 'compositional', 'version_needed'],
+  extraURIFields: ['hierarchy_root_url'],
 }
 
 const SourceForm = props => {

@@ -51,6 +51,7 @@ class ConceptContainerForm extends React.Component {
         text: '',
         collection_reference: '', //only source
         hierarchy_meaning: '', //only source
+        hierarchy_root_url: '', //only source
         case_sensitive: null, //only source
         compositional: null, //only source
         version_needed: null, //only source
@@ -118,7 +119,7 @@ class ConceptContainerForm extends React.Component {
       'id', 'external_id', 'name', 'full_name', 'description', 'revision_date',
       'content_type', 'copyright', 'purpose', 'publisher', 'canonical_url', 'description',
       'custom_validation_schema', 'public_access', 'website', 'default_locale', 'text',
-      'locked_date', 'collection_reference', 'hierarchy_meaning',
+      'locked_date', 'collection_reference', 'hierarchy_meaning', 'hierarchy_root_url'
     ]
     const jsonAttrs = ['jurisdiction', 'contact', 'identifier']
     const booleanAttrs = ['immutable', 'case_sensitive', 'compositional', 'version_needed', 'experimental']
@@ -218,6 +219,7 @@ class ConceptContainerForm extends React.Component {
       delete fields.source_type;
       delete fields.collection_reference;
       delete fields.hierarchy_meaning;
+      delete fields.hierarchy_root_url;
       delete fields.case_sensitive;
       delete fields.compositional;
       delete fields.version_needed;
@@ -228,6 +230,9 @@ class ConceptContainerForm extends React.Component {
     if(this.props.edit)
       fields.update_comment = fields.comment
     fields = pickBy(fields, value => value)
+
+    if(this.isSource())
+      fields.hierarchy_root_url = this.state.fields.hierarchy_root_url
 
     return fields
   }
@@ -284,7 +289,7 @@ class ConceptContainerForm extends React.Component {
     } = this.state;
     const {
       onCancel, edit, types, resourceType, placeholders,
-      extraFields, extraBooleanFields, extraDateTimeFields
+      extraFields, extraBooleanFields, extraDateTimeFields, extraURIFields,
     } = this.props;
     const isSource = this.isSource()
     const selected_type = isSource ? selected_source_type : selected_collection_type;
@@ -503,6 +508,21 @@ class ConceptContainerForm extends React.Component {
               </div>
               {
                 map(extraFields, attr => (
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr}>
+                    <TextField
+                      error={Boolean(get(fieldErrors, attr))}
+                      id={`fields.${attr}`}
+                      label={startCase(attr)}
+                      variant="outlined"
+                      fullWidth
+                      onChange={this.onTextFieldChange}
+                      value={fields[attr]}
+                    />
+                  </div>
+                ))
+              }
+              {
+                map(extraURIFields, attr => (
                   <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr}>
                     <TextField
                       error={Boolean(get(fieldErrors, attr))}
