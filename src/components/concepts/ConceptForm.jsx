@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, IconButton, Button, CircularProgress } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
 import {
   set, get, map, cloneDeep, pullAt, filter, isEmpty, pick
 } from 'lodash';
@@ -31,6 +31,7 @@ class ConceptForm extends React.Component {
         names: [cloneDeep(NAME_MODEL)],
         descriptions: [cloneDeep(DESC_MODEL)],
         extras: [cloneDeep(EXTRAS_MODEL)],
+        parent_concept_urls: [],
         comment: '',
       },
       fieldErrors: {},
@@ -77,6 +78,7 @@ class ConceptForm extends React.Component {
     newState.fields.names = isEmpty(instance.names) ? newState.fields.names : map(instance.names, name => pick(name, ['locale', 'name_type', 'locale_preferred', 'external_id', 'name']))
     newState.fields.descriptions = isEmpty(instance.descriptions) ? newState.fields.descriptions : map(instance.descriptions, desc => pick(desc, ['locale', 'description_type', 'locale_preferred', 'external_id', 'description']))
     newState.fields.extras = isEmpty(instance.extras) ? newState.fields.extras : map(instance.extras, (v, k) => ({key: k, value: v}))
+    newState.fields.parent_concept_urls = instance.parent_concept_urls || []
     this.setState(newState);
   }
 
@@ -108,6 +110,16 @@ class ConceptForm extends React.Component {
 
   onCheckboxChange = (id, value) => {
     this.setFieldValue(id, value)
+  }
+
+  onDeleteParentConceptURL = index => {
+    let newValue = cloneDeep(this.state.fields.parent_concept_urls)
+    newValue.splice(index, 1)
+    this.setFieldValue('fields.parent_concept_urls', newValue)
+  }
+
+  onAddParentConceptURL = () => {
+    this.setFieldValue('fields.parent_concept_urls', [...this.state.fields.parent_concept_urls, ''])
   }
 
   onAddNameLocale = () => {
@@ -319,6 +331,35 @@ class ConceptForm extends React.Component {
                   />
                 </div>
               }
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <div className='col-md-8'>
+                  <h3>Parent Concept URLs</h3>
+                </div>
+                <div className='col-md-4' style={{textAlign: 'right'}}>
+                  <IconButton color='primary' onClick={this.onAddParentConceptURL}>
+                    <AddIcon />
+                  </IconButton>
+                </div>
+                {
+                  map(fields.parent_concept_urls, (url, index) => (
+                    <div className='col-md-12 no-side-padding' key={index} style={index > 0 ? {marginTop: '5px', width: '100%'} : {width: '100%'}}>
+                      <div className='col-md-10 no-left-padding'>
+                      <TextField
+                        id={`fields.parent_concept_urls.${index}`}
+                        label="Parent Concept URL"
+                        variant="outlined"
+                        fullWidth
+                        onChange={this.onTextFieldChange}
+                        value={get(fields, `parent_concept_urls.${index}`)}
+                      />
+                      </div>
+                      <div className='col-md-2 no-right-padding'>
+                        <IconButton style={{}} onClick={() => this.onDeleteParentConceptURL(index)}><DeleteIcon /></IconButton>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <div className='col-md-8'>
                   <h3 style={fieldErrors.names && isEmpty(fields.names) ? {color: ERROR_RED} : {}}>Names & Synonyms</h3>
