@@ -166,6 +166,7 @@ class OrgForm extends React.Component {
                   value={fields.id}
                   disabled={edit}
                   required
+                  inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
                 />
               </div>
             }

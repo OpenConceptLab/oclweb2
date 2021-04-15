@@ -245,6 +245,7 @@ class MappingForm extends React.Component {
                     onChange={this.onTextFieldChange}
                     value={fields.id}
                     disabled={edit}
+                    inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
                   />
                 </div>
               }
