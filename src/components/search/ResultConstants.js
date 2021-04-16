@@ -104,7 +104,7 @@ export const ALL_COLUMNS = {
 };
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
-const CONCEPT_CONTAINER_TAGS = [
+export const CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS = [
   {
     id: 'activeConcepts',
     value: 'summary.active_concepts',
@@ -119,6 +119,9 @@ const CONCEPT_CONTAINER_TAGS = [
     icon: <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />,
     hrefAttr: 'mappings_url'
   },
+]
+const CONCEPT_CONTAINER_TAGS = [
+  ...CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS,
   {
     id: 'versions',
     value: 'summary.versions',

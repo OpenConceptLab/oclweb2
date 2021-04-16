@@ -109,7 +109,7 @@ class SourceHome extends React.Component {
   getVersions() {
     APIService.new()
               .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get(null, null, {verbose: true})
+              .get(null, null, {verbose: true, includeSummary: true})
               .then(response => {
                 this.setState({versions: response.data})
               })
@@ -177,7 +177,11 @@ class SourceHome extends React.Component {
 
   onVersionUpdate = updatedVersion => {
     const newState = {...this.state}
+    const oldVersion = find(newState.versions, {uuid: updatedVersion.uuid})
     const index = findIndex(newState.versions, {uuid: updatedVersion.uuid})
+    if(!updatedVersion.summary)
+      updatedVersion.summary = oldVersion.summary
+
     newState.versions.splice(index, 1, updatedVersion)
     this.setState(newState)
   }
