@@ -36,6 +36,9 @@ const FilterDrawer = props => {
     delete uiFilters.collection
   }
 
+  if(has(uiFilters, 'experimental'))
+    uiFilters.experimental = [[(uiFilters.experimental[0][0] === 1).toString(), uiFilters.experimental[0][1], uiFilters.experimental[0][2]]]
+
   if(!isEmpty(facetOrder) && !isEmpty(uiFilters)) {
     const orderedUIFilters = {}
     forEach(facetOrder, attr => {
