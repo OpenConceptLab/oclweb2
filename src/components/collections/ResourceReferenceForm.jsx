@@ -91,16 +91,11 @@ class ResourceReferenceForm extends React.Component {
   }
 
   render() {
-    const { owners } = this.props;
-    const {
-      owner, source, collection, sources, collections, version, versions
-    } = this.state;
+    const { source, collection, sources, collections, version, versions } = this.state;
     return (
       <div className='col-md-12 no-side-padding'>
         <div className='col-md-4 no-left-padding'>
           <MixedOwnersAutocomplete
-            owners={orderBy(owners, ['ownerType', 'name'])}
-            selected={owner}
             onChange={this.onAutoCompleteChange}
             required
           />

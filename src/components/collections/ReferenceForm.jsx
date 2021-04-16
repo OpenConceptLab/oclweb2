@@ -14,7 +14,6 @@ class ReferenceForm extends React.Component {
     this.expressionRegex = new RegExp(SOURCE_CHILD_URI_REGEX);
     this.state = {
       byURL: false,
-      owners: [],
       fields: {
         concepts: [],
         mappings: [],
@@ -22,22 +21,6 @@ class ReferenceForm extends React.Component {
       },
       fieldErrors: {},
     }
-  }
-
-  componentDidMount() {
-    this.fetchOwners();
-  }
-
-  fetchOwners() {
-    APIService.orgs().get().then(response => {
-      const orgs = map(response.data, org => ({...org, ownerType: 'org', name: org.id}))
-      this.setState({owners: [...this.state.owners, ...orgs]})
-    })
-
-    APIService.users().get().then(response => {
-      const users = map(response.data, user => ({...user, ownerType: 'user', name: user.username}))
-      this.setState({owners: [...this.state.owners, ...users]})
-    })
   }
 
   onSwitchChange = event => this.setState({
@@ -153,7 +136,7 @@ class ReferenceForm extends React.Component {
   }
 
   render() {
-    const { byURL, fields, owners } = this.state;
+    const { byURL, fields } = this.state;
     const { onCancel } = this.props;
     const header = `Add Reference(s)`;
     return (
@@ -187,7 +170,7 @@ class ReferenceForm extends React.Component {
                 onBlur={this.onExpressionBlur}
                 onDelete={this.onExpressionDelete}
               /> :
-              <ResourceReferenceForm owners={owners} onChange={this.onExpressionChange} />
+              <ResourceReferenceForm onChange={this.onExpressionChange} />
             }
           </form>
         </div>
