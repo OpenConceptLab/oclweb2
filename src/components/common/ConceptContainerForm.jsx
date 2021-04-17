@@ -231,8 +231,10 @@ class ConceptContainerForm extends React.Component {
       fields.update_comment = fields.comment
     fields = pickBy(fields, value => value)
 
-    if(this.isSource())
+    if(this.isSource()) {
       fields.hierarchy_root_url = this.state.fields.hierarchy_root_url
+      fields.hierarchy_meaning = this.state.fields.hierarchy_meaning
+    }
 
     return fields
   }
@@ -289,7 +291,7 @@ class ConceptContainerForm extends React.Component {
     } = this.state;
     const {
       onCancel, edit, types, resourceType, placeholders,
-      extraFields, extraBooleanFields, extraDateTimeFields, extraURIFields,
+      extraFields, extraBooleanFields, extraDateTimeFields, extraURIFields, extraSelectFields
     } = this.props;
     const isSource = this.isSource()
     const selected_type = isSource ? selected_source_type : selected_collection_type;
@@ -518,6 +520,29 @@ class ConceptContainerForm extends React.Component {
                       onChange={this.onTextFieldChange}
                       value={fields[attr]}
                     />
+                  </div>
+                ))
+              }
+              {
+                map(extraSelectFields, attr => (
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr.id}>
+                    <FormControl variant="outlined" fullWidth>
+                      <InputLabel id="demo-simple-select-outlined-label">{startCase(attr.id)}</InputLabel>
+                      <Select
+                        id={`fields.${attr.id}`}
+                        value={fields[attr.id]}
+                        onChange={event => this.setFieldValue(`fields.${attr.id}`, event.target.value)}
+                        label={startCase(attr.id)}
+                      >
+                        {
+                          map(["None", ...attr.options], option => (
+                            <MenuItem value={option === 'None' ? '' : option} key={option}>
+                              {option === 'None' ? <em>None</em> : option}
+                            </MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
                   </div>
                 ))
               }
