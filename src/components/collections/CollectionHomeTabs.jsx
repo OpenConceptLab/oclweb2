@@ -16,7 +16,7 @@ const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -98,7 +98,7 @@ const CollectionHomeTabs = props => {
         }
         {
           selectedTabConfig.type === 'versions' &&
-          <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} />
+          <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
         }
         {
           includes(['concepts', 'mappings', 'references'], selectedTabConfig.type) &&

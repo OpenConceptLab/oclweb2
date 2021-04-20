@@ -32,6 +32,7 @@ class SourceHome extends React.Component {
       accessDenied: false,
       permissionDenied: false,
       isLoading: true,
+      isLoadingVersions: true,
       source: {},
       versions: [],
       tab: this.getDefaultTabIndex(),
@@ -107,12 +108,14 @@ class SourceHome extends React.Component {
   }
 
   getVersions() {
-    APIService.new()
-              .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get(null, null, {verbose: true, includeSummary: true})
-              .then(response => {
-                this.setState({versions: response.data})
-              })
+    this.setState({isLoadingVersions: true}, () => {
+      APIService.new()
+                .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
+                .get(null, null, {verbose: true, includeSummary: true})
+                .then(response => {
+                  this.setState({versions: response.data, isLoadingVersions: false})
+                })
+    })
   }
 
   onTabChange = (event, value) => {
@@ -189,7 +192,7 @@ class SourceHome extends React.Component {
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied
+      notFound, accessDenied, permissionDenied, isLoadingVersions
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -226,6 +229,7 @@ class SourceHome extends React.Component {
               selectedConfig={selectedConfig}
               showConfigSelection={this.customConfigFeatureApplicable()}
               isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
+              isLoadingVersions={isLoadingVersions}
             />
           </div>
         }

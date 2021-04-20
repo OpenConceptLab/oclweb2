@@ -32,6 +32,7 @@ class CollectionHome extends React.Component {
       accessDenied: false,
       permissionDenied: false,
       isLoading: true,
+      isLoadingVersions: true,
       collection: {},
       versions: [],
       tab: this.getDefaultTabIndex(),
@@ -111,12 +112,14 @@ class CollectionHome extends React.Component {
   }
 
   getVersions() {
+    this.setState({isLoadingVersions: true}, () => {
     APIService.new()
               .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
               .get(null, null, {verbose: true})
               .then(response => {
-                this.setState({versions: response.data})
+                this.setState({versions: response.data, isLoadingVersions: false})
               })
+    })
   }
 
   onTabChange = (event, value) => {
@@ -193,7 +196,7 @@ class CollectionHome extends React.Component {
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied
+      notFound, accessDenied, permissionDenied, isLoadingVersions
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -230,6 +233,7 @@ class CollectionHome extends React.Component {
               selectedConfig={selectedConfig}
               showConfigSelection={this.customConfigFeatureApplicable()}
               isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
+              isLoadingVersions={isLoadingVersions}
             />
           </div>
         }
