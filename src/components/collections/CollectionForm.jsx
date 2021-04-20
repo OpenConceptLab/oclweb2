@@ -21,10 +21,9 @@ const CONFIGS = {
   extraDateTimeFields: ['locked_date']
 }
 
-const CollectionForm = props => {
-  return (
-    <ConceptContainerForm {...props} {...CONFIGS} resource={props.collection} />
-  )
-}
+const CollectionForm = props => (
+  <ConceptContainerForm {...props} {...CONFIGS} resource={props.collection} />
+);
 
 export default CollectionForm;
+

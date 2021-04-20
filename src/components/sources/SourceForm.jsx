@@ -24,10 +24,9 @@ const CONFIGS = {
   extraURIFields: ['hierarchy_root_url'],
 }
 
-const SourceForm = props => {
-  return (
-    <ConceptContainerForm {...props} {...CONFIGS} resource={props.source} />
-  )
-}
+const SourceForm = props => (
+  <ConceptContainerForm {...props} {...CONFIGS} resource={props.source} />
+);
 
 export default SourceForm;
+
