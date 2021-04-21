@@ -136,7 +136,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                             <LastUpdatedOnLabel
                               by={version.created_by}
                               date={fhir ? version.date : version.created_on}
-                              label={fhir ? 'Released on ' : 'Created on'}
+                              label={fhir ? 'Released' : 'Created'}
                             />
                           </div>
                         </div>
