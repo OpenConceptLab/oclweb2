@@ -28,6 +28,7 @@ import { fetchSearchResults, fetchCounts } from './utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
+import BestMatchSort from './BestMatchSort';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -54,7 +55,7 @@ class Search extends React.Component {
       exactMatch: 'off',
       resource: 'concepts',
       isLoading: false,
-      sortParams: {sortDesc: 'last_update'},
+      sortParams: {sortDesc: '_score'},
       limit: DEFAULT_LIMIT,
       openFacetsDrawer: false,
       appliedFacets: {},
@@ -438,7 +439,11 @@ class Search extends React.Component {
               <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
             </span>
             {
-              !isTable && <span style={{paddingRight: '4px'}}>
+              isTable ?
+              <span style={{paddingRight: '4px'}}>
+                <BestMatchSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+              </span> :
+              <span style={{paddingRight: '4px'}}>
                 <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={sortOn} sortBy={sortBy} />
               </span>
             }
