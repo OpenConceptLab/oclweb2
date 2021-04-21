@@ -27,7 +27,7 @@ const BestMatchSort = ({ selected, onSelect, size }) => {
                 <ArrowDownwardIcon fontSize="inherit" style={SORT_ICON_STYLES} />
           }
           variant="outlined"
-          color={isSelected ? "primary" : "default"}
+          color={isSelected ? "primary" : "secondary"}
           label="Best Match"
           onClick={onClick}
           size={size || 'medium'}

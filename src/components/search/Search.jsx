@@ -440,7 +440,7 @@ class Search extends React.Component {
             </span>
             {
               isTable ?
-              <span style={{paddingRight: '4px'}}>
+              <span>
                 <BestMatchSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
               </span> :
               <span style={{paddingRight: '4px'}}>
