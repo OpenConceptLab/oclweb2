@@ -28,7 +28,7 @@ const HIDDEN_ATTRIBUTES = {
 }
 
 const CodeSystemHomeHeader = ({source, url}) => {
-  const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 4;
+  const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 1;
   const status = get(source, 'status', '').toLowerCase()
   const isRetired = status === 'retired';
   const shortCode = source.id
