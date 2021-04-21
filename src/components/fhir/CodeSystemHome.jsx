@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty, get, isObject, map } from 'lodash';
+import { isEmpty, get, isObject, map, find } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import NotFound from '../common/NotFound';
 import APIService from '../../services/APIService';
@@ -36,10 +36,17 @@ class CodeSystemHome extends React.Component {
       isHAPI: isHAPI,
       notFound: false,
       isLoading: true,
+      isLoadingCodes: true,
       selectedConfig: DEFAULT_CONFIG,
       codeSystem: {},
       versions: [],
-      codes: [],
+      codes: {
+        results: [],
+        pageNumber: 1,
+        total: 0,
+        pageCount: 100,
+        pages: 1,
+      },
       tab: this.getDefaultTabIndex(),
       url: currentURL,
       serverUrl: codeSystemServerURL,
@@ -91,24 +98,52 @@ class CodeSystemHome extends React.Component {
     })
   }
 
-  refreshDataByURL() {
-    this.setState({isLoading: true, notFound: false}, () => {
+  getCurrentPage = data => {
+    const links = get(data, 'link', [])
+    const selfLink = get(find(links, {relation: 'self'}), 'url')
+    if(selfLink !== 'null') {
+      const query = new URLSearchParams(selfLink.split('?')[1])
+      const page = query.get('page')
+      if(page)
+        return parseInt(page)
+    }
+    return 1
+  }
+
+  getTotalPages = codeSystem => {
+    const total = get(codeSystem, 'count') || 0;
+    const pages = Math.ceil(total/100);
+    return pages < 1 ? 1 : pages
+  }
+
+  refreshDataByURL(loadingCodes = false) {
+    const { isHAPI, versions, codes } = this.state;
+    this.setState({isLoading: !loadingCodes, notFound: false}, () => {
+      const queryParams = isHAPI ? {} : {page: codes.pageNumber};
       APIService.new()
                 .overrideURL(this.state.serverUrl)
-                .get()
+                .get(null, null, queryParams)
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, notFound: true, codeSystem: {}})
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else {
-                    const codeSystem = this.state.isHAPI ? response.data : get(response, 'data.entry.0.resource');
+                    const codeSystem = isHAPI ? response.data : get(response, 'data.entry.0.resource');
+                    const total = get(codeSystem, 'count') || 0;
                     this.setState({
+                      isLoadingCodes: false,
                       isLoading: false,
                       codeSystem: codeSystem,
-                      codes: get(codeSystem, 'concept') || []
+                      codes: {
+                        results: get(codeSystem, 'concept') || [],
+                        total: total,
+                        pageCount: 100,
+                        pageNumber: isHAPI ? 1 : this.getCurrentPage(response.data),
+                        pages: isHAPI ? 1 : this.getTotalPages(codeSystem)
+                      },
                     }, () => {
-                      if(isEmpty(this.state.versions))
+                      if(isEmpty(versions))
                         this.getVersions()
                     })
                   }
@@ -117,9 +152,15 @@ class CodeSystemHome extends React.Component {
     })
   }
 
+  onCodesPageChange = page => this.setState({
+    isLoadingCodes: true,
+    codes: {...this.state.codes, pageNumber: page}
+  }, () => this.refreshDataByURL(true))
+
   render() {
     const {
       codeSystem, codes, versions, isLoading, tab, notFound, server, isHAPI, url, selectedConfig,
+      isLoadingCodes,
     } = this.state;
     const source = {...codeSystem, owner: server.info.org.id, canonical_url: codeSystem.url, release_date: codeSystem.date};
 
@@ -149,6 +190,8 @@ class CodeSystemHome extends React.Component {
                 selectedConfig={selectedConfig}
                 isOCLDefaultConfigSelected
                 hapi={isHAPI}
+                onPageChange={this.onCodesPageChange}
+                isLoadingCodes={isLoadingCodes}
               />
             </div>
           )

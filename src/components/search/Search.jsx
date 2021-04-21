@@ -4,11 +4,7 @@ import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
   map
 } from 'lodash';
-import { CircularProgress, ButtonGroup, Button, Chip } from '@material-ui/core';
-import {
-  NavigateBefore as NavigateBeforeIcon,
-  NavigateNext as NavigateNextIcon
-} from '@material-ui/icons';
+import { CircularProgress, Chip } from '@material-ui/core';
 import APIService from '../../services/APIService'
 import { BLUE, DEFAULT_LIMIT } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
@@ -29,6 +25,7 @@ import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
 import BestMatchSort from './BestMatchSort';
+import NavigationButtonGroup from './NavigationButtonGroup';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -535,14 +532,11 @@ class Search extends React.Component {
                 !noNav && (
                   shouldShowNewResourceComponent ?
                   newResourceComponent :
-                  <ButtonGroup size="small" color="primary" aria-label="outlined primary button group">
-                    <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(false)} disabled={!hasPrev}>
-                      <NavigateBeforeIcon width="10" />
-                    </Button>
-                    <Button style={{padding: 0}} onClick={() => this.onPageNavButtonClick(true)} disabled={!hasNext}>
-                      <NavigateNextIcon width="10" />
-                    </Button>
-                  </ButtonGroup>
+                  <NavigationButtonGroup
+                    onClick={this.onPageNavButtonClick}
+                    prev={hasPrev}
+                    next={hasNext}
+                  />
                 )
               }
             </span>
