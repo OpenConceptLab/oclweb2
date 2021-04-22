@@ -48,6 +48,7 @@ class ConceptContainerForm extends React.Component {
         identifier: '', //json
         contact: '', //json
         jurisdiction: '', //json
+        meta: '', //json
         text: '',
         collection_reference: '', //only source
         hierarchy_meaning: '', //only source
@@ -121,7 +122,7 @@ class ConceptContainerForm extends React.Component {
       'custom_validation_schema', 'public_access', 'website', 'default_locale', 'text',
       'locked_date', 'collection_reference', 'hierarchy_meaning', 'hierarchy_root_url'
     ]
-    const jsonAttrs = ['jurisdiction', 'contact', 'identifier']
+    const jsonAttrs = ['jurisdiction', 'contact', 'identifier', 'meta']
     const booleanAttrs = ['immutable', 'case_sensitive', 'compositional', 'version_needed', 'experimental']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(resource, attr, '') || ''))

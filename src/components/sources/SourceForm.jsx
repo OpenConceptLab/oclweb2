@@ -18,7 +18,7 @@ const CONFIGS = {
     external_id: "e.g. UUID from external system",
     canonical_url: "e.g. http://who.int/ICPC-2",
   },
-  extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction', 'collection_reference'],
+  extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction', 'collection_reference', 'meta'],
   extraBooleanFields: ['experimental', 'case_sensitive', 'compositional', 'version_needed'],
   extraSelectFields: [{id: 'hierarchy_meaning', options: HIERARCHY_MEANING}],
   extraURIFields: ['hierarchy_root_url'],

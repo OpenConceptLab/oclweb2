@@ -42,6 +42,7 @@ const HIDDEN_ATTRIBUTES = {
   identifier: 'json',
   contact: 'json',
   jurisdiction: 'json',
+  meta: 'json',
   immutable: 'boolean',
   locked_date: 'date',
   experimental: 'boolean'

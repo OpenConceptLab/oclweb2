@@ -16,7 +16,7 @@ const CONFIGS = {
     external_id: "e.g. UUID from external system",
     canonical_url: "e.g. http://who.int/ICPC-2",
   },
-  extraFields: ['publisher', 'purpose', 'copyright', 'identifier', 'contact', 'jurisdiction'],
+  extraFields: ['publisher', 'purpose', 'copyright', 'identifier', 'contact', 'jurisdiction', 'meta'],
   extraBooleanFields: ['experimental', 'immutable'],
   extraDateTimeFields: ['locked_date']
 }

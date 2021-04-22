@@ -41,6 +41,7 @@ const HIDDEN_ATTRIBUTES = {
   identifier: 'json',
   contact: 'json',
   jurisdiction: 'json',
+  meta: 'json',
   collection_reference: 'text',
   hierarchy_meaning: 'text',
   experimental: 'boolean',
