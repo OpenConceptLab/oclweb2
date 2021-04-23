@@ -412,3 +412,6 @@ export const getDefaultServerConfig = () => {
 export const canSwitchServer = () => Boolean(getSelectedServerConfig() || get(getCurrentUser(), 'is_staff'));
 
 export const isFHIRServer = () => get(getAppliedServerConfig(), 'type') === 'fhir';
+
+export const isConcept = uri => Boolean(uri.match('/concepts/'))
+export const isMapping = uri => Boolean(uri.match('/mappings/'))
