@@ -22,7 +22,7 @@ export const ALL_COLUMNS = {
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
-    {id: 'name', label: 'Name', value: 'display_name', sortOn: 'name', renderer: concept => (<span className={concept.retired ? 'retired' : ''}>{concept.display_name}</span>), className: 'medium', sortBy: 'asc'},
+    {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<span className={concept.retired ? 'retired' : ''}>{concept.display_name}</span>), className: 'medium', sortBy: 'asc'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
@@ -194,7 +194,7 @@ export const FACET_ORDER = {
 }
 
 export const SORT_ATTRS = {
-  concepts: ['score', 'last_update', 'id', 'name', 'concept_class', 'datatype', 'source', 'owner'],
+  concepts: ['score', 'last_update', 'id', '_name', 'concept_class', 'datatype', 'source', 'owner'],
   mappings: ['score', 'last_update', 'id', 'map_type', 'source', 'owner'],
   users: ['score', 'username', 'date_joined', 'company', 'location'],
   organizations: ['score', 'last_update', 'name', 'mnemonic'],
