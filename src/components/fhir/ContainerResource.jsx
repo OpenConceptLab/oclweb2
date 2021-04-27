@@ -3,7 +3,7 @@ import { merge, get, map, isArray } from 'lodash';
 import HeaderAttribute from '../common/HeaderAttribute';
 import Contact from './Contact';
 
-const CodeSystem = props => {
+const ContainerResource = props => {
   const contact = isArray(props.resource.contact) ?
                   (
                     <span>
@@ -30,4 +30,4 @@ const CodeSystem = props => {
   )
 }
 
-export default CodeSystem;
+export default ContainerResource;

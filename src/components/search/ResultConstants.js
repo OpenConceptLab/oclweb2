@@ -100,6 +100,15 @@ export const ALL_COLUMNS = {
     {id: 'content', label: 'Content', value: 'resource.content', sortOn: 'content', sortBy: 'asc'},
     {id: 'date', label: 'Release Date', value: 'resource.date', sortOn: 'date', formatter: formatDate},
     {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortOn: 'publisher', sortBy: 'asc'},
+  ],
+  ValueSet: [
+    {id: '_id', label: 'ID', value: 'resource.id', sortOn: '_id', sortBy: 'asc'},
+    {id: 'url', label: 'Canonical URL', value: 'resource.url', sortable: false},
+    {id: 'name', label: 'Name', value: 'resource.name', renderer: codeSystem => <span className={codeSystem.resource.status}>{codeSystem.resource.name}</span>, sortOn: 'name', sortBy: 'asc'},
+    {id: 'version', label: 'Latest Version', value: 'resource.version', sortOn: 'version', sortBy: 'asc'},
+    {id: 'status', label: 'Status', value: 'resource.status', sortOn: 'status', sortBy: 'asc'},
+    {id: 'date', label: 'Release Date', value: 'resource.date', sortOn: 'date', formatter: formatDate},
+    {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortOn: 'publisher', sortBy: 'asc'},
   ]
 };
 
@@ -139,8 +148,18 @@ const CODE_SYSTEM_TAGS = [
     hrefAttr: (item, hapi) => hapi ? `/fhir/CodeSystem/${item.resource.id}/` : `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
   },
 ]
+const VALUE_SET_TAGS = [
+  {
+    id: 'count',
+    getValue: item => (get(item, 'resource.count') || (get(item, 'resource.compose.include.0.concept', []) || []).length).toLocaleString(),
+    label: 'Concepts',
+    icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
+    hrefAttr: (item, hapi) => hapi ? `/fhir/ValueSet/${item.resource.id}/` : `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
+  },
+]
 
 export const CODE_SYSTEM_VERSION_TAGS = [...CODE_SYSTEM_TAGS]
+export const VALUE_SET_VERSION_TAGS = [...CODE_SYSTEM_TAGS]
 
 const SOURCE_TAG = {
   id: 'sources',
@@ -182,6 +201,7 @@ export const TAGS = {
     COLLECTION_TAG,
   ],
   CodeSystem: [...CODE_SYSTEM_TAGS],
+  ValueSet: [...VALUE_SET_TAGS]
 }
 export const FACET_ORDER = {
   concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership'],

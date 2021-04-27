@@ -34,7 +34,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
-import CodeSystem from '../fhir/CodeSystem';
+import FhirContainerResource from '../fhir/ContainerResource';
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -99,7 +99,16 @@ const RESOURCE_DEFINITIONS = {
     tags: TAGS.CodeSystem,
     expandible: true,
     tabs: ['Details', 'Versions', 'Copyright'],
-  }
+  },
+  ValueSet: {
+    headBgColor: GREEN,
+    headTextColor: WHITE,
+    columns: ALL_COLUMNS.ValueSet.slice(0, 8),
+    tagWaitAttribute: 'resource',
+    tags: TAGS.ValueSet,
+    expandible: true,
+    tabs: ['Details', 'Versions', 'Copyright'],
+  },
 }
 
 const getValue = (item, column) => {
@@ -288,6 +297,7 @@ const ExpandibleRow = props => {
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
   const isCodeSystem = resource === 'CodeSystem';
+  const isValueSet = resource === 'ValueSet';
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
@@ -592,15 +602,15 @@ const ExpandibleRow = props => {
                     </div>
                   }
                   {
-                    isCodeSystem && tab === resourceDefinition.tabs.indexOf('Copyright') &&
+                    (isCodeSystem || isValueSet) && tab === resourceDefinition.tabs.indexOf('Copyright') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       <div className="col-md-12" style={{padding: '20px'}} dangerouslySetInnerHTML={{__html: item.resource.copyright}} />
                     </div>
                   }
                   {
-                    isCodeSystem && tab === resourceDefinition.tabs.indexOf('Details') &&
+                    (isCodeSystem || isValueSet) && tab === resourceDefinition.tabs.indexOf('Details') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <CodeSystem {...item} style={{padding: '20px'}} />
+                      <FhirContainerResource {...item} style={{padding: '20px'}} />
                     </div>
                   }
                   {

@@ -10,9 +10,8 @@ const DEFAULT_CONFIG = {
   is_default: false,
   config: {
     tabs: [
-      {
-        type: "CodeSystem", label: "Code Systems", "default": true, layout: 'table'
-      },
+      { type: "CodeSystem", label: "Code Systems", "default": true, layout: 'table' },
+      { type: "ValueSet", label: "Value Sets", layout: 'table' },
     ]
   }
 }

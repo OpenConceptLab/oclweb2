@@ -5,14 +5,14 @@ import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
 
-const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit  , hapi}) => {
+const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit, hapi}) => {
   const tabConfigs = selectedConfig.config.tabs;
   const selectedTabConfig = tabConfigs[tab];
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="fhir-home-tabs" classes={{indicator: 'hidden'}}>
         {
-          map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
+          map(tabConfigs, config => <Tab key={config.label} label={config.label} disabled={!hapi && config.type === 'ValueSet'} />)
         }
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
