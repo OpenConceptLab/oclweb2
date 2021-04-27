@@ -228,7 +228,10 @@ class Search extends React.Component {
     this.fetchNewResults({searchStr: value, page: 1, exactMatch: exactMatch}, true, true)
   }
 
-  onFhirSearch = params => this.setState({fhirParams: params}, this.fetchNewResults)
+  onFhirSearch = params => this.setState(
+    {fhirParams: {...params, _sort: this.state.fhirParams._sort || '_id'}},
+    this.fetchNewResults
+  )
 
   getFacetQueryParam() {
     const { appliedFacets, viewFilters } = this.state;

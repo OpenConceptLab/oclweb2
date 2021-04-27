@@ -7,7 +7,7 @@ import CodeSystemHomeHeader from './CodeSystemHomeHeader';
 import CodeSystemHomeTabs from './CodeSystemHomeTabs';
 import { getAppliedServerConfig } from '../../common/utils';
 
-const DEFAULT_CONFIG = {
+const CODE_SYSTEM_DEFAULT_CONFIG = {
   name: 'FHIR Default (CodeSystem)',
   web_default: true,
   is_default: false,
@@ -20,25 +20,46 @@ const DEFAULT_CONFIG = {
   }
 }
 
-class CodeSystemHome extends React.Component {
+const VALUE_SET_DEFAULT_CONFIG = {
+  name: 'FHIR Default (ValueSet)',
+  web_default: true,
+  is_default: false,
+  config: {
+    tabs: [
+      {type: "codes", label: "Codes", page_size: 25, "default": true, layout: 'table'},
+      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
+      {type: "about", label: "About"},
+    ]
+  }
+}
+
+class ContainerHome extends React.Component {
   constructor(props) {
     super(props);
+    this.isCodeSystem = Boolean(window.location.hash.match('/CodeSystem/'))
+    this.isValueSet = Boolean(window.location.hash.match('/ValueSet/'))
+    this.URLAttr = 'CodeSystem'
+    let config = CODE_SYSTEM_DEFAULT_CONFIG
+    if(this.isValueSet) {
+      this.URLAttr = 'ValueSet'
+      config = VALUE_SET_DEFAULT_CONFIG
+    }
     const server = getAppliedServerConfig()
     const isHAPI = get(server, 'hapi', false);
     const currentURL = isHAPI ?
-                       `/fhir/CodeSystem/${props.match.params.id}` :
+                       `/fhir/${this.URLAttr}/${props.match.params.id}` :
                        window.location.hash.split('?')[0].replace('#', '');
-    const codeSystemServerURL = isHAPI ?
-                                `${server.info.baseURI}/CodeSystem/${props.match.params.id}` :
-                                window.location.hash.split('?')[0].replace('#/fhir', '');
+    const serverURL = isHAPI ?
+                      `${server.info.baseURI}/${this.URLAttr}/${props.match.params.id}` :
+                      window.location.hash.split('?')[0].replace('#/fhir', '');
     this.state = {
       server: server,
       isHAPI: isHAPI,
       notFound: false,
       isLoading: true,
       isLoadingCodes: true,
-      selectedConfig: DEFAULT_CONFIG,
-      codeSystem: {},
+      selectedConfig: config,
+      resource: {},
       versions: [],
       codes: {
         results: [],
@@ -49,7 +70,7 @@ class CodeSystemHome extends React.Component {
       },
       tab: this.getDefaultTabIndex(),
       url: currentURL,
-      serverUrl: codeSystemServerURL,
+      serverUrl: serverURL,
     }
   }
 
@@ -110,8 +131,7 @@ class CodeSystemHome extends React.Component {
     return 1
   }
 
-  getTotalPages = codeSystem => {
-    const total = get(codeSystem, 'count') || 0;
+  getTotalPages = total => {
     const pages = Math.ceil(total/100);
     return pages < 1 ? 1 : pages
   }
@@ -125,22 +145,24 @@ class CodeSystemHome extends React.Component {
                 .get(null, null, queryParams)
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, notFound: true, codeSystem: {}})
+                    this.setState({isLoading: false, notFound: true, resource: {}})
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else {
-                    const codeSystem = isHAPI ? response.data : get(response, 'data.entry.0.resource');
-                    const total = get(codeSystem, 'count') || 0;
+                    const resource = isHAPI ? response.data : get(response, 'data.entry.0.resource');
+                    const concepts = get(resource, 'concept') ||
+                                     get(find(get(resource, 'compose.include', []), inc => !isEmpty(get(inc, 'concept'))), 'concept') || [];
+                    const total = get(resource, 'count') || concepts.length || 0;
                     this.setState({
                       isLoadingCodes: false,
                       isLoading: false,
-                      codeSystem: codeSystem,
+                      resource: resource,
                       codes: {
-                        results: get(codeSystem, 'concept') || [],
+                        results: concepts,
                         total: total,
                         pageCount: 100,
                         pageNumber: isHAPI ? 1 : this.getCurrentPage(response.data),
-                        pages: isHAPI ? 1 : this.getTotalPages(codeSystem)
+                        pages: isHAPI ? 1 : this.getTotalPages(total)
                       },
                     }, () => {
                       if(isEmpty(versions))
@@ -159,10 +181,10 @@ class CodeSystemHome extends React.Component {
 
   render() {
     const {
-      codeSystem, codes, versions, isLoading, tab, notFound, server, isHAPI, url, selectedConfig,
+      resource, codes, versions, isLoading, tab, notFound, server, isHAPI, url, selectedConfig,
       isLoadingCodes,
     } = this.state;
-    const source = {...codeSystem, owner: server.info.org.id, canonical_url: codeSystem.url, release_date: codeSystem.date};
+    const source = {...resource, owner: server.info.org.id, canonical_url: resource.url, release_date: resource.date};
 
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
@@ -176,6 +198,7 @@ class CodeSystemHome extends React.Component {
               <CodeSystemHomeHeader
                 source={source}
                 url={`#${url}`}
+                parentURL={isHAPI ? `/fhir/${this.URLAttr}` : '/'}
               />
               <CodeSystemHomeTabs
                 tab={tab}
@@ -201,4 +224,4 @@ class CodeSystemHome extends React.Component {
   }
 }
 
-export default CodeSystemHome;
+export default ContainerHome;

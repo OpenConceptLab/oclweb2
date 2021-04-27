@@ -27,7 +27,7 @@ const HIDDEN_ATTRIBUTES = {
   release_date: 'date',
 }
 
-const CodeSystemHomeHeader = ({source, url}) => {
+const CodeSystemHomeHeader = ({source, url, parentURL}) => {
   const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 1;
   const status = get(source, 'status', '').toLowerCase()
   const isRetired = status === 'retired';
@@ -45,7 +45,7 @@ const CodeSystemHomeHeader = ({source, url}) => {
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...source} href='/' />
+            <OwnerButton {...source} href={parentURL} />
             <span className='separator'>/</span>
             <SourceButton label={shortCode} href={url} />
             {

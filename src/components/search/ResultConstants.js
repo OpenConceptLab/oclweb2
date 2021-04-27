@@ -8,7 +8,7 @@ import {
   Home as HomeIcon,
   Loyalty as LoyaltyIcon,
 } from '@material-ui/icons'
-import { get } from 'lodash';
+import { get, find, isEmpty } from 'lodash';
 import {
   formatDate, formatWebsiteLink, formatDateTime
 } from '../../common/utils';
@@ -151,7 +151,12 @@ const CODE_SYSTEM_TAGS = [
 const VALUE_SET_TAGS = [
   {
     id: 'count',
-    getValue: item => (get(item, 'resource.count') || (get(item, 'resource.compose.include.0.concept', []) || []).length).toLocaleString(),
+    getValue: item => {
+      const concepts = get(item, 'resource.count') ||
+                       get(find(get(item, 'resource.compose.include', []), inc => !isEmpty(get(inc, 'concept'))), 'concept', []).length ||
+                       0;
+      return concepts.toLocaleString()
+    },
     label: 'Concepts',
     icon: <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />,
     hrefAttr: (item, hapi) => hapi ? `/fhir/ValueSet/${item.resource.id}/` : `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`

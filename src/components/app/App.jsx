@@ -19,7 +19,7 @@ import ForgotPasswordForm from '../users/ForgotPasswordForm';
 import NotFound from '../common/NotFound';
 import ErrorBoundary from '../common/ErrorBoundary';
 import Fhir from '../fhir/Fhir';
-import CodeSystemHome from '../fhir/CodeSystemHome';
+import ContainerHome from '../fhir/ContainerHome';
 import Header from './Header';
 import Footer from './Footer';
 import RootView from './RootView';
@@ -180,14 +180,18 @@ const App = props => {
             <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_]+)/verify/:token([a-zA-Z0-9\-\.\_]+)" component={EmailVerification} />
 
             {/* FHIR */}
-            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={CodeSystemHome} />
-            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={CodeSystemHome} />
-            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/versions" component={CodeSystemHome} />
-            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)" component={CodeSystemHome} />
-            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/versions" component={CodeSystemHome} />
-            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={CodeSystemHome} />
-            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={CodeSystemHome} />
-            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)" component={CodeSystemHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={ContainerHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={ContainerHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/versions" component={ContainerHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/versions" component={ContainerHome} />
+            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={ContainerHome} />
+            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={ContainerHome} />
+            <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+            <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/versions" component={ContainerHome} />
+            <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/about" component={ContainerHome} />
+            <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/code" component={ContainerHome} />
+            <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
             <Route path="/fhir" component={Fhir} />
             <Route component={NotFound} />
           </Switch>

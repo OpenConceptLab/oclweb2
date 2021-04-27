@@ -4,7 +4,7 @@ import OrgHomeHeader from '../orgs/OrgHomeHeader';
 import FhirTabs from './FhirTabs';
 import HeaderAttribute from '../common/HeaderAttribute';
 
-const DEFAULT_CONFIG = {
+const HAPI_DEFAULT_CONFIG = {
   name: 'FHIR Default',
   web_default: true,
   is_default: false,
@@ -16,19 +16,31 @@ const DEFAULT_CONFIG = {
   }
 }
 
+const DEFAULT_CONFIG = {
+  name: 'FHIR Default',
+  web_default: true,
+  is_default: false,
+  config: {
+    tabs: [
+      { type: "CodeSystem", label: "Code Systems", "default": true, layout: 'table' },
+    ]
+  }
+}
+
 class Fhir extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tab: 0,
-    }
     this.serverConfig = getAppliedServerConfig()
+    this.state = {
+      tab: window.location.hash.match('/ValueSet') ? 1 : 0,
+      config: this.serverConfig.hapi ? HAPI_DEFAULT_CONFIG : DEFAULT_CONFIG
+    }
   }
 
   onTabChange = (event, value) => this.setState({tab: value})
 
   render() {
-    const { tab } = this.state;
+    const { tab, config } = this.state;
     const { info, url, hapi } = this.serverConfig;
     const { org, pageSize } = info;
     return (
@@ -53,7 +65,7 @@ class Fhir extends React.Component {
             location={this.props.location}
             match={this.props.match}
             url={info.baseURI}
-            selectedConfig={DEFAULT_CONFIG}
+            selectedConfig={config}
             limit={pageSize}
             hapi={hapi}
           />

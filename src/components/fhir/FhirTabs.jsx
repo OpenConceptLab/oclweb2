@@ -8,11 +8,12 @@ import { DEFAULT_LIMIT } from '../../common/constants';
 const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit, hapi}) => {
   const tabConfigs = selectedConfig.config.tabs;
   const selectedTabConfig = tabConfigs[tab];
+  const getTABHref = config => `#/fhir/${config.type}${location.search}`;
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="fhir-home-tabs" classes={{indicator: 'hidden'}}>
         {
-          map(tabConfigs, config => <Tab key={config.label} label={config.label} disabled={!hapi && config.type === 'ValueSet'} />)
+          map(tabConfigs, config => <Tab key={config.label} label={config.label} disabled={!hapi && config.type === 'ValueSet'}  component="a" href={getTABHref(config)} />)
         }
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>

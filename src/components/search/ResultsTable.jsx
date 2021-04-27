@@ -120,8 +120,8 @@ const getValue = (item, column) => {
   return value
 }
 
-const getTag = (tag, item) => {
-  const value = isFunction(tag.getValue) ? tag.getValue(item) : get(item, tag.value, '0').toLocaleString();
+const getTag = (tag, item, hapi) => {
+  const value = isFunction(tag.getValue) ? tag.getValue(item, hapi) : get(item, tag.value, '0').toLocaleString();
   return (
     <Tooltip title={tag.label} key={tag.id}>
       <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
@@ -385,6 +385,12 @@ const ExpandibleRow = props => {
       else
         window.location.hash = `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
     }
+    else if(resource === 'ValueSet'){
+      if(hapi)
+        window.location.hash = `/fhir/ValueSet/${item.resource.id}`;
+      else
+        window.location.hash = `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
+    }
     else
       window.location.hash = item.url;
   }
@@ -540,9 +546,9 @@ const ExpandibleRow = props => {
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
               <CircularProgress style={{width: '20px', height: '20px'}} /> :
-              map(resourceDefinition.tags, tag => tag.text ? getTag(tag, item) : (
+              map(resourceDefinition.tags, tag => tag.text ? getTag(tag, item, hapi) : (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, item, isFunction(tag.hrefAttr) ? tag.hrefAttr : get(item, tag.hrefAttr))}>
-                  {getTag(tag, item)}
+                  {getTag(tag, item, hapi)}
                 </Link>
               ))
             }
