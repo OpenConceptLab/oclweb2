@@ -16,6 +16,7 @@ import Signup from '../users/Signup';
 import EmailVerification from '../users/EmailVerification';
 import ForgotPasswordRequest from '../users/ForgotPasswordRequest';
 import ForgotPasswordForm from '../users/ForgotPasswordForm';
+import ImportHome from '../imports/ImportHome';
 import NotFound from '../common/NotFound';
 import ErrorBoundary from '../common/ErrorBoundary';
 import Fhir from '../fhir/Fhir';
@@ -59,6 +60,10 @@ const App = props => {
           <Switch>
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
             <Route path="/search" component={isFHIR ? Fhir : Search} />
+            <Route
+              path="/users/:user([a-zA-Z0-9\-\.\_]+)/imports"
+              component={ImportHome}
+            />
 
             { /* Concept Home */ }
             <Route
