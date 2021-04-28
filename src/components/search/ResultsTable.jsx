@@ -12,6 +12,8 @@ import {
   ArrowForward as ForwardIcon,
   Public as PublicIcon,
   Lock as PrivateIcon,
+  Warning as WarningIcon,
+  PriorityHigh as PriorityIcon,
 } from '@material-ui/icons'
 import { Pagination } from '@material-ui/lab'
 import {
@@ -94,7 +96,7 @@ const RESOURCE_DEFINITIONS = {
   CodeSystem: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.CodeSystem.slice(0, 8),
+    columns: ALL_COLUMNS.CodeSystem,
     tagWaitAttribute: 'resource',
     tags: TAGS.CodeSystem,
     expandible: true,
@@ -103,7 +105,7 @@ const RESOURCE_DEFINITIONS = {
   ValueSet: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.ValueSet.slice(0, 8),
+    columns: ALL_COLUMNS.ValueSet,
     tagWaitAttribute: 'resource',
     tags: TAGS.ValueSet,
     expandible: true,
@@ -122,16 +124,32 @@ const getValue = (item, column) => {
 
 const getTag = (tag, item, hapi) => {
   const value = isFunction(tag.getValue) ? tag.getValue(item, hapi) : get(item, tag.value, '0').toLocaleString();
-  return (
-    <Tooltip title={tag.label} key={tag.id}>
-      <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
-        <div className='flex-vertical-center'>
-          <span>{tag.icon}</span>
+  const icon = isFunction(tag.getIcon) ? tag.getIcon(item) : tag.icon;
+  const getTagDom = () => (
+    <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
+      <div className='flex-vertical-center'>
+        <span>{icon}</span>
+        {
+          !tag.noCount &&
           <span style={{padding: '2px'}}>{value}</span>
-        </div>
+        }
       </div>
-    </Tooltip>
-  )
+    </div>
+  );
+
+  return (
+    <React.Fragment>
+      {
+        tag.noTooltip ?
+        getTagDom() :
+        <Tooltip title={tag.label} key={tag.id}>
+          {
+            getTagDom()
+          }
+        </Tooltip>
+      }
+    </React.Fragment>
+  );
 }
 
 const FHIRHistoryTable = ({ versions }) => (
@@ -302,10 +320,10 @@ const ExpandibleRow = props => {
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(columns, 'length', 1) +
-                               (isConceptContainer ? 1 : 0) + //public column
-                                  (isSelectable ? 1 : 0) + // select column
-                                   ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                 (resourceDefinition.tags ? 1 : 0); //tags column
+                                    ((isConceptContainer || isValueSet) ? 1 : 0) + //public column
+                                       (isSelectable ? 1 : 0) + // select column
+                                        ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                      (resourceDefinition.tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -528,6 +546,29 @@ const ExpandibleRow = props => {
           </TableCell>
         }
         {
+          isValueSet &&
+          <TableCell align='center'>
+            <span className='flex-vertical-center'>
+              {
+                get(item, 'resource.experimental') &&
+                <Tooltip title='For testing purposes, not real usage'>
+                  <span className='flex-vertical-center'>
+                    <WarningIcon fontSize='small' style={{marginTop: '2px'}} />
+                  </span>
+                </Tooltip>
+              }
+              {
+                get(item, 'resource.immutable') &&
+                <Tooltip title='Changes to the content logical definition may occur'>
+                  <span className='flex-vertical-center'>
+                    <PriorityIcon fontSize='small' style={{marginTop: '2px'}} />
+                  </span>
+                </Tooltip>
+              }
+            </span>
+          </TableCell>
+        }
+        {
           isSelectable &&
           <TableCell>
             <Checkbox checked={selected} onClick={onCheckboxClick} />
@@ -674,6 +715,7 @@ const ResultsTable = (
     border: `1px solid ${theadBgColor}`,
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
+  const isValueSet = includes(['ValueSet'], resource);
   const shouldShowPin = showPin && resourceDefinition.pinnable;
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
@@ -726,7 +768,7 @@ const ResultsTable = (
                 resourceDefinition.columns;
 
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
-  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + (isConceptContainer ? 1 : 0);
+  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet) ? 1 : 0);
   const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
 
   return (
@@ -754,7 +796,7 @@ const ResultsTable = (
                 }
                 <TableRow>
                   {
-                    isConceptContainer &&
+                    (isConceptContainer || isValueSet) &&
                     <TableCell />
                   }
                   {

@@ -164,7 +164,7 @@ const VALUE_SET_TAGS = [
 ]
 
 export const CODE_SYSTEM_VERSION_TAGS = [...CODE_SYSTEM_TAGS]
-export const VALUE_SET_VERSION_TAGS = [...CODE_SYSTEM_TAGS]
+export const VALUE_SET_VERSION_TAGS = [...VALUE_SET_TAGS]
 
 const SOURCE_TAG = {
   id: 'sources',
