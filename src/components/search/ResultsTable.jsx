@@ -152,44 +152,75 @@ const getTag = (tag, item, hapi) => {
   );
 }
 
-const FHIRHistoryTable = ({ versions }) => (
-  <Table size="small" aria-label="versions">
-    <TableHead>
-      <TableRow>
-        <TableCell align='center'>Version</TableCell>
-        <TableCell align='left'>Status</TableCell>
-        <TableCell align='left'>Content</TableCell>
-        <TableCell align='left'>Release Date</TableCell>
-        <TableCell />
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {
-        map(versions, version => (
-          <TableRow hover key={version.resource.version || version.resource.meta.versionId}>
-            <TableCell align='center'>
-              { version.resource.version || version.resource.meta.versionId }
-            </TableCell>
-            <TableCell align='left'>
-              { version.resource.status }
-            </TableCell>
-            <TableCell align='left'>
-              { version.resource.content }
-            </TableCell>
-            <TableCell align='left'>
-              { formatDateTime(version.resource.date) }
-            </TableCell>
-            <TableCell align='left'>
-              {
-                map(CODE_SYSTEM_VERSION_TAGS, tag => getTag(tag, version))
-              }
-            </TableCell>
-          </TableRow>
-        ))
-      }
-    </TableBody>
-  </Table>
-)
+const FHIRHistoryTable = ({ versions, isValueSet }) => {
+  const getVersionLabel = version => {
+    const versionName = version.resource.version
+    const changeId = version.resource.meta.versionId
+
+    if(isValueSet && versionName !== changeId && versionName && changeId)
+      return `${versionName} (${changeId})`
+
+    return versionName || changeId
+  }
+
+  return (
+    <Table size="small" aria-label="versions">
+      <TableHead>
+        <TableRow>
+          { isValueSet && <TableCell /> }
+          <TableCell align='center'>Version</TableCell>
+          <TableCell align='left'>Status</TableCell>
+          <TableCell align='left'>Content</TableCell>
+          <TableCell align='left'>Release Date</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {
+          map(versions, version => {
+            const versionLabel = getVersionLabel(version)
+            return (
+              <TableRow hover key={versionLabel}>
+                {
+                  isValueSet &&
+                  <TableCell align='center'>
+                    <span className='flex-vertical-center'>
+                      {
+                        get(version, 'resource.experimental') &&
+                        <Tooltip title='For testing purposes, not real usage'>
+                          <span className='flex-vertical-center'>
+                            <WarningIcon fontSize='small' style={{marginTop: '2px'}} />
+                          </span>
+                        </Tooltip>
+                      }
+                      {
+                        get(version, 'resource.immutable') &&
+                        <Tooltip title='Changes to the content logical definition may occur'>
+                          <span className='flex-vertical-center'>
+                            <PriorityIcon fontSize='small' style={{marginTop: '2px'}} />
+                          </span>
+                        </Tooltip>
+                      }
+                    </span>
+                  </TableCell>
+                }
+                <TableCell align='center'> { versionLabel } </TableCell>
+                <TableCell align='left'> { version.resource.status } </TableCell>
+                <TableCell align='left'> { version.resource.content } </TableCell>
+                <TableCell align='left'> { formatDateTime(version.resource.date) } </TableCell>
+                <TableCell align='left'>
+                  {
+                    map(CODE_SYSTEM_VERSION_TAGS, tag => getTag(tag, version))
+                  }
+                </TableCell>
+              </TableRow>
+            )
+          })
+        }
+      </TableBody>
+    </Table>
+  )
+}
 
 const HistoryTable = ({ versions }) => {
   return (
@@ -320,10 +351,10 @@ const ExpandibleRow = props => {
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
 
   const columnsCount = get(columns, 'length', 1) +
-                                    ((isConceptContainer || isValueSet) ? 1 : 0) + //public column
-                                       (isSelectable ? 1 : 0) + // select column
-                                        ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                      (resourceDefinition.tags ? 1 : 0); //tags column
+                                       ((isConceptContainer || isValueSet) ? 1 : 0) + //public column
+                                          (isSelectable ? 1 : 0) + // select column
+                                           ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                         (resourceDefinition.tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -668,7 +699,7 @@ const ExpandibleRow = props => {
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       {
                         fhir ?
-                        <FHIRHistoryTable versions={versions} /> :
+                        <FHIRHistoryTable versions={versions} isValueSet={isValueSet} /> :
                         <HistoryTable versions={versions} />
                       }
                     </div>
