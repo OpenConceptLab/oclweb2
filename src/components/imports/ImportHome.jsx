@@ -81,8 +81,11 @@ class ImportHome extends React.Component {
 
   onRevokeTask = taskId => {
     if(taskId) {
+      const task = find(this.state.tasks, {task: taskId})
       APIService.new().overrideURL('/importers/bulk-import/').delete({task_id: taskId}).then(() => {
-        this.fetchImports()
+
+        this.stopPoll(task);
+        this.fetchImports();
       })
     }
   }
