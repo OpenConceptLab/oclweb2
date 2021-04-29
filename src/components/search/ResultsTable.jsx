@@ -431,14 +431,18 @@ const ExpandibleRow = props => {
     if(resource === 'CodeSystem'){
       if(hapi)
         window.location.hash = `/fhir/CodeSystem/${item.resource.id}`;
-      else
-        window.location.hash = `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
+      else {
+        const ident = get(find(get(item, 'resource.identifier', []), ident => get(ident, 'system', '').match('fhir.')), 'value', '');
+        window.location.hash = `/fhir${ident.split('/version/')[0]}`
+      }
     }
     else if(resource === 'ValueSet'){
       if(hapi)
         window.location.hash = `/fhir/ValueSet/${item.resource.id}`;
-      else
-        window.location.hash = `/fhir${get(item, 'resource.identifier.0.value', '').split('/version/')[0]}`
+      else {
+        const ident = get(find(get(item, 'resource.identifier', []), ident => get(ident, 'system', '').match('fhir.')), 'value', '');
+        window.location.hash = `/fhir${ident.split('/version/')[0]}`
+      }
     }
     else
       window.location.hash = item.url;
