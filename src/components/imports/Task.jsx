@@ -11,17 +11,18 @@ import {
   HourglassEmpty as PendingIcon,
   Replay as RetryIcon,
   ExpandMore as ExpandIcon,
+  PanTool as RevokedIcon,
 } from '@material-ui/icons';
+import { get } from 'lodash';
 import { formatDateTime, isAdminUser } from '../../common/utils';
-import { ERROR_RED, GREEN, ORANGE, DARKGRAY, WHITE } from '../../common/constants';
+import { ERROR_RED, GREEN, ORANGE, DARKGRAY, WHITE, BLUE } from '../../common/constants';
 
-const Task = ({task, open, onOpen, onClose, onRevoke}) => {
+const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
   const isAdmin = isAdminUser();
-  const { details, state } = task
+  const { details, state, result } = task
   const status = state.toLowerCase()
   const id = task.task
   const onChange = () => open ? onClose() : onOpen(id)
-
   const getTemplate = (label, value, type) => {
     let formattedValue = value
     if(type === 'timestamp')
@@ -48,9 +49,11 @@ const Task = ({task, open, onOpen, onClose, onRevoke}) => {
     if(status === 'pending')
       return <PendingIcon style={{color: ORANGE}} />;
     if(status === 'pending')
-      return <RetryIcon style={{color: DARKGRAY}} />;
+      return <RetryIcon style={{color: BLUE}} />;
     if(status === 'started')
       return <CircularProgress style={{width: '20px', height: '20px'}} />;
+    if(status === 'revoked')
+      return <RevokedIcon style={{color: DARKGRAY}} />;
   }
 
   const onCancelTaskClick = event => {
@@ -64,6 +67,13 @@ const Task = ({task, open, onOpen, onClose, onRevoke}) => {
       () => {}
     )
 
+    return false
+  }
+
+  const onDownloadTaskClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
+    onDownload(id)
     return false
   }
 
@@ -91,37 +101,40 @@ const Task = ({task, open, onOpen, onClose, onRevoke}) => {
                   Cancel
                 </Button>
               }
+              {
+                status === 'success' &&
+                <Button
+                  size='small'
+                  variant='contained'
+                  onClick={onDownloadTaskClick}
+                  style={{backgroundColor: GREEN, color: WHITE, padding: '0 5px', fontSize: '0.7125rem', marginLeft: '10px', marginTop: '3px'}}
+                  >
+                  Download
+                </Button>
+              }
+              {
+                get(result, 'summary') &&
+                <div className='col-md-11 no-side-padding sub-text italic'>
+                  { result.summary }
+                </div>
+              }
             </div>
           </div>
         </Tooltip>
       </AccordionSummary>
       <AccordionDetails>
         <div className='col-md-12 no-side-padding'>
-          {getTemplate('Task ID', id)}
-          {getTemplate('Name', details.name)}
-          {getTemplate('Received', details.received, 'timestamp')}
-          {getTemplate('Started', details.received, 'timestamp')}
-          {
-            details.runtime &&
-            getTemplate('Runtime', `${details.runtime} secs`)}
-          {
-            details.failed &&
-            getTemplate('Failed', details.failed, 'timestamp')
-          }
-          {getTemplate('Retries', details.retries)}
-          {getTemplate('Revoked', details.revoked)}
-          {
-            details.exception &&
-            getTemplate('Exception', details.exception)
-          }
-          {
-            status === 'success' &&
-            getTemplate('Result', details.result)
-          }
-          {
-            details.args &&
-            getTemplate('Args', details.args)
-          }
+          { getTemplate('Task ID', id) }
+          { getTemplate('Name', details.name) }
+          { getTemplate('Received', details.received, 'timestamp') }
+          { getTemplate('Started', details.received, 'timestamp') }
+          { details.runtime && getTemplate('Runtime', `${details.runtime} secs`) }
+          { details.failed && getTemplate('Failed', details.failed, 'timestamp') }
+          { getTemplate('Retries', details.retries) }
+          { details.revoked && getTemplate('Revoked', details.revoked, 'timestamp') }
+          { details.exception && getTemplate('Exception', details.exception) }
+          { status === 'success' && getTemplate('Result', details.result) }
+          { details.args && getTemplate('Args', details.args) }
         </div>
       </AccordionDetails>
     </Accordion>

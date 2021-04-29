@@ -4,7 +4,7 @@ import { CircularProgress } from '@material-ui/core';
 import { get, map, isEmpty } from 'lodash';
 import Task from './Task'
 
-const Tasks = ({ tasks, isLoading, error, onRevoke }) => {
+const Tasks = ({ tasks, isLoading, error, onRevoke, onDownload }) => {
   const [open, setOpen] = React.useState(null);
 
   return (
@@ -33,6 +33,7 @@ const Tasks = ({ tasks, isLoading, error, onRevoke }) => {
                     onOpen={taskId => setOpen(taskId)}
                     onClose={() => setOpen(null)}
                     onRevoke={onRevoke}
+                    onDownload={onDownload}
           />
         )
       }

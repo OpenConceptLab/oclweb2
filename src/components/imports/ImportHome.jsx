@@ -1,15 +1,17 @@
 import React from 'react';
-import { get, isArray } from 'lodash';
-import { Button } from '@material-ui/core';
-import FileUploader from '../common/FileUploader';
+import { get, isArray, forEach, filter, find, reject } from 'lodash';
+import { Paper } from '@material-ui/core';
 import APIService from '../../services/APIService';
-import { getCurrentUserUsername } from '../../common/utils';
-import Tasks from './Tasks';
+import { getCurrentUserUsername, downloadObject } from '../../common/utils';
+import NewImport from './NewImport';
+import ExistingImports from './ExistingImports';
 
 class ImportHome extends React.Component {
   constructor(props) {
     super(props)
+    this.service = APIService.new().overrideURL('/importers/bulk-import/')
     this.state = {
+      intervals: [],
       tasks: [],
       importListError: null,
       isLoadingImports: true,
@@ -20,14 +22,59 @@ class ImportHome extends React.Component {
     this.fetchImports()
   }
 
-  fetchImports() {
-    this.setState({isLoadingImports: true, importListError: null, tasks: []}, () => {
-      APIService.new().overrideURL('/importers/bulk-import/').get(null, null, {verbose: true, username: getCurrentUserUsername()}).then(res => {
+  fetchImports(poll=true) {
+    const newStateAttributes = {isLoadingImports: true, importListError: null, tasks: []}
+    if(poll)
+      newStateAttributes.intervals = []
+
+    this.setState(newStateAttributes, () => {
+      this.service.get(null, null, {verbose: true, username: getCurrentUserUsername()})
+          .then(res => {
+            const data = get(res, 'data')
+            if(isArray(data))
+              this.setState({tasks: data, isLoadingImports: false}, () => {
+                if(poll)
+                  this.queryStartedTasks(filter(this.state.tasks, {state: 'STARTED'}))
+              })
+            else
+              this.setState({importListError: res, isLoadingImports: false})
+          })
+    })
+  }
+
+  stopPoll(taskId) {
+    clearInterval(get(find(this.state.intervals, {id: taskId}), 'interval'))
+    this.setState({intervals: reject(this.state.intervals, {id: taskId})})
+  }
+
+
+  fetchStartedTaskUpdates(task) {
+    return setInterval(() => {
+      this.service.get(null, null, {task: task.task}).then(res => {
         const data = get(res, 'data')
-        if(isArray(data))
-          this.setState({tasks: data, isLoadingImports: false})
-        else
-          this.setState({importListError: res, isLoadingImports: false})
+        if(data) {
+          if(data.state !== task.state) {
+            this.stopPoll(task.task)
+            this.fetchImports(false)
+          } else if (data.details) {
+            const newState = {...this.state}
+            const existingTask = find(this.state.tasks, {task: task.task})
+            existingTask.result = data.details
+            this.setState(newState)
+          }
+        } else {
+          this.stopPoll(task.task)
+          this.fetchImports(false)
+        }
+      })
+    }, 5000)
+  }
+
+  queryStartedTasks(startedTasks) {
+    this.setState({intervals: []}, () => {
+      forEach(startedTasks, task => {
+        const newInterval = {id: task.task, interval: this.fetchStartedTaskUpdates(task)}
+        this.setState({intervals: [...this.state.intervals, newInterval]})
       })
     })
   }
@@ -40,30 +87,37 @@ class ImportHome extends React.Component {
     }
   }
 
+  onDownloadTask = taskId => {
+    if(taskId) {
+      APIService.new().overrideURL('/importers/bulk-import/').get(null, null, {task: taskId, result: 'json'}).then(res => {
+        if(get(res, 'data')) {
+          downloadObject(JSON.stringify(res.data, undefined, 2), 'application/json', `${taskId}.json`)
+        }
+      })
+    }
+  }
+
   render() {
     const { isLoadingImports, tasks, importListError } = this.state;
+    const PAPER_STYLES = {padding: '0 10px 10px 10px', display: 'inline-block', width: '100%', margin: '10px 0'}
     return (
       <div className='col-md-12'>
-        <div className='col-md-6'>
-          <h3>New Import</h3>
-          <div style={{marginTop: '-10px'}}>
-            <FileUploader />
-          </div>
+        <div className='col-md-6 no-left-padding'>
+          <Paper style={PAPER_STYLES}>
+            <NewImport onUploadSuccess={() => this.fetchImports()} />
+          </Paper>
         </div>
-        <div className='col-md-6 no-left-padding' style={{marginTop: '-4px'}}>
-          <h3 style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <span>
-              Existing Imports
-            </span>
-            <span>
-              <Button variant='outlined' size='small' color='primary' disabled={isLoadingImports} onClick={() => this.fetchImports()}>
-                Refresh
-              </Button>
-            </span>
-          </h3>
-          <div style={{marginTop: '-13px'}}>
-            <Tasks tasks={tasks} isLoading={isLoadingImports} error={importListError} onRevoke={this.onRevokeTask} />
-          </div>
+        <div className='col-md-6 no-side-padding'>
+          <Paper style={PAPER_STYLES}>
+            <ExistingImports
+              tasks={tasks}
+              isLoading={isLoadingImports}
+              onRefresh={() => this.fetchImports()}
+              onRevoke={this.onRevokeTask}
+              onDownload={this.onDownloadTask}
+              error={importListError}
+            />
+          </Paper>
         </div>
       </div>
     )

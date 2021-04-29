@@ -8,13 +8,16 @@ import { humanFileSize } from '../../common/utils';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 
 
-const FileUploader = ({ maxFiles, accept }) => {
+const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading }) => {
   const maxAllowedFiles = maxFiles || 1;
   const [progress, setProgress] = React.useState(0);
   const [canUpload, setCanUpload] = React.useState(false);
 
   const onDrop = acceptedFiles => {
     setCanUpload(false);
+    if(onLoading)
+      onLoading()
+
     const formData = new FormData();
     for (const file of acceptedFiles) formData.append('file', file);
 
@@ -22,6 +25,8 @@ const FileUploader = ({ maxFiles, accept }) => {
     xhr.upload.onprogress = event => {
       const percentage = parseInt((event.loaded / event.total) * 100);
       setProgress(percentage)
+      if(percentage === 100)
+        onUpload(acceptedFiles[0])
     };
     xhr.onreadystatechange = () => {
       if (xhr.readyState !== 4) return;
@@ -77,11 +82,19 @@ const FileUploader = ({ maxFiles, accept }) => {
             </React.Fragment>
           }
         </aside>
-        <div className='col-md-12 no-side-padding' style={{textAlign: 'right'}}>
-          <Button color='primary' variant='outlined' startIcon={<UploadIcon />} disabled={!canUpload}>
-            Upload
-          </Button>
-        </div>
+        {
+          uploadButton &&
+          <div className='col-md-12 no-side-padding' style={{textAlign: 'right'}}>
+            <Button
+              size='small'
+              color='primary'
+              variant='outlined'
+              startIcon={<UploadIcon fontSize='inherit' />}
+              disabled={!canUpload}>
+              Upload
+            </Button>
+          </div>
+        }
       </section>
     </div>
   );
