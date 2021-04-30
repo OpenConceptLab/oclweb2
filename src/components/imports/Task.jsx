@@ -14,11 +14,10 @@ import {
   PanTool as RevokedIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
-import { formatDateTime, isAdminUser } from '../../common/utils';
+import { formatDateTime } from '../../common/utils';
 import { ERROR_RED, GREEN, ORANGE, DARKGRAY, WHITE, BLUE } from '../../common/constants';
 
 const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
-  const isAdmin = isAdminUser();
   const { details, state, result } = task
   const status = state.toLowerCase()
   const id = task.task
@@ -91,7 +90,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
                 {formatDateTime(details.received * 1000)}
               </div>
               {
-                status === 'started' && isAdmin &&
+                status === 'started' &&
                 <Button
                   size='small'
                   variant='contained'
