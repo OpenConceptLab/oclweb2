@@ -22,7 +22,7 @@ class NewImport extends React.Component {
       file: null,
       fileURL: '',
       json: '',
-      type: 'json',
+      type: 'upload',
       update_if_exists: true,
       isUploading: false,
     };
@@ -148,8 +148,8 @@ class NewImport extends React.Component {
           </span>
           <span>
             <ButtonGroup color='secondary' size='small' disabled={isUploading}>
-              { this.getButton('json', <JSONIcon />, 'Submit JSON Data') }
               { this.getButton('upload', <UploadIcon />, 'Upload JSON File') }
+              { this.getButton('json', <JSONIcon />, 'Submit JSON Data') }
               { this.getButton('url', <URLIcon />, 'Paste File URL') }
             </ButtonGroup>
           </span>
