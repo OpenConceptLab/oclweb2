@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Tooltip, Button, ButtonGroup, TextField, FormControlLabel, Checkbox
+  Tooltip, Button, ButtonGroup, TextField, FormControlLabel, Checkbox, CircularProgress
 } from '@material-ui/core';
 import {
   CloudUpload as UploadIcon,
@@ -24,6 +24,7 @@ class NewImport extends React.Component {
       json: '',
       type: 'json',
       update_if_exists: true,
+      isUploading: false,
     };
     this.state = cloneDeep(this.defaultState)
   }
@@ -117,19 +118,23 @@ class NewImport extends React.Component {
   }
 
   onUpload = () => {
-    this.getService().post(this.getPayload(), null, this.getHeaders()).then(res => {
-      this.props.onUploadSuccess()
-      if(res.status === 202) {
-        this.reset()
-        alertifyjs.success('Successfully Queued!')
-      }
-      else
-        alertifyjs.error(get(res, 'exception') || 'Failed!')
+    this.setState({isUploading: true}, () => {
+      this.getService().post(this.getPayload(), null, this.getHeaders()).then(res => {
+        this.setState({isUploading: false}, () => {
+          setTimeout(this.props.onUploadSuccess, 1000)
+          if(res.status === 202) {
+            this.reset()
+            alertifyjs.success('Successfully Queued!')
+          }
+          else
+            alertifyjs.error(get(res, 'exception') || 'Failed!')
+        })
+      })
     })
   }
 
   render() {
-    const { type, queue, parallel, fileURL, json, update_if_exists } = this.state;
+    const { type, queue, parallel, fileURL, json, update_if_exists, isUploading } = this.state;
     const isUpload = type === 'upload';
     const isURL = type === 'url';
     const isJSON = type === 'json';
@@ -142,93 +147,99 @@ class NewImport extends React.Component {
             New Import
           </span>
           <span>
-            <ButtonGroup color='secondary' size='small'>
+            <ButtonGroup color='secondary' size='small' disabled={isUploading}>
               { this.getButton('json', <JSONIcon />, 'Submit JSON Data') }
               { this.getButton('upload', <UploadIcon />, 'Upload JSON File') }
               { this.getButton('url', <URLIcon />, 'Paste File URL') }
             </ButtonGroup>
           </span>
         </h3>
-        <div className='col-md-12 no-side-padding'>
-          <div className='col-md-6 no-left-padding'>
-            <TextField
-              fullWidth
-              size='small'
-              id='queue'
-              variant='outlined'
-              placeholder='e.g. my-queue'
-              label='Queue'
-              value={queue}
-              onChange={event => this.setFieldValue('queue', event.target.value)}
-              style={{marginBottom: '20px'}}
-              disabled={parallel}
-            />
-          </div>
-          <div className='col-md-4 no-side-padding'>
-            <FormControlLabel
-              control={<Checkbox checked={update_if_exists} onChange={event => this.setFieldValue('update_if_exists', event.target.checked)} name='update_if_exists' />}
-              label="Update Existing"
-            />
-          </div>
-          {
-            !isJSON &&
-            <div className='col-md-2 no-side-padding'>
+        {
+          isUploading ?
+          <div className='col-md-12 no-side-padding' style={{textAlign: 'center'}}>
+            <CircularProgress style={{margin: '50px'}} />
+          </div> :
+          <div className='col-md-12 no-side-padding'>
+            <div className='col-md-6 no-left-padding'>
+              <TextField
+                fullWidth
+                size='small'
+                id='queue'
+                variant='outlined'
+                placeholder='e.g. my-queue'
+                label='Queue'
+                value={queue}
+                onChange={event => this.setFieldValue('queue', event.target.value)}
+                style={{marginBottom: '20px'}}
+                disabled={parallel}
+              />
+            </div>
+            <div className='col-md-4 no-side-padding'>
               <FormControlLabel
-                control={<Checkbox checked={parallel} onChange={this.onParallelToogle} name='parallel' />}
-                label="Parallel"
+                control={<Checkbox checked={update_if_exists} onChange={event => this.setFieldValue('update_if_exists', event.target.checked)} name='update_if_exists' />}
+                label="Update Existing"
               />
             </div>
-          }
-          {
-            isUpload &&
-            <div className='col-md-12 no-side-padding' style={{marginBottom: '20px'}}>
-              <FileUploader
-                uploadButton={false}
-                onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
-                onLoading={() => this.setFieldValue('file', null)}
+            {
+              !isJSON &&
+              <div className='col-md-2 no-side-padding'>
+                <FormControlLabel
+                  control={<Checkbox checked={parallel} onChange={this.onParallelToogle} name='parallel' />}
+                  label="Parallel"
+                />
+              </div>
+            }
+            {
+              isUpload &&
+              <div className='col-md-12 no-side-padding' style={{marginBottom: '20px'}}>
+                <FileUploader
+                  uploadButton={false}
+                  onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
+                  onLoading={() => this.setFieldValue('file', null)}
+                />
+              </div>
+            }
+            {
+              isURL &&
+              <TextField
+                fullWidth
+                size='small'
+                id='fileURL'
+                type='url'
+                required
+                variant='outlined'
+                label='JSON File URL'
+                value={fileURL}
+                onChange={event => this.setFieldValue('fileURL', event.target.value)}
+                style={{marginBottom: '20px'}}
               />
-            </div>
-          }
-          {
-            isURL &&
-            <TextField
-              fullWidth
-              size='small'
-              id='fileURL'
-              type='url'
-              required
-              variant='outlined'
-              label='JSON File URL'
-              value={fileURL}
-              onChange={event => this.setFieldValue('fileURL', event.target.value)}
-              style={{marginBottom: '20px'}}
-            />
-          }
-          {
-            isJSON &&
-            <TextField
-              multiline
-              rows={12}
-              fullWidth
-              size='small'
-              id='json'
-              type='url'
-              required
-              variant='outlined'
-              label='JSON Data'
-              value={json}
-              onChange={event => this.setFieldValue('json', event.target.value)}
-              style={{marginBottom: '20px'}}
-            />
-          }
-        </div>
+            }
+            {
+              isJSON &&
+              <TextField
+                multiline
+                rows={12}
+                fullWidth
+                size='small'
+                id='json'
+                type='url'
+                required
+                variant='outlined'
+                label='JSON Data'
+                value={json}
+                onChange={event => this.setFieldValue('json', event.target.value)}
+                style={{marginBottom: '20px'}}
+              />
+            }
+          </div>
+        }
         <div className='col-md-12 no-side-padding' style={{textAlign: 'right'}}>
           <Button
             size='small'
             color='primary'
             variant='outlined'
             startIcon={<UploadIcon fontSize='inherit' />}
-            disabled={!canUpload}
+            disabled={!canUpload || isUploading}
             onClick={this.onUpload}
           >
             Upload

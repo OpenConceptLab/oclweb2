@@ -1,5 +1,5 @@
 import React from 'react';
-import { get, isArray, forEach, filter, find, reject } from 'lodash';
+import { get, isArray, forEach, filter, find, reject, orderBy } from 'lodash';
 import { Paper } from '@material-ui/core';
 import APIService from '../../services/APIService';
 import { getCurrentUserUsername, downloadObject } from '../../common/utils';
@@ -22,19 +22,15 @@ class ImportHome extends React.Component {
     this.fetchImports()
   }
 
-  fetchImports(poll=true) {
-    const newStateAttributes = {isLoadingImports: true, importListError: null, tasks: []}
-    if(poll)
-      newStateAttributes.intervals = []
-
-    this.setState(newStateAttributes, () => {
+  fetchImports() {
+    this.stopAllPolling()
+    this.setState({isLoadingImports: true, importListError: null, tasks: [], intervals: []}, () => {
       this.service.get(null, null, {verbose: true, username: getCurrentUserUsername()})
           .then(res => {
             const data = get(res, 'data')
             if(isArray(data))
-              this.setState({tasks: data, isLoadingImports: false}, () => {
-                if(poll)
-                  this.queryStartedTasks(filter(this.state.tasks, {state: 'STARTED'}))
+              this.setState({tasks: orderBy(data, 'details.received', 'desc'), isLoadingImports: false}, () => {
+                this.queryStartedTasks(filter(this.state.tasks, {state: 'STARTED'}))
               })
             else
               this.setState({importListError: res, isLoadingImports: false})
@@ -47,6 +43,9 @@ class ImportHome extends React.Component {
     this.setState({intervals: reject(this.state.intervals, {id: taskId})})
   }
 
+  stopAllPolling() {
+    forEach(this.state.intervals, interval => clearInterval(interval.interval))
+  }
 
   fetchStartedTaskUpdates(task) {
     return setInterval(() => {
@@ -55,7 +54,7 @@ class ImportHome extends React.Component {
         if(data) {
           if(data.state !== task.state) {
             this.stopPoll(task.task)
-            this.fetchImports(false)
+            this.fetchImports()
           } else if (data.details) {
             const newState = {...this.state}
             const existingTask = find(this.state.tasks, {task: task.task})
@@ -64,24 +63,27 @@ class ImportHome extends React.Component {
           }
         } else {
           this.stopPoll(task.task)
-          this.fetchImports(false)
+          this.fetchImports()
         }
       })
     }, 5000)
   }
 
   queryStartedTasks(startedTasks) {
-    this.setState({intervals: []}, () => {
-      forEach(startedTasks, task => {
-        const newInterval = {id: task.task, interval: this.fetchStartedTaskUpdates(task)}
-        this.setState({intervals: [...this.state.intervals, newInterval]})
-      })
+    forEach(startedTasks, task => {
+      const newInterval = {id: task.task, interval: this.fetchStartedTaskUpdates(task)}
+      this.setState({intervals: [...this.state.intervals, newInterval]})
     })
   }
 
   onRevokeTask = taskId => {
     if(taskId) {
       const task = find(this.state.tasks, {task: taskId})
+      const children = get(task, 'details.children') || [];
+      forEach(children, childTaskId => {
+        APIService.new().overrideURL('/importers/bulk-import/').delete({task_id: childTaskId}).then(() => {})
+      })
+
       APIService.new().overrideURL('/importers/bulk-import/').delete({task_id: taskId}).then(() => {
 
         this.stopPoll(task);
