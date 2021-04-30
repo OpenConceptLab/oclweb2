@@ -18,7 +18,7 @@ class NewImport extends React.Component {
     this.defaultState = {
       queue: '',
       parallel: false,
-      workers: 1,
+      workers: 2,
       file: null,
       fileURL: '',
       json: '',
