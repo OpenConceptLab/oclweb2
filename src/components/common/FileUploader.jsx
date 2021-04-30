@@ -8,7 +8,7 @@ import { humanFileSize } from '../../common/utils';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 
 
-const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading }) => {
+const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading, maxSize }) => {
   const maxAllowedFiles = maxFiles || 1;
   const [progress, setProgress] = React.useState(0);
   const [canUpload, setCanUpload] = React.useState(false);
@@ -41,6 +41,7 @@ const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading }) =
   const {
     acceptedFiles, fileRejections, getRootProps, getInputProps
   } = useDropzone({
+    maxSize: maxSize || 95 * 1024 * 1024,
     maxFiles: maxAllowedFiles,
     accept: accept || 'application/json',
     onDrop: onDrop,
