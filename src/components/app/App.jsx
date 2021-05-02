@@ -60,10 +60,7 @@ const App = props => {
           <Switch>
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
             <Route path="/search" component={isFHIR ? Fhir : Search} />
-            <Route
-              path="/users/:user([a-zA-Z0-9\-\.\_]+)/imports"
-              component={ImportHome}
-            />
+            <Route path="/imports" component={ImportHome} />
 
             { /* Concept Home */ }
             <Route
