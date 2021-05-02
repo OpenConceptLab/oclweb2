@@ -59,16 +59,16 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
           </Button>
         </span>
       </h3>
-      <div className='col-md-12 no-side-padding flex-vertical-center'>
-        <div className='col-md-8 no-left-padding'>
-        <SearchInput
-          onChange={onSearch}
-          onSearch={onSearch}
-          searchInputPlaceholder='Search by id, status or queue name...'
-          noExactMatch
-        />
+      <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginBottom: '10px'}}>
+        <div className='col-md-10 no-left-padding'>
+          <SearchInput
+            onChange={onSearch}
+            onSearch={onSearch}
+            searchInputPlaceholder='Search by id, status or queue name...'
+            noExactMatch
+          />
         </div>
-        <div className='col-md-4 no-side-padding'>
+        <div className='col-md-2 no-side-padding' style={{textAlign: 'center'}}>
           <ChipDatePicker onChange={onDateChange} label={getDateText()} date={date} size='medium' />
         </div>
       </div>

@@ -6,7 +6,7 @@ import {
   Accordion, AccordionDetails, AccordionSummary, Tooltip, Divider,
   Button
 } from '@material-ui/core';
-import { get, includes } from 'lodash';
+import { get, includes, last } from 'lodash';
 import { formatDateTime } from '../../common/utils';
 import { ERROR_RED, GREEN, WHITE } from '../../common/constants';
 import TaskIcon from './TaskIcon';
@@ -64,35 +64,44 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
               <TaskIcon status={status} />
             </div>
             <div className='col-md-11 no-side-padding'>
-              <div className='col-md-12 no-side-padding'>{id}</div>
-              <div className='col-md-3 no-side-padding sub-text italic'>
-                {formatDateTime(details.received * 1000)}
+              <div className='col-md-12 no-side-padding'><b>{id}</b></div>
+              <div className='col-md-12 no-side-padding flex-vertical-center'>
+                <div className='col-md-8 no-left-padding'>
+                  <div className='col-md-12 no-side-padding sub-text italic'>
+                    Received: <b>{formatDateTime(details.received * 1000)}</b>
+                  </div>
+                  <div className='col-md-12 no-side-padding sub-text italic'>
+                    Queue: <b>{last(task.task.split('~'))}</b>
+                  </div>
+                </div>
+                <div className='col-md-4 no-side-padding'>
+                  {
+                    includes(['started', 'received'], status) &&
+                    <Button
+                      size='small'
+                      variant='contained'
+                      onClick={onCancelTaskClick}
+                      style={{backgroundColor: ERROR_RED, color: WHITE, padding: '0 5px', fontSize: '0.7125rem', marginLeft: '10px', marginTop: '3px'}}
+                      >
+                      Cancel
+                    </Button>
+                  }
+                  {
+                    status === 'success' &&
+                    <Button
+                      size='small'
+                      variant='contained'
+                      onClick={onDownloadTaskClick}
+                      style={{backgroundColor: GREEN, color: WHITE, padding: '0 5px', fontSize: '0.7125rem', marginLeft: '10px', marginTop: '3px'}}
+                      >
+                      Download
+                    </Button>
+                  }
+                </div>
               </div>
               {
-                includes(['started', 'received'], status) &&
-                <Button
-                  size='small'
-                  variant='contained'
-                  onClick={onCancelTaskClick}
-                  style={{backgroundColor: ERROR_RED, color: WHITE, padding: '0 5px', fontSize: '0.7125rem', marginLeft: '10px', marginTop: '3px'}}
-                  >
-                  Cancel
-                </Button>
-              }
-              {
-                status === 'success' &&
-                <Button
-                  size='small'
-                  variant='contained'
-                  onClick={onDownloadTaskClick}
-                  style={{backgroundColor: GREEN, color: WHITE, padding: '0 5px', fontSize: '0.7125rem', marginLeft: '10px', marginTop: '3px'}}
-                  >
-                  Download
-                </Button>
-              }
-              {
                 get(result, 'summary') &&
-                <div className='col-md-11 no-side-padding sub-text italic'>
+                <div className='col-md-12 no-side-padding sub-text italic'>
                   { result.summary }
                 </div>
               }
