@@ -4,12 +4,11 @@ import {
   CheckCircle as SuccessIcon,
   HourglassFull as PendingIcon,
   Replay as RetryIcon,
-  ExpandMore as ExpandIcon,
   PanTool as RevokedIcon,
   Timer as ReceivedIcon,
 } from '@material-ui/icons';
 import { CircularProgress } from '@material-ui/core';
-import { ERROR_RED, GREEN, ORANGE, DARKGRAY, WHITE, BLUE } from '../../common/constants';
+import { ERROR_RED, GREEN, ORANGE, DARKGRAY, BLUE } from '../../common/constants';
 
 const getIcon = (status, rest) => {
   if(!status)
@@ -29,7 +28,7 @@ const getIcon = (status, rest) => {
   if(state === 'revoked')
     return <RevokedIcon style={{color: DARKGRAY}} {...rest} />;
   if(state === 'received')
-    return <RevokedIcon style={{color: BLUE}} {...rest} />;
+    return <ReceivedIcon style={{color: BLUE}} {...rest} />;
 }
 
 const TaskIcon = ({status, ...rest}) =>  {

@@ -3,12 +3,12 @@ import alertifyjs from 'alertifyjs';
 import './Tasks.scss';
 import { ExpandMore as ExpandIcon } from '@material-ui/icons';
 import {
-  Accordion, AccordionDetails, AccordionSummary, CircularProgress, Tooltip, Divider,
+  Accordion, AccordionDetails, AccordionSummary, Tooltip, Divider,
   Button
 } from '@material-ui/core';
 import { get, includes } from 'lodash';
 import { formatDateTime } from '../../common/utils';
-import { ERROR_RED, GREEN, ORANGE, DARKGRAY, WHITE, BLUE } from '../../common/constants';
+import { ERROR_RED, GREEN, WHITE } from '../../common/constants';
 import TaskIcon from './TaskIcon';
 
 const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {

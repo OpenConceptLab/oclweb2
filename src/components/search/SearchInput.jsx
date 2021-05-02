@@ -72,7 +72,10 @@ class SearchInput extends React.Component {
   }
 
   handleInputChange = event => {
-    this.setState({input: event.target.value})
+    this.setState({input: event.target.value}, () => {
+      if(this.props.onChange)
+        this.props.onChange(this.state.input)
+    })
   }
 
   moveToSearchPage = () => {
@@ -92,7 +95,7 @@ class SearchInput extends React.Component {
 
   render() {
     const { input, exactMatch } = this.state
-    const { moreControls, searchInputPlaceholder, nested } = this.props
+    const { moreControls, searchInputPlaceholder, nested, noExactMatch } = this.props
     const marginBottom = (isAtGlobalSearch() || nested) ? '10px' : '0px';
     return (
       <div className='col-sm-12 no-side-padding'>
@@ -119,12 +122,17 @@ class SearchInput extends React.Component {
               <SearchIcon />
             </IconButton>
           </Tooltip>
-          <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
-          <Tooltip title='Exact Match'>
-            <IconButton color={exactMatch === 'on' ? "primary" : "default"} style={{padding: '10px'}} aria-label="exact" onClick={this.handleExactMatchChange}>
-              <ExactMatchIcon />
-            </IconButton>
-          </Tooltip>
+          {
+            !noExactMatch &&
+            <React.Fragment>
+              <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
+              <Tooltip title='Exact Match'>
+                <IconButton color={exactMatch === 'on' ? "primary" : "default"} style={{padding: '10px'}} aria-label="exact" onClick={this.handleExactMatchChange}>
+                  <ExactMatchIcon />
+                </IconButton>
+              </Tooltip>
+            </React.Fragment>
+          }
         </div>
         <div style={{textAlign: 'left'}}>
           {moreControls}
