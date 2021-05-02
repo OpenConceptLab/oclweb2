@@ -1,21 +1,15 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import './Tasks.scss';
+import { ExpandMore as ExpandIcon } from '@material-ui/icons';
 import {
   Accordion, AccordionDetails, AccordionSummary, CircularProgress, Tooltip, Divider,
   Button
 } from '@material-ui/core';
-import {
-  Cancel as FailedIcon,
-  CheckCircle as SuccessIcon,
-  HourglassEmpty as PendingIcon,
-  Replay as RetryIcon,
-  ExpandMore as ExpandIcon,
-  PanTool as RevokedIcon,
-} from '@material-ui/icons';
-import { get } from 'lodash';
+import { get, includes } from 'lodash';
 import { formatDateTime } from '../../common/utils';
 import { ERROR_RED, GREEN, ORANGE, DARKGRAY, WHITE, BLUE } from '../../common/constants';
+import TaskIcon from './TaskIcon';
 
 const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
   const { details, state, result } = task
@@ -38,21 +32,6 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
         <Divider style={{width: '100%'}}/>
       </React.Fragment>
     )
-  }
-
-  const getIcon = () => {
-    if(status === 'failure')
-      return <FailedIcon style={{color: ERROR_RED}} />;
-    if(status === 'success')
-      return <SuccessIcon style={{color: GREEN}} />;
-    if(status === 'pending')
-      return <PendingIcon style={{color: ORANGE}} />;
-    if(status === 'pending')
-      return <RetryIcon style={{color: BLUE}} />;
-    if(status === 'started')
-      return <CircularProgress style={{width: '20px', height: '20px'}} />;
-    if(status === 'revoked')
-      return <RevokedIcon style={{color: DARKGRAY}} />;
   }
 
   const onCancelTaskClick = event => {
@@ -82,7 +61,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
         <Tooltip title={state}>
           <div className='col-md-12 no-side-padding task-summary flex-vertical-center'>
             <div className='col-md-1 no-left-padding'>
-              {getIcon()}
+              <TaskIcon status={status} />
             </div>
             <div className='col-md-11 no-side-padding'>
               <div className='col-md-12 no-side-padding'>{id}</div>
@@ -90,7 +69,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
                 {formatDateTime(details.received * 1000)}
               </div>
               {
-                status === 'started' &&
+                includes(['started', 'received'], status) &&
                 <Button
                   size='small'
                   variant='contained'

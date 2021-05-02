@@ -1,5 +1,5 @@
 import React from 'react';
-import { get, isArray, forEach, filter, find, reject, orderBy } from 'lodash';
+import { get, isArray, forEach, filter, find, reject, orderBy, includes } from 'lodash';
 import { Paper } from '@material-ui/core';
 import APIService from '../../services/APIService';
 import { getCurrentUserUsername, downloadObject } from '../../common/utils';
@@ -30,7 +30,7 @@ class ImportHome extends React.Component {
             const data = get(res, 'data')
             if(isArray(data))
               this.setState({tasks: orderBy(data, 'details.received', 'desc'), isLoadingImports: false}, () => {
-                this.queryStartedTasks(filter(this.state.tasks, {state: 'STARTED'}))
+                this.queryStartedTasks(filter(this.state.tasks, task => includes(['STARTED', 'RECEIVED'], task.state)))
               })
             else
               this.setState({importListError: res, isLoadingImports: false})
