@@ -33,9 +33,7 @@ const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
   const [orderedPins, setPins] = React.useState(pins)
   const gridClassName = `col-md-3`;
 
-  React.useEffect(() => {
-    setPins(pins)
-  }, [pins])
+  React.useEffect(setPins(pins), [pins])
 
   const onDragEnd = result => {
     if (!result.destination) {
