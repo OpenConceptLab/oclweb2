@@ -18,7 +18,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
   const onChange = () => open ? onClose() : onOpen(id)
   const getTemplate = (label, value, type) => {
     let formattedValue = value
-    if(type === 'timestamp')
+    if(type === 'timestamp' && value)
       formattedValue = formatDateTime(value*1000)
 
     return (
@@ -105,7 +105,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
           { getTemplate('Task ID', id) }
           { getTemplate('Name', details.name) }
           { getTemplate('Received', details.received, 'timestamp') }
-          { getTemplate('Started', details.received, 'timestamp') }
+          { getTemplate('Started', details.started, 'timestamp') }
           { details.runtime && getTemplate('Runtime', `${details.runtime} secs`) }
           { details.failed && getTemplate('Failed', details.failed, 'timestamp') }
           { getTemplate('Retries', details.retries) }

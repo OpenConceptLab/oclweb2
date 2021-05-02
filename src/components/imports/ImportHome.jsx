@@ -36,6 +36,7 @@ class ImportHome extends React.Component {
               this.setState({importListError: res, isLoadingImports: false})
           })
     })
+
   }
 
   stopPoll(taskId) {
@@ -47,12 +48,25 @@ class ImportHome extends React.Component {
     forEach(this.state.intervals, interval => clearInterval(interval.interval))
   }
 
+  updateTaskStatus(task, newStatus) {
+    const newState = {...this.state}
+    const existingTask = find(newState.tasks, {task: task.task})
+    existingTask.state = newStatus
+    if(existingTask.details)
+      existingTask.details.state = newStatus
+    this.setState(newState)
+  }
+
   fetchStartedTaskUpdates(task) {
     return setInterval(() => {
       this.service.get(null, null, {task: task.task}).then(res => {
         const data = get(res, 'data')
         if(data) {
-          if(data.state !== task.state) {
+          if(task.state === 'RECEIVED' && data.state === 'REVOKED') {
+            this.stopPoll(task.task)
+            this.updateTaskStatus(task, 'REVOKED')
+          }
+          else if(data.state !== task.state) {
             this.stopPoll(task.task)
             this.fetchImports()
           } else if (data.details) {
@@ -85,9 +99,8 @@ class ImportHome extends React.Component {
       })
 
       APIService.new().overrideURL('/importers/bulk-import/').delete({task_id: taskId}).then(() => {
-
         this.stopPoll(task);
-        this.fetchImports();
+        task.state === 'RECEIVED' ? this.updateTaskStatus(task, 'REVOKED') : this.fetchImports()
       })
     }
   }

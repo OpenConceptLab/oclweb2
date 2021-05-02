@@ -1,11 +1,11 @@
 import React from 'react';
-import moment from 'moment';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
   map
 } from 'lodash';
 import { CircularProgress, Chip } from '@material-ui/core';
 import APIService from '../../services/APIService'
+import { formatDate } from '../../common/utils';
 import { BLUE, DEFAULT_LIMIT } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
 import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
@@ -375,7 +375,7 @@ class Search extends React.Component {
   getUpdatedSinceText() {
     const { updatedSince } = this.state;
     if(updatedSince)
-      return `Since: ${moment(updatedSince).format('MM/DD/YYYY')}`;
+      return `Since: ${formatDate(updatedSince)}`
     return 'All Time'
   }
 

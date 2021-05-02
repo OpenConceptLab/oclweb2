@@ -121,7 +121,7 @@ class NewImport extends React.Component {
     this.setState({isUploading: true}, () => {
       this.getService().post(this.getPayload(), null, this.getHeaders()).then(res => {
         this.setState({isUploading: false}, () => {
-          setTimeout(this.props.onUploadSuccess, 1000)
+          setTimeout(this.props.onUploadSuccess, 2500)
           if(res.status === 202) {
             this.reset()
             alertifyjs.success('Successfully Queued!')

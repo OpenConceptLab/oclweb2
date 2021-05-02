@@ -23,7 +23,7 @@ const Tasks = ({ tasks, isLoading, error, onRevoke, onDownload }) => {
       }
       {
         isEmpty(tasks) && !error && !isLoading ?
-        'No Import Tasks Found.' :
+        'No Tasks Found.' :
         map(
           tasks,
           task => <Task
