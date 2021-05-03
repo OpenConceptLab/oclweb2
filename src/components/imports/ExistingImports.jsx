@@ -1,14 +1,14 @@
 import React from 'react';
 import moment from 'moment';
 import {
-  Collapse, IconButton, Tooltip, Chip
+  Collapse, IconButton, Tooltip, Chip, Badge
 } from '@material-ui/core';
 import {
   FilterList as FilterIcon,
   Refresh as RefreshIcon,
   Check as CheckIcon
 } from '@material-ui/icons';
-import { filter, map, startCase, includes, without, uniq, isEmpty } from 'lodash';
+import { filter, map, startCase, includes, without, uniqBy, isEmpty, orderBy } from 'lodash';
 import { BLACK } from '../../common/constants';
 import { formatDate } from '../../common/utils';
 import ChipDatePicker from '../common/ChipDatePicker';
@@ -49,6 +49,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
 
     return tasks
   }
+  const filteredTasks = getTasks()
   const getTitle = () => {
     const prefix = 'Existing Imports'
 
@@ -56,7 +57,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
       return prefix
 
     if(anyFilterApplied)
-      return `${prefix} (${getTasks().length}/${tasks.length})`
+      return `${prefix} (${filteredTasks.length}/${tasks.length})`
 
     return `${prefix} (${tasks.length})`
   }
@@ -70,8 +71,26 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
   const toggleQueueFilter = queue => setQueueFilter(
     includes(queues, queue) ? without(queues, queue) : [...queues, queue]
   )
+  const getQueueName = task => task.task.split('~')[1]
+  const getStatusCount = status => filter(tasks, {state: status.toUpperCase()}).length
+  const getQueueCount = queue => filter(tasks, task => getQueueName(task) === queue).length
+  const appliedStatusQueueFilterCount = statuses.length + queues.length;
+  const getAllStatuses = () => orderBy(map(STATUSES, status => {
+    const count = getStatusCount(status)
+    return {
+      id: status, label: `${startCase(status)} (${count})`, count: count,
+      isApplied: includes(statuses, status),
+      ...getTaskIconDetails(status, {fontSize: 'inherit', height: '14px', width: '14px'}),
+    }
+  }), 'count', 'desc');
 
-  const getQueues = () => uniq(map(tasks, task => task.task.split('~')[1]))
+  const getAllQueues = () => orderBy(uniqBy(map(tasks, task => {
+    const name = getQueueName(task)
+    const count = getQueueCount(name)
+    return {
+      id: name, count: count, isApplied: includes(queues, name), label: `${name} (${count})`
+    }
+  }), 'id'), 'count', 'desc')
 
   return (
     <React.Fragment>
@@ -81,8 +100,10 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
         </span>
         <span>
           <Tooltip title='Filter by queue or status'>
-            <IconButton style={{marginRight: '5px'}} variant='outlined' color='secondary' disabled={isLoading} onClick={toggleFilters}>
-              <FilterIcon />
+            <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
+              <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
+                <FilterIcon />
+              </Badge>
             </IconButton>
           </Tooltip>
           <Tooltip title='Refresh List'>
@@ -112,22 +133,21 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
           </div>
           <div className='col-md-11 no-right-padding' style={{paddingLeft: '2px'}}>
             {
-              map(STATUSES, status => {
-                const { icon, color } = getTaskIconDetails(status, {height: '14px', width: '14px'})
-                const isApplied = includes(statuses, status)
+              map(getAllStatuses(), ({ icon, color, isApplied, count, label, id }) => {
                 return (
                   <Chip
+                    disabled={count === 0}
                     size='small'
-                    key={status}
+                    key={id}
                     icon={icon}
-                    label={startCase(status)}
+                    label={label}
                     variant='outlined'
                     style={{
                       color: color, border: `1px solid ${color}`,
-                      marginRight: '2px'
+                      margin: '2px'
                     }}
-                    onClick={() => toggleStatusFilter(status)}
-                    onDelete={() => toggleStatusFilter(status)}
+                    onClick={() => toggleStatusFilter(id)}
+                    onDelete={() => toggleStatusFilter(id)}
                     deleteIcon={
                       isApplied ?
                                 <CheckIcon style={{color: color}} /> :
@@ -145,19 +165,19 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
           </div>
           <div className='col-md-11 no-right-padding' style={{paddingLeft: '2px'}}>
             {
-              map(getQueues(), queue => {
-                const isApplied = includes(queues, queue)
+              map(getAllQueues(), ({id, count, isApplied, label}) => {
                 return (
                   <Chip
-                    key={queue}
+                    disabled={count === 0}
+                    key={id}
                     size='small'
-                    label={queue}
+                    label={label}
                     variant='outlined'
                     style={{
-                      marginRight: '2px', border: `1px solid ${BLACK}`
+                      margin: '2px', border: `1px solid ${BLACK}`
                     }}
-                    onClick={() => toggleQueueFilter(queue)}
-                    onDelete={() => toggleQueueFilter(queue)}
+                    onClick={() => toggleQueueFilter(id)}
+                    onDelete={() => toggleQueueFilter(id)}
                     deleteIcon={
                       isApplied ?
                                 <CheckIcon /> :
@@ -172,7 +192,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
       </Collapse>
       <div>
         <Tasks
-          tasks={getTasks()}
+          tasks={filteredTasks}
           isLoading={isLoading}
           error={error}
           onRevoke={onRevoke}
