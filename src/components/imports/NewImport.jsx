@@ -1,7 +1,8 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Tooltip, Button, ButtonGroup, TextField, FormControlLabel, Checkbox, CircularProgress
+  Tooltip, Button, ButtonGroup, TextField, FormControlLabel, Checkbox, CircularProgress,
+  FormHelperText
 } from '@material-ui/core';
 import {
   CloudUpload as UploadIcon,
@@ -160,7 +161,7 @@ class NewImport extends React.Component {
             <CircularProgress style={{margin: '50px'}} />
           </div> :
           <div className='col-md-12 no-side-padding'>
-            <div className='col-md-6 no-left-padding'>
+            <div className='col-md-12 no-left-padding'>
               <TextField
                 fullWidth
                 size='small'
@@ -170,67 +171,73 @@ class NewImport extends React.Component {
                 label='Queue'
                 value={queue}
                 onChange={event => this.setFieldValue('queue', event.target.value)}
-                style={{marginBottom: '20px'}}
                 disabled={parallel}
               />
+              <FormHelperText style={{marginLeft: '2px'}}>Custom queue name</FormHelperText>
             </div>
-            <div className='col-md-4 no-side-padding'>
+            <div className='col-md-6 no-side-padding'>
               <FormControlLabel
                 control={<Checkbox checked={update_if_exists} onChange={event => this.setFieldValue('update_if_exists', event.target.checked)} name='update_if_exists' />}
                 label="Update Existing"
               />
+              <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
+                Update if existing concept/mapping found
+              </FormHelperText>
             </div>
             {
               !isJSON &&
-              <div className='col-md-2 no-side-padding'>
+              <div className='col-md-6 no-side-padding'>
                 <FormControlLabel
                   control={<Checkbox checked={parallel} onChange={this.onParallelToogle} name='parallel' />}
                   label="Parallel"
                 />
+                <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
+                  Run concepts/mappings/references imports in parallel
+                </FormHelperText>
               </div>
             }
-            {
-              isUpload &&
-              <div className='col-md-12 no-side-padding' style={{marginBottom: '20px'}}>
+            <div className='col-md-12 no-side-padding' style={{margin: '10px 0'}}>
+              {
+                isUpload &&
                 <FileUploader
                   uploadButton={false}
                   onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
                   onLoading={() => this.setFieldValue('file', null)}
                 />
-              </div>
-            }
-            {
-              isURL &&
-              <TextField
-                fullWidth
-                size='small'
-                id='fileURL'
-                type='url'
-                required
-                variant='outlined'
-                label='JSON File URL'
-                value={fileURL}
-                onChange={event => this.setFieldValue('fileURL', event.target.value)}
-                style={{marginBottom: '20px'}}
-              />
-            }
-            {
-              isJSON &&
-              <TextField
-                multiline
-                rows={12}
-                fullWidth
-                size='small'
-                id='json'
-                type='url'
-                required
-                variant='outlined'
-                label='JSON Data'
-                value={json}
-                onChange={event => this.setFieldValue('json', event.target.value)}
-                style={{marginBottom: '20px'}}
-              />
-            }
+              }
+              {
+                isURL &&
+                <TextField
+                  fullWidth
+                  size='small'
+                  id='fileURL'
+                  type='url'
+                  required
+                  variant='outlined'
+                  label='JSON File URL'
+                  value={fileURL}
+                  onChange={event => this.setFieldValue('fileURL', event.target.value)}
+                  style={{marginBottom: '20px'}}
+                />
+              }
+              {
+                isJSON &&
+                <TextField
+                  multiline
+                  rows={12}
+                  fullWidth
+                  size='small'
+                  id='json'
+                  type='url'
+                  required
+                  variant='outlined'
+                  label='JSON Data'
+                  value={json}
+                  onChange={event => this.setFieldValue('json', event.target.value)}
+                  style={{marginBottom: '20px'}}
+                />
+              }
+            </div>
           </div>
         }
         <div className='col-md-12 no-side-padding' style={{textAlign: 'right'}}>
