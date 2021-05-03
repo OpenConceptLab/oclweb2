@@ -10,6 +10,7 @@ import {
 } from '@material-ui/icons';
 import { cloneDeep, get } from 'lodash';
 import APIService from '../../services/APIService';
+import { isAdminUser } from '../../common/utils';
 import JSONIcon from '../common/JSONIcon';
 import FileUploader from '../common/FileUploader';
 
@@ -54,7 +55,7 @@ class NewImport extends React.Component {
       alertifyjs.confirm(
         'Parallel Mode',
         'Bulk Import in parallel mode cannot support hierarchy. Are you sure you want to continue?',
-        () => this.setState({parallel: true, queue: ''}),
+        () => this.setState({parallel: true}),
         () => {}
       )
     } else this.setState({parallel: false})
@@ -91,7 +92,10 @@ class NewImport extends React.Component {
   }
 
   getParallelService() {
-    return APIService.new().overrideURL('/importers/bulk-import-parallel-inline/')
+    const service = APIService.new().overrideURL('/importers/bulk-import-parallel-inline/')
+    if(this.state.queue)
+      service.appendToUrl(`${this.state.queue}/`)
+    return service
   }
 
   getService() {
@@ -161,20 +165,22 @@ class NewImport extends React.Component {
             <CircularProgress style={{margin: '50px'}} />
           </div> :
           <div className='col-md-12 no-side-padding'>
-            <div className='col-md-12 no-left-padding'>
-              <TextField
-                fullWidth
-                size='small'
-                id='queue'
-                variant='outlined'
-                placeholder='e.g. my-queue'
-                label='Queue'
-                value={queue}
-                onChange={event => this.setFieldValue('queue', event.target.value)}
-                disabled={parallel}
-              />
-              <FormHelperText style={{marginLeft: '2px'}}>Custom queue name</FormHelperText>
-            </div>
+            {
+              !isAdminUser() &&
+              <div className='col-md-12 no-left-padding'>
+                <TextField
+                  fullWidth
+                  size='small'
+                  id='queue'
+                  variant='outlined'
+                  placeholder='e.g. my-queue'
+                  label='Queue'
+                  value={queue}
+                  onChange={event => this.setFieldValue('queue', event.target.value)}
+                />
+                <FormHelperText style={{marginLeft: '2px'}}>Custom queue name</FormHelperText>
+              </div>
+            }
             <div className='col-md-6 no-side-padding'>
               <FormControlLabel
                 control={<Checkbox checked={update_if_exists} onChange={event => this.setFieldValue('update_if_exists', event.target.checked)} name='update_if_exists' />}
