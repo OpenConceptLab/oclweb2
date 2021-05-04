@@ -100,16 +100,20 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
         </span>
         <span>
           <Tooltip title='Filter by queue or status'>
-            <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
-              <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
-                <FilterIcon />
-              </Badge>
-            </IconButton>
+            <span>
+              <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
+                <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
+                  <FilterIcon />
+                </Badge>
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title='Refresh List'>
-            <IconButton variant='outlined' color='secondary' disabled={isLoading} onClick={onRefresh}>
-              <RefreshIcon />
-            </IconButton>
+            <span>
+              <IconButton variant='outlined' color='secondary' disabled={isLoading} onClick={onRefresh}>
+                <RefreshIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         </span>
       </h3>
