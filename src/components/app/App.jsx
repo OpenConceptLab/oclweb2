@@ -2,7 +2,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import ReactGA from 'react-ga';
-import { isFHIRServer } from '../../common/utils';
+import { isFHIRServer, isLoggedIn } from '../../common/utils';
 import Search from '../search/Search';
 import ConceptHome from '../concepts/ConceptHome';
 import ConceptsComparison from '../concepts/ConceptsComparison';
@@ -19,12 +19,21 @@ import ForgotPasswordForm from '../users/ForgotPasswordForm';
 import ImportHome from '../imports/ImportHome';
 import NotFound from '../common/NotFound';
 import ErrorBoundary from '../common/ErrorBoundary';
+import AccessDenied from '../common/AccessDenied';
 import Fhir from '../fhir/Fhir';
 import ContainerHome from '../fhir/ContainerHome';
 import Header from './Header';
 import Footer from './Footer';
 import RootView from './RootView';
 import './App.scss';
+
+
+const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
+  <Route
+    {...rest}
+    render={props => isLoggedIn() ? <Component {...props} /> : <AccessDenied />}
+  />
+)
 
 const App = props => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -60,7 +69,7 @@ const App = props => {
           <Switch>
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
             <Route path="/search" component={isFHIR ? Fhir : Search} />
-            <Route path="/imports" component={ImportHome} />
+            <AuthenticationRequiredRoute path="/imports" component={ImportHome} />
 
             { /* Concept Home */ }
             <Route
