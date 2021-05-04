@@ -198,7 +198,7 @@ class ContainerHome extends React.Component {
               <CodeSystemHomeHeader
                 source={source}
                 url={`#${url}`}
-                parentURL={isHAPI ? `/fhir/${this.URLAttr}` : '/'}
+                parentURL={`/fhir/${this.URLAttr}`}
               />
               <CodeSystemHomeTabs
                 tab={tab}

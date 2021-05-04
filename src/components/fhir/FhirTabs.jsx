@@ -13,7 +13,7 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url,
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="fhir-home-tabs" classes={{indicator: 'hidden'}}>
         {
-          map(tabConfigs, config => <Tab key={config.label} label={config.label} disabled={!hapi && config.type === 'ValueSet'}  component="a" href={getTABHref(config)} />)
+          map(tabConfigs, config => <Tab key={config.label} label={config.label} component="a" href={getTABHref(config)} />)
         }
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>

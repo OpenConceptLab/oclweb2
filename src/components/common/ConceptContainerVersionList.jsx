@@ -141,15 +141,18 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                           </div>
                         </div>
                         <div className='col-md-3 no-right-padding version-button-controls-container'>
-                          <div className='col-md-12 no-side-padding' style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '5px'}}>
-                            {
-                              map(CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS, (tag, i) => (
-                                <Link to={version[tag.hrefAttr]} key={tag.id} style={i === 0 ? {marginRight: '10px'} : {}}>
-                                  {getTag(tag, version)}
-                                </Link>
-                              ))
-                            }
-                          </div>
+                          {
+                            !fhir &&
+                            <div className='col-md-12 no-side-padding' style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '5px'}}>
+                              {
+                                map(CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS, (tag, i) => (
+                                  <Link to={version[tag.hrefAttr]} key={tag.id} style={i === 0 ? {marginRight: '10px'} : {}}>
+                                    {getTag(tag, version)}
+                                  </Link>
+                                ))
+                              }
+                            </div>
+                          }
                           <div className='col-md-12 no-side-padding'>
                             {
                               canEdit && !isHEAD &&

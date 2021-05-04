@@ -18,7 +18,7 @@ import {
 import { Pagination } from '@material-ui/lab'
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction,
+  isFunction, compact
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -155,7 +155,7 @@ const getTag = (tag, item, hapi) => {
 const FHIRHistoryTable = ({ versions, isValueSet }) => {
   const getVersionLabel = version => {
     const versionName = version.resource.version
-    const changeId = version.resource.meta.versionId
+    const changeId = get(version, 'resource.meta.versionId')
 
     if(isValueSet && versionName !== changeId && versionName && changeId)
       return `${versionName} (${changeId})`
@@ -427,24 +427,12 @@ const ExpandibleRow = props => {
       return
     event.stopPropagation();
     event.preventDefault()
-
-    if(resource === 'CodeSystem'){
+    if(fhir) {
       if(hapi)
-        window.location.hash = `/fhir/CodeSystem/${item.resource.id}`;
-      else {
-        const ident = get(find(get(item, 'resource.identifier', []), ident => get(ident, 'system', '').match('fhir.')), 'value', '');
-        window.location.hash = `/fhir${ident.split('/version/')[0]}`
-      }
-    }
-    else if(resource === 'ValueSet'){
-      if(hapi)
-        window.location.hash = `/fhir/ValueSet/${item.resource.id}`;
-      else {
-        const ident = get(find(get(item, 'resource.identifier', []), ident => get(ident, 'system', '').match('fhir.')), 'value', '');
-        window.location.hash = `/fhir${ident.split('/version/')[0]}`
-      }
-    }
-    else
+        window.location.hash = `/fhir/${resource}/${item.resource.id}`;
+      else
+        window.location.hash = `/fhir${getOCLFHIRResourceURL(item)}`
+    } else
       window.location.hash = item.url;
   }
 
@@ -455,9 +443,9 @@ const ExpandibleRow = props => {
     }
   }
 
-  const handleTabChange = (event, newValue) => {
-    setTab(newValue);
-  };
+  const handleTabChange = (event, newValue) => setTab(newValue);
+
+  const getOCLFHIRResourceURL = item => '/' + compact(get(find(get(item, 'resource.identifier', []), ident => get(ident, 'system', '').match('fhir.')), 'value', '').split('/')).splice(0, 4).join('/');
 
   const fetchVersions = () => {
     if(fhir) {
@@ -472,7 +460,7 @@ const ExpandibleRow = props => {
           })
 
       } else {
-        const uri = get(get(item, 'resource.identifier.0.value', '').split('/version/'), '0')
+        const uri = getOCLFHIRResourceURL(item);
         if(uri)
           APIService.new().overrideURL(uri).appendToUrl('/version/').get().then(response => {
             if(response.status === 200)
