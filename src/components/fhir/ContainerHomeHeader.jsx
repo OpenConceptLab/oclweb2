@@ -36,84 +36,84 @@ const ContainerHomeHeader = ({source, url, parentURL, resource}) => {
   const shortCode = source.id
   const lastUpdated = get(source, 'meta.lastUpdated')
   const isCodeSystem = resource === 'CodeSystem'
-  const icon = isCodeSystem ? <ListIcon className='default-svg' /> : <LoyaltyIcon className='default-svg' />
+  const icon = isCodeSystem ? <ListIcon className='default-svg' /> : <LoyaltyIcon className='default-svg' />;
 
   return (
-  <header className='home-header col-md-12'>
-    <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-      <div className='no-side-padding col-md-1 home-icon'>
-        <HeaderLogo
-          logoURL={source.logo_url}
-          defaultIcon={icon}
-        />
-      </div>
-      <div className='col-md-11'>
-        <div className='col-md-12 no-side-padding flex-vertical-center'>
-          <OwnerButton {...source} href={parentURL} />
-          <span className='separator'>/</span>
-          {
-            isCodeSystem ?
-            <SourceButton label={shortCode} href={url} /> :
-            <CollectionButton label={shortCode} href={url} />
-          }
-          {
-            isRetired &&
-            <span style={{marginLeft: '10px'}}>
-              <RetiredChip size='small' />
-            </span>
-          }
+    <header className='home-header col-md-12'>
+      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
+        <div className='no-side-padding col-md-1 home-icon'>
+          <HeaderLogo
+            logoURL={source.logo_url}
+            defaultIcon={icon}
+          />
         </div>
-        <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-          <span style={{marginRight: '10px'}}>
-            {source.full_name}
-          </span>
-        </div>
-        {
-          source.description &&
-          <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
-            {source.description}
-          </div>
-        }
-        <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
-        <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
-        {
-          hasManyHiddenAttributes ?
-          <div className='col-md-12 no-side-padding'>
-            <CollapsibleAttributes
-              object={source}
-              urlAttrs={['canonical_url']}
-              textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
-              dateAttrs={['revision_date', 'release_date']}
-              jsonAttrs={['identifier', 'contact', 'jurisdiction']}
-            />
-          </div> :
-          <React.Fragment>
+        <div className='col-md-11'>
+          <div className='col-md-12 no-side-padding flex-vertical-center'>
+            <OwnerButton {...source} href={parentURL} />
+            <span className='separator'>/</span>
             {
-              map(HIDDEN_ATTRIBUTES, (type, attr) => (
-                <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(source, attr)} gridClass="col-md-12" type={type} />
-              ))
+              isCodeSystem ?
+              <SourceButton label={shortCode} href={url} /> :
+              <CollectionButton label={shortCode} href={url} />
             }
-          </React.Fragment>
-        }
-        <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-          {
-            source.website &&
+            {
+              isRetired &&
+              <span style={{marginLeft: '10px'}}>
+                <RetiredChip size='small' />
+              </span>
+            }
+          </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>
-              <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+              {source.full_name}
             </span>
+          </div>
+          {
+            source.description &&
+            <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              {source.description}
+            </div>
           }
-          <span>
-            <LastUpdatedOnLabel
-              date={lastUpdated}
-              by={source.updated_by}
-              iconSize='medium'
-              noContainerClass
-            />
-          </span>
+          <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
+          <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
+          {
+            hasManyHiddenAttributes ?
+            <div className='col-md-12 no-side-padding'>
+              <CollapsibleAttributes
+                object={source}
+                urlAttrs={['canonical_url']}
+                textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
+                dateAttrs={['revision_date', 'release_date']}
+                jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+              />
+            </div> :
+            <React.Fragment>
+              {
+                map(HIDDEN_ATTRIBUTES, (type, attr) => (
+                  <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(source, attr)} gridClass="col-md-12" type={type} />
+                ))
+              }
+            </React.Fragment>
+          }
+          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+            {
+              source.website &&
+              <span style={{marginRight: '10px'}}>
+                <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+              </span>
+            }
+            <span>
+              <LastUpdatedOnLabel
+                date={lastUpdated}
+                by={source.updated_by}
+                iconSize='medium'
+                noContainerClass
+              />
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
   )
 }
 
