@@ -26,6 +26,7 @@ const ResourceLabelVertical = props => {
     color: 'white',
     padding: '0 5px',
     borderRadius: '2px',
+    minHeight: '18px',
   }
 
   return (
@@ -55,7 +56,7 @@ const ResourceLabelVertical = props => {
           <span style={{maxWidth: '100%', fontWeight: 'bold'}}>{props.id || props.name}</span>
         </div>
         <div style={nameTextStyles} className={'col-md-12 ' + resource + '-bg'}>
-          <span className=''>{props.name || 'None'}</span>
+          <span>{props.name}</span>
         </div>
       </div>
       <div className='no-left-padding flex-vertical-center' style={{width: '5%', justifyContent: 'flex-end'}}>

@@ -612,7 +612,7 @@ const ExpandibleRow = props => {
         {
           map(columns, column => (
             <TableCell key={column.id} align={column.align || 'left'} className={column.className}>
-              { getValue(item, column) || 'None' }
+              { getValue(item, column) }
             </TableCell>
           ))
         }

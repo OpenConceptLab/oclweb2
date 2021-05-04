@@ -35,7 +35,7 @@ const Collection = props => {
               return (
                 <React.Fragment key={attr}>
                   <span className='resource-attr'>{label}:</span>
-                  <span className='resource-value'>{get(props, attr, 'None')}</span>
+                  <span className='resource-value'>{get(props, attr, '')}</span>
                   <br/>
                 </React.Fragment>
               )

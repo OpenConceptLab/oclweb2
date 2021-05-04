@@ -33,7 +33,7 @@ const Concept = props => {
                   {label}:
                 </span>
                 <span className='resource-value' style={{marginRight: '0px'}}>
-                  {get(props, attr, 'None')}
+                  {get(props, attr, '')}
                 </span>
                 {i < fields.length - 1 && <span style={{marginRight: '5px'}}>, </span>}
               </React.Fragment>

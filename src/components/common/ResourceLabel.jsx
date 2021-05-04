@@ -33,7 +33,7 @@ const ResourceLabel = props => {
         <span className='resource-name ellipsis-text-3' style={{maxWidth: '100%'}}>{props.id || props.name}</span>
       </span>
       <span className={'resource-label resource-id ' + (props.colorClass || '')} style={{maxWidth: '100%'}}>
-        <span className='ellipsis-text'>{props.name || 'None'}</span>
+        <span className='ellipsis-text'>{props.name}</span>
       </span>
       {
         isSourceChild && (
