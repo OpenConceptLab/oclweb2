@@ -60,7 +60,13 @@ class Login extends React.Component {
   cacheUserData() {
     refreshCurrentUserCache(response => {
       alertifyjs.success(`Successfully signed in as ${this.state.username}.`)
-      window.location.hash  = '#' + response.data.url
+      let returnToURL = response.data.url
+      if(get(this.props, 'location.search')) {
+        const queryParams = new URLSearchParams(this.props.location.search)
+        if(queryParams && queryParams.get('returnTo'))
+          returnToURL = queryParams.get('returnTo')
+      }
+      window.location.hash  = '#' + returnToURL
     })
   }
 
