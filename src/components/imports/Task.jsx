@@ -94,7 +94,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
                       onClick={onDownloadTaskClick}
                       style={{backgroundColor: GREEN, color: WHITE, padding: '0 5px', fontSize: '0.7125rem', marginLeft: '10px', marginTop: '3px'}}
                       >
-                      Download
+                      Download Report
                     </Button>
                   }
                 </div>
