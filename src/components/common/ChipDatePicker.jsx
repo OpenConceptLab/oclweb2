@@ -17,7 +17,7 @@ const ChipDatePicker = props => {
 
 
   return (
-    <Tooltip title='Updated Since'>
+    <Tooltip title={props.tooltip || 'Updated Since'}>
       <span id='chip-date-picker'>
         <span id='hidden-date-html5'>
           <Chip

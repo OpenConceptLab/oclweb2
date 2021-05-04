@@ -123,7 +123,13 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
           />
         </div>
         <div className='col-md-3 no-side-padding' style={{textAlign: 'left'}}>
-          <ChipDatePicker onChange={onDateChange} label={getDateText()} date={date} size='medium' />
+          <ChipDatePicker
+            tooltip="Filter by date"
+            onChange={onDateChange}
+            label={getDateText()}
+            date={date}
+            size='medium'
+          />
         </div>
       </div>
       <Collapse in={openFilters} className='col-md-12' style={{padding: '0px', display: openFilters ? 'block' : 'none', marginBottom: openFilters ? '10px' : '0px'}}>
