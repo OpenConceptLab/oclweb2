@@ -5,7 +5,7 @@ import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import About from '../common/About';
 import ConceptTable from './ConceptTable';
 
-const CodeSystemHomeTabs = props => {
+const ContainerHomeTabs = props => {
   const {
     tab, source, versions, location, versionedObjectURL, aboutTab, selectedConfig, onTabChange,
     isOCLDefaultConfigSelected, codes, hapi, onPageChange, isLoadingCodes
@@ -65,4 +65,4 @@ const CodeSystemHomeTabs = props => {
   );
 }
 
-export default CodeSystemHomeTabs;
+export default ContainerHomeTabs;

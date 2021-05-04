@@ -3,8 +3,8 @@ import { isEmpty, get, isObject, map, find } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import NotFound from '../common/NotFound';
 import APIService from '../../services/APIService';
-import CodeSystemHomeHeader from './CodeSystemHomeHeader';
-import CodeSystemHomeTabs from './CodeSystemHomeTabs';
+import ContainerHomeHeader from './ContainerHomeHeader';
+import ContainerHomeTabs from './ContainerHomeTabs';
 import { getAppliedServerConfig } from '../../common/utils';
 
 const CODE_SYSTEM_DEFAULT_CONFIG = {
@@ -195,12 +195,14 @@ class ContainerHome extends React.Component {
             notFound ?
             <NotFound /> :
             <div className='col-md-12 home-container no-side-padding'>
-              <CodeSystemHomeHeader
+              <ContainerHomeHeader
+                resource={this.URLAttr}
                 source={source}
                 url={`#${url}`}
                 parentURL={`/fhir/${this.URLAttr}`}
               />
-              <CodeSystemHomeTabs
+              <ContainerHomeTabs
+                resource={this.URLAttr}
                 tab={tab}
                 onTabChange={this.onTabChange}
                 source={source}
