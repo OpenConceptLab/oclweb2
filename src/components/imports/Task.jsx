@@ -1,20 +1,27 @@
 import React from 'react';
+import moment from 'moment';
 import alertifyjs from 'alertifyjs';
 import './Tasks.scss';
 import { ExpandMore as ExpandIcon } from '@material-ui/icons';
 import {
-  Accordion, AccordionDetails, AccordionSummary, Tooltip, Divider,
-  Button
+  Accordion, AccordionDetails, AccordionSummary, Tooltip, Divider, Button, Chip,
 } from '@material-ui/core';
 import { get, includes, last } from 'lodash';
 import { formatDateTime } from '../../common/utils';
 import { ERROR_RED, GREEN, WHITE } from '../../common/constants';
 import TaskIcon from './TaskIcon';
 
+const ExpiredResult = () => (
+  <Chip variant='outlined' label='Result Expired' style={{border: `1px solid ${ERROR_RED}`, color: ERROR_RED}} size='small' />
+);
+
+const TASK_RESULT_EXPIRY_HOURS = 72;
+
 const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
   const { details, state, result } = task
   const status = state.toLowerCase()
   const id = task.task
+  const hasResultExpired = status === 'success' && moment.duration(moment(new Date()).diff(moment(task.details.started * 1000))).asHours() > TASK_RESULT_EXPIRY_HOURS;
   const onChange = () => open ? onClose() : onOpen(id)
   const getTemplate = (label, value, type) => {
     let formattedValue = value
@@ -87,7 +94,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
                     </Button>
                   }
                   {
-                    status === 'success' &&
+                    status === 'success' && !hasResultExpired &&
                     <Button
                       size='small'
                       variant='contained'
@@ -96,6 +103,10 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
                       >
                       Download Report
                     </Button>
+                  }
+                  {
+                    hasResultExpired &&
+                    <ExpiredResult />
                   }
                 </div>
               </div>
