@@ -58,38 +58,45 @@ class SearchByAttributeInput extends React.Component {
 
   render() {
     const { attrs, input, selectedAttribute, anchorEl } = this.state;
-    const { searchInputPlaceholder } = this.props;
+    const { searchInputPlaceholder, fhir, hapi, resource } = this.props;
+    const isDisabled = fhir && !hapi && resource === 'ValueSet';
+    const placeholder = isDisabled ? 'Coming soon...' : (searchInputPlaceholder || "Search OCL")
 
     return (
       <div className='col-sm-12 no-side-padding'>
         <div className='col-sm-12 no-side-padding' style={{marginBottom: '0px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
-          <Button className='search-attribute-menu-button' color='primary' variant='text' startIcon={<MenuIcon fontSize='inherit'/>} onClick={this.toggleAnchorEl}>
+          <Button disabled={isDisabled} className='search-attribute-menu-button' color='primary' variant='text' startIcon={<MenuIcon fontSize='inherit'/>} onClick={this.toggleAnchorEl}>
             {get(selectedAttribute, 'label')}
           </Button>
           <InputBase
             style={{flex: 1, marginLeft: '10px'}}
-            placeholder={searchInputPlaceholder || "Search OCL"}
+            placeholder={placeholder}
             inputProps={{ 'aria-label': 'search ocl' }}
             value={input || ''}
             fullWidth
             onChange={this.handleInputChange}
             onKeyPress={this.handleKeyPress}
+            disabled={isDisabled}
           />
           {
             input &&
             <React.Fragment>
               <Tooltip title='Clear'>
-                <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
-                  <ClearIcon />
-                </IconButton>
+                <span>
+                  <IconButton disabled={isDisabled} type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
+                    <ClearIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
               <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
             </React.Fragment>
           }
           <Tooltip title='Search'>
-            <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
-              <SearchIcon />
-            </IconButton>
+            <span>
+              <IconButton disabled={isDisabled} type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
+                <SearchIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         </div>
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.toggleAnchorEl}>
