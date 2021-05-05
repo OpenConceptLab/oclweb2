@@ -3,6 +3,7 @@ import moment from 'moment';
 import {
   Collapse, IconButton, Tooltip, Chip, Badge
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import {
   FilterList as FilterIcon,
   Refresh as RefreshIcon,
@@ -94,29 +95,38 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
 
   return (
     <React.Fragment>
-      <h3 style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-        <span>
-          {getTitle()}
-        </span>
-        <span>
-          <Tooltip title='Filter by queue or status'>
-            <span>
-              <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
-                <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
-                  <FilterIcon />
-                </Badge>
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title='Refresh List'>
-            <span>
-              <IconButton variant='outlined' color='secondary' disabled={isLoading} onClick={onRefresh}>
-                <RefreshIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-        </span>
-      </h3>
+      <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
+        <Alert severity="info" style={{padding: '5px'}}>
+          <span style={{marginLeft: '-8px'}}>
+            Results will expire after <strong>72 hours</strong> from the task&apos;s start time
+          </span>
+        </Alert>
+      </div>
+      <div className='col-md-12 no-side-padding'>
+        <h3 style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0px', marginBottom: '5px'}}>
+          <span>
+            {getTitle()}
+          </span>
+          <span>
+            <Tooltip title='Filter by queue or status'>
+              <span>
+                <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
+                  <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
+                    <FilterIcon />
+                  </Badge>
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip title='Refresh List'>
+              <span>
+                <IconButton variant='outlined' color='secondary' disabled={isLoading} onClick={onRefresh}>
+                  <RefreshIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </span>
+        </h3>
+      </div>
       <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginBottom: '10px', marginTop: '-5px'}}>
         <div className='col-md-9 no-left-padding'>
           <SearchInput
