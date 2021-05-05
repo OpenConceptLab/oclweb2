@@ -108,6 +108,7 @@ const RESOURCE_DEFINITIONS = {
     columns: ALL_COLUMNS.ValueSet,
     tagWaitAttribute: 'resource',
     tags: TAGS.ValueSet,
+    getTags: hapi => hapi ? TAGS.ValueSet : null,
     expandible: true,
     tabs: ['Details', 'Versions', 'Copyright'],
   },
@@ -349,12 +350,13 @@ const ExpandibleRow = props => {
   const isValueSet = resource === 'ValueSet';
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
+  const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
                                        ((isConceptContainer || isValueSet) ? 1 : 0) + //public column
                                           (isSelectable ? 1 : 0) + // select column
                                            ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                         (resourceDefinition.tags ? 1 : 0); //tags column
+                                         (tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -610,7 +612,7 @@ const ExpandibleRow = props => {
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
               <CircularProgress style={{width: '20px', height: '20px'}} /> :
-              map(resourceDefinition.tags, tag => tag.text ? getTag(tag, item, hapi) : (
+              map(tags, tag => tag.text ? getTag(tag, item, hapi) : (
                 <Link key={tag.id} to='' onClick={event => navigateTo(event, item, isFunction(tag.hrefAttr) ? tag.hrefAttr : get(item, tag.hrefAttr))}>
                   {getTag(tag, item, hapi)}
                 </Link>
