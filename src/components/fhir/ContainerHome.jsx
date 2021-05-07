@@ -62,6 +62,7 @@ class ContainerHome extends React.Component {
       resource: {},
       versions: [],
       codes: {
+        systems: [],
         results: [],
         pageNumber: 1,
         total: 0,
@@ -158,6 +159,7 @@ class ContainerHome extends React.Component {
                       isLoading: false,
                       resource: resource,
                       codes: {
+                        systems: get(resource, 'compose.include', []),
                         results: concepts,
                         total: total,
                         pageCount: 100,

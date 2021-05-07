@@ -1,14 +1,15 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, reject, map } from 'lodash';
+import { get, reject, map, isEmpty } from 'lodash';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import About from '../common/About';
 import ConceptTable from './ConceptTable';
+import CodeList from './CodeList';
 
 const ContainerHomeTabs = props => {
   const {
     tab, source, versions, location, versionedObjectURL, aboutTab, selectedConfig, onTabChange,
-    isOCLDefaultConfigSelected, codes, hapi, onPageChange, isLoadingCodes
+    isOCLDefaultConfigSelected, codes, hapi, onPageChange, isLoadingCodes, resource
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -57,8 +58,11 @@ const ContainerHomeTabs = props => {
         }
 
         {
-          selectedTabConfig.type === 'codes' &&
-          <ConceptTable concepts={codes} hapi={hapi} onPageChange={onPageChange} isLoading={isLoadingCodes} />
+          selectedTabConfig.type === 'codes' && (
+            (resource === 'ValueSet' && !isEmpty(get(codes, 'systems'))) ?
+            <CodeList codes={codes} isLoading={isLoadingCodes} hapi={hapi} /> :
+            <ConceptTable concepts={codes} hapi={hapi} onPageChange={onPageChange} isLoading={isLoadingCodes} />
+          )
         }
       </div>
     </div>

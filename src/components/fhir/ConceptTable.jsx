@@ -8,7 +8,7 @@ import { BLUE, WHITE } from '../../common/constants';
 import PageResultsLabel from '../search/PageResultsLabel';
 import NavigationButtonGroup from '../search/NavigationButtonGroup';
 
-const ConceptTable = ({ concepts, hapi, onPageChange, isLoading }) => {
+const ConceptTable = ({ concepts, hapi, onPageChange, isLoading, noPaginate }) => {
   const theadStyles = {
     backgroundColor: BLUE,
     border: `1px solid ${BLUE}`,
@@ -26,7 +26,7 @@ const ConceptTable = ({ concepts, hapi, onPageChange, isLoading }) => {
   return (
     <div className='col-md-12 no-side-padding'>
       {
-        !hapi &&
+        !hapi && !noPaginate &&
         <div className='col-md-12 flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           <span>
             <PageResultsLabel disabled results={concepts} limit={100} />
@@ -63,11 +63,11 @@ const ConceptTable = ({ concepts, hapi, onPageChange, isLoading }) => {
               </TableRow> :
               <React.Fragment>
                 {
-                  map(concepts.results, concept => {
+                  map(concepts.results, (concept, index) => {
                     const isInactive = getValue(concept, 'inactive', 'valueBoolean')
                     const className = isInactive ? 'retired' : '';
                     return (
-                      <TableRow hover key={concept.code}>
+                      <TableRow hover key={index}>
                         <TableCell>{concept.code}</TableCell>
                         <TableCell className={className}>{concept.display}</TableCell>
                         {
@@ -82,7 +82,7 @@ const ConceptTable = ({ concepts, hapi, onPageChange, isLoading }) => {
                   })
                 }
                 {
-                  !hapi &&
+                  !hapi && !noPaginate &&
                   <TableRow colSpan="4">
                     <TableCell colSpan="4" align='center' className='pagination-center'>
                       <Pagination
