@@ -45,11 +45,6 @@ const COMMUNITY_OPTIONS = [
     icon: <DocumentationIcon />
   },
   {
-    label: 'OCL for OpenMRS',
-    href: MARKETING_SITE_URL + 'community-resources/ocl-for-openmrs/',
-    icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />
-  },
-  {
     label: 'OCL Mailing List',
     href: MARKETING_SITE_URL + 'list/',
     icon: <EmailIcon />
@@ -65,6 +60,11 @@ const TOOLS_OPTIONS = [
     label: 'Terminology Service',
     href: MARKETING_SITE_URL + 'ocl-tools/terminology-service/',
     icon: <TerminologyServiceIcon />
+  },
+  {
+    label: 'OCL for OpenMRS',
+    href: MARKETING_SITE_URL + 'community-resources/ocl-for-openmrs/',
+    icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />
   },
 ];
 export const OPTIONS = [
