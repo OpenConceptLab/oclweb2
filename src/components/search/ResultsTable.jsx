@@ -112,6 +112,14 @@ const RESOURCE_DEFINITIONS = {
     expandible: true,
     tabs: ['Details', 'Versions', 'Copyright'],
   },
+  ConceptMap: {
+    headBgColor: BLUE,
+    headTextColor: WHITE,
+    columns: ALL_COLUMNS.ConceptMap,
+    tagWaitAttribute: 'resource',
+    expandible: true,
+    tabs: ['Details', 'Versions', 'Copyright'],
+  },
 }
 
 const getValue = (item, column) => {
@@ -153,14 +161,14 @@ const getTag = (tag, item, hapi) => {
   );
 }
 
-const FHIRHistoryTable = ({ versions, isValueSet }) => {
+const FHIRHistoryTable = ({ versions, resource }) => {
+  const isValueSet = resource === 'ValueSet'
+  const isCodeSystem = resource === 'CodeSystem'
   const getVersionLabel = version => {
     const versionName = version.resource.version
     const changeId = get(version, 'resource.meta.versionId')
-
     if(isValueSet && versionName !== changeId && versionName && changeId)
       return `${versionName} (${changeId})`
-
     return versionName || changeId
   }
 
@@ -173,15 +181,15 @@ const FHIRHistoryTable = ({ versions, isValueSet }) => {
           <TableCell align='left'>Status</TableCell>
           <TableCell align='left'>Content</TableCell>
           <TableCell align='left'>Release Date</TableCell>
-          <TableCell />
+          { isCodeSystem && <TableCell /> }
         </TableRow>
       </TableHead>
       <TableBody>
         {
-          map(versions, version => {
+          map(versions, (version, index) => {
             const versionLabel = getVersionLabel(version)
             return (
-              <TableRow hover key={versionLabel}>
+              <TableRow hover key={index}>
                 {
                   isValueSet &&
                   <TableCell align='center'>
@@ -209,11 +217,12 @@ const FHIRHistoryTable = ({ versions, isValueSet }) => {
                 <TableCell align='left'> { version.resource.status } </TableCell>
                 <TableCell align='left'> { version.resource.content } </TableCell>
                 <TableCell align='left'> { formatDateTime(version.resource.date) } </TableCell>
-                <TableCell align='left'>
-                  {
-                    map(CODE_SYSTEM_VERSION_TAGS, tag => getTag(tag, version))
-                  }
-                </TableCell>
+                {
+                  isCodeSystem &&
+                  <TableCell align='left'>
+                    { map(CODE_SYSTEM_VERSION_TAGS, tag => getTag(tag, version)) }
+                  </TableCell>
+                }
               </TableRow>
             )
           })
@@ -346,14 +355,14 @@ const ExpandibleRow = props => {
   const [tab, setTab] = React.useState(0);
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
-  const isCodeSystem = resource === 'CodeSystem';
   const isValueSet = resource === 'ValueSet';
+  const isConceptMap = resource === 'ConceptMap';
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
-                                       ((isConceptContainer || isValueSet) ? 1 : 0) + //public column
+                                       ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
                                           (isSelectable ? 1 : 0) + // select column
                                            ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
                                          (tags ? 1 : 0); //tags column
@@ -571,7 +580,7 @@ const ExpandibleRow = props => {
           </TableCell>
         }
         {
-          isValueSet &&
+          (isValueSet || isConceptMap) &&
           <TableCell align='center'>
             <span className='flex-vertical-center'>
               {
@@ -674,13 +683,13 @@ const ExpandibleRow = props => {
                     </div>
                   }
                   {
-                    (isCodeSystem || isValueSet) && tab === resourceDefinition.tabs.indexOf('Copyright') &&
+                    fhir && tab === resourceDefinition.tabs.indexOf('Copyright') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       <div className="col-md-12" style={{padding: '20px'}} dangerouslySetInnerHTML={{__html: item.resource.copyright}} />
                     </div>
                   }
                   {
-                    (isCodeSystem || isValueSet) && tab === resourceDefinition.tabs.indexOf('Details') &&
+                    fhir && tab === resourceDefinition.tabs.indexOf('Details') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       <FhirContainerResource {...item} style={{padding: '20px'}} />
                     </div>
@@ -693,7 +702,7 @@ const ExpandibleRow = props => {
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
                       {
                         fhir ?
-                        <FHIRHistoryTable versions={versions} isValueSet={isValueSet} /> :
+                        <FHIRHistoryTable versions={versions} resource={resource} /> :
                         <HistoryTable versions={versions} />
                       }
                     </div>
@@ -740,7 +749,8 @@ const ResultsTable = (
     border: `1px solid ${theadBgColor}`,
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
-  const isValueSet = includes(['ValueSet'], resource);
+  const isValueSet = resource === 'ValueSet'
+  const isConceptMap = resource === 'ConceptMap'
   const shouldShowPin = showPin && resourceDefinition.pinnable;
   const canRender = results.total && resourceDefinition;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
@@ -793,7 +803,7 @@ const ResultsTable = (
                 resourceDefinition.columns;
 
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
-  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet) ? 1 : 0);
+  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
   const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
 
   return (
@@ -821,7 +831,7 @@ const ResultsTable = (
                 }
                 <TableRow>
                   {
-                    (isConceptContainer || isValueSet) &&
+                    (isConceptContainer || isValueSet || isConceptMap) &&
                     <TableCell />
                   }
                   {

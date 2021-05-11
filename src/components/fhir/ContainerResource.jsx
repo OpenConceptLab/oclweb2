@@ -19,7 +19,7 @@ const ContainerResource = props => {
 
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
-      <HeaderAttribute value={props.resource.name} label='Name' gridClass="col-md-12" />
+      <HeaderAttribute value={props.resource.title || props.resource.name} label='Name' gridClass="col-md-12" />
       <HeaderAttribute value={props.resource.description} label='Description' gridClass="col-md-12" />
       <HeaderAttribute value={props.resource.purpose} label='Purpose' gridClass="col-md-12" />
       <HeaderAttribute value={props.resource.useContext} label='Use Context' gridClass="col-md-12" />

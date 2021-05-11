@@ -10,8 +10,9 @@ const DEFAULT_CONFIG = {
   is_default: false,
   config: {
     tabs: [
-      { type: "CodeSystem", label: "Code Systems", "default": true, layout: 'table' },
-      { type: "ValueSet", label: "Value Sets", layout: 'table' },
+      { type: "CodeSystem", label: "Code Systems", "default": true },
+      { type: "ValueSet", label: "Value Sets" },
+      { type: "ConceptMap", label: "Concept Map" },
     ]
   }
 }
@@ -21,9 +22,17 @@ class Fhir extends React.Component {
     super(props);
     this.serverConfig = getAppliedServerConfig()
     this.state = {
-      tab: window.location.hash.match('/ValueSet') ? 1 : 0,
+      tab: this.getDefaultTab(),
       config: DEFAULT_CONFIG
     }
+  }
+
+  getDefaultTab = () => {
+    if(window.location.hash.match('/ValueSet'))
+      return 1
+    if(window.location.hash.match('/ConceptMap'))
+      return 2
+    return 0
   }
 
   onTabChange = (event, value) => this.setState({tab: value})

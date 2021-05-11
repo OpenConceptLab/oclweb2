@@ -203,6 +203,7 @@ const App = props => {
             <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/about" component={ContainerHome} />
             <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)/code" component={ContainerHome} />
             <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+
             <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/code" component={ContainerHome} />
             <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/about" component={ContainerHome} />
             <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/versions" component={ContainerHome} />
@@ -215,6 +216,11 @@ const App = props => {
             <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/about" component={ContainerHome} />
             <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)/code" component={ContainerHome} />
             <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)/ConceptMap/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+            <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_]+)/ConceptMap/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+            <Route path="/fhir/ConceptMap/:id([a-zA-Z0-9\-\.\_]+)" component={ContainerHome} />
+
             <Route path="/fhir" component={Fhir} />
             <Route component={NotFound} />
           </Switch>

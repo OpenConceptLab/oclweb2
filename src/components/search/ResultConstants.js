@@ -109,6 +109,15 @@ export const ALL_COLUMNS = {
     {id: 'status', label: 'Status', value: 'resource.status', sortOn: 'status', sortBy: 'asc'},
     {id: 'date', label: 'Release Date', value: 'resource.date', sortOn: 'date', formatter: formatDate},
     {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortOn: 'publisher', sortBy: 'asc'},
+  ],
+  ConceptMap: [
+    {id: '_id', label: 'ID', value: 'resource.id', sortOn: '_id', sortBy: 'asc'},
+    {id: 'url', label: 'Canonical URL', value: 'resource.url', sortable: false},
+    {id: 'name', label: 'Name', value: 'resource.title', renderer: codeSystem => <span className={codeSystem.resource.status}>{codeSystem.resource.title}</span>, sortOn: 'title', sortBy: 'asc'},
+    {id: 'version', label: 'Latest Version', value: 'resource.version', sortOn: 'version', sortBy: 'asc'},
+    {id: 'status', label: 'Status', value: 'resource.status', sortOn: 'status', sortBy: 'asc'},
+    {id: 'date', label: 'Release Date', value: 'resource.date', sortOn: 'date', formatter: formatDate},
+    {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortOn: 'publisher', sortBy: 'asc'},
   ]
 };
 
