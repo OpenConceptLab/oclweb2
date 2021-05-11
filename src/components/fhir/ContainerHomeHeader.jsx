@@ -2,12 +2,14 @@ import React from 'react';
 import {
   List as ListIcon,
   Loyalty as LoyaltyIcon,
+  Link as LinkIcon
 } from '@material-ui/icons';
 import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { nonEmptyCount } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import CollectionButton from '../common/CollectionButton';
+import ConceptMapButton from '../common/ConceptMapButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import LinkLabel from '../common/LinkLabel';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
@@ -36,26 +38,38 @@ const ContainerHomeHeader = ({source, url, parentURL, resource}) => {
   const shortCode = source.id
   const lastUpdated = get(source, 'meta.lastUpdated')
   const isCodeSystem = resource === 'CodeSystem'
-  const icon = isCodeSystem ? <ListIcon className='default-svg' /> : <LoyaltyIcon className='default-svg' />;
-
+  const isValueSet = resource === 'ValueSet'
+  const isConceptMap = resource === 'ConceptMap'
+  const getIcon = () => {
+    if(isCodeSystem)
+      return <ListIcon className='default-svg' />;
+    if(isValueSet)
+      return <LoyaltyIcon className='default-svg' />;
+    if(isConceptMap)
+      return <LinkIcon className='default-svg' />;
+  }
+  const getResourceButton = () => {
+    if(isCodeSystem)
+      return <SourceButton label={shortCode} href={url} />;
+    if(isValueSet)
+      return <CollectionButton label={shortCode} href={url} />;
+    if(isConceptMap)
+      return <ConceptMapButton label={shortCode} href={url} />;
+  }
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <div className='no-side-padding col-md-1 home-icon'>
           <HeaderLogo
             logoURL={source.logo_url}
-            defaultIcon={icon}
+            defaultIcon={getIcon()}
           />
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...source} href={parentURL} />
             <span className='separator'>/</span>
-            {
-              isCodeSystem ?
-              <SourceButton label={shortCode} href={url} /> :
-              <CollectionButton label={shortCode} href={url} />
-            }
+            { getResourceButton() }
             {
               isRetired &&
               <span style={{marginLeft: '10px'}}>
