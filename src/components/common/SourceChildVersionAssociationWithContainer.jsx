@@ -53,7 +53,7 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
           </Collapse>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <Divider style={{width: '48%', backgroundColor: open ? BLUE : LIGHT_GRAY}} />
-            <Tooltip title='View associations with Sources/Collections'>
+            <Tooltip title='View associations with Sources/Collections' arrow>
               <IconButton onClick={toggleOpen} color={open ? 'primary' : 'default'} size='small' style={{border: '1px solid', borderColor: open ? BLUE : LIGHT_GRAY}}>
                 {open ? <UpIcon fontSize='inherit' /> : <DownIcon fontSize='inherit' />}
               </IconButton>
