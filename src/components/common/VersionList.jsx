@@ -3,14 +3,14 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton, Button, Checkbox
 } from '@material-ui/core';
-import { map, isEmpty, startCase, uniq, without} from 'lodash';
+import { map, isEmpty, startCase, uniq, without, orderBy } from 'lodash';
 import {
   ExpandMore as ExpandMoreIcon, Search as SearchIcon,
   CompareArrows as CompareArrowsIcon,
 } from '@material-ui/icons';
-import { headFirst } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import Tip from './Tip';
+import SourceChildVersionAssociationWithContainer from './SourceChildVersionAssociationWithContainer';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -24,7 +24,7 @@ const None = () => {
 }
 
 const VersionList = ({ versions, resource }) => {
-  const sortedVersions = headFirst(versions);
+  const sortedVersions = orderBy(versions, 'version_created_on', 'desc');
 
   const [selectedList, setSelectedList] = React.useState([]);
   const onSelectChange = (event, id) => {
@@ -43,6 +43,8 @@ const VersionList = ({ versions, resource }) => {
     const url = `#/concepts/compare?lhs=${selectedList[0]}&rhs=${selectedList[1]}`
     window.open(url, '_blank')
   }
+
+  const isAssociated = version => !isEmpty(version.source_versions_associated_with) || !isEmpty(version.collection_versions_associated_with)
 
   return (
     <div className='col-md-12'>
@@ -96,7 +98,7 @@ const VersionList = ({ versions, resource }) => {
                             <span className='gray-italics-small'>No update comment</span>
                           }
                         </div>
-                        <div className='col-md-12 no-side-padding'>
+                        <div className='col-md-12 no-side-padding' style={{marginTop: '5px'}}>
                           <LastUpdatedOnLabel
                             by={version.version_created_by}
                             date={version.version_created_on}
@@ -112,8 +114,16 @@ const VersionList = ({ versions, resource }) => {
                       </div>
                     </div>
                   </div>
+                  <div className='col-md-12 no-side-padding' style={{textAlign: 'center', marginTop: '-15px'}}>
+                    <SourceChildVersionAssociationWithContainer
+                      associatedWith={{
+                        source: version.source_versions_associated_with,
+                        collection: version.collection_versions_associated_with
+                      }}
+                    />
+                  </div>
                   {
-                    (index + 1) < versions.length &&
+                    !isAssociated(version) && ((index + 1) < versions.length) &&
                     <Divider style={{width: '100%'}} />
                   }
                 </React.Fragment>
