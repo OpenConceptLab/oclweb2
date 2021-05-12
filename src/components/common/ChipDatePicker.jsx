@@ -23,7 +23,7 @@ const ChipDatePicker = props => {
     const count = get(badgedDates, fDate)
     if(count && fDate !== fSelectedDate) {
       return (
-        <Tooltip title={`${count} imports`}>
+        <Tooltip title={`${count} imports`} arrow>
           <Badge badgeContent={count} color="primary" variant="dot" overlap="circle">
             {dayComponent}
           </Badge>
