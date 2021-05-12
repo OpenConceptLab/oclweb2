@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore as ExpandIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
 import { get, map, compact, groupBy, startCase, has, filter } from 'lodash';
-import { BLUE, WHITE, DARKGRAY } from '../../common/constants';
+import { DARKGRAY } from '../../common/constants';
 import { formatWebsiteLink } from '../../common/utils';
 import ResourceLabel from '../common/ResourceLabel';
 

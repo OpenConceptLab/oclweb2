@@ -88,7 +88,8 @@ export const toFullURL = uri => window.location.origin + '/#' + uri;
 
 export const toFullAPIURL = uri => {
   /*eslint no-undef: 0*/
-  const APIURL = window.API_URL || process.env.API_URL;
+  const config = getAppliedServerConfig()
+  const APIURL = config.url;
   return APIURL + uri;
 }
 

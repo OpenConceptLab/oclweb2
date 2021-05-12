@@ -184,7 +184,7 @@ class ContainerHome extends React.Component {
   render() {
     const {
       resource, codes, versions, isLoading, tab, notFound, server, isHAPI, url, selectedConfig,
-      isLoadingCodes,
+      isLoadingCodes, serverUrl
     } = this.state;
     const source = {...resource, owner: server.info.org.id, canonical_url: resource.url, release_date: resource.date};
 
@@ -202,6 +202,7 @@ class ContainerHome extends React.Component {
                 source={source}
                 url={`#${url}`}
                 parentURL={`/fhir/${this.URLAttr}`}
+                serverURL={serverUrl}
               />
               <ContainerHomeTabs
                 resource={this.URLAttr}

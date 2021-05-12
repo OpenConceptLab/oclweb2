@@ -122,7 +122,7 @@ class ConceptMapHome extends React.Component {
 
   render() {
     const {
-      resource, codes, isLoading, notFound, server, isHAPI, url,
+      resource, codes, isLoading, notFound, server, isHAPI, url, serverUrl
     } = this.state;
     const source = {...resource, owner: server.info.org.id, canonical_url: resource.url, release_date: resource.date};
 
@@ -140,6 +140,7 @@ class ConceptMapHome extends React.Component {
                 source={source}
                 url={`#${url}`}
                 parentURL={`/fhir/${this.URLAttr}`}
+                serverURL={serverUrl}
               />
               <div className='col-md-12'>
                 <ConceptMapGroups groups={codes.results} isHAPI={isHAPI} />
