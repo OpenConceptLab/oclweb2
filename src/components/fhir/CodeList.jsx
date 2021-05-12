@@ -3,14 +3,22 @@ import {
   CircularProgress, Accordion, AccordionDetails, AccordionSummary, Divider
 } from '@material-ui/core';
 import { ExpandMore as ExpandIcon } from '@material-ui/icons';
-import { get, map, isEmpty, startCase, filter, has } from 'lodash';
+import { get, map, isEmpty, startCase, filter, has, isArray, flatten } from 'lodash';
 import { formatWebsiteLink } from '../../common/utils';
 import ConceptTable from './ConceptTable';
 
 const CodeList = ({codes, isLoading, hapi}) => {
   const [open, setOpen] = React.useState(0);
   const { systems } = codes;
-  const validSystems = filter(systems, system => has(system, 'concept') || !has(system, 'filter'));
+  const validSystems = () => {
+    let _systems = filter(systems, system => has(system, 'concept') || !has(system, 'filter'));
+    return flatten(map(_systems, sys => {
+      const value = sys.system || sys.valueSet;
+      if(isArray(value))
+        return map(value, s => ({system: s}))
+      return sys
+    }))
+  }
 
   return (
     <div className='col-md-12 no-side-padding'>
@@ -28,7 +36,7 @@ const CodeList = ({codes, isLoading, hapi}) => {
       }
       {
         !isEmpty(systems) &&
-        map(validSystems, (system, index) => {
+        map(validSystems(), (system, index) => {
           const concepts = get(system, 'concept', [])
           const count = concepts.length
           const isOpen = Boolean(count && (open === index));
