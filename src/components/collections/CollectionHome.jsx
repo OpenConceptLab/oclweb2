@@ -115,7 +115,7 @@ class CollectionHome extends React.Component {
     this.setState({isLoadingVersions: true}, () => {
     APIService.new()
               .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get(null, null, {verbose: true})
+              .get(null, null, {verbose: true, includeSummary: true})
               .then(response => {
                 this.setState({versions: response.data, isLoadingVersions: false})
               })
