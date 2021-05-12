@@ -115,12 +115,15 @@ const ConceptMapGroups = ({ groups, isHAPI }) => {
                                       </AccordionSummary>
                                       <AccordionDetails className='col-md-12 no-side-padding' style={{display: 'inline-block'}}>
                                         {
-                                          map(validCodes, targetCode => (
+                                          map(validCodes, (targetCode, _i) => (
                                             <React.Fragment key={targetCode.code}>
+                                              {
+                                                _i !== 0 &&
+                                                <Divider style={{margin: '5px 0', width: '100%'}}  />
+                                              }
                                               <div className='col-md-12'>
                                                 {getCodeLabel(targetCode.code, targetCode.display)}
                                               </div>
-                                              <Divider style={{margin: '5px 0', width: '100%'}}  />
                                             </React.Fragment>
                                           ))
                                         }
