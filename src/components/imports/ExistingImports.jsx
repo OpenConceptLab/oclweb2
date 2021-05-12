@@ -9,7 +9,7 @@ import {
   Refresh as RefreshIcon,
   Check as CheckIcon
 } from '@material-ui/icons';
-import { filter, map, startCase, includes, without, uniqBy, isEmpty, orderBy } from 'lodash';
+import { filter, map, startCase, includes, without, uniqBy, isEmpty, orderBy, forEach } from 'lodash';
 import { BLACK } from '../../common/constants';
 import { formatDate } from '../../common/utils';
 import ChipDatePicker from '../common/ChipDatePicker';
@@ -51,6 +51,18 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
     return tasks
   }
   const filteredTasks = getTasks()
+  const getTasksCountByDate = () => {
+    const results = {}
+    forEach(tasks, task => {
+      const date = task.details.started || task.details.received
+      const fDate = moment(date * 1000).format('DD-MM-YYYY')
+      if(!results[fDate])
+        results[fDate] = 0
+      results[fDate] += 1;
+    })
+    return results
+  }
+  const tasksCountByDate = getTasksCountByDate()
   const getTitle = () => {
     const prefix = 'Existing Imports'
 
@@ -143,6 +155,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
             label={getDateText()}
             date={date}
             size='medium'
+            badgedDates={tasksCountByDate}
           />
         </div>
       </div>

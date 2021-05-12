@@ -1,12 +1,13 @@
 import React from 'react';
 import { DatePicker } from "@material-ui/pickers";
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip, Badge } from '@material-ui/core';
 import { Schedule, Cancel } from '@material-ui/icons';
+import { isEmpty, get } from 'lodash';
 
 
 const ChipDatePicker = props => {
   const ref = React.useRef(null);
-  const { label, size, date, defaultValue } = props;
+  const { label, size, date, defaultValue, badgedDates } = props;
   const clickHidden = () => document.getElementById('hidden-chip-date-picker').click()
   const onChange = mDate => {
     let date = null;
@@ -14,7 +15,23 @@ const ChipDatePicker = props => {
       date = mDate.format('YYYY-MM-DD')
     props.onChange(date);
   }
-
+  const renderDay = (date, selectedDate, dayInCurrentMonth, dayComponent) => {
+    if(!badgedDates || isEmpty(badgedDates))
+      return dayComponent
+    const fSelectedDate = selectedDate.format('DD-MM-YYYY')
+    const fDate = date.format('DD-MM-YYYY')
+    const count = get(badgedDates, fDate)
+    if(count && fDate !== fSelectedDate) {
+      return (
+        <Tooltip title={`${count} imports`}>
+          <Badge badgeContent={count} color="primary" variant="dot" overlap="circle">
+            {dayComponent}
+          </Badge>
+        </Tooltip>
+      )
+    }
+    return dayComponent;
+  }
 
   return (
     <Tooltip title={props.tooltip || 'Updated Since'}>
@@ -51,6 +68,7 @@ const ChipDatePicker = props => {
             PopoverProps={{
               anchorEl: ref.current
             }}
+            renderDay={renderDay}
           />
         </span>
       </span>
