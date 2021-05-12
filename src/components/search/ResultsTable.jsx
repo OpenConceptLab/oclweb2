@@ -18,7 +18,7 @@ import {
 import { Pagination } from '@material-ui/lab'
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact
+  isFunction, compact, flatten
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -456,7 +456,10 @@ const ExpandibleRow = props => {
 
   const handleTabChange = (event, newValue) => setTab(newValue);
 
-  const getOCLFHIRResourceURL = item => '/' + compact(get(find(get(item, 'resource.identifier', []), ident => get(ident, 'system', '').match('fhir.')), 'value', '').split('/')).splice(0, 4).join('/');
+  const getOCLFHIRResourceURL = item => {
+    const identifiers = flatten([get(item, 'resource.identifier', [])])
+    return '/' + compact(get(find(identifiers, ident => get(ident, 'system', '').match('fhir.')), 'value', '').split('/')).splice(0, 4).join('/')
+  };
 
   const fetchVersions = () => {
     if(fhir) {

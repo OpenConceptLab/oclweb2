@@ -12,7 +12,7 @@ const DEFAULT_CONFIG = {
     tabs: [
       { type: "CodeSystem", label: "Code Systems", "default": true },
       { type: "ValueSet", label: "Value Sets" },
-      { type: "ConceptMap", label: "Concept Map" },
+      { type: "ConceptMap", label: "Concept Maps" },
     ]
   }
 }
