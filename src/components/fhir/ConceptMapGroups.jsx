@@ -9,7 +9,7 @@ import { formatWebsiteLink } from '../../common/utils';
 import ResourceLabel from '../common/ResourceLabel';
 
 const ConceptMapGroups = ({ groups, isHAPI }) => {
-  const [open, setOpen] = React.useState(0);
+  const [open, setOpen] = React.useState(null);
   const getParentLabel = uri => {
     const parts = compact(uri.split('/'))
     return `${parts[1]} / ${parts[3]}`
