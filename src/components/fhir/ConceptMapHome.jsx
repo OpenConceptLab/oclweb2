@@ -1,11 +1,13 @@
 import React from 'react';
 import { get, isObject, find } from 'lodash';
+import { Pagination } from '@material-ui/lab'
 import { CircularProgress } from '@material-ui/core';
-import NotFound from '../common/NotFound';
 import APIService from '../../services/APIService';
+import { getAppliedServerConfig } from '../../common/utils';
+import NotFound from '../common/NotFound';
+import NavigationButtonGroup from '../search/NavigationButtonGroup';
 import ContainerHomeHeader from './ContainerHomeHeader';
 import ConceptMapGroups from './ConceptMapGroups';
-import { getAppliedServerConfig } from '../../common/utils';
 
 const CONCEPT_MAP_DEFAULT_CONFIG = {
   name: 'FHIR Default (ConceptMap)',
@@ -42,6 +44,8 @@ class ConceptMapHome extends React.Component {
       selectedConfig: config,
       resource: {},
       codes: {
+        next: null,
+        previous: null,
         results: [],
         pageNumber: 1,
         total: 0,
@@ -67,8 +71,7 @@ class ConceptMapHome extends React.Component {
   }
 
   getCurrentPage = data => {
-    const links = get(data, 'link', [])
-    const selfLink = get(find(links, {relation: 'self'}), 'url')
+    const selfLink = this.getLinkURL(data, 'self')
     if(selfLink !== 'null') {
       const query = new URLSearchParams(selfLink.split('?')[1])
       const page = query.get('page')
@@ -83,10 +86,17 @@ class ConceptMapHome extends React.Component {
     return pages < 1 ? 1 : pages
   }
 
-  refreshDataByURL(loadingGroups = false) {
+
+  getLinkURL = (response, rel) => {
+    const url = get(find(get(response, 'link', []), {relation: rel}), 'url')
+    if(url !== 'null')
+      return url
+  }
+
+  refreshDataByURL(loadingGroups = false, page) {
     const { isHAPI, codes } = this.state;
-    this.setState({isLoading: !loadingGroups, notFound: false}, () => {
-      const queryParams = isHAPI ? {} : {page: codes.pageNumber};
+    this.setState({isLoading: !loadingGroups, isLoadingGroups: loadingGroups, notFound: false}, () => {
+      const queryParams = isHAPI ? {} : {page: page || codes.pageNumber}
       APIService.new()
                 .overrideURL(this.state.serverUrl)
                 .get(null, null, queryParams)
@@ -100,10 +110,12 @@ class ConceptMapHome extends React.Component {
                     const groups = get(resource, 'group') || [];
                     const total = get(groups, 'length') || 0;
                     this.setState({
-                      isLoadingCodes: false,
+                      isLoadingGroups: false,
                       isLoading: false,
                       resource: resource,
                       codes: {
+                        next: this.getLinkURL(response.data, 'next'),
+                        previous: this.getLinkURL(response.data, 'previous'),
                         results: groups,
                         pageNumber: isHAPI ? 1 : this.getCurrentPage(response.data),
                         pages: isHAPI ? 1 : this.getTotalPages(total)
@@ -115,14 +127,15 @@ class ConceptMapHome extends React.Component {
     })
   }
 
-  onCodesPageChange = page => this.setState({
-    isLoadingGroups: true,
-    codes: {...this.state.codes, pageNumber: page}
-  }, () => this.refreshDataByURL(true))
+  onPageChange = page => this.refreshDataByURL(true, page)
+
+  onNavClick = next => this.refreshDataByURL(
+    true, next ? this.state.codes.pageNumber + 1 : this.state.codes.pageNumber - 1
+  );
 
   render() {
     const {
-      resource, codes, isLoading, notFound, server, isHAPI, url, serverUrl
+      resource, codes, isLoading, notFound, server, isHAPI, url, serverUrl, isLoadingGroups
     } = this.state;
     const source = {...resource, owner: server.info.org.id, canonical_url: resource.url, release_date: resource.date};
 
@@ -142,9 +155,34 @@ class ConceptMapHome extends React.Component {
                 parentURL={`/fhir/${this.URLAttr}`}
                 serverURL={serverUrl}
               />
+              {
+                !isHAPI &&
+                <div className='col-md-12 flex-vertical-center' style={{justifyContent: 'flex-end'}}>
+                  <span>
+                    <NavigationButtonGroup onClick={this.onNavClick} next={Boolean(codes.next)} prev={Boolean(codes.previous)} />
+                  </span>
+                </div>
+              }
               <div className='col-md-12'>
-                <ConceptMapGroups groups={codes.results} isHAPI={isHAPI} />
+                <ConceptMapGroups groups={codes.results} isHAPI={isHAPI} isLoading={isLoadingGroups} />
               </div>
+              {
+                !isHAPI &&
+                <div className='col-md-12 no-side-padding pagination-center' style={{textAlign: 'center'}}>
+                  <Pagination
+                    onChange={(event, page) => this.onPageChange(page)}
+                    variant="outlined"
+                    shape="rounded"
+                    color="primary"
+                    showFirstButton
+                    showLastButton={false}
+                    page={codes.pageNumber}
+                    count={codes.next ? codes.pageNumber + 1 : codes.pageNumber}
+                    style={{display: 'inline-flex', marginTop: '10px'}}
+                  />
+                </div>
+              }
+
             </div>
           )
         }
