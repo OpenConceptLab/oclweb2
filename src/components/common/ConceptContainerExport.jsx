@@ -142,7 +142,7 @@ class ConceptContainerExport extends React.Component {
     const { version, title } = this.props;
     return (
       <React.Fragment>
-        <Tooltip title={title}>
+        <Tooltip arrow title={title}>
           <IconButton onClick={this.toggleAnchorEl} size='small'>
             <DownloadIcon fontSize='inherit' />
           </IconButton>

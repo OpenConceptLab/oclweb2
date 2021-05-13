@@ -90,7 +90,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
                   { getConceptName(mapping, conceptCodeName) }
                 </TableCell>
                 <TableCell align='left'>
-                  <Tooltip title='View mapping details'>
+                  <Tooltip arrow title='View mapping details'>
                     <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
                       <SearchIcon fontSize='inherit' />
                     </IconButton>

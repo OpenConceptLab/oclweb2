@@ -31,7 +31,7 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle }) => {
         }
         {
           hasAccess &&
-          <Tooltip title={logoURL ? 'Edit Logo' : 'Upload Logo'}>
+          <Tooltip arrow title={logoURL ? 'Edit Logo' : 'Upload Logo'}>
             <IconButton onClick={() => setOpen(true)} className='logo-edit-button' color='secondary'>
               {
                 logoURL ?

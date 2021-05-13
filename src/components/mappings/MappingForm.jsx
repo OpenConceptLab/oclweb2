@@ -362,7 +362,7 @@ class MappingForm extends React.Component {
                 </div>
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%', textAlign: 'center'}}>
-                <Tooltip title="Swap From and To Concepts">
+                <Tooltip arrow title="Swap From and To Concepts">
                   <IconButton color="primary" onClick={this.swapConcepts}>
                     <SwapIcon />
                   </IconButton>

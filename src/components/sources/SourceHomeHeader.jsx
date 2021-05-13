@@ -119,14 +119,14 @@ const SourceHomeHeader = ({
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
-                <Tooltip title="Copy URL">
+                <Tooltip arrow title="Copy URL">
                   <Button onClick={onIconClick}>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
-                  <Tooltip title='Edit Source'>
+                  <Tooltip arrow title='Edit Source'>
                     <Button onClick={() => setSourceForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
@@ -134,7 +134,7 @@ const SourceHomeHeader = ({
                 }
                 {
                   hasAccess && isVersionedObject &&
-                  <Tooltip title='Delete Source'>
+                  <Tooltip arrow title='Delete Source'>
                     <Button onClick={() => setDeleteDialog(true) }>
                       <DeleteIcon fontSize='inherit' />
                     </Button>

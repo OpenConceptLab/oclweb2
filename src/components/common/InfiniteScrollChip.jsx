@@ -6,7 +6,7 @@ const InfiniteScrollChip = ({isInfinite, onClick, size}) => {
   const tooltipTitle = `Switch to ${label}`
 
   return (
-    <Tooltip title={tooltipTitle}>
+    <Tooltip arrow title={tooltipTitle}>
       <Chip variant="outlined" color="primary" label={label} onClick={onClick} size={size || 'medium'} />
     </Tooltip>
   );

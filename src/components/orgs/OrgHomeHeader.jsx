@@ -54,14 +54,14 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
               !fhir &&
               <span style={{marginLeft: '15px'}}>
                 <ButtonGroup variant='text' size='large'>
-                  <Tooltip title="Copy URL">
+                  <Tooltip arrow title="Copy URL">
                     <Button onClick={onIconClick}>
                       <CopyIcon fontSize="inherit" />
                     </Button>
                   </Tooltip>
                   {
                     hasAccess &&
-                    <Tooltip title='Edit Organization'>
+                    <Tooltip arrow title='Edit Organization'>
                       <Button onClick={() => setOrgForm(true)}>
                         <EditIcon fontSize='inherit' />
                       </Button>

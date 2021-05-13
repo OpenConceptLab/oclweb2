@@ -50,7 +50,7 @@ const UserOptions = () => {
 
   return (
     <React.Fragment>
-      <Tooltip title={username || ''}>
+      <Tooltip arrow title={username || ''}>
         {
           user.logo_url ?
           <IconButton touch='true' onClick={handleToggle} ref={anchorRef}>
@@ -95,7 +95,7 @@ const UserOptions = () => {
                     </ListItemText>
                   </ListItem>
                   <Divider />
-                  <Tooltip placement='left' title='Bulk Imports'>
+                  <Tooltip arrow placement='left' title='Bulk Imports'>
                     <ListItem className='user-option-list-item' onClick={onImportsClick}>
                       <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
                         <ImportsIcon fontSize='small' />
@@ -106,7 +106,7 @@ const UserOptions = () => {
                   <Divider />
                   {
                     canSwitchServer() &&
-                    <Tooltip placement='left' title='Switch Server'>
+                    <Tooltip arrow placement='left' title='Switch Server'>
                       <ListItem className='user-option-list-item' onClick={() => setServerOpen(!serverOpen)}>
                         <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
                           <ServerIcon fontSize='small' />

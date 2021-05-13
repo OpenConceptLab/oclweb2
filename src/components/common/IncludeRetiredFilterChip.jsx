@@ -5,7 +5,7 @@ const IncludeRetiredFilterChip = ({ size, applied, onClick }) => {
   const label = applied ? 'Exclude Retired' : 'Include Retired';
   const color = applied ? 'primary' : 'secondary';
   return (
-    <Tooltip title={applied ? 'Exclude retired results' : 'Include retried results'}>
+    <Tooltip arrow title={applied ? 'Exclude retired results' : 'Include retried results'}>
       <Chip
         label={ label }
         variant='outlined'

@@ -8,7 +8,7 @@ const LayoutToggle = ({isTable, onClick, size}) => {
   const tooltipTitle = `Switch to ${label}`
 
   return (
-    <Tooltip title={tooltipTitle}>
+    <Tooltip arrow title={tooltipTitle}>
       <Chip variant="outlined" icon={icon} color="primary" label={label} onClick={onClick} size={size || 'medium'} />
     </Tooltip>
   );

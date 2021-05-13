@@ -110,14 +110,14 @@ const MappingHomeHeader = ({
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
-                <Tooltip title="Copy URL">
+                <Tooltip arrow title="Copy URL">
                   <Button onClick={onIconClick}>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
-                  <Tooltip title='Edit Mapping'>
+                  <Tooltip arrow title='Edit Mapping'>
                     <Button onClick={() => setMappingForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
@@ -127,12 +127,12 @@ const MappingHomeHeader = ({
                   hasAccess && isVersionedObject &&
                   (
                     isRetired ?
-                    <Tooltip title='Un-Retire Mapping'>
+                    <Tooltip arrow title='Un-Retire Mapping'>
                       <Button onClick={onUnretire}>
                         <RestoreIcon fontSize='inherit' />
                       </Button>
                     </Tooltip> :
-                    <Tooltip title='Retire Mapping'>
+                    <Tooltip arrow title='Retire Mapping'>
                       <Button onClick={onRetire}>
                         <DeleteIcon fontSize='inherit' />
                       </Button>

@@ -7,7 +7,7 @@ const ProcessingChip = props => {
   const icon = <ProcessingIcon fontSize='inherit' style={{color: ORANGE}} />;
 
   return (
-    <Tooltip placement='top-start' title='Processing'>
+    <Tooltip arrow placement='top-start' title='Processing'>
       <Chip icon={icon} label='Processing' variant='outlined' style={{color: ORANGE, border: `1px solid ${ORANGE}`}} size={props.size || 'medium'}/>
     </Tooltip>
   )

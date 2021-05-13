@@ -37,7 +37,7 @@ const Pin = ({ pin, canDelete, onDelete, style }) => {
           }
           action={
             canDelete &&
-                  <Tooltip title='Remove Pin'>
+                  <Tooltip arrow title='Remove Pin'>
                   <IconButton size='small' onClick={() => onDelete(pin.id)}>
                     <PinIcon pinned='true' fontSize='small' style={{width: '20px'}}/>
                   </IconButton>

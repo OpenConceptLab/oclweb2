@@ -106,7 +106,7 @@ const VersionList = ({ versions, resource }) => {
                         </div>
                       </div>
                       <div className='col-md-1 no-right-padding'>
-                        <Tooltip title='Version Link'>
+                        <Tooltip arrow title='Version Link'>
                           <IconButton href={`#${version.version_url}`} color='primary' size='small'>
                             <SearchIcon fontSize='inherit' />
                           </IconButton>

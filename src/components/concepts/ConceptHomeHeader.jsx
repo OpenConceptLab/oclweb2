@@ -103,14 +103,14 @@ const ConceptHomeHeader = ({
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
-                <Tooltip title="Copy URL">
+                <Tooltip arrow title="Copy URL">
                   <Button onClick={onIconClick}>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
-                  <Tooltip title='Edit Concept'>
+                  <Tooltip arrow title='Edit Concept'>
                     <Button onClick={() => setConceptForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
@@ -120,12 +120,12 @@ const ConceptHomeHeader = ({
                   hasAccess && isVersionedObject &&
                   (
                     isRetired ?
-                    <Tooltip title='Un-Retire Concept'>
+                    <Tooltip arrow title='Un-Retire Concept'>
                       <Button onClick={onUnretire}>
                         <RestoreIcon fontSize='inherit' />
                       </Button>
                     </Tooltip> :
-                    <Tooltip title='Retire Concept'>
+                    <Tooltip arrow title='Retire Concept'>
                       <Button onClick={onRetire}>
                         <DeleteIcon fontSize='inherit' />
                       </Button>

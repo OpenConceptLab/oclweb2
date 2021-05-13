@@ -19,7 +19,7 @@ const BestMatchSort = ({ selected, onSelect, size }) => {
   };
   return (
     <span>
-      <Tooltip title='Sort By Best Match (score)'>
+      <Tooltip arrow title='Sort By Best Match (score)'>
         <Chip
           icon={
             isAsc ?

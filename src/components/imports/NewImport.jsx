@@ -39,7 +39,7 @@ class NewImport extends React.Component {
     const isSelected = this.state.type === type;
     const variant = isSelected ? 'contained' : 'outlined';
     return (
-      <Tooltip title={tooltip}>
+      <Tooltip arrow title={tooltip}>
         <Button variant={variant} onClick={() => this.onTypeClick(type)}>
           {icon}
         </Button>

@@ -12,7 +12,7 @@ const OwnerChip = ({owner, ownerType, ...rest}) => {
                <HomeIcon fontSize='small' color='primary' />;
 
   return (
-    <Tooltip placement='top-start' title={`${startCase(type.toLowerCase())}: ${owner}`}>
+    <Tooltip arrow placement='top-start' title={`${startCase(type.toLowerCase())}: ${owner}`}>
       <Chip icon={icon} label={owner} variant='outlined' color='default' {...rest} />
     </Tooltip>
   )

@@ -284,7 +284,7 @@ const Header = props => {
 
                 return (
                   <React.Fragment key={label}>
-                    <Tooltip title={tooltip || label} placement='right'>
+                    <Tooltip arrow title={tooltip || label} placement='right'>
                       <ListItem
                         className='btn'
                         button

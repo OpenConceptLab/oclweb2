@@ -22,7 +22,7 @@ const VersionFilter = props => {
 
   return (
     <React.Fragment>
-      <Tooltip title='Change Version'>
+      <Tooltip arrow title='Change Version'>
       <Chip
         variant="outlined"
         color='primary'

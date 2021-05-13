@@ -151,7 +151,7 @@ const getTag = (tag, item, hapi) => {
       {
         tag.noTooltip ?
         getTagDom() :
-        <Tooltip title={tag.label} key={tag.id}>
+        <Tooltip arrow title={tag.label} key={tag.id}>
           {
             getTagDom()
           }
@@ -196,7 +196,7 @@ const FHIRHistoryTable = ({ versions, resource }) => {
                     <span className='flex-vertical-center'>
                       {
                         get(version, 'resource.experimental') &&
-                        <Tooltip title='For testing purposes, not real usage'>
+                        <Tooltip arrow title='For testing purposes, not real usage'>
                           <span className='flex-vertical-center'>
                             <WarningIcon fontSize='small' style={{marginTop: '2px'}} />
                           </span>
@@ -204,7 +204,7 @@ const FHIRHistoryTable = ({ versions, resource }) => {
                       }
                       {
                         get(version, 'resource.immutable') &&
-                        <Tooltip title='Changes to the content logical definition may occur'>
+                        <Tooltip arrow title='Changes to the content logical definition may occur'>
                           <span className='flex-vertical-center'>
                             <PriorityIcon fontSize='small' style={{marginTop: '2px'}} />
                           </span>
@@ -299,7 +299,7 @@ const LocalesTable = ({ locales, isDescription }) => {
                   {
                     locale.locale_preferred &&
                     <span style={{marginRight: '5px'}}>
-                      <Tooltip title={`Preferred ${nameAttr} for this locale`} placement='top-start'>
+                      <Tooltip arrow title={`Preferred ${nameAttr} for this locale`} placement='top-start'>
                         <FlagIcon color='secondary' fontSize='small' style={{width: '18px', marginTop: '4px'}}/>
                       </Tooltip>
                     </span>
@@ -307,7 +307,7 @@ const LocalesTable = ({ locales, isDescription }) => {
                   {
                     locale.external_id &&
                     <span style={{marginRight: '5px'}}>
-                      <Tooltip title={`External ID: ${locale.external_id}`} placement='top-start'>
+                      <Tooltip arrow title={`External ID: ${locale.external_id}`} placement='top-start'>
                         <ForwardIcon
                           fontSize='small'
                           color='secondary'
@@ -569,12 +569,12 @@ const ExpandibleRow = props => {
           <TableCell align='center'>
             {
               isPublic ?
-              <Tooltip title='Public'>
+              <Tooltip arrow title='Public'>
                 <span className='flex-vertical-center'>
                   <PublicIcon fontSize='small' />
                 </span>
               </Tooltip> :
-              <Tooltip title='Private'>
+              <Tooltip arrow title='Private'>
                 <span className='flex-vertical-center'>
                   <PrivateIcon fontSize='small' />
                 </span>
@@ -588,7 +588,7 @@ const ExpandibleRow = props => {
             <span className='flex-vertical-center'>
               {
                 get(item, 'resource.experimental') &&
-                <Tooltip title='For testing purposes, not real usage'>
+                <Tooltip arrow title='For testing purposes, not real usage'>
                   <span className='flex-vertical-center'>
                     <WarningIcon fontSize='small' style={{marginTop: '2px'}} />
                   </span>
@@ -596,7 +596,7 @@ const ExpandibleRow = props => {
               }
               {
                 get(item, 'resource.immutable') &&
-                <Tooltip title='Changes to the content logical definition may occur'>
+                <Tooltip arrow title='Changes to the content logical definition may occur'>
                   <span className='flex-vertical-center'>
                     <PriorityIcon fontSize='small' style={{marginTop: '2px'}} />
                   </span>

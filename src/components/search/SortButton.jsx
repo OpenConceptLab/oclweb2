@@ -123,7 +123,7 @@ class SortButton extends React.Component {
     const options = this.getOptions()
     return (
       <span>
-        <Tooltip title='Sort By'>
+        <Tooltip arrow title='Sort By'>
           <Chip
             ref={this.anchorRef}
             variant="outlined"

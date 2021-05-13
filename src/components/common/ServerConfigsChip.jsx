@@ -17,7 +17,7 @@ const ServerConfigsChip = props => {
 
   return (
     <React.Fragment>
-      <Tooltip title='Switch Server' placement='bottom'>
+      <Tooltip arrow title='Switch Server' placement='bottom'>
         <Chip
           icon={<ServerIcon fontSize='inherit' />}
           color='secondary'

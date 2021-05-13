@@ -117,14 +117,14 @@ const CollectionHomeHeader = ({
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
-                <Tooltip title="Copy URL">
+                <Tooltip arrow title="Copy URL">
                   <Button onClick={onIconClick}>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
-                  <Tooltip title='Edit Collection'>
+                  <Tooltip arrow title='Edit Collection'>
                     <Button onClick={() => setCollectionForm(true)}>
                       <EditIcon fontSize='inherit' />
                     </Button>
@@ -132,7 +132,7 @@ const CollectionHomeHeader = ({
                 }
                 {
                   hasAccess && isVersionedObject &&
-                  <Tooltip title='Delete Collection'>
+                  <Tooltip arrow title='Delete Collection'>
                     <Button onClick={() => setDeleteDialog(true) }>
                       <DeleteIcon fontSize='inherit' />
                     </Button>

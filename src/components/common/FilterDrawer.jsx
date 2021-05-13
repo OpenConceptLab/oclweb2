@@ -155,7 +155,7 @@ const FilterDrawer = props => {
             />
             {
               input &&
-              <Tooltip title='Clear'>
+              <Tooltip arrow title='Clear'>
                 <IconButton
                   type="submit"
                   style={{padding: '10px'}}
@@ -166,7 +166,7 @@ const FilterDrawer = props => {
                 </IconButton>
               </Tooltip>
             }
-            <Tooltip title='Search'>
+            <Tooltip arrow title='Search'>
               <IconButton
                 type="submit"
                 style={{padding: '10px'}}

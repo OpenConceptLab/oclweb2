@@ -33,7 +33,7 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
   }
   return (
     <span>
-      <Tooltip title='Change View Layout'>
+      <Tooltip arrow title='Change View Layout'>
         <Chip
           variant="default"
           color='secondary'

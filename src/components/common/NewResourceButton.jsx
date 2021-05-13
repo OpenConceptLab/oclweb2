@@ -20,7 +20,7 @@ const NewResourceButton = ({resources, onClick}) => {
 
   return (
     <React.Fragment>
-      <Tooltip title='Manage Content'>
+      <Tooltip arrow title='Manage Content'>
         <IconButton color='primary' onClick={toggleAnchorEl}>
           { hasEdit ? <SettingsIcon /> : <AddIcon />}
         </IconButton>

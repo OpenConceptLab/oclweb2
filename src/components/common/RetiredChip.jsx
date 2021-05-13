@@ -7,7 +7,7 @@ const RetiredChip = props => {
   const icon = <RetireIcon fontSize='inherit' style={{color: RED}} />;
 
   return (
-    <Tooltip placement='top-start' title='Retired'>
+    <Tooltip arrow placement='top-start' title='Retired'>
       <Chip icon={icon} label='Retired' variant='outlined' style={{color: RED, border: `1px solid ${RED}`}} size={props.size || 'medium'}/>
     </Tooltip>
   )

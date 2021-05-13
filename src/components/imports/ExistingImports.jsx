@@ -120,7 +120,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
             {getTitle()}
           </span>
           <span>
-            <Tooltip title='Filter by queue or status'>
+            <Tooltip arrow title='Filter by queue or status'>
               <span>
                 <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
                   <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
@@ -129,7 +129,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
                 </IconButton>
               </span>
             </Tooltip>
-            <Tooltip title='Refresh List'>
+            <Tooltip arrow title='Refresh List'>
               <span>
                 <IconButton variant='outlined' color='secondary' disabled={isLoading} onClick={onRefresh}>
                   <RefreshIcon />

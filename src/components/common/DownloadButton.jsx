@@ -57,7 +57,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
 
   return (
     <React.Fragment>
-      <Tooltip title={tooltipTitle}>
+      <Tooltip arrow title={tooltipTitle}>
         {
           buttonFunc ? buttonFunc({onClick: event => setAnchorEl(event.currentTarget)}) :
           <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}}>

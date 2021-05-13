@@ -50,7 +50,7 @@ const Organization = props => {
       </div>
       <div className="col-sm-3" style={{textAlign: 'right'}}>
         <Link to={props.url + 'members'}>
-          <Tooltip title='Members'>
+          <Tooltip arrow title='Members'>
             <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
               <PersonIcon fontSize='small' style={TAG_ICON_STYLES} />
               {props.members}
@@ -58,7 +58,7 @@ const Organization = props => {
           </Tooltip>
         </Link>
         <Link to={props.sources_url}>
-          <Tooltip title='Sources'>
+          <Tooltip arrow title='Sources'>
             <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
               <ListIcon fontSize='small' style={TAG_ICON_STYLES} />
               {props.public_sources}
@@ -66,7 +66,7 @@ const Organization = props => {
           </Tooltip>
         </Link>
         <Link to={props.collections_url}>
-          <Tooltip title='Collections'>
+          <Tooltip arrow title='Collections'>
             <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
               <LoyaltyIcon fontSize='small' style={TAG_ICON_STYLES} />
               {props.public_collections}

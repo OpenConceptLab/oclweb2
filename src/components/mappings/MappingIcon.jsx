@@ -12,7 +12,7 @@ const MappingIcon = ({ url }) => {
     <div className='no-side-padding col-md-1 home-icon mapping flex-vertical-center' style={{width: '5%'}}>
       {
         url ?
-        <Tooltip title='Copy URL'>
+        <Tooltip arrow title='Copy URL'>
           <LinkIcon onClick={onIconClick} className='default-svg' />
         </Tooltip> :
         <LinkIcon className='default-svg' />

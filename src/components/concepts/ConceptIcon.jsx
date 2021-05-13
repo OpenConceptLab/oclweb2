@@ -12,7 +12,7 @@ const ConceptIcon = ({ url }) => {
     <div className='no-side-padding col-md-1 home-icon concept flex-vertical-center' style={{width: '5%'}}>
       {
         url ?
-        <Tooltip title='Copy URL'>
+        <Tooltip arrow title='Copy URL'>
           <LocalOfferIcon onClick={onIconClick} className='default-svg' />
         </Tooltip> :
         <LocalOfferIcon className='default-svg' />

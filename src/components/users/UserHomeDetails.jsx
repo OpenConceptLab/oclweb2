@@ -97,7 +97,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
             token &&
             <p>
               <strong>API Token</strong>
-              <Tooltip title="Click to copy Token">
+              <Tooltip arrow title="Click to copy Token">
                 <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
                   <CopyIcon fontSize="small" />
                 </IconButton>

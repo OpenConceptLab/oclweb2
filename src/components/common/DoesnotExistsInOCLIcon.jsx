@@ -7,7 +7,7 @@ import { ORANGE } from '../../common/constants';
 const DoesnotExistsInOCLIcon = ({containerStyles, iconStyles, title}) => {
   return (
     <span className='flex-vertical-center' style={containerStyles || {}}>
-      <Tooltip title={title || "Not defined in OCL"}>
+      <Tooltip arrow title={title || "Not defined in OCL"}>
         <Icon style={merge({color: ORANGE, cursor: 'not-allowed'}, (iconStyles || {}))} fontSize='small' />
       </Tooltip>
     </span>

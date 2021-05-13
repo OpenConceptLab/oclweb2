@@ -54,7 +54,7 @@ class ResultsCountDropDown extends React.Component {
     const { limit, anchorEl } = this.state;
     return (
       <span>
-        <Tooltip title='Results Per Page'>
+        <Tooltip arrow title='Results Per Page'>
           <Chip
             variant="outlined"
             color='primary'

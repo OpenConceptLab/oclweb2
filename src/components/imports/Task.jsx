@@ -65,7 +65,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
   return (
     <Accordion expanded={open} onChange={onChange}>
       <AccordionSummary expandIcon={<ExpandIcon />} id={id} className={status}>
-        <Tooltip title={state}>
+        <Tooltip arrow title={state}>
           <div className='col-md-12 no-side-padding task-summary flex-vertical-center'>
             <div className='col-md-1 no-left-padding'>
               <TaskIcon status={status} />

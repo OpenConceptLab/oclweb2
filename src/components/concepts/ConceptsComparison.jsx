@@ -416,7 +416,7 @@ class ConceptsComparison extends React.Component {
                 <TableHead>
                   <TableRow colSpan="12">
                     <TableCell colSpan="2" style={{width: '10%'}}>
-                      <Tooltip title='Customize attributes' placement='top'>
+                      <Tooltip arrow title='Customize attributes' placement='top'>
                         <IconButton onClick={this.onDrawerClick}>
                           <SettingsIcon />
                         </IconButton>

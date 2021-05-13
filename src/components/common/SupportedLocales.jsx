@@ -5,7 +5,7 @@ import { map } from 'lodash';
 const SupportedLocales = ({default_locale, supported_locales}) => {
   return (
     <span>
-      <Tooltip title='Default Locale'>
+      <Tooltip arrow title='Default Locale'>
         <span><b>{default_locale}</b></span>
       </Tooltip>
       {

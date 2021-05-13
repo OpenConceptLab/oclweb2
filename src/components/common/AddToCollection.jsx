@@ -127,7 +127,7 @@ class AddToCollection extends React.Component {
     const { iconButton, ...rest } = this.props;
     if(iconButton)
       return (
-        <Tooltip title='Add to Collection'>
+        <Tooltip arrow title='Add to Collection'>
           <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest}>
             <LoyaltyIcon fontSize='inherit' />
           </Button>
@@ -269,7 +269,7 @@ class AddToCollection extends React.Component {
                   label={
                     <span className='flex-vertical-center'>
                       <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings</span>
-                      <Tooltip title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
+                      <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
                         <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
                       </Tooltip>
                     </span>

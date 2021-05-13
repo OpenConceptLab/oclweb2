@@ -10,7 +10,7 @@ const FilterButton = ({tooltipTitle, label, count, disabled, onClick, size}) => 
   const buttonLabel = (label || 'Filters') + (hasFilters ? ` (${count})` : '');
 
   return (
-    <Tooltip title={tooltipTitle || 'Filter Results'}>
+    <Tooltip arrow title={tooltipTitle || 'Filter Results'}>
       <Chip
         onClick={onClick}
         variant={hasFilters ? 'default' : 'outlined'}

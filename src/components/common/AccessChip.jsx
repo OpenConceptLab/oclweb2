@@ -13,7 +13,7 @@ const AccessChip = props => {
   const title = isPublic ? `Public Access: ${startCase(publicAccess)}` : 'Private';
   return (
     <span style={{marginTop: '-5px'}}>
-      <Tooltip title={title} placement="top">
+      <Tooltip arrow title={title} placement="top">
         <Chip
           label={label}
           size='small'

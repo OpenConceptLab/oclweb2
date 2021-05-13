@@ -81,7 +81,7 @@ class SearchByAttributeInput extends React.Component {
           {
             input &&
             <React.Fragment>
-              <Tooltip title='Clear'>
+              <Tooltip arrow title='Clear'>
                 <span>
                   <IconButton disabled={isDisabled} type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
                     <ClearIcon />
@@ -91,7 +91,7 @@ class SearchByAttributeInput extends React.Component {
               <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
             </React.Fragment>
           }
-          <Tooltip title='Search'>
+          <Tooltip arrow title='Search'>
             <span>
               <IconButton disabled={isDisabled} type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
                 <SearchIcon />

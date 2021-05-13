@@ -31,7 +31,7 @@ const ACCORDIAN_DETAILS_STYLES = {
 const getTag = (tag, item) => {
   const value = get(item, tag.value, '0').toLocaleString();
   return (
-    <Tooltip title={tag.label} key={tag.id}>
+    <Tooltip arrow title={tag.label} key={tag.id}>
       <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
         <div className='flex-vertical-center'>
           <span>{tag.icon}</span>
@@ -157,22 +157,22 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                             {
                               canEdit && !isHEAD &&
                               <React.Fragment>
-                                <Tooltip title='Edit Version'>
+                                <Tooltip arrow title='Edit Version'>
                                   <IconButton onClick={() => onEditClick(version)} size='small'>
                                     <EditIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title={version.released ? 'UnRelease Version' : 'Release Version'}>
+                                <Tooltip arrow title={version.released ? 'UnRelease Version' : 'Release Version'}>
                                   <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)} size='small'>
                                     <ReleaseIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
+                                <Tooltip arrow title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
                                   <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)} size='small'>
                                     <RetireIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title='Delete Version'>
+                                <Tooltip arrow title='Delete Version'>
                                   <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)} size='small'>
                                     <DeleteIcon fontSize='inherit' />
                                   </IconButton>
@@ -190,12 +190,12 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                             {
                               !fhir &&
                               <React.Fragment>
-                                <Tooltip title='Explore Version'>
+                                <Tooltip arrow title='Explore Version'>
                                   <IconButton href={`#${version.concepts_url}`} color='primary' size='small'>
                                     <SearchIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title='Copy URL'>
+                                <Tooltip arrow title='Copy URL'>
                                   <IconButton onClick={() => onCopyClick(version)} size='small'>
                                     <CopyIcon fontSize='inherit' />
                                   </IconButton>

@@ -111,13 +111,13 @@ class SearchInput extends React.Component {
           />
           {
             input &&
-            <Tooltip title='Clear'>
+            <Tooltip arrow title='Clear'>
               <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
                 <ClearIcon />
               </IconButton>
             </Tooltip>
           }
-          <Tooltip title='Search'>
+          <Tooltip arrow title='Search'>
             <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
               <SearchIcon />
             </IconButton>
@@ -126,7 +126,7 @@ class SearchInput extends React.Component {
             !noExactMatch &&
             <React.Fragment>
               <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
-              <Tooltip title='Exact Match'>
+              <Tooltip arrow title='Exact Match'>
                 <IconButton color={exactMatch === 'on' ? "primary" : "default"} style={{padding: '10px'}} aria-label="exact" onClick={this.handleExactMatchChange}>
                   <ExactMatchIcon />
                 </IconButton>

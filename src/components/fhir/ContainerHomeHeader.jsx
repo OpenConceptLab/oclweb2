@@ -84,7 +84,7 @@ const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL}) => {
             }
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
-                <Tooltip title="Copy URL">
+                <Tooltip arrow title="Copy URL">
                   <Button onClick={onCopyClick}>
                     <CopyIcon fontSize="inherit" />
                   </Button>
