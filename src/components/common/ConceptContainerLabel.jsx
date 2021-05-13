@@ -21,8 +21,8 @@ const ConceptContainerLabel = props => {
     ownerIcon = <PersonIcon fontSize='small' />;
 
   return (
-    <Link to={props.uri}>
-      <div className='col-sm-12 no-side-padding flex-vertical-center' style={{margin: '5px 0'}}>
+    <div className='col-sm-12 no-side-padding flex-vertical-center' style={{margin: '5px 0'}}>
+      <Link to={props.uri} className='no-anchor-styles'>
         {
           props.owner && props.ownerType &&
           <React.Fragment>
@@ -47,8 +47,8 @@ const ConceptContainerLabel = props => {
             </span>
           </React.Fragment>
         }
-      </div>
-    </Link>
+      </Link>
+    </div>
   )
 }
 
