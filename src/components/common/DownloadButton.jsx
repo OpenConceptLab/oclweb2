@@ -6,7 +6,7 @@ import { isArray, map, toUpper, includes, forEach } from 'lodash';
 import APIService from '../../services/APIService';
 import { downloadObject, arrayToCSV, downloadFromURL, toFullAPIURL } from '../../common/utils';
 
-const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams}) => {
+const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip}) => {
   const fileName = filename || 'download';
   const [fetchedResources, setFetchedResources] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -53,7 +53,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
     JSON.stringify(objects, null, 2), 'application/json', `${fileName}.json`
   )
 
-  const tooltipTitle = `Download ${map(downloadableFormats, toUpper).join(', ')}`;
+  const tooltipTitle = tooltip || `Download ${map(downloadableFormats, toUpper).join(', ')}`;
 
   return (
     <React.Fragment>

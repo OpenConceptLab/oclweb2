@@ -89,7 +89,7 @@ const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL}) => {
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
-                <DownloadButton resource={source} formats={['json']} />
+                <DownloadButton resource={source} formats={['json']} tooltip='Download' />
               </ButtonGroup>
             </span>
           </div>
