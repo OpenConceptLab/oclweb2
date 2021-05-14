@@ -10,7 +10,6 @@ import {
 } from '@material-ui/icons';
 import { cloneDeep, get } from 'lodash';
 import APIService from '../../services/APIService';
-import { isAdminUser } from '../../common/utils';
 import JSONIcon from '../common/JSONIcon';
 import FileUploader from '../common/FileUploader';
 
@@ -165,22 +164,19 @@ class NewImport extends React.Component {
             <CircularProgress style={{margin: '50px'}} />
           </div> :
           <div className='col-md-12 no-side-padding'>
-            {
-              !isAdminUser() &&
-              <div className='col-md-12 no-left-padding'>
-                <TextField
-                  fullWidth
-                  size='small'
-                  id='queue'
-                  variant='outlined'
-                  placeholder='e.g. my-queue'
-                  label='Queue'
-                  value={queue}
-                  onChange={event => this.setFieldValue('queue', event.target.value)}
-                />
-                <FormHelperText style={{marginLeft: '2px'}}>Custom queue name</FormHelperText>
-              </div>
-            }
+            <div className='col-md-12 no-left-padding'>
+              <TextField
+                fullWidth
+                size='small'
+                id='queue'
+                variant='outlined'
+                placeholder='e.g. my-queue'
+                label='Queue'
+                value={queue}
+                onChange={event => this.setFieldValue('queue', event.target.value)}
+              />
+              <FormHelperText style={{marginLeft: '2px'}}>Custom queue name</FormHelperText>
+            </div>
             <div className='col-md-6 no-side-padding'>
               <FormControlLabel
                 control={<Checkbox checked={update_if_exists} onChange={event => this.setFieldValue('update_if_exists', event.target.checked)} name='update_if_exists' />}
