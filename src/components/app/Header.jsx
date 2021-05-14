@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import {
   AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, Divider, IconButton,
   ListItem, ListItemText, Collapse, ListItemIcon, Tooltip, Paper,
@@ -127,7 +126,7 @@ const Header = props => {
         position="fixed"
         variant="outlined"
         style={{backgroundColor: WHITE, color: BLACK, borderLeft: 'none'}}
-        className={clsx(classes.appBar)}
+        className={classes.appBar}
       >
         <Toolbar style={{padding: '0 15px'}}>
           <IconButton
@@ -135,7 +134,7 @@ const Header = props => {
             aria-label="open drawer"
             onClick={toggleOpen}
             edge="start"
-            className={clsx(classes.menuButton)}
+            className={classes.menuButton}
           >
             <MenuIcon />
           </IconButton>
@@ -260,7 +259,7 @@ const Header = props => {
               aria-label="open drawer"
               onClick={toggleOpen}
               edge="start"
-              className={clsx(classes.menuButton, open && classes.hide)}
+              className={open ? classes.menuButton + ' ' + classes.hide : classes.menuButton}
               style={{marginLeft: 0}}
             >
               <MenuIcon />
