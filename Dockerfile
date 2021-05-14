@@ -14,7 +14,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 ADD package.json /app/
 ADD package-lock.json /app/
 
-RUN npm install --production=false
+RUN npm ci --production=false
 
 ADD webpack.config.js /app/
 ADD .babelrc /app/
