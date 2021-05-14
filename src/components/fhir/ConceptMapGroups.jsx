@@ -3,12 +3,12 @@ import {
   Accordion, AccordionDetails, AccordionSummary, Divider, CircularProgress
 } from '@material-ui/core';
 import { ExpandMore as ExpandIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
-import { get, map, compact, groupBy, startCase, has, filter } from 'lodash';
+import { get, map, compact, groupBy, startCase, has, filter, isEmpty, uniqWith, isEqual } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
 import { formatWebsiteLink } from '../../common/utils';
 import ResourceLabel from '../common/ResourceLabel';
 
-const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
+const ConceptMapGroups = ({ resource, groups, isHAPI, isLoading }) => {
   const [open, setOpen] = React.useState(null);
   const getParentLabel = uri => {
     const parts = compact(uri.split('/'))
@@ -43,6 +43,8 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
       return value
     if(type === 'url')
       return formatWebsiteLink(value)
+    if(type === 'url' && !value.startsWith('http'))
+      return getParentLabel(value)
     if(type === 'parentLabel')
       return getParentLabel(value)
 
@@ -69,6 +71,18 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
       return groupBy(target, 'equivalence')
   };
 
+  const uniqElements = elements => uniqWith(elements, isEqual)
+  const getSource = () => get(resource, 'sourceCanonical') || get(resource, 'sourceUri')
+  const getTarget = () => get(resource, 'targetCanonical') || get(resource, 'targetUri')
+  const getGroupHeaderValue = (group, attr) => {
+    const value = get(group, attr)
+    if(value)
+      return value
+    if(attr === 'source')
+      return getSource()
+    if(attr === 'target')
+      return getTarget()
+  }
   return (
     <React.Fragment>
       {
@@ -77,8 +91,23 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
           <CircularProgress />
         </div> :
         (
+          isEmpty(groups) ?
+          <Accordion>
+            <AccordionSummary>
+              <div className='col-md-12 flex-vertical-center'>
+                {
+                  getSummaryTemplate(0, 'Source', getSource(), isHAPI ? 'url' : 'parentLabel', true)
+                }
+                {
+                  getSummaryTemplate(1, 'Target', getTarget(), isHAPI ? 'url' : 'parentLabel', true)
+                }
+                { getSummaryTemplate(null, 'Count', 0, false, false) }
+              </div>
+            </AccordionSummary>
+          </Accordion> :
           map(groups, (group, index) => {
-            const count = get(group, 'element', []).length
+            const elements = uniqElements(get(group, 'element', []))
+            const count = elements.length
             const isOpen = Boolean(count && (open === index))
             const headerAttrs = getHeaderAttrs()
             return (
@@ -88,7 +117,7 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
                     {
                       map(
                         headerAttrs,
-                        (meta, i) => getSummaryTemplate(i, meta.label, get(group, meta.attr), meta.type, true)
+                        (meta, i) => getSummaryTemplate(i, meta.label, getGroupHeaderValue(group, meta.attr), meta.type, true)
                       )
                     }
                     { getSummaryTemplate(null, 'Count', count, false, false) }
@@ -97,7 +126,7 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
                 <AccordionDetails>
                   <div className='col-md-12'>
                     {
-                      map(group.element, ({code, display, target}) => {
+                      map(uniqElements(group.element), ({code, display, target}) => {
                         return (
                           <React.Fragment key={code}>
                             <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginBottom: '5px'}}>

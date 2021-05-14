@@ -138,7 +138,6 @@ class ConceptMapHome extends React.Component {
       resource, codes, isLoading, notFound, server, isHAPI, url, serverUrl, isLoadingGroups
     } = this.state;
     const source = {...resource, owner: server.info.org.id, canonical_url: resource.url, release_date: resource.date};
-
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -164,7 +163,7 @@ class ConceptMapHome extends React.Component {
                 </div>
               }
               <div className='col-md-12'>
-                <ConceptMapGroups groups={codes.results} isHAPI={isHAPI} isLoading={isLoadingGroups} />
+                <ConceptMapGroups resource={source} groups={codes.results} isHAPI={isHAPI} isLoading={isLoadingGroups} />
               </div>
               {
                 !isHAPI &&
