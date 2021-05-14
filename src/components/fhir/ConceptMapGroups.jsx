@@ -124,7 +124,7 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
                                               <React.Fragment key={targetCode.code}>
                                                 {
                                                   _i !== 0 &&
-                                                  <Divider style={{margin: '5px 0', width: '100%'}}  />
+                                                  <Divider style={{margin: '5px 0', width: '100%', display: 'inline-block'}}  />
                                                 }
                                                 <div className='col-md-12'>
                                                   {getCodeLabel(targetCode.code, targetCode.display)}
@@ -139,7 +139,7 @@ const ConceptMapGroups = ({ groups, isHAPI, isLoading }) => {
                                 }
                               </div>
                             </div>
-                            <Divider style={{margin: '5px 0', width: '100%'}} />
+                            <Divider style={{margin: '5px 0', width: '100%', display: 'inline-block'}} />
                           </React.Fragment>
                         )
                       })
