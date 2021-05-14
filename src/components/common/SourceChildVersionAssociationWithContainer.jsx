@@ -30,7 +30,7 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
         <div className='col-md-12 no-side-padding'>
           <Collapse in={open} className="col-md-12" style={{padding: '0px', display: `${open ? 'block' : 'none'}`, margin: '5px 0 5px 100px'}}>
             <div style={{textAlign: 'left'}} className='gray-italics-small'>
-              {`Associated with ${count}`}
+              {`Associated with ${count} versions`}
             </div>
             {
               map(associatedWith.source, uri => {
