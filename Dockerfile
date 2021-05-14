@@ -1,7 +1,7 @@
 # Stage-1 Build and Development Environment
 FROM node:14.11 as build
 ARG NODE_ENV=production
-ARG NODE_OPTIONS=--max_old_space_size=512
+ARG NODE_OPTIONS=--max_old_space_size=700
 ENV NPM_CONFIG_LOGLEVEL warn
 ENV WEB_PORT=${WEB_PORT:-4000}
 ENV API_URL=${API_URL:-http://127.0.0.1:8000}
