@@ -33,7 +33,7 @@ class ConceptMapHome extends React.Component {
                        `/fhir/${this.URLAttr}/${props.match.params.id}` :
                        window.location.hash.split('?')[0].replace('#', '');
     const serverURL = isHAPI ?
-                      `${server.info.baseURI}/${this.URLAttr}/${props.match.params.id}` :
+                      `${server.info.baseURI}${this.URLAttr}/${props.match.params.id}` :
                       window.location.hash.split('?')[0].replace('#/fhir', '');
     this.state = {
       server: server,
