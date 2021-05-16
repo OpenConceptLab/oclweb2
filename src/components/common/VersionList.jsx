@@ -46,7 +46,7 @@ const VersionList = ({ versions, resource }) => {
     window.open(url, '_blank')
   }
 
-  const isAssociated = version => !isEmpty(version.source_versions_associated_with) || !isEmpty(version.collection_versions_associated_with)
+  const isAssociated = version => !isEmpty(version.source_versions) || !isEmpty(version.collection_versions)
 
   return (
     <div className='col-md-12'>
@@ -129,8 +129,8 @@ const VersionList = ({ versions, resource }) => {
                     <div className='col-md-12 no-side-padding' style={{textAlign: 'center', marginTop: '-15px'}}>
                       <SourceChildVersionAssociationWithContainer
                         associatedWith={{
-                          source: version.source_versions_associated_with,
-                          collection: version.collection_versions_associated_with
+                          source: version.source_versions,
+                          collection: version.collection_versions
                         }}
                       />
                     </div>

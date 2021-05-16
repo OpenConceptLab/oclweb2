@@ -88,7 +88,7 @@ class ConceptHome extends React.Component {
   getVersions() {
     APIService.new()
               .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get()
+              .get(null, null, {includeCollectionVersions: true, includeSourceVersions: true})
               .then(response => {
                 this.setState({versions: response.data})
               })
