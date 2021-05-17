@@ -467,20 +467,22 @@ export const humanFileSize = (bytes, si=false, dp=1) => {
 export const getServerConfigsForCurrentUser = () => {
   if(isAdminUser())
     return SERVER_CONFIGS
-  if(!isLoggedIn())
-    return JSON.parse(localStorage.getItem('server_configs'))
-
-  const { server_groups } = getCurrentUser();
 
   const defaultConfig = getDefaultServerConfig();
   const appliedConfig = getAppliedServerConfig();
-  let eligible = [];
-  if(includes(server_groups, OCL_SERVERS_GROUP))
-    eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'ocl'})]
-  if(includes(server_groups, OCL_FHIR_SERVERS_GROUP))
-    eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: false})]
-  if(includes(server_groups, HAPI_FHIR_SERVERS_GROUP))
-    eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: true})]
+
+  let eligible = []
+  if(isLoggedIn()) {
+    const { server_groups } = getCurrentUser();
+    if(includes(server_groups, OCL_SERVERS_GROUP))
+      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'ocl'})]
+    if(includes(server_groups, OCL_FHIR_SERVERS_GROUP))
+      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: false})]
+    if(includes(server_groups, HAPI_FHIR_SERVERS_GROUP))
+      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: true})]
+  } else {
+    eligible = JSON.parse(localStorage.getItem('server_configs')) || []
+  }
 
   eligible = compact([defaultConfig, appliedConfig, ...eligible])
   return uniqBy(eligible, 'url');
