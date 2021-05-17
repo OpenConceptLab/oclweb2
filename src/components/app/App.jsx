@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import ReactGA from 'react-ga';
+import { get } from 'lodash';
 import { isFHIRServer, isLoggedIn } from '../../common/utils';
 import Search from '../search/Search';
 import ConceptHome from '../concepts/ConceptHome';
