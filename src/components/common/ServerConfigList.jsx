@@ -7,12 +7,14 @@ import {
   Check as CheckIcon
 } from '@material-ui/icons';
 import { get, map } from 'lodash';
-import { SERVER_CONFIGS } from '../../common/serverConfigs';
-import { getAppliedServerConfig, getDefaultServerConfig,  isServerSwitched } from '../../common/utils';
+import {
+  getAppliedServerConfig, getDefaultServerConfig,  isServerSwitched, getServerConfigsForCurrentUser
+} from '../../common/utils';
 
 const ServerConfigList = ({ onClose }) => {
   const selectedConfig = getAppliedServerConfig();
   const defaultConfig = getDefaultServerConfig();
+  const eligibleServerConfigs = getServerConfigsForCurrentUser()
 
   const onChange = (event, config) => {
     event.preventDefault();
@@ -31,6 +33,7 @@ const ServerConfigList = ({ onClose }) => {
 
     alertifyjs.success('Switching Server! This might take few seconds...', 2, () => {
       const isOCLServer = config.type === 'ocl';
+      localStorage.setItem('server_configs', JSON.stringify(eligibleServerConfigs))
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.hash = isOCLServer ? '#/' : '#/fhir'
@@ -41,7 +44,7 @@ const ServerConfigList = ({ onClose }) => {
   return (
     <List component="div" disablePadding>
       {
-        map(SERVER_CONFIGS, config => {
+        map(eligibleServerConfigs, config => {
           const selected = get(selectedConfig, 'url') === config.url;
           const isDefault = config.url === defaultConfig.url;
           return (
@@ -49,21 +52,21 @@ const ServerConfigList = ({ onClose }) => {
               <ListItemIcon style={{minWidth: 'auto', marginRight: '15px', width: '22px', height: '22px'}}>
                 <img src={config.type === 'ocl' ? '/favicon.ico' : '/fhir.svg'} />
               </ListItemIcon>
-              <ListItemText primary={
-                <span>
+              <ListItemText
+                primary={
                   <span>
-                    {config.name}
+                    <span>{ config.name }</span>
+                    {
+                      isDefault &&
+                      <span style={{fontStyle: 'italic', marginLeft: '5px'}}>
+                        (default)
+                      </span>
+                    }
                   </span>
-                  {
-                    isDefault &&
-                    <span style={{fontStyle: 'italic', marginLeft: '5px'}}>
-                    (default)
-                    </span>
-                  }
-                </span>
-              }
-                            secondary={config.url}/>
-              {selected && <CheckIcon />}
+                }
+                secondary={config.url}
+              />
+              { selected && <CheckIcon /> }
             </ListItem>
           )
         })

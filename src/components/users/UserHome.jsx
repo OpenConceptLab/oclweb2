@@ -2,7 +2,8 @@ import React from 'react';
 import { reject, get, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  defaultCreatePin, defaultDeletePin, getCurrentUserUsername, isAdminUser
+  defaultCreatePin, defaultDeletePin, getCurrentUserUsername, isAdminUser,
+  replaceCurrentUserCacheWith
 } from '../../common/utils';
 import Pins from '../common/Pins';
 import UserHomeDetails from './UserHomeDetails';
@@ -83,7 +84,7 @@ class UserHome extends React.Component {
       this.setState(
         { isLoading: true, notFound: false, accessDenied: false, permissionDenied: false },
         () => service
-          .get(null, null, {verbose: true})
+          .get(null, null, {verbose: true, includeServerGroups: true})
           .then(response => {
             if(get(response, 'detail') === "Not found.")
               this.setState({isLoading: false, notFound: true, user: {}, accessDenied: false, permissionDenied: false})
@@ -94,7 +95,10 @@ class UserHome extends React.Component {
             else if(!isObject(response))
               this.setState({isLoading: false}, () => {throw response})
             else
-              this.setState({ user: response.data, isLoading: false })
+              this.setState({ user: response.data, isLoading: false }, () => {
+                if(getCurrentUserUsername() === get(response, 'data.username'))
+                  replaceCurrentUserCacheWith(response.data)
+              })
           }))
     }
   }

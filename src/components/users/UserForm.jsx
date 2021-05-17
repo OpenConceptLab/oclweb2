@@ -1,17 +1,24 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, IconButton } from '@material-ui/core';
+import {
+  TextField, Button, IconButton, FormControlLabel, Checkbox
+} from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
-import {set, get, isEmpty, cloneDeep, merge, map, pullAt} from 'lodash';
+import {
+  set, get, isEmpty, cloneDeep, merge, map, pullAt, isEqual, uniq, without, includes,
+} from 'lodash';
 import APIService from '../../services/APIService';
-import {arrayToObject} from '../../common/utils';
-const EXTRAS_MODEL = {key: '', value: ''}
+import { arrayToObject, isAdminUser, getCurrentUserUsername } from '../../common/utils';
+import { SERVER_GROUPS } from '../../common/constants';
 import ExtrasForm from '../common/ExtrasForm';
+const EXTRAS_MODEL = {key: '', value: ''}
 
 class UserForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isAdminUser: isAdminUser(),
+      isUserEditingSelf: false,
       fieldErrors: {},
       fields: {
         username: '',
@@ -21,6 +28,7 @@ class UserForm extends React.Component {
         company: '',
         location: '',
         extras: [cloneDeep(EXTRAS_MODEL)],
+        server_groups: [],
       }
     }
   }
@@ -32,7 +40,7 @@ class UserForm extends React.Component {
 
   setFieldsForEdit() {
     const { user } = this.props;
-    const attrs = ['username', 'first_name', 'last_name', 'email', 'company', 'location',]
+    const attrs = ['username', 'first_name', 'last_name', 'email', 'company', 'location', 'server_groups']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(user, attr, '') || ''))
     if(newState.fields.first_name === '-')
@@ -40,10 +48,21 @@ class UserForm extends React.Component {
     if(newState.fields.last_name === '-')
       newState.fields.last_name = ''
     newState.fields.extras = isEmpty(user.extras) ? newState.fields.extras : map(user.extras, (v, k) => ({key: k, value: v}))
+    newState.isUserEditingSelf = getCurrentUserUsername() === user.username
     this.setState(newState);
   }
-  onTextFieldChange = event => {
-    this.setFieldValue(event.target.id, event.target.value)
+
+  onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
+
+  onServerGroupChange = event => {
+    const group = event.target.id
+    const applied = event.target.checked
+    let groups = cloneDeep(this.state.fields.server_groups)
+    if(applied)
+      groups = uniq([...groups, group])
+    else
+      groups = without(groups, group)
+    this.setFieldValue('fields.server_groups', groups)
   }
 
   setFieldValue(id, value) {
@@ -75,11 +94,13 @@ class UserForm extends React.Component {
     this.setState(newState)
   }
 
+  canEditServerGroups = () => this.state.isAdminUser && !this.state.isUserEditingSelf
+
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
 
-    const { edit } = this.props
+    const { edit, user } = this.props
     let fields = cloneDeep(this.state.fields);
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
@@ -87,10 +108,13 @@ class UserForm extends React.Component {
     const isFormValid = form.checkValidity()
     if(isFormValid) {
       fields.extras = arrayToObject(fields.extras)
+      if(!this.canEditServerGroups() || (edit && isEqual(user.server_groups, fields.server_groups)))
+        delete fields.server_groups;
+
       if(edit) {
-        APIService.users(fields.username).put(fields).then(response => this.handleSubmitResponse(response))
+        APIService.users(fields.username).put(fields, null, null, {includeServerGroups: true}).then(response => this.handleSubmitResponse(response))
       } else {
-        APIService.users().post(fields).then(response => this.handleSubmitResponse(response))
+        APIService.users().post(fields, null, null, {includeServerGroups: true}).then(response => this.handleSubmitResponse(response))
       }
     }
   }
@@ -208,6 +232,22 @@ class UserForm extends React.Component {
                 value={fields.location}
               />
             </div>
+            {
+              this.canEditServerGroups() &&
+              <div className='col-md-12' style={{marginTop: '15px', width: '100%'}}>
+                {
+                  map(SERVER_GROUPS, group => (
+                    <div className='col-md-4 no-side-padding' key={group.id}>
+                      <FormControlLabel
+                        control={<Checkbox checked={includes(fields.server_groups, group.id)} onChange={this.onServerGroupChange} id={group.id} name="fields.server_groups" />}
+                        label={group.name}
+                      />
+                    </div>
+                  ))
+                }
+
+              </div>
+            }
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <div className='col-md-8'>
                 <h3>Custom Attributes</h3>

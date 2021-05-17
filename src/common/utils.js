@@ -7,7 +7,10 @@ import {
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
   uniqBy
 } from 'lodash';
-import { DATE_FORMAT, DATETIME_FORMAT } from './constants';
+import {
+  DATE_FORMAT, DATETIME_FORMAT,
+  OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
+} from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
 
@@ -272,13 +275,15 @@ export const arrayToCSV = objArray => {
 }
 
 export const refreshCurrentUserCache = callback => {
-  APIService.user().get(null, null, {includeSubscribedOrgs: true}).then(response => {
+  APIService.user().get(null, null, {includeSubscribedOrgs: true, includeServerGroups: true}).then(response => {
     if(response.status === 200) {
       localStorage.setItem('user', JSON.stringify(response.data));
       if(callback) callback(response);
     }
   });
 }
+
+export const replaceCurrentUserCacheWith = data => localStorage.setItem('user', JSON.stringify(data));
 
 export const formatByteSize = bytes => {
   if(bytes < 1024) return bytes + " bytes";
@@ -410,7 +415,15 @@ export const getDefaultServerConfig = () => {
   return find(SERVER_CONFIGS, {url: APIURL});
 }
 
-export const canSwitchServer = () => Boolean(getSelectedServerConfig() || get(getCurrentUser(), 'is_staff'));
+export const canSwitchServer = () => {
+  const user = getCurrentUser()
+
+  return Boolean(
+    getSelectedServerConfig() ||
+    get(user, 'is_superuser') ||
+    !isEmpty(get(user, 'server_groups'))
+  );
+}
 
 export const isFHIRServer = () => get(getAppliedServerConfig(), 'type') === 'fhir';
 
@@ -449,4 +462,26 @@ export const humanFileSize = (bytes, si=false, dp=1) => {
 
 
   return bytes.toFixed(dp) + ' ' + units[u];
+}
+
+export const getServerConfigsForCurrentUser = () => {
+  if(isAdminUser())
+    return SERVER_CONFIGS
+  if(!isLoggedIn())
+    return JSON.parse(localStorage.getItem('server_configs'))
+
+  const { server_groups } = getCurrentUser();
+
+  const defaultConfig = getDefaultServerConfig();
+  const appliedConfig = getAppliedServerConfig();
+  let eligible = [];
+  if(includes(server_groups, OCL_SERVERS_GROUP))
+    eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'ocl'})]
+  if(includes(server_groups, OCL_FHIR_SERVERS_GROUP))
+    eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: false})]
+  if(includes(server_groups, HAPI_FHIR_SERVERS_GROUP))
+    eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: true})]
+
+  eligible = compact([defaultConfig, appliedConfig, ...eligible])
+  return uniqBy(eligible, 'url');
 }

@@ -53,6 +53,7 @@ class Login extends React.Component {
   }
 
   afterLoginSuccess(token) {
+    localStorage.removeItem('server_configs')
     localStorage.setItem('token', token)
     this.cacheUserData()
   }

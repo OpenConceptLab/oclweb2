@@ -8,7 +8,7 @@ import {
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard
+  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername
 } from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -111,7 +111,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
         onClose={onEditClick}
         formComponent={
           <UserForm
-            loggedIn
+            loggedIn={user.username === getCurrentUserUsername()}
             edit
             reloadOnSuccess
             onCancel={onEditClose} user={user}
