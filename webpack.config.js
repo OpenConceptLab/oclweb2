@@ -30,6 +30,61 @@ module.exports = (env) => {
         },
       ],
     },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 100000,
+        minRemainingSize: 0,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          react: {
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+            name: "react"
+          },
+          lodash: {
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](lodash)[\\/]/,
+            name: "lodash"
+          },
+          moment: {
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](moment|moment-timezone)[\\/]/,
+            name: "moment",
+            reuseExistingChunk: true
+          },
+          material: {
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](@material-ui[\\/]core|@material-ui[\\/]icons)[\\/]/,
+            name: "material",
+            reuseExistingChunk: true
+          },
+          materialLab: {
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](@material-ui[\\/]lab)[\\/]/,
+            name: "material-lab",
+            reuseExistingChunk: true
+          },
+          materialPickers: {
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](@material-ui[\\/]pickers)[\\/]/,
+            name: "material-pickers",
+            reuseExistingChunk: true
+          },
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](!react)(!react-dom)(!react-router-dom)(!@material-ui)(!lodash)(!moment)(!moment-timezone)[\\/]/,
+            reuseExistingChunk: true,
+            priority: 20
+          }
+        }
+      }
+    },
     devServer: {
       contentBase: path.resolve(__dirname, 'public'),
       disableHostCheck: true,
