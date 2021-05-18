@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { ProvidePlugin, DefinePlugin, IgnorePlugin } = require('webpack');
 
@@ -41,7 +41,7 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         template: './public/index.html',
       }),
-      new ExtractTextPlugin('bundle.css'),
+      new MiniCssExtractPlugin({filename: 'bundle.css'}),
       new CopyWebpackPlugin(['src/assets']),
       new ProvidePlugin({
         $: 'jquery',
