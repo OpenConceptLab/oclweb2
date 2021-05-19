@@ -1,10 +1,10 @@
 import React from 'react';
 import './FileUploader.scss'
 import { useDropzone } from 'react-dropzone';
-import { isEmpty } from 'lodash';
+import { isEmpty, last, uniq } from 'lodash';
 import { Button } from '@material-ui/core';
 import { CloudUpload as UploadIcon } from '@material-ui/icons'
-import { humanFileSize } from '../../common/utils';
+import { humanFileSize, arrayToSentence } from '../../common/utils';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 
 
@@ -47,6 +47,9 @@ const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading, max
     onDrop: onDrop,
   })
 
+  const acceptedExtensions = accept ? uniq(accept.split(',').map(ext => last(ext.split('/')))) : ['json']
+  const acceptedExtensionFormatsLabel = arrayToSentence(acceptedExtensions, ', ', ' or ');
+
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path} - {humanFileSize(file.size, true)}
@@ -69,7 +72,11 @@ const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading, max
         <div {...getRootProps({className: 'dropzone'})}>
           <input {...getInputProps()} />
           <p>Drag and drop file here, or click to select file</p>
-          <em>(only *.json file will be accepted)</em>
+          <em>
+            {
+              `(only ${acceptedExtensionFormatsLabel} file will be accepted)`
+            }
+          </em>
         </div>
         <LinearProgressWithLabel progress={progress} />
         <aside>

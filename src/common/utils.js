@@ -5,7 +5,7 @@ import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy
+  uniqBy, cloneDeep
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT,
@@ -486,4 +486,13 @@ export const getServerConfigsForCurrentUser = () => {
 
   eligible = compact([defaultConfig, appliedConfig, ...eligible]);
   return uniqBy(eligible, 'url');
+}
+
+export const arrayToSentence = (arr, separator, lastSeparator=' and ') => {
+  if(arr.length <= 2)
+    return arr.join(lastSeparator);
+
+  const newArr = cloneDeep(arr);
+  newArr.push( `${lastSeparator}${newArr.pop()}`);
+  return newArr.join(separator);
 }

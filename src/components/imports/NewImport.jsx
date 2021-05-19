@@ -152,9 +152,9 @@ class NewImport extends React.Component {
           </span>
           <span>
             <ButtonGroup color='secondary' size='small' disabled={isUploading}>
-              { this.getButton('upload', <UploadIcon />, 'Upload JSON File') }
+              { this.getButton('upload', <UploadIcon />, 'Upload JSON/CSV File') }
               { this.getButton('json', <JSONIcon />, 'Submit JSON Data') }
-              { this.getButton('url', <URLIcon />, 'Paste File URL') }
+              { this.getButton('url', <URLIcon />, 'Paste JSON/CSV File URL') }
             </ButtonGroup>
           </span>
         </h3>
@@ -205,6 +205,7 @@ class NewImport extends React.Component {
                   uploadButton={false}
                   onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
                   onLoading={() => this.setFieldValue('file', null)}
+                  accept='application/json,application/csv,text/csv'
                 />
               }
               {
@@ -216,7 +217,7 @@ class NewImport extends React.Component {
                   type='url'
                   required
                   variant='outlined'
-                  label='JSON File URL'
+                  label='JSON/CSV File URL'
                   value={fileURL}
                   onChange={event => this.setFieldValue('fileURL', event.target.value)}
                   style={{marginBottom: '20px'}}
