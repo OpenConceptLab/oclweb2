@@ -9,7 +9,7 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, isAdminUser, getCurrentUserUsername } from '../../common/utils';
-import { SERVER_GROUPS } from '../../common/constants';
+import { AUTH_GROUPS } from '../../common/constants';
 import ExtrasForm from '../common/ExtrasForm';
 const EXTRAS_MODEL = {key: '', value: ''}
 
@@ -28,7 +28,7 @@ class UserForm extends React.Component {
         company: '',
         location: '',
         extras: [cloneDeep(EXTRAS_MODEL)],
-        server_groups: [],
+        auth_groups: [],
       }
     }
   }
@@ -40,7 +40,7 @@ class UserForm extends React.Component {
 
   setFieldsForEdit() {
     const { user } = this.props;
-    const attrs = ['username', 'first_name', 'last_name', 'email', 'company', 'location', 'server_groups']
+    const attrs = ['username', 'first_name', 'last_name', 'email', 'company', 'location', 'auth_groups']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(user, attr, '') || ''))
     if(newState.fields.first_name === '-')
@@ -54,15 +54,15 @@ class UserForm extends React.Component {
 
   onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
-  onServerGroupChange = event => {
+  onAuthGroupChange = event => {
     const group = event.target.id
     const applied = event.target.checked
-    let groups = cloneDeep(this.state.fields.server_groups)
+    let groups = cloneDeep(this.state.fields.auth_groups)
     if(applied)
       groups = uniq([...groups, group])
     else
       groups = without(groups, group)
-    this.setFieldValue('fields.server_groups', groups)
+    this.setFieldValue('fields.auth_groups', groups)
   }
 
   setFieldValue(id, value) {
@@ -94,7 +94,7 @@ class UserForm extends React.Component {
     this.setState(newState)
   }
 
-  canEditServerGroups = () => this.state.isAdminUser && !this.state.isUserEditingSelf
+  canEditAuthGroups = () => this.state.isAdminUser && !this.state.isUserEditingSelf
 
   onSubmit = event => {
     event.preventDefault();
@@ -108,13 +108,13 @@ class UserForm extends React.Component {
     const isFormValid = form.checkValidity()
     if(isFormValid) {
       fields.extras = arrayToObject(fields.extras)
-      if(!this.canEditServerGroups() || (edit && isEqual(user.server_groups, fields.server_groups)))
-        delete fields.server_groups;
+      if(!this.canEditAuthGroups() || (edit && isEqual(user.auth_groups, fields.auth_groups)))
+        delete fields.auth_groups;
 
       if(edit) {
-        APIService.users(fields.username).put(fields, null, null, {includeServerGroups: true}).then(response => this.handleSubmitResponse(response))
+        APIService.users(fields.username).put(fields, null, null, {includeAuthGroups: true}).then(response => this.handleSubmitResponse(response))
       } else {
-        APIService.users().post(fields, null, null, {includeServerGroups: true}).then(response => this.handleSubmitResponse(response))
+        APIService.users().post(fields, null, null, {includeAuthGroups: true}).then(response => this.handleSubmitResponse(response))
       }
     }
   }
@@ -233,13 +233,13 @@ class UserForm extends React.Component {
               />
             </div>
             {
-              this.canEditServerGroups() &&
+              this.canEditAuthGroups() &&
               <div className='col-md-12' style={{marginTop: '15px', width: '100%'}}>
                 {
-                  map(SERVER_GROUPS, group => (
+                  map(AUTH_GROUPS, group => (
                     <div className='col-md-4 no-side-padding' key={group.id}>
                       <FormControlLabel
-                        control={<Checkbox checked={includes(fields.server_groups, group.id)} onChange={this.onServerGroupChange} id={group.id} name="fields.server_groups" />}
+                        control={<Checkbox checked={includes(fields.auth_groups, group.id)} onChange={this.onAuthGroupChange} id={group.id} name="fields.auth_groups" />}
                         label={group.name}
                       />
                     </div>

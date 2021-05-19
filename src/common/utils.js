@@ -275,7 +275,7 @@ export const arrayToCSV = objArray => {
 }
 
 export const refreshCurrentUserCache = callback => {
-  APIService.user().get(null, null, {includeSubscribedOrgs: true, includeServerGroups: true}).then(response => {
+  APIService.user().get(null, null, {includeSubscribedOrgs: true, includeAuthGroups: true}).then(response => {
     if(response.status === 200) {
       localStorage.setItem('user', JSON.stringify(response.data));
       if(callback) callback(response);
@@ -416,19 +416,19 @@ export const getDefaultServerConfig = () => {
 }
 
 export const canSwitchServer = () => {
-  const user = getCurrentUser()
+  const user = getCurrentUser();
 
   return Boolean(
     getSelectedServerConfig() ||
     get(user, 'is_superuser') ||
-    !isEmpty(get(user, 'server_groups'))
+    !isEmpty(get(user, 'auth_groups'))
   );
 }
 
 export const isFHIRServer = () => get(getAppliedServerConfig(), 'type') === 'fhir';
 
-export const isConcept = uri => Boolean(uri.match('/concepts/'))
-export const isMapping = uri => Boolean(uri.match('/mappings/'))
+export const isConcept = uri => Boolean(uri.match('/concepts/'));
+export const isMapping = uri => Boolean(uri.match('/mappings/'));
 
 
 // https://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable-string
@@ -466,24 +466,24 @@ export const humanFileSize = (bytes, si=false, dp=1) => {
 
 export const getServerConfigsForCurrentUser = () => {
   if(isAdminUser())
-    return SERVER_CONFIGS
+    return SERVER_CONFIGS;
 
   const defaultConfig = getDefaultServerConfig();
   const appliedConfig = getAppliedServerConfig();
 
-  let eligible = []
+  let eligible = [];
   if(isLoggedIn()) {
-    const { server_groups } = getCurrentUser();
-    if(includes(server_groups, OCL_SERVERS_GROUP))
-      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'ocl'})]
-    if(includes(server_groups, OCL_FHIR_SERVERS_GROUP))
-      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: false})]
-    if(includes(server_groups, HAPI_FHIR_SERVERS_GROUP))
-      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: true})]
+    const { auth_groups } = getCurrentUser();
+    if(includes(auth_groups, OCL_SERVERS_GROUP))
+      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'ocl'})];
+    if(includes(auth_groups, OCL_FHIR_SERVERS_GROUP))
+      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: false})];
+    if(includes(auth_groups, HAPI_FHIR_SERVERS_GROUP))
+      eligible = [...eligible, ...filter(SERVER_CONFIGS, {type: 'fhir', hapi: true})];
   } else {
-    eligible = JSON.parse(localStorage.getItem('server_configs')) || []
+    eligible = JSON.parse(localStorage.getItem('server_configs')) || [];
   }
 
-  eligible = compact([defaultConfig, appliedConfig, ...eligible])
+  eligible = compact([defaultConfig, appliedConfig, ...eligible]);
   return uniqBy(eligible, 'url');
 }

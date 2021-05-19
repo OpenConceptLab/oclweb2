@@ -84,7 +84,7 @@ class UserHome extends React.Component {
       this.setState(
         { isLoading: true, notFound: false, accessDenied: false, permissionDenied: false },
         () => service
-          .get(null, null, {verbose: true, includeServerGroups: true})
+          .get(null, null, {verbose: true, includeAuthGroups: true})
           .then(response => {
             if(get(response, 'detail') === "Not found.")
               this.setState({isLoading: false, notFound: true, user: {}, accessDenied: false, permissionDenied: false})
