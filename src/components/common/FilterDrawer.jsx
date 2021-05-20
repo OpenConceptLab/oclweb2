@@ -64,7 +64,12 @@ const FilterDrawer = props => {
   const [appliedFilters, setFilters] = React.useState(existingFilters);
 
   const onApplyClick = () => {
-    onApply(cloneDeep(appliedFilters))
+    const filters = cloneDeep(appliedFilters)
+    if(filters.collection_membership) {
+      filters['collection'] = filters.collection_membership
+      delete filters.collection_membership
+    }
+    onApply(filters)
     onClose()
   }
 
