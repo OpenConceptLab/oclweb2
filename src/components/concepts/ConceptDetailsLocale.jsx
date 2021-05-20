@@ -13,7 +13,7 @@ const ConceptDetailsLocale = ({ locale, isDescription, url }) => {
   const onCopyClick = () => copyURL(toFullAPIURL(url))
 
   return (
-    <div className='col-md-12 flex-vertical-center' style={{marginBottom: '10px'}}>
+    <div className='col-md-12 flex-vertical-center'>
       <div className='col-md-11 no-left-padding'>
         <div className='col-md-12 no-side-padding flex-vertical-center'>
           <span style={{marginRight: '10px'}}>{ get(locale, nameAttr) }</span>

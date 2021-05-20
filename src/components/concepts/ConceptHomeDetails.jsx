@@ -12,7 +12,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0px'
+  maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
 const None = () => {
@@ -39,7 +39,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>{`Names & Synonyms (${namesCount})`}</Typography>
           </AccordionSummary>
-          <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
+          <AccordionDetails style={{...ACCORDIAN_DETAILS_STYLES, padding: '10px 0'}}>
             {
               isEmpty(names) ?
               None() :
