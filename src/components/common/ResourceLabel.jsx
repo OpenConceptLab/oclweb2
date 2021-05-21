@@ -10,7 +10,7 @@ const ResourceLabel = props => {
 
 
   return (
-    <div className='col-sm-12 no-side-padding flex-vertical-center'>
+    <div className='col-sm-12 no-side-padding flex-vertical-center' style={{flexWrap: 'wrap'}}>
       <span className='resource-label ellipsis-text' style={{maxWidth: '100%'}}>
         <span style={{paddingTop: '5px'}}>{props.icon}</span>
         {
