@@ -39,3 +39,4 @@ export const AUTH_GROUPS = [
   {id: OCL_FHIR_SERVERS_GROUP, name: 'OCL FHIR Servers'},
   {id: HAPI_FHIR_SERVERS_GROUP, name: 'HAPI FHIR Servers'}
 ];
+export const CONCEPT_CODE_REGEX = "[^\s]+(\s[^\s]+)*";

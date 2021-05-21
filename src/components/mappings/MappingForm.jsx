@@ -11,6 +11,7 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, fetchMapTypes, toParentURI } from '../../common/utils';
+import { CONCEPT_CODE_REGEX } from '../../common/constants';
 import ExtrasForm from '../common/ExtrasForm';
 
 const EXTRAS_MODEL = {key: '', value: ''}
@@ -360,6 +361,7 @@ class MappingForm extends React.Component {
                     fullWidth
                     onChange={this.onTextFieldChange}
                     value={fields.from_concept_code}
+                    inputProps={{ pattern: CONCEPT_CODE_REGEX }}
                   />
                 </div>
               </div>
@@ -431,6 +433,7 @@ class MappingForm extends React.Component {
                     fullWidth
                     onChange={this.onTextFieldChange}
                     value={fields.to_concept_code}
+                    inputProps={{ pattern: CONCEPT_CODE_REGEX }}
                   />
                 </div>
               </div>
