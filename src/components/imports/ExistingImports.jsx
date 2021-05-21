@@ -7,7 +7,8 @@ import { Alert } from '@material-ui/lab';
 import {
   FilterList as FilterIcon,
   Refresh as RefreshIcon,
-  Check as CheckIcon
+  Check as CheckIcon,
+  Info as InfoIcon,
 } from '@material-ui/icons';
 import { filter, map, startCase, includes, without, uniqBy, isEmpty, orderBy, forEach } from 'lodash';
 import { BLACK } from '../../common/constants';
@@ -108,8 +109,8 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
   return (
     <React.Fragment>
       <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
-        <Alert severity="info" style={{padding: '5px'}}>
-          <span style={{marginLeft: '-8px'}}>
+        <Alert className='flex-vertical-center' severity="warning" style={{padding: '5px 10px', width: '100%'}} icon={<InfoIcon fontSize='small' />}>
+          <span style={{marginLeft: '-3px'}}>
             Results will expire after <strong>72 hours</strong> from the task&apos;s start time
           </span>
         </Alert>

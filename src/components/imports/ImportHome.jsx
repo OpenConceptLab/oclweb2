@@ -123,9 +123,9 @@ class ImportHome extends React.Component {
     return (
       <div className='col-md-12'>
         <div className='col-md-12' style={{padding: '15px 0px 5px 0px'}}>
-          <Alert icon={<DocIcon fontSize='small' />} severity="success" style={{padding: '5px 10px', width: '100%'}} className='flex-vertical-center'>
+          <Alert icon={<DocIcon fontSize='small' />} severity="info" style={{padding: '5px 10px', width: '100%'}} className='flex-vertical-center'>
             <span style={{marginLeft: '-5px'}}>
-              OCL processes bulk import asynchronously. A bulk import file may include creates, updates, or deletes for multiple owners and repositories.&nbsp;
+              OCL processes bulk import asynchronously. A bulk import may include creates, updates, or deletes for multiple owners and repositories.&nbsp;
               {
                 formatWebsiteLink('https://docs.openconceptlab.org/en/latest/oclapi/apireference/bulkimporting.html', null, 'Read More...')
               }
