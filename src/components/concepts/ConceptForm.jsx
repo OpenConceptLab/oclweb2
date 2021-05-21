@@ -94,7 +94,7 @@ class ConceptForm extends React.Component {
               `${getCurrentURL()}/concepts/`
             }
           </span>
-          <span><b>{id}</b>/</span>
+          <span><b>{encodeURIComponent(id)}</b>/</span>
         </span>
       </span>
     )
@@ -102,6 +102,12 @@ class ConceptForm extends React.Component {
 
   onTextFieldChange = event => {
     this.setFieldValue(event.target.id, event.target.value)
+  }
+
+  onIdFieldBlur = event => {
+    const el = event.target
+    if(el)
+      el.reportValidity()
   }
 
   onAutoCompleteChange = (id, item) => {
@@ -189,7 +195,7 @@ class ConceptForm extends React.Component {
       fields.extras = arrayToObject(fields.extras)
       fields.names = this.cleanLocales(fields.names)
       fields.descriptions = this.cleanLocales(fields.descriptions)
-      let service = APIService.new().overrideURL(parentURL)
+      let service = APIService.new().overrideURL(encodeURI(parentURL))
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
       } else {
@@ -238,6 +244,7 @@ class ConceptForm extends React.Component {
     const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(locales) || isEmpty(conceptClasses) || isEmpty(nameTypes);
     const { onCancel, edit } = this.props;
     const header = edit ? `Edit Concept: ${fields.id}` : 'New Concept'
+
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>
@@ -263,9 +270,10 @@ class ConceptForm extends React.Component {
                     fullWidth
                     required
                     onChange={this.onTextFieldChange}
+                    onBlur={this.onIdFieldBlur}
                     value={fields.id}
                     disabled={edit}
-                    inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
+                    inputProps={{ pattern: "[a-zA-Z0-9-._@\\s+/%/(/)/,]+" }}
                   />
                 </div>
               }

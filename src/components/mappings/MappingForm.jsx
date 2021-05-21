@@ -54,13 +54,15 @@ class MappingForm extends React.Component {
     const instance = edit ? mapping : copyFrom
     const attrs = [
       'id', 'map_type', 'external_id',
-      'from_concept_url', 'from_concept_code', 'from_concept_name',
+      'from_concept_url', 'from_concept_name',
       'from_source_url', 'from_source_version',
-      'to_concept_url', 'to_concept_code', 'to_concept_name',
+      'to_concept_url', 'to_concept_name',
       'to_source_url', 'to_source_version',
     ]
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(instance, attr, '') || ''))
+    newState.fields.to_concept_code = instance.to_concept_code ? decodeURIComponent(instance.to_concept_code) : instance.to_concept_code
+    newState.fields.from_concept_code = instance.from_concept_code ? decodeURIComponent(instance.from_concept_code) : instance.from_concept_code
     if(!edit)
       newState.fields.id = ''
     newState.selected_map_type = {id: instance.map_type, name: instance.map_type}
@@ -77,13 +79,13 @@ class MappingForm extends React.Component {
 
     if(fromConcept) {
       newState.fields.from_concept_url = fromConcept.url
-      newState.fields.from_concept_code = fromConcept.id
+      newState.fields.from_concept_code = fromConcept.id ? decodeURIComponent(fromConcept.id) : fromConcept.id
       newState.fields.from_concept_name = fromConcept.display_name
       newState.fields.from_source_url = toParentURI(fromConcept.url) + '/'
     }
     if(toConcept) {
       newState.fields.to_concept_url = toConcept.url
-      newState.fields.to_concept_code = toConcept.id
+      newState.fields.to_concept_code = toConcept.id ? decodeURIComponent(toConcept.id) : toConcept.id
       newState.fields.to_concept_name = toConcept.display_name
       newState.fields.to_source_url = toParentURI(toConcept.url) + '/'
     }

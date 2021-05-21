@@ -81,7 +81,6 @@ const ConceptHomeHeader = ({
   }
 
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
-
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
@@ -92,13 +91,13 @@ const ConceptHomeHeader = ({
             <span className='separator'>/</span>
             <SourceButton label={concept.source} childURI={versionedObjectURL} />
             <span className='separator'>/</span>
-            <ConceptButton label={concept.id} retired={isRetired} href={`#${versionedObjectURL}`} />
+            <ConceptButton label={concept.id} retired={isRetired} href={`#${encodeURI(versionedObjectURL)}`} />
             {
               !isVersionedObject &&
               <React.Fragment>
                 <span className='separator'>/</span>
 
-                <VersionButton label={concept.version} retired={isRetired} href={`#${currentURL}`} />
+                <VersionButton label={concept.version} retired={isRetired} href={`#${encodeURI(currentURL)}`} />
               </React.Fragment>
             }
             <span style={{marginLeft: '15px'}}>

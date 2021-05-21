@@ -45,16 +45,20 @@ class ConceptHome extends React.Component {
   }
 
   getConceptURLFromPath() {
+    let uri;
     const { location, match } = this.props;
     if(location.pathname.indexOf('/details') > -1)
-      return location.pathname.split('/details')[0] + '/'
-    if(location.pathname.indexOf('/history') > -1)
-      return location.pathname.split('/history')[0] + '/'
-    if(location.pathname.indexOf('/mappings') > -1)
-      return location.pathname.split('/mappings')[0] + '/'
-    if(match.params.conceptVersion)
-      return location.pathname.split('/').slice(0, 8).join('/') + '/';
-    return this.getVersionedObjectURLFromPath();
+      uri = location.pathname.split('/details')[0] + '/'
+    else if(location.pathname.indexOf('/history') > -1)
+      uri = location.pathname.split('/history')[0] + '/'
+    else if(location.pathname.indexOf('/mappings') > -1)
+      uri = location.pathname.split('/mappings')[0] + '/'
+    else if(match.params.conceptVersion)
+      uri = location.pathname.split('/').slice(0, 8).join('/') + '/';
+    else
+      return this.getVersionedObjectURLFromPath();
+
+    return uri
   }
 
   getVersionedObjectURLFromPath() {
@@ -66,7 +70,7 @@ class ConceptHome extends React.Component {
   refreshDataByURL() {
     this.setState({isLoading: true, notFound: false}, () => {
       APIService.new()
-                .overrideURL(this.getConceptURLFromPath())
+                .overrideURL(encodeURI(this.getConceptURLFromPath()))
                 .get()
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
@@ -87,7 +91,7 @@ class ConceptHome extends React.Component {
 
   getVersions() {
     APIService.new()
-              .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
+              .overrideURL(encodeURI(this.getVersionedObjectURLFromPath()) + 'versions/')
               .get(null, null, {includeCollectionVersions: true, includeSourceVersions: true})
               .then(response => {
                 this.setState({versions: response.data})
@@ -97,7 +101,7 @@ class ConceptHome extends React.Component {
   getMappings() {
     this.setState({isLoadingMappings: true}, () => {
       APIService.new()
-                .overrideURL(this.getConceptURLFromPath() + 'mappings/?includeInverseMappings=true&limit=1000')
+                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'mappings/?includeInverseMappings=true&limit=1000')
                 .get()
                 .then(response => {
                   this.setState({mappings: response.data, isLoadingMappings: false})
@@ -123,7 +127,6 @@ class ConceptHome extends React.Component {
     const { concept, versions, mappings, isLoadingMappings, isLoading, tab, notFound } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
-
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
