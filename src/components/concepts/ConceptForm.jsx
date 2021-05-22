@@ -87,16 +87,12 @@ class ConceptForm extends React.Component {
     const id = this.state.fields.id
     return (
       <span>
-        <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
-        <br />
-        <span>
-          <span>Your new concept will live at: <br />
-            {
-              `${getCurrentURL()}/concepts/`
-            }
-          </span>
-          <span><b>{id ? encodeURIComponent(id) : defaultId}</b>/</span>
+        <span>Your new concept will live at: <br />
+          {
+            `${getCurrentURL()}/concepts/`
+          }
         </span>
+        <span><b>{id ? encodeURIComponent(id) : defaultId}</b>/</span>
       </span>
     )
   }
