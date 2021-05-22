@@ -13,7 +13,7 @@ export const SERVER_CONFIGS = [
   },
   {
     id: 3,
-    name: 'OCL DEMO',
+    name: 'OCL Demo',
     type: 'ocl',
     url: 'https://api.demo.openconceptlab.org'
   },

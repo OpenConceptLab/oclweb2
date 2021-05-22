@@ -8,7 +8,9 @@ import {
 } from '@material-ui/icons';
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
-import { refreshCurrentUserCache } from '../../common/utils';
+import {
+  refreshCurrentUserCache, getAppliedServerConfig
+} from '../../common/utils';
 import VerifyEmailMessage from './VerifyEmailMessage';
 
 class Login extends React.Component {
@@ -73,6 +75,8 @@ class Login extends React.Component {
 
   handleClickShowPassword = () => this.setState({showPassword: !this.state.showPassword})
 
+  getTitle = () => `Sign In - ${getAppliedServerConfig().name}`
+
   render() {
     const { serverError, verificationMsg, email, showPassword } = this.state;
     return (
@@ -85,7 +89,7 @@ class Login extends React.Component {
               verificationMsg ?
               <VerifyEmailMessage message={verificationMsg} email={email} />:
               <React.Fragment>
-                <h1 style={{textAlign: 'center'}}>Sign In</h1>
+                <h1 style={{textAlign: 'center'}}>{this.getTitle()}</h1>
                 {
                   serverError &&
                   <div className='col-md-12 alert-danger'>
