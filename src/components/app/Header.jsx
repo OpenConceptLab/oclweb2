@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, Divider, IconButton,
+  AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, IconButton,
   ListItem, ListItemText, Collapse, ListItemIcon, Tooltip, Paper,
   Popper, Grow, ClickAwayListener
 } from '@material-ui/core';
@@ -251,6 +251,7 @@ const Header = props => {
           </div>
         </Drawer> :
         <Drawer
+          id='left-menu-collapsed'
           style={{flexShrink: 0, width: 'auto'}}
           variant="permanent"
           anchor="left"
@@ -271,7 +272,6 @@ const Header = props => {
               <MenuIcon />
             </IconButton>
           </div>
-          <Divider />
           <List>
             {
               map(OPTIONS, option => {

@@ -1,3 +1,12 @@
+@media only screen and (max-width: 600px) {
+    div#left-menu-collapsed {
+        display: none !important;
+    }
+    main.content {
+        width: 100%;
+        margin-left: 0px;
+    }
+}
 .content {
     margin-top: 65px;
     margin-bottom: 50px;
