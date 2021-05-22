@@ -10,8 +10,10 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { map, isEmpty } from 'lodash';
-import { isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer } from '../../common/utils';
+import { map, isEmpty, get } from 'lodash';
+import {
+  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig
+} from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
@@ -20,7 +22,6 @@ import Feedback from '../common/Feedback';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 
 const drawerWidth = 250;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -119,6 +120,8 @@ const Header = props => {
     return newOpen
   })
 
+  const isFHIRServer = get(getAppliedServerConfig(), 'type') === 'fhir';
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -158,10 +161,13 @@ const Header = props => {
               authenticated ?
               <span style={{marginLeft: '10px'}}>
                 <UserOptions />
-              </span>:
-              <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
-                Sign In
-              </Button>
+              </span> :
+              (
+                !isFHIRServer &&
+                <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
+                  Sign In
+                </Button>
+              )
             }
           </div>
         </Toolbar>
