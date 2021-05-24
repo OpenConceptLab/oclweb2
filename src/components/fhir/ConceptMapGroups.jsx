@@ -39,7 +39,7 @@ const ConceptMapGroups = ({ resource, groups, isHAPI, isLoading }) => {
   };
 
   const getValue = (value, type) => {
-    if(!type)
+    if(!type || !value)
       return value
     if(type === 'url')
       return formatWebsiteLink(value)
