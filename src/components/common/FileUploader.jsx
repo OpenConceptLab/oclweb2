@@ -47,7 +47,7 @@ const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading, max
     onDrop: onDrop,
   })
 
-  const acceptedExtensions = accept ? uniq(accept.split(',').map(ext => last(ext.split('/')))) : ['json']
+  const acceptedExtensions = accept ? uniq(accept.split(',').map(ext => last(ext.split('/')).toLowerCase())) : ['json']
   const acceptedExtensionFormatsLabel = arrayToSentence(acceptedExtensions, ', ', ' or ');
 
   const files = acceptedFiles.map(file => (
