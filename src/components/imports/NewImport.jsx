@@ -7,9 +7,12 @@ import {
 import {
   CloudUpload as UploadIcon,
   Http as URLIcon,
+  Description as DocIcon
 } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import { cloneDeep, get } from 'lodash';
 import APIService from '../../services/APIService';
+import { formatWebsiteLink } from '../../common/utils';
 import JSONIcon from '../common/JSONIcon';
 import FileUploader from '../common/FileUploader';
 
@@ -220,7 +223,6 @@ class NewImport extends React.Component {
                   label='JSON/CSV File URL'
                   value={fileURL}
                   onChange={event => this.setFieldValue('fileURL', event.target.value)}
-                  style={{marginBottom: '20px'}}
                 />
               }
               {
@@ -237,7 +239,6 @@ class NewImport extends React.Component {
                   label='JSON Data'
                   value={json}
                   onChange={event => this.setFieldValue('json', event.target.value)}
-                  style={{marginBottom: '20px'}}
                 />
               }
             </div>
@@ -254,6 +255,17 @@ class NewImport extends React.Component {
           >
             Upload
           </Button>
+        </div>
+        <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
+          <Alert icon={<DocIcon fontSize='small' />} severity="info" className='flex-vertical-center'>
+            <span>
+              OCL processes bulk import asynchronously. A bulk import may include creates, updates, or deletes for multiple owners and repositories.&nbsp;
+              {
+                formatWebsiteLink('https://docs.openconceptlab.org/en/latest/oclapi/apireference/bulkimporting.html', null, 'Read More...')
+              }
+            </span>
+          </Alert>
+
         </div>
       </React.Fragment>
     )

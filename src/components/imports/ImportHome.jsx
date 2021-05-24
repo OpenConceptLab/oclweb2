@@ -1,10 +1,8 @@
 import React from 'react';
 import { get, isArray, forEach, filter, find, reject, orderBy, includes } from 'lodash';
 import { Paper } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { Description as DocIcon } from '@material-ui/icons';
 import APIService from '../../services/APIService';
-import { getCurrentUserUsername, downloadObject, formatWebsiteLink } from '../../common/utils';
+import { getCurrentUserUsername, downloadObject } from '../../common/utils';
 import NewImport from './NewImport';
 import ExistingImports from './ExistingImports';
 
@@ -122,16 +120,6 @@ class ImportHome extends React.Component {
     const PAPER_STYLES = {padding: '0 10px 10px 10px', display: 'inline-block', width: '100%', margin: '10px 0'}
     return (
       <div className='col-md-12'>
-        <div className='col-md-12' style={{padding: '15px 0px 5px 0px'}}>
-          <Alert icon={<DocIcon fontSize='small' />} severity="info" style={{padding: '5px 10px', width: '100%'}} className='flex-vertical-center'>
-            <span style={{marginLeft: '-5px'}}>
-              OCL processes bulk import asynchronously. A bulk import may include creates, updates, or deletes for multiple owners and repositories.&nbsp;
-              {
-                formatWebsiteLink('https://docs.openconceptlab.org/en/latest/oclapi/apireference/bulkimporting.html', null, 'Read More...')
-              }
-            </span>
-          </Alert>
-        </div>
         <div className='col-md-12 no-side-padding'>
           <div className='col-md-6 no-left-padding'>
             <Paper style={PAPER_STYLES}>
