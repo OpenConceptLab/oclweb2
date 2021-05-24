@@ -5,7 +5,6 @@ import {
 import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
-  Storage as ServerIcon,
 } from '@material-ui/icons';
 import { getAppliedServerConfig } from '../../common/utils';
 import ServerConfigList from './ServerConfigList';
@@ -14,12 +13,13 @@ const ServerConfigsChip = props => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const applied = getAppliedServerConfig();
+  const icon = <img style={{marginLeft: '5px', width: '20px'}} src={applied.type === 'ocl' ? '/favicon.ico' : '/fhir.svg'} />
 
   return (
     <React.Fragment>
       <Tooltip arrow title='Switch Server' placement='bottom'>
         <Chip
-          icon={<ServerIcon fontSize='inherit' />}
+          icon={icon}
           color='secondary'
           variant='outlined'
           label={`Server : ${applied.name}`}

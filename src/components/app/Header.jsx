@@ -155,18 +155,20 @@ const Header = props => {
           <div className='col-sm-4 pull-right no-side-padding'style={{textAlign: 'right'}}>
             {
               canSwitchServer() && isServerSwitched() &&
-              <ServerConfigsChip style={{marginRight: '20px'}} />
+              <ServerConfigsChip />
             }
             {
               authenticated ?
-              <span style={{marginLeft: '10px'}}>
+              <span style={{marginLeft: '20px'}}>
                 <UserOptions />
               </span> :
               (
                 !isFHIRServer &&
-                <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
-                  Sign In
-                </Button>
+                <span style={{marginLeft: '20px'}}>
+                  <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
+                    Sign In
+                  </Button>
+                </span>
               )
             }
           </div>
