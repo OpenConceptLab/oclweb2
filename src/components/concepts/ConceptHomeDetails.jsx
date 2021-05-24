@@ -44,7 +44,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
               isEmpty(names) ?
               None() :
               map(names, name => (
-                <ConceptDetailsLocale locale={name} key={name.uuid} url={`${currentURL}names/${name.uuid}/`} />
+                <ConceptDetailsLocale locale={name} key={name.uuid} url={`${encodeURI(currentURL)}names/${name.uuid}/`} />
               ))
             }
           </AccordionDetails>
@@ -62,7 +62,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
               isEmpty(descriptions) ?
               None() :
               map(descriptions, description => (
-                <ConceptDetailsLocale locale={description} isDescription key={description.uuid} url={`${currentURL}descriptions/${description.uuid}/`} />
+                <ConceptDetailsLocale locale={description} isDescription key={description.uuid} url={`${encodeURI(currentURL)}descriptions/${description.uuid}/`} />
               ))
             }
           </AccordionDetails>
