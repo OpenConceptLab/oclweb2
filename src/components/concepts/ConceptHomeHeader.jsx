@@ -80,7 +80,7 @@ const ConceptHomeHeader = ({
     })
   }
 
-  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
+  const onIconClick = () => copyURL(toFullAPIURL(encodeURI(currentURL)))
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
