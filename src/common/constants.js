@@ -40,3 +40,4 @@ export const AUTH_GROUPS = [
   {id: HAPI_FHIR_SERVERS_GROUP, name: 'HAPI FHIR Servers'}
 ];
 export const CONCEPT_CODE_REGEX = "[^\s]+(\s[^\s]+)*";
+export const ROUTE_ID_PATTERN = "[a-zA-Z0-9\-\.\_\@]+"

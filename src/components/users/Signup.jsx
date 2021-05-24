@@ -4,6 +4,7 @@ import alertifyjs from 'alertifyjs';
 import { TextField, Button, Paper } from '@material-ui/core';
 import {set, get, isEmpty, cloneDeep, startCase, map, includes} from 'lodash';
 import APIService from '../../services/APIService';
+import { ROUTE_ID_PATTERN } from '../../common/constants';
 import VerifyEmailMessage from './VerifyEmailMessage';
 import PasswordFields from '../common/PasswordFields';
 import Captcha from '../common/Captcha';
@@ -106,6 +107,7 @@ class Signup extends React.Component {
                             onChange={event => this.setFieldValue(`fields.${attr}`, event.target.value)}
                             type={attr === "email" ? 'email' : (includes(['password', 'confirm_password'], attr) ? 'password' : 'text') }
                             fullWidth
+                            inputProps={attr === 'username' ? { pattern: ROUTE_ID_PATTERN } : {}}
                           />
                         </div>
                       ))
