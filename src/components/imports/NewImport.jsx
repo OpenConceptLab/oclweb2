@@ -208,7 +208,7 @@ class NewImport extends React.Component {
                   uploadButton={false}
                   onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
                   onLoading={() => this.setFieldValue('file', null)}
-                  accept='application/json, application/JSON, text/comma-separated-values, text/csv, application/csv'
+                  accept='application/json, application/JSON, .csv, text/comma-separated-values, text/csv, application/csv'
                 />
               }
               {
