@@ -5,11 +5,13 @@ import { get } from 'lodash';
 import { toOwnerURI } from '../../common/utils';
 
 const OwnerButton = props => {
-  const ownerType = (
+  const uri = props.uri ? props.uri : '#' + toOwnerURI(props.href || '')
+  let ownerType = (
     get(props, 'ownerType', '') ||
     get(props, 'owner_type', '')
   ).toLowerCase();
-  const uri = '#' + toOwnerURI(props.href || '')
+  if(!ownerType && uri)
+    ownerType = uri.match('/users/') ? 'user' : 'org';
 
   return (
     <span>

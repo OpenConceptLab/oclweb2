@@ -5,10 +5,15 @@ import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
 
-const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit, hapi}) => {
+const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit, hapi, nested}) => {
   const tabConfigs = selectedConfig.config.tabs;
   const selectedTabConfig = tabConfigs[tab];
-  const getTABHref = config => `#/fhir/${config.type}${location.search}`;
+  const getTABHref = config => {
+    if(nested)
+      return `#/fhir${url}${config.type}${location.search}`
+    return `#/fhir/${config.type}${location.search}`
+  };
+
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="fhir-home-tabs" classes={{indicator: 'hidden'}}>

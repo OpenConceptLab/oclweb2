@@ -93,8 +93,27 @@ class ConceptMapHome extends React.Component {
       return url
   }
 
+  getOwner = data => {
+    const selfLink = this.getLinkURL(data, 'self')
+    let ownerType;
+    let owner;
+    let ownerURL;
+    if(selfLink.match('/orgs/')){
+      ownerType = 'Organization'
+      owner = get(get(selfLink.split('/orgs/'), '1', '').split('/'), '0')
+      ownerURL = `/orgs/${owner}/`
+    }
+    else if (selfLink.match('/users/')) {
+      ownerType = 'User'
+      owner = get(get(selfLink.split('/users/'), '1', '').split('/'), '0')
+      ownerURL = `/users/${owner}/`
+    }
+    if(ownerType && owner)
+      return {ownerType: ownerType, owner: owner, ownerURL: ownerURL}
+  }
+
   refreshDataByURL(loadingGroups = false, page) {
-    const { isHAPI, codes } = this.state;
+    const { isHAPI, codes, server } = this.state;
     this.setState({isLoading: !loadingGroups, isLoadingGroups: loadingGroups, notFound: false}, () => {
       const queryParams = isHAPI ? {} : {page: page || codes.pageNumber}
       APIService.new()
@@ -107,12 +126,13 @@ class ConceptMapHome extends React.Component {
                     this.setState({isLoading: false}, () => {throw response})
                   else {
                     const resource = isHAPI ? response.data : get(response, 'data.entry.0.resource');
+                    const owner = isHAPI ? {owner: server.info.org.id} : this.getOwner(response.data)
                     const groups = get(resource, 'group') || [];
                     const total = get(groups, 'length') || 0;
                     this.setState({
                       isLoadingGroups: false,
                       isLoading: false,
-                      resource: resource,
+                      resource: {...resource, ...owner},
                       codes: {
                         next: this.getLinkURL(response.data, 'next'),
                         previous: this.getLinkURL(response.data, 'previous'),
@@ -135,9 +155,9 @@ class ConceptMapHome extends React.Component {
 
   render() {
     const {
-      resource, codes, isLoading, notFound, server, isHAPI, url, serverUrl, isLoadingGroups
+      resource, codes, isLoading, notFound, isHAPI, url, serverUrl, isLoadingGroups
     } = this.state;
-    const source = {...resource, owner: server.info.org.id, canonical_url: resource.url, release_date: resource.date};
+    const source = {...resource, canonical_url: resource.url, release_date: resource.date};
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         {
@@ -153,6 +173,7 @@ class ConceptMapHome extends React.Component {
                 url={`#${url}`}
                 parentURL={`/fhir/${this.URLAttr}`}
                 serverURL={serverUrl}
+                isHAPI={isHAPI}
               />
               {
                 !isHAPI &&

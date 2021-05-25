@@ -23,6 +23,7 @@ import ErrorBoundary from '../common/ErrorBoundary';
 import AccessDenied from '../common/AccessDenied';
 import Fhir from '../fhir/Fhir';
 import ContainerHome from '../fhir/ContainerHome';
+import OwnerHome from '../fhir/OwnerHome';
 import ConceptMapHome from '../fhir/ConceptMapHome';
 import Header from './Header';
 import Footer from './Footer';
@@ -223,6 +224,9 @@ const App = props => {
             <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/ConceptMap/:id([a-zA-Z0-9\-\.\_\@]+)" component={ConceptMapHome} />
             <Route path="/fhir/ConceptMap/:id([a-zA-Z0-9\-\.\_\@]+)" component={ConceptMapHome} />
 
+
+            <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_]+)" component={OwnerHome} />
+            <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)" component={OwnerHome} />
             <Route path="/fhir" component={Fhir} />
             <Route component={NotFound} />
           </Switch>

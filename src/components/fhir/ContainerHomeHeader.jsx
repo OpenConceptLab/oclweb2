@@ -34,7 +34,7 @@ const HIDDEN_ATTRIBUTES = {
   release_date: 'date',
 }
 
-const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL}) => {
+const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL, isHAPI}) => {
   const hasManyHiddenAttributes = nonEmptyCount(source, keys(HIDDEN_ATTRIBUTES)) >= 1;
   const status = get(source, 'status', '').toLowerCase()
   const isRetired = status === 'retired';
@@ -73,8 +73,15 @@ const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL}) => {
         </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...source} href={parentURL} />
+            <OwnerButton owner='FHIR' uri={`#${parentURL}`} />
             <span className='separator'>/</span>
+            {
+              !isHAPI &&
+              <React.Fragment>
+                <OwnerButton owner={source.owner} uri={`#/fhir${source.ownerURL}${resource}`} />
+                <span className='separator'>/</span>
+              </React.Fragment>
+            }
             { getResourceButton() }
             {
               isRetired &&
