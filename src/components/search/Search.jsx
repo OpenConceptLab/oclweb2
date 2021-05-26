@@ -103,6 +103,7 @@ class Search extends React.Component {
       exactMatch: queryParams.get('exactMatch') || 'off',
       limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
       viewFilters: this.props.viewFilters || {},
+      userFilters: this.props.userFilters || {},
       sortParams: get(fixedFilters, 'sortParams') || this.state.sortParams,
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
@@ -110,18 +111,16 @@ class Search extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(get(prevProps, 'location.search') !== get(this.props, 'location.search')) {
+    if(get(prevProps, 'location.search') !== get(this.props, 'location.search'))
       this.setQueryParamsInState()
-    }
-    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL) {
+    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL)
       this.setQueryParamsInState()
-    }
-    if(!isEqual(prevProps.viewFilters, this.props.viewFilters)) {
+    if(!isEqual(prevProps.viewFilters, this.props.viewFilters))
       this.setQueryParamsInState()
-    }
-    if(!isEqual(prevProps.fixedFilters, this.props.fixedFilters)) {
+    if(!isEqual(prevProps.fixedFilters, this.props.fixedFilters))
       this.setQueryParamsInState()
-    }
+    if(!isEqual(prevProps.userFilters, this.props.userFilters))
+      this.setQueryParamsInState()
   }
 
   updateSummaryOnResult(resource, summary) {
