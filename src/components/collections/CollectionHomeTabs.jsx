@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, reject, includes, map } from 'lodash';
+import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
@@ -111,7 +111,8 @@ const CollectionHomeTabs = props => {
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}
             references={selectedTabConfig.type === 'references'}
-            viewFilters={selectedTabConfig.filters}
+            viewFilters={pickBy(selectedTabConfig.filters, isString)}
+            extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
           />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, map, reject } from 'lodash';
+import { get, map, reject, pickBy, isString, isObject } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import About from '../common/About';
@@ -82,7 +82,8 @@ const OrgHomeTabs = props => {
             onPinCreate={onPinCreate}
             onPinDelete={onPinDelete}
             resource={selectedTabConfig.type}
-            viewFilters={selectedTabConfig.filters}
+            viewFilters={pickBy(selectedTabConfig.filters, isString)}
+            extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
           />

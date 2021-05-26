@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, reject, includes, map } from 'lodash';
+import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
@@ -84,7 +84,6 @@ const SourceHomeTabs = props => {
         return {sortDesc: selectedTabConfig.sortDesc}
     }
   }
-
   return (
     <div className='col-md-12 sub-tab'>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
@@ -139,7 +138,8 @@ const SourceHomeTabs = props => {
             resource={selectedTabConfig.type}
             onCreateSimilarClick={onCreateSimilarClick}
             onCreateMappingClick={onCreateMappingFromSelectedConceptsClick}
-            viewFilters={selectedTabConfig.filters}
+            viewFilters={pickBy(selectedTabConfig.filters, isString)}
+            extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
             configQueryParams={selectedTabConfig.query_params}

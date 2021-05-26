@@ -26,6 +26,7 @@ import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
 import BestMatchSort from './BestMatchSort';
 import NavigationButtonGroup from './NavigationButtonGroup';
+import GenericFilterChip from './GenericFilterChip';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -60,6 +61,7 @@ class Search extends React.Component {
       fhirParams: {},
       staticParams: {},
       includeRetired: false,
+      userFilters: {},
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -263,7 +265,7 @@ class Search extends React.Component {
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
-        includeRetired, fhirParams, staticParams
+        includeRetired, fhirParams, staticParams, userFilters
       } = this.state;
       const { configQueryParams, noQuery, noHeaders, fhir, hapi } = this.props;
       let queryParams = {};
@@ -280,7 +282,7 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
-      let params = {...staticParams}
+      let params = {...staticParams, ...userFilters}
       if(!noQuery)
         params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
       if(fhir) {
@@ -363,7 +365,7 @@ class Search extends React.Component {
     const shouldGetCounts = !isEmpty(this.state.appliedFacets);
 
     this.setState(
-      {resource: resource, appliedFacets: {}, sortParams: {sortDesc: '_score'}},
+      {resource: resource, appliedFacets: {}, sortParams: {sortDesc: '_score'}, userFilters: {}},
       () => this.fetchNewResults(null, shouldGetCounts, true)
     )
   }
@@ -398,10 +400,10 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { nested, extraControls, fhir } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters } = this.props;
     const {
       updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
-      viewFilters, sortParams
+      viewFilters, sortParams, userFilters
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
     const sortDesc = get(sortParams, 'sortDesc')
@@ -465,28 +467,39 @@ class Search extends React.Component {
             </span>
           ))
         }
+        {
+          extraControlFilters &&
+          map(extraControlFilters, (definition, id) => (
+            <span style={{paddingLeft: '4px'}} key={id}>
+              <GenericFilterChip
+                id={id}
+                size={nested ? 'small' : 'medium'}
+                onChange={this.onApplyUserFilters}
+                value={get(userFilters, id)}
+                {...definition}
+              />
+            </span>
+          ))
+        }
       </span>
     )
   }
 
-  onLimitChange = limit => {
-    if(this.props.fhir)
-      this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false))
-    else
-      this.fetchNewResults({limit: limit}, false, true)
-  }
+  onLimitChange = limit => this.props.fhir ?
+                         this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false)) :
+                         this.fetchNewResults({limit: limit}, false, true)
 
-  toggleFacetsDrawer = () => {
-    this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
-  }
+  toggleFacetsDrawer = () => this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
 
-  onCloseFacetsDrawer = () => {
-    this.setState({openFacetsDrawer: false})
-  }
+  onCloseFacetsDrawer = () => this.setState({openFacetsDrawer: false})
 
-  onApplyFacets = filters => {
-    this.setState({appliedFacets: filters}, () => this.fetchNewResults(null, false, true))
-  }
+  onApplyFacets = filters => this.setState(
+    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true)
+  )
+
+  onApplyUserFilters = (id, value) => this.setState(
+    {userFilters: value ? {[id]: value} : {}}, () => this.fetchNewResults(null, false, true)
+  )
 
   render() {
     const {
