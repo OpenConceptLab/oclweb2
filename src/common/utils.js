@@ -219,7 +219,7 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 
 export const fetchLocales = callback => {
   APIService.sources('Locales').concepts().get(null, null, {limit: 1000, is_latest: true}).then(response => {
-    callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
+    callback(orderBy(map(reject(response.data, l => !l.locale && !l.display_locale), l => ({id: l.locale || l.display_locale, name: `${l.display_name} [${l.locale || l.display_locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
