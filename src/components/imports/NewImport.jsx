@@ -174,11 +174,13 @@ class NewImport extends React.Component {
                 id='queue'
                 variant='outlined'
                 placeholder='e.g. my-queue'
-                label='Queue'
+                label='Queue ID'
                 value={queue}
                 onChange={event => this.setFieldValue('queue', event.target.value)}
               />
-              <FormHelperText style={{marginLeft: '2px'}}>Custom queue name</FormHelperText>
+              <FormHelperText style={{marginLeft: '2px'}}>
+                Imports that share the same queue ID are processed in sequence
+              </FormHelperText>
             </div>
             <div className='col-md-6 no-side-padding'>
               <FormControlLabel
