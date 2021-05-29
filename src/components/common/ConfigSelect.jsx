@@ -1,15 +1,18 @@
 import React from 'react';
-import { Tooltip, Chip, MenuItem, Menu } from '@material-ui/core'
-import SettingsIcon from '@material-ui/icons/Settings';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { map } from 'lodash';
+import { Tooltip, MenuItem, Menu, ButtonGroup, Button } from '@material-ui/core'
+import {
+  ArrowDropDown as ArrowDropDownIcon
+} from '@material-ui/icons'
+import { map, get } from 'lodash';
 import CommonFormDrawer from './CommonFormDrawer';
 import ViewConfigForm from './ViewConfigForm';
+import { BLUE, WHITE } from '../../common/constants';
 
 const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
   const [drawer, setDrawer] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [preview, setPreviewConfig] = React.useState(null);
 
   const toggleOpen = event => {
     const newOpen = !open
@@ -21,6 +24,8 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
   const _onChange = (event, config) => {
     event.persist();
 
+    setPreviewConfig(null)
+
     onChange(config)
     toggleOpen(event)
   }
@@ -31,20 +36,26 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
 
     setDrawer(true)
   }
+
+  const getLabel = () => {
+    const name = get(selected, 'name')
+    return preview ? `Preview : ${name || 'New Configuration'}` : `Layout : ${name}`;
+  }
+
   return (
     <span>
-      <Tooltip arrow title='Change View Layout'>
-        <Chip
-          variant="default"
-          color='secondary'
-          icon={<SettingsIcon style={{width: '18px', marginLeft: '8px'}} onClick={ onIconClick } />}
-          deleteIcon={<ArrowDropDownIcon style={{width: '18px'}} />}
-          label={`Layout : ${selected.name}`}
-          onClick={toggleOpen}
-          onDelete={toggleOpen}
-          style={{backgroundColor: color, borderColor: color, maxWidth: '200px'}}
-        />
-      </Tooltip>
+      <ButtonGroup style={{backgroundColor: preview ? BLUE : color}} size='small'>
+        <Tooltip arrow title='View Configuration'>
+          <Button style={{borderColor: WHITE, maxWidth: '200px', color: WHITE, textTransform: 'revert', letterSpacing: 'unset', overflow: 'hidden', whiteSpace: 'nowrap'}} onClick={onIconClick}>
+            {getLabel()}
+          </Button>
+        </Tooltip>
+        <Tooltip arrow title='Switch Configuration'>
+          <Button style={{color: WHITE, borderColor: WHITE}} onClick={toggleOpen}>
+            <ArrowDropDownIcon style={{width: '18px'}} />
+          </Button>
+        </Tooltip>
+        </ButtonGroup>
       <Menu
         id="results-size-menu"
         anchorEl={anchorEl}
@@ -60,13 +71,19 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
           ))
         }
       </Menu>
-
       <CommonFormDrawer
-        isOpen={drawer} onClose={() => setDrawer(false)}
+        isOpen={drawer}
+        onClose={() => setDrawer(false)}
         formComponent={
           <ViewConfigForm
             reloadOnSuccess
-            selected={selected} configs={configs} onCancel={() => setDrawer(false)} resourceURL={resourceURL}
+            previewFields={get(preview, 'fields')}
+            selected={get(preview, 'selected') || selected}
+                     configs={configs}
+                     onCancel={() => setDrawer(false)}
+                     resourceURL={resourceURL}
+                     onChange={onChange}
+                     onPreview={setPreviewConfig}
           />
         }
       />

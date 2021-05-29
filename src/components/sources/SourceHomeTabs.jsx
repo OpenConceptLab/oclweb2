@@ -101,7 +101,7 @@ const SourceHomeTabs = props => {
       </Tabs>
       {
         hasAccess && isVersionedObject &&
-        <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+        <div className='col-md-4 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>

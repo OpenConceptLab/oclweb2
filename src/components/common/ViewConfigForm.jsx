@@ -5,6 +5,11 @@ import {
   TextField, Button, Select, MenuItem, FormControl, InputLabel,
   FormHelperText
 } from '@material-ui/core';
+import {
+  Visibility as PreviewIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon
+} from '@material-ui/icons';
 import APIService from '../../services/APIService';
 import { ORANGE } from '../../common/constants';
 import JSONEditor from './JSONEditor';
@@ -20,11 +25,12 @@ const NEW_CONFIG = {id: 'new', name: 'New Configuration'};
 class ViewConfigForm extends React.Component {
   constructor(props) {
     super(props);
+    const initialConfig = get(props.previewFields, 'config') ? cloneDeep(props.previewFields.config) : cloneDeep(get(props.selected, 'config', {}));
     this.state = {
-      initialConfig: cloneDeep(get(props.selected, 'config', {})),
+      initialConfig: initialConfig,
       selected: props.selected,
-      selectedConfig: findIndex(props.configs, props.selected),
-      fields: cloneDeep(DEFAULT_STATE),
+      selectedConfig: findIndex([...props.configs, NEW_CONFIG], props.selected),
+      fields: props.previewFields ? cloneDeep(props.previewFields) : cloneDeep(DEFAULT_STATE),
       errors: null,
     }
   }
@@ -34,15 +40,23 @@ class ViewConfigForm extends React.Component {
   }
 
   setFieldsForEdit() {
+    const { previewFields } = this.props;
     const { selected } = this.state;
     const newState = {...this.state}
     const attrs = ['name', 'layout', 'page_size', 'config', 'is_default']
-    attrs.forEach(attr => set(newState, `fields.${attr}`, get(selected, attr)))
-    newState.initialConfig = cloneDeep(get(selected, 'config', {}))
+    attrs.forEach(
+      attr => {
+        if(isEmpty(previewFields))
+          set(newState, `fields.${attr}`, get(selected, attr))
+        else
+          set(newState, `fields.${attr}`, get(previewFields, attr))
+      }
+    )
+    newState.initialConfig = get(previewFields, 'config') ? cloneDeep(previewFields.config) : cloneDeep(get(selected, 'config', {}))
     this.setState(newState)
   }
 
-  setFieldValue(id, value) {
+  setFieldValue(id, value, callback) {
     const newState = {...this.state}
     set(newState, id, value)
     this.setState(newState, () => {
@@ -51,6 +65,7 @@ class ViewConfigForm extends React.Component {
         this.setState({fields: cloneDeep(DEFAULT_STATE)}) :
         this.setFieldsForEdit()
       }
+      if(callback) callback();
     })
   }
 
@@ -149,7 +164,10 @@ class ViewConfigForm extends React.Component {
     newState.fields.config = config.config
     newState.fields.is_default = config.is_default
     this.setState(newState, () => {
-      this.setState({initialConfig: cloneDeep(get(config, 'config', {}))})
+      this.setState({initialConfig: cloneDeep(get(config, 'config', {}))}, () => {
+        if(config.id !== 'new')
+          this.props.onChange(this.state.fields)
+      })
     })
   }
 
@@ -165,6 +183,24 @@ class ViewConfigForm extends React.Component {
   getErrorHelperText() {
     const { errors } = this.state
     return isEmpty(errors) ? '' : values(errors).join('\n')
+  }
+
+  onJSONUpdate = value => {
+    this.setFieldValue('fields.config', value.jsObject, () => {
+      if(!value.error && this.props.onChange) {
+        this.props.onChange(this.state.fields)
+      }
+    })
+  }
+
+  togglePreview = () => {
+    this.props.onCancel()
+    this.props.onPreview({fields: this.state.fields, selected: this.state.selected})
+  }
+
+  onCancel = () => {
+    this.props.onPreview(null)
+    this.props.onCancel()
   }
 
   render() {
@@ -248,14 +284,17 @@ class ViewConfigForm extends React.Component {
               <JSONEditor
                 placeholder={initialConfig}
                 viewOnly={isOCLDefaultConfigSelected}
-                onChange={value => this.setFieldValue('fields.config', value.jsObject) }
+                onChange={this.onJSONUpdate}
               />
             </div>
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
-              <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
+              <Button style={{margin: '0 10px'}} color='primary' variant='outlined' onClick={this.togglePreview} startIcon={<PreviewIcon />}>
+                Preview
+              </Button>
+              <Button className='green-btn-outlined' style={{margin: '0 10px'}} variant='outlined' type='submit' onClick={this.onSubmit} startIcon={<SaveIcon />} disabled={isOCLDefaultConfigSelected}>
                 {isNew ? 'Create' : 'Update'}
               </Button>
-              <Button style={{margin: '0 10px'}} variant='outlined' onClick={this.props.onCancel}>
+              <Button className='red-btn-outlined' style={{margin: '0 10px'}} variant='outlined' onClick={this.onCancel} startIcon={<CancelIcon />}>
                 Cancel
               </Button>
             </div>

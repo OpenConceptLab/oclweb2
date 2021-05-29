@@ -149,6 +149,9 @@ class SourceHome extends React.Component {
                       selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
+                      const tab = this.getDefaultTabIndex()
+                      if(tab === 0)
+                        this.setTab()
                       if(isEmpty(this.state.versions))
                         this.getVersions()
                     })
@@ -158,7 +161,11 @@ class SourceHome extends React.Component {
     })
   }
 
-  onConfigChange = config => this.setState({selectedConfig: config})
+  onConfigChange = config => this.setState({selectedConfig: config}, () => {
+    const tab = this.getDefaultTabIndex()
+    if(tab === 0)
+      this.setTab()
+  })
 
   isVersionedObject() {
     const version = this.props.match.params.version;
