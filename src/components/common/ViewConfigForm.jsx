@@ -3,12 +3,13 @@ import alertifyjs from 'alertifyjs';
 import { get, map, set, findIndex, cloneDeep, find, reject, values, isEmpty } from 'lodash';
 import {
   TextField, Button, Select, MenuItem, FormControl, InputLabel,
-  FormHelperText
+  FormHelperText, IconButton, Menu, MenuList
 } from '@material-ui/core';
 import {
   Visibility as PreviewIcon,
   Save as SaveIcon,
-  Cancel as CancelIcon
+  Cancel as CancelIcon,
+  MoreVert as MenuIcon,
 } from '@material-ui/icons';
 import APIService from '../../services/APIService';
 import { ORANGE } from '../../common/constants';
@@ -26,12 +27,14 @@ class ViewConfigForm extends React.Component {
   constructor(props) {
     super(props);
     const initialConfig = get(props.previewFields, 'config') ? cloneDeep(props.previewFields.config) : cloneDeep(get(props.selected, 'config', {}));
+    this.menuRef = React.createRef();
     this.state = {
       initialConfig: initialConfig,
       selected: props.selected,
       selectedConfig: findIndex([...props.configs, NEW_CONFIG], props.selected),
       fields: props.previewFields ? cloneDeep(props.previewFields) : cloneDeep(DEFAULT_STATE),
       errors: null,
+      menu: false,
     }
   }
 
@@ -69,9 +72,7 @@ class ViewConfigForm extends React.Component {
     })
   }
 
-  onTextFieldChange = event => {
-    this.setFieldValue(event.target.id, event.target.value)
-  }
+  onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
   getDefaultCheckboxHelperText() {
     const { configs } = this.props;
@@ -148,11 +149,13 @@ class ViewConfigForm extends React.Component {
     newState.fields.is_default = false
     newState.fields.config = selected.config
     newState.selected = NEW_CONFIG;
+    newState.menu = false
     this.setState(newState);
   }
 
-  toggleDefault() {
+  toggleDefault = () => {
     this.setFieldValue('fields.is_default', !this.state.fields.is_default)
+    this.setState({menu: false})
   }
 
   onConfigurationChange(config) {
@@ -171,7 +174,8 @@ class ViewConfigForm extends React.Component {
     })
   }
 
-  onDelete() {
+  onDelete = () => {
+    this.setState({menu: false})
     alertifyjs.confirm(
       `Delete Configuration: ${this.state.selected.name}`,
       'Are you sure you want to delete this?',
@@ -205,67 +209,78 @@ class ViewConfigForm extends React.Component {
 
   render() {
     const { configs } = this.props;
-    const { selected, fields, initialConfig, errors } = this.state;
+    const { selected, fields, initialConfig, errors, menu } = this.state;
     const isOCLDefaultConfigSelected = get(selected, 'web_default');
     const configOptions = [...configs, NEW_CONFIG];
     const isNew = get(selected, 'id') === 'new';
     const isDefault = fields.is_default;
     return (
-      <div className='col-md-12' style={{marginBottom: '30px'}}>
+      <div className='col-md-12' style={{marginBottom: '30px', textAlign: 'left'}}>
         <div className='col-md-12 no-side-padding'>
-          <h2>Manage View Configurations</h2>
+          <h2>Manage Configurations</h2>
         </div>
-        <div className='col-md-6 no-side-padding' style={{marginTop: '15px'}}>
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel>Select Configuration</InputLabel>
-            <Select
-              required
-              id="config"
-              value={findIndex(configOptions, selected)}
-              onChange={event => this.onConfigurationChange(configOptions[event.target.value])}
-              label="Existing Configuration"
-            >
-              {
-                map(configOptions, (config, index) => (
-                  <MenuItem key={index} value={index}>
-                    {
-                      config.id === 'new' ?
-                      <i>{config.name}</i> :
-                      config.name
-                    }
-                  </MenuItem>
-                ))
-              }
-            </Select>
-          </FormControl>
+        <div className='col-md-12 no-side-padding flex-vertical-center'>
+          <div className='col-md-11 no-side-padding' style={{}}>
+            <FormControl variant="outlined" fullWidth size='small'>
+              <InputLabel>Select</InputLabel>
+              <Select
+                required
+                id="config"
+                value={findIndex(configOptions, selected)}
+                onChange={event => this.onConfigurationChange(configOptions[event.target.value])}
+                label="Select"
+              >
+                {
+                  map(configOptions, (config, index) => (
+                    <MenuItem key={index} value={index}>
+                      {
+                        config.id === 'new' ?
+                        <i>{config.name}</i> :
+                        config.name
+                      }
+                    </MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </div>
+          <div className='col-md-1 no-side-padding' style={{marginLeft: '5px'}}>
+            <IconButton size='small' ref={this.menuRef} onClick={() => this.setState({menu: !menu})}>
+              <MenuIcon />
+            </IconButton>
+          </div>
         </div>
-        <div className="col-md-6 no-right-padding flex-vertical-center" style={{marginTop: '15px', height: '56px'}}>
-          {
-            !isOCLDefaultConfigSelected &&
-            <Button size="small" color={isDefault ? 'primary' : 'default'} variant="outlined" onClick={() => this.toggleDefault()}>
-              {isDefault ? 'Un-Default': 'Default'}
-            </Button>
-          }
-          {
-            !isOCLDefaultConfigSelected &&
-            <Button style={{marginLeft: '4px'}} size="small" variant="outlined" onClick={() => this.onDelete()}>
-              Delete
-            </Button>
-          }
-          {
-            !isNew &&
-            <Button style={{marginLeft: '4px'}} size="small" variant="outlined" onClick={this.moveToCreateSimilar}>Create Similar</Button>
-          }
-        </div>
-        <div className="col-md-12 no-side-padding">
+        <div className='col-md-12 no-side-padding' style={{marginBottom: '35px'}}>
           {this.getDefaultCheckboxHelperText()}
         </div>
-        <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
+        {
+          menu &&
+          <Menu open anchorEl={this.menuRef.current} onClose={() => this.setState({menu: false})}>
+            <MenuList id="split-button-menu">
+              {
+                !isOCLDefaultConfigSelected &&
+                <MenuItem onClick={this.toggleDefault}>
+                  {isDefault ? 'Un-Default': 'Mark Default'}
+                </MenuItem>
+              }
+              {
+                !isNew &&
+                <MenuItem onClick={this.moveToCreateSimilar}>
+                  Create Similar
+                </MenuItem>
+              }
+              {
+                !isOCLDefaultConfigSelected &&
+                <MenuItem onClick={this.onDelete}>
+                  Delete
+                </MenuItem>
+              }
+            </MenuList>
+          </Menu>
+        }
+        <div className='col-md-12 no-side-padding' style={{}}>
           <form>
-            <div className='col-md-12 no-side-padding' style={{width: '100%'}}>
-              <h3 className="form-subheading">View/Edit Configuration</h3>
-            </div>
-            <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
+            <div className='col-md-12 no-side-padding' style={{}}>
               <TextField
                 error={!isEmpty(errors)}
                 id="fields.name"
@@ -278,6 +293,7 @@ class ViewConfigForm extends React.Component {
                 value={fields.name}
                 disabled={isOCLDefaultConfigSelected}
                 helperText={this.getErrorHelperText()}
+                size='small'
               />
             </div>
             <div className='col-md-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
@@ -287,14 +303,14 @@ class ViewConfigForm extends React.Component {
                 onChange={this.onJSONUpdate}
               />
             </div>
-            <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
-              <Button style={{margin: '0 10px'}} color='primary' variant='outlined' onClick={this.togglePreview} startIcon={<PreviewIcon />}>
+            <div className='col-md-12 no-side-padding' style={{textAlign: 'center', margin: '10px 0'}}>
+              <Button size='small' style={{margin: '2px'}} color='primary' variant='outlined' onClick={this.togglePreview} startIcon={<PreviewIcon fontSize='inherit' />}>
                 Preview
               </Button>
-              <Button className='green-btn-outlined' style={{margin: '0 10px'}} variant='outlined' type='submit' onClick={this.onSubmit} startIcon={<SaveIcon />} disabled={isOCLDefaultConfigSelected}>
+              <Button size='small' className='green-btn-outlined' style={{margin: '2px'}} variant='outlined' type='submit' onClick={this.onSubmit} startIcon={<SaveIcon fontSize='inherit' />} disabled={isOCLDefaultConfigSelected}>
                 {isNew ? 'Create' : 'Update'}
               </Button>
-              <Button className='red-btn-outlined' style={{margin: '0 10px'}} variant='outlined' onClick={this.onCancel} startIcon={<CancelIcon />}>
+              <Button size='small' className='red-btn-outlined' style={{margin: '2px'}} variant='outlined' onClick={this.onCancel} startIcon={<CancelIcon fontSize='inherit' />}>
                 Cancel
               </Button>
             </div>

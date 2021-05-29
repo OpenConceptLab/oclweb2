@@ -24,6 +24,7 @@ const OrgHomeTabs = props => {
   const [sourceForm, setSourceForm] = React.useState(false);
   const [collectionForm, setCollectionForm] = React.useState(false);
   const [membersForm, setMembersForm] = React.useState(false);
+  const [configFormWidth, setConfigFormWidth] = React.useState(false);
   const hasAccess = currentUserHasAccess()
   const onNewClick = resource => {
     if(resource === 'source')
@@ -43,8 +44,10 @@ const OrgHomeTabs = props => {
     }
   }
 
+  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%'
+
   return (
-    <div className='col-md-12 sub-tab'>
+    <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
         {
           map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
@@ -52,7 +55,7 @@ const OrgHomeTabs = props => {
       </Tabs>
       {
         hasAccess &&
-        <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+        <div className='col-md-4 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>
@@ -62,6 +65,7 @@ const OrgHomeTabs = props => {
                 onChange={onConfigChange}
                 color={ORANGE}
                 resourceURL={url}
+                onWidthChange={setConfigFormWidth}
               />
             </span>
           }

@@ -25,6 +25,7 @@ const CollectionHomeTabs = props => {
   const about = get(collection, 'text')
   const [versionForm, setVersionForm] = React.useState(false);
   const [referenceForm, setReferenceForm] = React.useState(false);
+  const [configFormWidth, setConfigFormWidth] = React.useState(false);
   const onNewClick = resource => {
     if(resource === 'version')
       setVersionForm(true)
@@ -58,8 +59,10 @@ const CollectionHomeTabs = props => {
     }
   }
 
+  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%'
+
   return (
-    <div className='col-md-12 sub-tab'>
+    <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="collection-home-tabs"  classes={{indicator: 'hidden'}}>
         {
           map(
@@ -75,7 +78,7 @@ const CollectionHomeTabs = props => {
       </Tabs>
       {
         hasAccess && isVersionedObject &&
-        <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
+        <div className='col-md-4 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>
@@ -85,6 +88,7 @@ const CollectionHomeTabs = props => {
                 onChange={onConfigChange}
                 color={GREEN}
                 resourceURL={collection.url}
+                onWidthChange={setConfigFormWidth}
               />
             </span>
           }

@@ -4,11 +4,11 @@ import {
   ArrowDropDown as ArrowDropDownIcon
 } from '@material-ui/icons'
 import { map, get } from 'lodash';
-import CommonFormDrawer from './CommonFormDrawer';
+import ResponsiveDrawer from './ResponsiveDrawer';
 import ViewConfigForm from './ViewConfigForm';
 import { BLUE, WHITE } from '../../common/constants';
 
-const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
+const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthChange}) => {
   const [drawer, setDrawer] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -34,12 +34,18 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
     event.stopPropagation();
     event.preventDefault();
 
-    setDrawer(true)
+    setDrawer(!drawer)
+    onWidthChange(drawer ? 0 : 360)
   }
 
   const getLabel = () => {
     const name = get(selected, 'name')
     return preview ? `Preview : ${name || 'New Configuration'}` : `Layout : ${name}`;
+  }
+
+  const onCancel = () => {
+    setDrawer(false)
+    onWidthChange(0)
   }
 
   return (
@@ -55,7 +61,7 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
             <ArrowDropDownIcon style={{width: '18px'}} />
           </Button>
         </Tooltip>
-        </ButtonGroup>
+      </ButtonGroup>
       <Menu
         id="results-size-menu"
         anchorEl={anchorEl}
@@ -71,22 +77,27 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL}) => {
           ))
         }
       </Menu>
-      <CommonFormDrawer
-        isOpen={drawer}
-        onClose={() => setDrawer(false)}
-        formComponent={
-          <ViewConfigForm
-            reloadOnSuccess
-            previewFields={get(preview, 'fields')}
-            selected={get(preview, 'selected') || selected}
-                     configs={configs}
-                     onCancel={() => setDrawer(false)}
-                     resourceURL={resourceURL}
-                     onChange={onChange}
-                     onPreview={setPreviewConfig}
-          />
-        }
-      />
+      {
+        drawer &&
+        <ResponsiveDrawer
+          variant='persistent'
+          isOpen={drawer}
+          onClose={() => setDrawer(false)}
+          onWidthChange={onWidthChange}
+          formComponent={
+            <ViewConfigForm
+              reloadOnSuccess
+              previewFields={get(preview, 'fields')}
+                            selected={get(preview, 'selected') || selected}
+                            configs={configs}
+                            onCancel={onCancel}
+                            resourceURL={resourceURL}
+                            onChange={onChange}
+                            onPreview={setPreviewConfig}
+            />
+          }
+        />
+      }
     </span>
   )
 }
