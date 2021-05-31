@@ -38,7 +38,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
   }
 
   return (
-    <header className='home-header col-md-12'>
+    <header className='home-header col-md-12' style={{marginBottom: '0px'}}>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <div className='no-side-padding col-md-1 home-icon'>
           <HeaderLogo
