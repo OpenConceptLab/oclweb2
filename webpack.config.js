@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { ProvidePlugin, DefinePlugin, IgnorePlugin } = require('webpack');
 
 module.exports = (env) => {
+  const isProduction = env.NODE_ENV === 'production';
   return {
     mode: env.NODE_ENV,
     module: {
@@ -30,7 +31,7 @@ module.exports = (env) => {
         },
       ],
     },
-    optimization: {
+    optimization: isProduction ? {
       splitChunks: {
         chunks: 'all',
         minSize: 100000,
@@ -84,7 +85,7 @@ module.exports = (env) => {
           }
         }
       }
-    },
+    } : {},
     devServer: {
       contentBase: path.resolve(__dirname, 'public'),
       disableHostCheck: true,
