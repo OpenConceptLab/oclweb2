@@ -483,7 +483,7 @@ class ConceptContainerForm extends React.Component {
                     <MenuItem value='OpenMRS'>OpenMRS</MenuItem>
                   </Select>
                   {
-                    this.isSource() &&
+                    this.isSource() && edit &&
                     <FormHelperText>
                       Changing Schema is an async process. It may take few minutes to apply depending on the amount of content in this Source. Other updates will be applied immediately.
                     </FormHelperText>
