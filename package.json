@@ -32,8 +32,8 @@
     "react-suggestion-box": "^1.2.3"
   },
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --mode ${NODE_ENV} --hot",
-    "build": "./node_modules/webpack/bin/webpack.js --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --mode ${NODE_ENV}",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.WEB_VERSION=${WEB_VERSION} --env.WEB_BUILD=${WEB_BUILD} --mode ${NODE_ENV} --hot",
+    "build": "./node_modules/webpack/bin/webpack.js --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.WEB_VERSION=${WEB_VERSION} --env.WEB_BUILD=${WEB_BUILD} --mode ${NODE_ENV}",
     "eslint": "./node_modules/.bin/eslint ./src"
   },
   "devDependencies": {
