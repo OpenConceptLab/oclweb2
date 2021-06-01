@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Add as AddIcon } from '@material-ui/icons';
 import {
   TextField, IconButton, Button, CircularProgress, Select, MenuItem, FormControl, InputLabel,
-  FormControlLabel, Checkbox
+  FormControlLabel, Checkbox, FormHelperText
 } from '@material-ui/core';
 import {
   set, get, map, cloneDeep, pullAt, isEmpty, startCase, pickBy, isObject, isArray,
@@ -482,6 +482,12 @@ class ConceptContainerForm extends React.Component {
                     <MenuItem value='None'>None</MenuItem>
                     <MenuItem value='OpenMRS'>OpenMRS</MenuItem>
                   </Select>
+                  {
+                    this.isSource() &&
+                    <FormHelperText>
+                      Changing Schema is an async process. It may take few minutes to apply depending on the amount of content in this Source. Other updates will be applied immediately.
+                    </FormHelperText>
+                  }
                 </FormControl>
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
