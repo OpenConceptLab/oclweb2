@@ -233,7 +233,7 @@ export const FACET_ORDER = {
 }
 
 export const SORT_ATTRS = {
-  concepts: ['score', 'last_update', 'id', '_name', 'concept_class', 'datatype', 'source', 'owner'],
+  concepts: ['score', 'last_update', 'id', 'numeric_id', '_name', 'concept_class', 'datatype', 'source', 'owner'],
   mappings: ['score', 'last_update', 'id', 'map_type', 'source', 'owner'],
   users: ['score', 'username', 'date_joined', 'company', 'location'],
   organizations: ['score', 'last_update', 'name', 'mnemonic'],

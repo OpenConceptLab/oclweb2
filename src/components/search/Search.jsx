@@ -25,6 +25,7 @@ import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
 import BestMatchSort from './BestMatchSort';
+import NumericalIDSort from './NumericalIDSort';
 import NavigationButtonGroup from './NavigationButtonGroup';
 import GenericFilterChip from './GenericFilterChip';
 
@@ -434,6 +435,12 @@ class Search extends React.Component {
             <span style={{paddingRight: '4px', cursor: isDisabledFilters ? 'not-allowed' : 'pointer'}}>
               <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
             </span>
+            {
+              resource === 'concepts' && isTable &&
+              <span style={{paddingRight: '4px'}}>
+                <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+              </span>
+            }
             {
               isTable ?
               <span>
