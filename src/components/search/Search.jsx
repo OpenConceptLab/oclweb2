@@ -94,6 +94,15 @@ class Search extends React.Component {
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     const fixedFilters = this.props.fixedFilters;
+    let userFilters = this.props.userFilters || {};
+
+    if(this.props.extraControlFilters) {
+      forEach(this.props.extraControlFilters, (definition, id) => {
+        if(definition.default)
+          userFilters[id] = definition.default
+      })
+    }
+
     this.setState({
       isTable: this.getLayoutAttrValue('isTable'),
       isInfinite: this.getLayoutAttrValue('isInfinite'),
@@ -104,7 +113,7 @@ class Search extends React.Component {
       exactMatch: queryParams.get('exactMatch') || 'off',
       limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
       viewFilters: this.props.viewFilters || {},
-      userFilters: this.props.userFilters || {},
+      userFilters: userFilters,
       sortParams: get(fixedFilters, 'sortParams') || this.state.sortParams,
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
@@ -121,6 +130,8 @@ class Search extends React.Component {
     if(!isEqual(prevProps.fixedFilters, this.props.fixedFilters))
       this.setQueryParamsInState()
     if(!isEqual(prevProps.userFilters, this.props.userFilters))
+      this.setQueryParamsInState()
+    if(!isEqual(prevProps.extraControlFilters, this.props.extraControlFilters))
       this.setQueryParamsInState()
   }
 
