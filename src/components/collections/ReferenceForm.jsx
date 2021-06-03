@@ -79,7 +79,7 @@ class ReferenceForm extends React.Component {
     const newState = {...this.state};
     const expression = get(newState.fields.expressions, index)
     if(expression.uri) {
-      const service = isConcept(expression.uri) ? APIService.concept() : APIService.mappings()
+      const service = isConcept(expression.uri) ? APIService.concepts() : APIService.mappings()
       service.head(null, null, {uri: expression.uri}).then(response => {
         if(get(response, 'status') === 200) {
           const found = parseInt(get(response, 'headers.num_found'))
