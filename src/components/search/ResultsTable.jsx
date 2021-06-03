@@ -34,6 +34,7 @@ import PinIcon from '../common/PinIcon';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
+import MappingOptions from '../mappings/MappingOptions';
 import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
 import FhirContainerResource from '../fhir/ContainerResource';
@@ -637,9 +638,13 @@ const ExpandibleRow = props => {
           <TableCell align={nested ? 'center' : 'left'}>
             {
               resourceDefinition.expandible &&
-              <IconButton aria-label="expand row" size="small" onClick={onClick}>
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
+              (
+                resource === 'mappings' ?
+                <MappingOptions mapping={item} /> :
+                <IconButton aria-label="expand row" size="small" onClick={onClick}>
+                  {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+              )
             }
             {
               showPin &&
