@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map
+  map, omit
 } from 'lodash';
 import { CircularProgress, Chip } from '@material-ui/core';
 import APIService from '../../services/APIService'
@@ -514,9 +514,16 @@ class Search extends React.Component {
     {appliedFacets: filters}, () => this.fetchNewResults(null, false, true)
   )
 
-  onApplyUserFilters = (id, value) => this.setState(
-    {userFilters: value ? {[id]: value} : {}}, () => this.fetchNewResults(null, false, true)
-  )
+  onApplyUserFilters = (id, value) => {
+    let newFilters = {...this.state.userFilters}
+
+    if(value)
+      newFilters[id] = value
+    else
+      newFilters = omit(newFilters, id)
+
+    this.setState({userFilters: newFilters}, () => this.fetchNewResults(null, false, true))
+  }
 
   render() {
     const {
