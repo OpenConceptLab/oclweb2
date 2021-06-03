@@ -6,6 +6,7 @@ import {
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
+  CompareArrows as CompareArrowsIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
@@ -88,6 +89,9 @@ const MappingHomeHeader = ({
   }
 
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
+  const conceptCompareURL = (mapping.from_concept_url && mapping.to_concept_url) ?
+                            `/concepts/compare?lhs=${mapping.from_concept_url}&rhs=${mapping.to_concept_url}` :
+                            null;
 
   return (
     <header className='home-header col-md-12'>
@@ -145,6 +149,14 @@ const MappingHomeHeader = ({
                     references={[{...mapping, url: resourceRelativeURL}]}
                     iconButton
                   />
+                }
+                {
+                  conceptCompareURL &&
+                  <Tooltip arrow title='Compare Concepts'>
+                    <Button component='a' href={`/#${conceptCompareURL}`}>
+                      <CompareArrowsIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
                 }
                 <DownloadButton resource={mapping} filename={downloadFileName} />
               </ButtonGroup>
