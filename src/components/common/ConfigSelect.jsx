@@ -8,7 +8,7 @@ import ResponsiveDrawer from './ResponsiveDrawer';
 import ViewConfigForm from './ViewConfigForm';
 import { BLUE, WHITE } from '../../common/constants';
 
-const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthChange}) => {
+const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthChange, ...rest}) => {
   const [drawer, setDrawer] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -94,6 +94,7 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthC
                             resourceURL={resourceURL}
                             onChange={onChange}
                             onPreview={setPreviewConfig}
+            {...rest}
             />
           }
         />

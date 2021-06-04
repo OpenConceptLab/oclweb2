@@ -116,6 +116,7 @@ const SourceHomeTabs = props => {
                 color={GREEN}
                 resourceURL={source.url}
                 onWidthChange={setConfigFormWidth}
+                resource='sources'
               />
             </span>
           }
