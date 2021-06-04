@@ -5,6 +5,8 @@ import APIService from '../../services/APIService';
 import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
 import NotFound from '../common/NotFound';
+import AccessDenied from '../common/AccessDenied';
+import PermissionDenied from '../common/PermissionDenied';
 
 const TABS = ['details', 'mappings', 'history'];
 
@@ -13,6 +15,8 @@ class ConceptHome extends React.Component {
     super(props);
     this.state = {
       notFound: false,
+      accessDenied: false,
+      permissionDenied: false,
       isLoading: true,
       isLoadingMappings: false,
       concept: {},
@@ -68,13 +72,17 @@ class ConceptHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true, notFound: false}, () => {
+    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
                 .overrideURL(encodeURI(this.getConceptURLFromPath()))
                 .get()
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, concept: {}, notFound: true})
+                    this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
+                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
+                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: true, permissionDenied: false})
+                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
+                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: false, permissionDenied: true})
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else
@@ -124,37 +132,40 @@ class ConceptHome extends React.Component {
   }
 
   render() {
-    const { concept, versions, mappings, isLoadingMappings, isLoading, tab, notFound } = this.state;
+    const {
+      concept, versions, mappings, isLoadingMappings, isLoading, tab,
+      notFound, accessDenied, permissionDenied
+    } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
+    const hasError = notFound || accessDenied || permissionDenied;
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
+        { isLoading && <CircularProgress color='primary' /> }
+        { notFound && <NotFound /> }
+        { accessDenied && <AccessDenied /> }
+        { permissionDenied && <PermissionDenied /> }
         {
-          isLoading ?
-          <CircularProgress color='primary' /> :
-          (
-            notFound ?
-            <NotFound /> :
-            <div className='col-md-12 home-container no-side-padding'>
-              <ConceptHomeHeader
-                concept={concept}
-                mappings={mappings}
-                isVersionedObject={isVersionedObject}
-                versionedObjectURL={this.getVersionedObjectURLFromPath()}
-                currentURL={currentURL}
-              />
-              <ConceptHomeTabs
-                tab={tab}
-                onChange={this.onTabChange}
-                concept={concept}
-                versions={versions}
-                mappings={mappings}
-                isLoadingMappings={isLoadingMappings}
-                currentURL={currentURL}
-                isVersionedObject={isVersionedObject}
-              />
-            </div>
-          )
+          !isLoading && !hasError &&
+          <div className='col-md-12 home-container no-side-padding'>
+            <ConceptHomeHeader
+              concept={concept}
+              mappings={mappings}
+              isVersionedObject={isVersionedObject}
+              versionedObjectURL={this.getVersionedObjectURLFromPath()}
+              currentURL={currentURL}
+            />
+            <ConceptHomeTabs
+              tab={tab}
+              onChange={this.onTabChange}
+              concept={concept}
+              versions={versions}
+              mappings={mappings}
+              isLoadingMappings={isLoadingMappings}
+              currentURL={currentURL}
+              isVersionedObject={isVersionedObject}
+            />
+          </div>
         }
       </div>
     )
