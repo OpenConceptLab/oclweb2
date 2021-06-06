@@ -66,6 +66,7 @@ const OrgHomeTabs = props => {
                 color={ORANGE}
                 resourceURL={url}
                 onWidthChange={setConfigFormWidth}
+                resource='orgs'
               />
             </span>
           }

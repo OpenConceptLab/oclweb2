@@ -89,6 +89,7 @@ const CollectionHomeTabs = props => {
                 color={GREEN}
                 resourceURL={collection.url}
                 onWidthChange={setConfigFormWidth}
+                resource='collections'
               />
             </span>
           }
