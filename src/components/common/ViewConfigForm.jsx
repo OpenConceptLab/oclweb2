@@ -270,9 +270,11 @@ class ViewConfigForm extends React.Component {
                 option => (
                   <React.Fragment>
                     <span className='flex-vertical-center'>
-                      <span>
-                        {option.name}
-                      </span>
+                      {
+                        option.id === 'new' ?
+                        <i>{option.name}</i> :
+                        <span>{option.name}</span>
+                      }
                       {
                         option.is_template &&
                         <span style={{marginLeft: '10px'}}>
