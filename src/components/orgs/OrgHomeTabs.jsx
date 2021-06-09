@@ -48,14 +48,14 @@ const OrgHomeTabs = props => {
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
+      <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
         {
           map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
         }
       </Tabs>
       {
         hasAccess &&
-        <div className='col-md-4 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
+        <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>
