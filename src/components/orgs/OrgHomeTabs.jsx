@@ -1,9 +1,10 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, map, reject, pickBy, isString, isObject } from 'lodash';
+import { get, map, reject, pickBy, isString, isObject, includes } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import About from '../common/About';
+import CustomMarkup from '../common/CustomMarkup';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -44,8 +45,7 @@ const OrgHomeTabs = props => {
     }
   }
 
-  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%'
-
+  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
@@ -75,8 +75,23 @@ const OrgHomeTabs = props => {
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
         {
-          selectedTabConfig.type === 'about' ?
-          <About id={org.id} about={about} /> :
+          selectedTabConfig.type === 'about' &&
+          <About id={org.id} about={about} />
+        }
+        {
+          selectedTabConfig.type === 'text' &&
+          <div className='col-md-12'>
+            {
+              map(selectedTabConfig.fields, field => {
+                const value = field.value || get(org, field.id);
+                const label = field.label
+                return <CustomMarkup key={value} title={label} markup={value} />
+              })
+            }
+          </div>
+        }
+        {
+          !includes(['about', 'text'], selectedTabConfig.type) &&
           <OrgHomeChildrenList
             org={org}
             location={location}

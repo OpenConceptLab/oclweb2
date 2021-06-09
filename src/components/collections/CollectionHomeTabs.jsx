@@ -6,6 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
 import About from '../common/About';
+import CustomMarkup from '../common/CustomMarkup';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConfigSelect from '../common/ConfigSelect';
@@ -104,6 +105,18 @@ const CollectionHomeTabs = props => {
         {
           selectedTabConfig.type === 'versions' &&
           <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
+        }
+        {
+          selectedTabConfig.type === 'text' &&
+          <div className='col-md-12'>
+            {
+              map(selectedTabConfig.fields, field => {
+                const value = field.value || get(collection, field.id);
+                const label = field.label
+                return <CustomMarkup key={value} title={label} markup={value} />
+              })
+            }
+          </div>
         }
         {
           includes(['concepts', 'mappings', 'references'], selectedTabConfig.type) &&
