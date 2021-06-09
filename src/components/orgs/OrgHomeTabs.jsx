@@ -96,7 +96,7 @@ const OrgHomeTabs = props => {
             org={org}
             location={location}
             match={match}
-            url={url}
+            url={selectedTabConfig.uri || url}
             pins={pins}
             showPin={showPin}
             onPinCreate={onPinCreate}

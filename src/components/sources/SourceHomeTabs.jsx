@@ -151,7 +151,7 @@ const SourceHomeTabs = props => {
             source={source}
             match={match}
             location={location}
-            versionedObjectURL={versionedObjectURL}
+            versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
             versions={versions}
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}
