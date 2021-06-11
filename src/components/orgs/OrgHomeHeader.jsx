@@ -22,13 +22,18 @@ import DownloadButton from '../common/DownloadButton';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import OrgForm from './OrgForm';
 
-const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
+const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
-  const [openHeader, setOpenHeader] = React.useState(true);
+  const [openHeader, setOpenHeader] = React.useState(!config.config.shrinkHeader);
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
   const hasAccess = currentUserHasAccess();
   const onIconClick = () => copyURL(toFullAPIURL(url));
+
+  React.useEffect(
+    () => setOpenHeader(!config.config.shrinkHeader),
+    [config.config.shrinkHeader]
+  )
 
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(url).appendToUrl('logo/')

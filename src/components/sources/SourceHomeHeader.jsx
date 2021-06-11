@@ -51,11 +51,11 @@ const HIDDEN_ATTRIBUTES = {
   version_needed: 'boolean',
 }
 const SourceHomeHeader = ({
-  source, isVersionedObject, versionedObjectURL, currentURL
+  source, isVersionedObject, versionedObjectURL, currentURL, config
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(true);
+  const [openHeader, setOpenHeader] = React.useState(!config.config.shrinkHeader);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
@@ -69,6 +69,11 @@ const SourceHomeHeader = ({
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
   }
+
+  React.useEffect(
+    () => setOpenHeader(!config.config.shrinkHeader),
+    [config.config.shrinkHeader]
+  )
 
   const deleteSource = () => {
     APIService.new().overrideURL(source.url).delete().then(response => {

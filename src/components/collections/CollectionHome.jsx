@@ -216,6 +216,7 @@ class CollectionHome extends React.Component {
               isVersionedObject={this.isVersionedObject()}
               versionedObjectURL={versionedObjectURL}
               currentURL={currentURL}
+              config={selectedConfig}
             />
             <CollectionHomeTabs
               tab={tab}

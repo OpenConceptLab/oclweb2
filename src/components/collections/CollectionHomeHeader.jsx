@@ -49,11 +49,11 @@ const HIDDEN_ATTRIBUTES = {
   experimental: 'boolean'
 }
 const CollectionHomeHeader = ({
-  collection, isVersionedObject, versionedObjectURL, currentURL
+  collection, isVersionedObject, versionedObjectURL, currentURL, config
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(true);
+  const [openHeader, setOpenHeader] = React.useState(!config.config.shrinkHeader);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
@@ -67,6 +67,11 @@ const CollectionHomeHeader = ({
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
   }
+
+  React.useEffect(
+    () => setOpenHeader(!config.config.shrinkHeader),
+    [config.config.shrinkHeader]
+  )
 
   const deleteCollection = () => {
     APIService.new().overrideURL(collection.url).delete().then(response => {
