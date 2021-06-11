@@ -4,7 +4,7 @@ import {
   FileCopy as CopyIcon,
   Edit as EditIcon,
 } from '@material-ui/icons';
-import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
 import { isEmpty, get } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -19,10 +19,12 @@ import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
+import CollapsibleDivider from '../common/CollapsibleDivider';
 import OrgForm from './OrgForm';
 
 const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
+  const [openHeader, setOpenHeader] = React.useState(true);
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
   const hasAccess = currentUserHasAccess();
@@ -40,13 +42,16 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
   return (
     <header className='home-header col-md-12' style={{marginBottom: '0px'}}>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon'>
-          <HeaderLogo
-            logoURL={logoURL}
-            onUpload={onLogoUpload}
-            defaultIcon={<HomeIcon className='default-svg' />}
-          />
-        </div>
+        {
+          openHeader &&
+          <div className='no-side-padding col-md-1 home-icon'>
+            <HeaderLogo
+              logoURL={logoURL}
+              onUpload={onLogoUpload}
+              defaultIcon={<HomeIcon className='default-svg' />}
+            />
+          </div>
+        }
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
@@ -72,68 +77,71 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents }) => {
               </span>
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-            <span style={{marginRight: '10px'}}>
-              {org.name}
-            </span>
-            {
-              !fhir &&
-              <AccessChip publicAccess={org.public_access} />
-            }
-          </div>
-          {
-            org.description &&
-            <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
-              {org.description}
+          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+              <span style={{marginRight: '10px'}}>
+                {org.name}
+              </span>
+              {
+                !fhir &&
+                <AccessChip publicAccess={org.public_access} />
+              }
             </div>
-          }
-          <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
-          <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             {
-              org.location &&
-              <span style={{marginRight: '10px'}}>
-                <LocationLabel location={org.location} noContainerClass iconSize="medium" />
-              </span>
+              org.description &&
+              <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+                {org.description}
+              </div>
             }
-            {
-              org.website &&
-              <span style={{marginRight: '10px'}}>
-                <LinkLabel link={org.website} iconSize='medium' noContainerClass />
-              </span>
-            }
-            {
-              org.created_on &&
-              <span>
-                <LastUpdatedOnLabel
-                  label='Created'
-                  date={org.created_on}
-                  by={org.created_by}
-                  iconSize='medium'
-                  noContainerClass
-                />
-              </span>
-            }
-            {
-              org.updated_on &&
-              <span style={{marginLeft: '10px'}}>
-                <LastUpdatedOnLabel
-                  date={org.updated_on}
-                  by={org.updated_by}
-                  iconSize='medium'
-                  noContainerClass
-                />
-              </span>
-            }
-            {
-              org.external_id &&
-              <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                <ExternalIdLabel externalId={org.external_id} iconSize='medium' />
-              </span>
-            }
-          </div>
-          {extraComponents}
+            <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
+            <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+              {
+                org.location &&
+                <span style={{marginRight: '10px'}}>
+                  <LocationLabel location={org.location} noContainerClass iconSize="medium" />
+                </span>
+              }
+              {
+                org.website &&
+                <span style={{marginRight: '10px'}}>
+                  <LinkLabel link={org.website} iconSize='medium' noContainerClass />
+                </span>
+              }
+              {
+                org.created_on &&
+                <span>
+                  <LastUpdatedOnLabel
+                    label='Created'
+                    date={org.created_on}
+                    by={org.created_by}
+                    iconSize='medium'
+                    noContainerClass
+                  />
+                </span>
+              }
+              {
+                org.updated_on &&
+                <span style={{marginLeft: '10px'}}>
+                  <LastUpdatedOnLabel
+                    date={org.updated_on}
+                    by={org.updated_by}
+                    iconSize='medium'
+                    noContainerClass
+                  />
+                </span>
+              }
+              {
+                org.external_id &&
+                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                  <ExternalIdLabel externalId={org.external_id} iconSize='medium' />
+                </span>
+              }
+            </div>
+            {extraComponents}
+          </Collapse>
         </div>
+        <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
         isOpen={orgForm}

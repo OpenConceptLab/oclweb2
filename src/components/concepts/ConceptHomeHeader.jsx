@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -20,6 +20,7 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
+import CollapsibleDivider from '../common/CollapsibleDivider';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 
@@ -33,6 +34,7 @@ const ConceptHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const isAuthenticated = isLoggedIn();
   const resourceRelativeURL = isVersionedObject ? concept.url : concept.version_url;
+  const [openHeader, setOpenHeader] = React.useState(true);
   const [conceptForm, setConceptForm] = React.useState(false);
   const onRetire = () => {
     const prompt = alertifyjs.prompt()
@@ -84,8 +86,8 @@ const ConceptHomeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        <ConceptIcon />
-        <div className='col-md-11' style={{width: '95%'}}>
+        { openHeader && <ConceptIcon /> }
+        <div className='col-md-11' style={{width: '95%', marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...concept} href={versionedObjectURL} />
             <span className='separator'>/</span>
@@ -142,62 +144,65 @@ const ConceptHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
-              {concept.display_name}
-            </span>
-            <span className='gray-italics-small'>
-              [{concept.display_locale}]
-            </span>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Class:
-            </span>
-            <span>
-              {concept.concept_class},
-            </span>
-            <span className='italic' style={{marginLeft: '5px', marginRight: '3px'}}>
-              Datatype:
-            </span>
-            <span>
-              {concept.datatype}
-            </span>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Custom Attributes:
-            </span>
-            <span>
-              <CustomAttributesPopup attributes={concept.extras} />
-            </span>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
-            <span>
-              <LastUpdatedOnLabel
-                date={concept.updated_on}
-                by={concept.updated_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            <span style={{marginLeft: '10px'}}>
-              <LastUpdatedOnLabel
-                label='Created'
-                date={concept.created_on}
-                by={concept.created_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            {
-              concept.external_id &&
-              <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                <ExternalIdLabel externalId={concept.external_id} iconSize='medium' />
+          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
+              <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
+                {concept.display_name}
               </span>
-            }
-          </div>
+              <span className='gray-italics-small'>
+                [{concept.display_locale}]
+              </span>
+            </div>
+            <div className='col-md-12 no-side-padding flex-vertical-center'>
+              <span className='italic' style={{marginRight: '3px'}}>
+                Class:
+              </span>
+              <span>
+                {concept.concept_class},
+              </span>
+              <span className='italic' style={{marginLeft: '5px', marginRight: '3px'}}>
+                Datatype:
+              </span>
+              <span>
+                {concept.datatype}
+              </span>
+            </div>
+            <div className='col-md-12 no-side-padding flex-vertical-center'>
+              <span className='italic' style={{marginRight: '3px'}}>
+                Custom Attributes:
+              </span>
+              <span>
+                <CustomAttributesPopup attributes={concept.extras} />
+              </span>
+            </div>
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
+              <span>
+                <LastUpdatedOnLabel
+                  date={concept.updated_on}
+                  by={concept.updated_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
+              </span>
+              <span style={{marginLeft: '10px'}}>
+                <LastUpdatedOnLabel
+                  label='Created'
+                  date={concept.created_on}
+                  by={concept.created_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
+              </span>
+              {
+                concept.external_id &&
+                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                  <ExternalIdLabel externalId={concept.external_id} iconSize='medium' />
+                </span>
+              }
+            </div>
+          </Collapse>
         </div>
+        <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
         isOpen={conceptForm}

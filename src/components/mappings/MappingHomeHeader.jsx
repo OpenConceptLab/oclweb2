@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -22,6 +22,7 @@ import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
+import CollapsibleDivider from '../common/CollapsibleDivider';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
@@ -41,6 +42,7 @@ const MappingHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const isAuthenticated = isLoggedIn();
   const resourceRelativeURL = isVersionedObject ? mapping.url : mapping.version_url;
+  const [openHeader, setOpenHeader] = React.useState(true);
   const [mappingForm, setMappingForm] = React.useState(false);
   const onRetire = () => {
     const prompt = alertifyjs.prompt()
@@ -96,8 +98,8 @@ const MappingHomeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        <MappingIcon />
-        <div className='col-md-11' style={{width: '95%'}}>
+        { openHeader && <MappingIcon /> }
+        <div className='col-md-11' style={{width: '95%', marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...mapping} href={versionedObjectURL} />
             <span className='separator'>/</span>
@@ -162,56 +164,59 @@ const MappingHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-            <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
-              From:
+          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+              <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
+                From:
+              </div>
+              <div className='col-sm-11 no-side-padding'>
+                <FromConceptLabel {...mapping} />
+              </div>
             </div>
-            <div className='col-sm-11 no-side-padding'>
-              <FromConceptLabel {...mapping} />
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
+              <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
+                To:
+              </div>
+              <div className='col-sm-11 no-side-padding'>
+                <ToConceptLabel {...mapping} />
+              </div>
             </div>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
-              To:
-            </div>
-            <div className='col-sm-11 no-side-padding'>
-              <ToConceptLabel {...mapping} />
-            </div>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <span className='italic' style={{marginRight: '3px'}}>
-              Custom Attributes:
-            </span>
-            <span>
-              <CustomAttributesPopup attributes={mapping.extras} />
-            </span>
-          </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-            <span>
-              <LastUpdatedOnLabel
-                date={mapping.updated_on}
-                by={mapping.updated_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            <span style={{marginLeft: '10px'}}>
-              <LastUpdatedOnLabel
-                label='Created'
-                date={mapping.created_on}
-                by={mapping.created_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            {
-              mapping.external_id &&
-              <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                <ExternalIdLabel externalId={mapping.external_id} iconSize='medium' />
+            <div className='col-md-12 no-side-padding flex-vertical-center'>
+              <span className='italic' style={{marginRight: '3px'}}>
+                Custom Attributes:
               </span>
-            }
-          </div>
+              <span>
+                <CustomAttributesPopup attributes={mapping.extras} />
+              </span>
+            </div>
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+              <span>
+                <LastUpdatedOnLabel
+                  date={mapping.updated_on}
+                  by={mapping.updated_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
+              </span>
+              <span style={{marginLeft: '10px'}}>
+                <LastUpdatedOnLabel
+                  label='Created'
+                  date={mapping.created_on}
+                  by={mapping.created_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
+              </span>
+              {
+                mapping.external_id &&
+                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                  <ExternalIdLabel externalId={mapping.external_id} iconSize='medium' />
+                </span>
+              }
+            </div>
+          </Collapse>
         </div>
+        <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
         isOpen={mappingForm}
