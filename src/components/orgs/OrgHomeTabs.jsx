@@ -46,6 +46,7 @@ const OrgHomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
+  const isInvalidTabConfig = !includes(['sources', 'collections', 'about', 'users', 'text'], selectedTabConfig.type) && !selectedTabConfig.uri;
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
@@ -75,11 +76,15 @@ const OrgHomeTabs = props => {
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
         {
-          selectedTabConfig.type === 'about' &&
+          isInvalidTabConfig &&
+          <div>Invalid Tab Configuration</div>
+        }
+        {
+          !isInvalidTabConfig && selectedTabConfig.type === 'about' &&
           <About id={org.id} about={about} />
         }
         {
-          selectedTabConfig.type === 'text' &&
+          !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
           <div className='col-md-12'>
             {
               map(selectedTabConfig.fields, field => {
@@ -91,7 +96,7 @@ const OrgHomeTabs = props => {
           </div>
         }
         {
-          !includes(['about', 'text'], selectedTabConfig.type) &&
+          !isInvalidTabConfig && !includes(['about', 'text'], selectedTabConfig.type) &&
           <OrgHomeChildrenList
             org={org}
             location={location}

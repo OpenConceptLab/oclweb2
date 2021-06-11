@@ -60,7 +60,8 @@ const CollectionHomeTabs = props => {
     }
   }
 
-  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%'
+  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
+  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references'], selectedTabConfig.type) && !selectedTabConfig.uri;
 
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
@@ -99,15 +100,19 @@ const CollectionHomeTabs = props => {
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
         {
-          selectedTabConfig.type === 'about' &&
+          isInvalidTabConfig &&
+          <div>Invalid Tab Configuration</div>
+        }
+        {
+          !isInvalidTabConfig && selectedTabConfig.type === 'about' &&
           <About id={collection.id} about={about} />
         }
         {
-          selectedTabConfig.type === 'versions' &&
+          !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
           <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
         }
         {
-          selectedTabConfig.type === 'text' &&
+          !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
           <div className='col-md-12'>
             {
               map(selectedTabConfig.fields, field => {
@@ -119,7 +124,7 @@ const CollectionHomeTabs = props => {
           </div>
         }
         {
-          includes(['concepts', 'mappings', 'references'], selectedTabConfig.type) &&
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions'], selectedTabConfig.type) &&
           <CollectionHomeChildrenList
             collection={collection}
             match={match}
