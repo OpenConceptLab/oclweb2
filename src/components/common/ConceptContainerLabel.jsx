@@ -22,7 +22,7 @@ const ConceptContainerLabel = props => {
 
   return (
     <div className='col-sm-12 no-side-padding flex-vertical-center' style={{margin: '5px 0'}}>
-      <Link to={props.uri} className='no-anchor-styles'>
+      <Link to={props.uri} className='no-anchor-styles flex-vertical-center'>
         {
           props.owner && props.ownerType &&
           <React.Fragment>
