@@ -76,7 +76,7 @@ class NewImport extends React.Component {
   }
 
   getPayload() {
-    const { type, fileURL, json, file, workers } = this.state
+    const { type, fileURL, json, file, workers, parallel } = this.state
     if(type === 'upload'){
       const formData = new FormData()
       formData.append('file', file)
@@ -89,8 +89,15 @@ class NewImport extends React.Component {
       formData.append('parallel', workers)
       return formData
     }
-    if(type === 'json')
+    if(type === 'json') {
+      if(parallel) {
+        const formData = new FormData()
+        formData.append('parallel', workers)
+        formData.append('data', json)
+        return formData
+      }
       return json
+    }
   }
 
   getParallelService() {
@@ -102,7 +109,7 @@ class NewImport extends React.Component {
 
   getService() {
     const { type, parallel, queue } = this.state
-    if(type !== 'json' && parallel)
+    if(parallel)
       return this.getParallelService()
 
     const service = APIService.new().overrideURL('/importers/bulk-import/')
@@ -191,8 +198,6 @@ class NewImport extends React.Component {
                 Update if existing concept/mapping found
               </FormHelperText>
             </div>
-            {
-              !isJSON &&
               <div className='col-md-6 no-side-padding'>
                 <FormControlLabel
                   control={<Checkbox checked={parallel} onChange={this.onParallelToogle} name='parallel' />}
@@ -202,7 +207,6 @@ class NewImport extends React.Component {
                   Run concepts/mappings/references imports in parallel
                 </FormHelperText>
               </div>
-            }
             <div className='col-md-12 no-side-padding' style={{margin: '10px 0'}}>
               {
                 isUpload &&
