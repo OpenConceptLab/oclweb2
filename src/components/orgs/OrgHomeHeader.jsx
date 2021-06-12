@@ -24,15 +24,15 @@ import OrgForm from './OrgForm';
 
 const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
-  const [openHeader, setOpenHeader] = React.useState(!config.config.shrinkHeader);
+  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
   const hasAccess = currentUserHasAccess();
   const onIconClick = () => copyURL(toFullAPIURL(url));
 
   React.useEffect(
-    () => setOpenHeader(!config.config.shrinkHeader),
-    [config.config.shrinkHeader]
+    () => setOpenHeader(!get(config, 'config.shrinkHeader', false)),
+    [get(config, 'config.shrinkHeader')]
   )
 
   const onLogoUpload = (base64, name) => {

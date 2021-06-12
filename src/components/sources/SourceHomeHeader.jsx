@@ -55,7 +55,7 @@ const SourceHomeHeader = ({
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(!config.config.shrinkHeader);
+  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
@@ -71,8 +71,8 @@ const SourceHomeHeader = ({
   }
 
   React.useEffect(
-    () => setOpenHeader(!config.config.shrinkHeader),
-    [config.config.shrinkHeader]
+    () => setOpenHeader(!get(config, 'config.shrinkHeader', false)),
+    [get(config, 'config.shrinkHeader')]
   )
 
   const deleteSource = () => {

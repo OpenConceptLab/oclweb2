@@ -53,7 +53,7 @@ const CollectionHomeHeader = ({
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(!config.config.shrinkHeader);
+  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
@@ -69,8 +69,8 @@ const CollectionHomeHeader = ({
   }
 
   React.useEffect(
-    () => setOpenHeader(!config.config.shrinkHeader),
-    [config.config.shrinkHeader]
+    () => setOpenHeader(!get(config, 'config.shrinkHeader', false)),
+    [get(config, 'config.shrinkHeader')]
   )
 
   const deleteCollection = () => {
