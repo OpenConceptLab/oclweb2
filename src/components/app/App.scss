@@ -191,6 +191,7 @@ td.pagination-center {
     font-style: italic;
 }
 .home-icon {
+    text-align: center;
     color: #e5e5e5;
     cursor: pointer;
     &.concept {
@@ -325,6 +326,9 @@ div.bottom-fixed-center {
     font-size: 20px;
     font-weight: bold;
     padding-bottom: 7px;
+    &.small {
+        font-size: 18px;
+    }
 }
 .clickable {
     cursor: pointer !important;
@@ -391,6 +395,9 @@ div.login-paper {
     position: relative;
     width:100%;
     max-width: 100px;
+    &.small {
+        height: 70px;
+    }
 
     img {
         display:block;
