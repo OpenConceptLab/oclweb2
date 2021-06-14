@@ -47,16 +47,14 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
   return (
     <header className='home-header col-md-12' style={{marginBottom: '0px'}}>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        {
-          openHeader &&
-          <div className='no-side-padding col-md-1 home-icon'>
-            <HeaderLogo
-              logoURL={logoURL}
-              onUpload={onLogoUpload}
-              defaultIcon={<HomeIcon className='default-svg' />}
-            />
-          </div>
-        }
+        <div className='no-side-padding col-md-1 home-icon'>
+          <HeaderLogo
+            logoURL={logoURL}
+            onUpload={onLogoUpload}
+            defaultIcon={<HomeIcon className='default-svg' />}
+            shrink={!openHeader}
+          />
+        </div>
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
@@ -82,16 +80,16 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
               </span>
             }
           </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+            <span style={{marginRight: '10px'}}>
+              {org.name}
+            </span>
+            {
+              !fhir &&
+              <AccessChip publicAccess={org.public_access} />
+            }
+          </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
-            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-              <span style={{marginRight: '10px'}}>
-                {org.name}
-              </span>
-              {
-                !fhir &&
-                <AccessChip publicAccess={org.public_access} />
-              }
-            </div>
             {
               org.description &&
               <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>

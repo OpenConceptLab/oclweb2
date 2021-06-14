@@ -87,16 +87,14 @@ const SourceHomeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        {
-          openHeader &&
-          <div className='no-side-padding col-md-1 home-icon'>
-            <HeaderLogo
-              logoURL={logoURL}
-              onUpload={onLogoUpload}
-              defaultIcon={<ListIcon className='default-svg' />}
-            />
-          </div>
-        }
+        <div className='no-side-padding col-md-1 home-icon'>
+          <HeaderLogo
+            logoURL={logoURL}
+            onUpload={onLogoUpload}
+            defaultIcon={<ListIcon className='default-svg' />}
+            shrink={!openHeader}
+          />
+        </div>
         <div className='col-md-11' style={{marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...source} href={versionedObjectURL} />
@@ -154,13 +152,13 @@ const SourceHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+            <span style={{marginRight: '10px'}}>
+              {source.full_name}
+            </span>
+            <AccessChip publicAccess={source.public_access} />
+          </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
-            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-              <span style={{marginRight: '10px'}}>
-                {source.full_name}
-              </span>
-              <AccessChip publicAccess={source.public_access} />
-            </div>
             {
               source.description &&
               <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>

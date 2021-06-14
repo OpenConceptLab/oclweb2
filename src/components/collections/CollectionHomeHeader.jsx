@@ -85,16 +85,14 @@ const CollectionHomeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        {
-          openHeader &&
-          <div className='no-side-padding col-md-1 home-icon'>
-            <HeaderLogo
-              logoURL={logoURL}
-              onUpload={onLogoUpload}
-              defaultIcon={<LoyaltyIcon className='default-svg' />}
-            />
-          </div>
-        }
+        <div className='no-side-padding col-md-1 home-icon'>
+          <HeaderLogo
+            logoURL={logoURL}
+            onUpload={onLogoUpload}
+            defaultIcon={<LoyaltyIcon className='default-svg' />}
+            shrink={!openHeader}
+          />
+        </div>
         <div className='col-md-11' style={{marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...collection} href={versionedObjectURL} />
@@ -152,13 +150,13 @@ const CollectionHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+            <span style={{marginRight: '10px'}}>
+              {collection.full_name}
+            </span>
+            <AccessChip publicAccess={collection.public_access} />
+          </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
-            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-              <span style={{marginRight: '10px'}}>
-                {collection.full_name}
-              </span>
-              <AccessChip publicAccess={collection.public_access} />
-            </div>
             {
               collection.description &&
               <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
