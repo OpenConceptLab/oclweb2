@@ -86,7 +86,7 @@ const ConceptHomeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        { openHeader && <ConceptIcon /> }
+        <ConceptIcon shrink={!openHeader} />
         <div className='col-md-11' style={{width: '95%', marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...concept} href={versionedObjectURL} />
@@ -144,15 +144,15 @@ const ConceptHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
+            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
+              {concept.display_name}
+            </span>
+            <span className='gray-italics-small'>
+              [{concept.display_locale}]
+            </span>
+          </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
-            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-              <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
-                {concept.display_name}
-              </span>
-              <span className='gray-italics-small'>
-                [{concept.display_locale}]
-              </span>
-            </div>
             <div className='col-md-12 no-side-padding flex-vertical-center'>
               <span className='italic' style={{marginRight: '3px'}}>
                 Class:

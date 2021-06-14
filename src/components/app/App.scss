@@ -217,6 +217,12 @@ td.pagination-center {
         width: 48px;
         color: rgb(253, 164, 41);
     }
+    &.small {
+        height: 70px;
+    }
+    &.xsmall {
+        height: 35px;
+    }
     .default-svg {
         width: 60px;
         height: 60px;

@@ -98,7 +98,7 @@ const MappingHomeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        { openHeader && <MappingIcon /> }
+        <MappingIcon shrink={!openHeader} />
         <div className='col-md-11' style={{width: '95%', marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...mapping} href={versionedObjectURL} />
