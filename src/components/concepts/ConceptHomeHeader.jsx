@@ -6,6 +6,7 @@ import {
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
+  TimelineOutlined as HierarchyIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL } from '../../common/utils';
@@ -25,7 +26,7 @@ import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 
 const ConceptHomeHeader = ({
-  concept, mappings, isVersionedObject, versionedObjectURL, currentURL
+  concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick
 }) => {
   const downloadFileName = isVersionedObject ?
                            `concept-${concept.id}` :
@@ -140,6 +141,11 @@ const ConceptHomeHeader = ({
                     iconButton
                   />
                 }
+                <Tooltip arrow title={hierarchy ? 'Hide Hierarchy' : 'Show Hierarchy'}>
+                  <Button onClick={onHierarchyClick} color={hierarchy ? 'primary' : 'secondary'}>
+                    <HierarchyIcon fontSize='inherit' />
+                  </Button>
+                </Tooltip>
                 <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} />
               </ButtonGroup>
             </span>

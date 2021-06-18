@@ -651,7 +651,7 @@ footer.footer-container {
     left: 0;
     right: 0;
     position: absolute;
-    background: #fff;
+    background: transparent;
     color: #000;
     height: 50px;
     padding: 15px;
@@ -839,4 +839,16 @@ div.feedback-div-open {
 }
 div.divider-highlight-hover:hover {
     background-color: rgba(0, 0, 0, 0.05);
+}
+.hierarchy-node-selected {
+    background-color: rgba(51, 115, 170, 0.08);
+}
+.hierarchy-node-content {
+    align-items: flex-start;
+}
+.hierarchy-node-icon {
+    display: initial;
+    margin-right: 2px;
+    margin-top: 4px;
+    width: 12px
 }

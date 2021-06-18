@@ -496,3 +496,5 @@ export const arrayToSentence = (arr, separator, lastSeparator=' and ') => {
   newArr.push( `${lastSeparator}${newArr.pop()}`);
   return newArr.join(separator);
 }
+
+export const generateRandomString = () => Math.random().toString(36).substring(7);

@@ -29,8 +29,11 @@ class ConceptHome extends React.Component {
       versions: [],
       mappings: [],
       tab: this.getDefaultTabIndex(),
+      openHierarchy: true,
     }
   }
+
+  toggleHierarchy = () => this.setState({openHierarchy: !this.state.openHierarchy})
 
   componentDidMount() {
     this.refreshDataByURL()
@@ -154,7 +157,7 @@ class ConceptHome extends React.Component {
   render() {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading, tab,
-      notFound, accessDenied, permissionDenied, hierarchy
+      notFound, accessDenied, permissionDenied, hierarchy, openHierarchy
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -167,6 +170,8 @@ class ConceptHome extends React.Component {
           isVersionedObject={isVersionedObject}
           versionedObjectURL={this.getVersionedObjectURLFromPath()}
           currentURL={currentURL}
+          hierarchy={openHierarchy}
+          onHierarchyClick={this.toggleHierarchy}
         />
         <ConceptHomeTabs
           tab={tab}
@@ -190,13 +195,13 @@ class ConceptHome extends React.Component {
           !isLoading && !hasError &&
           <div className='col-md-12 home-container no-side-padding'>
             {
-              hierarchy ?
-              <Split className='split' sizes={[15, 85]} minSize={50}>
+              hierarchy && openHierarchy ?
+              <Split className='split' sizes={[20, 80]} minSize={50}>
                 <HierarchyTraversalList
                   data={hierarchy}
                   fetchChildren={this.fetchConceptChildren}
                   currentNodeURL={concept.url}
-                hierarchyPath={concept.hierarchy_path}
+                  hierarchyPath={[...concept.hierarchy_path, concept.url]}
                 />
                 { conceptDetails }
               </Split> :
