@@ -1,5 +1,6 @@
 import React from 'react'
 import { TreeView, TreeItem } from '@material-ui/lab'
+import { CircularProgress } from '@material-ui/core'
 import { find, reject, isEmpty, isEqual, forEach } from 'lodash'
 import { BLUE, BLACK } from '../../common/constants';
 import { generateRandomString } from '../../common/utils';
@@ -24,30 +25,31 @@ const makeHierarchy = data => {
   return hierarchy
 }
 
-const getNodeLabel = (child, isCurrentNode) => {
-  const labelStyles = {fontSize: '12px', fontWeight: isCurrentNode ? 'bold' : 'initial', color: isCurrentNode ? BLUE : BLACK}
+const getLoader = () => (<CircularProgress color='secondary' style={{width: '11px', height: '11px', marginLeft: '5px', marginTop: '5px'}} />)
+
+const getNodeLabel = (child, isCurrentNode, isLoading) => {
+  const labelStyles = {fontSize: '12px', color: isCurrentNode ? BLUE : BLACK}
   const showName = child.name && child.name !== child._id
   return (
     <React.Fragment>
-      <span style={labelStyles}>
-        {
-          child._id &&
-          <span style={showName ? {fontWeight: 'bold', marginRight: '2px'} : {}}>
-            {child._id}
-          </span>
-        }
-        {
-          showName &&
-          <span style={child.origin ? {fontWeight: 'bold'} : {}}>
-            {child.name}
-          </span>
-        }
-        {
-          child.root &&
-          <span style={{fontSize: '10px', fontStyle: 'italic', color: 'gray', marginLeft: '2px', fontWeight: 'bold'}}>
-            (root)
-          </span>
-        }
+      <span style={labelStyles} className='flex-vertical-center'>
+        <span>
+          {
+            child._id && (showName ? <React.Fragment><b>{child._id}</b>&nbsp;</React.Fragment> : <React.Fragment>{child._id} &nbsp;</React.Fragment>)
+          }
+          {
+            showName && (child.origin ? <b>{child.name}</b> : <React.Fragment>{child.name}</React.Fragment>)
+          }
+          {
+            child.root &&
+            <span style={{fontSize: '10px', fontStyle: 'italic', color: 'gray', marginLeft: '2px', fontWeight: 'bold'}}>
+              (root)
+            </span>
+          }
+          {
+            isLoading && getLoader()
+          }
+        </span>
       </span>
     </React.Fragment>
   )
@@ -58,35 +60,42 @@ class HierarchyTraversalList extends React.Component {
     super(props);
     this.state = {
       tree: makeHierarchy(props.data),
+      isLoading: false,
+      loadingNode: null,
     }
   }
 
-  handleChange = (event, nodeId) => {
+  handleChange = (event, nodeId, loadingNodeId) => {
     if(isEqual(nodeId, [this.props.data.id]))
       return
 
     const id = nodeId[0]
-    this.props.fetchChildren(id, children => {
-      if(!children)
-        return
-      const newTree = {
-        ...this.state.tree,
-        [id]: children.map(makeChildNode)
-      }
-      this.setState({tree: newTree})
+    this.setState({isLoading: true, loadingNode: loadingNodeId || id}, () => {
+      this.props.fetchChildren(id, children => {
+        if(children) {
+          const newTree = {
+            ...this.state.tree,
+            [id]: children.map(makeChildNode)
+          }
+          this.setState({tree: newTree, isLoading: false, loadingNode: null})
+        } else {
+          this.setState({isLoading: false, loadingNode: null})
+        }
+      })
     })
   };
 
   onLabelClick = child => window.location.hash = child.url
 
   renderTree = children => {
-    const { tree } = this.state
+    const { tree, isLoading, loadingNode } = this.state
     const { currentNodeURL } = this.props;
     return children.map(child => {
       const childrenNodes = (tree[child.id] && tree[child.id].length > 0) ?
                             this.renderTree(tree[child.id]) :
                             (child.children.length === 0 ? null : [<div key={generateRandomString()} />]);
       const isCurrentNode = child.url && child.url === currentNodeURL
+      const loading = isLoading && loadingNode === child.id
       return (
         <TreeItem
           id={child.id}
@@ -94,7 +103,7 @@ class HierarchyTraversalList extends React.Component {
           onLabelClick={() => this.onLabelClick(child)}
           key={child.id}
           nodeId={child.id}
-          label={getNodeLabel(child, isCurrentNode)}
+          label={getNodeLabel(child, isCurrentNode, loading)}
           classes={
             isCurrentNode ? {label: 'hierarchy-node-selected', iconContainer: 'hierarchy-node-icon', content: 'hierarchy-node-content'} : {iconContainer: 'hierarchy-node-icon', content: 'hierarchy-node-content'}
           }>
@@ -105,17 +114,22 @@ class HierarchyTraversalList extends React.Component {
   };
 
   componentDidMount() {
-    const { hierarchyPath, currentNodeURL } = this.props;
-    setTimeout(() => {
-      if(!isEmpty(hierarchyPath)) {
-        forEach(hierarchyPath, path => {
-          setTimeout(this.handleChange(null, [path]), 100)
-        })
-        setTimeout(() => {
-          const el = document.getElementById(currentNodeURL);
-          if(el)
-            el.scrollIntoViewIfNeeded()
-        }, (100 * hierarchyPath.length) + 100)
+    const { hierarchyPath, data } = this.props;
+    if(!isEmpty(hierarchyPath)) {
+      setTimeout(() => {
+        forEach(hierarchyPath, path => setTimeout(() => this.handleChange(null, [path], data.id), 100))
+        this.scrollToSelected()
+      }, 500)
+    }
+  }
+
+  scrollToSelected() {
+    const { currentNodeURL } = this.props;
+    this.scrollInterval = setInterval(() => {
+      const el = document.getElementById(currentNodeURL);
+      if(el) {
+        el.scrollIntoViewIfNeeded()
+        clearInterval(this.scrollInterval)
       }
     }, 500)
   }

@@ -196,7 +196,7 @@ class ConceptHome extends React.Component {
           <div className='col-md-12 home-container no-side-padding'>
             {
               hierarchy && openHierarchy ?
-              <Split className='split' sizes={[20, 80]} minSize={50}>
+              <Split className='split' sizes={[25, 75]} minSize={50}>
                 <HierarchyTraversalList
                   data={hierarchy}
                   fetchChildren={this.fetchConceptChildren}
