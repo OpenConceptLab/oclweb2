@@ -7,7 +7,7 @@ import PlusIcon from '../common/PlusSquareIcon';
 import MinusIcon from '../common/MinusSquareIcon';
 import CloseIcon from '../common/CloseSquareIcon';
 
-const makeChildNode = child => ({id: child.url, _id: child.id, name: child.name, url: child.url, children: child.children})
+const makeChildNode = child => ({id: child.url, _id: child.id, name: child.name, url: child.url, children: child.children, root: child.root})
 
 const makeHierarchy = data => {
   const hierarchy = {root: [{id: data.id, name: data.id, origin: true}]}
@@ -40,6 +40,12 @@ const getNodeLabel = (child, isCurrentNode) => {
           showName &&
           <span style={child.origin ? {fontWeight: 'bold'} : {}}>
             {child.name}
+          </span>
+        }
+        {
+          child.root &&
+          <span style={{fontSize: '10px', fontStyle: 'italic', color: 'gray', marginLeft: '2px', fontWeight: 'bold'}}>
+            (root)
           </span>
         }
       </span>
