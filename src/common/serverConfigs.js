@@ -42,6 +42,7 @@ export const SERVER_CONFIGS = [
     url: 'https://fhir.qa.openconceptlab.org',
     hapi: false,
     info: {
+      pageSize: 10,
       baseURI: '/fhir/',
       type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
       org: {
