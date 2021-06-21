@@ -85,7 +85,11 @@ class HierarchyTraversalList extends React.Component {
     })
   };
 
-  onLabelClick = child => window.location.hash = child.url
+  onLabelClick = child => {
+    if(child.origin)
+      return
+    window.location.hash = child.url
+  }
 
   renderTree = children => {
     const { tree, isLoading, loadingNode } = this.state
