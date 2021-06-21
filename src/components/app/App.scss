@@ -1,3 +1,7 @@
+$blue: rgb(51, 115, 170);
+$green: rgb(92, 184, 92);
+$orange: rgb(253, 164, 41);
+$black: #000;
 @media only screen and (max-width: 600px) {
     div#left-menu-collapsed {
         display: none !important;
@@ -30,7 +34,7 @@
 
 .search-resources {
     .active {
-        background-color: rgb(51, 115, 170);
+        background-color: $blue;
         color: #FFF;
     }
     th {
@@ -80,15 +84,15 @@ span.resource-label {
         padding: 0 2px;
     }
     &.resource-id {
-        background-color: rgb(51, 115, 170);
+        background-color: $blue;
         color: #fff;
         border-radius: 0 .25em .25em 0;
     }
     &.orange {
-        background-color: rgb(253, 164, 41);
+        background-color: $orange;
     }
     &.green {
-        background-color: rgb(92, 184, 92);
+        background-color: $green;
     }
     .resource-name {
         font-weight: bold;
@@ -96,13 +100,13 @@ span.resource-label {
     }
 }
 .bg-orange {
-    background-color: rgb(253, 164, 41) !important;
+    background-color: $orange !important;
 }
 .bg-green {
-    background-color: rgb(92, 184, 92) !important;
+    background-color: $green !important;
 }
 .bg-blue {
-    background-color: rgb(51, 115, 170) !important;
+    background-color: $blue !important;
 }
 div.resource-attributes {
     font-size: 13px;
@@ -194,28 +198,20 @@ td.pagination-center {
     text-align: center;
     color: #e5e5e5;
     cursor: pointer;
-    &.concept {
+    &.concept, &.mapping {
         justify-content: center;
         height: 110px;
-        color: rgb(51, 115, 170);
+        color: $blue;
     }
-    &.mapping {
-        justify-content: center;
-        height: 110px;
-        color: rgb(51, 115, 170);
-    }
-    &.source {
-        color: rgb(92, 184, 92);
-    }
-    &.collection {
-        color: rgb(92, 184, 92);
+    &.source, &.collection {
+        color: $green;
     }
     &.org {
-        color: rgb(253, 164, 41);
+        color: $orange;
     }
     &.user {
         width: 48px;
-        color: rgb(253, 164, 41);
+        color: $orange;
     }
     &.small {
         height: 70px;
@@ -265,7 +261,7 @@ span.separator-small {
             border-bottom: 1px solid #e0e0e0;
             span {
                 font-size: 1.150rem;
-                color: rgb(51, 115, 170);
+                color: $blue;
             }
         }
 
@@ -486,7 +482,7 @@ div.login-paper {
     background-color: rgb(231, 255, 238);
 }
 .border-primary {
-    border: 1px solid rgb(51, 115, 170);
+    border: 1px solid $blue
 }
 .diff-row {
     table tbody tr td:nth-child(odd) {
@@ -590,20 +586,14 @@ table.nested-mappings {
     }
 }
 
-.source-bg {
-    background-color: rgb(92, 184, 92) !important;
+.source-bg, .collection-bg {
+    background-color: $green !important;
 }
-.collection-bg {
-    background-color: rgb(92, 184, 92) !important;
-}
-.org-bg {
-    background-color: rgb(253, 164, 41) !important;
-}
-.user-bg {
-    background-color: rgb(253, 164, 41) !important;
+.org-bg, .user-bg {
+    background-color: $orange !important;
 }
 .concept-bg, mapping-bg {
-    background-color: rgb(51, 115, 170) !important;
+    background-color: $blue !important;
 }
 
 
@@ -657,7 +647,13 @@ footer.footer-container {
     padding: 15px;
     justify-content: flex-end;
     .footer-company {
-        padding: 0 2px
+        padding: 0 2px;
+        font-weight: bold;
+    }
+    hr.footer-divider-vertical {
+        margin: 0 5px;
+        background: $black;
+        width: 2px;
     }
 }
 .pagination-center {
@@ -670,14 +666,14 @@ footer.footer-container {
     width: 60px;
 }
 .user-info-icon {
-    background: rgb(51, 115, 170) !important;
+    background: $blue !important;
     font-size: 1.2rem !important;
     font-weight: 300 !important;
     color: #fff !important;
     width: 52px;
 
     &:hover {
-        background: rgb(51, 115, 170) !important;
+        background: $blue !important;
     }
 }
 
@@ -837,6 +833,33 @@ div.feedback-div-open {
     color: #5cb85c;
     border: 1px solid rgba(92, 184, 92, 0.23);
 }
+span.app-version-container {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    height: 30px;
+    span.app-label {
+        border: 1px solid $black;
+        border-radius: 10px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        background: $black;
+        color: #fff;
+        min-width: 35px;
+        text-align: center;
+    }
+    span {
+        padding: 2px;
+    }
+    span.app-version {
+        border: 1px solid $black;
+        border-radius: 10px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        text-align: center;
+        padding: 2px 6px;
+    }
+}
 div.divider-highlight-hover:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
@@ -850,5 +873,5 @@ div.divider-highlight-hover:hover {
     display: initial;
     margin-right: 2px;
     margin-top: 4px;
-    width: 12px
+    width: 12px;
 }
