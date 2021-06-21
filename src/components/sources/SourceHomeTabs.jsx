@@ -84,6 +84,8 @@ const SourceHomeTabs = props => {
         return {sortAsc: selectedTabConfig.sortAsc}
       if(selectedTabConfig.sortDesc)
         return {sortDesc: selectedTabConfig.sortDesc}
+      if(selectedTabConfig.sort)
+        return {sort: selectedTabConfig.sort}
     }
   }
 
