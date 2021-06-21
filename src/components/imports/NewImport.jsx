@@ -22,6 +22,7 @@ class NewImport extends React.Component {
     this.defaultState = {
       queue: '',
       parallel: false,
+      hierarchy: false,
       workers: 2,
       file: null,
       fileURL: '',
@@ -76,21 +77,29 @@ class NewImport extends React.Component {
   }
 
   getPayload() {
-    const { type, fileURL, json, file, workers } = this.state
+    const { type, fileURL, json, file, workers, parallel, hierarchy } = this.state
+    const eligibleWorkers = hierarchy ? 1 : workers
     if(type === 'upload'){
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('parallel', workers)
+      formData.append('parallel', eligibleWorkers)
       return formData
     }
     if(type === 'url') {
       const formData = new FormData()
       formData.append('file_url', fileURL)
-      formData.append('parallel', workers)
+      formData.append('parallel', eligibleWorkers)
       return formData
     }
-    if(type === 'json')
+    if(type === 'json') {
+      if(parallel) {
+        const formData = new FormData()
+        formData.append('parallel', eligibleWorkers)
+        formData.append('data', json)
+        return formData
+      }
       return json
+    }
   }
 
   getParallelService() {
@@ -102,7 +111,7 @@ class NewImport extends React.Component {
 
   getService() {
     const { type, parallel, queue } = this.state
-    if(type !== 'json' && parallel)
+    if(parallel)
       return this.getParallelService()
 
     const service = APIService.new().overrideURL('/importers/bulk-import/')
@@ -125,6 +134,10 @@ class NewImport extends React.Component {
   }
 
   onUpload = () => {
+    if(this.state.parallel && (this.state.workers > 2 || this.state.workers < 1)) {
+      alertifyjs.error('Parallel workers can only be 1 or 2')
+      return
+    }
     this.setState({isUploading: true}, () => {
       this.getService().post(this.getPayload(), null, this.getHeaders()).then(res => {
         this.setState({isUploading: false}, () => {
@@ -141,7 +154,7 @@ class NewImport extends React.Component {
   }
 
   render() {
-    const { type, queue, parallel, fileURL, json, update_if_exists, isUploading } = this.state;
+    const { type, queue, parallel, fileURL, json, update_if_exists, isUploading, hierarchy } = this.state;
     const isUpload = type === 'upload';
     const isURL = type === 'url';
     const isJSON = type === 'json';
@@ -191,18 +204,27 @@ class NewImport extends React.Component {
                 Update if existing concept/mapping found
               </FormHelperText>
             </div>
-            {
-              !isJSON &&
-              <div className='col-md-6 no-side-padding'>
-                <FormControlLabel
-                  control={<Checkbox checked={parallel} onChange={this.onParallelToogle} name='parallel' />}
-                  label="Parallel"
-                />
-                <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
-                  Run concepts/mappings/references imports in parallel
-                </FormHelperText>
-              </div>
-            }
+            <div className='col-md-6 no-side-padding'>
+              <FormControlLabel
+                control={<Checkbox checked={parallel} onChange={this.onParallelToogle} name='parallel' />}
+                label="Parallel"
+              />
+              <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
+                Run concepts/mappings/references imports in parallel
+              </FormHelperText>
+              {
+                parallel &&
+                <div className='col-md-12 no-side-padding'>
+                  <FormControlLabel
+                    control={<Checkbox checked={hierarchy} onChange={event => this.setFieldValue('hierarchy', event.target.checked)} name='hierarchy' />}
+                    label="Hierarchy"
+                  />
+                  <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
+                    Important to check this if the import file has hierarchy
+                  </FormHelperText>
+                </div>
+              }
+            </div>
             <div className='col-md-12 no-side-padding' style={{margin: '10px 0'}}>
               {
                 isUpload &&

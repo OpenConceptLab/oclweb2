@@ -212,12 +212,12 @@ class ConceptsComparison extends React.Component {
   }
 
   sortLocales = locales => {
-    return [
+    return sortBy([
       ...filter(locales, {name_type: 'FULLY_SPECIFIED', locale_preferred: true}),
       ...filter(reject(locales, {name_type: 'FULLY_SPECIFIED'}), {locale_preferred: true}),
       ...filter(locales, {name_type: 'FULLY_SPECIFIED', locale_preferred: false}),
       ...reject(reject(locales, {name_type: 'FULLY_SPECIFIED'}), {locale_preferred: true}),
-    ]
+    ], 'locale')
   }
 
   getHeaderSubAttributes(concept) {

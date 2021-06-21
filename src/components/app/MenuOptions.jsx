@@ -62,7 +62,7 @@ const TOOLS_OPTIONS = [
     icon: <TerminologyServiceIcon />
   },
   {
-    label: 'OCL for OpenMRS',
+    label: 'OpenMRS Dictionary Manager',
     href: MARKETING_SITE_URL + 'community-resources/ocl-for-openmrs/',
     icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />
   },

@@ -1,10 +1,16 @@
 import React from 'react';
+import Split from 'react-split'
 import { CircularProgress } from '@material-ui/core';
 import { includes, get, isObject } from 'lodash';
 import APIService from '../../services/APIService';
+import { toParentURI } from '../../common/utils'
+import NotFound from '../common/NotFound';
+import AccessDenied from '../common/AccessDenied';
+import PermissionDenied from '../common/PermissionDenied';
+import HierarchyTraversalList from './HierarchyTraversalList';
 import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
-import NotFound from '../common/NotFound';
+import './Split.scss';
 
 const TABS = ['details', 'mappings', 'history'];
 
@@ -12,15 +18,22 @@ class ConceptHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoadingHierarchy: false,
+      hierarchy: false,
       notFound: false,
+      accessDenied: false,
+      permissionDenied: false,
       isLoading: true,
       isLoadingMappings: false,
       concept: {},
       versions: [],
       mappings: [],
       tab: this.getDefaultTabIndex(),
+      openHierarchy: true,
     }
   }
+
+  toggleHierarchy = () => this.setState({openHierarchy: !this.state.openHierarchy})
 
   componentDidMount() {
     this.refreshDataByURL()
@@ -68,17 +81,22 @@ class ConceptHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true, notFound: false}, () => {
+    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
                 .overrideURL(encodeURI(this.getConceptURLFromPath()))
-                .get()
+                .get(null, null, {includeHierarchyPath: true})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, concept: {}, notFound: true})
+                    this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
+                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
+                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: true, permissionDenied: false})
+                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
+                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: false, permissionDenied: true})
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else
                     this.setState({isLoading: false, concept: response.data}, () => {
+                      this.getHierarchy()
                       if(this.state.tab === 1)
                         this.getVersions()
                       else
@@ -87,6 +105,19 @@ class ConceptHome extends React.Component {
                 })
 
     })
+  }
+
+  getHierarchy() {
+    this.setState({isLoadingHierarchy: true}, () => {
+      APIService.new().overrideURL(toParentURI(this.getConceptURLFromPath())).appendToUrl('/hierarchy/').get().then(response => this.setState({hierarchy: response.data, isLoadingHierarchy: false}))
+
+    })
+  }
+
+  fetchConceptChildren = (url, callback) => {
+    APIService.new()
+              .overrideURL(url)
+              .appendToUrl(`children/`).get().then(response => callback(response.data))
   }
 
   getVersions() {
@@ -124,37 +155,59 @@ class ConceptHome extends React.Component {
   }
 
   render() {
-    const { concept, versions, mappings, isLoadingMappings, isLoading, tab, notFound } = this.state;
+    const {
+      concept, versions, mappings, isLoadingMappings, isLoading, tab,
+      notFound, accessDenied, permissionDenied, hierarchy, openHierarchy
+    } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
+    const hasError = notFound || accessDenied || permissionDenied;
+    const conceptDetails = (
+      <div>
+        <ConceptHomeHeader
+          concept={concept}
+          mappings={mappings}
+          isVersionedObject={isVersionedObject}
+          versionedObjectURL={this.getVersionedObjectURLFromPath()}
+          currentURL={currentURL}
+          hierarchy={openHierarchy}
+          onHierarchyClick={this.toggleHierarchy}
+        />
+        <ConceptHomeTabs
+          tab={tab}
+          onChange={this.onTabChange}
+          concept={concept}
+          versions={versions}
+          mappings={mappings}
+          isLoadingMappings={isLoadingMappings}
+          currentURL={currentURL}
+          isVersionedObject={isVersionedObject}
+        />
+      </div>
+    )
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
+        { isLoading && <CircularProgress color='primary' /> }
+        { notFound && <NotFound /> }
+        { accessDenied && <AccessDenied /> }
+        { permissionDenied && <PermissionDenied /> }
         {
-          isLoading ?
-          <CircularProgress color='primary' /> :
-          (
-            notFound ?
-            <NotFound /> :
-            <div className='col-md-12 home-container no-side-padding'>
-              <ConceptHomeHeader
-                concept={concept}
-                mappings={mappings}
-                isVersionedObject={isVersionedObject}
-                versionedObjectURL={this.getVersionedObjectURLFromPath()}
-                currentURL={currentURL}
-              />
-              <ConceptHomeTabs
-                tab={tab}
-                onChange={this.onTabChange}
-                concept={concept}
-                versions={versions}
-                mappings={mappings}
-                isLoadingMappings={isLoadingMappings}
-                currentURL={currentURL}
-                isVersionedObject={isVersionedObject}
-              />
-            </div>
-          )
+          !isLoading && !hasError &&
+          <div className='col-md-12 home-container no-side-padding'>
+            {
+              hierarchy && openHierarchy ?
+              <Split className='split' sizes={[25, 75]} minSize={50}>
+                <HierarchyTraversalList
+                  data={hierarchy}
+                  fetchChildren={this.fetchConceptChildren}
+                  currentNodeURL={concept.url}
+                  hierarchyPath={[...concept.hierarchy_path, concept.url]}
+                />
+                { conceptDetails }
+              </Split> :
+              conceptDetails
+            }
+          </div>
         }
       </div>
     )

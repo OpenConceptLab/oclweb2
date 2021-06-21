@@ -5,11 +5,12 @@ import {
 import { Tooltip } from '@material-ui/core';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 
-const MappingIcon = ({ url }) => {
+const MappingIcon = ({ url, shrink }) => {
   const onIconClick = () => copyURL(toFullAPIURL(url))
+  const classes = 'no-side-padding col-md-1 home-icon mapping flex-vertical-center' + (shrink ? ' xsmall' : '')
 
   return (
-    <div className='no-side-padding col-md-1 home-icon mapping flex-vertical-center' style={{width: '5%'}}>
+    <div className={classes} style={{width: '5%'}}>
       {
         url ?
         <Tooltip arrow title='Copy URL'>
@@ -19,6 +20,6 @@ const MappingIcon = ({ url }) => {
       }
     </div>
   );
-    }
+}
 
 export default MappingIcon;

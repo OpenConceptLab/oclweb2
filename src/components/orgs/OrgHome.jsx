@@ -16,6 +16,7 @@ const DEFAULT_CONFIG = {
   web_default: true,
   is_default: false,
   config: {
+    shrinkHeader: false,
     tabs: [
       {type: "sources", label: "Sources", page_size: 25, "default": true, layout: 'table'},
       {type: "collections", label: "Collections", page_size: 25, layout: 'table'},
@@ -141,13 +142,9 @@ class OrgHome extends React.Component {
     }
   }
 
-  onConfigChange = config => {
-    this.setState({selectedConfig: config})
-  }
+  onConfigChange = config => this.setState({selectedConfig: config})
 
-  onTabChange = (event, value) => {
-    this.setState({tab: value})
-  }
+  onTabChange = (event, value) => this.setState({tab: value})
 
   getPins() {
     const service = this.getPinsService()
@@ -209,7 +206,7 @@ class OrgHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-md-12 home-container no-side-padding'>
-            <OrgHomeHeader org={org} url={url} />
+            <OrgHomeHeader org={org} url={url} config={selectedConfig} />
             <Pins
               pins={pins}
               onDelete={this.deletePin}

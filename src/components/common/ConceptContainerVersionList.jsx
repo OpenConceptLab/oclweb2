@@ -185,6 +185,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                                 isHEAD={isHEAD}
                                 title={`Export Version ${version.id}`}
                                 version={version}
+                                resource={resource}
                               />
                             }
                             {

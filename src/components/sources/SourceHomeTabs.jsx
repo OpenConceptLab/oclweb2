@@ -6,6 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import About from '../common/About';
+import CustomMarkup from '../common/CustomMarkup';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConfigSelect from '../common/ConfigSelect';
@@ -86,11 +87,12 @@ const SourceHomeTabs = props => {
     }
   }
 
-  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%'
+  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
+  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text'], selectedTabConfig.type) && !selectedTabConfig.uri;
 
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
+      <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
         {
           map(
             tabConfigs,
@@ -105,7 +107,7 @@ const SourceHomeTabs = props => {
       </Tabs>
       {
         hasAccess && isVersionedObject &&
-        <div className='col-md-4 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
+        <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>
@@ -116,6 +118,7 @@ const SourceHomeTabs = props => {
                 color={GREEN}
                 resourceURL={source.url}
                 onWidthChange={setConfigFormWidth}
+                resource='sources'
               />
             </span>
           }
@@ -124,20 +127,36 @@ const SourceHomeTabs = props => {
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
         {
-          selectedTabConfig.type === 'about' &&
+          isInvalidTabConfig &&
+          <div>Invalid Tab Configuration</div>
+        }
+        {
+          !isInvalidTabConfig && selectedTabConfig.type === 'about' &&
           <About id={source.id} about={about} />
         }
         {
-          selectedTabConfig.type === 'versions' &&
+          !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
           <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
         }
         {
-          includes(['concepts', 'mappings'], selectedTabConfig.type) &&
+          !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
+          <div className='col-md-12'>
+            {
+              map(selectedTabConfig.fields, field => {
+                const value = field.value || get(source, field.id);
+                const label = field.label
+                return <CustomMarkup key={value} title={label} markup={value} />
+              })
+            }
+          </div>
+        }
+        {
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions'], selectedTabConfig.type) &&
           <SourceHomeChildrenList
             source={source}
             match={match}
             location={location}
-            versionedObjectURL={versionedObjectURL}
+            versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
             versions={versions}
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}

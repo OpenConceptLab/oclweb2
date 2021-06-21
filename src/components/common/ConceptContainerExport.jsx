@@ -10,7 +10,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import { get, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { downloadFromURL, isLoggedIn } from '../../common/utils';
+import { downloadFromURL, isLoggedIn, isAdminUser } from '../../common/utils';
 import { WHITE } from '../../common/constants';
 
 const DOWNLOAD_OPTIONS = [
@@ -36,7 +36,10 @@ class ConceptContainerExport extends React.Component {
   }
 
   componentDidMount() {
-    if(!this.props.isHEAD && isLoggedIn())
+    const { resource, isHEAD } = this.props
+    if(resource === 'source' && isHEAD && isAdminUser())
+      this.setState({options: [...this.state.options, EXPORT_OPTION]})
+    else if (!isHEAD && isLoggedIn())
       this.setState({options: [...this.state.options, EXPORT_OPTION]})
   }
 
@@ -46,8 +49,11 @@ class ConceptContainerExport extends React.Component {
   })
 
   getExportService() {
-    const { version } = this.props
-    return APIService.new().overrideURL(version.version_url).appendToUrl('export/')
+    const { version, isHEAD } = this.props
+    let url = version.version_url
+    if(isHEAD)
+      url += 'HEAD/'
+    return APIService.new().overrideURL(url).appendToUrl('export/')
   }
 
   checkExportExists() {

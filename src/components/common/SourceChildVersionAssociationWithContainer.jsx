@@ -1,11 +1,9 @@
 import React from 'react';
 import { map, isEmpty, compact, values } from 'lodash';
-import { Divider, IconButton, Collapse, Tooltip } from '@material-ui/core';
-import { ArrowDropDown as DownIcon, ArrowDropUp as UpIcon } from '@material-ui/icons';
-import { BLACK } from '../../common/constants';
+import { Collapse } from '@material-ui/core';
 import ConceptContainerLabel from './ConceptContainerLabel';
+import CollapsibleDivider from './CollapsibleDivider';
 
-const LIGHT_GRAY = 'rgba(0, 0, 0, 0.12)';
 const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
   const [open, setOpen] = React.useState(false)
   const toggleOpen = () => setOpen(!open)
@@ -28,7 +26,7 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
       {
         isPresent &&
         <div className='col-md-12 no-side-padding'>
-          <Collapse in={open} className="col-md-12" style={{padding: '0px', display: `${open ? 'block' : 'none'}`, margin: '5px 0 5px 100px'}}>
+          <Collapse in={open} className="col-md-12" style={{padding: '0px', display: `${open ? 'block' : 'none'}`, margin: '5px 0 5px 15px'}}>
             <div style={{textAlign: 'left'}} className='gray-italics-small'>
               {`Associated with ${count} versions`}
             </div>
@@ -51,15 +49,11 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
               })
             }
           </Collapse>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
-            <Divider style={{width: '48%', backgroundColor: open ? BLACK : LIGHT_GRAY}} />
-            <Tooltip title='View associations with Sources/Collections' arrow>
-              <IconButton onClick={toggleOpen} color={open ? 'secondary' : 'default'} size='small' style={{border: '1px solid', borderColor: open ? BLACK : LIGHT_GRAY}}>
-                {open ? <UpIcon fontSize='inherit' /> : <DownIcon fontSize='inherit' />}
-              </IconButton>
-            </Tooltip>
-            <Divider style={{width: '48%', backgroundColor: open ? BLACK : LIGHT_GRAY}} />
-          </div>
+          <CollapsibleDivider
+            open={open}
+            tooltip='View associations with Sources/Collections'
+            onClick={toggleOpen}
+          />
         </div>
       }
     </React.Fragment>

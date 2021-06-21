@@ -112,9 +112,9 @@ class UserForm extends React.Component {
         delete fields.auth_groups;
 
       if(edit) {
-        APIService.users(fields.username).put(fields, null, null, {includeAuthGroups: true}).then(response => this.handleSubmitResponse(response))
+        APIService.users(fields.username).put(fields, null, null, {includeAuthGroups: true, includeSubscribedOrgs: true}).then(response => this.handleSubmitResponse(response))
       } else {
-        APIService.users().post(fields, null, null, {includeAuthGroups: true}).then(response => this.handleSubmitResponse(response))
+        APIService.users().post(fields, null, null, {includeAuthGroups: true, includeSubscribedOrgs: true}).then(response => this.handleSubmitResponse(response))
       }
     }
   }

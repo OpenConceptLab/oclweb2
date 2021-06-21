@@ -1,26 +1,17 @@
 import React from 'react';
 import {
-  Table, TableHead, TableRow, TableCell, TableBody, Chip, IconButton, Tooltip
+  Table, TableHead, TableRow, TableCell, TableBody, Chip
 } from '@material-ui/core';
-import {
-  Search as SearchIcon,
-} from '@material-ui/icons';
 import { map, isEmpty, get } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
+import MappingOptions from './MappingOptions';
 
 const NestedMappingsTable = ({ mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
   const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
   const ownerAttr = isIndirect ? 'from_source_owner' : 'to_source_owner';
   const sourceAttr = isIndirect ? 'from_source_name' : 'to_source_name';
-
-  const onRowClick = (event, mapping) => {
-    event.stopPropagation()
-    event.preventDefault()
-    if(mapping.url)
-      window.location.hash = mapping.url
-  }
 
   const onDefaultClick = (event, targetURL) => {
     event.stopPropagation()
@@ -90,11 +81,7 @@ const NestedMappingsTable = ({ mappings, isIndirect }) => {
                   { getConceptName(mapping, conceptCodeName) }
                 </TableCell>
                 <TableCell align='left'>
-                  <Tooltip arrow title='View mapping details'>
-                    <IconButton color='primary' onClick={event => onRowClick(event, mapping)}>
-                      <SearchIcon fontSize='inherit' />
-                    </IconButton>
-                  </Tooltip>
+                  <MappingOptions mapping={mapping} />
                 </TableCell>
               </TableRow>
             )

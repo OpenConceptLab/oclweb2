@@ -6,7 +6,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from '@material-ui/icons';
-import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
 import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
@@ -30,6 +30,7 @@ import ReleasedChip from '../common/ReleasedChip';
 import RetiredChip from '../common/RetiredChip';
 import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
+import CollapsibleDivider from '../common/CollapsibleDivider';
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -50,10 +51,11 @@ const HIDDEN_ATTRIBUTES = {
   version_needed: 'boolean',
 }
 const SourceHomeHeader = ({
-  source, isVersionedObject, versionedObjectURL, currentURL
+  source, isVersionedObject, versionedObjectURL, currentURL, config
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
+  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
@@ -67,6 +69,11 @@ const SourceHomeHeader = ({
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
   }
+
+  React.useEffect(
+    () => setOpenHeader(!get(config, 'config.shrinkHeader', false)),
+    [get(config, 'config.shrinkHeader')]
+  )
 
   const deleteSource = () => {
     APIService.new().overrideURL(source.url).delete().then(response => {
@@ -85,9 +92,10 @@ const SourceHomeHeader = ({
             logoURL={logoURL}
             onUpload={onLogoUpload}
             defaultIcon={<ListIcon className='default-svg' />}
+            shrink={!openHeader}
           />
         </div>
-        <div className='col-md-11'>
+        <div className='col-md-11' style={{marginBottom: '5px'}}>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...source} href={versionedObjectURL} />
             <span className='separator'>/</span>
@@ -150,68 +158,71 @@ const SourceHomeHeader = ({
             </span>
             <AccessChip publicAccess={source.public_access} />
           </div>
-          {
-            source.description &&
-            <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
-              {source.description}
-            </div>
-          }
-          <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
-          <HeaderAttribute label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-md-12" type="component" />
-          <HeaderAttribute label="Custom Validation Schema" value={source.custom_validation_schema} gridClass="col-md-12" />
-          <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
-          {
-            hasManyHiddenAttributes ?
-            <div className='col-md-12 no-side-padding'>
-              <CollapsibleAttributes
-                object={source}
-                urlAttrs={['canonical_url']}
-                textAttrs={['publisher', 'purpose', 'copyright', 'content_type', 'collection_reference', 'hierarchy_meaning']}
-                dateAttrs={['revision_date']}
-                jsonAttrs={['identifier', 'contact', 'jurisdiction']}
-                booleanAttrs={['experimental', 'case_sensitive', 'compositional', 'version_needed']}
-              />
-            </div> :
-            <React.Fragment>
+          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+            {
+              source.description &&
+              <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+                {source.description}
+              </div>
+            }
+            <HeaderAttribute label="Source Type" value={source.source_type} gridClass="col-md-12" />
+            <HeaderAttribute label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-md-12" type="component" />
+            <HeaderAttribute label="Custom Validation Schema" value={source.custom_validation_schema} gridClass="col-md-12" />
+            <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
+            {
+              hasManyHiddenAttributes ?
+              <div className='col-md-12 no-side-padding'>
+                <CollapsibleAttributes
+                  object={source}
+                  urlAttrs={['canonical_url']}
+                  textAttrs={['publisher', 'purpose', 'copyright', 'content_type', 'collection_reference', 'hierarchy_meaning']}
+                  dateAttrs={['revision_date']}
+                  jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+                  booleanAttrs={['experimental', 'case_sensitive', 'compositional', 'version_needed']}
+                />
+              </div> :
+              <React.Fragment>
+                {
+                  map(HIDDEN_ATTRIBUTES, (type, attr) => (
+                    <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(source, attr)} gridClass="col-md-12" type={type} />
+                  ))
+                }
+              </React.Fragment>
+            }
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {
-                map(HIDDEN_ATTRIBUTES, (type, attr) => (
-                  <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(source, attr)} gridClass="col-md-12" type={type} />
-                ))
+                source.website &&
+                <span style={{marginRight: '10px'}}>
+                  <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+                </span>
               }
-            </React.Fragment>
-          }
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-            {
-              source.website &&
-              <span style={{marginRight: '10px'}}>
-                <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+              <span>
+                <LastUpdatedOnLabel
+                  date={source.updated_on}
+                  by={source.updated_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
               </span>
-            }
-            <span>
-              <LastUpdatedOnLabel
-                date={source.updated_on}
-                by={source.updated_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            <span style={{marginLeft: '10px'}}>
-              <LastUpdatedOnLabel
-                label='Created'
-                date={source.created_on}
-                by={source.created_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            {
-              source.external_id &&
-              <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                <ExternalIdLabel externalId={source.external_id} iconSize='medium' />
+              <span style={{marginLeft: '10px'}}>
+                <LastUpdatedOnLabel
+                  label='Created'
+                  date={source.created_on}
+                  by={source.created_by}
+                  iconSize='medium'
+                  noContainerClass
+                />
               </span>
-            }
-          </div>
+              {
+                source.external_id &&
+                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                  <ExternalIdLabel externalId={source.external_id} iconSize='medium' />
+                </span>
+              }
+            </div>
+          </Collapse>
         </div>
+        <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
         isOpen={sourceForm}

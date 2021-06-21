@@ -12,7 +12,7 @@ const ExtrasDiff = ({lhs, rhs}) => {
   const iteratorKeys = uniq(compact([...lhsKeys, ...rhsKeys]))
 
   const formatValue = value => {
-    if(isBoolean(value))
+    if(isBoolean(value) || isNumber(value))
       return value.toString()
     if(isObject(value)) {
       if(isArray(value)) {
@@ -25,6 +25,7 @@ const ExtrasDiff = ({lhs, rhs}) => {
       }
       return JSON.stringify(value, undefined, 2).trim();
     }
+
     if(isEmpty(value))
       return value
 

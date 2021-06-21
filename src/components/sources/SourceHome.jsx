@@ -219,6 +219,7 @@ class SourceHome extends React.Component {
               isVersionedObject={this.isVersionedObject()}
               versionedObjectURL={versionedObjectURL}
               currentURL={currentURL}
+              config={selectedConfig}
             />
             <SourceHomeTabs
               tab={tab}

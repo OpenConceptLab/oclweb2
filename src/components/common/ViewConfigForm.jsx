@@ -1,9 +1,13 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { get, map, set, findIndex, cloneDeep, find, reject, values, isEmpty } from 'lodash';
 import {
-  TextField, Button, Select, MenuItem, FormControl, InputLabel,
-  FormHelperText, IconButton, Menu, MenuList
+  get, set, findIndex, cloneDeep, find, reject, values, isEmpty, isArray, isNumber,
+  isEqual
+} from 'lodash';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+  TextField, Button, MenuItem,
+  FormHelperText, IconButton, Menu, MenuList, Chip
 } from '@material-ui/core';
 import {
   Visibility as PreviewIcon,
@@ -12,7 +16,7 @@ import {
   MoreVert as MenuIcon,
 } from '@material-ui/icons';
 import APIService from '../../services/APIService';
-import { ORANGE } from '../../common/constants';
+import { ORANGE, WHITE } from '../../common/constants';
 import JSONEditor from './JSONEditor';
 
 const DEFAULT_STATE = {
@@ -29,17 +33,33 @@ class ViewConfigForm extends React.Component {
     const initialConfig = get(props.previewFields, 'config') ? cloneDeep(props.previewFields.config) : cloneDeep(get(props.selected, 'config', {}));
     this.menuRef = React.createRef();
     this.state = {
+      resource: props.resource,
+      templates: [],
       initialConfig: initialConfig,
       selected: props.selected,
       selectedConfig: findIndex([...props.configs, NEW_CONFIG], props.selected),
       fields: props.previewFields ? cloneDeep(props.previewFields) : cloneDeep(DEFAULT_STATE),
       errors: null,
       menu: false,
+      configs: props.configs,
     }
+  }
+
+  fetchTemplates() {
+    const { resource } = this.state;
+    if(resource) {
+      APIService.new().overrideURL(`/client-configs/${resource}/templates/`).get().then(response => this.setState({templates: isArray(response.data) ? response.data : []}))
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(!isEqual(prevProps.configs, this.props.configs))
+      this.setState({configs: this.props.configs})
   }
 
   componentDidMount() {
     this.setFieldsForEdit()
+    this.fetchTemplates()
   }
 
   setFieldsForEdit() {
@@ -75,8 +95,7 @@ class ViewConfigForm extends React.Component {
   onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
   getDefaultCheckboxHelperText() {
-    const { configs } = this.props;
-    const { selected, fields } = this.state;
+    const { selected, fields, configs } = this.state;
     const existingDefaultConfigOtherThanSelected = find(reject(configs, {name: selected.name}), {is_default: true});
 
     if(existingDefaultConfigOtherThanSelected && fields.is_default)
@@ -208,10 +227,10 @@ class ViewConfigForm extends React.Component {
   }
 
   render() {
-    const { configs } = this.props;
-    const { selected, fields, initialConfig, errors, menu } = this.state;
+    const { selected, fields, initialConfig, errors, menu, configs, templates } = this.state;
     const isOCLDefaultConfigSelected = get(selected, 'web_default');
-    const configOptions = [...configs, NEW_CONFIG];
+    const isTemplateSelected = get(selected, 'is_template');
+    const configOptions = [...configs, ...templates, NEW_CONFIG];
     const isNew = get(selected, 'id') === 'new';
     const isDefault = fields.is_default;
     return (
@@ -221,28 +240,53 @@ class ViewConfigForm extends React.Component {
         </div>
         <div className='col-md-12 no-side-padding flex-vertical-center'>
           <div className='col-md-11 no-side-padding' style={{}}>
-            <FormControl variant="outlined" fullWidth size='small'>
-              <InputLabel>Select</InputLabel>
-              <Select
-                required
-                id="config"
-                value={findIndex(configOptions, selected)}
-                onChange={event => this.onConfigurationChange(configOptions[event.target.value])}
-                label="Select"
-              >
-                {
-                  map(configOptions, (config, index) => (
-                    <MenuItem key={index} value={index}>
+            <Autocomplete
+              openOnFocus
+              getOptionSelected={(option, value) => option.id === get(value, 'id')}
+              value={findIndex(configOptions, selected)}
+              id="config"
+              options={configOptions}
+              getOptionLabel={option => {
+                  let opt = option
+                  if(isNumber(opt))
+                    opt = get(configOptions, opt)
+
+                  return get(opt, 'name', '')
+              }}
+              fullWidth
+              required
+              renderInput={
+                params => <TextField
+                            {...params}
+                            required
+                            label="Select"
+                                   variant="outlined"
+                                   fullWidth
+                />
+              }
+              onChange={(event, item) => this.onConfigurationChange(item)}
+              closeIcon={false}
+              renderOption={
+                option => (
+                  <React.Fragment>
+                    <span className='flex-vertical-center'>
                       {
-                        config.id === 'new' ?
-                        <i>{config.name}</i> :
-                        config.name
+                        option.id === 'new' ?
+                        <i>{option.name}</i> :
+                        <span>{option.name}</span>
                       }
-                    </MenuItem>
-                  ))
-                }
-              </Select>
-            </FormControl>
+                      {
+                        option.is_template &&
+                        <span style={{marginLeft: '10px'}}>
+                          <Chip style={{backgroundColor: ORANGE, color: WHITE, border: `1px solid ${ORANGE}`, fontSize: '10px'}} label="Template" size='small' />
+                        </span>
+                      }
+
+                    </span>
+                  </React.Fragment>
+                )
+              }
+            />
           </div>
           <div className='col-md-1 no-side-padding' style={{marginLeft: '5px'}}>
             <IconButton size='small' ref={this.menuRef} onClick={() => this.setState({menu: !menu})}>
@@ -258,7 +302,7 @@ class ViewConfigForm extends React.Component {
           <Menu open anchorEl={this.menuRef.current} onClose={() => this.setState({menu: false})}>
             <MenuList id="split-button-menu">
               {
-                !isOCLDefaultConfigSelected &&
+                !isOCLDefaultConfigSelected && !isTemplateSelected &&
                 <MenuItem onClick={this.toggleDefault}>
                   {isDefault ? 'Un-Default': 'Mark Default'}
                 </MenuItem>
@@ -270,7 +314,7 @@ class ViewConfigForm extends React.Component {
                 </MenuItem>
               }
               {
-                !isOCLDefaultConfigSelected &&
+                !isOCLDefaultConfigSelected && !isTemplateSelected &&
                 <MenuItem onClick={this.onDelete}>
                   Delete
                 </MenuItem>
@@ -291,7 +335,7 @@ class ViewConfigForm extends React.Component {
                 required
                 onChange={this.onTextFieldChange}
                 value={fields.name}
-                disabled={isOCLDefaultConfigSelected}
+                disabled={isOCLDefaultConfigSelected || isTemplateSelected}
                 helperText={this.getErrorHelperText()}
                 size='small'
               />
@@ -299,7 +343,7 @@ class ViewConfigForm extends React.Component {
             <div className='col-md-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               <JSONEditor
                 placeholder={initialConfig}
-                viewOnly={isOCLDefaultConfigSelected}
+                viewOnly={isOCLDefaultConfigSelected ||  isTemplateSelected}
                 onChange={this.onJSONUpdate}
               />
             </div>
@@ -307,7 +351,7 @@ class ViewConfigForm extends React.Component {
               <Button size='small' style={{margin: '2px'}} color='primary' variant='outlined' onClick={this.togglePreview} startIcon={<PreviewIcon fontSize='inherit' />}>
                 Preview
               </Button>
-              <Button size='small' className='green-btn-outlined' style={{margin: '2px'}} variant='outlined' type='submit' onClick={this.onSubmit} startIcon={<SaveIcon fontSize='inherit' />} disabled={isOCLDefaultConfigSelected}>
+              <Button size='small' className='green-btn-outlined' style={{margin: '2px'}} variant='outlined' type='submit' onClick={this.onSubmit} startIcon={<SaveIcon fontSize='inherit' />} disabled={isOCLDefaultConfigSelected || isTemplateSelected}>
                 {isNew ? 'Create' : 'Update'}
               </Button>
               <Button size='small' className='red-btn-outlined' style={{margin: '2px'}} variant='outlined' onClick={this.onCancel} startIcon={<CancelIcon fontSize='inherit' />}>

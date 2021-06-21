@@ -5,6 +5,8 @@ import APIService from '../../services/APIService';
 import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeTabs from './MappingHomeTabs';
 import NotFound from '../common/NotFound';
+import AccessDenied from '../common/AccessDenied';
+import PermissionDenied from '../common/PermissionDenied';
 
 const TABS = ['details', 'history'];
 
@@ -13,6 +15,8 @@ class MappingHome extends React.Component {
     super(props);
     this.state = {
       notFound: false,
+      accessDenied: false,
+      permissionDenied: false,
       isLoading: true,
       mapping: {},
       versions: [],
@@ -58,13 +62,17 @@ class MappingHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true, notFound: false}, () => {
+    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
                 .overrideURL(this.getMappingURLFromPath())
                 .get()
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, mapping: {}, notFound: true})
+                    this.setState({isLoading: false, mapping: {}, notFound: true, accessDenied: false, permissionDenied: false})
+                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
+                    this.setState({isLoading: false, notFound: false, mapping: {}, accessDenied: true, permissionDenied: false})
+                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
+                    this.setState({isLoading: false, notFound: false, mapping: {}, accessDenied: false, permissionDenied: true})
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else
@@ -101,33 +109,35 @@ class MappingHome extends React.Component {
   }
 
   render() {
-    const { mapping, versions, isLoading, tab, notFound } = this.state;
+    const {
+      mapping, versions, isLoading, tab, notFound, accessDenied, permissionDenied
+    } = this.state;
     const currentURL = this.getMappingURLFromPath()
     const isVersionedObject = this.isVersionedObject()
+    const hasError = notFound || accessDenied || permissionDenied;
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
+        { isLoading && <CircularProgress color='primary' /> }
+        { notFound && <NotFound /> }
+        { accessDenied && <AccessDenied /> }
+        { permissionDenied && <PermissionDenied /> }
         {
-          isLoading ?
-          <CircularProgress color='primary' /> :
-          (
-            notFound ?
-            <NotFound /> :
-            <div className='col-md-12 home-container no-side-padding'>
-              <MappingHomeHeader
-                mapping={mapping}
-                isVersionedObject={isVersionedObject}
-                versionedObjectURL={this.getVersionedObjectURLFromPath()}
-                currentURL={currentURL}
-              />
-              <MappingHomeTabs
-                tab={tab}
-                onChange={this.onTabChange}
-                mapping={mapping}
-                versions={versions}
-                isVersionedObject={isVersionedObject}
-              />
-            </div>
-          )
+          !isLoading && !hasError &&
+          <div className='col-md-12 home-container no-side-padding'>
+            <MappingHomeHeader
+              mapping={mapping}
+              isVersionedObject={isVersionedObject}
+              versionedObjectURL={this.getVersionedObjectURLFromPath()}
+              currentURL={currentURL}
+            />
+            <MappingHomeTabs
+              tab={tab}
+              onChange={this.onTabChange}
+              mapping={mapping}
+              versions={versions}
+              isVersionedObject={isVersionedObject}
+            />
+          </div>
         }
       </div>
     )

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, map, reject, pickBy, isString, isObject } from 'lodash';
+import { get, map, reject, pickBy, isString, isObject, includes } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import About from '../common/About';
+import CustomMarkup from '../common/CustomMarkup';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -44,18 +45,18 @@ const OrgHomeTabs = props => {
     }
   }
 
-  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%'
-
+  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
+  const isInvalidTabConfig = !includes(['sources', 'collections', 'about', 'users', 'text'], selectedTabConfig.type) && !selectedTabConfig.uri;
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
+      <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
         {
           map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
         }
       </Tabs>
       {
         hasAccess &&
-        <div className='col-md-4 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
+        <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>
@@ -66,6 +67,7 @@ const OrgHomeTabs = props => {
                 color={ORANGE}
                 resourceURL={url}
                 onWidthChange={setConfigFormWidth}
+                resource='orgs'
               />
             </span>
           }
@@ -74,13 +76,32 @@ const OrgHomeTabs = props => {
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
         {
-          selectedTabConfig.type === 'about' ?
-          <About id={org.id} about={about} /> :
+          isInvalidTabConfig &&
+          <div>Invalid Tab Configuration</div>
+        }
+        {
+          !isInvalidTabConfig && selectedTabConfig.type === 'about' &&
+          <About id={org.id} about={about} />
+        }
+        {
+          !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
+          <div className='col-md-12'>
+            {
+              map(selectedTabConfig.fields, field => {
+                const value = field.value || get(org, field.id);
+                const label = field.label
+                return <CustomMarkup key={value} title={label} markup={value} />
+              })
+            }
+          </div>
+        }
+        {
+          !isInvalidTabConfig && !includes(['about', 'text'], selectedTabConfig.type) &&
           <OrgHomeChildrenList
             org={org}
             location={location}
             match={match}
-            url={url}
+            url={selectedTabConfig.uri || url}
             pins={pins}
             showPin={showPin}
             onPinCreate={onPinCreate}
