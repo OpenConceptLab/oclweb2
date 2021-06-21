@@ -110,8 +110,6 @@ module.exports = (env) => {
         'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV) || 'development',
         'process.env.RECAPTCHA_SITE_KEY': JSON.stringify(env.RECAPTCHA_SITE_KEY),
         'process.env.GA_ACCOUNT_ID': JSON.stringify(env.GA_ACCOUNT_ID),
-        'process.env.WEB_VERSION': JSON.stringify(env.WEB_VERSION || '2.0.1'),
-        'process.env.WEB_BUILD': JSON.stringify(env.WEB_BUILD || 'dev'),
       }),
       new IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],

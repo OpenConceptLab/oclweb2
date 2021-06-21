@@ -17,12 +17,6 @@ fi
 if [[ ! -z "${RECAPTCHA_SITE_KEY}" ]]; then
     echo "var RECAPTCHA_SITE_KEY = \"${RECAPTCHA_SITE_KEY}\";" >> ${ENV_FILE}
 fi
-if [[ ! -z "${WEB_VERSION}" ]]; then
-    echo "var WEB_VERSION = \"${WEB_VERSION}\";" >> ${ENV_FILE}
-fi
-if [[ ! -z "${WEB_BUILD}" ]]; then
-    echo "var WEB_BUILD = \"${WEB_BUILD}\";" >> ${ENV_FILE}
-fi
 
 echo "Adjusting nginx configuration"
 envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf

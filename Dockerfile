@@ -7,12 +7,11 @@ ENV WEB_PORT=${WEB_PORT:-4000}
 ENV API_URL=${API_URL:-http://127.0.0.1:8000}
 ENV RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY:-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}
 ENV GA_ACCOUNT_ID=${GA_ACCOUNT_ID:-UA-000000-01}
-ENV WEB_VERSION=${WEB_VERSION:-2.0.1}
-ENV WEB_BUILD=${WEB_BUILD:-dev}
 RUN mkdir /app
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
+ADD config.json /app/
 ADD package.json /app/
 ADD package-lock.json /app/
 
