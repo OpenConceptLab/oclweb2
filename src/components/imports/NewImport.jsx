@@ -52,17 +52,7 @@ class NewImport extends React.Component {
 
   setFieldValue = (id, value) => this.setState({[id]: value})
 
-  onParallelToogle = event => {
-    const checked = event.target.checked;
-    if(checked) {
-      alertifyjs.confirm(
-        'Parallel Mode',
-        'Bulk Import in parallel mode cannot support hierarchy. Are you sure you want to continue?',
-        () => this.setState({parallel: true}),
-        () => {}
-      )
-    } else this.setState({parallel: false})
-  }
+  onParallelToogle = event => this.setState({parallel: event.target.checked})
 
   canUpload() {
     const { type, fileURL, json, file } = this.state
