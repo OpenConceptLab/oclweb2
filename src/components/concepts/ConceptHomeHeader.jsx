@@ -6,7 +6,7 @@ import {
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
-  TimelineOutlined as HierarchyIcon,
+  FormatIndentIncrease as HierarchyIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL } from '../../common/utils';
