@@ -1,68 +1,100 @@
 import React from 'react'
 import { TreeView, TreeItem } from '@material-ui/lab'
 import { CircularProgress } from '@material-ui/core'
-import { find, reject, isEmpty, isEqual, forEach } from 'lodash'
+import { find, reject, isEmpty, isEqual, forEach, get } from 'lodash'
 import { BLUE, BLACK } from '../../common/constants';
 import { generateRandomString } from '../../common/utils';
 import PlusIcon from '../common/PlusSquareIcon';
 import MinusIcon from '../common/MinusSquareIcon';
 import CloseIcon from '../common/CloseSquareIcon';
 
-const makeChildNode = child => ({id: child.url, _id: child.id, name: child.name, url: child.url, children: child.children, root: child.root})
-
-const makeHierarchy = data => {
-  const hierarchy = {root: [{id: data.id, name: data.id, origin: true}]}
-  hierarchy[data.id] = []
-  const rootChild = find(data.children, {root: true})
-  let nonRootChildren = data.children
-  if(rootChild) {
-    hierarchy[data.id].push(makeChildNode(rootChild))
-    nonRootChildren = reject(data.children, {url: rootChild.url})
-  }
-
-  nonRootChildren.map(child => hierarchy[data.id].push(makeChildNode(child)))
-
-  return hierarchy
-}
-
-const getLoader = () => (<CircularProgress color='secondary' style={{width: '11px', height: '11px', marginLeft: '5px', marginTop: '5px'}} />)
-
-const getNodeLabel = (child, isCurrentNode, isLoading) => {
-  const labelStyles = {fontSize: '12px', color: isCurrentNode ? BLUE : BLACK}
-  const showName = child.name && child.name !== child._id
-  return (
-    <React.Fragment>
-      <span style={labelStyles} className='flex-vertical-center'>
-        <span>
-          {
-            child._id && (showName ? <React.Fragment><b>{child._id}</b>&nbsp;</React.Fragment> : <React.Fragment>{child._id} &nbsp;</React.Fragment>)
-          }
-          {
-            showName && (child.origin ? <b>{child.name}</b> : <React.Fragment>{child.name}</React.Fragment>)
-          }
-          {
-            child.root &&
-            <span style={{fontSize: '10px', fontStyle: 'italic', color: 'gray', marginLeft: '2px', fontWeight: 'bold'}}>
-              (root)
-            </span>
-          }
-          {
-            isLoading && getLoader()
-          }
-        </span>
-      </span>
-    </React.Fragment>
-  )
-}
 
 class HierarchyTraversalList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tree: makeHierarchy(props.data),
+      tree: this.makeHierarchy(props.data),
+      currentCount: get(props.data, 'children.length', 0),
       isLoading: false,
       loadingNode: null,
     }
+  }
+
+  makeChildNode = child => ({id: child.url, _id: child.id, name: child.name, url: child.url, children: child.children, root: child.root})
+
+  makeHierarchy = data => {
+    const hierarchy = {root: [{id: data.id, name: data.id, origin: true, count: data.count}]}
+    hierarchy[data.id] = []
+    const rootChild = find(data.children, {root: true})
+    let nonRootChildren = data.children
+    if(rootChild) {
+      hierarchy[data.id].push(this.makeChildNode(rootChild))
+      nonRootChildren = reject(data.children, {url: rootChild.url})
+    }
+
+    nonRootChildren.map(child => hierarchy[data.id].push(this.makeChildNode(child)))
+
+    return hierarchy
+  }
+
+  getLoader = () => (<CircularProgress color='secondary' style={{width: '11px', height: '11px', marginLeft: '5px', marginTop: '5px'}} />)
+
+  onLoadMoreClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    this.props.onLoadMore()
+    return false
+  }
+
+  getOriginNode = origin => {
+    const { currentCount } = this.state
+    return (
+      <span style={{display: 'flex', justifyContent: 'space-between'}}>
+        <b>{`${origin.name} (${currentCount}/${origin.count})`}</b>
+        {
+          currentCount < origin.count &&
+          <span style={{float: 'right'}}>
+            {
+              this.props.isLoadingChildren ?
+              this.getLoader() :
+              <a onClick={this.onLoadMoreClick}>Load More</a>
+            }
+          </span>
+        }
+      </span>
+    )
+  }
+
+  getNodeLabel = (child, isCurrentNode, isLoading) => {
+    const labelStyles = {fontSize: '12px', color: isCurrentNode ? BLUE : BLACK, width: '100%'}
+    const showName = child.name && child.name !== child._id
+    return (
+      <React.Fragment>
+        <span style={labelStyles} className='flex-vertical-center'>
+          <span style={{width: '100%'}}>
+            {
+              child._id && (showName ? <React.Fragment><b>{child._id}</b>&nbsp;</React.Fragment> : <React.Fragment>{child._id} &nbsp;</React.Fragment>)
+            }
+            {
+              showName && (
+                child.origin ?
+                this.getOriginNode(child) :
+                <React.Fragment>{child.name}</React.Fragment>
+              )
+            }
+            {
+              child.root &&
+              <span style={{fontSize: '10px', fontStyle: 'italic', color: 'gray', marginLeft: '2px', fontWeight: 'bold'}}>
+                (root)
+              </span>
+            }
+            {
+              isLoading && this.getLoader()
+            }
+          </span>
+        </span>
+      </React.Fragment>
+    )
   }
 
   handleChange = (event, nodeId, loadingNodeId) => {
@@ -75,7 +107,7 @@ class HierarchyTraversalList extends React.Component {
         if(children) {
           const newTree = {
             ...this.state.tree,
-            [id]: children.map(makeChildNode)
+            [id]: children.map(this.makeChildNode)
           }
           this.setState({tree: newTree, isLoading: false, loadingNode: null})
         } else {
@@ -107,7 +139,7 @@ class HierarchyTraversalList extends React.Component {
           onLabelClick={() => this.onLabelClick(child)}
           key={child.id}
           nodeId={child.id}
-          label={getNodeLabel(child, isCurrentNode, loading)}
+          label={this.getNodeLabel(child, isCurrentNode, loading)}
           classes={
             isCurrentNode ? {label: 'hierarchy-node-selected', iconContainer: 'hierarchy-node-icon', content: 'hierarchy-node-content'} : {iconContainer: 'hierarchy-node-icon', content: 'hierarchy-node-content'}
           }>
@@ -124,6 +156,16 @@ class HierarchyTraversalList extends React.Component {
         forEach(hierarchyPath, path => setTimeout(() => this.handleChange(null, [path], data.id), 100))
         this.scrollToSelected()
       }, 500)
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { newChildren, data } = this.props
+    if(!isEqual(newChildren, prevProps.newChildren)) {
+      const newState = {...this.state}
+      newChildren.map(child => newState.tree[data.id].push(this.makeChildNode(child)))
+      newState.currentCount = get(data, 'children.length', 0)
+      this.setState(newState)
     }
   }
 

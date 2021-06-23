@@ -19,6 +19,7 @@ class ConceptHome extends React.Component {
     super(props);
     this.state = {
       isLoadingHierarchy: false,
+      newChildren: [],
       hierarchy: false,
       notFound: false,
       accessDenied: false,
@@ -81,7 +82,7 @@ class ConceptHome extends React.Component {
   }
 
   refreshDataByURL() {
-    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
+    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
       APIService.new()
                 .overrideURL(encodeURI(this.getConceptURLFromPath()))
                 .get(null, null, {includeHierarchyPath: true})
@@ -107,10 +108,31 @@ class ConceptHome extends React.Component {
     })
   }
 
-  getHierarchy() {
+  getHierarchy = () => {
     this.setState({isLoadingHierarchy: true}, () => {
-      APIService.new().overrideURL(toParentURI(this.getConceptURLFromPath())).appendToUrl('/hierarchy/').get().then(response => this.setState({hierarchy: response.data, isLoadingHierarchy: false}))
-
+      const { hierarchy } = this.state
+      const offset = hierarchy ? hierarchy.offset + 100 : 0
+      const limit = get(hierarchy, 'limit', 100)
+      const queryParams = {limit: limit, offset: offset}
+      APIService
+        .new()
+        .overrideURL(toParentURI(this.getConceptURLFromPath()))
+        .appendToUrl('/hierarchy/')
+        .get(null, null, queryParams)
+        .then(response => {
+          if(!hierarchy)
+            this.setState({isLoadingHierarchy: false, hierarchy: response.data, newChildren: []})
+          else
+            this.setState({
+              isLoadingHierarchy: false,
+              newChildren: response.data.children,
+              hierarchy: {
+                ...hierarchy,
+                offset: response.data.offset,
+                limit: response.data.limit
+              }
+            })
+        })
     })
   }
 
@@ -157,7 +179,8 @@ class ConceptHome extends React.Component {
   render() {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading, tab,
-      notFound, accessDenied, permissionDenied, hierarchy, openHierarchy
+      notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
+      isLoadingHierarchy
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -202,6 +225,9 @@ class ConceptHome extends React.Component {
                   fetchChildren={this.fetchConceptChildren}
                   currentNodeURL={concept.url}
                   hierarchyPath={[...concept.hierarchy_path, concept.url]}
+                  onLoadMore={this.getHierarchy}
+                  newChildren={newChildren}
+                  isLoadingChildren={isLoadingHierarchy}
                 />
                 { conceptDetails }
               </Split> :
