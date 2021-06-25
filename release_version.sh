@@ -23,4 +23,4 @@ git push --tags
 
 docker pull $DOCKER_IMAGE_ID
 docker tag $DOCKER_IMAGE_ID $DOCKER_IMAGE_NAME:$TAG
-docker push $DOCKER_IMAGE_ID:$TAG
+docker push $DOCKER_IMAGE_NAME:$TAG
