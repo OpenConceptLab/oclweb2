@@ -20,6 +20,7 @@ Every build is a candidate for release.
 In order to release please trigger the release build step in [our CI](https://ci.openmrs.org/browse/OCL-OW2/latest)
 
 You also need to create a deployment release [here](https://ci.openmrs.org/deploy/createDeploymentVersion.action?deploymentProjectId=205619202).
+Please make sure that the release version matches the version defined in package.json.
 
 Do remember to increase maintenance release version in package.json after a successful release (if releasing the latest build).
 
