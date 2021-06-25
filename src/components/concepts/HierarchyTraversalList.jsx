@@ -3,10 +3,11 @@ import { TreeView, TreeItem } from '@material-ui/lab'
 import { CircularProgress } from '@material-ui/core'
 import { find, reject, isEmpty, isEqual, forEach, get } from 'lodash'
 import { BLUE, BLACK } from '../../common/constants';
-import { generateRandomString } from '../../common/utils';
+import { generateRandomString, toParentURI } from '../../common/utils';
 import PlusIcon from '../common/PlusSquareIcon';
 import MinusIcon from '../common/MinusSquareIcon';
 import CloseIcon from '../common/CloseSquareIcon';
+import HierarchySearch from './HierarchySearch';
 
 
 class HierarchyTraversalList extends React.Component {
@@ -180,11 +181,18 @@ class HierarchyTraversalList extends React.Component {
     }, 500)
   }
 
+  onSearchSelect = selected => selected && this.onLabelClick(selected)
+
   render() {
-    const { data, hierarchyPath } = this.props
+    const { data, hierarchyPath, currentNodeURL } = this.props
     const iconStyles = {width: '12px', height: '12px'}
     return (
       <div className='col-md-12' style={{padding: '2px 12px', height: '700px', overflow: 'auto'}}>
+        <HierarchySearch
+          searchURL={toParentURI(currentNodeURL) + '/concepts/'}
+          style={{margin: '5px 0'}}
+          onChange={this.onSearchSelect}
+        />
         <TreeView
           defaultExpanded={[data.id, ...hierarchyPath]}
           onNodeToggle={this.handleChange}

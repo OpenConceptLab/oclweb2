@@ -30,7 +30,7 @@ class ConceptHome extends React.Component {
       versions: [],
       mappings: [],
       tab: this.getDefaultTabIndex(),
-      openHierarchy: false,
+      openHierarchy: true,
     }
   }
 

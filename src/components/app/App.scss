@@ -875,3 +875,20 @@ div.divider-highlight-hover:hover {
     margin-top: 4px;
     width: 12px;
 }
+.input-small {
+    input {
+        padding: 0px !important;
+        font-size: 12px;
+    }
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+.autocomplete-small {
+    font-size: 12px;
+}
+.autocomplete-small-input-root {
+    padding: 4px !important;
+    padding-right: 5px !important;
+}
