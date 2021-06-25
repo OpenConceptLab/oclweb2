@@ -6,7 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
 import About from '../common/About';
-import CustomMarkup from '../common/CustomMarkup';
+import CustomText from '../common/CustomText';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConfigSelect from '../common/ConfigSelect';
@@ -147,7 +147,7 @@ const SourceHomeTabs = props => {
               map(selectedTabConfig.fields, field => {
                 const value = field.value || get(source, field.id);
                 const label = field.label
-                return <CustomMarkup key={value} title={label} markup={value} />
+                return <CustomText key={value} title={label} value={value} format={field.format} />
               })
             }
           </div>

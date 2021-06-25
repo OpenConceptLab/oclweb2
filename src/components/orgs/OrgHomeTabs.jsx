@@ -4,7 +4,7 @@ import { get, map, reject, pickBy, isString, isObject, includes } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import About from '../common/About';
-import CustomMarkup from '../common/CustomMarkup';
+import CustomText from '../common/CustomText';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -90,7 +90,7 @@ const OrgHomeTabs = props => {
               map(selectedTabConfig.fields, field => {
                 const value = field.value || get(org, field.id);
                 const label = field.label
-                return <CustomMarkup key={value} title={label} markup={value} />
+                return <CustomText key={value} title={label} value={value} format={field.format} />
               })
             }
           </div>
