@@ -1,5 +1,6 @@
 # Stage-1 Build and Development Environment
 FROM node:14.11 as build
+ARG SOURCE_COMMIT
 ARG NODE_ENV=production
 ARG NODE_OPTIONS=--max_old_space_size=700
 ENV NPM_CONFIG_LOGLEVEL warn
@@ -11,7 +12,6 @@ RUN mkdir /app
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
-ADD config.json /app/
 ADD package.json /app/
 ADD package-lock.json /app/
 
@@ -21,11 +21,14 @@ ADD webpack.config.js /app/
 ADD .babelrc /app/
 ADD src /app/src/
 ADD public /app/public/
-ADD package.json /app/
-ADD package-lock.json /app/
 
 ADD start.sh /app/
 RUN chmod +x start.sh
+
+ADD set_build_version.sh /app/
+RUN chmod +X set_build_version.sh
+
+RUN ["bash", "-c", "./set_build_version.sh"]
 
 RUN npm run build
 RUN cp public/bootstrap.min.css dist/
