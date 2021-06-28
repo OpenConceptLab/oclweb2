@@ -1,22 +1,25 @@
 #!/bin/bash
 set -e
 
+VERSION_FILE="package.json"
+
 SOURCE_COMMIT=$(git rev-parse HEAD)
 export SOURCE_COMMIT=${SOURCE_COMMIT:0:8}
 
-PACKAGE_VERSION=$(cat package.json \
+PROJECT_VERSION=$(cat $VERSION_FILE \
   | grep version \
   | head -1 \
   | awk -F: '{ print $2 }' \
   | sed 's/[",]//g' \
   | tr -d '[[:space:]]')
 
-TAG="$PACKAGE_VERSION-$SOURCE_COMMIT"
+TAG="$PROJECT_VERSION-$SOURCE_COMMIT"
 
 ./set_build_version.sh
 
+git checkout -b release
 git add config.json
-git commit -m "Set build version"
+git commit -m "Release version $PROJECT_VERSION"
 
 git tag "$TAG"
 
@@ -26,3 +29,15 @@ git push origin --tags
 docker pull $DOCKER_IMAGE_ID
 docker tag $DOCKER_IMAGE_ID $DOCKER_IMAGE_NAME:$TAG
 docker push $DOCKER_IMAGE_NAME:$TAG
+
+if [[ "$INCREASE_MAINTENANCE_VERSION" = true ]]; then
+  git checkout master
+
+  NEW_PROJECT_VERSION=$(echo "${PROJECT_VERSION}" | awk -F. -v OFS=. '{$NF++;print}')
+  sed -i "s/\"version\": \"$PROJECT_VERSION\"/\"version\": \"$NEW_PROJECT_VERSION\"/" $VERSION_FILE
+
+  git add $VERSION_FILE
+  git commit -m "Increase maintenance version to $NEW_PROJECT_VERSION"
+
+  git push origin master
+fi
