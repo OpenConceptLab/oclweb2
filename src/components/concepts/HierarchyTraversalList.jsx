@@ -189,7 +189,6 @@ class HierarchyTraversalList extends React.Component {
   shouldShowBottomLoadMore = () => Boolean(document.getElementById('top-load-more'))
 
   render() {
-    const { currentCount } = this.state
     const { data, hierarchyPath, currentNodeURL } = this.props
     const iconStyles = {width: '12px', height: '12px'}
     return (
