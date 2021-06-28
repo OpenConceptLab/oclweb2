@@ -17,12 +17,12 @@ docker exec -it <container_name> bash -c "eslint src/ --ext=.js*"
 
 Every build is a candidate for release.
 
-In order to release please trigger the release build step in [our CI](https://ci.openmrs.org/browse/OCL-OW2/latest)
+In order to release please trigger the release build step in [our CI](https://ci.openmrs.org/browse/OCL-OW2/latest). Please note
+that the maintenance version will be automatically increased after a successful release. It is desired only, if you are releasing the latest build and
+should be turned off by setting the increaseMaintenanceRelease variable to false on the Run stage "Release" popup in other cases.
 
 You also need to create a deployment release [here](https://ci.openmrs.org/deploy/createDeploymentVersion.action?deploymentProjectId=205619202).
-Please set the release version to match the version defined in package.json.
-
-Do remember to increase maintenance release version in package.json after a successful release (if releasing the latest build).
+Please make sure the release version matches the version defined in package.json (except the extended GIT SHA in the release version).
 
 ### Deployment
 
