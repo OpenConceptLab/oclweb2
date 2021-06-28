@@ -39,17 +39,8 @@ class ReferenceForm extends React.Component {
   isValidExpression = expression => this.expressionRegex.test(expression)
 
   onExpressionBlur = (event, index) => {
-    const value = event.target.value
-    const newState = {...this.state}
-    const isValid = this.isValidExpression(value)
-
-    if(value && !isValid) {
-      set(newState, `${event.target.id}.error`, 'This is not a valid expression.')
-      this.setState(newState)
-    } else {
-      set(newState, `${event.target.id}.error`, '')
-      this.setState(newState, () => this.getResourcesFromExpression(index))
-    }
+    if(event.target.value && this.isValidExpression(event.target.value))
+      this.getResourcesFromExpression(index)
   }
 
   onExpressionAdd = () => this.setState({
