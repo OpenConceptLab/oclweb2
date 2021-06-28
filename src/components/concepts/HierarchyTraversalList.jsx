@@ -54,7 +54,7 @@ class HierarchyTraversalList extends React.Component {
         <b>{`${origin.name} (${currentCount}/${origin.count})`}</b>
         {
           currentCount < origin.count &&
-          <span style={{float: 'right'}}>
+          <span id="top-load-more" style={{float: 'right'}}>
             {
               this.props.isLoadingChildren ?
               this.getLoader() :
@@ -165,7 +165,7 @@ class HierarchyTraversalList extends React.Component {
     if(!isEqual(newChildren, prevProps.newChildren)) {
       const newState = {...this.state}
       newChildren.map(child => newState.tree[data.id].push(this.makeChildNode(child)))
-      newState.currentCount = get(data, 'children.length', 0)
+      newState.currentCount += newChildren.length
       this.setState(newState)
     }
   }
@@ -177,15 +177,19 @@ class HierarchyTraversalList extends React.Component {
       if(el) {
         try {
           el.scrollIntoViewIfNeeded()
-        } catch () {}
+        } catch (err) {
+          //pass
+        }
         clearInterval(this.scrollInterval)
       }
     }, 500)
   }
 
   onSearchSelect = selected => selected && this.onLabelClick(selected)
+  shouldShowBottomLoadMore = () => Boolean(document.getElementById('top-load-more'))
 
   render() {
+    const { currentCount } = this.state
     const { data, hierarchyPath, currentNodeURL } = this.props
     const iconStyles = {width: '12px', height: '12px'}
     return (
@@ -204,6 +208,16 @@ class HierarchyTraversalList extends React.Component {
         >
           {this.renderTree(this.state.tree.root)}
         </TreeView>
+        {
+          this.shouldShowBottomLoadMore() &&
+          <span id="bottom-load-more" style={{float: 'right', fontSize: '12px', cursor: 'pointer'}}>
+            {
+              this.props.isLoadingChildren ?
+              this.getLoader() :
+              <a onClick={this.onLoadMoreClick}>Load More</a>
+            }
+          </span>
+        }
       </div>
     )
   }
