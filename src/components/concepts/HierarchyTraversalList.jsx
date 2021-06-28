@@ -175,7 +175,9 @@ class HierarchyTraversalList extends React.Component {
     this.scrollInterval = setInterval(() => {
       const el = document.getElementById(currentNodeURL);
       if(el) {
-        el.scrollIntoViewIfNeeded()
+        try {
+          el.scrollIntoViewIfNeeded()
+        } catch () {}
         clearInterval(this.scrollInterval)
       }
     }, 500)
