@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit
+  map, omit, isString
 } from 'lodash';
-import { CircularProgress, Chip } from '@material-ui/core';
+import { Share as ShareIcon } from '@material-ui/icons'
+import { CircularProgress, Chip, Tooltip } from '@material-ui/core';
 import APIService from '../../services/APIService'
-import { formatDate } from '../../common/utils';
+import { formatDate, copyURL } from '../../common/utils';
 import { BLUE, DEFAULT_LIMIT } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
 import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
@@ -41,7 +42,7 @@ const resourceResultStruct = {
   facets: {},
   items: [],
 }
-
+const DEFAULT_SORT_PARAMS = {sortDesc: '_score'}
 class Search extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +55,7 @@ class Search extends React.Component {
       exactMatch: 'off',
       resource: 'concepts',
       isLoading: false,
-      sortParams: {sortDesc: '_score'},
+      sortParams: DEFAULT_SORT_PARAMS,
       limit: DEFAULT_LIMIT,
       openFacetsDrawer: false,
       appliedFacets: {},
@@ -80,20 +81,39 @@ class Search extends React.Component {
     this.setQueryParamsInState()
   }
 
-  getLayoutAttrValue(attr) {
+  getLayoutAttrValue(attr, type) {
+    let result;
     const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     const { fixedFilters } = this.props;
-    if(has(queryParams, attr))
-      return queryParams.get(attr)
-    if(has(fixedFilters, attr))
-      return fixedFilters[attr]
+    if(queryParams.get(attr))
+      result = queryParams.get(attr)
+    else if(has(fixedFilters, attr))
+      result = fixedFilters[attr]
+    else
+      result = this.state[attr]
 
-    return this.state[attr]
+    if(type === 'bool') {
+      if(result === 'false')
+        result = false
+      if (result === 'true')
+        result = true
+    }
+    else if(type === 'int')
+      result = parseInt(result)
+    else if(type === 'obj') {
+      if(isString(result))
+        try {
+          result = JSON.parse(result)
+        } catch (err) {
+          //pass
+        }
+    }
+
+    return result
   }
 
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(get(this.props, 'location.search'))
-    const fixedFilters = this.props.fixedFilters;
     let userFilters = this.props.userFilters || {};
 
     if(this.props.extraControlFilters) {
@@ -104,17 +124,19 @@ class Search extends React.Component {
     }
 
     this.setState({
-      isTable: this.getLayoutAttrValue('isTable'),
-      isInfinite: this.getLayoutAttrValue('isInfinite'),
+      updatedSince: this.getLayoutAttrValue('updatedSince'),
+      includeRetired: this.getLayoutAttrValue('includeRetired', 'bool'),
+      isTable: this.getLayoutAttrValue('isTable', 'bool'),
+      isInfinite: this.getLayoutAttrValue('isInfinite', 'bool'),
+      limit: this.getLayoutAttrValue('limit', 'int'),
+      page: this.getLayoutAttrValue('page', 'int'),
+      sortParams: this.getLayoutAttrValue('sortParams', 'obj'),
       resource: queryParams.get('type') || this.props.resource || 'concepts',
-      page: queryParams.get('page') || 1,
       isLoading: true,
       searchStr: queryParams.get('q') || '',
       exactMatch: queryParams.get('exactMatch') || 'off',
-      limit: parseInt(queryParams.get('limit')) || get(fixedFilters, 'limit') || DEFAULT_LIMIT,
       viewFilters: this.props.viewFilters || {},
       userFilters: userFilters,
-      sortParams: get(fixedFilters, 'sortParams') || this.state.sortParams,
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
     }, this.fetchNewResults)
@@ -409,6 +431,27 @@ class Search extends React.Component {
     this.setState({isInfinite: !this.state.isInfinite})
   }
 
+  onShareClick = () => {
+    let url = this.props.match.url;
+    url += `?q=${this.state.searchStr || ''}`
+    url += `&isTable=${this.state.isTable === true}`
+    url += `&page=${this.state.page}`
+    url += `&exactMatch=${this.state.exactMatch}`
+
+    if(this.state.limit !== DEFAULT_LIMIT)
+      url += `&limit=${this.state.limit || DEFAULT_LIMIT}`
+    if(!isEqual(this.state.sortParams, DEFAULT_SORT_PARAMS))
+      url += `&sortParams=${JSON.stringify(this.state.sortParams)}`
+    if(this.state.isInfinite)
+      url += `&isInfinite=true`
+    if(this.state.includeRetired)
+      url += `&includeRetired=true`
+    if(this.state.updatedSince)
+      url += `&updatedSince=${this.state.updatedSince}`
+
+    copyURL(window.location.origin + '/#' + url)
+  }
+
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
     const { nested, extraControls, fhir, extraControlFilters } = this.props;
@@ -497,6 +540,21 @@ class Search extends React.Component {
               />
             </span>
           ))
+        }
+        {
+          resource !== 'references' && !fhir &&
+          <span style={{paddingLeft: '4px'}}>
+            <Tooltip title='Copy Link to this results'>
+              <Chip
+                onClick={this.onShareClick}
+                icon={<ShareIcon fontSize='small' />}
+                label='Share'
+                color='secondary'
+                variant='outlined'
+                size={nested ? 'small' : 'medium'}
+              />
+            </Tooltip>
+          </span>
         }
       </span>
     )
