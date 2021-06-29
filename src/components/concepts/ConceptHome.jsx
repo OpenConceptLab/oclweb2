@@ -85,7 +85,7 @@ class ConceptHome extends React.Component {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
       APIService.new()
                 .overrideURL(encodeURI(this.getConceptURLFromPath()))
-                .get(null, null, {includeHierarchyPath: true})
+                .get(null, null, {includeHierarchyPath: true, includeParentConceptURLs: true})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})

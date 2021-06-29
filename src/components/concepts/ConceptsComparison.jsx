@@ -170,18 +170,22 @@ class ConceptsComparison extends React.Component {
     if(uri && attr && loadingAttr) {
       const { isVersion } = this.state;
       const isAnyVersion = isVersion || uri.match(/\//g).length === 8;
-      APIService.new().overrideURL(encodeURI(uri)).get(null, null, {includeInverseMappings: true}).then(response => {
-        if(get(response, 'status') === 200) {
-          const newState = {...this.state}
-          newState[attr] = this.formatConcept(response.data)
-          newState[loadingAttr] = false
-          newState.isVersion = isAnyVersion
-          if(isAnyVersion) {
-            newState.attributes['is_latest_version'] = {...cloneDeep(this.attributeState), type: 'bool', position: 14}
-            newState.attributes['update_comment'] = {...cloneDeep(this.attributeState), position: 15}
+      APIService
+        .new()
+        .overrideURL(encodeURI(uri))
+        .get(null, null, {includeInverseMappings: true, includeHierarchyPath: true, includeParentConceptURLs: true, includeChildConceptURLs: true})
+        .then(response => {
+          if(get(response, 'status') === 200) {
+            const newState = {...this.state}
+            newState[attr] = this.formatConcept(response.data)
+            newState[loadingAttr] = false
+            newState.isVersion = isAnyVersion
+            if(isAnyVersion) {
+              newState.attributes['is_latest_version'] = {...cloneDeep(this.attributeState), type: 'bool', position: 14}
+              newState.attributes['update_comment'] = {...cloneDeep(this.attributeState), position: 15}
+            }
+            this.setState(newState, this.sortMappings)
           }
-          this.setState(newState, this.sortMappings)
-        }
       })
     }
   }
