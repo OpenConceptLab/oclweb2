@@ -648,12 +648,11 @@ footer.footer-container {
     justify-content: flex-end;
     .footer-company {
         padding: 0 2px;
-        font-weight: bold;
     }
     hr.footer-divider-vertical {
         margin: 0 5px;
         background: $black;
-        width: 2px;
+        width: 1px;
     }
 }
 .pagination-center {
