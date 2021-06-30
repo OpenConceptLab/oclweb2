@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import {
   List as ListIcon,
 } from '@material-ui/icons'
@@ -13,22 +12,27 @@ const DEFAULT_FIELDS = [{source_type: 'Source Type'}]
 const LABEL_FIELDS = ['id', 'short_code', 'name', 'owner']
 
 const Source = props => {
-  const { summary, viewFields } = props;
+  const { summary, viewFields, history, currentLayoutURL, url } = props;
   const hasSummary = !isEmpty(summary);
   const mainClass = 'no-left-padding ' + hasSummary ? 'col-sm-9': 'col-sm-12';
   const customFields = isArray(viewFields) ? reject(viewFields, fieldConfig => includes(LABEL_FIELDS, keys(fieldConfig)[0])) : [];
   const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
+  const navigateTo = () => {
+    if(currentLayoutURL)
+      history.replace(currentLayoutURL)
+    history.push(url)
+  }
 
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <div className={mainClass}>
-        <Link to={props.url} style={{display: 'inline-block'}}>
+        <span onClick={navigateTo} style={{display: 'inline-block', cursor: 'pointer'}}>
           <ResourceLabel
             owner={props.owner} id={props.id} name={props.name}
             icon={<ListIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
             colorClass="source-bg"
           />
-        </Link>
+        </span>
         <div className='col-sm-12 no-side-padding resource-attributes'>
           {
             map(fields, field => {

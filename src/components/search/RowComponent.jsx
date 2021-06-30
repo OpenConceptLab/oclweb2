@@ -8,22 +8,22 @@ import Collection from '../collections/Collection';
 import Organization from '../orgs/Organization';
 import User from '../users/User';
 
-const RowComponent = ({resource, item, onSelect, viewFields}) => {
+const RowComponent = ({resource, item, onSelect, viewFields, history, currentLayoutURL}) => {
   const isSourceChild = includes(['concepts', 'mappings'], resource);
 
   const getComponent = () => {
     if(resource === 'concepts')
-      return <Concept {...item} viewFields={viewFields} style={{paddingLeft: '10px'}} />;
+      return <Concept {...item} viewFields={viewFields} history={history} currentLayoutURL={currentLayoutURL} style={{paddingLeft: '10px'}} />;
     if(resource === 'mappings')
-      return <Mapping {...item} viewFields={viewFields} style={{paddingLeft: '10px'}} />;
+      return <Mapping {...item} viewFields={viewFields} history={history} currentLayoutURL={currentLayoutURL} style={{paddingLeft: '10px'}} />;
     if(resource === 'sources')
-      return <Source {...item} viewFields={viewFields} style={{paddingLeft: '10px'}} />;
+      return <Source {...item} viewFields={viewFields} history={history} currentLayoutURL={currentLayoutURL} style={{paddingLeft: '10px'}} />;
     if(resource === 'collections')
-      return <Collection {...item} viewFields={viewFields} style={{paddingLeft: '10px'}} />;
+      return <Collection {...item} viewFields={viewFields} history={history} currentLayoutURL={currentLayoutURL} style={{paddingLeft: '10px'}} />;
     if(resource === 'organizations')
-      return <Organization {...item} viewFields={viewFields} style={{paddingLeft: '10px'}} />;
+      return <Organization {...item} viewFields={viewFields} history={history} currentLayoutURL={currentLayoutURL} style={{paddingLeft: '10px'}} />;
     if(resource === 'users')
-      return <User {...item} viewFields={viewFields} style={{paddingLeft: '10px'}} />;
+      return <User {...item} viewFields={viewFields} history={history} currentLayoutURL={currentLayoutURL} style={{paddingLeft: '10px'}} />;
   }
 
   return (

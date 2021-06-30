@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
-    onLoadMore, isInfinite, noControls, onReferencesDelete
+    onLoadMore, isInfinite, noControls, onReferencesDelete, history, currentLayoutURL
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
@@ -29,6 +29,7 @@ const Results = props => {
     item => <RowComponent
               key={item.uuid || item.id} onSelect={onSelectChange}
               item={item} resource={resource} viewFields={viewFields}
+              history={history} currentLayoutURL={currentLayoutURL}
     />
   )
   const infiniteResults = () => (

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { LocalOffer as LocalOfferIcon } from '@material-ui/icons'
 import { merge, get, isArray, reject, keys, isEmpty, includes, map } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
@@ -10,18 +9,24 @@ const DEFAULT_FIELDS = [{concept_class: 'Class'}, {datatype: 'Datatype'}]
 const LABEL_FIELDS = ['id', 'display_name', 'name', 'owner', 'source']
 
 const Concept = props => {
-  const { viewFields } = props;
+  const { viewFields, history, currentLayoutURL, url } = props;
   const customFields = isArray(viewFields) ? reject(viewFields, fieldConfig => includes(LABEL_FIELDS, keys(fieldConfig)[0])) : [];
   const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
 
+  const navigateTo = () => {
+    if(currentLayoutURL)
+      history.replace(currentLayoutURL)
+    history.push(url)
+  }
+
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
-      <Link to={props.url} style={{display: 'inline-block'}}>
+      <span onClick={navigateTo} style={{display: 'inline-block', cursor: 'pointer'}}>
         <ResourceLabel
           owner={props.owner} parent={props.source} id={props.display_name} name={props.id}
           icon={<LocalOfferIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
         />
-      </Link>
+      </span>
       <div className='col-sm-11 no-side-padding resource-attributes'>
         {
           map(fields, (field, i) => {

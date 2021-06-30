@@ -343,7 +343,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested, showPin, columns, hapi, fhir
+    nested, showPin, columns, hapi, fhir, history, currentLayoutURL
   } = props;
   const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
@@ -439,13 +439,16 @@ const ExpandibleRow = props => {
       return
     event.stopPropagation();
     event.preventDefault()
+    let url;
     if(fhir) {
       if(hapi)
-        window.location.hash = `/fhir/${resource}/${item.resource.id}`;
+        url = `/fhir/${resource}/${item.resource.id}`;
       else
-        window.location.hash = `/fhir${getOCLFHIRResourceURL(item)}`
-    } else
-      window.location.hash = item.url;
+        url = `/fhir${getOCLFHIRResourceURL(item)}`
+    } else url = item.url;
+
+    history.replace(currentLayoutURL)
+    history.push(url)
   }
 
   const onContextMenu = event => {
@@ -746,7 +749,8 @@ const ResultsTable = (
   {
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
-    isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir
+    isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
+    currentLayoutURL
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -903,6 +907,8 @@ const ResultsTable = (
                       columns={columns}
                       hapi={hapi}
                       fhir={fhir}
+                      history={history}
+                      currentLayoutURL={currentLayoutURL}
                     />
                   ))
                 }

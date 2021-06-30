@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   Link as LinkIcon,
 } from '@material-ui/icons'
@@ -17,7 +16,7 @@ const LABEL_STYLES = {
 };
 
 const Mapping = props => {
-  const { viewFields } = props;
+  const { viewFields, history, currentLayoutURL, url } = props;
   const customFields = isArray(viewFields) ? viewFields : [];
 
   const isFromConceptInContext = props.conceptContext === props.from_concept_code;
@@ -28,15 +27,20 @@ const Mapping = props => {
   const toConceptLabel = isToConceptInContext ?
                          <ThisConceptLabel /> :
                          <ToConceptLabel {...props} />;
+  const navigateTo = () => {
+    if(currentLayoutURL)
+      history.replace(currentLayoutURL)
+    history.push(url)
+  }
 
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
-      <Link to={props.url} style={{display: 'inline-block'}}>
+      <span onClick={navigateTo} style={{display: 'inline-block', cursor: 'pointer'}}>
         <ResourceLabel
           owner={props.owner} parent={props.source} id={props.id} name={props.map_type}
           icon={<LinkIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
         />
-      </Link>
+      </span>
       <div className='col-sm-12 no-left-padding' style={{margin: '5px'}}>
         <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
           From:

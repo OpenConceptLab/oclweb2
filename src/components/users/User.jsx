@@ -14,10 +14,16 @@ import LocationLabel from '../common/LocationLabel';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '4px', marginTop: '2px'}
 const User = props => {
+  const navigateTo = () => {
+    if(props.currentLayoutURL)
+      props.history.replace(props.currentLayoutURL)
+    props.history.push(props.url)
+  }
+
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <div className="col-sm-9 no-left-padding">
-        <Link to={props.url} style={{display: 'inline-block'}}>
+        <span onClick={navigateTo} style={{display: 'inline-block', cursor: 'pointer'}}>
           <div className='col-sm-12 no-side-padding'>
             <span className='resource-label ellipsis-text' style={{maxWidth: '100%'}}>
               <span style={{paddingTop: '5px'}}>
@@ -31,7 +37,7 @@ const User = props => {
               <span className='ellipsis-text'>{props.name}</span>
             </span>
           </div>
-        </Link>
+        </span>
         <div className='col-sm-12 no-side-padding resource-attributes'>
           {
             props.company &&

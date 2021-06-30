@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from "react-router";
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
   map, omit, isString
@@ -431,12 +432,24 @@ class Search extends React.Component {
     this.setState({isInfinite: !this.state.isInfinite})
   }
 
-  onShareClick = () => {
+  onShareClick = () => copyURL(this.convertURLToFQDN(this.getCurrentLayoutURL()))
+
+  convertURLToFQDN = url => window.location.origin + '/#' + url
+
+  getCurrentLayoutURL() {
     let url = this.props.match.url;
+    let resource = this.state.resource || 'concepts'
+    if(resource === 'organizations')
+      resource = 'orgs'
+    if(this.props.nested && !url.match('/'+resource))
+      url += url.endsWith('/') ? resource : '/' + resource
     url += `?q=${this.state.searchStr || ''}`
     url += `&isTable=${this.state.isTable === true}`
     url += `&page=${this.state.page}`
-    url += `&exactMatch=${this.state.exactMatch}`
+    url += `&exactMatch=${this.state.exactMatch || 'off'}`
+    if(!this.props.nested)
+      url += `&type=${this.state.resource || 'concepts'}`
+
 
     if(this.state.limit !== DEFAULT_LIMIT)
       url += `&limit=${this.state.limit || DEFAULT_LIMIT}`
@@ -449,7 +462,7 @@ class Search extends React.Component {
     if(this.state.updatedSince)
       url += `&updatedSince=${this.state.updatedSince}`
 
-    copyURL(window.location.origin + '/#' + url)
+    return url
   }
 
   getFilterControls() {
@@ -675,6 +688,8 @@ class Search extends React.Component {
                   noControls={noControls}
                   fhir={fhir}
                   hapi={hapi}
+                  history={this.props.history}
+                  currentLayoutURL={this.getCurrentLayoutURL()}
                 /> :
                 <Results
                   resource={resource}
@@ -688,6 +703,8 @@ class Search extends React.Component {
                   isInfinite={isInfinite}
                   onLoadMore={this.loadMore}
                   noControls={noControls}
+                  history={this.props.history}
+                  currentLayoutURL={this.getCurrentLayoutURL()}
                 />
               }
             </div>
@@ -707,4 +724,4 @@ class Search extends React.Component {
   }
 }
 
-export default Search;
+export default withRouter(Search);
