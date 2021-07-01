@@ -9,7 +9,9 @@ const CustomMarkdown = ({title, markdown}) => {
       { title && <h3> { title } </h3> }
       {
         markdown &&
-        <ReactMarkdown escapeHtml={false} remarkPlugins={[gfm]} children={markdown} />
+        <ReactMarkdown escapeHtml={false} remarkPlugins={[gfm]}>
+          { markdown }
+        </ReactMarkdown>
       }
     </div>
   );
