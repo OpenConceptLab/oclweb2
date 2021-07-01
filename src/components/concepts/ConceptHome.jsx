@@ -224,7 +224,7 @@ class ConceptHome extends React.Component {
                   data={hierarchy}
                   fetchChildren={this.fetchConceptChildren}
                   currentNodeURL={concept.url}
-                  hierarchyPath={[...concept.hierarchy_path, concept.url]}
+                  hierarchyPath={[...(concept.hierarchy_path || []), concept.url]}
                   onLoadMore={this.getHierarchy}
                   newChildren={newChildren}
                   isLoadingChildren={isLoadingHierarchy}
