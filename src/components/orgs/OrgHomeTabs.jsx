@@ -90,7 +90,7 @@ const OrgHomeTabs = props => {
               map(selectedTabConfig.fields, field => {
                 const value = field.value || get(org, field.id);
                 const label = field.label
-                return <CustomText key={value} title={label} value={value} format={field.format} url={field.url} />
+                return <CustomText key={value || field.url} title={label} value={value} format={field.format} url={field.url} />
               })
             }
           </div>

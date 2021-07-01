@@ -147,7 +147,7 @@ const SourceHomeTabs = props => {
               map(selectedTabConfig.fields, field => {
                 const value = field.value || get(source, field.id);
                 const label = field.label
-                return <CustomText key={value} title={label} value={value} format={field.format} />
+                return <CustomText key={value || field.url} title={label} value={value} format={field.format} url={field.url} />
               })
             }
           </div>
