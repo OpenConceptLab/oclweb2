@@ -131,7 +131,7 @@ class Search extends React.Component {
       isInfinite: this.getLayoutAttrValue('isInfinite', 'bool'),
       limit: this.getLayoutAttrValue('limit', 'int'),
       page: this.getLayoutAttrValue('page', 'int'),
-      sortParams: this.getLayoutAttrValue('sortParams', 'obj'),
+      sortParams: this.getLayoutAttrValue('sortParams', 'obj') || DEFAULT_SORT_PARAMS,
       resource: queryParams.get('type') || this.props.resource || 'concepts',
       isLoading: true,
       searchStr: queryParams.get('q') || '',
@@ -140,7 +140,7 @@ class Search extends React.Component {
       userFilters: userFilters,
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
-    }, this.fetchNewResults)
+    }, () => this.fetchNewResults(null, true, false))
   }
 
   componentDidUpdate(prevProps) {
