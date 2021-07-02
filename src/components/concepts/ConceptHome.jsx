@@ -218,17 +218,25 @@ class ConceptHome extends React.Component {
           !isLoading && !hasError &&
           <div className='col-md-12 home-container no-side-padding'>
             {
-              hierarchy && openHierarchy ?
+              openHierarchy ?
               <Split className='split' sizes={[25, 75]} minSize={50}>
-                <HierarchyTraversalList
-                  data={hierarchy}
-                  fetchChildren={this.fetchConceptChildren}
-                  currentNodeURL={concept.url}
-                  hierarchyPath={[...(concept.hierarchy_path || []), concept.url]}
-                  onLoadMore={this.getHierarchy}
-                  newChildren={newChildren}
-                  isLoadingChildren={isLoadingHierarchy}
-                />
+                <div>
+                  {
+                    hierarchy ?
+                    <HierarchyTraversalList
+                      data={hierarchy}
+                      fetchChildren={this.fetchConceptChildren}
+                      currentNodeURL={concept.url}
+                      hierarchyPath={[...(concept.hierarchy_path || []), concept.url]}
+                      onLoadMore={this.getHierarchy}
+                      newChildren={newChildren}
+                      isLoadingChildren={isLoadingHierarchy}
+                    /> :
+                    <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>
+                      <CircularProgress />
+                    </div>
+                  }
+                </div>
                 { conceptDetails }
               </Split> :
               conceptDetails
