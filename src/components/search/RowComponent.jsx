@@ -30,11 +30,11 @@ const RowComponent = ({resource, item, onSelect, viewFields, history, currentLay
     <div className='col-sm-12 no-side-padding' key={item.uuid || item.id} style={{width: '100%'}}>
       {
         isSourceChild &&
-        <div className='col-sm-1 no-left-padding' style={{textAlign: 'right', width: '2%'}}>
-          <Checkbox onChange={event => onSelect(event, item.url)} />
+        <div className='col-sm-1 no-left-padding' style={{textAlign: 'right', maxWidth: '2%'}}>
+          <Checkbox size='small' onChange={event => onSelect(event, item.url)} />
         </div>
       }
-      <div className='col-sm-11 no-right-padding' style={{width: '97%', overflow: 'auto'}}>
+      <div className='col-sm-11 no-right-padding' style={{maxWidth: '97%', overflow: 'auto'}}>
         {getComponent()}
       </div>
       <Divider style={{width: '100%'}} />

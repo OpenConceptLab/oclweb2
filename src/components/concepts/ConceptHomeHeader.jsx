@@ -26,7 +26,8 @@ import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 
 const ConceptHomeHeader = ({
-  concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick
+  concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick,
+  header
 }) => {
   const downloadFileName = isVersionedObject ?
                            `concept-${concept.id}` :
@@ -35,7 +36,7 @@ const ConceptHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const isAuthenticated = isLoggedIn();
   const resourceRelativeURL = isVersionedObject ? concept.url : concept.version_url;
-  const [openHeader, setOpenHeader] = React.useState(true);
+  const [openHeader, setOpenHeader] = React.useState(header);
   const [conceptForm, setConceptForm] = React.useState(false);
   const onRetire = () => {
     const prompt = alertifyjs.prompt()

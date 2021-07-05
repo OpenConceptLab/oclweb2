@@ -7,6 +7,7 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
+import { VerticalSplit as SplitViewIcon } from '@material-ui/icons';
 import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
@@ -51,7 +52,8 @@ const HIDDEN_ATTRIBUTES = {
   version_needed: 'boolean',
 }
 const SourceHomeHeader = ({
-  source, isVersionedObject, versionedObjectURL, currentURL, config
+  source, isVersionedObject, versionedObjectURL, currentURL, config,
+  splitViewOption, onSplitViewToggle, splitView
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
@@ -82,6 +84,12 @@ const SourceHomeHeader = ({
       else
         alertifyjs.error('Something bad happened!')
     })
+  }
+
+  const toggleSplitView = () => {
+    if(!splitView)
+      setOpenHeader(false)
+    onSplitViewToggle()
   }
 
   return (
@@ -145,6 +153,14 @@ const SourceHomeHeader = ({
                   <Tooltip arrow title='Delete Source'>
                     <Button onClick={() => setDeleteDialog(true) }>
                       <DeleteIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                }
+                {
+                  splitViewOption &&
+                  <Tooltip arrow title="Split View">
+                    <Button onClick={toggleSplitView} color={splitView ? 'primary' : 'secondary'}>
+                      <SplitViewIcon fontSize="inherit" />
                     </Button>
                   </Tooltip>
                 }

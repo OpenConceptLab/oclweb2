@@ -18,7 +18,7 @@ const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -169,6 +169,7 @@ const SourceHomeTabs = props => {
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
             configQueryParams={selectedTabConfig.query_params}
+            onSelect={onSelect}
           />
         }
       </div>

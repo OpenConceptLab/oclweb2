@@ -1,12 +1,17 @@
 import React from 'react';
+import Split from 'react-split'
 import { CircularProgress } from '@material-ui/core';
 import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit } from 'lodash';
+import { BLUE } from '../../common/constants';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
+import ConceptHome from '../concepts/ConceptHome';
+import MappingHome from '../mappings/MappingHome';
+import '../common/Split.scss';
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
 
@@ -38,6 +43,8 @@ class SourceHome extends React.Component {
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
+      splitView: false,
+      selected: null,
     }
   }
 
@@ -119,7 +126,7 @@ class SourceHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value}, () => {
+    this.setState({tab: value, selected: null}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
     })
@@ -207,15 +214,43 @@ class SourceHome extends React.Component {
     this.setState(newState)
   }
 
+  onResourceSelect = selected => this.setState({selected: selected})
+
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions
+      notFound, accessDenied, permissionDenied, isLoadingVersions, splitView, selected
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
     const showAboutTab = this.shouldShowAboutTab();
     const hasError = notFound || accessDenied || permissionDenied;
+    const tabsView = (
+      <SourceHomeTabs
+        tab={tab}
+        onTabChange={this.onTabChange}
+        source={source}
+        versions={versions}
+        location={this.props.location}
+        match={this.props.match}
+        versionedObjectURL={versionedObjectURL}
+        currentVersion={this.getCurrentVersion()}
+        aboutTab={showAboutTab}
+        onVersionUpdate={this.onVersionUpdate}
+        customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+        onConfigChange={this.onConfigChange}
+        selectedConfig={selectedConfig}
+        showConfigSelection={this.customConfigFeatureApplicable()}
+        isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
+        isLoadingVersions={isLoadingVersions}
+        splitView={splitView}
+        onSelect={this.onResourceSelect}
+      />
+    )
+    const currentTabConfig = get(selectedConfig, `config.tabs[${tab}]`)
+    const isMappingSelected = Boolean(selected && get(selected, 'map_type'))
+    const isConceptSelected = Boolean(selected && !isMappingSelected)
+    const splitViewSizes = splitView ? [35, 65] : [100, 0]
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -231,25 +266,35 @@ class SourceHome extends React.Component {
               versionedObjectURL={versionedObjectURL}
               currentURL={currentURL}
               config={selectedConfig}
+              splitViewOption={
+                includes(['concepts', 'mappings'], currentTabConfig.type)
+              }
+              onSplitViewToggle={() => this.setState({splitView: !this.state.splitView})}
+              splitView={splitView}
             />
-            <SourceHomeTabs
-              tab={tab}
-              onTabChange={this.onTabChange}
-              source={source}
-              versions={versions}
-              location={this.props.location}
-              match={this.props.match}
-              versionedObjectURL={versionedObjectURL}
-              currentVersion={this.getCurrentVersion()}
-              aboutTab={showAboutTab}
-              onVersionUpdate={this.onVersionUpdate}
-              customConfigs={[...customConfigs, DEFAULT_CONFIG]}
-              onConfigChange={this.onConfigChange}
-              selectedConfig={selectedConfig}
-              showConfigSelection={this.customConfigFeatureApplicable()}
-              isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
-              isLoadingVersions={isLoadingVersions}
-            />
+            <Split className='split' sizes={splitViewSizes} minSize={[50, 0]}>
+              {tabsView}
+              <div className='col-md-12' style={{display: splitView ? 'initial' : 'none'}}>
+                <React.Fragment>
+                  {
+                    isMappingSelected &&
+                    <MappingHome mapping={selected} location={{pathname: selected.version_url}} match={{params: {mappingVersion: null}}} header={false} />
+                  }
+                  {
+                    isConceptSelected &&
+                    <ConceptHome concept={selected} location={{pathname: selected.version_url}} match={{params: {conceptVersion: null}}} openHierarchy={false} header={false} />
+                  }
+                  {
+                    !isMappingSelected && !isConceptSelected &&
+                    <div className='flex-vertical-center col-md-12' style={{color: BLUE, justifyContent: 'center', marginTop: '100px', fontSize: '18px'}}>
+                      {
+                        `Please select a ${currentTabConfig.type === 'concepts' ? 'concept' : 'mapping'}`
+                      }
+                    </div>
+                  }
+                </React.Fragment>
+              </div>
+            </Split>
           </div>
         }
       </div>

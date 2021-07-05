@@ -47,7 +47,7 @@ const SelectedResourceControls = ({
   }
 
   return (
-    <span>
+    <span style={{display: 'inline-flex', width: 'max-content'}}>
       {
         shouldShowDownloadOption &&
         <DownloadButton

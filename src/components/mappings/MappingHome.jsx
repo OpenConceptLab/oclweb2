@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, get, isObject } from 'lodash';
+import { includes, get, isObject, has } from 'lodash';
 import APIService from '../../services/APIService';
 import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeTabs from './MappingHomeTabs';
@@ -129,6 +129,7 @@ class MappingHome extends React.Component {
               isVersionedObject={isVersionedObject}
               versionedObjectURL={this.getVersionedObjectURLFromPath()}
               currentURL={currentURL}
+              header={has(this.props, 'header') ? this.props.header : true}
             />
             <MappingHomeTabs
               tab={tab}

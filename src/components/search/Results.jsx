@@ -1,7 +1,7 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab'
-import { map, startCase, uniq, without, filter, includes, isEmpty, get } from 'lodash';
+import { map, startCase, uniq, without, filter, includes, isEmpty, get, find, last } from 'lodash';
 import RowComponent from './RowComponent';
 import SelectedResourceControls from './SelectedResourceControls';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -9,12 +9,13 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
-    onLoadMore, isInfinite, noControls, onReferencesDelete, history, currentLayoutURL
+    onLoadMore, isInfinite, noControls, onReferencesDelete, history, currentLayoutURL, onSelect
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
   const total = get(results, 'total', 0)
   const [selectedList, setSelectedList] = React.useState([]);
+
   const onSelectChange = (event, id) => {
     const newSelectedList = event.target.checked ?
                             uniq([...selectedList, id]) :
@@ -22,6 +23,9 @@ const Results = props => {
     setSelectedList(newSelectedList)
     if (props.onSelectChange)
       props.onSelectChange(newSelectedList);
+
+    if(onSelect)
+      onSelect(find(results.items, {url: last(newSelectedList)}))
   }
   const selectedItemObjects = filter(items, item => includes(selectedList, item.url));
   const resultDOM = () => map(

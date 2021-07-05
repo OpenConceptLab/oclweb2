@@ -18,7 +18,7 @@ import {
 import { Pagination } from '@material-ui/lab'
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact, flatten
+  isFunction, compact, flatten, last
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -612,7 +612,7 @@ const ExpandibleRow = props => {
         {
           isSelectable &&
           <TableCell>
-            <Checkbox checked={selected} onClick={onCheckboxClick} />
+            <Checkbox size='small' checked={selected} onClick={onCheckboxClick} />
           </TableCell>
         }
         {
@@ -750,7 +750,7 @@ const ResultsTable = (
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
-    currentLayoutURL
+    currentLayoutURL, onSelect
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -779,9 +779,13 @@ const ResultsTable = (
   const onAllSelect = event => event.target.checked ?
                              setSelectedList(map(results.items, 'id')) :
                              setSelectedList([]);
-  const updateSelected = (id, selected) => selected ?
-                                         setSelectedList(uniq([...selectedList, id])) :
-                                         setSelectedList(without(selectedList, id));
+  const updateSelected = (id, selected) => {
+    const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
+    setSelectedList(newList)
+
+    if(onSelect)
+      onSelect(find(results.items, {id: last(newList)}))
+  };
   const getOppositeOrder = order => order === 'asc' ? 'desc' : 'asc';
   const onSort = (event, columnId) => {
     const column = find(resourceDefinition.columns, {id: columnId})
@@ -849,7 +853,7 @@ const ResultsTable = (
                   {
                     isSelectable &&
                     <TableCell>
-                      <Checkbox style={{color: theadTextColor}} onChange={onAllSelect} />
+                      <Checkbox size='small' style={{color: theadTextColor}} onChange={onAllSelect} />
                     </TableCell>
                   }
                   {

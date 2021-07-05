@@ -1,7 +1,7 @@
 import React from 'react';
 import Split from 'react-split'
 import { CircularProgress } from '@material-ui/core';
-import { includes, get, isObject } from 'lodash';
+import { includes, get, isObject, isBoolean, has } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -10,7 +10,7 @@ import PermissionDenied from '../common/PermissionDenied';
 import HierarchyTraversalList from './HierarchyTraversalList';
 import ConceptHomeHeader from './ConceptHomeHeader';
 import ConceptHomeTabs from './ConceptHomeTabs';
-import './Split.scss';
+import '../common/Split.scss';
 
 const TABS = ['details', 'mappings', 'history'];
 
@@ -30,7 +30,7 @@ class ConceptHome extends React.Component {
       versions: [],
       mappings: [],
       tab: this.getDefaultTabIndex(),
-      openHierarchy: true,
+      openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : true,
     }
   }
 
@@ -195,6 +195,7 @@ class ConceptHome extends React.Component {
           currentURL={currentURL}
           hierarchy={openHierarchy}
           onHierarchyClick={this.toggleHierarchy}
+          header={has(this.props, 'header') ? this.props.header : true}
         />
         <ConceptHomeTabs
           tab={tab}

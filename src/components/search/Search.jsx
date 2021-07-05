@@ -478,7 +478,7 @@ class Search extends React.Component {
     const sortOn = sortDesc || sortAsc;
     const sortBy = sortDesc ? 'desc' : 'asc'
     return (
-      <span style={{display: 'inline-flex', alignItems: 'center', width: 'max-content'}}>
+      <span style={{display: 'inline-flex', alignItems: 'center', width: '135%', overflow: 'auto'}}>
         {
           extraControls &&
           <span style={{paddingRight: '4px'}}>
@@ -489,7 +489,7 @@ class Search extends React.Component {
         }
         {
           resource !== 'references' && !fhir &&
-          <span>
+          <React.Fragment>
             {
               includes(['concepts', 'mappings'], resource) &&
               <span style={{paddingRight: '4px'}}>
@@ -517,7 +517,7 @@ class Search extends React.Component {
                 <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={sortOn} sortBy={sortBy} />
               </span>
             }
-          </span>
+          </React.Fragment>
 
         }
         {
@@ -600,7 +600,7 @@ class Search extends React.Component {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
-      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi
+      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi, onSelect
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite
@@ -690,6 +690,7 @@ class Search extends React.Component {
                   hapi={hapi}
                   history={this.props.history}
                   currentLayoutURL={this.getCurrentLayoutURL()}
+                  onSelect={onSelect}
                 /> :
                 <Results
                   resource={resource}
@@ -705,6 +706,7 @@ class Search extends React.Component {
                   noControls={noControls}
                   history={this.props.history}
                   currentLayoutURL={this.getCurrentLayoutURL()}
+                  onSelect={onSelect}
                 />
               }
             </div>

@@ -33,7 +33,7 @@ const LABEL_STYLES = {
 };
 
 const MappingHomeHeader = ({
-  mapping, isVersionedObject, versionedObjectURL, currentURL
+  mapping, isVersionedObject, versionedObjectURL, currentURL, header
 }) => {
   const downloadFileName = isVersionedObject ?
                            `mapping-${mapping.id}` :
@@ -42,7 +42,7 @@ const MappingHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const isAuthenticated = isLoggedIn();
   const resourceRelativeURL = isVersionedObject ? mapping.url : mapping.version_url;
-  const [openHeader, setOpenHeader] = React.useState(true);
+  const [openHeader, setOpenHeader] = React.useState(header);
   const [mappingForm, setMappingForm] = React.useState(false);
   const onRetire = () => {
     const prompt = alertifyjs.prompt()
