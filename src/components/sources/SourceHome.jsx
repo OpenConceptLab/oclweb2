@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import SourceHomeTabs from './SourceHomeTabs';
@@ -129,7 +129,7 @@ class SourceHome extends React.Component {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
                 .overrideURL(this.getURLFromPath())
-                .get(null, null, {includeSummary: true, includeClientConfigs: true})
+                .get(null, null, {includeClientConfigs: true})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, notFound: true, source: {}, accessDenied: false, permissionDenied: false})
@@ -149,6 +149,7 @@ class SourceHome extends React.Component {
                       selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
+                      this.fetchSummary()
                       const tab = this.getDefaultTabIndex()
                       if(tab === 0)
                         this.setTab()
@@ -159,6 +160,16 @@ class SourceHome extends React.Component {
                 })
 
     })
+  }
+
+  fetchSummary() {
+    APIService.new()
+              .overrideURL(this.getURLFromPath())
+              .appendToUrl('summary/')
+              .get()
+              .then(response => this.setState({
+                source: {...this.state.source, summary: omit(response.data, ['id', 'uuid'])}
+              }))
   }
 
   onConfigChange = config => this.setState({selectedConfig: config}, () => {
