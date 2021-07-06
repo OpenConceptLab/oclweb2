@@ -9,7 +9,7 @@ const DEFAULT_FIELDS = [{concept_class: 'Class'}, {datatype: 'Datatype'}]
 const LABEL_FIELDS = ['id', 'display_name', 'name', 'owner', 'source']
 
 const Concept = props => {
-  const { viewFields, history, currentLayoutURL, url } = props;
+  const { viewFields, history, currentLayoutURL, url, hideAttributes } = props;
   const customFields = isArray(viewFields) ? reject(viewFields, fieldConfig => includes(LABEL_FIELDS, keys(fieldConfig)[0])) : [];
   const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
 
@@ -23,30 +23,35 @@ const Concept = props => {
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <span onClick={navigateTo} style={{display: 'inline-block', cursor: 'pointer'}}>
         <ResourceLabel
-          owner={props.owner} parent={props.source} id={props.display_name} name={props.id}
+          id={props.display_name} name={props.id} noSeparator
           icon={<LocalOfferIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
         />
       </span>
-      <div className='col-sm-11 no-side-padding resource-attributes'>
-        {
-          map(fields, (field, i) => {
-            const attr = keys(field)[0]
-            const label = field[attr];
-            return (
-              <React.Fragment key={attr}>
-                <span className='resource-attr'>
-                  {label}:
-                </span>
-                <span className='resource-value' style={{marginRight: '0px'}}>
-                  {get(props, attr, '')}
-                </span>
-                {i < fields.length - 1 && <span style={{marginRight: '5px'}}>, </span>}
-              </React.Fragment>
-            )
-          })
-        }
-      </div>
-      <LastUpdatedOnLabel date={props.version_created_on} />
+      {
+        !hideAttributes &&
+        <React.Fragment>
+        <div className='col-sm-11 no-side-padding resource-attributes'>
+          {
+            map(fields, (field, i) => {
+              const attr = keys(field)[0]
+              const label = field[attr];
+              return (
+                <React.Fragment key={attr}>
+                  <span className='resource-attr'>
+                    {label}:
+                  </span>
+                  <span className='resource-value' style={{marginRight: '0px'}}>
+                    {get(props, attr, '')}
+                  </span>
+                  {i < fields.length - 1 && <span style={{marginRight: '5px'}}>, </span>}
+                </React.Fragment>
+              )
+            })
+          }
+        </div>
+        <LastUpdatedOnLabel date={props.version_created_on} />
+        </React.Fragment>
+      }
     </div>
   )
 }

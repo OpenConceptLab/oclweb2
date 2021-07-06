@@ -3,13 +3,15 @@ import { CircularProgress } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab'
 import { map, startCase, uniq, without, filter, includes, isEmpty, get, find, last } from 'lodash';
 import RowComponent from './RowComponent';
+import MinimalRowComponent from './MinimalRowComponent';
 import SelectedResourceControls from './SelectedResourceControls';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
-    onLoadMore, isInfinite, noControls, onReferencesDelete, history, currentLayoutURL, onSelect
+    onLoadMore, isInfinite, noControls, onReferencesDelete, history, currentLayoutURL, onSelect,
+    splitView
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
@@ -30,26 +32,30 @@ const Results = props => {
   const selectedItemObjects = filter(items, item => includes(selectedList, item.url));
   const resultDOM = () => map(
     items,
-    item => <RowComponent
-              key={item.uuid || item.id} onSelect={onSelectChange}
-              item={item} resource={resource} viewFields={viewFields}
-              history={history} currentLayoutURL={currentLayoutURL}
-    />
+    item => splitView ?
+          <MinimalRowComponent
+            key={item.uuid || item.id} onSelect={onSelectChange}
+            item={item} resource={resource} viewFields={viewFields}
+            history={history} currentLayoutURL={currentLayoutURL} /> :
+          <RowComponent
+            key={item.uuid || item.id} onSelect={onSelectChange}
+            item={item} resource={resource} viewFields={viewFields}
+            history={history} currentLayoutURL={currentLayoutURL} />
   )
   const infiniteResults = () => (
-      <InfiniteScroll
-        dataLength={count}
-        next={onLoadMore}
-        hasMore={count !== total}
-        loader={<CircularProgress />}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>You have reached end of results!</b>
-          </p>
-        }
-      >
-        { resultDOM() }
-      </InfiniteScroll>
+    <InfiniteScroll
+      dataLength={count}
+      next={onLoadMore}
+      hasMore={count !== total}
+      loader={<CircularProgress />}
+      endMessage={
+        <p style={{ textAlign: "center" }}>
+          <b>You have reached end of results!</b>
+        </p>
+      }
+    >
+      { resultDOM() }
+    </InfiniteScroll>
   )
 
   const paginatedResults = () => (
@@ -73,14 +79,14 @@ const Results = props => {
   return (
     <div className='col-sm-12 no-side-padding'>
       {
-        !isEmpty(selectedItemObjects) && !noControls &&
+        !isEmpty(selectedItemObjects) && !noControls && !splitView &&
         <div className='col-sm-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
           <SelectedResourceControls
             selectedItems={selectedItemObjects}
             resource={resource}
             onCreateSimilarClick={onCreateSimilarClick}
             onCreateMappingClick={onCreateMappingClick}
-          onReferencesDelete={onReferencesDelete}
+            onReferencesDelete={onReferencesDelete}
           />
         </div>
       }

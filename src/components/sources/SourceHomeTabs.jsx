@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
 import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
-import { GREEN } from '../../common/constants';
+import { GREEN, TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
@@ -18,7 +18,7 @@ const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, onSplitViewToggle, splitView,
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -167,9 +167,17 @@ const SourceHomeTabs = props => {
             viewFilters={pickBy(selectedTabConfig.filters, isString)}
             extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
-            fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
+            fixedFilters={{
+              limit: selectedTabConfig.page_size,
+              isList: selectedTabConfig.layout === LIST_LAYOUT_ID,
+              isSplit: selectedTabConfig.layout === SPLIT_LAYOUT_ID,
+              isTable: !selectedTabConfig.layout || selectedTabConfig.layout === TABLE_LAYOUT_ID,
+              sortParams: getSortParams()
+            }}
             configQueryParams={selectedTabConfig.query_params}
             onSelect={onSelect}
+            onSplitViewToggle={onSplitViewToggle}
+            splitView={splitView}
           />
         }
       </div>

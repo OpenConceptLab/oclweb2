@@ -32,6 +32,7 @@ const DEFAULT_CONFIG = {
 class SourceHome extends React.Component {
   constructor(props) {
     super(props);
+    const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     this.state = {
       notFound: false,
       accessDenied: false,
@@ -43,7 +44,7 @@ class SourceHome extends React.Component {
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
-      splitView: false,
+      splitView: queryParams.get('isSplit') === 'true',
       selected: null,
     }
   }
@@ -126,7 +127,7 @@ class SourceHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value, selected: null}, () => {
+    this.setState({tab: value, selected: null, splitView: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
     })
@@ -216,6 +217,8 @@ class SourceHome extends React.Component {
 
   onResourceSelect = selected => this.setState({selected: selected})
 
+  toggleSplitView = () => this.setState({splitView: !this.state.splitView})
+
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
@@ -245,6 +248,7 @@ class SourceHome extends React.Component {
         isLoadingVersions={isLoadingVersions}
         splitView={splitView}
         onSelect={this.onResourceSelect}
+        onSplitViewToggle={this.toggleSplitView}
       />
     )
     const currentTabConfig = get(selectedConfig, `config.tabs[${tab}]`)
@@ -266,10 +270,6 @@ class SourceHome extends React.Component {
               versionedObjectURL={versionedObjectURL}
               currentURL={currentURL}
               config={selectedConfig}
-              splitViewOption={
-                includes(['concepts', 'mappings'], currentTabConfig.type)
-              }
-              onSplitViewToggle={() => this.setState({splitView: !this.state.splitView})}
               splitView={splitView}
             />
             <Split className='split' sizes={splitViewSizes} minSize={[50, 0]}>
