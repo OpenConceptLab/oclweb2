@@ -37,7 +37,7 @@ const RowComponent = ({resource, item, onSelect, viewFields, history, currentLay
       <div className='col-sm-11 no-right-padding' style={{maxWidth: '97%', overflow: 'auto'}}>
         {getComponent()}
       </div>
-      <Divider style={{width: '100%'}} />
+      <Divider style={{width: '100%', display: 'inline-block'}} />
     </div>
   )
 }

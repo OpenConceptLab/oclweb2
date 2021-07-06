@@ -20,7 +20,7 @@ const MinimalRowComponent = ({resource, item, onSelect}) => {
           }
         </div>
       </div>
-      <Divider style={{width: '100%'}} />
+      <Divider style={{width: '100%', display: 'inline-block'}} />
     </div>
   )
 }
