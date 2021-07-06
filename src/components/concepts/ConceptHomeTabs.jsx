@@ -5,18 +5,22 @@ import VersionList from '../common/VersionList';
 
 const ConceptHomeTabs = props => {
   const {
-    tab, concept, versions, mappings, currentURL, isVersionedObject, isLoadingMappings
+    tab, concept, versions, mappings, currentURL, isVersionedObject, isLoadingMappings, noRedirect,
+    onTabChange
   } = props;
   const resourceRelativeURL = isVersionedObject ? concept.url : concept.version_url;
   const conceptWithMappings = {...concept, mappings: mappings}
 
+  const detailsRedirectionProps = noRedirect ? {} : {component: "a", href: `#${resourceRelativeURL}details/`}
+  const historyRedirectionProps = noRedirect ? {} : {component: "a", href: `#${resourceRelativeURL}history/`}
+
   return (
     <div className='col-md-12 sub-tab'>
-      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}}>
-        <Tab label="Details" component="a" href={`#${resourceRelativeURL}details/`} />
-        <Tab label="History" component="a" href={`#${resourceRelativeURL}history/`} />
+      <Tabs className='sub-tab-header col-md-8 no-side-padding' value={tab} aria-label="concept-home-tabs"  classes={{indicator: 'hidden'}} onChange={onTabChange}>
+        <Tab label="Details" {...detailsRedirectionProps} />
+        <Tab label="History" {...historyRedirectionProps} />
       </Tabs>
-      <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%', minHeight: '100vh'}}>
         { tab === 0 && <ConceptHomeDetails concept={conceptWithMappings} isLoadingMappings={isLoadingMappings} currentURL={currentURL} /> }
         { tab === 1 && <VersionList versions={versions} resource='concept' /> }
       </div>

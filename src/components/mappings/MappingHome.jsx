@@ -137,6 +137,8 @@ class MappingHome extends React.Component {
               mapping={mapping}
               versions={versions}
               isVersionedObject={isVersionedObject}
+              noRedirect={this.props.noRedirect}
+              onTabChange={this.onTabChange}
             />
           </div>
         }

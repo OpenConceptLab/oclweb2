@@ -278,11 +278,11 @@ class SourceHome extends React.Component {
                 <React.Fragment>
                   {
                     isMappingSelected &&
-                    <MappingHome mapping={selected} location={{pathname: selected.version_url}} match={{params: {mappingVersion: null}}} header={false} />
+                    <MappingHome mapping={selected} location={{pathname: selected.version_url}} match={{params: {mappingVersion: null}}} header={false} noRedirect />
                   }
                   {
                     isConceptSelected &&
-                    <ConceptHome concept={selected} location={{pathname: selected.version_url}} match={{params: {conceptVersion: null}}} openHierarchy={false} header={false} />
+                    <ConceptHome concept={selected} location={{pathname: selected.version_url}} match={{params: {conceptVersion: null}}} openHierarchy={false} header={false} noRedirect />
                   }
                   {
                     !isMappingSelected && !isConceptSelected &&

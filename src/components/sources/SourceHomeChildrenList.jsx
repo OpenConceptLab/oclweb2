@@ -46,6 +46,7 @@ class SourceHomeChildrenList extends React.Component {
         {...this.props}
         nested
         essentialColumns
+        parentResource='source'
         baseURL={this.getURL()}
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         extraControls={this.getExtraControls()}

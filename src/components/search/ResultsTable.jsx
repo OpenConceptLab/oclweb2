@@ -733,10 +733,10 @@ const ExpandibleRow = props => {
           formComponent={
             item.concept_class ?
                          <ConceptHome
-                           concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: null}}}
+                           noRedirect concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: null}}}
                          /> :
                          <MappingHome
-                           mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: null}}}
+                           noRedirect mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: null}}}
                          />
           }
         />

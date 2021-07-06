@@ -156,7 +156,7 @@ class Search extends React.Component {
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
     }, () => {
-      if(this.state.isSplit && !this.props.splitView)
+      if(this.state.isSplit && !this.props.splitView && this.props.onSplitViewToggle)
         this.props.onSplitViewToggle()
       this.fetchNewResults(null, true, false)
     })
@@ -459,7 +459,7 @@ class Search extends React.Component {
       newState.isInfinite = false
 
     this.setState(newState, () => {
-      if(includes([newLayoutId, existingLayoutId], SPLIT_LAYOUT_ID))
+      if(includes([newLayoutId, existingLayoutId], SPLIT_LAYOUT_ID) && this.props.onSplitViewToggle)
         this.props.onSplitViewToggle()
     })
   }
@@ -503,7 +503,7 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { nested, extraControls, fhir, extraControlFilters } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters, parentResource } = this.props;
     const {
       updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams, userFilters
@@ -560,7 +560,7 @@ class Search extends React.Component {
         {
           resource !== 'references' && !fhir &&
           <span style={{paddingLeft: '4px'}}>
-            <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} includeSplitView={nested && isSourceChild} />
+            <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} includeSplitView={nested && isSourceChild && parentResource === 'source'} />
           </span>
         }
         {

@@ -198,6 +198,7 @@ class ConceptHome extends React.Component {
           header={has(this.props, 'header') ? this.props.header : true}
         />
         <ConceptHomeTabs
+          noRedirect={this.props.noRedirect}
           tab={tab}
           onChange={this.onTabChange}
           concept={concept}
@@ -206,6 +207,7 @@ class ConceptHome extends React.Component {
           isLoadingMappings={isLoadingMappings}
           currentURL={currentURL}
           isVersionedObject={isVersionedObject}
+          onTabChange={this.onTabChange}
         />
       </div>
     )
