@@ -37,7 +37,7 @@ if [[ "$INCREASE_MAINTENANCE_VERSION" = true ]]; then
   sed -i "s/\"version\": \"$PROJECT_VERSION\"/\"version\": \"$NEW_PROJECT_VERSION\"/" $VERSION_FILE
 
   git add $VERSION_FILE
-  git commit -m "Increase maintenance version to $NEW_PROJECT_VERSION"
+  git commit -m "[skip ci] Increase maintenance version to $NEW_PROJECT_VERSION"
 
   git push origin master
 fi
