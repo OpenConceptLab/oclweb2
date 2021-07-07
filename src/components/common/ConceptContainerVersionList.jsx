@@ -145,11 +145,13 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                             !fhir &&
                             <div className='col-md-12 no-side-padding' style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '5px'}}>
                               {
+                                version.summary ?
                                 map(CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS, (tag, i) => (
                                   <Link to={version[tag.hrefAttr]} key={tag.id} style={i === 0 ? {marginRight: '10px'} : {}}>
                                     {getTag(tag, version)}
                                   </Link>
-                                ))
+                                )) :
+                                <CircularProgress style={{width: '20px', height: '20px'}} />
                               }
                             </div>
                           }

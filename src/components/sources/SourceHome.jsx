@@ -1,7 +1,7 @@
 import React from 'react';
 import Split from 'react-split'
 import { CircularProgress } from '@material-ui/core';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach } from 'lodash';
 import { BLUE } from '../../common/constants';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
@@ -119,10 +119,36 @@ class SourceHome extends React.Component {
     this.setState({isLoadingVersions: true}, () => {
       APIService.new()
                 .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-                .get(null, null, {verbose: true, includeSummary: true})
+                .get(null, null, {verbose: true})
                 .then(response => {
-                  this.setState({versions: response.data, isLoadingVersions: false})
+                  this.setState({versions: response.data, isLoadingVersions: false}, this.fetchVersionsSummary)
                 })
+    })
+  }
+
+  setHEADSummary() {
+    if(this.state.source.summary) {
+      const newState = {...this.state}
+      const head = find(newState.versions, {id: 'HEAD'})
+      if(head) {
+        head.summary = this.state.source.summary
+        this.setState(newState)
+      }
+
+    }
+  }
+
+  fetchVersionsSummary() {
+    forEach(this.state.versions, version => {
+      if(version.id === 'HEAD')
+        this.setHEADSummary()
+      else
+        APIService.new().overrideURL(version.version_url).appendToUrl('summary/').get().then(response => {
+          const newState = {...this.state}
+          const _version = find(newState.versions, {uuid: version.uuid})
+          _version.summary = omit(response.data, ['id', 'uuid'])
+          this.setState(newState)
+        })
     })
   }
 
@@ -177,7 +203,7 @@ class SourceHome extends React.Component {
               .get()
               .then(response => this.setState({
                 source: {...this.state.source, summary: omit(response.data, ['id', 'uuid'])}
-              }))
+              }, this.setHEADSummary))
   }
 
   onConfigChange = config => this.setState({selectedConfig: config}, () => {
