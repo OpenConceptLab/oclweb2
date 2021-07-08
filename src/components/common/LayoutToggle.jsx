@@ -7,6 +7,7 @@ import {
   ArrowDropDown as ArrowDropDownIcon
 } from '@material-ui/icons';
 import { find, map } from 'lodash';
+import { isAdminUser } from '../../common/utils';
 import {
   TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID
 } from '../../common/constants'
@@ -21,7 +22,7 @@ const SPLIT_VIEW_OPTION = {id: SPLIT_LAYOUT_ID, name: 'Split View', icon: <Split
 const LayoutToggle = ({ layoutId, onClick, size, includeSplitView }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const selectedLayoutId = layoutId || 'table';
-  const options = includeSplitView ? [...OPTIONS, SPLIT_VIEW_OPTION] : OPTIONS
+  const options = (includeSplitView && isAdminUser()) ? [...OPTIONS, SPLIT_VIEW_OPTION] : OPTIONS
   const selectedLayout = find(options, {id: selectedLayoutId})
   const toggleAnchor = event => setAnchorEl(anchorEl ? null : event.currentTarget)
   const onSelect = id => {
