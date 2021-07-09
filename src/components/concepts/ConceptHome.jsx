@@ -18,6 +18,7 @@ class ConceptHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isUpdatingFromHierarchy: false,
       isLoadingHierarchy: false,
       newChildren: [],
       hierarchy: false,
@@ -41,7 +42,7 @@ class ConceptHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname) {
+    if(prevProps.location.pathname !== this.props.location.pathname && !this.state.isUpdatingFromHierarchy) {
       this.refreshDataByURL()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
@@ -76,15 +77,13 @@ class ConceptHome extends React.Component {
   }
 
   getVersionedObjectURLFromPath() {
-    const { location } = this.props;
-
-    return location.pathname.split('/').slice(0, 7).join('/') + '/';
+    return this.props.location.pathname.split('/').slice(0, 7).join('/') + '/';
   }
 
-  refreshDataByURL() {
+  refreshDataByURL(url) {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
       APIService.new()
-                .overrideURL(encodeURI(this.getConceptURLFromPath()))
+                .overrideURL(encodeURI(url || this.getConceptURLFromPath()))
                 .get(null, null, {includeHierarchyPath: true, includeParentConceptURLs: true})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
@@ -108,8 +107,7 @@ class ConceptHome extends React.Component {
     })
   }
 
-  getHierarchy = () => {
-    this.setState({isLoadingHierarchy: true}, () => {
+  getHierarchy = () => this.setState({isLoadingHierarchy: true}, () => {
       const { hierarchy } = this.state
       const offset = hierarchy ? hierarchy.offset + 100 : 0
       const limit = get(hierarchy, 'limit', 100)
@@ -134,13 +132,12 @@ class ConceptHome extends React.Component {
             })
         })
     })
-  }
 
-  fetchConceptChildren = (url, callback) => {
-    APIService.new()
-              .overrideURL(url)
-              .appendToUrl(`children/`).get().then(response => callback(response.data))
-  }
+  fetchConceptChildren = (url, callback) => APIService.new()
+                                                      .overrideURL(url)
+                                                      .appendToUrl(`children/`)
+                                                      .get()
+                                                      .then(response => callback(response.data))
 
   getVersions() {
     APIService.new()
@@ -162,18 +159,34 @@ class ConceptHome extends React.Component {
     })
   }
 
-  onTabChange = (event, value) => {
-    this.setState({tab: value}, () => {
-      if(value === 1)
-        this.getVersions()
-    })
-  }
+  onTabChange = (event, value) => this.setState({tab: value}, () => value === 1 && this.getVersions())
 
   isVersionedObject() {
     const version = this.props.match.params.conceptVersion;
     if(version)
       return includes(TABS, version)
     return true
+  }
+
+  onConceptClick = concept => {
+    this.setState({isUpdatingFromHierarchy: true, isLoading: true}, () => {
+      window.location.hash = concept.url
+      APIService.new()
+                .overrideURL(encodeURI(concept.url))
+                .get().then(response => {
+                  this.setState(
+                    {
+                      isLoading: false,
+                      concept: response.data,
+                      isUpdatingFromHierarchy: false
+                    },
+                    () => {
+                      this.state.tab === 1 ? this.getVersions() : this.getMappings()
+                      window.scrollTo(0, 0)
+                    }
+                  )
+                })
+    })
   }
 
   render() {
@@ -186,32 +199,6 @@ class ConceptHome extends React.Component {
     const isVersionedObject = this.isVersionedObject()
     const hasError = notFound || accessDenied || permissionDenied;
     const conceptDetails = (
-      <div>
-        <ConceptHomeHeader
-          concept={concept}
-          mappings={mappings}
-          isVersionedObject={isVersionedObject}
-          versionedObjectURL={this.getVersionedObjectURLFromPath()}
-          currentURL={currentURL}
-          hierarchy={openHierarchy}
-          onHierarchyClick={this.toggleHierarchy}
-          header={has(this.props, 'header') ? this.props.header : true}
-        />
-        <ConceptHomeTabs
-          noRedirect={this.props.noRedirect}
-          tab={tab}
-          onChange={this.onTabChange}
-          concept={concept}
-          versions={versions}
-          mappings={mappings}
-          isLoadingMappings={isLoadingMappings}
-          currentURL={currentURL}
-          isVersionedObject={isVersionedObject}
-          onTabChange={this.onTabChange}
-        />
-      </div>
-    )
-    return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
         { notFound && <NotFound /> }
@@ -219,33 +206,62 @@ class ConceptHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-md-12 home-container no-side-padding'>
-            {
-              openHierarchy ?
-              <Split className='split' sizes={[25, 75]} minSize={50}>
-                <div>
-                  {
-                    hierarchy ?
-                    <HierarchyTraversalList
-                      data={hierarchy}
-                      fetchChildren={this.fetchConceptChildren}
-                      currentNodeURL={concept.url}
-                      hierarchyPath={[...(concept.hierarchy_path || []), concept.url]}
-                      onLoadMore={this.getHierarchy}
-                      newChildren={newChildren}
-                      isLoadingChildren={isLoadingHierarchy}
-                    /> :
-                    <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>
-                      <CircularProgress />
-                    </div>
-                  }
-                </div>
-                { conceptDetails }
-              </Split> :
-              conceptDetails
-            }
-          </div>
+          <React.Fragment>
+            <ConceptHomeHeader
+              concept={concept}
+              mappings={mappings}
+              isVersionedObject={isVersionedObject}
+              versionedObjectURL={this.getVersionedObjectURLFromPath()}
+              currentURL={currentURL}
+              hierarchy={openHierarchy}
+              onHierarchyClick={this.toggleHierarchy}
+              header={has(this.props, 'header') ? this.props.header : true}
+            />
+            <ConceptHomeTabs
+              noRedirect={this.props.noRedirect}
+              tab={tab}
+              onChange={this.onTabChange}
+              concept={concept}
+              versions={versions}
+              mappings={mappings}
+              isLoadingMappings={isLoadingMappings}
+              currentURL={currentURL}
+              isVersionedObject={isVersionedObject}
+              onTabChange={this.onTabChange}
+            />
+          </React.Fragment>
         }
+      </div>
+    )
+    return (
+      <div>
+        <div className='col-md-12 home-container no-side-padding'>
+          {
+            openHierarchy ?
+            <Split className='split' sizes={[25, 75]} minSize={50}>
+              <div>
+                {
+                  hierarchy ?
+                  <HierarchyTraversalList
+                    data={hierarchy}
+                    fetchChildren={this.fetchConceptChildren}
+                    currentNodeURL={concept.url}
+                    hierarchyPath={[...(concept.hierarchy_path || []), concept.url]}
+                    onLoadMore={this.getHierarchy}
+                    newChildren={newChildren}
+                    isLoadingChildren={isLoadingHierarchy}
+                    onClick={this.onConceptClick}
+                  /> :
+                  <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}>
+                    <CircularProgress />
+                  </div>
+                }
+              </div>
+              { conceptDetails }
+            </Split> :
+            conceptDetails
+          }
+        </div>
       </div>
     )
   }
