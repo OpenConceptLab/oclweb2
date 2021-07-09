@@ -95,10 +95,7 @@ class OrgHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(
-      (prevProps.location.pathname !== this.props.location.pathname) ||
-      (prevProps.location.search !== this.props.location.search)
-    ) {
+    if(prevProps.location.pathname !== this.props.location.pathname) {
       this.refreshDataByURL()
       this.getPins()
     }

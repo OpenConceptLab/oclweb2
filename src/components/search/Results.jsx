@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
-    onLoadMore, isInfinite, noControls, onReferencesDelete, history, currentLayoutURL, onSelect,
+    onLoadMore, isInfinite, noControls, onReferencesDelete, history, onSelect,
     splitView
   } = props;
   const items = get(results, 'items', [])
@@ -35,12 +35,11 @@ const Results = props => {
     item => splitView ?
           <MinimalRowComponent
             key={item.uuid || item.id} onSelect={onSelectChange}
-            item={item} resource={resource} viewFields={viewFields}
-            history={history} currentLayoutURL={currentLayoutURL} /> :
+            item={item} resource={resource} /> :
           <RowComponent
             key={item.uuid || item.id} onSelect={onSelectChange}
             item={item} resource={resource} viewFields={viewFields}
-            history={history} currentLayoutURL={currentLayoutURL} />
+            history={history} />
   )
   const infiniteResults = () => (
     <InfiniteScroll

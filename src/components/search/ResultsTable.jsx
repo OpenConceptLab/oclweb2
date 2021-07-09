@@ -343,7 +343,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested, showPin, columns, hapi, fhir, history, currentLayoutURL
+    nested, showPin, columns, hapi, fhir, history
   } = props;
   const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
@@ -447,7 +447,6 @@ const ExpandibleRow = props => {
         url = `/fhir${getOCLFHIRResourceURL(item)}`
     } else url = item.url;
 
-    history.replace(currentLayoutURL)
     history.push(url)
   }
 
@@ -750,7 +749,7 @@ const ResultsTable = (
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
-    currentLayoutURL, onSelect
+    onSelect
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -912,7 +911,6 @@ const ResultsTable = (
                       hapi={hapi}
                       fhir={fhir}
                       history={history}
-                      currentLayoutURL={currentLayoutURL}
                     />
                   ))
                 }

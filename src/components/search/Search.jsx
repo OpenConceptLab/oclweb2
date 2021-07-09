@@ -69,6 +69,7 @@ class Search extends React.Component {
       staticParams: {},
       includeRetired: false,
       userFilters: {},
+      isURLUpdatedByActionChange: false,
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -163,17 +164,18 @@ class Search extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(get(prevProps, 'location.search') !== get(this.props, 'location.search'))
+    const { isURLUpdatedByActionChange } = this.state
+    if(get(prevProps, 'location.search') !== get(this.props, 'location.search') && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
-    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL)
+    if(prevProps.baseURL !== this.props.baseURL && this.props.baseURL && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
-    if(!isEqual(prevProps.viewFilters, this.props.viewFilters))
+    if(!isEqual(prevProps.viewFilters, this.props.viewFilters) && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
-    if(!isEqual(prevProps.fixedFilters, this.props.fixedFilters))
+    if(!isEqual(prevProps.fixedFilters, this.props.fixedFilters) && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
-    if(!isEqual(prevProps.userFilters, this.props.userFilters))
+    if(!isEqual(prevProps.userFilters, this.props.userFilters) && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
-    if(!isEqual(prevProps.extraControlFilters, this.props.extraControlFilters))
+    if(!isEqual(prevProps.extraControlFilters, this.props.extraControlFilters) && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
   }
 
@@ -279,7 +281,7 @@ class Search extends React.Component {
   }
 
   onSearch = (value, exactMatch) => {
-    this.fetchNewResults({searchStr: value, page: 1, exactMatch: exactMatch}, true, true)
+    this.fetchNewResults({searchStr: value, page: 1, exactMatch: exactMatch}, true, true, true)
   }
 
   onFhirSearch = params => this.setState(
@@ -299,7 +301,7 @@ class Search extends React.Component {
     return {...queryParam, ...viewFilters}
   }
 
-  fetchNewResults(attrsToSet, counts=true, resetItems=true) {
+  fetchNewResults(attrsToSet, counts=true, resetItems=true, updateURL=false) {
     if(!attrsToSet)
       attrsToSet = {}
 
@@ -314,6 +316,8 @@ class Search extends React.Component {
         resourceState.isLoadingCount = true
       })
     }
+    if(!this.props.fhir)
+      newState.isURLUpdatedByActionChange = true
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
@@ -343,13 +347,19 @@ class Search extends React.Component {
         else
           params = {...params, page: page, ...fhirParams}
       }
+
       fetchSearchResults(
         _resource,
         params,
         !noHeaders,
         this.props.baseURL,
         null,
-        response => this.onSearchResultsLoad(resource, response, resetItems)
+        response => {
+          if(updateURL && !fhir)
+            window.location.hash = this.getCurrentLayoutURL()
+          this.onSearchResultsLoad(resource, response, resetItems)
+          setTimeout(() => this.setState({isURLUpdatedByActionChange: false}), 1000)
+        }
       )
       if(counts && !this.props.nested)
         fetchCounts(_resource, queryParams, this.onCountsLoad)
@@ -357,7 +367,7 @@ class Search extends React.Component {
   }
 
   loadMore = () => {
-    this.fetchNewResults({page: this.state.page + 1}, false, false);
+    this.fetchNewResults({page: this.state.page + 1}, false, false, true);
   }
 
   onPageChange = page => {
@@ -371,7 +381,7 @@ class Search extends React.Component {
           }
         }, () => this.fetchNewResults(null, false, false))
       else
-        this.fetchNewResults({page: page}, false, false)
+        this.fetchNewResults({page: page}, false, false, true)
 
     }
   }
@@ -385,7 +395,7 @@ class Search extends React.Component {
       }, () => this.fetchNewResults(null, false, true))
     }
     else
-      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true))
+      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true, true))
   }
 
   hasPrev() {
@@ -418,11 +428,11 @@ class Search extends React.Component {
 
     this.setState(
       {resource: resource, appliedFacets: {}, sortParams: {sortDesc: '_score'}, userFilters: {}},
-      () => this.fetchNewResults(null, shouldGetCounts, true)
+      () => this.fetchNewResults(null, shouldGetCounts, true, true)
     )
   }
 
-  onDateChange = date => this.fetchNewResults({updatedSince: date}, true, true)
+  onDateChange = date => this.fetchNewResults({updatedSince: date}, true, true, true)
 
   getUpdatedSinceText() {
     const { updatedSince } = this.state;
@@ -431,13 +441,14 @@ class Search extends React.Component {
     return 'All Time'
   }
 
-  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true)
+  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true, true)
 
   onLayoutChange = newLayoutId => {
     const existingLayoutId = this.getLayoutTypeName()
     if(newLayoutId === existingLayoutId)
       return
     const newState = { ...this.state }
+    newState.isURLUpdatedByActionChange = true
 
     if(newLayoutId === LIST_LAYOUT_ID) {
       newState.isTable = false
@@ -459,8 +470,12 @@ class Search extends React.Component {
       newState.isInfinite = false
 
     this.setState(newState, () => {
+      window.location.hash = this.getCurrentLayoutURL()
+
       if(includes([newLayoutId, existingLayoutId], SPLIT_LAYOUT_ID) && this.props.onSplitViewToggle)
         this.props.onSplitViewToggle()
+
+      setTimeout(() => this.setState({isURLUpdatedByActionChange: false}), 1000)
     })
   }
 
@@ -612,7 +627,7 @@ class Search extends React.Component {
 
   onLimitChange = limit => this.props.fhir ?
                          this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false)) :
-                         this.fetchNewResults({limit: limit}, false, true)
+                         this.fetchNewResults({limit: limit}, false, true, true)
 
   toggleFacetsDrawer = () => this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
 
@@ -630,7 +645,7 @@ class Search extends React.Component {
     else
       newFilters = omit(newFilters, id)
 
-    this.setState({userFilters: newFilters}, () => this.fetchNewResults(null, false, true))
+    this.setState({userFilters: newFilters}, () => this.fetchNewResults(null, false, true, true))
   }
 
   render() {
@@ -727,7 +742,6 @@ class Search extends React.Component {
                   fhir={fhir}
                   hapi={hapi}
                   history={this.props.history}
-                  currentLayoutURL={this.getCurrentLayoutURL()}
                   onSelect={onSelect}
                 /> :
                 <Results
@@ -743,7 +757,6 @@ class Search extends React.Component {
                   onLoadMore={this.loadMore}
                   noControls={noControls}
                   history={this.props.history}
-                  currentLayoutURL={this.getCurrentLayoutURL()}
                   onSelect={onSelect}
                   splitView={isSplit}
                 />
