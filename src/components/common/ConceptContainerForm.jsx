@@ -11,9 +11,10 @@ import {
   find, intersectionBy
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, getCurrentURL, fetchLocales } from '../../common/utils';
+import { arrayToObject, getCurrentURL } from '../../common/utils';
 import ExtrasForm from './ExtrasForm';
 import RTEditor from './RTEditor';
+import LocaleAutoComplete from './LocaleAutoComplete';
 const JSON_MODEL = {key: '', value: ''}
 
 
@@ -70,7 +71,7 @@ class ConceptContainerForm extends React.Component {
   }
 
   componentDidMount() {
-    fetchLocales(locales => this.setState({locales: locales}))
+    //fetchLocales(locales => this.setState({locales: locales}))
     const { edit, resource, newCollectionProps } = this.props
 
     this.setState({typeAttr: this.isSource() ? 'source_type' : 'collection_type'}, () => {
@@ -296,7 +297,7 @@ class ConceptContainerForm extends React.Component {
     } = this.props;
     const isSource = this.isSource()
     const selected_type = isSource ? selected_source_type : selected_collection_type;
-    const isLoading = isEmpty(locales);
+    const isLoading = false && isEmpty(locales);
     const resourceTypeLabel = startCase(resourceType)
     const header = edit ? `Edit ${resourceTypeLabel}: ${fields.id}` : `New ${resourceTypeLabel}`
     return (
@@ -420,53 +421,25 @@ class ConceptContainerForm extends React.Component {
                 </FormControl>
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
-                <Autocomplete
-                  openOnFocus
-                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
-                  value={selected_default_locale}
+                <LocaleAutoComplete
                   id="fields.default_locale"
-                  options={locales}
-                  getOptionLabel={(option) => option.name}
-                  fullWidth
+                  label="Default Locale"
+                  onChange={this.onAutoCompleteChange}
                   required
-                  renderInput={
-                    params => <TextField
-                                {...params}
-                                error={Boolean(fieldErrors.default_locale)}
-                                      required
-                                      label="Default Locale"
-                                      variant="outlined"
-                                      fullWidth
-                    />
-                  }
-                  onChange={(event, item) => this.onAutoCompleteChange('fields.default_locale', item)}
+                  selected={selected_default_locale}
+                  error={Boolean(fieldErrors.default_locale)}
                 />
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
-                <Autocomplete
-                  className='multi-auto-select'
-                  multiple
-                  openOnFocus
-                  filterSelectedOptions
-                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
-                  value={selected_supported_locales}
+                <LocaleAutoComplete
                   id="fields.supported_locales"
-                  options={locales}
-                  getOptionLabel={(option) => option.name}
-                  fullWidth
-                  required
-                  renderInput={
-                    params => <TextField
-                                {...params}
-                                error={Boolean(fieldErrors.supported_locales)}
-                                      label="Supported Locales"
-                                      variant="outlined"
-                                      id='supported-locale-input'
-                                      required
-                                      fullWidth
-                    />
-                  }
+                  label="Supported Locales"
                   onChange={this.onMultiAutoCompleteChange}
+                  required
+                  multiple
+                  selected={selected_supported_locales}
+                  error={Boolean(fieldErrors.supported_locales)}
+                  filterSelectedOptions
                 />
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
