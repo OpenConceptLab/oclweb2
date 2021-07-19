@@ -1,3 +1,8 @@
+##### 2.0.16 - Mon Jul 19 09:00:32 2021 +0000
+- [OpenConceptLab/ocl_issues#835](https://github.com/OpenConceptLab/ocl_issues/issues/835) | hierarchy pane (beta) for admin users only
+- [OpenConceptLab/ocl_issues#845](https://github.com/OpenConceptLab/ocl_issues/issues/845) | Source/Collection form | locale autocomplete | fixing no default value
+- [OpenConceptLab/ocl_issues#845](https://github.com/OpenConceptLab/ocl_issues/issues/845) | Source/Collection form | async locales on typing
+- [OpenConceptLab/ocl_issues#809](https://github.com/OpenConceptLab/ocl_issues/issues/809) | Search View | URL changes on action/filter triggers
 ##### 2.0.15 - Fri Jul 9 13:23:25 2021 +0000
 - Story-OpenConceptLab/ocl_issues#830 | change logs to have issue numbers as links
 - Story-OpenConceptLab/ocl_issues#830 | python script to generate changelog/release-notes
