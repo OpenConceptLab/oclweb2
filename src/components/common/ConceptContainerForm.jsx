@@ -71,7 +71,6 @@ class ConceptContainerForm extends React.Component {
   }
 
   componentDidMount() {
-    //fetchLocales(locales => this.setState({locales: locales}))
     const { edit, resource, newCollectionProps } = this.props
 
     this.setState({typeAttr: this.isSource() ? 'source_type' : 'collection_type'}, () => {

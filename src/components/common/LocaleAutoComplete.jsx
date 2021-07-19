@@ -51,6 +51,7 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
           setOpen(false);
       }}
       getOptionSelected={(option, value) => option.uuid === get(value, 'uuid')}
+      defaultValue={isEmpty(selected) ? (multiple ? [] : '') : selected}
       value={selected || ''}
       id={id || 'localesAutoComplete'}
       options={locales}
