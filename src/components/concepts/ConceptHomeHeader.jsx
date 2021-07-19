@@ -9,7 +9,7 @@ import {
   FormatIndentIncrease as HierarchyIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
-import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL } from '../../common/utils';
+import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
@@ -142,11 +142,14 @@ const ConceptHomeHeader = ({
                     iconButton
                   />
                 }
-                <Tooltip arrow title={hierarchy ? 'Hide Hierarchy' : 'Show Hierarchy'}>
-                  <Button onClick={onHierarchyClick} color={hierarchy ? 'primary' : 'secondary'}>
-                    <HierarchyIcon fontSize='inherit' />
-                  </Button>
-                </Tooltip>
+                {
+                  isAdminUser() &&
+                  <Tooltip arrow title={hierarchy ? 'Hide Hierarchy' : 'Show Hierarchy (Beta)'}>
+                    <Button onClick={onHierarchyClick} color={hierarchy ? 'primary' : 'secondary'}>
+                      <HierarchyIcon fontSize='inherit' />
+                    </Button>
+                  </Tooltip>
+                }
                 <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} />
               </ButtonGroup>
             </span>

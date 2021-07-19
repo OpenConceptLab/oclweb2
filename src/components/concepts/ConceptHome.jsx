@@ -31,7 +31,7 @@ class ConceptHome extends React.Component {
       versions: [],
       mappings: [],
       tab: this.getDefaultTabIndex(),
-      openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : true,
+      openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
     }
   }
 
