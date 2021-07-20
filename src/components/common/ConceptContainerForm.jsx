@@ -61,6 +61,8 @@ class ConceptContainerForm extends React.Component {
         immutable: null, //only collection
         locked_date: '', // only collection - datetime
       },
+      selected_supported_locales: [],
+      selected_default_locale: null,
       typeAttr: '',
       fieldErrors: {},
       serverErrors: null,
