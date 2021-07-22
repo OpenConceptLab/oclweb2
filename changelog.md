@@ -1,3 +1,5 @@
+##### 2.0.17 - Tue Jul 20 05:16:35 2021 +0000
+- fixing locale auto complete for multi select
 ##### 2.0.16 - Mon Jul 19 09:00:32 2021 +0000
 - [OpenConceptLab/ocl_issues#835](https://github.com/OpenConceptLab/ocl_issues/issues/835) | hierarchy pane (beta) for admin users only
 - [OpenConceptLab/ocl_issues#845](https://github.com/OpenConceptLab/ocl_issues/issues/845) | Source/Collection form | locale autocomplete | fixing no default value
