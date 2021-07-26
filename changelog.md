@@ -1,3 +1,5 @@
+##### 2.0.18 - Mon Jul 26 08:23:00 2021 +0000
+- [OpenConceptLab/ocl_issues#854](https://github.com/OpenConceptLab/ocl_issues/issues/854) | Updated TermBrowser sidebar links
 ##### 2.0.17 - Tue Jul 20 05:16:35 2021 +0000
 - fixing locale auto complete for multi select
 ##### 2.0.16 - Mon Jul 19 09:00:32 2021 +0000
