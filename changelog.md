@@ -1,3 +1,6 @@
+##### 2.0.19 - Mon Jul 26 10:23:08 2021 +0000
+- [OpenConceptLab/ocl_issues#854](https://github.com/OpenConceptLab/ocl_issues/issues/854) | ConceptForm | locales fetch is async
+- [OpenConceptLab/ocl_issues#854](https://github.com/OpenConceptLab/ocl_issues/issues/854) | Fixed OCL Header Link
 ##### 2.0.18 - Mon Jul 26 08:23:00 2021 +0000
 - [OpenConceptLab/ocl_issues#854](https://github.com/OpenConceptLab/ocl_issues/issues/854) | Updated TermBrowser sidebar links
 ##### 2.0.17 - Tue Jul 20 05:16:35 2021 +0000
