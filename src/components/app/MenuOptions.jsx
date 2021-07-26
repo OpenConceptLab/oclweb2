@@ -17,21 +17,21 @@ import {
 } from '@material-ui/icons';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 
-export const MARKETING_SITE_URL = 'https://openconceptlab.org/';
+export const SITE_URL = 'https://openconceptlab.org/';
 const COMMUNITY_OPTIONS = [
   {
     label: 'Architecture Community Call',
-    href: MARKETING_SITE_URL + 'community-resources/ocl-architecture-call/',
+    href: SITE_URL + 'community-resources/ocl-architecture-call/',
     icon: <ArchCommunityCallIcon />
   },
   {
     label: 'Developer Community Call',
-    href: MARKETING_SITE_URL + 'community-resources/ocl-dev-community/',
+    href: SITE_URL + 'community-resources/ocl-dev-community/',
     icon: <DevCommunityCallIcon />
   },
   {
     label: 'OpenHIE Terminology Service Call',
-    href: MARKETING_SITE_URL + 'community-resources/community-calls/',
+    href: SITE_URL + 'community-resources/community-calls/',
     icon: <OpenHIETerminologyServiceIcon />
   },
   {
@@ -46,43 +46,43 @@ const COMMUNITY_OPTIONS = [
   },
   {
     label: 'OCL Mailing List',
-    href: MARKETING_SITE_URL + 'list/',
+    href: SITE_URL + 'list/',
     icon: <EmailIcon />
   },
 ];
 const TOOLS_OPTIONS = [
   {
     label: 'TermBrowser',
-    href: MARKETING_SITE_URL + 'ocl-tools/metadata-browser/',
+    href: SITE_URL + 'termbrowser/',
     icon: <MetadataBrowserIcon />
   },
   {
     label: 'Terminology Service',
-    href: MARKETING_SITE_URL + 'ocl-tools/terminology-service/',
+    href: SITE_URL + 'ocl-tools/terminology-service/',
     icon: <TerminologyServiceIcon />
   },
   {
     label: 'OpenMRS Dictionary Manager',
-    href: MARKETING_SITE_URL + 'community-resources/ocl-for-openmrs/',
+    href: SITE_URL + 'openmrs-dictionary-manager/',
     icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />
   },
 ];
 export const OPTIONS = [
   {
     label: 'About',
-    href: MARKETING_SITE_URL + 'about/',
+    href: SITE_URL + 'about/',
     icon: <AboutIcon />,
   },
   {
     label: 'Blog',
-    href: MARKETING_SITE_URL + 'blog/',
+    href: SITE_URL + 'blog/',
     icon: <BlogIcon />
   },
   {
     label: 'Community',
     nested: [...COMMUNITY_OPTIONS],
     icon: <CommunityIcon />,
-    href: MARKETING_SITE_URL + 'community-resources/'
+    href: SITE_URL + 'community-resources/'
   },
   {
     label: 'OCL Online',
@@ -94,11 +94,11 @@ export const OPTIONS = [
     label: 'Tools',
     nested: [...TOOLS_OPTIONS],
     icon: <ToolsIcon />,
-    href: MARKETING_SITE_URL + 'ocl-tools/'
+    href: SITE_URL + 'ocl-tools/'
   },
   {
     label: 'Contact',
-    href: MARKETING_SITE_URL + 'contact/',
+    href: SITE_URL + 'contact/',
     icon: <ContactIcon />
   }
 ];
