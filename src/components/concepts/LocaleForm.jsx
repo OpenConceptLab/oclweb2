@@ -4,16 +4,19 @@ import { TextField, Checkbox, IconButton, FormControlLabel } from '@material-ui/
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { find, get } from 'lodash'
 import { ERROR_RED } from '../../common/constants';
+import LocaleAutoComplete from '../common/LocaleAutoComplete';
 
 const LocaleForm = ({
-  localeAttr, index, onTextFieldChange, onAutoCompleteChange, onCheckboxChange, locales, types,
+  localeAttr, index, onTextFieldChange, onAutoCompleteChange, onCheckboxChange, types,
   onDelete, error, locale
 }) => {
   const isName = localeAttr === 'fields.names';
   const nameAttr = isName ? 'name' : 'description';
   const typeAttr = `${nameAttr}_type`;
   const localeType = get(locale, typeAttr);
-  const selectedLocale = get(locale, 'locale') ? find(locales, {id: locale.locale}) : null;
+  const [selectedLocale, setSelectedLocale] = React.useState(
+    locale.locale ? {id: locale.locale, name: locale.locale} : null
+  )
   let selectedLocaleType = localeType ? find(types, {id: locale[typeAttr]}) : null;
   const idPrefix = `${localeAttr}.${index}`;
   const borderColor = error ? ERROR_RED : 'lightgray'
@@ -23,21 +26,23 @@ const LocaleForm = ({
     selectedLocaleType = _type
     formattedTypes = [_type, ...types]
   }
+
+  const onLocaleChange = (event, item) => {
+    setSelectedLocale(item)
+    onAutoCompleteChange(`${idPrefix}.locale`, item)
+  }
   return (
     <div className='col-md-12' style={{border: `1px solid ${borderColor}`, borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
       <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
         <div className='col-md-10 no-side-padding'>
           <div className="col-md-6 no-left-padding">
-            <Autocomplete
-              openOnFocus
-              value={selectedLocale}
+            <LocaleAutoComplete
               id={`${idPrefix}.locale`}
-              options={locales}
-              getOptionLabel={(option) => option.name}
-              fullWidth
+              selected={selectedLocale}
+              onChange={onLocaleChange}
               required
-              renderInput={(params) => <TextField {...params} required size='small' label="Locale" variant="outlined" fullWidth />}
-              onChange={(event, item) => onAutoCompleteChange(`${idPrefix}.locale`, item)}
+              label='Locale'
+              size='small'
             />
           </div>
           <div className="col-md-6 no-left-padding">

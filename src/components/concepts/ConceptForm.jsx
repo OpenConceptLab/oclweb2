@@ -8,7 +8,7 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  arrayToObject, getCurrentURL, fetchLocales, fetchConceptClasses, fetchDatatypes, fetchNameTypes,
+  arrayToObject, getCurrentURL, fetchConceptClasses, fetchDatatypes, fetchNameTypes,
   fetchDescriptionTypes
 } from '../../common/utils';
 import { ERROR_RED, CONCEPT_CODE_REGEX } from '../../common/constants';
@@ -40,14 +40,12 @@ class ConceptForm extends React.Component {
       selected_datatype: null,
       conceptClasses: [],
       datatypes: [],
-      locales: [],
       nameTypes: [],
       descriptionTypes: [],
     }
   }
 
   componentDidMount() {
-    fetchLocales(data => this.setState({locales: data}))
     fetchConceptClasses(data => this.setState({conceptClasses: data}))
     fetchDatatypes(data => this.setState({datatypes: data}))
     fetchNameTypes(data => this.setState({nameTypes: data}))
@@ -235,10 +233,10 @@ class ConceptForm extends React.Component {
 
   render() {
     const {
-      fieldErrors, fields, conceptClasses, datatypes, locales, nameTypes,
+      fieldErrors, fields, conceptClasses, datatypes, nameTypes,
       descriptionTypes, selected_concept_class, selected_datatype
     } = this.state;
-    const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(locales) || isEmpty(conceptClasses) || isEmpty(nameTypes);
+    const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(conceptClasses) || isEmpty(nameTypes);
     const { onCancel, edit } = this.props;
     const header = edit ? `Edit Concept: ${fields.id}` : 'New Concept'
 
@@ -385,7 +383,6 @@ class ConceptForm extends React.Component {
                         onTextFieldChange={this.onTextFieldChange}
                         onAutoCompleteChange={this.onAutoCompleteChange}
                         onCheckboxChange={this.onCheckboxChange}
-                        locales={locales}
                         types={nameTypes}
                         onDelete={this.onDeleteNameLocale}
                       />
@@ -412,7 +409,6 @@ class ConceptForm extends React.Component {
                         onTextFieldChange={this.onTextFieldChange}
                         onAutoCompleteChange={this.onAutoCompleteChange}
                         onCheckboxChange={this.onCheckboxChange}
-                        locales={locales}
                         types={descriptionTypes}
                         onDelete={this.onDeleteDescLocale}
                       />

@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { get, debounce, map, orderBy, isEmpty } from 'lodash'
 import APIService from '../../services/APIService';
 
-const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, required, onChange, label, error, ...rest }) => {
+const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, required, onChange, label, error, size, ...rest }) => {
   const minLength = minCharactersForSearch || 2;
   const [input, setInput] = React.useState('')
   const [open, setOpen] = React.useState(false)
@@ -66,6 +66,7 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
           <TextField
             {...params}
             value={input}
+                  size={size || 'medium'}
                   required={required}
                   label={label}
                   error={error}
