@@ -17,7 +17,7 @@ import {
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
-import { OPTIONS, MARKETING_SITE_URL } from './MenuOptions.jsx';
+import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 import Feedback from '../common/Feedback';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 
@@ -142,7 +142,7 @@ const Header = props => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
-            <a className="no-anchor-styles" href={MARKETING_SITE_URL} rel="noopener noreferrer">
+            <a className="no-anchor-styles" href={SITE_URL} rel="noopener noreferrer">
               OCL
             </a>
           </Typography>
