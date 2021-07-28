@@ -17,7 +17,7 @@ const CONFIGS = {
     canonical_url: "e.g. http://who.int/ICPC-2",
   },
   extraFields: ['publisher', 'purpose', 'copyright', 'identifier', 'contact', 'jurisdiction', 'meta'],
-  extraBooleanFields: ['experimental', 'immutable'],
+  extraBooleanFields: ['experimental', 'immutable', 'autoexpand_head'],
   extraDateTimeFields: ['locked_date']
 }
 

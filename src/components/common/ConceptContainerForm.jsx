@@ -60,6 +60,7 @@ class ConceptContainerForm extends React.Component {
         experimental: null, //only source
         immutable: null, //only collection
         locked_date: '', // only collection - datetime
+        autoexpand_head: true,
       },
       selected_supported_locales: [],
       selected_default_locale: null,
@@ -217,6 +218,7 @@ class ConceptContainerForm extends React.Component {
       delete fields.collection_type;
       delete fields.immutable;
       delete fields.locked_date;
+      delete fields.autoexpand_head;
     } else {
       delete fields.content_type;
       delete fields.source_type;
@@ -237,6 +239,8 @@ class ConceptContainerForm extends React.Component {
     if(this.isSource()) {
       fields.hierarchy_root_url = this.state.fields.hierarchy_root_url
       fields.hierarchy_meaning = this.state.fields.hierarchy_meaning
+    } else {
+      fields.autoexpand_head = this.state.fields.autoexpand_head
     }
 
     return fields
