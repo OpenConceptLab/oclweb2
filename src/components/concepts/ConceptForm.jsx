@@ -8,10 +8,11 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  arrayToObject, getCurrentURL, fetchConceptClasses, fetchDatatypes, fetchNameTypes,
+  arrayToObject, getCurrentURL, fetchDatatypes, fetchNameTypes,
   fetchDescriptionTypes
 } from '../../common/utils';
 import { ERROR_RED, CONCEPT_CODE_REGEX } from '../../common/constants';
+import ConceptClassAutoComplete from '../common/ConceptClassAutoComplete';
 import LocaleForm from './LocaleForm';
 import ExtrasForm from '../common/ExtrasForm';
 
@@ -46,7 +47,6 @@ class ConceptForm extends React.Component {
   }
 
   componentDidMount() {
-    fetchConceptClasses(data => this.setState({conceptClasses: data}))
     fetchDatatypes(data => this.setState({datatypes: data}))
     fetchNameTypes(data => this.setState({nameTypes: data}))
     fetchDescriptionTypes(data => this.setState({descriptionTypes: data}))
@@ -233,10 +233,10 @@ class ConceptForm extends React.Component {
 
   render() {
     const {
-      fieldErrors, fields, conceptClasses, datatypes, nameTypes,
+      fieldErrors, fields, datatypes, nameTypes,
       descriptionTypes, selected_concept_class, selected_datatype
     } = this.state;
-    const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(conceptClasses) || isEmpty(nameTypes);
+    const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(nameTypes);
     const { onCancel, edit } = this.props;
     const header = edit ? `Edit Concept: ${fields.id}` : 'New Concept'
 
@@ -273,26 +273,12 @@ class ConceptForm extends React.Component {
                 </div>
               }
               <div style={{marginTop: '15px', width: '100%'}}>
-                <Autocomplete
-                  openOnFocus
-                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
-                  value={selected_concept_class}
+                <ConceptClassAutoComplete
                   id="fields.concept_class"
-                  options={conceptClasses}
-                  getOptionLabel={(option) => option.name}
-                  fullWidth
+                  label="Concept Class"
+                  selected={selected_concept_class}
+                  onChange={this.onAutoCompleteChange}
                   required
-                  renderInput={
-                    params => <TextField
-                                {...params}
-                                error={Boolean(fieldErrors.concept_class)}
-                                      required
-                                      label="Concept Class"
-                                      variant="outlined"
-                                      fullWidth
-                    />
-                  }
-                  onChange={(event, item) => this.onAutoCompleteChange('fields.concept_class', item)}
                 />
               </div>
               <div style={{marginTop: '15px', width: '100%'}}>
