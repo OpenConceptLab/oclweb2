@@ -89,7 +89,7 @@ class ConceptContainerVersionForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br />'))
       } else if(get(response, 'detail')) {
         alertifyjs.error(response.detail)
       } else {

@@ -134,7 +134,7 @@ class UserForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br />'))
       } else {
         this.setState(
           {fieldErrors: response || {}},

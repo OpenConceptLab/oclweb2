@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, IconButton, Button, CircularProgress } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
 import {
-  set, get, map, cloneDeep, pullAt, filter, isEmpty, pick
+  set, get, map, cloneDeep, pullAt, filter, isEmpty, pick, isObject, values, startCase,
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
@@ -213,7 +213,9 @@ class ConceptForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br/>'))
+      } else if (isObject(response)) {
+        alertifyjs.error(map(values(response), startCase).join('.<br/>'))
       } else {
         this.setState(
           {fieldErrors: response || {}},

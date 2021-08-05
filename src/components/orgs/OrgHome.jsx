@@ -158,7 +158,7 @@ class OrgHome extends React.Component {
           if(get(response, 'status') === 201)
             this.setState({pins: [...this.state.pins, response.data]})
           else if (get(response, 'error'))
-            alertifyjs.error(values(response.error).join('\n'))
+            alertifyjs.error(values(response.error).join('.<br />'))
           else
             alertifyjs.error('Something bad happened')
         })
