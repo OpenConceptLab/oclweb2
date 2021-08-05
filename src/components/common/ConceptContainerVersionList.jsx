@@ -226,7 +226,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
         isOpen={versionForm}
         onClose={onEditCancel}
         formComponent={
-          <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={onUpdate} />
+          <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={onUpdate} resource={resource} />
         }
       />
     </div>

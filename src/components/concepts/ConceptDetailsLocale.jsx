@@ -18,7 +18,7 @@ const ConceptDetailsLocale = ({ locale, isDescription, url }) => {
         <div className='col-md-12 no-side-padding flex-vertical-center'>
           <span style={{marginRight: '10px'}}>{ get(locale, nameAttr) }</span>
           {
-            type &&
+            type && type !== 'None' &&
             <span style={{marginRight: '10px'}}>
               <Chip style={{height: '20px', fontSize: '10px'}} size='small' variant='default' label={type} />
             </span>

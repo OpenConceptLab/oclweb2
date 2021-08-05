@@ -13,6 +13,7 @@ class ConceptContainerVersionForm extends React.Component {
         description: '',
         external_id: '',
         released: false,
+        autoexpand: true,
       },
       fieldErrors: {},
     }
@@ -53,8 +54,10 @@ class ConceptContainerVersionForm extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { parentURL, edit } = this.props
+    const { parentURL, edit, resource } = this.props
     let fields = cloneDeep(this.state.fields);
+
+
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
@@ -62,6 +65,12 @@ class ConceptContainerVersionForm extends React.Component {
       this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
       fields.released = this.state.fields.released
+
+      if(resource !== 'collection')
+        delete fields.autoexpand
+      else
+        fields.autoexpand = this.state.fields.autoexpand
+
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
@@ -167,6 +176,16 @@ class ConceptContainerVersionForm extends React.Component {
                 label="Release"
               />
             </div>
+            {
+              this.props.resource === 'collection' &&
+              <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
+                <FormControlLabel
+                  control={<Checkbox checked={fields.autoexpand} onChange={this.onCheckboxChange} name="fields.autoexpand" />}
+                  label="Auto Expand"
+                  disabled={edit}
+                />
+              </div>
+            }
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
               <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
                 {edit ? 'Update' : 'Create'}

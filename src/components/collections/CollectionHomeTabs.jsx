@@ -153,7 +153,7 @@ const CollectionHomeTabs = props => {
         isOpen={versionForm}
         onClose={() => setVersionForm(false)}
         formComponent={
-          <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} />
+          <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} resource="collection" />
         }
       />
     </div>

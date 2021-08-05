@@ -18,6 +18,7 @@ import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
 import AccessChip from '../common/AccessChip';
+import ExpansionChip from '../common/ExpansionChip';
 import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CollapsibleAttributes from '../common/CollapsibleAttributes';
 import HeaderAttribute from '../common/HeaderAttribute';
@@ -155,6 +156,9 @@ const CollectionHomeHeader = ({
               {collection.full_name}
             </span>
             <AccessChip publicAccess={collection.public_access} />
+            <span style={{marginLeft: '5px', marginTop: '-5px'}}>
+              <ExpansionChip expanded={isVersionedObject ? collection.autoexpand_head : collection.expanded} />
+            </span>
           </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
