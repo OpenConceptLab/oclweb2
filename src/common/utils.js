@@ -224,32 +224,32 @@ export const fetchLocales = callback => {
 
 export const fetchConceptClasses = callback => {
   APIService.sources('Classes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback));
+    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
   APIService.sources('MapTypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback));
+    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
   APIService.sources('Datatypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback));
+    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
   APIService.sources('NameTypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDescriptionTypes = callback => {
   APIService.sources('DescriptionTypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const downloadObject = (obj, format, filename) => {

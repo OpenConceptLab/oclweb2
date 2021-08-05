@@ -25,7 +25,7 @@ const ConceptClassAutoComplete = ({ id, selected, multiple, minCharactersForSear
     APIService
       .sources('Classes')
       .concepts()
-      .get(null, null, {limit: 25, q: searchStr, is_latest: true})
+      .get(null, null, {limit: 25, q: searchStr, is_latest: true, brief: true})
       .then(response => {
         setItems(orderBy(uniqBy(map(response.data, cc => ({id: cc.id, name: cc.id})), 'name'), 'name'))
         setFetched(true)
