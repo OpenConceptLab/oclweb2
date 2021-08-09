@@ -1,3 +1,6 @@
+##### 2.0.21 - Fri Aug 6 08:17:54 2021 +0000
+- Formatting server errors display on create/update
+- Lookup values to only ask for brief response (id/uuid)
 ##### 2.0.20 - Wed Jul 28 06:10:47 2021 +0000
 - [OpenConceptLab/ocl_issues#845](https://github.com/OpenConceptLab/ocl_issues/issues/845) | ConceptForm | ConceptClass autocomplete loads results async
 ##### 2.0.19 - Mon Jul 26 10:23:08 2021 +0000
