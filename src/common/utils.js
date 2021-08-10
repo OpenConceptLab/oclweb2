@@ -218,37 +218,37 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = callback => {
-  APIService.sources('Locales').concepts().get(null, null, {limit: 1000, is_latest: true}).then(response => {
+  APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/').get(null, null, {limit: 1000}).then(response => {
     callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
-  APIService.sources('Classes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+  APIService.orgs('OCL').sources('Classes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
-  APIService.sources('MapTypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+  APIService.orgs('OCL').sources('MapTypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
-  APIService.sources('Datatypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+  APIService.orgs('OCL').sources('Datatypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
-  APIService.sources('NameTypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+  APIService.orgs('OCL').sources('NameTypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDescriptionTypes = callback => {
-  APIService.sources('DescriptionTypes').concepts()
-    .get(null, null, {limit: 1000, is_latest: true, brief: true})
+  APIService.orgs('OCL').sources('DescriptionTypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 

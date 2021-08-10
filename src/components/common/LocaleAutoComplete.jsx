@@ -23,9 +23,10 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
 
   const searchLocales = searchStr => {
     APIService
+      .orgs('OCL')
       .sources('Locales')
-      .concepts()
-      .get(null, null, {limit: 25, q: searchStr, is_latest: true})
+      .appendToUrl('concepts/')
+      .get(null, null, {limit: 25, q: searchStr})
       .then(response => {
         const _locales = orderBy(map(response.data, l => ({id: l.locale || l.display_locale, name: `${l.display_name} [${l.locale || l.display_locale}]`, uuid: l.uuid})), 'name');
         setLocales(_locales)
