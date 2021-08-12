@@ -1,3 +1,5 @@
+##### 2.0.22 - Tue Aug 10 04:49:10 2021 +0000
+- Correcting lookup values fetch api call
 ##### 2.0.21 - Fri Aug 6 08:17:54 2021 +0000
 - Formatting server errors display on create/update
 - Lookup values to only ask for brief response (id/uuid)
