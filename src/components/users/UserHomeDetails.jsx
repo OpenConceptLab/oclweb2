@@ -4,6 +4,11 @@ import {
   Person as PersonIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
+  Business as CompanyIcon,
+  LocationOn as LocationIcon,
+  Link as WebsiteIcon,
+  MailOutline as MailIcon,
+  EventAvailable as DateJoinedIcon
 } from '@material-ui/icons';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
@@ -80,24 +85,61 @@ const UserHomeDetails = ({ user, isLoading }) => {
             />
           </div>
           <Divider style={{width: '100%'}} />
-          <p><strong>Company</strong><br />{user.company || 'N/A'}</p>
-          <p><strong>Location</strong><br />{user.location || 'N/A'}</p>
+          {
+            user.company &&
+            <div style={{marginTop: '5px'}}>
+              <Tooltip title='Company' arrow>
+                <span className='flex-vertical-center' placement='right'>
+                  <span style={{marginRight: '5px'}}><CompanyIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                  <span>{user.company}</span>
+                </span>
+              </Tooltip>
+            </div>
+          }
+          {
+            user.location &&
+            <div>
+              <Tooltip title='Location' arrow placement='right'>
+                <span className='flex-vertical-center'>
+                  <span style={{marginRight: '5px'}}><LocationIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                  <span>{user.location}</span>
+                </span>
+              </Tooltip>
+            </div>
+          }
           {
             user.website &&
-            <p>
-              <strong>Website</strong>
-              <br />
-              {formatWebsiteLink(user.website)}
-            </p>
+            <div>
+              <Tooltip title='Website' arrow placement='right'>
+                <span className='flex-vertical-center'>
+                  <span style={{marginRight: '5px'}}><WebsiteIcon fontSize='small' style={{marginTop: '4px', transform: 'rotate(-30deg)'}} /></span>
+                  <span>{formatWebsiteLink(user.website)}</span>
+                </span>
+              </Tooltip>
+            </div>
           }
-          <p><strong>Email</strong><br />{user.email}</p>
-          <p><strong>Joined</strong><br />{formatDate(user.created_on)}</p>
+          <div>
+            <Tooltip title='Email' arrow placement='right'>
+              <span className='flex-vertical-center'>
+                <span style={{marginRight: '5px'}}><MailIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                <span>{user.email}</span>
+              </span>
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip title='Date Joined' arrow placement='right'>
+              <span className='flex-vertical-center'>
+                <span style={{marginRight: '5px'}}><DateJoinedIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                <span>{formatDate(user.created_on)}</span>
+              </span>
+            </Tooltip>
+          </div>
           <Divider style={{width: '100%'}} />
           {
             token &&
             <p>
               <strong>API Token</strong>
-              <Tooltip arrow title="Click to copy Token">
+              <Tooltip arrow title="Click to copy Token" placement='right'>
                 <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
                   <CopyIcon fontSize="small" />
                 </IconButton>
@@ -112,9 +154,9 @@ const UserHomeDetails = ({ user, isLoading }) => {
         formComponent={
           <UserForm
             loggedIn={user.username === getCurrentUserUsername()}
-            edit
-            reloadOnSuccess
-            onCancel={onEditClose} user={user}
+                     edit
+                     reloadOnSuccess
+                     onCancel={onEditClose} user={user}
           />
         }
       />
