@@ -13,7 +13,8 @@ import {
   Build as ToolsIcon,
   Web as MetadataBrowserIcon,
   Code as TerminologyServiceIcon,
-  ContactSupport as ContactIcon
+  ContactSupport as ContactIcon,
+  Map as MapIcon,
 } from '@material-ui/icons';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 
@@ -33,6 +34,11 @@ const COMMUNITY_OPTIONS = [
     label: 'OpenHIE Terminology Service Call',
     href: SITE_URL + 'community-resources/community-calls/',
     icon: <OpenHIETerminologyServiceIcon />
+  },
+  {
+    label: 'Technical Roadmap',
+    href: SITE_URL + 'technical-roadmap/',
+    icon: <MapIcon />
   },
   {
     label: 'Github',
