@@ -218,36 +218,36 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = callback => {
-  APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/').get(null, null, {limit: 1000}).then(response => {
+  APIService.orgs('OCL').sources('Locales').concepts().get(null, null, {limit: 1000}).then(response => {
     callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
-  APIService.orgs('OCL').sources('Classes').appendToUrl('concepts/')
+  APIService.orgs('OCL').sources('Classes').concepts()
     .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
-  APIService.orgs('OCL').sources('MapTypes').appendToUrl('concepts/')
+  APIService.orgs('OCL').sources('MapTypes').concepts()
     .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
-  APIService.orgs('OCL').sources('Datatypes').appendToUrl('concepts/')
+  APIService.orgs('OCL').sources('Datatypes').concepts()
     .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
-  APIService.orgs('OCL').sources('NameTypes').appendToUrl('concepts/')
+  APIService.orgs('OCL').sources('NameTypes').concepts()
     .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDescriptionTypes = callback => {
-  APIService.orgs('OCL').sources('DescriptionTypes').appendToUrl('concepts/')
+  APIService.orgs('OCL').sources('DescriptionTypes').concepts()
     .get(null, null, {limit: 1000, brief: true})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
@@ -340,7 +340,7 @@ export const getCurrentUserCollections = callback => {
               .then(response => isArray(response.data) ? callback(response.data) : false);
     APIService.users(username)
               .orgs()
-              .appendToUrl('collections/')
+              .collections()
               .get(null, null, {limit: 1000})
               .then(response => isArray(response.data) ? callback(response.data) : false);
   }
