@@ -1,3 +1,7 @@
+##### 2.0.24 - Mon Aug 16 04:17:10 2021 +0000
+- Pins to show summary counts
+- Icons for user details
+- [OpenConceptLab/ocl_issues#921](https://github.com/OpenConceptLab/ocl_issues/issues/921) | Technical Roadmap as menu option
 ##### 2.0.22 - Tue Aug 10 04:49:10 2021 +0000
 - Correcting lookup values fetch api call
 ##### 2.0.21 - Fri Aug 6 08:17:54 2021 +0000
