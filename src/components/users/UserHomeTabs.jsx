@@ -99,6 +99,7 @@ const UserHomeTabs = props => {
             <Search
               {...props}
               nested
+              essentialColumns
               parentResource="user"
               baseURL={user.sources_url}
               fixedFilters={{isTable: true, limit: 25}}
@@ -116,6 +117,7 @@ const UserHomeTabs = props => {
             <Search
               {...props}
               nested
+              essentialColumns
               parentResource="user"
               baseURL={user.collections_url}
               fixedFilters={{isTable: true, limit: 25}}
