@@ -67,11 +67,10 @@ const UserHomeDetails = ({ user, isLoading }) => {
               defaultIcon={<PersonIcon style={{width: '120px', height: '120px'}} />}
             />
           </div>
-          <h2 style={{marginBottom: '5px'}}>
-            {startCase(name)}
-            <br />
-            <small>{user.username}</small>
-          </h2>
+          <h2 style={{marginBottom: '-2px'}}> {startCase(name)} </h2>
+          <div className='user-home-username'>
+            {user.username}
+          </div>
           <div>
             <Chip
               className='underline-text'
@@ -84,7 +83,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
               onClick={onEditClick}
             />
           </div>
-          <Divider style={{width: '100%'}} />
+          <Divider style={{width: '100%', margin: '5px 0'}} />
           {
             user.company &&
             <div style={{marginTop: '5px'}}>
@@ -134,7 +133,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
               </span>
             </Tooltip>
           </div>
-          <Divider style={{width: '100%'}} />
+          <Divider style={{width: '100%', margin: '5px 0'}} />
           {
             token &&
             <p>
