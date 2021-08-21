@@ -25,7 +25,7 @@ const ConceptClassAutoComplete = ({ id, selected, multiple, minCharactersForSear
     APIService
       .orgs('OCL')
       .sources('Classes')
-      .concepts()
+      .appendToUrl('concepts/')
       .get(null, null, {limit: 25, q: searchStr, brief: true})
       .then(response => {
         setItems(orderBy(uniqBy(map(response.data, cc => ({id: cc.id, name: cc.id})), 'name'), 'name'))

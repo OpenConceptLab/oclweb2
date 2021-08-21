@@ -24,7 +24,7 @@ const getAPIURL = () => {
 }
 
 class APIService {
-  constructor(name, id, relations, url) {
+  constructor(name, id, relations) {
     const apiURL = getAPIURL();
     if (name === 'empty') this.URL = `${apiURL}/`;
     else this.URL = `${apiURL}/${name}/`;
@@ -33,24 +33,16 @@ class APIService {
       Accept: 'application/json'
     };
 
-    if(url) this.URL=url
-
-    if (id) this.URL += `${id}/`;
-
+    if (id) {
+      this.URL += `${id}/`;
+    }
     if (relations) {
-      relations.forEach((relation) => {
-        const resource = RESOURCES.find(res=>res.name === relation)
-        if(!resource) return
-        if(resource.relations.length === 0) {
-          this[relation] = relationId => {
-                this.URL += `${relation}/${relationId ? `${relationId}/` : ''}`
-                return this
-             };
-        }
-        else {
-          this[relation] = (id, query) => new APIService(resource.name, id, resource.relations, query,this.URL);
-        }
-      })
+      relations.forEach(relation => {
+        this[relation] = relationId => {
+          this.URL += `${relation}/${relationId ? `${relationId}/` : ''}`;
+          return this;
+        };
+      });
     }
   }
 
@@ -126,7 +118,9 @@ class APIService {
   }
 
   getQueryParams(query) {
-    if (isPlainObject(query)) return query;
+    if (isPlainObject(query)) {
+      return query;
+    }
     if (isString(query)) {
       const questionMarkSplit = query.split('?');
       if (questionMarkSplit.length === 2) {

@@ -194,7 +194,7 @@ class ConceptForm extends React.Component {
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
       } else {
-        service.concepts().post(fields).then(response => this.handleSubmitResponse(response))
+        service.appendToUrl('concepts/').post(fields).then(response => this.handleSubmitResponse(response))
       }
     }
   }
