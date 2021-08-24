@@ -36,11 +36,6 @@ const COMMUNITY_OPTIONS = [
     icon: <OpenHIETerminologyServiceIcon />
   },
   {
-    label: 'Technical Roadmap',
-    href: SITE_URL + 'technical-roadmap/',
-    icon: <MapIcon />
-  },
-  {
     label: 'Github',
     href: 'https://github.com/OpenConceptLab',
     icon: <GitHubIcon />
@@ -49,6 +44,11 @@ const COMMUNITY_OPTIONS = [
     label: 'Documentation',
     href: 'https://docs.openconceptlab.org',
     icon: <DocumentationIcon />
+  },
+  {
+    label: 'Technical Roadmap',
+    href: SITE_URL + 'technical-roadmap/',
+    icon: <MapIcon />
   },
   {
     label: 'OCL Mailing List',
