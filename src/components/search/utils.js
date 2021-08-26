@@ -1,17 +1,17 @@
 import APIService from '../../services/APIService';
 import { without, forEach } from 'lodash';
 
-export const fetchSearchResults = (resource, queryParams, hasHeaders, baseURL, beforeCallback, afterCallback) => {
+export const fetchSearchResults = (resource, queryParams, baseURL, beforeCallback, afterCallback) => {
   if(!resource)
     resource = 'concepts';
 
   if(beforeCallback)
-    beforeCallback(__fetchSearchResults(resource, queryParams, hasHeaders, baseURL, afterCallback));
+    beforeCallback(__fetchSearchResults(resource, queryParams, baseURL, afterCallback));
   else
-    __fetchSearchResults(resource, queryParams, hasHeaders, baseURL, afterCallback);
+    __fetchSearchResults(resource, queryParams, baseURL, afterCallback);
 };
 
-const __fetchSearchResults = (resource, queryParams, hasHeaders, baseURL, callback, method='get') => {
+const __fetchSearchResults = (resource, queryParams, baseURL, callback, method='get') => {
   if(!queryParams)
     queryParams = {};
 
@@ -22,17 +22,13 @@ const __fetchSearchResults = (resource, queryParams, hasHeaders, baseURL, callba
   else if(resource)
     service = APIService[resource]();
 
-  let headers = {}
-  if(hasHeaders)
-    headers = {INCLUDEFACETS: true}
-
   if(method === 'get')
     service
-    .get(null, headers, queryParams)
+    .get(null, {}, queryParams)
     .then(response => callback(response, resource));
   if(method === 'head')
     service
-    .head(null, headers, queryParams)
+    .head(null, {}, queryParams)
     .then(response => callback(response, resource));
 };
 
@@ -42,6 +38,14 @@ export const fetchCounts = (excludeResource, queryParams, callback) => {
     queryParams = {};
 
   forEach(resources, resource => {
-    __fetchSearchResults(resource, queryParams, true, null, callback, 'head')
+    __fetchSearchResults(resource, queryParams, null, callback, 'head')
   });
+}
+
+export const fetchFacets = (resource, queryParams, callback) => {
+  if(!queryParams)
+    queryParams = {}
+  queryParams.facetsOnly = true
+
+  __fetchSearchResults(resource, queryParams, null, callback)
 }

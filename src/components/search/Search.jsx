@@ -24,7 +24,7 @@ import SearchByAttributeInput from './SearchByAttributeInput';
 import ResourcesHorizontal from './ResourcesHorizontal';
 import ResourceTabs from './ResourceTabs';
 //import Resources from './Resources';
-import { fetchSearchResults, fetchCounts } from './utils';
+import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
@@ -70,6 +70,7 @@ class Search extends React.Component {
       includeRetired: false,
       userFilters: {},
       isURLUpdatedByActionChange: false,
+      facets: {},
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -229,8 +230,7 @@ class Search extends React.Component {
     const numReturned = parseInt(get(response, 'headers.num_returned', 0))
     const next = get(response, 'headers.next')
     const previous = get(response, 'headers.previous')
-    const facets = get(response, 'data.facets', {})
-    let items = get(response, 'data.results', [])
+    let items = get(response, 'data', [])
     if(this.state.isInfinite && !resetItems)
       items = [...this.state.results[resource].items, ...items]
     return {
@@ -240,7 +240,7 @@ class Search extends React.Component {
       pages: parseInt(get(response, 'headers.pages', 1)),
       next: next,
       prev: previous,
-      facets: facets,
+      facets: this.state.facets,
       items: items,
     }
   }
@@ -260,6 +260,18 @@ class Search extends React.Component {
     } else {
       this.setState({isLoading: false}, () => {
         throw response
+      })
+    }
+  }
+
+  onFacetsLoad = (response, resource) => {
+    if(response.status === 200) {
+      this.setState({facets: get(response, 'data.facets', {})}, () => {
+        if(has(this.state, `results.${resource}.facets`)) {
+          const newState = {...this.state}
+          newState.results[resource].facets = this.state.facets
+          this.setState(newState)
+        }
       })
     }
   }
@@ -318,6 +330,7 @@ class Search extends React.Component {
     }
     if(!this.props.fhir)
       newState.isURLUpdatedByActionChange = true
+    newState.facets = {}
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
@@ -351,7 +364,6 @@ class Search extends React.Component {
       fetchSearchResults(
         _resource,
         params,
-        !noHeaders,
         this.props.baseURL,
         null,
         response => {
@@ -363,6 +375,8 @@ class Search extends React.Component {
       )
       if(counts && !this.props.nested)
         fetchCounts(_resource, queryParams, this.onCountsLoad)
+      if(!noHeaders)
+        fetchFacets(_resource, queryParams, this.onFacetsLoad)
     })
   }
 
