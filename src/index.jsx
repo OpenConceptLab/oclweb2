@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme, StylesProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme, StylesProvider } from '@material-ui/core/styles';
 import alertifyjs from 'alertifyjs';
 import App from './components/app/App';
 import './index.scss';
@@ -19,7 +19,7 @@ alertifyjs.defaults = {
   },
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: BLUE,
