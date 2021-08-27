@@ -1,3 +1,9 @@
+##### 2.0.26 - Fri Aug 27 03:37:03 2021 +0000
+- [OpenConceptLab/ocl_issues#936](https://github.com/OpenConceptLab/ocl_issues/issues/936) | separated facets from search results call
+- [OpenConceptLab/ocl_issues#938](https://github.com/OpenConceptLab/ocl_issues/issues/938) | added FAQ menu option | switched contact and FAQ icons
+- [OpenConceptLab/ocl_issues#921](https://github.com/OpenConceptLab/ocl_issues/issues/921) | reordered community menu options
+- Source/Collections nested in org/user will not have redundant owner column
+- UserHome | styling username and fullname
 ##### 2.0.24 - Mon Aug 16 04:17:10 2021 +0000
 - Pins to show summary counts
 - Icons for user details
