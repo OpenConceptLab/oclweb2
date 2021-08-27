@@ -1,3 +1,7 @@
+##### 2.0.27 - Fri Aug 27 09:12:25 2021 +0000
+- [OpenConceptLab/ocl_issues#947](https://github.com/OpenConceptLab/ocl_issues/issues/947) | Handling API response for max search pagination errorr
+- material-ui deprecation fix
+- [OpenConceptLab/ocl_issues#938](https://github.com/OpenConceptLab/ocl_issues/issues/938) | updated FAQ menu option label
 ##### 2.0.26 - Fri Aug 27 03:37:03 2021 +0000
 - [OpenConceptLab/ocl_issues#936](https://github.com/OpenConceptLab/ocl_issues/issues/936) | separated facets from search results call
 - [OpenConceptLab/ocl_issues#938](https://github.com/OpenConceptLab/ocl_issues/issues/938) | added FAQ menu option | switched contact and FAQ icons
