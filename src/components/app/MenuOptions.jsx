@@ -104,7 +104,7 @@ export const OPTIONS = [
     href: SITE_URL + 'ocl-tools/'
   },
   {
-    label: 'Frequently Asked Questions',
+    label: 'FAQs',
     href: SITE_URL + 'faq/',
     icon: <FAQIcon />
   },
