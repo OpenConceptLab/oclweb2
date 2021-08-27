@@ -313,7 +313,7 @@ class Search extends React.Component {
     return {...queryParam, ...viewFilters}
   }
 
-  fetchNewResults(attrsToSet, counts=true, resetItems=true, updateURL=false) {
+  fetchNewResults(attrsToSet, counts=true, resetItems=true, updateURL=false, facets=true) {
     if(!attrsToSet)
       attrsToSet = {}
 
@@ -375,13 +375,13 @@ class Search extends React.Component {
       )
       if(counts && !this.props.nested)
         fetchCounts(_resource, queryParams, this.onCountsLoad)
-      if(!noHeaders)
+      if(!noHeaders && facets && !fhir)
         fetchFacets(_resource, queryParams, this.onFacetsLoad)
     })
   }
 
   loadMore = () => {
-    this.fetchNewResults({page: this.state.page + 1}, false, false, true);
+    this.fetchNewResults({page: this.state.page + 1}, false, false, true, false);
   }
 
   onPageChange = page => {
@@ -395,7 +395,7 @@ class Search extends React.Component {
           }
         }, () => this.fetchNewResults(null, false, false))
       else
-        this.fetchNewResults({page: page}, false, false, true)
+        this.fetchNewResults({page: page}, false, false, true, false)
 
     }
   }
@@ -409,7 +409,7 @@ class Search extends React.Component {
       }, () => this.fetchNewResults(null, false, true))
     }
     else
-      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true, true))
+      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true, true, false))
   }
 
   hasPrev() {
@@ -455,7 +455,7 @@ class Search extends React.Component {
     return 'All Time'
   }
 
-  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true, true)
+  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true, true, false)
 
   onLayoutChange = newLayoutId => {
     const existingLayoutId = this.getLayoutTypeName()
@@ -641,14 +641,14 @@ class Search extends React.Component {
 
   onLimitChange = limit => this.props.fhir ?
                          this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false)) :
-                         this.fetchNewResults({limit: limit}, false, true, true)
+                         this.fetchNewResults({limit: limit}, false, true, true, false)
 
   toggleFacetsDrawer = () => this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
 
   onCloseFacetsDrawer = () => this.setState({openFacetsDrawer: false})
 
   onApplyFacets = filters => this.setState(
-    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true)
+    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true, false, false)
   )
 
   onApplyUserFilters = (id, value) => {
