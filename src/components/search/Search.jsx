@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from "react-router";
+import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
   map, omit, isString
@@ -257,11 +258,10 @@ class Search extends React.Component {
         if(includes(['sources', 'collections'], resource))
           this.loadSummary(resource)
       })
-    } else {
-      this.setState({isLoading: false}, () => {
-        throw response
-      })
-    }
+    } else if (get(response, 'detail'))
+      this.setState({isLoading: false}, () => alertifyjs.error(response.detail, 0))
+    else
+      this.setState({isLoading: false}, () => {throw response})
   }
 
   onFacetsLoad = (response, resource) => {
