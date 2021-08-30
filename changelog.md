@@ -1,3 +1,8 @@
+##### 2.0.28 - Mon Aug 30 05:30:44 2021 +0000
+- Concept Listing | name is display name with display locale and tooltip
+- Source/Collection version export dialog | updated processing info label
+- Source/Collection version export dialog | added more info on title
+- [OpenConceptLab/ocl_issues#936](https://github.com/OpenConceptLab/ocl_issues/issues/936) | only making facets call when needed
 ##### 2.0.27 - Fri Aug 27 09:12:25 2021 +0000
 - [OpenConceptLab/ocl_issues#947](https://github.com/OpenConceptLab/ocl_issues/issues/947) | Handling API response for max search pagination errorr
 - material-ui deprecation fix
