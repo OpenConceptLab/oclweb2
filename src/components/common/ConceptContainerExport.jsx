@@ -200,7 +200,7 @@ class ConceptContainerExport extends React.Component {
                 !isProcessing && !hasExistingExport && !isCheckingExportExists && !exportURL &&
                 <React.Fragment>
                   <Alert variant="filled" severity="warning" style={{margin: '5px 0'}}>
-                    {`There is no export cached for this ${resoure} version`}
+                    {`There is no export cached for this ${resource} version`}
                   </Alert>
                   <div style={{marginTop: '15px', padding: '0 10px'}}>
                     <h3 style={{display: 'contents'}}>Click here to queue a new export</h3>
