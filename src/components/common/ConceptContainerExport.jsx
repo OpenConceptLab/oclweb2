@@ -145,7 +145,7 @@ class ConceptContainerExport extends React.Component {
       anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport, exportURL,
       serverError, errorDetails, options
     } = this.state;
-    const { version, title } = this.props;
+    const { title } = this.props;
     return (
       <React.Fragment>
         <Tooltip arrow title={title}>
@@ -170,7 +170,7 @@ class ConceptContainerExport extends React.Component {
           open &&
           <Dialog open={open} onClose={this.toggleOpen} maxWidth="sm" fullWidth>
             <DialogTitle>
-              {`Export Version: ${version.id}`}
+              {title}
             </DialogTitle>
             <DialogContent>
               {
