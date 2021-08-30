@@ -16,13 +16,14 @@ import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
 import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
+import ConceptDisplayName from '../concepts/ConceptDisplayName';
 
 export const ALL_COLUMNS = {
   concepts: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
-    {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<span className={concept.retired ? 'retired' : ''}>{concept.display_name}</span>), className: 'medium', sortBy: 'asc'},
+    {id: 'name', label: 'Display Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},

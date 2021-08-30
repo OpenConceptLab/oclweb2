@@ -24,6 +24,7 @@ import AddToCollection from '../common/AddToCollection';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
+import ConceptDisplayName from './ConceptDisplayName';
 
 const ConceptHomeHeader = ({
   concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick,
@@ -155,12 +156,7 @@ const ConceptHomeHeader = ({
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
-              {concept.display_name}
-            </span>
-            <span className='gray-italics-small'>
-              [{concept.display_locale}]
-            </span>
+            <ConceptDisplayName concept={concept} style={{marginRight: '10px'}} />
           </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             <div className='col-md-12 no-side-padding flex-vertical-center'>
