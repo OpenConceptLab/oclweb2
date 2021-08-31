@@ -866,6 +866,31 @@ span.app-version-container {
 div.divider-highlight-hover:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
+.app-menu-toggle {
+    &.selected{
+        background-color: rgba(51, 115, 170, 0.08);
+    }
+}
+.app-menu {
+    border: 1px solid lightgray;
+    justify-content: center;
+    padding: 0px;
+    .app-container {
+        .app:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        .app {
+            border-radius: 5px;
+            padding: 10px;
+            margin: 4px;
+            width: 120px;
+            cursor: pointer;
+            &.selected, &.selected:hover {
+                background-color: rgba(51, 115, 170, 0.25);
+            }
+        }
+    }
+}
 .hierarchy-node-selected {
     background-color: rgba(51, 115, 170, 0.08);
 }
