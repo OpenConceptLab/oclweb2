@@ -39,11 +39,6 @@ const UserOptions = () => {
     handleClose(event);
     window.location.hash = user.url
   };
-  const onImportsClick = event => {
-    event.persist();
-    handleClose(event);
-    window.location.hash = '/imports'
-  };
   const username = get(user, 'username');
   const displayName = get(user, 'name') || username;
   const serverConfig = getAppliedServerConfig();
@@ -94,15 +89,6 @@ const UserOptions = () => {
                       <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} />
                     </ListItemText>
                   </ListItem>
-                  <Divider />
-                  <Tooltip arrow placement='left' title='Bulk Imports'>
-                    <ListItem className='user-option-list-item' onClick={onImportsClick}>
-                      <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
-                        <ImportsIcon fontSize='small' />
-                      </ListItemIcon>
-                      <ListItemText className='list-item-text' primary='Bulk Imports' secondary='View existing bulk-imports or queue a new one.' />
-                    </ListItem>
-                  </Tooltip>
                   <Divider />
                   {
                     canSwitchServer() &&
