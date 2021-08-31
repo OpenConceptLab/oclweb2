@@ -7,7 +7,6 @@ import {
 import {
   ExitToApp as LogoutIcon, AccountCircle as AccountIcon,
   Storage as ServerIcon, ExpandLess as LessIcon, ExpandMore as MoreIcon,
-  Publish as ImportsIcon,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer } from '../../common/utils';

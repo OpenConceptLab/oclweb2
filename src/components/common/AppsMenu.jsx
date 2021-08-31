@@ -4,7 +4,7 @@ import { Popper, ClickAwayListener, Tooltip, Grow, Paper, IconButton, Box, Typog
 import useToggle from '../../hooks/useToggle';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 import { useLocation, useHistory } from 'react-router';
-import { BLUE } from '../../common/constants';
+import { BLUE, OPENMRS_URL } from '../../common/constants';
 
 const AppsMenu = () => {
   const open = useToggle()
@@ -25,7 +25,7 @@ const AppsMenu = () => {
   const onOpenMRSClick = event => {
     event.persist();
     handleClose(event);
-    window.location = 'https://openmrs.openconceptlab.org'
+    window.location = OPENMRS_URL
   };
   const onImportsClick = event => {
     event.persist();

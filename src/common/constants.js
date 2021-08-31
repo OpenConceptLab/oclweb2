@@ -44,3 +44,5 @@ export const ROUTE_ID_PATTERN = "[a-zA-Z0-9\-\.\_\@]+";
 export const TABLE_LAYOUT_ID = 'table';
 export const LIST_LAYOUT_ID = 'list';
 export const SPLIT_LAYOUT_ID = 'split';
+export const OPENMRS_URL = 'https://openmrs.openconceptlab.org';
+
