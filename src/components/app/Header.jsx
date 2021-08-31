@@ -19,6 +19,7 @@ import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 import Feedback from '../common/Feedback';
+import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 
 const drawerWidth = 250;
@@ -160,6 +161,7 @@ const Header = props => {
             {
               authenticated ?
               <span style={{marginLeft: '20px'}}>
+                <AppsMenu/>
                 <UserOptions />
               </span> :
               (
