@@ -1,15 +1,15 @@
 import React from 'react';
+import { useLocation, useHistory } from 'react-router';
 import { Apps as AppsIcon , Web as MetadataBrowserIcon, Publish as ImportsIcon } from '@material-ui/icons';
 import { Popper, ClickAwayListener, Tooltip, Grow, Paper, IconButton, Box, Typography } from '@material-ui/core';
 import useToggle from '../../hooks/useToggle';
 import OpenMRSLogo from '../common/OpenMRSLogo';
-import { useLocation, useHistory } from 'react-router';
-import { OPENMRS_URL } from '../../common/constants';
+import { getOpenMRSURL } from '../../common/utils';
 
 const AppsMenu = () => {
   const open = useToggle()
   const location = useLocation()
-  const histroy = useHistory()
+  const history = useHistory()
   const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target))
       return;
@@ -20,17 +20,17 @@ const AppsMenu = () => {
   const onTermBrowserClick = event => {
     event.persist();
     handleClose(event);
-    histroy.push('/')
+    history.push('/')
   };
   const onOpenMRSClick = event => {
     event.persist();
     handleClose(event);
-    window.location = OPENMRS_URL
+    window.location = getOpenMRSURL()
   };
   const onImportsClick = event => {
     event.persist();
     handleClose(event);
-    histroy.push('/imports')
+    history.push('/imports')
   };
 
   return (
