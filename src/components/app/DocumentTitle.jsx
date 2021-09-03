@@ -45,8 +45,8 @@ const TITLES = {
     "/users/([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)/concepts/([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)":"$1 - $8 / $6 / $5 / $3 / $2 - OCL",
     "/orgs/([a-zA-Z0-9\-\.\_\@]+)/sources/([a-zA-Z0-9\-\.\_\@]+)/concepts/([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)":"$1 - $7 / $5 / $3 / $2 - OCL",
     "/users/([a-zA-Z0-9\-\.\_\@]+)/sources/([a-zA-Z0-9\-\.\_\@]+)/concepts/([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)/([a-zA-Z0-9\-\.\_\@]+)":"$1 - $7 / $5 / $3 / $2 - OCL",
-    "/imports":"$1 - OCL",
-    "/search":"$1 - OCL"
+    "/imports":"Imports - OCL",
+    "/search":"Search - OCL"
 }
 
 
