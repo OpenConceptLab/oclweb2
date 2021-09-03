@@ -28,7 +28,10 @@ import ConceptMapHome from '../fhir/ConceptMapHome';
 import Header from './Header';
 import Footer from './Footer';
 import RootView from './RootView';
+import DocumentTitle from "./DocumentTitle"
+import Comparison from "../common/Comparison"
 import './App.scss';
+import MappingsComparison from '../mappings/MappingsComparison';
 
 
 const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
@@ -66,6 +69,7 @@ const App = props => {
 
   return (
     <div>
+      <DocumentTitle/>
       <Header {...props} onOpen={setMenuOpen} />
       <ErrorBoundary>
         <main className={menuOpen ? 'content menu-open' : 'content'}>
@@ -106,11 +110,6 @@ const App = props => {
             <Route
               path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
               component={ConceptHome}
-            />
-            <Route
-              exact
-              path="/concepts/compare"
-              component={ConceptsComparison}
             />
 
             { /* Mapping Home */ }
@@ -180,6 +179,18 @@ const App = props => {
             <Route
               path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)"
               component={CollectionHome}
+            />
+
+            {/* Comparison */}
+            <Route
+              exact
+              path="/concepts/compare"
+              component={ConceptsComparison}
+            />
+            <Route
+              exact
+              path="/mappings/compare"
+              component={MappingsComparison}
             />
 
             {/* Organization Home */}
