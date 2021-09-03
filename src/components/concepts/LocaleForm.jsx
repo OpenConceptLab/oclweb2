@@ -2,7 +2,7 @@ import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
-import { find, get } from 'lodash'
+import { find, get, map, includes } from 'lodash'
 import { ERROR_RED } from '../../common/constants';
 import LocaleAutoComplete from '../common/LocaleAutoComplete';
 
@@ -14,17 +14,26 @@ const LocaleForm = ({
   const nameAttr = isName ? 'name' : 'description';
   const typeAttr = `${nameAttr}_type`;
   const localeType = get(locale, typeAttr);
+  const borderColor = error ? ERROR_RED : 'lightgray'
+  const idPrefix = `${localeAttr}.${index}`;
+
   const [selectedLocale, setSelectedLocale] = React.useState(
     locale.locale ? {id: locale.locale, name: locale.locale} : null
   )
-  let selectedLocaleType = localeType ? find(types, {id: locale[typeAttr]}) : null;
-  const idPrefix = `${localeAttr}.${index}`;
-  const borderColor = error ? ERROR_RED : 'lightgray'
-  let formattedTypes = types;
+
+  let formattedTypes = isName ? map(types, _type => {
+    const name = includes(['none', 'definition'], _type.id.toLowerCase()) ?
+                 _type.id :
+                 _type.id.toUpperCase().replaceAll(' ', '_')
+    return {id: name, name: name}
+  }) : types;
+
+  let selectedLocaleType = localeType ? find(formattedTypes, {id: locale[typeAttr]}) : null;
+
   if(localeType && !selectedLocaleType) {
     const _type = {id: localeType, name: localeType}
     selectedLocaleType = _type
-    formattedTypes = [_type, ...types]
+    formattedTypes = [_type, ...formattedTypes]
   }
 
   const onLocaleChange = (event, item) => {
