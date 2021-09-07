@@ -14,13 +14,19 @@ export default function MappingsComparison() {
         external_id: {...cloneDeep(attributeState), position: 2},
         owner: {...cloneDeep(attributeState), type: 'textFormatted', position: 3},
         from_source_owner: {...cloneDeep(attributeState), type: 'textFormatted', position: 4},
-        to_source_owner: {...cloneDeep(attributeState), type: 'textFormatted', position: 5},
-        extras: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 6},
-        retired: {...cloneDeep(attributeState), type: 'bool', position: 7},
-        created_by: {...cloneDeep(attributeState), position: 8},
-        updated_by: {...cloneDeep(attributeState), position: 9},
-        created_on: {...cloneDeep(attributeState), type: 'date', position: 10},
-        updated_on: {...cloneDeep(attributeState), type: 'date', position: 11},
+        from_source_name: {...cloneDeep(attributeState), position: 5},
+        to_source_url: {...cloneDeep(attributeState), position: 6},
+        to_source_owner: {...cloneDeep(attributeState), type: 'textFormatted', position: 7},
+        to_source_name: {...cloneDeep(attributeState), position: 8},
+        from_concept_name: {...cloneDeep(attributeState), position: 9},
+        from_concept_url: {...cloneDeep(attributeState), position: 10},
+        to_concept_name: {...cloneDeep(attributeState), position: 11},
+        to_concept_url: {...cloneDeep(attributeState), position: 12},
+        retired: {...cloneDeep(attributeState), type: 'bool', position: 13},
+        created_by: {...cloneDeep(attributeState), position: 14},
+        updated_by: {...cloneDeep(attributeState), position: 15},
+        created_on: {...cloneDeep(attributeState), type: 'date', position: 16},
+        updated_on: {...cloneDeep(attributeState), type: 'date', position: 17},
     }
 
     const fetcher = (uri, attr, loadingAttr, state) => {
@@ -54,34 +60,38 @@ export default function MappingsComparison() {
         return mapping
     }
 
-    const getAttributeValue = (concept, attr, type) => {
-        let value = get(concept, attr)
+    const getAttributeValue = (mapping, attr, type) => {
+        let value = get(mapping, attr)
         if (attr === 'extras')
           return JSON.stringify(value, undefined, 2)
+        if (attr === 'from_concept_name')
+          return value ||= get(mapping, 'from_concept_code')
+        if (attr === 'to_concept_name')
+          return value ||= get(mapping, 'to_concept_code')
         if(type === 'list') {
           if(isEmpty(value)) return '';
           else return value
         } else if(type === 'date') {
           if(attr === 'created_on')
-            value ||= get(concept, 'created_at')
+            value ||= get(mapping, 'created_at')
           if(attr === 'updated_on')
-            value ||= get(concept, 'updated_at')
+            value ||= get(mapping, 'updated_at')
     
           return value ? formatDate(value) : '';
         } else if (type === 'textFormatted') {
           if(attr === 'owner')
-            return `${concept.owner_type}: ${concept.owner}`
+            return `${mapping.owner_type}: ${mapping.owner}`
           if(attr === 'to_source_owner')
-            return `${concept.to_source_owner_type}: ${concept.to_source_owner}`
+            return `${mapping.to_source_owner_type}: ${mapping.to_source_owner}`
           if(attr === 'from_source_owner')
-            return `${concept.from_source_owner_type}: ${concept.from_source_owner}`
+            return `${mapping.from_source_owner_type}: ${mapping.from_source_owner}`
         } else if (type === 'bool') {
           return value ? 'True' : 'False'
         } else {
           if(includes(['created_by', 'updated_by'], attr))
-            value ||= get(concept, `version_${attr}`)
-          if(attr === 'updated_by' && has(concept, 'version_created_by'))
-            value ||= concept.version_created_by
+            value ||= get(mapping, `version_${attr}`)
+          if(attr === 'updated_by' && has(mapping, 'version_created_by'))
+            value ||= mapping.version_created_by
           return value || '';
         }
       }
@@ -98,26 +108,6 @@ export default function MappingsComparison() {
             value: mapping.id,
             url: null
            },
-          {
-            name: "From Concept:",
-            value: mapping.from_concept_name,
-            url: mapping.from_concept_url
-          },
-          {
-            name: "To Concept:",
-            value: mapping.to_concept_name,
-            url: mapping.to_concept_url
-          },
-          {
-            name: "From Source:",
-            value: mapping.from_source_name,
-            url: mapping.from_source_url
-          },
-          {
-            name: "To Source:",
-            value: mapping.to_source_name,
-            url: mapping.to_source_url
-          },
         ]
         if (isVersion) {
           attributes.push({
