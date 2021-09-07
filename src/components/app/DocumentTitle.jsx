@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from "react-router-dom";
-import { forEach } from "lodash"
-import { includes, capitalize } from 'lodash';
+import { forEach, includes, capitalize } from 'lodash';
 
 const TITLES = {
     '/accounts/login': 'Sign In - OCL',
@@ -54,7 +53,7 @@ export default function DocumentTitle() {
     const { pathname } = useLocation();
     const capitalWords = ['concepts', 'mappings', 'versions', 'details', 'history', 'sources', 'collections', 'orgs', 'references', 'about']
     useEffect(() => {
-        forEach(TITLES, (title, routeName) =>{
+        forEach(TITLES, (title, routeName) => {
             if(new RegExp(routeName).test(pathname)) {
                 const keywords = pathname.split("/").filter(ele => ele).reverse()
                 keywords.forEach((keyword, index) => {
