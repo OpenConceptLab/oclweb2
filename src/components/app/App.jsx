@@ -28,6 +28,7 @@ import ConceptMapHome from '../fhir/ConceptMapHome';
 import Header from './Header';
 import Footer from './Footer';
 import RootView from './RootView';
+import DocumentTitle from "./DocumentTitle"
 import './App.scss';
 
 
@@ -66,6 +67,7 @@ const App = props => {
 
   return (
     <div>
+      <DocumentTitle/>
       <Header {...props} onOpen={setMenuOpen} />
       <ErrorBoundary>
         <main className={menuOpen ? 'content menu-open' : 'content'}>
