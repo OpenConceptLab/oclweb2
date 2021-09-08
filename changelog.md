@@ -1,3 +1,15 @@
+##### 2.0.30 - Wed Sep 8 03:17:27 2021 +0000
+- Merge pull request #7 from akhilkala/document_title
+- Sources and collections title fix
+- Fixing collection references list | facets are not applicable for references list
+- Details/History tab bug fixed
+- Document titles added
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | apps-menu | using direct Link for redirects
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | openmrs apps menu to redirect to corresponding env
+- Merge pull request #6 from akhilkala/apps_menu
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | Apps menu added
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | Apps menu added
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | Apps menu added
 ##### 2.0.28 - Mon Aug 30 05:30:44 2021 +0000
 - Concept Listing | name is display name with display locale and tooltip
 - Source/Collection version export dialog | updated processing info label
