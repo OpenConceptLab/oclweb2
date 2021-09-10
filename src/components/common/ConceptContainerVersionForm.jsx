@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core';
-import { set, get, cloneDeep, isEmpty, pickBy, startCase } from 'lodash';
+import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values } from 'lodash';
 import APIService from '../../services/APIService';
 
 class ConceptContainerVersionForm extends React.Component {
@@ -14,6 +14,7 @@ class ConceptContainerVersionForm extends React.Component {
         external_id: '',
         released: false,
         autoexpand: true,
+        expansion_url: '',
       },
       fieldErrors: {},
     }
@@ -26,7 +27,7 @@ class ConceptContainerVersionForm extends React.Component {
 
   setFieldsForEdit() {
     const { version } = this.props;
-    const attrs = ['id', 'description', 'external_id', 'released']
+    const attrs = ['id', 'description', 'external_id', 'released', 'expansion_url', 'autoexpand']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(version, attr, '') || ''))
     this.setState(newState);
@@ -53,7 +54,6 @@ class ConceptContainerVersionForm extends React.Component {
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-
     const { parentURL, edit, resource } = this.props
     let fields = cloneDeep(this.state.fields);
 
@@ -64,12 +64,18 @@ class ConceptContainerVersionForm extends React.Component {
     if(parentURL && isFormValid) {
       this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
-      fields.released = this.state.fields.released
 
-      if(resource !== 'collection')
+      if(isBoolean(this.state.fields.released))
+        fields.released = this.state.fields.released
+
+      if(resource === 'collection') {
+        fields.autoexpand = isBoolean(this.state.fields.autoexpand) ? this.state.fields.autoexpand : false
+        fields.expansion_url = this.state.fields.expansion_url || null
+      } else {
         delete fields.autoexpand
-      else
-        fields.autoexpand = this.state.fields.autoexpand
+        delete fields.expansion_url
+      }
+
 
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
@@ -82,9 +88,9 @@ class ConceptContainerVersionForm extends React.Component {
 
   handleSubmitResponse(response) {
     const { edit, reloadOnSuccess, onCancel, resourceType, onSubmit } = this.props
+    if(this.alert)
+      this.alert.dismiss();
     if(response.status === 201 || response.status === 200) { // success
-      if(this.alert)
-        this.alert.dismiss();
       const verb = edit ? 'updated' : 'created'
       const successMsg = `Successfully ${verb} ${resourceType} version`;
       const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
@@ -101,6 +107,8 @@ class ConceptContainerVersionForm extends React.Component {
         alertifyjs.error(genericError.join('\n'))
       } else if(get(response, 'detail')) {
         alertifyjs.error(response.detail)
+      } else if (isObject(response)) {
+        alertifyjs.error(values(response).join('\n'))
       } else {
         this.setState(
           {fieldErrors: response || {}},
@@ -112,7 +120,7 @@ class ConceptContainerVersionForm extends React.Component {
 
   render() {
     const { fields, fieldErrors } = this.state;
-    const { onCancel, edit, version, resourceType } = this.props;
+    const { onCancel, edit, version, resourceType, resource } = this.props;
     const idLabel = fields.id ? fields.id : 'version-id';
     const resourceTypeLabel = startCase(resourceType)
     const versionLabel = `${version.short_code} [${idLabel}]`;
@@ -170,6 +178,20 @@ class ConceptContainerVersionForm extends React.Component {
                 value={fields.external_id}
               />
             </div>
+            {
+              resource === 'collection' && edit &&
+              <div className='col-md-12 no-side-padding' style={{width: '100%', marginTop: '15px'}}>
+                <TextField
+                  id="fields.expansion_url"
+                  label="Expansion URL"
+                  placeholder={`e.g. ${version.version_url}expansions/<exp-id>/`}
+                  variant="outlined"
+                  fullWidth
+                  onChange={this.onTextFieldChange}
+                  value={fields.expansion_url}
+                />
+              </div>
+            }
             <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
               <FormControlLabel
                 control={<Checkbox checked={fields.released} onChange={this.onCheckboxChange} name="fields.released" />}
@@ -177,7 +199,7 @@ class ConceptContainerVersionForm extends React.Component {
               />
             </div>
             {
-              this.props.resource === 'collection' &&
+              resource === 'collection' &&
               <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
                 <FormControlLabel
                   control={<Checkbox checked={fields.autoexpand} onChange={this.onCheckboxChange} name="fields.autoexpand" />}
