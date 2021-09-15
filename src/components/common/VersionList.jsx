@@ -35,14 +35,15 @@ const VersionList = ({ versions, resource }) => {
     setSelectedList(newSelectedList)
   }
   const isConcept = resource === 'concept';
-  const canSelect = isConcept && sortedVersions.length > 1;
+  const isMapping = resource === 'mapping';
+  const canSelect = (isConcept || isMapping) && sortedVersions.length > 1;
   const gridClass = canSelect ? 'col-md-11' : 'col-md-12'
-  const showCompareOption = isConcept && selectedList.length === 2;
+  const showCompareOption = (isConcept || isMapping) && selectedList.length === 2;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
 
-    const url = `#/concepts/compare?lhs=${selectedList[0]}&rhs=${selectedList[1]}`
+    const url = `#/${resource}s/compare?lhs=${selectedList[0]}&rhs=${selectedList[1]}`
     window.open(url, '_blank')
   }
 
