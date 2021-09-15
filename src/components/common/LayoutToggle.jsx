@@ -11,6 +11,7 @@ import { isAdminUser } from '../../common/utils';
 import {
   TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID
 } from '../../common/constants'
+import useResponsive from "../../hooks/useResponsive"
 
 const OPTIONS = [
   {id: TABLE_LAYOUT_ID, name: 'Table View', icon: <TableIcon fontSize='inherit' />},
@@ -29,10 +30,12 @@ const LayoutToggle = ({ layoutId, onClick, size, includeSplitView }) => {
     onClick(id)
     toggleAnchor()
   }
+  const { isTablePotrait } = useResponsive()
+
 
   return (
     <React.Fragment>
-      <Tooltip arrow title='Switch view layouts'>
+      {!isTablePotrait && <Tooltip arrow title='Switch view layouts'>
         <Chip
           variant="outlined"
           icon={selectedLayout.icon}
@@ -43,7 +46,7 @@ const LayoutToggle = ({ layoutId, onClick, size, includeSplitView }) => {
           deleteIcon={<ArrowDropDownIcon fontSize="inherit" />}
           onDelete={toggleAnchor}
         />
-      </Tooltip>
+      </Tooltip>}
       <Menu
         id="layouts-menu"
         anchorEl={anchorEl}

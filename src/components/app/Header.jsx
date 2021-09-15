@@ -20,6 +20,8 @@ import UserOptions from '../users/UserOptions';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 import Feedback from '../common/Feedback';
 import ServerConfigsChip from '../common/ServerConfigsChip';
+import useResponsive from "../../hooks/useResponsive"
+import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 250;
 const useStyles = makeStyles((theme) => ({
@@ -94,6 +96,9 @@ const Header = props => {
       setNestedTools(false)
     setNestedCommunity(value)
   };
+  const { isTablePotrait } = useResponsive()
+  const location = useLocation()
+  const isSearchPage = location.pathname.includes("search")
 
   const toggleNestedTools = () => {
     const value = !nestedTools
@@ -111,11 +116,13 @@ const Header = props => {
 
   const toggleOpen = () => setOpen(prevOpen => {
     const newOpen = !prevOpen
-    props.onOpen(newOpen)
-    setTimeout(() => window.dispatchEvent(new CustomEvent("resize")), 300)
-    if(!newOpen) {
-      setNestedTools(false)
-      setNestedCommunity(false)
+    if (!isTablePotrait) {
+      props.onOpen(newOpen)
+      setTimeout(() => window.dispatchEvent(new CustomEvent("resize")), 300)
+      if(!newOpen) {
+        setNestedTools(false)
+        setNestedCommunity(false)
+      }
     }
     return newOpen
   })
@@ -131,7 +138,8 @@ const Header = props => {
         style={{backgroundColor: WHITE, color: BLACK, borderLeft: 'none'}}
         className={classes.appBar}
       >
-        <Toolbar style={{padding: '0 15px'}}>
+        <Toolbar style={isSearchPage?{padding: '0 15px', display:"flex", justifyContent:"space-between"}:{padding: '0 15px'}}>
+          <div style={{ display:"flex"}}>
           <IconButton
             color="primary"
             aria-label="open drawer"
@@ -146,6 +154,7 @@ const Header = props => {
               OCL
             </a>
           </Typography>
+          </div>
           <div className="col-sm-8">
             {
               !isAtGlobalSearch() &&
@@ -178,11 +187,15 @@ const Header = props => {
         open ?
         <Drawer
           className={classes.drawer}
-          variant="persistent"
+          variant={!isTablePotrait ? "persistent": null}
           anchor="left"
           open
           classes={{
             paper: classes.drawerPaper,
+          }}
+          onClose={()=>{
+            if(!isTablePotrait) return
+            toggleOpen()
           }}
           >
           <Toolbar />
@@ -354,7 +367,6 @@ const Header = props => {
             <Feedback mainButtonLabel={false} containerClassName='feedback-div' />
           </List>
         </Drawer>
-
       }
     </React.Fragment>
   )

@@ -29,6 +29,8 @@ import Header from './Header';
 import Footer from './Footer';
 import RootView from './RootView';
 import './App.scss';
+import useResponsive from "../../hooks/useResponsive"
+
 
 
 const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
@@ -63,6 +65,7 @@ const App = props => {
   })
 
   const isFHIR = isFHIRServer();
+  const { isTablePotrait } = useResponsive()
 
   return (
     <div>
@@ -71,7 +74,7 @@ const App = props => {
         <main className={menuOpen ? 'content menu-open' : 'content'}>
           <Switch>
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
-            <Route path="/search" component={isFHIR ? Fhir : Search} />
+            <Route path="/search" render={() => isFHIR ? <Fhir/> : <Search fixedFilters={isTablePotrait ? {isTable:false, isList:true}: {}} />}/>
             <AuthenticationRequiredRoute path="/imports" component={ImportHome} />
 
             { /* Concept Home */ }

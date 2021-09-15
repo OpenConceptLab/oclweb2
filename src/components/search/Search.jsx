@@ -32,6 +32,7 @@ import BestMatchSort from './BestMatchSort';
 import NumericalIDSort from './NumericalIDSort';
 import NavigationButtonGroup from './NavigationButtonGroup';
 import GenericFilterChip from './GenericFilterChip';
+import useResponsive from "../../hooks/useResponsive"
 
 const resourceResultStruct = {
   isLoading: false,
@@ -80,6 +81,8 @@ class Search extends React.Component {
       }
     }
   }
+
+  isSearchPage = () => get(this.props, 'location.pathname').includes("search")
 
   getLayoutTypeName = () => {
     const { isList, isSplit } = this.state;
@@ -530,7 +533,7 @@ class Search extends React.Component {
     const sortOn = sortDesc || sortAsc;
     const sortBy = sortDesc ? 'desc' : 'asc'
     return (
-      <span style={{display: 'inline-flex', alignItems: 'center', width: '135%', overflow: 'auto'}}>
+      <span style={this.isSearchPage() ? {display: 'inline-flex', alignItems: 'center', width: '95%', overflow: 'auto', flexWrap:"wrap", gap:"5px"}:{display: 'inline-flex', alignItems: 'center', width: '135%', overflow: 'auto'}}>
         {
           extraControls &&
           <span style={{paddingRight: '4px'}}>
@@ -778,4 +781,10 @@ class Search extends React.Component {
   }
 }
 
-export default withRouter(Search);
+const _Search = (props)=>{
+  const SearchComponent = withRouter(Search)
+  const { isTablePotrait } = useResponsive()
+  return <SearchComponent {...props} fixedFilters={isTablePotrait ? {isTable:false, isList:true}: {}}/>
+}
+
+export default _Search

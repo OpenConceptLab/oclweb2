@@ -12,6 +12,7 @@ import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import Tip from './Tip';
 import SourceChildVersionAssociationWithContainer from './SourceChildVersionAssociationWithContainer';
 import RetiredChip from '../common/RetiredChip';
+import useResponsive from '../../hooks/useResponsive';
 
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -47,6 +48,8 @@ const VersionList = ({ versions, resource }) => {
   }
 
   const isAssociated = version => !isEmpty(version.source_versions) || !isEmpty(version.collection_versions)
+
+  const { isTabletLandscape } = useResponsive()
 
   return (
     <div className='col-md-12'>
@@ -145,7 +148,7 @@ const VersionList = ({ versions, resource }) => {
           </AccordionDetails>
         </Accordion>
       </div>
-      <div className='col-md-4 no-right-padding'>
+     {!isTabletLandscape && <div className='col-md-4 no-right-padding'>
         <Tip
           content={
             <p className="small">
@@ -154,7 +157,7 @@ const VersionList = ({ versions, resource }) => {
             </p>
           }
         />
-      </div>
+      </div>}
     </div>
   );
 }

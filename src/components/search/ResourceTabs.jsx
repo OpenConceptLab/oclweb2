@@ -1,11 +1,13 @@
 import React from 'react';
-import { CircularProgress, Tabs, Tab, AppBar, } from '@material-ui/core';
+import { CircularProgress, Tabs, Tab, AppBar, Button, Menu, MenuItem } from '@material-ui/core';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon, List as ListIcon,
   Loyalty as LoyaltyIcon, Home as HomeIcon, Person as PersonIcon,
+  ArrowDropDown as ArrowDropDownIcon
 } from '@material-ui/icons'
 import { get, startCase, invert } from 'lodash';
 import { BLUE, WHITE, GREEN, ORANGE, DARKGRAY } from '../../common/constants';
+import useResponsive from '../../hooks/useResponsive';
 
 const HEIGHT = '50px'
 
@@ -20,6 +22,8 @@ const TAB_STYLES = {
 const RESOURCES = {
   concepts: 0, mappings: 1, sources: 2, collections: 3, organizations: 4, users: 5
 }
+
+const COLORS = [BLUE, BLUE, GREEN, GREEN, ORANGE, ORANGE]
 
 const ResourceTabs = props => {
   const activeResource = props.active;
@@ -47,7 +51,7 @@ const ResourceTabs = props => {
   }
 
   const getTabStyles = (index, color) => {
-    const styles = {...TAB_STYLES}
+    const styles = {...TAB_STYLES }
 
     if(value === index)
       return {color: color, ...styles}
@@ -87,6 +91,96 @@ const ResourceTabs = props => {
     />
   }
 
+  const { isTabletLandscape, isMobileLarge } = useResponsive()
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = (_, newValue) => {
+    setAnchorEl(null);
+    if(newValue){
+      setValue(() => {
+        props.onClick(get(invert(RESOURCES), newValue))
+        return newValue
+      });
+    }
+  };
+
+  const getCurrentReource =(value)=>{
+    const icons = [LocalOfferIcon, LinkIcon, ListIcon, LoyaltyIcon, HomeIcon, PersonIcon]
+    const Icon = icons[value]
+    return (
+      <>
+        <Icon fontSize='small' style={getIconStyles(value, COLORS[value])} />
+        {getLabelComponent(Object.keys(RESOURCES).find(key => RESOURCES[key] === value), COLORS[value])}
+      </>
+    )
+  }
+
+
+  if(isMobileLarge){
+    return (
+      <div style={{margin:"10px 0"}}>
+        <Button
+          aria-controls="menu"
+          aria-haspopup="true"
+          variant="outlined"
+          endIcon={<ArrowDropDownIcon style={{marginLeft:"15px"}} />}
+          color="primary"
+          onClick={handleOpenMenu}
+        >
+         {getCurrentReource(value)}
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={(e)=>handleCloseMenu(e, null)}
+        >
+          <MenuItem onClick={(e)=>handleCloseMenu(e, 0)}>
+            <>
+              <LocalOfferIcon fontSize='small' style={getIconStyles(0, BLUE)} />
+              {getLabelComponent('concepts', BLUE)}
+            </>
+          </MenuItem>
+          <MenuItem onClick={(e)=>handleCloseMenu(e, 1)}>
+            <>
+              <LinkIcon fontSize='small' style={getIconStyles(1, BLUE)} />
+              {getLabelComponent('mappings', BLUE)}
+            </>
+          </MenuItem>
+          <MenuItem onClick={(e)=>handleCloseMenu(e, 2)}>
+            <>
+              <ListIcon fontSize='small' style={getIconStyles(2, GREEN)} />
+              {getLabelComponent('sources', GREEN)}
+            </>
+          </MenuItem>
+          <MenuItem onClick={(e)=>handleCloseMenu(e, 3)}>
+            <>
+              <LoyaltyIcon fontSize='small' style={getIconStyles(3, GREEN)} />
+              {getLabelComponent('collections', GREEN)}
+            </>
+          </MenuItem>
+          <MenuItem onClick={(e)=>handleCloseMenu(e, 4)}>
+            <>
+              <HomeIcon fontSize='small' style={getIconStyles(4, ORANGE)} />
+              {getLabelComponent('organizations', ORANGE)}
+            </>
+          </MenuItem>
+          <MenuItem onClick={(e)=>handleCloseMenu(e, 5)}>
+            <>
+              <PersonIcon fontSize='small' style={getIconStyles(5, ORANGE)}/>
+              {getLabelComponent('users', ORANGE)}
+            </>
+          </MenuItem>
+        </Menu>
+      </div>
+    )
+  }
+
   return (
     <div style={{width: '100%'}}>
       <AppBar position="static" color="default" style={{backgroundColor: WHITE, boxShadow: 'none', borderTop: '1px solid lightgray', borderBottom: '1px solid lightgray'}}>
@@ -95,7 +189,7 @@ const ResourceTabs = props => {
           onChange={handleChange}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth"
+          variant={isTabletLandscape ? "scrollable" :"fullWidth"}
           style={{height: HEIGHT}}
           classes={{
             indicator: indicatorColorClass()
