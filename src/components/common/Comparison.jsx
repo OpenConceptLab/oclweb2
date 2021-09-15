@@ -140,7 +140,7 @@ class Comparison extends React.Component {
       return ''
     return `${keys(val)[0]}: ${JSON.stringify(values(val)[0])}`
   }
-  
+
   getListAttributeValue(attr, val) {
     if(includes(['extras'], attr))
       return this.getExtraAttributeLabel(val)
@@ -151,28 +151,28 @@ class Comparison extends React.Component {
   getHeaderSubAttributes(concept) {
     if (!this.props.getHeaderSubAttributeValues) return null
     return (
-        <div style={{margin: '5px 0px'}}>
-          {this.props.getHeaderSubAttributeValues(concept, this.state.isVersion).map((attribute, i) => {
-            if(attribute.url) {
-              return (
-                <span style={{marginLeft: i ? '10px': ''}}>
-                  <span className='gray-italics'>{attribute.name}</span>
-                  <Link to={toParentURI(attribute.url)}>
-                    <span>{attribute.value}</span>
-                  </Link>
-                </span>
-              )
-            }
-            else{
-              return (
-                <span style={{marginLeft: i ? '10px': ''}}>
-                  <span className='gray-italics'>{attribute.name}</span>
-                  <span>{attribute.value}</span>
-                </span>
-              )
-            }
-          })}
-        </div>
+      <div style={{margin: '5px 0px'}}>
+        {this.props.getHeaderSubAttributeValues(concept, this.state.isVersion).map((attribute, i) => {
+           if(attribute.url) {
+             return (
+               <span style={{marginLeft: i ? '10px': ''}} key={i}>
+                 <span className='gray-italics'>{attribute.name}</span>
+                 <Link to={toParentURI(attribute.url)}>
+                   <span>{attribute.value}</span>
+                 </Link>
+               </span>
+             )
+           }
+           else{
+             return (
+               <span style={{marginLeft: i ? '10px': ''}} key={i}>
+                 <span className='gray-italics'>{attribute.name}</span>
+                 <span>{attribute.value}</span>
+               </span>
+             )
+           }
+        })}
+      </div>
     )
   }
 
