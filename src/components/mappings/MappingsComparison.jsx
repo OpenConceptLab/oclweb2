@@ -22,11 +22,12 @@ export default function MappingsComparison() {
         from_concept_url: {...cloneDeep(attributeState), position: 10},
         to_concept_name: {...cloneDeep(attributeState), position: 11},
         to_concept_url: {...cloneDeep(attributeState), position: 12},
-        retired: {...cloneDeep(attributeState), type: 'bool', position: 13},
-        created_by: {...cloneDeep(attributeState), position: 14},
-        updated_by: {...cloneDeep(attributeState), position: 15},
-        created_on: {...cloneDeep(attributeState), type: 'date', position: 16},
-        updated_on: {...cloneDeep(attributeState), type: 'date', position: 17},
+        extras: {...cloneDeep(attributeState), collapsed: true, type: 'list', position: 13},
+        retired: {...cloneDeep(attributeState), type: 'bool', position: 14},
+        created_by: {...cloneDeep(attributeState), position: 15},
+        updated_by: {...cloneDeep(attributeState), position: 16},
+        created_on: {...cloneDeep(attributeState), type: 'date', position: 17},
+        updated_on: {...cloneDeep(attributeState), type: 'date', position: 18},
     }
 
     const fetcher = (uri, attr, loadingAttr, state) => {
