@@ -75,7 +75,7 @@ class Login extends React.Component {
 
   handleClickShowPassword = () => this.setState({showPassword: !this.state.showPassword})
 
-  getTitle = () => `Sign In - ${getAppliedServerConfig().name}`
+  getTitle = () => `Sign In - ${get(getAppliedServerConfig(), 'name', 'OCL')}`
 
   render() {
     const { serverError, verificationMsg, email, showPassword } = this.state;
