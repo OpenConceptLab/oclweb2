@@ -7,7 +7,7 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
-import { isEmpty, keys, map, startCase, get } from 'lodash';
+import { isEmpty, map, filter, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
@@ -32,6 +32,23 @@ import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 
+const DEFAULT_VISIBLE_ATTRIBUTES = [
+  {
+    label: "Source Type",
+    value: "source_type",
+    type: "text"
+  },
+  {
+    label: "Supported Locales",
+    value: "supported_locales",
+  },
+  {
+    label: "Custom Validation Schema",
+    value: "custom_validation_schema",
+    type: "text"
+  },
+]
+
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL, config, splitView
 }) => {
@@ -42,7 +59,6 @@ const SourceHomeHeader = ({
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
-  const hasManyHiddenAttributes = nonEmptyCount(source, map(get(config, 'config.header.invisibleAttributes'),(attr) => attr.value)) >= 4;
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
               .post({base64: base64, name: name})
@@ -51,6 +67,17 @@ const SourceHomeHeader = ({
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
   }
+  const getDefaultHiddenAttributes = () => {
+    return filter(DEFAULT_VISIBLE_ATTRIBUTES, (attr) => {
+      return !map(get(config, 'config.header.visibleAttributes'),(attr) => attr.value).includes(attr.value)
+    }
+    )
+  }
+  const getHiddenAttributes = () => {
+    return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
+  }
+  const hasManyHiddenAttributes = nonEmptyCount(source, map(getHiddenAttributes(),(attr) => attr.value)) >= 4;
+
 
   React.useEffect(
     () => setOpenHeader(!get(config, 'config.header.shrink', false)),
@@ -164,12 +191,12 @@ const SourceHomeHeader = ({
               <div className='col-md-12 no-side-padding'>
                 <CollapsibleAttributes
                   object={source}
-                  hiddenAttributes={get(config, 'config.header.invisibleAttributes')}
+                  hiddenAttributes={getHiddenAttributes()}
                 />
               </div> :
               <React.Fragment>
                 {
-                  map(get(config, 'config.header.invisibleAttributes'), (attr) => (
+                  map(getHiddenAttributes(), (attr) => (
                     <HeaderAttribute key={attr.label} label={attr.label} value={get(source, attr.value)} gridClass="col-md-12" type={attr.type} />
                   ))
                 }

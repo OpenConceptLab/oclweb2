@@ -5,6 +5,7 @@ import {
 import { Collapse, Chip } from '@material-ui/core';
 import { map, get } from 'lodash';
 import HeaderAttribute from './HeaderAttribute';
+import SupportedLocales from '../common/SupportedLocales';
 
 const CollapsibleAttributes = ({
   object, hiddenAttributes
@@ -19,6 +20,10 @@ const CollapsibleAttributes = ({
           map(hiddenAttributes, (attr) => {
             const value = get(object, attr.value)
             if (!value) return null
+            
+            if (attr.value === "supported_locales" || attr.value === "default_locale"){
+              return <HeaderAttribute key={attr.label} label="Supported Locales" value={<SupportedLocales {...object} />} gridClass="col-md-12" type="component" />
+            }
             return <HeaderAttribute key={attr.label} label={attr.label} value={value} gridClass='col-md-10' type={attr.type} />
           })
         }
