@@ -32,33 +32,17 @@ import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 
-const HIDDEN_ATTRIBUTES = {
-  canonical_url: 'url',
-  publisher: 'text',
-  purpose: 'text',
-  copyright: 'text',
-  preferred_source: 'text',
-  custom_resources_linked_source: 'text',
-  revision_date: 'date',
-  identifier: 'json',
-  contact: 'json',
-  jurisdiction: 'json',
-  meta: 'json',
-  immutable: 'boolean',
-  locked_date: 'date',
-  experimental: 'boolean'
-}
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL, config
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
+  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.header.shrink', false));
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
   const onIconClick = () => copyURL(toFullAPIURL(currentURL))
-  const hasManyHiddenAttributes = nonEmptyCount(collection, keys(HIDDEN_ATTRIBUTES)) >= 4;
+  const hasManyHiddenAttributes = nonEmptyCount(collection, map(get(config, 'config.header.invisibleAttributes'),(attr) => attr.value)) >= 4;
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
               .post({base64: base64, name: name})
@@ -69,8 +53,8 @@ const CollectionHomeHeader = ({
   }
 
   React.useEffect(
-    () => setOpenHeader(!get(config, 'config.shrinkHeader', false)),
-    [get(config, 'config.shrinkHeader')]
+    () => setOpenHeader(!get(config, 'config.header.shrink', false)),
+    [get(config, 'config.header.shrink')]
   )
 
   const deleteCollection = () => {
@@ -163,28 +147,25 @@ const CollectionHomeHeader = ({
                 {collection.description}
               </div>
             }
-            <HeaderAttribute label="Short Code" value={collection.short_code} gridClass="col-md-12" />
-            <HeaderAttribute label="Name" value={collection.name} gridClass="col-md-12" />
-            <HeaderAttribute label="Collection Type" value={collection.collection_type} gridClass="col-md-12" />
-            <HeaderAttribute label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-md-12" type="component" />
-            <HeaderAttribute label="Custom Validation Schema" value={collection.custom_validation_schema} gridClass="col-md-12" />
+            {map(get(config, 'config.header.visibleAttributes'), (attr) => {
+              if (attr.value === "supported_locales" || attr.value === "default_locale"){
+                return <HeaderAttribute key={attr.label} label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-md-12" type="component" />
+              }
+              return <HeaderAttribute key={attr.label} label={attr.label} value={collection[attr.value]} type={attr.type} gridClass="col-md-12"/>
+            })}
             <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-md-12" />
             {
               hasManyHiddenAttributes ?
               <div className='col-md-12 no-side-padding'>
                 <CollapsibleAttributes
+                  hiddenAttributes={get(config, 'config.header.invisibleAttributes')}
                   object={collection}
-                  urlAttrs={['canonical_url']}
-                  textAttrs={['publisher', 'purpose', 'copyright', 'preferred_source', 'custom_resources_linked_source']}
-                  dateAttrs={['revision_date', 'locked_date']}
-                  jsonAttrs={['identifier', 'contact', 'jurisdiction']}
-                  booleanAttrs={['immutable', 'experimental']}
                 />
               </div> :
               <React.Fragment>
                 {
-                  map(HIDDEN_ATTRIBUTES, (type, attr) => (
-                    <HeaderAttribute key={attr} label={`${startCase(attr)}`} value={get(collection, attr)} gridClass="col-md-12" type={type} />
+                  map(get(config, 'config.header.invisibleAttributes'), (attr) => (
+                    <HeaderAttribute key={attr.label} label={attr.label} value={get(collection, attr.value)} gridClass="col-md-12" type={attr.type} />
                   ))
                 }
               </React.Fragment>

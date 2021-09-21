@@ -5,7 +5,7 @@ import {
   Edit as EditIcon,
 } from '@material-ui/icons';
 import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get, map } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -24,15 +24,15 @@ import OrgForm from './OrgForm';
 
 const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
-  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
+  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.header.shrink', false));
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
   const hasAccess = currentUserHasAccess();
   const onIconClick = () => copyURL(toFullAPIURL(url));
 
   React.useEffect(
-    () => setOpenHeader(!get(config, 'config.shrinkHeader', false)),
-    [get(config, 'config.shrinkHeader')]
+    () => setOpenHeader(!get(config, 'config.header.shrink', false)),
+    [get(config, 'config.header.shrink')]
   )
 
   const onLogoUpload = (base64, name) => {
@@ -96,7 +96,9 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
                 {org.description}
               </div>
             }
-            <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" />
+            {map(get(config, 'config.header.attributes'), (attr) => {
+                return <HeaderAttribute key={attr.label} label={attr.label} value={org[attr.value]} type={attr.type} gridClass="col-md-12" />
+            })}
             <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {

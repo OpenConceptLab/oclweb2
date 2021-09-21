@@ -14,6 +14,107 @@ const DEFAULT_CONFIG = {
   web_default: true,
   is_default: false,
   config: {
+    header:{
+      shrink: false,
+      visibleAttributes: [
+        {
+          label: "Short Code",
+          value: "short_code",
+          type: "text"
+        },
+        {
+          label: "Name",
+          value: "name",
+          type: "text"
+        },
+        {
+          label: "Collection Type",
+          value: "collection_type",
+          type: "text"
+        },
+        {
+          label: "Custom Validation Schema",
+          value: "custom_validation_schema",
+          type: "text"
+        },
+        {
+          label: "Supported Locales",
+          value: "supported_locales",
+        }
+      ],
+      invisibleAttributes: [
+        {
+          label: "Canonical Url",
+          value: "canonical_url",
+          type: "url"
+        },
+        {
+          label: "Publisher",
+          value: "publisher",
+          type: "text"
+        },
+        {
+          label: "Purpose",
+          value: "purpose",
+          type: "text"
+        },
+        {
+          label: "Copyright",
+          value: "copyright",
+          type: "text"
+        },
+        {
+          label: "Preferred Source",
+          value: "preferred_source",
+          type: "text"
+        },
+        {
+          label: "Custom Resources Linked Source",
+          value: "custom_resources_linked_source",
+          type: "text"
+        },
+        {
+          label: "Revision Date",
+          value: "revision_date",
+          type: "date"
+        },
+        {
+          label: "Identifier",
+          value: "identifier",
+          type: "json"
+        },
+        {
+          label: "Contact",
+          value: "contact",
+          type: "json"
+        },
+        {
+          label: "Jurisdiction",
+          value: "jurisdiction",
+          type: "json"
+        },
+        {
+          label: "Meta",
+          value: "meta",
+          type: "json"
+        },
+        {
+          label: "Immutable",
+          value: "immutable",
+          type: "boolean"
+        },
+        {
+          label: "Locked Date",
+          value: "locked_date",
+          type: "date"
+        },
+        {
+          label: "Experimental",
+          value: "experimental",
+          type: "boolean"
+        },
+      ]
+    },
     tabs: [
       {type: "concepts", label: "Concepts", page_size: 25, "default": true, layout: 'table'},
       {type: "mappings", label: "Mappings", page_size: 25, layout: 'table'},

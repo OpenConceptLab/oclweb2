@@ -20,6 +20,112 @@ const DEFAULT_CONFIG = {
   web_default: true,
   is_default: false,
   config: {
+    header: {
+      shrink: false,
+      visibleAttributes: [
+        {
+          label: "Source Type",
+          value: "source_type",
+          type: "text"
+        },
+        {
+          label: "Supported Locales",
+          value: "supported_locales",
+        },
+        {
+          label: "Custom Validation Schema",
+          value: "custom_validation_schema",
+          type: "text"
+        },
+      ],
+      invisibleAttributes: [
+        {
+          label: "Canonical Url",
+          value: "canonical_url",
+          type: "url"
+        },
+        {
+          label: "Publisher",
+          value: "publisher",
+          type: "text"
+        },
+        {
+          label: "Purpose",
+          value: "purpose",
+          type: "text"
+        },
+        {
+          label: "Copyright",
+          value: "copyright",
+          type: "text"
+        },
+        {
+          label: "Content Type",
+          value: "content_type",
+          type: "text"
+        },
+        {
+          label: "Revision Date",
+          value: "revision_date",
+          type: "date"
+        },
+        {
+          label: "Revision Date",
+          value: "revision_date",
+          type: "date"
+        },
+        {
+          label: "Identifier",
+          value: "identifier",
+          type: "json"
+        },
+        {
+          label: "Contact",
+          value: "contact",
+          type: "json"
+        },
+        {
+          label: "Jurisdiction",
+          value: "jurisdiction",
+          type: "json"
+        },
+        {
+          label: "Meta",
+          value: "meta",
+          type: "json"
+        },
+        {
+          label: "Collection Reference",
+          value: "collection_reference",
+          type: "text"
+        },
+        {
+          label: "Hierarchy Meaning",
+          value: "hierarchy_meaning",
+          type: "text"
+        },
+        {
+          label: "Experimental",
+          value: "experimental",
+          type: "boolean"
+        },
+        {
+          label: "Case Sensitive",
+          value: "case_sensitive",
+          type: "boolean"
+        },
+        {
+          label: "Compositional",
+          value: "compositional",
+          type: "boolean"
+        },
+        {
+          label: "Version Needed",
+          value: "version_needed",
+          type: "boolean"
+        },
+      ]
+    },
     tabs: [
       {type: "concepts", label: "Concepts", page_size: 25, "default": true, layout: 'table'},
       {type: "mappings", label: "Mappings", page_size: 25, layout: 'table'},

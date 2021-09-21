@@ -16,7 +16,26 @@ const DEFAULT_CONFIG = {
   web_default: true,
   is_default: false,
   config: {
-    shrinkHeader: false,
+    header: {
+      shrink: false,
+      attributes: [
+        {
+          label: "Company",
+          value: "company",
+          type:"text"
+        },
+        {
+          label: "Location",
+          value: "location",
+          type:"text"
+        },
+        {
+          label: "Website",
+          value: "website",
+          type:"url"
+        },
+      ]
+    },
     tabs: [
       {type: "sources", label: "Sources", page_size: 25, "default": true, layout: 'table'},
       {type: "collections", label: "Collections", page_size: 25, layout: 'table'},
