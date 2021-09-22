@@ -18,7 +18,7 @@ const CONFIGS = {
   },
   extraFields: ['publisher', 'purpose', 'copyright', 'identifier', 'contact', 'jurisdiction', 'meta'],
   extraBooleanFields: ['experimental', 'immutable', 'autoexpand_head'],
-  extraDateTimeFields: ['locked_date']
+  extraDateTimeFields: ['locked_date'],
 }
 
 const CollectionForm = props => (
