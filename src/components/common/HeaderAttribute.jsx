@@ -16,7 +16,7 @@ const getJSONComponent = val => {
   return <pre style={{margin: '0px'}}>{JSON.stringify(val, undefined, 1)}</pre>;
 }
 
-const HeaderAttribute = ({label, value, gridClass, type}) => {
+const HeaderAttribute = ({label, value, gridClass, type, color}) => {
   const valueType = type || 'text';
   const className = 'no-side-padding flex-vertical-start ' + (gridClass ? gridClass : 'col-md-4')
   const getValueComponent = () => {
@@ -43,8 +43,8 @@ const HeaderAttribute = ({label, value, gridClass, type}) => {
     <React.Fragment>
       {
         isValid() &&
-        <div className={className}>
-          <span className='italic' style={{marginRight: '10px', color: 'rgba(0, 0, 0, 0.6)'}}>
+        <div className={className} style={color ? {color: color} : {}}>
+          <span className='italic' style={{marginRight: '10px', color: color? color : 'rgba(0, 0, 0, 0.6)'}}>
             {label}:
           </span>
           <span>

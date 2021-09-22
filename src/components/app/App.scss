@@ -928,3 +928,9 @@ div.divider-highlight-hover:hover {
     line-height: 24px;
     margin-bottom: 8px;
 }
+.header-custom-html {
+    button, a {
+        color: inherit;
+        text-decoration: underline;
+    }
+}

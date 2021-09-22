@@ -1,27 +1,51 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, values, find, findIndex, isEmpty, isObject } from 'lodash';
+import { reject, get, values, find, findIndex, isEmpty, isObject, includes } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
+import OrgHomeHeaderInlay from './OrgHomeHeaderInlay';
+import HomeTabContent from './HomeTabContent';
 import OrgHomeTabs from './OrgHomeTabs';
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
+
+const BACKGROUND_CONFIG = {
+  background: {
+    image: '',
+    backgroundColor: '',
+  },
+  forground: {
+    color: '',
+    titleColor: '',
+    descriptionColor: '',
+    title: '',
+    description: ""
+  },
+}
 
 const DEFAULT_CONFIG = {
   name: 'OCL Default (Org)',
   web_default: true,
   is_default: false,
   config: {
-    shrinkHeader: false,
+    header: {
+      ...BACKGROUND_CONFIG,
+      height: '',
+      controls: true,
+      attributes: true,
+      signatures: true,
+      logo: true,
+      shrink: false,
+    },
     tabs: [
-      {type: "sources", label: "Sources", page_size: 25, "default": true, layout: 'table'},
-      {type: "collections", label: "Collections", page_size: 25, layout: 'table'},
-      {type: "users", label: "Members", page_size: 25, layout: 'table'},
-      {type: "about", label: "About"},
+      {type: "sources", label: "Sources", page_size: 25, "default": true, layout: 'table', color: ''},
+      {type: "collections", label: "Collections", page_size: 25, layout: 'table', color: ''},
+      {type: "users", label: "Members", page_size: 25, layout: 'table', color: ''},
+      {type: "about", label: "About", color: ''},
     ]
   }
 }
@@ -44,6 +68,10 @@ class OrgHome extends React.Component {
 
   customConfigFeatureApplicable() {
     return this.props.location.search.indexOf('configs=true') > -1;
+  }
+
+  isNewUI() {
+    return this.props.location.search.indexOf('new=true') > -1;
   }
 
   getDefaultTabIndex() {
@@ -194,6 +222,8 @@ class OrgHome extends React.Component {
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
     const hasError = notFound || accessDenied || permissionDenied;
+    const selectedTabConfig = get(selectedConfig, `config.tabs.${tab}`);
+
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -203,32 +233,83 @@ class OrgHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-md-12 home-container no-side-padding'>
-            <OrgHomeHeader org={org} url={url} config={selectedConfig} />
-            <Pins
-              pins={pins}
-              onDelete={this.deletePin}
-              canDelete={isCurrentUserMemberOfOrg}
-              onOrderUpdate={this.updatePinOrder}
-            />
             {
-              tab !== null &&
-              <OrgHomeTabs
-                tab={tab}
-                onTabChange={this.onTabChange}
-                org={org}
-                location={this.props.location}
-                match={this.props.match}
-                url={url}
-                pins={pins}
-                onPinCreate={this.createPin}
-                onPinDelete={this.deletePin}
-                showPin={isCurrentUserMemberOfOrg}
-                customConfigs={[...customConfigs, DEFAULT_CONFIG]}
-                onConfigChange={this.onConfigChange}
-                selectedConfig={selectedConfig}
-                aboutTab={showAboutTab}
-                showConfigSelection={this.customConfigFeatureApplicable()}
-              />
+              this.isNewUI() && tab !== null ?
+              <React.Fragment>
+                <OrgHomeHeaderInlay
+                  org={org}
+                  url={url}
+                  config={selectedConfig}
+                  tab={tab}
+                  onTabChange={this.onTabChange}
+                  location={this.props.location}
+                  match={this.props.match}
+                  pins={pins}
+                  onPinCreate={this.createPin}
+                  onPinDelete={this.deletePin}
+                  showPin={isCurrentUserMemberOfOrg}
+                  customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                  onConfigChange={this.onConfigChange}
+                  aboutTab={showAboutTab}
+                  showConfigSelection={this.customConfigFeatureApplicable()}
+                />
+                {
+                  !includes(['about', 'text'], get(selectedTabConfig, 'type')) &&
+                  <Pins
+                    pins={pins}
+                    onDelete={this.deletePin}
+                    canDelete={isCurrentUserMemberOfOrg}
+                    onOrderUpdate={this.updatePinOrder}
+                  />
+                }
+                <HomeTabContent
+                  org={org}
+                  url={url}
+                  selectedConfig={selectedConfig}
+                  tab={tab}
+                  onTabChange={this.onTabChange}
+                  location={this.props.location}
+                  match={this.props.match}
+                  pins={pins}
+                  onPinCreate={this.createPin}
+                  onPinDelete={this.deletePin}
+                  showPin={isCurrentUserMemberOfOrg}
+                  customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                  onConfigChange={this.onConfigChange}
+                  aboutTab={showAboutTab}
+                  showConfigSelection={this.customConfigFeatureApplicable()}
+                />
+
+              </React.Fragment> :
+              <React.Fragment>
+                <OrgHomeHeader org={org} url={url} config={selectedConfig} />
+                <Pins
+                  pins={pins}
+                  onDelete={this.deletePin}
+                  canDelete={isCurrentUserMemberOfOrg}
+                  onOrderUpdate={this.updatePinOrder}
+                />
+                {
+                  tab !== null &&
+                  <OrgHomeTabs
+                    tab={tab}
+                    onTabChange={this.onTabChange}
+                    org={org}
+                    location={this.props.location}
+                    match={this.props.match}
+                    url={url}
+                    pins={pins}
+                    onPinCreate={this.createPin}
+                    onPinDelete={this.deletePin}
+                    showPin={isCurrentUserMemberOfOrg}
+                    customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                    onConfigChange={this.onConfigChange}
+                    selectedConfig={selectedConfig}
+                    aboutTab={showAboutTab}
+                    showConfigSelection={this.customConfigFeatureApplicable()}
+                  />
+                }
+              </React.Fragment>
             }
           </div>
         }

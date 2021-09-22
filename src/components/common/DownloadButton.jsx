@@ -2,11 +2,11 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { MenuItem, Menu, Tooltip, Button } from '@material-ui/core';
 import { GetApp as DownloadIcon } from '@material-ui/icons';
-import { isArray, map, toUpper, includes, forEach } from 'lodash';
+import { isArray, map, toUpper, includes, forEach, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import { downloadObject, arrayToCSV, downloadFromURL, toFullAPIURL } from '../../common/utils';
 
-const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip}) => {
+const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip, iconStyle}) => {
   const fileName = filename || 'download';
   const [fetchedResources, setFetchedResources] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -61,7 +61,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
         {
           buttonFunc ? buttonFunc({onClick: event => setAnchorEl(event.currentTarget)}) :
           <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}}>
-            <DownloadIcon fontSize='inherit' style={{marginTop: '3px'}} />
+            <DownloadIcon fontSize='inherit' style={merge({marginTop: '3px'}, (iconStyle || {}))} />
           </Button>
         }
       </Tooltip>

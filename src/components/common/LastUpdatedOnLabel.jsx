@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import {Event as EventIcon} from '@material-ui/icons'
+import { merge } from 'lodash';
 import { DATE_FORMAT } from '../../common/constants'
 
 const STYLES = {
@@ -21,7 +22,7 @@ const LastUpdatedOnLabel = props => {
   const styles = STYLES[props.iconSize || 'small']
 
   return (
-    <div className={`${containerClass} resource-metadata`} style={{fontSize: styles.fontSize}}>
+    <div className={`${containerClass} resource-metadata`} style={merge({fontSize: styles.fontSize}, (props.containerStyle || {}))}>
       <span>
         <EventIcon style={styles.icon} />
       </span>
