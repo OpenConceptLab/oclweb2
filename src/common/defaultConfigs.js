@@ -95,16 +95,6 @@ export const ORG_DEFAULT_CONFIG = {
           value: "company",
           type: "text",
         },
-        {
-          label: "Location",
-          value: "location",
-          type: "text",
-        },
-        {
-          label: "Website",
-          value: "website",
-          type: "url",
-        },
       ],
       height: null,
       controls: true,

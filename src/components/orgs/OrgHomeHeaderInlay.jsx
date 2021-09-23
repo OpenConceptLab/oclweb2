@@ -5,7 +5,7 @@ import {
   Edit as EditIcon,
 } from '@material-ui/icons';
 import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
-import { isEmpty, get, has, isObject, merge } from 'lodash';
+import { isEmpty, get, has, isObject, merge, isBoolean, map } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -21,6 +21,9 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import OrgForm from './OrgForm';
 import HomeTabs from './HomeTabs';
+import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
+
+const DEFAULT_VISIBLE_ATTRIBUTES = ORG_DEFAULT_CONFIG.config.header.attributes
 
 const OrgHomeHeaderInlay = ({ org, url, fhir, extraComponents, config, ...rest }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
@@ -81,6 +84,12 @@ const OrgHomeHeaderInlay = ({ org, url, fhir, extraComponents, config, ...rest }
       style['minHeight'] = get(config, 'config.header.height') || '140px'
 
     return style;
+  }
+
+  const getVisibleAttributes = () => {
+    const attributes = get(config, 'config.header.attributes')
+    if(attributes)
+      return isBoolean(attributes) ? DEFAULT_VISIBLE_ATTRIBUTES : attributes
   }
 
   return (
@@ -148,7 +157,19 @@ const OrgHomeHeaderInlay = ({ org, url, fhir, extraComponents, config, ...rest }
           {
             showAttributes &&
             <React.Fragment>
-              <HeaderAttribute label="Company" value={org.company} gridClass="col-md-12" color={customDescriptionColor} />
+              {
+                map(
+                  getVisibleAttributes(),
+                  attr => <HeaderAttribute
+                            key={attr.label}
+                            label={attr.label}
+                            value={org[attr.value]}
+                            type={attr.type}
+                            gridClass="col-md-12"
+                            color={customDescriptionColor}
+                  />
+                )
+              }
               <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} color={customDescriptionColor} />} gridClass="col-md-12" color={customDescriptionColor} />
             </React.Fragment>
           }
