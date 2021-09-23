@@ -7,6 +7,7 @@ import {
 import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
 import { isEmpty, get, has, isObject, merge, isBoolean, map } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
+import { HEADER_GRAY } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -25,7 +26,7 @@ import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 const DEFAULT_VISIBLE_ATTRIBUTES = ORG_DEFAULT_CONFIG.config.header.attributes
 
-const OrgHomeHeaderInlay = ({ org, url, fhir, extraComponents, config, ...rest }) => {
+const HomeHeader = ({ org, url, fhir, extraComponents, config, ...rest }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
   const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
@@ -70,6 +71,8 @@ const OrgHomeHeaderInlay = ({ org, url, fhir, extraComponents, config, ...rest }
         styles['backgroundAttachment'] = 'fixed';
       } else if (backgroundColor) {
         styles['backgroundColor'] = backgroundColor
+      } else {
+        styles['backgroundColor'] = HEADER_GRAY
       }
     }
 
@@ -246,4 +249,4 @@ const OrgHomeHeaderInlay = ({ org, url, fhir, extraComponents, config, ...rest }
   )
 }
 
-export default OrgHomeHeaderInlay;
+export default HomeHeader;

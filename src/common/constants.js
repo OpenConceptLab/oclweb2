@@ -2,6 +2,7 @@ export const WHITE = '#FFF';
 export const BLACK = '#000';
 export const BLUE = 'rgb(51, 115, 170)';
 export const DARKGRAY = 'rgb(119, 119, 119)';
+export const HEADER_GRAY = '#f6f8fa';
 export const DATE_FORMAT = 'MM/DD/YYYY';
 export const DATETIME_FORMAT = DATE_FORMAT + ' hh:mm A';
 export const DEFAULT_LIMIT = 25;
@@ -45,4 +46,3 @@ export const TABLE_LAYOUT_ID = 'table';
 export const LIST_LAYOUT_ID = 'list';
 export const SPLIT_LAYOUT_ID = 'split';
 export const OPENMRS_URL = 'https://openmrs.openconceptlab.org';
-

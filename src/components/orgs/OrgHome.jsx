@@ -6,7 +6,7 @@ import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
 import OrgHomeHeader from './OrgHomeHeader';
-import OrgHomeHeaderInlay from './OrgHomeHeaderInlay';
+import HomeHeader from './HomeHeader';
 import HomeTabContent from './HomeTabContent';
 import OrgHomeTabs from './OrgHomeTabs';
 import NotFound from '../common/NotFound';
@@ -200,7 +200,7 @@ class OrgHome extends React.Component {
             {
               this.isNewUI() && tab !== null ?
               <React.Fragment>
-                <OrgHomeHeaderInlay
+                <HomeHeader
                   org={org}
                   url={url}
                   config={selectedConfig}
