@@ -34,6 +34,7 @@ import CollapsibleDivider from '../common/CollapsibleDivider';
 import { COLLECTION_DEFAULT_CONFIG } from '../../common/defaultConfigs';
 
 const DEFAULT_VISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.visibleAttributes
+const DEFAULT_INVISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL, config
@@ -60,7 +61,22 @@ const CollectionHomeHeader = ({
     )
   }
   const getHiddenAttributes = () => {
-    return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
+    if (get(config, 'config.header.invisibleAttributes') === 'object'){
+      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()} 
+    }
+    else if (get(config, 'config.header.invisibleAttributes')) {
+      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() } 
+    }
+    else return []
+  }
+  const getVisibleAttributes = ()=>{
+    if (get(config, 'config.header.visibleAttributes') === 'object'){
+      return get(config, 'config.header.visibleAttributes')
+    }
+    else if (get(config, 'config.header.visibleAttributes')) {
+      return DEFAULT_VISIBLE_ATTRIBUTES
+    }
+    else return []
   }
   const hasManyHiddenAttributes = nonEmptyCount(collection, map(getHiddenAttributes(),(attr) => attr.value)) >= 4;
 
@@ -160,7 +176,7 @@ const CollectionHomeHeader = ({
                 {collection.description}
               </div>
             }
-            {map(get(config, 'config.header.visibleAttributes'), (attr) => {
+            {map(getVisibleAttributes(), (attr) => {
               if (attr.value === "supported_locales" || attr.value === "default_locale"){
                 return <HeaderAttribute key={attr.label} label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-md-12" type="component" />
               }

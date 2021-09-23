@@ -21,6 +21,9 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import OrgForm from './OrgForm';
+import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
+
+const DEFAULT_VISIBLE_ATTRIBUTES = ORG_DEFAULT_CONFIG.config.header.attributes
 
 const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
@@ -42,6 +45,16 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
                 if(get(response, 'status') === 200)
                   setLogoURL(get(response, 'data.logo_url', logoURL))
               })
+  }
+
+  const getVisibleAttributes = ()=>{
+    if (typeof get(config, 'config.header.attributes') === 'object') {
+      return get(config, 'config.header.attributes')
+    }
+    else if (get(config, 'config.header.attributes')) {
+      return DEFAULT_VISIBLE_ATTRIBUTES
+    }
+    else return []
   }
 
   return (
@@ -96,7 +109,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
                 {org.description}
               </div>
             }
-            {map(get(config, 'config.header.attributes'), (attr) => {
+            {map(getVisibleAttributes(), (attr) => {
                 return <HeaderAttribute key={attr.label} label={attr.label} value={org[attr.value]} type={attr.type} gridClass="col-md-12" />
             })}
             <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
