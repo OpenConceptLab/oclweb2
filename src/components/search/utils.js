@@ -42,10 +42,10 @@ export const fetchCounts = (excludeResource, queryParams, callback) => {
   });
 }
 
-export const fetchFacets = (resource, queryParams, callback) => {
+export const fetchFacets = (resource, queryParams, baseURL, callback) => {
   if(!queryParams)
     queryParams = {}
   queryParams.facetsOnly = true
 
-  __fetchSearchResults(resource, queryParams, null, callback)
+  __fetchSearchResults(resource, queryParams, baseURL, callback)
 }

@@ -376,7 +376,7 @@ class Search extends React.Component {
       if(counts && !this.props.nested)
         fetchCounts(_resource, queryParams, this.onCountsLoad)
       if(!noHeaders && facets && !fhir && resource !== 'references')
-        fetchFacets(_resource, queryParams, this.onFacetsLoad)
+        fetchFacets(_resource, queryParams, this.props.baseURL, this.onFacetsLoad)
     })
   }
 
