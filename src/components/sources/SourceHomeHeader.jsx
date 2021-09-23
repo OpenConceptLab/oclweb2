@@ -31,23 +31,9 @@ import RetiredChip from '../common/RetiredChip';
 import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
+import { SOURCE_DEFAULT_CONFIG } from '../../common/defaultConfigs';
 
-const DEFAULT_VISIBLE_ATTRIBUTES = [
-  {
-    label: "Source Type",
-    value: "source_type",
-    type: "text"
-  },
-  {
-    label: "Supported Locales",
-    value: "supported_locales",
-  },
-  {
-    label: "Custom Validation Schema",
-    value: "custom_validation_schema",
-    type: "text"
-  },
-]
+const DEFAULT_VISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.visibleAttributes
 
 const SourceHomeHeader = ({
   source, isVersionedObject, versionedObjectURL, currentURL, config, splitView

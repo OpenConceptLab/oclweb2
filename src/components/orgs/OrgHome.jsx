@@ -12,59 +12,7 @@ import OrgHomeTabs from './OrgHomeTabs';
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
-
-const BACKGROUND_CONFIG = {
-  background: {
-    image: '',
-    backgroundColor: '',
-  },
-  forground: {
-    color: '',
-    titleColor: '',
-    descriptionColor: '',
-    title: '',
-    description: ""
-  },
-}
-
-const DEFAULT_CONFIG = {
-  name: 'OCL Default (Org)',
-  web_default: true,
-  is_default: false,
-  config: {
-    header: {
-      ...BACKGROUND_CONFIG,
-      attributes: [
-        {
-          label: "Company",
-          value: "company",
-          type:"text"
-        },
-        {
-          label: "Location",
-          value: "location",
-          type:"text"
-        },
-        {
-          label: "Website",
-          value: "website",
-          type:"url"
-        },
-      ],
-      height: null,
-      controls: true,
-      signatures: true,
-      logo: true,
-      shrink: false,
-    },
-    tabs: [
-      {type: "sources", label: "Sources", page_size: 25, "default": true, layout: 'table', color: ''},
-      {type: "collections", label: "Collections", page_size: 25, layout: 'table', color: ''},
-      {type: "users", label: "Members", page_size: 25, layout: 'table', color: ''},
-      {type: "about", label: "About", color: ''},
-    ]
-  }
-}
+import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 class OrgHome extends React.Component {
   constructor(props) {
@@ -175,7 +123,7 @@ class OrgHome extends React.Component {
               this.setState({
                 isLoading: false,
                 org: org,
-                selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
+                selectedConfig: defaultCustomConfig || ORG_DEFAULT_CONFIG,
                 customConfigs: customConfigs,
               }, this.setTab)
             }
@@ -264,7 +212,7 @@ class OrgHome extends React.Component {
                   onPinCreate={this.createPin}
                   onPinDelete={this.deletePin}
                   showPin={isCurrentUserMemberOfOrg}
-                  customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                  customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
                   aboutTab={showAboutTab}
                   showConfigSelection={this.customConfigFeatureApplicable()}
@@ -290,7 +238,7 @@ class OrgHome extends React.Component {
                   onPinCreate={this.createPin}
                   onPinDelete={this.deletePin}
                   showPin={isCurrentUserMemberOfOrg}
-                  customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                  customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
                   aboutTab={showAboutTab}
                   showConfigSelection={this.customConfigFeatureApplicable()}
@@ -318,7 +266,7 @@ class OrgHome extends React.Component {
                     onPinCreate={this.createPin}
                     onPinDelete={this.deletePin}
                     showPin={isCurrentUserMemberOfOrg}
-                    customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+                    customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                     onConfigChange={this.onConfigChange}
                     selectedConfig={selectedConfig}
                     aboutTab={showAboutTab}

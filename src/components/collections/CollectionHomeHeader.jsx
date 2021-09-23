@@ -31,33 +31,9 @@ import RetiredChip from '../common/RetiredChip';
 import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
+import { COLLECTION_DEFAULT_CONFIG } from '../../common/defaultConfigs';
 
-const DEFAULT_VISIBLE_ATTRIBUTES = [
-  {
-    label: "Short Code",
-    value: "short_code",
-    type: "text"
-  },
-  {
-    label: "Name",
-    value: "name",
-    type: "text"
-  },
-  {
-    label: "Collection Type",
-    value: "collection_type",
-    type: "text"
-  },
-  {
-    label: "Custom Validation Schema",
-    value: "custom_validation_schema",
-    type: "text"
-  },
-  {
-    label: "Supported Locales",
-    value: "supported_locales",
-  }
-]
+const DEFAULT_VISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.visibleAttributes
 
 const CollectionHomeHeader = ({
   collection, isVersionedObject, versionedObjectURL, currentURL, config
