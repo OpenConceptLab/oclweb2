@@ -1,3 +1,7 @@
+##### 2.0.31 - Thu Sep 23 02:20:17 2021 +0000
+- [OpenConceptLab/ocl_issues#987](https://github.com/OpenConceptLab/ocl_issues/issues/987) | Fixing incorrect facets query construction
+- [OpenConceptLab/ocl_issues#982](https://github.com/OpenConceptLab/ocl_issues/issues/982) | OpenConceptLab/ocl_issues#983 | OpenConceptLab/ocl_issues#981 | org header customisations
+- [OpenConceptLab/ocl_issues#961](https://github.com/OpenConceptLab/ocl_issues/issues/961) Common Comparison Component
 ##### 2.0.30 - Wed Sep 8 03:17:27 2021 +0000
 - Merge pull request #7 from akhilkala/document_title
 - Sources and collections title fix
