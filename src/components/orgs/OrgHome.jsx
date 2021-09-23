@@ -53,7 +53,6 @@ const DEFAULT_CONFIG = {
       ],
       height: null,
       controls: true,
-      attributes: true,
       signatures: true,
       logo: true,
       shrink: false,
