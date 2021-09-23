@@ -13,8 +13,9 @@ import {
   Build as ToolsIcon,
   Web as MetadataBrowserIcon,
   Code as TerminologyServiceIcon,
-  ContactSupport as ContactIcon,
+  ContactSupport as FAQIcon,
   Map as MapIcon,
+  QuestionAnswer as ContactIcon
 } from '@material-ui/icons';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 
@@ -36,11 +37,6 @@ const COMMUNITY_OPTIONS = [
     icon: <OpenHIETerminologyServiceIcon />
   },
   {
-    label: 'Technical Roadmap',
-    href: SITE_URL + 'technical-roadmap/',
-    icon: <MapIcon />
-  },
-  {
     label: 'Github',
     href: 'https://github.com/OpenConceptLab',
     icon: <GitHubIcon />
@@ -49,6 +45,11 @@ const COMMUNITY_OPTIONS = [
     label: 'Documentation',
     href: 'https://docs.openconceptlab.org',
     icon: <DocumentationIcon />
+  },
+  {
+    label: 'Technical Roadmap',
+    href: SITE_URL + 'technical-roadmap/',
+    icon: <MapIcon />
   },
   {
     label: 'OCL Mailing List',
@@ -101,6 +102,11 @@ export const OPTIONS = [
     nested: [...TOOLS_OPTIONS],
     icon: <ToolsIcon />,
     href: SITE_URL + 'ocl-tools/'
+  },
+  {
+    label: 'FAQs',
+    href: SITE_URL + 'faq/',
+    icon: <FAQIcon />
   },
   {
     label: 'Contact',

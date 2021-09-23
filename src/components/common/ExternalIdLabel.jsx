@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowForward as ForwardIcon } from '@material-ui/icons';
+import { merge } from 'lodash';
 
 const STYLES = {
   medium: {
@@ -15,7 +16,7 @@ const STYLES = {
 const ExternalIdLabel = props => {
   const styles = STYLES[props.iconSize || 'small']
   return (
-    <div className='resource-metadata' style={{fontSize: styles.fontSize}}>
+    <div className='resource-metadata' style={merge({fontSize: styles.fontSize}, (props.containerStyle || {}))}>
       <span>
         <ForwardIcon style={{
           ...styles.icon,

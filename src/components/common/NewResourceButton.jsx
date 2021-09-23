@@ -6,7 +6,7 @@ import {
   Add as AddIcon,
 } from '@material-ui/icons'
 
-const NewResourceButton = ({resources, onClick}) => {
+const NewResourceButton = ({resources, onClick, color}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const toggleAnchorEl = event => setAnchorEl(prev => prev ? null : event.currentTarget)
 
@@ -22,7 +22,7 @@ const NewResourceButton = ({resources, onClick}) => {
     <React.Fragment>
       <Tooltip arrow title='Manage Content'>
         <IconButton color='primary' onClick={toggleAnchorEl}>
-          { hasEdit ? <SettingsIcon /> : <AddIcon />}
+          { hasEdit ? <SettingsIcon style={color ? {color: color} : {}} /> : <AddIcon style={color ? {color: color} : {}} />}
         </IconButton>
       </Tooltip>
       <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={toggleAnchorEl}>

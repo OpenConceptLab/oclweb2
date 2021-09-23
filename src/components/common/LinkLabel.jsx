@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link as LinkIcon } from '@material-ui/icons';
+import { merge } from 'lodash';
 import { formatWebsiteLink } from '../../common/utils';
 
 const STYLES = {
@@ -17,7 +18,7 @@ const LinkLabel = props => {
   const containerClass = props.noContainerClass ? '' : 'col-sm-12 no-side-padding';
   const styles = STYLES[props.iconSize || 'small']
   return (
-    <div className={`${containerClass} resource-metadata`} style={{fontSize: styles.fontSize}}>
+    <div className={`${containerClass} resource-metadata`} style={merge({fontSize: styles.fontSize}, (props.containerStyle || {}))}>
       <span>
         <LinkIcon style={styles.icon} />
       </span>

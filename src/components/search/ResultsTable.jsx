@@ -864,15 +864,29 @@ const ResultsTable = (
                           sortDirection={orderBy === column.id ? order : false}
                           align={column.align || 'left'}
                           style={{color: theadTextColor}}>
-                          <TableSortLabel
-                            className='table-sort-label-white'
-                            active={orderBy === column.id}
-                            direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
-                            onClick={(event) => onSort(event, column.id)}
-                            style={{color: theadTextColor}}
-                          >
-                            { column.label }
-                          </TableSortLabel>
+                          {
+                            column.tooltip ?
+                            <Tooltip arrow placement='top' title={column.tooltip}>
+                              <TableSortLabel
+                                className='table-sort-label-white'
+                                active={orderBy === column.id}
+                                direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
+                                onClick={(event) => onSort(event, column.id)}
+                                style={{color: theadTextColor}}
+                              >
+                                { column.label }
+                              </TableSortLabel>
+                            </Tooltip> :
+                            <TableSortLabel
+                              className='table-sort-label-white'
+                              active={orderBy === column.id}
+                              direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
+                              onClick={(event) => onSort(event, column.id)}
+                              style={{color: theadTextColor}}
+                              >
+                              { column.label }
+                            </TableSortLabel>
+                          }
                         </TableCell>
                       ) : (
                         <TableCell key={column.id} align='left' style={{color: theadTextColor}}>

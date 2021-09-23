@@ -16,13 +16,14 @@ import ReferenceChip from '../common/ReferenceChip';
 import OwnerChip from '../common/OwnerChip';
 import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
+import ConceptDisplayName from '../concepts/ConceptDisplayName';
 
 export const ALL_COLUMNS = {
   concepts: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
-    {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<span className={concept.retired ? 'retired' : ''}>{concept.display_name}</span>), className: 'medium', sortBy: 'asc'},
+    {id: 'name', label: 'Display Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
@@ -37,7 +38,7 @@ export const ALL_COLUMNS = {
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
   ],
   sources: [
-    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} />},
+    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} />, essential: false},
     {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
     {id: 'sourceType', label: 'Type', value: 'source_type', sortOn: 'source_type'},
@@ -56,7 +57,7 @@ export const ALL_COLUMNS = {
     {id: 'revision_date', label: 'Revision Date', value: 'revision_date', sortable: false, formatter: formatDate},
   ],
   collections: [
-    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} />},
+    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} />, essential: false},
     {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
     {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},

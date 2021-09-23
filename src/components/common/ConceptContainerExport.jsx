@@ -145,7 +145,7 @@ class ConceptContainerExport extends React.Component {
       anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport, exportURL,
       serverError, errorDetails, options
     } = this.state;
-    const { version, title } = this.props;
+    const { title, resource } = this.props;
     return (
       <React.Fragment>
         <Tooltip arrow title={title}>
@@ -170,7 +170,7 @@ class ConceptContainerExport extends React.Component {
           open &&
           <Dialog open={open} onClose={this.toggleOpen} maxWidth="sm" fullWidth>
             <DialogTitle>
-              {`Export Version: ${version.id}`}
+              {title}
             </DialogTitle>
             <DialogContent>
               {
@@ -187,7 +187,7 @@ class ConceptContainerExport extends React.Component {
               {
                 isProcessing &&
                 <Alert variant="filled" severity="warning" style={{margin: '5px 0'}}>
-                  This version is currently in processing...
+                  {`A cached export for this ${resource} version is being generated. Check again later…`}
                 </Alert>
               }
               {
@@ -200,7 +200,7 @@ class ConceptContainerExport extends React.Component {
                 !isProcessing && !hasExistingExport && !isCheckingExportExists && !exportURL &&
                 <React.Fragment>
                   <Alert variant="filled" severity="warning" style={{margin: '5px 0'}}>
-                    There is no existing export found for this version.
+                    {`There is no export cached for this ${resource} version`}
                   </Alert>
                   <div style={{marginTop: '15px', padding: '0 10px'}}>
                     <h3 style={{display: 'contents'}}>Click here to queue a new export</h3>

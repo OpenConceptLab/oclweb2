@@ -8,8 +8,8 @@ import {
   uniqBy, cloneDeep
 } from 'lodash';
 import {
-  DATE_FORMAT, DATETIME_FORMAT,
-  OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
+  DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
+  OPENMRS_URL,
 } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
@@ -498,3 +498,29 @@ export const arrayToSentence = (arr, separator, lastSeparator=' and ') => {
 }
 
 export const generateRandomString = () => Math.random().toString(36).substring(7);
+
+export const getEnv = forURL => {
+  const fqdn = window.location.origin;
+
+  if(fqdn.match('app.staging.openconceptlab'))
+    return 'staging';
+  if(fqdn.match('app.qa.openconceptlab'))
+    return 'qa';
+  if(fqdn.match('app.demo.openconceptlab'))
+    return 'demo';
+  if(fqdn.match('app.openconceptlab'))
+    return forURL ? '' : 'production';
+
+  return 'development';
+}
+
+export const getOpenMRSURL = () => {
+  let env = getEnv(true);
+
+  if(env === 'development')
+    env = 'qa';
+
+  if(env) env += '.';
+
+  return OPENMRS_URL.replace('openmrs.', `openmrs.${env}`);
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import {LocationOn as LocationIcon} from '@material-ui/icons'
+import { merge } from 'lodash';
 
 const STYLES = {
   medium: {
@@ -15,9 +16,10 @@ const STYLES = {
 const LocationLabel = props => {
   const containerClass = props.noContainerClass ? '' : 'col-sm-12 no-side-padding';
   const styles = STYLES[props.iconSize || 'small']
+  const containerStyles = props.containerStyle || {}
 
   return (
-    <div className={`${containerClass} resource-metadata`} style={{fontSize: styles.fontSize}}>
+    <div className={`${containerClass} resource-metadata`} style={merge({fontSize: styles.fontSize}, containerStyles)}>
       <span>
         <LocationIcon style={styles.icon} />
       </span>

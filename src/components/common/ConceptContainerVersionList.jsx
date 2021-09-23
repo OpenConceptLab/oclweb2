@@ -185,7 +185,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                               version && !fhir &&
                               <ConceptContainerExport
                                 isHEAD={isHEAD}
-                                title={`Export Version ${version.id}`}
+                                title={`Export ${startCase(resource)} Version: ${version.short_code} / ${version.id}`}
                                 version={version}
                                 resource={resource}
                               />

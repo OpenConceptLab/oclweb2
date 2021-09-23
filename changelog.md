@@ -1,3 +1,38 @@
+##### 2.0.31 - Thu Sep 23 02:20:17 2021 +0000
+- [OpenConceptLab/ocl_issues#987](https://github.com/OpenConceptLab/ocl_issues/issues/987) | Fixing incorrect facets query construction
+- [OpenConceptLab/ocl_issues#982](https://github.com/OpenConceptLab/ocl_issues/issues/982) | OpenConceptLab/ocl_issues#983 | OpenConceptLab/ocl_issues#981 | org header customisations
+- [OpenConceptLab/ocl_issues#961](https://github.com/OpenConceptLab/ocl_issues/issues/961) Common Comparison Component
+##### 2.0.30 - Wed Sep 8 03:17:27 2021 +0000
+- Merge pull request #7 from akhilkala/document_title
+- Sources and collections title fix
+- Fixing collection references list | facets are not applicable for references list
+- Details/History tab bug fixed
+- Document titles added
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | apps-menu | using direct Link for redirects
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | openmrs apps menu to redirect to corresponding env
+- Merge pull request #6 from akhilkala/apps_menu
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | Apps menu added
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | Apps menu added
+- [OpenConceptLab/ocl_issues#945](https://github.com/OpenConceptLab/ocl_issues/issues/945) | Apps menu added
+##### 2.0.28 - Mon Aug 30 05:30:44 2021 +0000
+- Concept Listing | name is display name with display locale and tooltip
+- Source/Collection version export dialog | updated processing info label
+- Source/Collection version export dialog | added more info on title
+- [OpenConceptLab/ocl_issues#936](https://github.com/OpenConceptLab/ocl_issues/issues/936) | only making facets call when needed
+##### 2.0.27 - Fri Aug 27 09:12:25 2021 +0000
+- [OpenConceptLab/ocl_issues#947](https://github.com/OpenConceptLab/ocl_issues/issues/947) | Handling API response for max search pagination errorr
+- material-ui deprecation fix
+- [OpenConceptLab/ocl_issues#938](https://github.com/OpenConceptLab/ocl_issues/issues/938) | updated FAQ menu option label
+##### 2.0.26 - Fri Aug 27 03:37:03 2021 +0000
+- [OpenConceptLab/ocl_issues#936](https://github.com/OpenConceptLab/ocl_issues/issues/936) | separated facets from search results call
+- [OpenConceptLab/ocl_issues#938](https://github.com/OpenConceptLab/ocl_issues/issues/938) | added FAQ menu option | switched contact and FAQ icons
+- [OpenConceptLab/ocl_issues#921](https://github.com/OpenConceptLab/ocl_issues/issues/921) | reordered community menu options
+- Source/Collections nested in org/user will not have redundant owner column
+- UserHome | styling username and fullname
+##### 2.0.24 - Mon Aug 16 04:17:10 2021 +0000
+- Pins to show summary counts
+- Icons for user details
+- [OpenConceptLab/ocl_issues#921](https://github.com/OpenConceptLab/ocl_issues/issues/921) | Technical Roadmap as menu option
 ##### 2.0.22 - Tue Aug 10 04:49:10 2021 +0000
 - Correcting lookup values fetch api call
 ##### 2.0.21 - Fri Aug 6 08:17:54 2021 +0000
