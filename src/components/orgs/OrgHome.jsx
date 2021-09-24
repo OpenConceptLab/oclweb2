@@ -243,7 +243,6 @@ class OrgHome extends React.Component {
                   aboutTab={showAboutTab}
                   showConfigSelection={this.customConfigFeatureApplicable()}
                 />
-
               </React.Fragment> :
               <React.Fragment>
                 <OrgHomeHeader org={org} url={url} config={selectedConfig} />

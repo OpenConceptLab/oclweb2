@@ -1,10 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { map, reject, includes } from 'lodash';
-import {
-  List as ListIcon, Loyalty as LoyaltyIcon, Person as PersonIcon,
-  Info as InfoIcon, Home as HomeIcon
-} from '@material-ui/icons';
+import { map, reject } from 'lodash';
 import { ORANGE, BLUE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import NewResourceButton from '../common/NewResourceButton';
@@ -12,12 +8,13 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import SourceForm from '../sources/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConfigSelect from '../common/ConfigSelect';
+import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import MembersForm from './MembersForm'
 
 const HomeTabs = props => {
   const {
-    tab, url, onTabChange,
-    selectedConfig, customConfigs, onConfigChange, aboutTab, showConfigSelection, tabColor,
+    tab, url, onTabChange, selectedConfig, customConfigs, onConfigChange,
+    aboutTab, showConfigSelection, tabColor,
   } = props;
 
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
@@ -37,37 +34,22 @@ const HomeTabs = props => {
       setMembersForm(true)
   }
 
-  const getIcon = config => {
-    const type = config.type
-    if(type === 'sources')
-      return <ListIcon />;
-    if(type === 'collections')
-      return <LoyaltyIcon />;
-    if(type === 'users')
-      return <PersonIcon />
-    if(tabConfigs.indexOf(config) === 0)
-      return <HomeIcon />
-    if(includes(['about', 'text'], type))
-      return <InfoIcon />
-  }
-
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   return (
     <div className='col-md-12 no-side-padding' style={{width: width}}>
-      <Tabs className='col-md-11 no-side-padding' value={tab} onChange={onTabChange} TabIndicatorProps={ {style: {background: selectedTabColor}} } indicatorColor='primary'>
+      <Tabs className='col-md-11 no-side-padding' value={tab} onChange={onTabChange} TabIndicatorProps={{style: {background: selectedTabColor}}} indicatorColor='primary'>
         {
           map(tabConfigs, (config, index) => {
             const key = config.label + index
             const isSelected = index === tab
             const color = config.color || tabColor
-            const icon = getIcon(config)
             return (
               <Tab
                 style={color ? {color: color}: {}}
                 index={index} key={key} id={key} label={
                   <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
-                    {icon}
-                    <span style={icon ? {marginLeft: '4px'} : {}}>{config.label}</span>
+                    <DynamicConfigResourceIcon resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
+                    <span style={{marginLeft: '4px'}}>{config.label}</span>
                   </span>
                 }
               />
