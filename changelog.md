@@ -1,3 +1,8 @@
+##### 2.0.32 - Sat Sep 25 04:41:59 2021 +0000
+- [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | org header | refactoring to extract common dynmic config icon component
+- [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | org header | default background color
+- [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | org new header with attributes customisations
+- [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | +@akhilkala | customistions on header attributes
 ##### 2.0.31 - Thu Sep 23 02:20:17 2021 +0000
 - [OpenConceptLab/ocl_issues#987](https://github.com/OpenConceptLab/ocl_issues/issues/987) | Fixing incorrect facets query construction
 - [OpenConceptLab/ocl_issues#982](https://github.com/OpenConceptLab/ocl_issues/issues/982) | OpenConceptLab/ocl_issues#983 | OpenConceptLab/ocl_issues#981 | org header customisations
