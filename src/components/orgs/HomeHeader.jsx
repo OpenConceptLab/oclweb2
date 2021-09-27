@@ -95,156 +95,160 @@ const HomeHeader = ({ org, url, fhir, extraComponents, config, ...rest }) => {
       return isBoolean(attributes) ? DEFAULT_VISIBLE_ATTRIBUTES : attributes
   }
 
+  const shouldShowOverlay = Boolean(get(config, 'config.header.background.imageOverlay') && get(config, 'config.header.background.image'));
+
   return (
-    <header className='home-header col-md-12' style={merge({marginBottom: '0px'}, getBackgroundStyles())}>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        {
-          showLogo &&
-          <div className='no-side-padding col-md-1 home-icon'>
-            <HeaderLogo
-              logoURL={logoURL}
-              onUpload={onLogoUpload}
-              defaultIcon={<HomeIcon className='default-svg' />}
-              shrink={!openHeader}
-            />
-          </div>
-        }
-        <div className='col-md-11'>
+    <header className='home-header col-md-12' style={merge({marginBottom: '0px', padding: 0}, getBackgroundStyles())}>
+      <div className='col-md-12 no-side-padding' style={shouldShowOverlay ? {paddingBottom: '2px', backgroundColor: 'rgba(0,0,0,0.6)'} : {}}>
+        <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
           {
-            showControls &&
-            <div className='col-md-12 no-side-padding flex-vertical-center'>
-              <OwnerButton owner={org.id} ownerType='Organization' href={url} />
-              {
-                !fhir &&
-                <span style={{marginLeft: '15px'}}>
-                  <ButtonGroup variant='text' size='large'>
-                    <Tooltip arrow title="Copy URL">
-                      <Button onClick={onIconClick}>
-                        <CopyIcon fontSize="inherit" style={customTitleColor ? {color: customTitleColor} : {}} />
-                      </Button>
-                    </Tooltip>
-                    {
-                      hasAccess &&
-                      <Tooltip arrow title='Edit Organization'>
-                        <Button onClick={() => setOrgForm(true)}>
-                          <EditIcon fontSize='inherit' style={customTitleColor ? {color: customTitleColor} : {}} />
+            showLogo &&
+            <div className='no-side-padding col-md-1 home-icon'>
+              <HeaderLogo
+                logoURL={logoURL}
+                onUpload={onLogoUpload}
+                defaultIcon={<HomeIcon className='default-svg' />}
+                shrink={!openHeader}
+              />
+            </div>
+          }
+          <div className='col-md-11'>
+            {
+              showControls &&
+              <div className='col-md-12 no-side-padding flex-vertical-center'>
+                <OwnerButton owner={org.id} ownerType='Organization' href={url} />
+                {
+                  !fhir &&
+                  <span style={{marginLeft: '15px'}}>
+                    <ButtonGroup variant='text' size='large'>
+                      <Tooltip arrow title="Copy URL">
+                        <Button onClick={onIconClick}>
+                          <CopyIcon fontSize="inherit" style={customTitleColor ? {color: customTitleColor} : {}} />
                         </Button>
                       </Tooltip>
-                    }
-                    <DownloadButton resource={org} filename={downloadFileName} includeCSV iconStyle={customTitleColor ? {color: customTitleColor} : {}} />
-                  </ButtonGroup>
-                </span>
-              }
-            </div>
-          }
-          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
-            <span style={merge({marginRight: '10px'}, getTitleStyles())}>
-              {
-                customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
-              }
-            </span>
-            {
-              !fhir && showAttributes &&
-              <AccessChip publicAccess={org.public_access} />
-            }
-          </div>
-          {
-            customDescription ?
-            <div className='col-md-12 no-side-padding header-custom-html resource-description' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
-              org.description &&
-              <div className='col-md-12 no-side-padding flex-vertical-center resource-description' style={getDescriptionStyles()}>
-                {org.description}
+                      {
+                        hasAccess &&
+                        <Tooltip arrow title='Edit Organization'>
+                          <Button onClick={() => setOrgForm(true)}>
+                            <EditIcon fontSize='inherit' style={customTitleColor ? {color: customTitleColor} : {}} />
+                          </Button>
+                        </Tooltip>
+                      }
+                      <DownloadButton resource={org} filename={downloadFileName} includeCSV iconStyle={customTitleColor ? {color: customTitleColor} : {}} />
+                    </ButtonGroup>
+                  </span>
+                }
               </div>
-            )
-          }
-          {
-            showAttributes &&
-            <React.Fragment>
+            }
+            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+              <span style={merge({marginRight: '10px'}, getTitleStyles())}>
+                {
+                  customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
+                }
+              </span>
               {
-                map(
-                  getVisibleAttributes(),
-                  attr => <HeaderAttribute
-                            key={attr.label}
-                            label={attr.label}
-                            value={org[attr.value]}
-                            type={attr.type}
-                            gridClass="col-md-12"
-                            color={customDescriptionColor}
-                  />
-                )
-              }
-              <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} color={customDescriptionColor} />} gridClass="col-md-12" color={customDescriptionColor} />
-            </React.Fragment>
-          }
-          {
-            showSignatures &&
-            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-              {
-                org.location &&
-                <span style={{marginRight: '10px'}}>
-                  <LocationLabel location={org.location} noContainerClass iconSize="medium" containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}} />
-                </span>
-              }
-              {
-                org.website &&
-                <span style={{marginRight: '10px'}}>
-                  <LinkLabel link={org.website} iconSize='medium' noContainerClass containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}} />
-                </span>
-              }
-              {
-                org.created_on &&
-                <span>
-                  <LastUpdatedOnLabel
-                    label='Created'
-                    date={org.created_on}
-                    by={org.created_by}
-                    iconSize='medium'
-                    noContainerClass
-                    containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}}
-                  />
-                </span>
-              }
-              {
-                org.updated_on &&
-                <span style={{marginLeft: '10px'}}>
-                  <LastUpdatedOnLabel
-                    date={org.updated_on}
-                    by={org.updated_by}
-                    iconSize='medium'
-                    noContainerClass
-                    containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}}
-                  />
-                </span>
-              }
-              {
-                org.external_id &&
-                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                  <ExternalIdLabel
-                    externalId={org.external_id}
-                    iconSize='medium'
-                    containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}}
-                  />
-                </span>
+                !fhir && showAttributes &&
+                <AccessChip publicAccess={org.public_access} />
               }
             </div>
-          }
-          {extraComponents}
+            {
+              customDescription ?
+              <div className='col-md-12 no-side-padding header-custom-html resource-description' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
+                org.description &&
+                <div className='col-md-12 no-side-padding flex-vertical-center resource-description' style={getDescriptionStyles()}>
+                  {org.description}
+                </div>
+              )
+            }
+            {
+              showAttributes &&
+              <React.Fragment>
+                {
+                  map(
+                    getVisibleAttributes(),
+                    attr => <HeaderAttribute
+                              key={attr.label}
+                              label={attr.label}
+                              value={org[attr.value]}
+                              type={attr.type}
+                              gridClass="col-md-12"
+                              color={customDescriptionColor}
+                    />
+                  )
+                }
+                <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} color={customDescriptionColor} />} gridClass="col-md-12" color={customDescriptionColor} />
+              </React.Fragment>
+            }
+            {
+              showSignatures &&
+              <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+                {
+                  org.location &&
+                  <span style={{marginRight: '10px'}}>
+                    <LocationLabel location={org.location} noContainerClass iconSize="medium" containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}} />
+                  </span>
+                }
+                {
+                  org.website &&
+                  <span style={{marginRight: '10px'}}>
+                    <LinkLabel link={org.website} iconSize='medium' noContainerClass containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}} />
+                  </span>
+                }
+                {
+                  org.created_on &&
+                  <span>
+                    <LastUpdatedOnLabel
+                      label='Created'
+                      date={org.created_on}
+                      by={org.created_by}
+                      iconSize='medium'
+                      noContainerClass
+                      containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}}
+                    />
+                  </span>
+                }
+                {
+                  org.updated_on &&
+                  <span style={{marginLeft: '10px'}}>
+                    <LastUpdatedOnLabel
+                      date={org.updated_on}
+                      by={org.updated_by}
+                      iconSize='medium'
+                      noContainerClass
+                      containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}}
+                    />
+                  </span>
+                }
+                {
+                  org.external_id &&
+                  <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                    <ExternalIdLabel
+                      externalId={org.external_id}
+                      iconSize='medium'
+                      containerStyle={customDescriptionColor ? {color: customDescriptionColor} : {}}
+                    />
+                  </span>
+                }
+              </div>
+            }
+            {extraComponents}
+          </div>
+          <HomeTabs
+            org={org}
+            url={url}
+            selectedConfig={config}
+            tabColor={forgroundTextColor}
+            {...rest}
+          />
         </div>
-        <HomeTabs
-          org={org}
-          url={url}
-          selectedConfig={config}
-          tabColor={forgroundTextColor}
-          {...rest}
+        <CommonFormDrawer
+          isOpen={orgForm}
+          onClose={() => setOrgForm(false)}
+          formComponent={
+            <OrgForm edit reloadOnSuccess onCancel={() => setOrgForm(false)} org={org} />
+          }
         />
       </div>
-      <CommonFormDrawer
-        isOpen={orgForm}
-        onClose={() => setOrgForm(false)}
-        formComponent={
-          <OrgForm edit reloadOnSuccess onCancel={() => setOrgForm(false)} org={org} />
-        }
-      />
     </header>
   )
 }
