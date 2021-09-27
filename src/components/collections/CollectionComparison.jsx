@@ -76,7 +76,7 @@ export default function CollectionComparison() {
 
     const getAttributeValue = (collection, attr, type) => {
         let value = get(collection, attr)
-        if (attr === 'extras')
+        if (attr === 'extras' || attr === 'summary')
           return JSON.stringify(value, undefined, 2)
         if(type === 'list') {
           if(isEmpty(value)) return '';

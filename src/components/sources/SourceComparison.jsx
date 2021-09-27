@@ -67,14 +67,16 @@ export default function SourceComparison() {
     }
 
     const formatter = (source) => {
-        source.originalExtras = source.extras
-        source.extras = toObjectArray(source.extras)
-        return source
+      source.originalExtras = source.extras
+      source.originalSummary = source.summary
+      source.extras = toObjectArray(source.extras)
+      source.summary = toObjectArray(source.summary)
+      return source
     }
 
     const getAttributeValue = (source, attr, type) => {
         let value = get(source, attr)
-        if (attr === 'extras')
+        if (attr === 'extras' || attr === 'summary')
           return JSON.stringify(value, undefined, 2)
         if(type === 'list') {
           if(isEmpty(value)) return '';
