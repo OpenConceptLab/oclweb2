@@ -11,6 +11,8 @@ import SourceHome from '../sources/SourceHome';
 import CollectionHome from '../collections/CollectionHome';
 import ConceptsComparison from '../concepts/ConceptsComparison';
 import MappingsComparison from '../mappings/MappingsComparison';
+import SourceComparison from '../sources/SourceComparison';
+import CollectionComparison from '../collections/CollectionComparison';
 import OrgHome from '../orgs/OrgHome';
 import UserHome from '../users/UserHome';
 import Login from '../users/Login';
@@ -188,6 +190,16 @@ const App = props => {
               exact
               path="/mappings/compare"
               component={MappingsComparison}
+            />
+            <Route
+              exact
+              path="/sources/compare"
+              component={SourceComparison}
+            />
+            <Route
+              exact
+              path="/collections/compare"
+              component={CollectionComparison}
             />
 
             {/* Organization Home */}

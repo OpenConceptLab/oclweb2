@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
-  IconButton, CircularProgress
+  IconButton, CircularProgress, Button, Checkbox
 } from '@material-ui/core';
-import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
+import { map, isEmpty, startCase, get, includes, merge, uniq, without } from 'lodash';
 import {
   ExpandMore as ExpandMoreIcon, Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
+  CompareArrows as CompareArrowsIcon,
 } from '@material-ui/icons';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
@@ -20,6 +21,7 @@ import ConceptContainerVersionForm from './ConceptContainerVersionForm';
 import CommonFormDrawer from './CommonFormDrawer';
 import ConceptContainerExport from './ConceptContainerExport';
 import { CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS } from '../search/ResultConstants';
+import { useHistory } from "react-router-dom"
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -65,6 +67,7 @@ const updateVersion = (version, data, verb, successCallback) => getService(versi
 const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fhir, isLoading }) => {
   const sortedVersions = headFirst(versions);
   const [versionForm, setVersionForm] = React.useState(false);
+  const history = useHistory()
   const [selectedVersion, setSelectedVersion] = React.useState();
   const onEditClick = version => {
     setSelectedVersion(version)
@@ -96,6 +99,24 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, onUpdate))
   }
 
+  const [selectedList, setSelectedList] = React.useState([]);
+  const onSelectChange = (event, id) => {
+    const newSelectedList = event.target.checked ? uniq([...selectedList, id]) : without(selectedList, id);
+
+    setSelectedList(newSelectedList)
+  }
+  const showCompareOption = selectedList.length === 2;
+  const canSelect = versions.length > 1;
+  const onCompareClick = event => {
+    event.stopPropagation()
+    event.preventDefault()
+    history.push({
+      pathname: `/${resource}s/compare`,
+      search: `?lhs=${selectedList[0]}&rhs=${selectedList[1]}`,
+      state: sortedVersions
+    })
+  }
+
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-left-padding'>
@@ -105,7 +126,24 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
+            <span>
             <Typography style={ACCORDIAN_HEADING_STYLES}>{`${startCase(resource)} Version History`}</Typography>
+            </span>
+            {
+              showCompareOption &&
+              <span className='flex-vertical-center'>
+                <Button
+                  startIcon={<CompareArrowsIcon fontSize='small' />}
+                  variant='contained'
+                  size='small'
+                  color='primary'
+                  style={{marginLeft: '30px'}}
+                  onClick={onCompareClick}
+                >
+                  Compare
+                </Button>
+              </span>
+            }
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
@@ -121,6 +159,12 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                   return (
                     <div className='col-md-12 no-side-padding' key={index}>
                       <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
+                        {
+                          canSelect &&
+                          <div className='col-md-1 no-side-padding'>
+                            <Checkbox size='small' onChange={event => onSelectChange(event, version.version_url)} />
+                          </div>
+                        }
                         <div className='col-md-9 no-side-padding'>
                           <div className='col-md-12 no-side-padding' style={{marginBottom: '5px'}}>
                             {

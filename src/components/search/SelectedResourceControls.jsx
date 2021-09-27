@@ -20,9 +20,10 @@ const SelectedResourceControls = ({
   const isReferenceResource = resource === 'references';
   const isConceptResource = resource === 'concepts';
   const isSourceChild = includes(['concepts', 'mappings'], resource);
+  const isComparable = includes(['concepts', 'mappings', 'sources', 'collections'], resource);
   const hasSelectedItems = selectedItems.length > 0;
   const shouldShowDownloadOption = isSourceChild && hasSelectedItems;
-  const shouldShowCompareOption = isSourceChild && selectedItems.length === 2;
+  const shouldShowCompareOption = isComparable && selectedItems.length === 2;
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedItems.length == 1 && onCreateSimilarClick;
   const shouldShowAddToCollection = isSourceChild && isAuthenticated && hasSelectedItems;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && hasSelectedItems && selectedItems.length <= 2 && onCreateMappingClick;

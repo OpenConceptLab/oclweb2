@@ -622,7 +622,7 @@ const ExpandibleRow = props => {
           ))
         }
         {
-          !isSelectable &&
+          !isSelectable || true &&
           <TableCell align='left' style={{width: '120px', padding: '2px'}}>
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
@@ -770,7 +770,7 @@ const ResultsTable = (
   const [orderBy, setOrderBy] = React.useState(defaultOrderBy)
   const [order, setOrder] = React.useState(defaultOrder)
   const hasAccess = currentUserHasAccess()
-  const isSourceChild = includes(['concepts', 'mappings'], resource);
+  const isSourceChild = includes(['concepts', 'mappings', 'sources', 'collections'], resource);
   const isReferenceResource = resource === 'references';
   const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
@@ -896,7 +896,7 @@ const ResultsTable = (
                     })
                   }
                   {
-                    !isSelectable &&
+                    !isSelectable || true &&
                     <TableCell />
                   }
                   {

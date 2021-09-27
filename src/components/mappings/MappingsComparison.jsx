@@ -46,8 +46,8 @@ export default function MappingsComparison() {
                   newState.isVersion = isAnyVersion
                   newState.attributes = attributes
                   if(isAnyVersion) {
-                    newState.attributes['is_latest_version'] = {...cloneDeep(attributeState), type: 'bool', position: 14}
-                    newState.attributes['update_comment'] = {...cloneDeep(attributeState), position: 15}
+                    newState.attributes['is_latest_version'] = {...cloneDeep(attributeState), type: 'bool', position: 19}
+                    newState.attributes['update_comment'] = {...cloneDeep(attributeState), position: 20}
                   }
                   return newState
                 }

@@ -95,6 +95,7 @@ class Comparison extends React.Component {
   }
 
   setObjectsForComparison() {
+    if (this.props.getState()) return this.setState(this.props.getState())
     const queryParams = new URLSearchParams(this.props.search)
     this.props.fetcher(queryParams.get('lhs'), 'lhs', 'isLoadingLHS', this.state).then((lhsData) => {
       this.props.fetcher(queryParams.get('rhs'), 'rhs', 'isLoadingRHS', lhsData).then((data) => {
@@ -109,7 +110,7 @@ class Comparison extends React.Component {
 
   getAttributeValue(concept, attr, type) {
     let value = get(concept, attr)
-    if (attr === 'extras')
+    if (attr === 'extras' || attr === 'summary')
       return JSON.stringify(value, undefined, 2)
     if(type === 'list') {
       if(isEmpty(value)) return '';
@@ -142,7 +143,7 @@ class Comparison extends React.Component {
   }
   
   getListAttributeValue(attr, val) {
-    if(includes(['extras'], attr))
+    if(includes(['extras', 'summary'], attr))
       return this.getExtraAttributeLabel(val)
     if(includes(['parent_concept_urls', 'child_concept_urls'], attr))
       return val
@@ -198,11 +199,12 @@ class Comparison extends React.Component {
     const maxLengthAttr = type === 'list' ? this.maxArrayElement(get(lhs, attr), get(rhs, attr)) : [];
     const rowSpan = size(maxLengthAttr);
     const isExtras = attr === 'extras';
+    const isSummary = attr === 'summary';
     return (
       <React.Fragment key={attr}>
         {
-          isExtras ?
-          <ExtrasDiff lhs={lhs.originalExtras} rhs={rhs.originalExtras}  /> :
+          (isExtras || isSummary) ?
+          <ExtrasDiff lhs={isExtras? lhs.originalExtras: lhs.originalSummary} rhs={isExtras? rhs.originalExtras: rhs.originalSummary}  /> :
           (
             type === 'list' ?
             map(maxLengthAttr, (_attr, index) => {
@@ -319,7 +321,7 @@ class Comparison extends React.Component {
                         const hasKids = Boolean(lhsCount || rhsCount);
                         const styles = isDiff ? {background: DIFF_BG_RED} : {};
                         const isExpanded = !config.collapsed || !hasKids;
-                        const isExtras = attr === 'extras';
+                        const isExtras = attr === 'extras' || attr === 'summary';
                         let lhsSize, rhsSize;
                         let size = '';
                         if(isExtras && (!isEmpty(lhsRawValue) || !isEmpty(rhsRawValue))) {
