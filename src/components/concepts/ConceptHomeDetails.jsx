@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography, CircularProgress
+  Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@material-ui/core';
 import { map, get, isEmpty } from 'lodash';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
-import NestedMappingsTable from '../mappings/NestedMappingsTable';
-import { getIndirectMappings, getDirectMappings } from '../../common/utils';
+import HomeMappings from './HomeMappings';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -20,12 +19,8 @@ const None = () => {
 }
 
 const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
-  const directMappings = getDirectMappings(concept.mappings, concept.url);
-  const indirectMappings = getIndirectMappings(concept.mappings, concept.url);
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
-  const directMappingsCountLabel = isLoadingMappings ? '' : `(${get(directMappings, 'length', 0)})`;
-  const indirectMappingsCountLabel = isLoadingMappings ? '' : `(${get(indirectMappings, 'length', 0)})`;
   const namesCount = names.length;
   const descCount = descriptions.length;
   return (
@@ -69,50 +64,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
         </Accordion>
       </div>
       <div className='col-md-6 no-right-padding'>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Mappings ${directMappingsCountLabel}`}</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
-            {
-              isLoadingMappings ?
-              <div className='col-md-12' style={{textAlign: 'center', padding: '10px'}}>
-                <CircularProgress />
-              </div> :
-              (
-                isEmpty(directMappings) ?
-                None() :
-                <NestedMappingsTable mappings={directMappings} />
-              )
-            }
-          </AccordionDetails>
-        </Accordion>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-          >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Inverse Mappings ${indirectMappingsCountLabel}`}</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={{...ACCORDIAN_DETAILS_STYLES, padding: 0}}>
-            {
-              isLoadingMappings ?
-              <div className='col-md-12' style={{textAlign: 'center', padding: '10px'}}>
-                <CircularProgress />
-              </div> :
-              (
-                isEmpty(indirectMappings) ?
-                None() :
-                <NestedMappingsTable mappings={indirectMappings} isIndirect />
-              )
-            }
-          </AccordionDetails>
-        </Accordion>
+        <HomeMappings concept={concept} currentURL={currentURL} isLoadingMappings={isLoadingMappings} />
       </div>
     </React.Fragment>
   );
