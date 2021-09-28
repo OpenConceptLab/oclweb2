@@ -111,7 +111,7 @@ module.exports = (env) => {
         'process.env.RECAPTCHA_SITE_KEY': JSON.stringify(env.RECAPTCHA_SITE_KEY),
         'process.env.GA_ACCOUNT_ID': JSON.stringify(env.GA_ACCOUNT_ID),
       }),
-      new IgnorePlugin(/^\.\/locale$/, /moment$/)
+      new IgnorePlugin({ resourceRegExp: /moment\/locale\// })
     ],
     resolve: {
       extensions: ['.js', '.jsx'],
