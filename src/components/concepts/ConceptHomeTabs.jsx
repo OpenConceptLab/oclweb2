@@ -6,10 +6,10 @@ import VersionList from '../common/VersionList';
 const ConceptHomeTabs = props => {
   const {
     tab, concept, versions, mappings, currentURL, isVersionedObject, isLoadingMappings, noRedirect,
-    onTabChange
+    onTabChange, collections, isLoadingCollections
   } = props;
   const resourceRelativeURL = isVersionedObject ? concept.url : concept.version_url;
-  const conceptWithMappings = {...concept, mappings: mappings}
+  const conceptWithMappings = {...concept, mappings: mappings, collections: collections}
 
   const detailsRedirectionProps = noRedirect ? {} : {component: "a", href: `#${resourceRelativeURL}details/`}
   const historyRedirectionProps = noRedirect ? {} : {component: "a", href: `#${resourceRelativeURL}history/`}
@@ -21,7 +21,7 @@ const ConceptHomeTabs = props => {
         <Tab label="History" {...historyRedirectionProps} />
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%', minHeight: '100vh'}}>
-        { tab === 0 && <ConceptHomeDetails concept={conceptWithMappings} isLoadingMappings={isLoadingMappings} currentURL={currentURL} /> }
+        { tab === 0 && <ConceptHomeDetails concept={conceptWithMappings} isLoadingMappings={isLoadingMappings} currentURL={currentURL} isLoadingCollections={isLoadingCollections} /> }
         { tab === 1 && <VersionList versions={versions} resource='concept' /> }
       </div>
     </div>

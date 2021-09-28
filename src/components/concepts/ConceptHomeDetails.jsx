@@ -6,6 +6,7 @@ import { map, get, isEmpty } from 'lodash';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
 import HomeMappings from './HomeMappings';
+import ConceptCollections from './ConceptCollections';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -18,7 +19,7 @@ const None = () => {
   return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
 }
 
-const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
+const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingCollections }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   const namesCount = names.length;
@@ -64,7 +65,8 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings }) => {
         </Accordion>
       </div>
       <div className='col-md-6 no-right-padding'>
-        <HomeMappings concept={concept} currentURL={currentURL} isLoadingMappings={isLoadingMappings} />
+        <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} />
+        <ConceptCollections concept={concept} isLoadingCollections={isLoadingCollections} />
       </div>
     </React.Fragment>
   );

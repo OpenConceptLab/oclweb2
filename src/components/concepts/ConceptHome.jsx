@@ -27,9 +27,11 @@ class ConceptHome extends React.Component {
       permissionDenied: false,
       isLoading: true,
       isLoadingMappings: false,
+      isLoadingCollections: false,
       concept: {},
       versions: [],
       mappings: [],
+      collections: [],
       tab: this.getDefaultTabIndex(),
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
     }
@@ -99,8 +101,10 @@ class ConceptHome extends React.Component {
                       this.getHierarchy()
                       if(this.state.tab === 1)
                         this.getVersions()
-                      else
+                      else {
                         this.getMappings()
+                        this.getCollectionVersions()
+                      }
                     })
                 })
 
@@ -159,6 +163,17 @@ class ConceptHome extends React.Component {
     })
   }
 
+  getCollectionVersions() {
+    this.setState({isLoadingCollections: true}, () => {
+      APIService.new()
+                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'collection-versions/?limit=100')
+                .get()
+                .then(response => {
+                  this.setState({collections: response.data, isLoadingCollections: false})
+                })
+    })
+  }
+
   onTabChange = (event, value) => this.setState({tab: value}, () => value === 1 && this.getVersions())
 
   isVersionedObject() {
@@ -193,7 +208,7 @@ class ConceptHome extends React.Component {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading, tab,
       notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
-      isLoadingHierarchy
+      isLoadingHierarchy, collections, isLoadingCollections
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -225,6 +240,8 @@ class ConceptHome extends React.Component {
               versions={versions}
               mappings={mappings}
               isLoadingMappings={isLoadingMappings}
+              collections={collections}
+              isLoadingCollections={isLoadingCollections}
               currentURL={currentURL}
               isVersionedObject={isVersionedObject}
               onTabChange={this.onTabChange}
