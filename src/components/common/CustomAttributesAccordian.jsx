@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Button,
-  Divider
 } from '@material-ui/core';
 import { map, isEmpty, isBoolean, isArray, isObject, find, startCase } from 'lodash';
 import CustomAttributes from './CustomAttributes'
@@ -64,7 +63,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                   const needNesting = !isBool && shouldBeNested(value)
                   const isArr = isArray(value)
                   return (
-                    <div className='col-md-12 no-side-padding' style={{marginTop: '5px'}}>
+                    <div className='col-md-12 no-side-padding flex-vertical-center custom-attributes-accordion-content' key={name}>
                       <div className='col-md-3 no-right-padding' style={{color: '#777'}}>
                         <b>{startCase(name)}</b>
                       </div>
@@ -89,7 +88,6 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                           value
                         }
                       </div>
-                      <Divider style={{display: 'inline-block', width: '100%'}} />
                     </div>
                   )
 

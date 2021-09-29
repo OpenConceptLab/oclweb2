@@ -934,3 +934,12 @@ div.divider-highlight-hover:hover {
         text-decoration: underline;
     }
 }
+
+div.custom-attributes-accordion-content {
+    border-bottom: 1px solid lightgray;
+    min-height: 30px;
+    padding: 5px 0;
+    &:last-child {
+        border-bottom: none;
+    }
+}
