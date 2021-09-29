@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
-  ExpandMore as ExpandMoreIcon, Search as SearchIcon, Edit as EditIcon,
+  Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
 } from '@material-ui/icons';
@@ -102,7 +102,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<span />}
             aria-controls="panel1a-content"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>{`${startCase(resource)} Version History`}</Typography>

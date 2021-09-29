@@ -2,7 +2,6 @@ import React from 'react';
 import {
   CircularProgress, Accordion, AccordionDetails, AccordionSummary, Divider
 } from '@material-ui/core';
-import { ExpandMore as ExpandIcon } from '@material-ui/icons';
 import { get, map, isEmpty, startCase, filter, has, isArray, flatten } from 'lodash';
 import { formatWebsiteLink } from '../../common/utils';
 import ConceptTable from './ConceptTable';
@@ -42,7 +41,7 @@ const CodeList = ({codes, isLoading, hapi}) => {
           const isOpen = Boolean(count && (open === index));
           return (
             <Accordion key={index} expanded={isOpen} onChange={() => setOpen(isOpen ? null : index)}>
-              <AccordionSummary expandIcon={<ExpandIcon />}>
+              <AccordionSummary expandIcon={<span />}>
                 <div className='col-md-12 flex-vertical-center'>
                   <span>
                     <span className='gray-italics'>

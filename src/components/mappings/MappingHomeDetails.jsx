@@ -4,7 +4,6 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider
 } from '@material-ui/core';
 import { DATETIME_FORMAT } from '../../common/constants';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
 
@@ -22,7 +21,7 @@ const MappingHomeDetails = ({ mapping }) => {
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<span />}
             aria-controls="panel1a-content"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Mapping Details</Typography>

@@ -3,7 +3,6 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@material-ui/core';
 import { map, get, isEmpty } from 'lodash';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from './ConceptCollections';
@@ -30,7 +29,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingC
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<span />}
             aria-controls="panel1a-content"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>{`Names & Synonyms (${namesCount})`}</Typography>
@@ -48,7 +47,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingC
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<span />}
             aria-controls="panel1a-content"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>{`Descriptions (${descCount})`}</Typography>

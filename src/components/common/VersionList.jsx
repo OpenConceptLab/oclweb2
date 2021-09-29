@@ -5,8 +5,7 @@ import {
 } from '@material-ui/core';
 import { map, isEmpty, startCase, uniq, without, orderBy } from 'lodash';
 import {
-  ExpandMore as ExpandMoreIcon, Search as SearchIcon,
-  CompareArrows as CompareArrowsIcon,
+  Search as SearchIcon, CompareArrows as CompareArrowsIcon,
 } from '@material-ui/icons';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import Tip from './Tip';
@@ -55,7 +54,6 @@ const VersionList = ({ versions, resource }) => {
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
             <span className='flex-vertical-center'>

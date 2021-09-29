@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CustomAttributes from './CustomAttributes'
 
 const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) => {
@@ -10,7 +9,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
     <Accordion defaultExpanded>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<span />}
         aria-controls="panel1a-content"
       >
         <Typography style={headingStyles}>Custom Attributes</Typography>
