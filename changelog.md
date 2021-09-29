@@ -1,3 +1,18 @@
+##### 2.0.35 - Wed Sep 29 11:40:20 2021 +0000
+- [OpenConceptLab/ocl_issues#1007](https://github.com/OpenConceptLab/ocl_issues/issues/1007) | fixing checkbox column width
+- [OpenConceptLab/ocl_issues#999](https://github.com/OpenConceptLab/ocl_issues/issues/999) | concept/mapping home custom attributes panel
+- Accordions to not have icon to collapse/expand
+- Concept/Mapping version associations | updated label
+- Org Home Tabs | fixing default config tab URLs
+- [OpenConceptLab/ocl_issues#1004](https://github.com/OpenConceptLab/ocl_issues/issues/1004) | About header | removed gray background
+- Org Home | URL should reflect tab selection
+- Org Home | new header is the default header
+- Custom Config | making sure URL update works with custom config filters
+- Org home tabs | passing config query params
+- updated IgnorePlugin
+- [OpenConceptLab/ocl_issues#992](https://github.com/OpenConceptLab/ocl_issues/issues/992) | Concept Home | collection membership panel
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | updated mappings UI on Concept Home
+- [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | org configs | image overlay can be introduced by header.background.imageOverlay true
 ##### 2.0.32 - Sat Sep 25 04:41:59 2021 +0000
 - [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | org header | refactoring to extract common dynmic config icon component
 - [OpenConceptLab/ocl_issues#851](https://github.com/OpenConceptLab/ocl_issues/issues/851) | org header | default background color
