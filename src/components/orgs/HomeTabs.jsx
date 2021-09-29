@@ -48,7 +48,7 @@ const HomeTabs = props => {
       const urlAttr = tabConfig.type + '_url'
       href = `#${org[urlAttr]}`
     }
-    let queryString = location.hash.split('?')[1]
+    let queryString = location.hash.split('?')[1] || ''
     if(queryString)
       queryString = `?${queryString}`
 
