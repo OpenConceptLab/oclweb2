@@ -16,7 +16,7 @@ const LABEL_STYLES = {
 };
 
 const Mapping = props => {
-  const { viewFields, history, currentLayoutURL, url, hideAttributes } = props;
+  const { viewFields, history, currentLayoutURL, url, hideAttributes, version_url } = props;
   const customFields = isArray(viewFields) ? viewFields : [];
 
   const isFromConceptInContext = props.conceptContext === props.from_concept_code;
@@ -27,10 +27,15 @@ const Mapping = props => {
   const toConceptLabel = isToConceptInContext ?
                          <ThisConceptLabel /> :
                          <ToConceptLabel {...props} />;
+  const getNavigationURL = () => {
+    if(window.location.hash.includes('/collections/'))
+      return version_url || url
+    return url
+  }
   const navigateTo = () => {
     if(currentLayoutURL)
       history.replace(currentLayoutURL)
-    history.push(url)
+    history.push(getNavigationURL())
   }
 
   return (
