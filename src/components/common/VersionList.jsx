@@ -133,6 +133,7 @@ const VersionList = ({ versions, resource }) => {
                           source: version.source_versions,
                           collection: version.collection_versions
                         }}
+                        resource={resource}
                       />
                     </div>
                     {

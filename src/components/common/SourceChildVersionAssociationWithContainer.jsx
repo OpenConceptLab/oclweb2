@@ -4,7 +4,7 @@ import { Collapse } from '@material-ui/core';
 import ConceptContainerLabel from './ConceptContainerLabel';
 import CollapsibleDivider from './CollapsibleDivider';
 
-const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
+const SourceChildVersionAssociationWithContainer = ({ associatedWith, resource }) => {
   const [open, setOpen] = React.useState(false)
   const toggleOpen = () => setOpen(!open)
   const getResourceDetails = uri => {
@@ -28,16 +28,14 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith }) => {
         <div className='col-md-12 no-side-padding'>
           <Collapse in={open} className="col-md-12" style={{padding: '0px', display: `${open ? 'block' : 'none'}`, margin: '5px 0 5px 15px'}}>
             <div style={{textAlign: 'left'}} className='gray-italics-small'>
-              {`Associated with ${count} versions`}
+              {`This ${resource} version is referenced in the following ${count} source and collection versions:`}
             </div>
             {
-              map(associatedWith.source, uri => {
-                return (
-                  <div className='col-md-12 no-right-padding' key={uri}>
-                    <ConceptContainerLabel resource='source' {...getResourceDetails(uri)} />
-                  </div>
-                )
-              })
+              map(associatedWith.source, uri => (
+                <div className='col-md-12 no-right-padding' key={uri}>
+                  <ConceptContainerLabel resource='source' {...getResourceDetails(uri)} />
+                </div>
+              ))
             }
             {
               map(associatedWith.collection, uri => {
