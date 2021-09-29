@@ -610,7 +610,7 @@ const ExpandibleRow = props => {
         }
         {
           isSelectable &&
-          <TableCell>
+          <TableCell style={{width: '50px'}}>
             <Checkbox size='small' checked={selected} onClick={onCheckboxClick} />
           </TableCell>
         }
