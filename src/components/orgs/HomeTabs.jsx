@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { map, reject } from 'lodash';
+import { map, reject, get } from 'lodash';
 import { ORANGE, BLUE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import NewResourceButton from '../common/NewResourceButton';
@@ -19,7 +19,7 @@ const HomeTabs = props => {
 
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
-  const selectedTabColor = selectedTabConfig.color || tabColor;
+  const selectedTabColor = get(selectedTabConfig, 'color') || tabColor;
   const [sourceForm, setSourceForm] = React.useState(false);
   const [collectionForm, setCollectionForm] = React.useState(false);
   const [membersForm, setMembersForm] = React.useState(false);
@@ -40,13 +40,19 @@ const HomeTabs = props => {
       href = `#${org.url}about`
     else if(tabConfig.type === 'versions')
       href = `#${org.url}versions`
+    else if(tabConfig.type === 'users')
+      href = `#${org.url}members`
     else if(tabConfig.href)
       href = `#${org.url}${tabConfig.href}`
     else {
       const urlAttr = tabConfig.type + '_url'
       href = `#${org[urlAttr]}`
     }
-    return href + location.search
+    let queryString = location.hash.split('?')[1]
+    if(queryString)
+      queryString = `?${queryString}`
+
+    return href + queryString
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';

@@ -22,7 +22,7 @@ class OrgHome extends React.Component {
       isLoading: true,
       org: {},
       pins: [],
-      tab: null,
+      tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
     }
@@ -48,6 +48,9 @@ class OrgHome extends React.Component {
   }
 
   getDefaultTabIndexFromConfig() {
+    if(this.isOCLDefaultConfigSelected())
+      return this.getDefaultTabIndex()
+
     const index = findIndex(this.state.selectedConfig.config.tabs, {"default": true});
     return index > -1 ? index : 0;
   }
@@ -171,6 +174,8 @@ class OrgHome extends React.Component {
     return !isEmpty(get(this, 'state.org.text'));
   }
 
+  isOCLDefaultConfigSelected = () => isEqual(this.state.selectedConfig, ORG_DEFAULT_CONFIG);
+
   render() {
     const {
       org, isLoading, tab, pins, selectedConfig, customConfigs,
@@ -209,7 +214,7 @@ class OrgHome extends React.Component {
                   customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
 
-                  isOCLDefaultConfigSelected={isEqual(selectedConfig, ORG_DEFAULT_CONFIG)}
+                  isOCLDefaultConfigSelected={this.isOCLDefaultConfigSelected()}
                   aboutTab={showAboutTab}
                   showConfigSelection={this.customConfigFeatureApplicable()}
                 />
