@@ -58,6 +58,7 @@ const HomeTabContent = ({
           extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
           viewFields={selectedTabConfig.fields}
           fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
+          configQueryParams={selectedTabConfig.query_params}
         />
       }
     </div>
