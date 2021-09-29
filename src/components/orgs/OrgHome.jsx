@@ -5,10 +5,8 @@ import { reject, get, values, find, findIndex, isEmpty, isObject, includes, isEq
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
-import OrgHomeHeader from './OrgHomeHeader';
 import HomeHeader from './HomeHeader';
 import HomeTabContent from './HomeTabContent';
-import OrgHomeTabs from './OrgHomeTabs';
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -32,10 +30,6 @@ class OrgHome extends React.Component {
 
   customConfigFeatureApplicable() {
     return this.props.location.search.indexOf('configs=true') > -1;
-  }
-
-  isNewUI() {
-    return this.props.location.search.indexOf('new=true') > -1;
   }
 
   getDefaultTabIndex() {
@@ -198,7 +192,7 @@ class OrgHome extends React.Component {
           !isLoading && !hasError &&
           <div className='col-md-12 home-container no-side-padding'>
             {
-              this.isNewUI() && tab !== null ?
+              tab !== null &&
               <React.Fragment>
                 <HomeHeader
                   org={org}
@@ -245,35 +239,6 @@ class OrgHome extends React.Component {
                   aboutTab={showAboutTab}
                   showConfigSelection={this.customConfigFeatureApplicable()}
                 />
-              </React.Fragment> :
-              <React.Fragment>
-                <OrgHomeHeader org={org} url={url} config={selectedConfig} />
-                <Pins
-                  pins={pins}
-                  onDelete={this.deletePin}
-                  canDelete={isCurrentUserMemberOfOrg}
-                  onOrderUpdate={this.updatePinOrder}
-                />
-                {
-                  tab !== null &&
-                  <OrgHomeTabs
-                    tab={tab}
-                    onTabChange={this.onTabChange}
-                    org={org}
-                    location={this.props.location}
-                    match={this.props.match}
-                    url={url}
-                    pins={pins}
-                    onPinCreate={this.createPin}
-                    onPinDelete={this.deletePin}
-                    showPin={isCurrentUserMemberOfOrg}
-                    customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
-                    onConfigChange={this.onConfigChange}
-                    selectedConfig={selectedConfig}
-                    aboutTab={showAboutTab}
-                    showConfigSelection={this.customConfigFeatureApplicable()}
-                  />
-                }
               </React.Fragment>
             }
           </div>
