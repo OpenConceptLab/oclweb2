@@ -100,9 +100,9 @@ const SourceHomeTabs = props => {
             tabConfigs,
             config => {
               if(isOCLDefaultConfigSelected)
-                return (<Tab key={config.label} label={config.label} component="a" href={getTABHref(config)}/>)
-              else
-                return (<Tab key={config.label} label={config.label} />)
+                return (<Tab key={config.label} label={config.label} component="a" href={getTABHref(config)} />)
+
+              return (<Tab key={config.label} label={config.label} />)
             }
           )
         }

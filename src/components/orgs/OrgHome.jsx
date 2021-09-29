@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@material-ui/core';
-import { reject, get, values, find, findIndex, isEmpty, isObject, includes } from 'lodash';
+import { reject, get, values, find, findIndex, isEmpty, isObject, includes, isEqual } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import Pins from '../common/Pins';
@@ -214,6 +214,8 @@ class OrgHome extends React.Component {
                   showPin={isCurrentUserMemberOfOrg}
                   customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
+
+                  isOCLDefaultConfigSelected={isEqual(selectedConfig, ORG_DEFAULT_CONFIG)}
                   aboutTab={showAboutTab}
                   showConfigSelection={this.customConfigFeatureApplicable()}
                 />

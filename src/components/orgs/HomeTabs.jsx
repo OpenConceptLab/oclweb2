@@ -14,7 +14,7 @@ import MembersForm from './MembersForm'
 const HomeTabs = props => {
   const {
     tab, url, onTabChange, selectedConfig, customConfigs, onConfigChange,
-    aboutTab, showConfigSelection, tabColor,
+    aboutTab, showConfigSelection, tabColor, isOCLDefaultConfigSelected, org
   } = props;
 
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
@@ -34,6 +34,21 @@ const HomeTabs = props => {
       setMembersForm(true)
   }
 
+  const getTABHref = tabConfig => {
+    let href = '';
+    if(tabConfig.type === 'about')
+      href = `#${org.url}about`
+    else if(tabConfig.type === 'versions')
+      href = `#${org.url}versions`
+    else if(tabConfig.href)
+      href = `#${org.url}${tabConfig.href}`
+    else {
+      const urlAttr = tabConfig.type + '_url'
+      href = `#${org[urlAttr]}`
+    }
+    return href + location.search
+  }
+
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   return (
     <div className='col-md-12 no-side-padding' style={{width: width}}>
@@ -43,10 +58,30 @@ const HomeTabs = props => {
             const key = config.label + index
             const isSelected = index === tab
             const color = config.color || tabColor
+            if(isOCLDefaultConfigSelected)
+              return (
+                <Tab
+                  style={color ? {color: color}: {}}
+                  index={index}
+                  key={key}
+                  id={key}
+                  label={
+                    <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
+                      <DynamicConfigResourceIcon resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
+                      <span style={{marginLeft: '4px'}}>{config.label}</span>
+                    </span>
+                  }
+                  component="a"
+                  href={getTABHref(config)}
+                />
+              )
             return (
               <Tab
                 style={color ? {color: color}: {}}
-                index={index} key={key} id={key} label={
+                index={index}
+                key={key}
+                id={key}
+                label={
                   <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
                     <DynamicConfigResourceIcon resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
                     <span style={{marginLeft: '4px'}}>{config.label}</span>

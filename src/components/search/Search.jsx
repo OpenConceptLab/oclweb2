@@ -504,7 +504,7 @@ class Search extends React.Component {
     let resource = this.state.resource || 'concepts'
     if(resource === 'organizations')
       resource = 'orgs'
-    if(this.props.nested && !url.match('/'+resource))
+    if(this.props.nested && !url.match('/' + resource))
       url += url.endsWith('/') ? resource : '/' + resource
     url += `?q=${this.state.searchStr || ''}`
     url += `&isTable=${this.state.isTable}`
@@ -514,8 +514,6 @@ class Search extends React.Component {
     url += `&exactMatch=${this.state.exactMatch || 'off'}`
     if(!this.props.nested)
       url += `&type=${this.state.resource || 'concepts'}`
-
-
     if(this.state.limit !== DEFAULT_LIMIT)
       url += `&limit=${this.state.limit || DEFAULT_LIMIT}`
     if(!isEqual(this.state.sortParams, DEFAULT_SORT_PARAMS))
@@ -526,8 +524,12 @@ class Search extends React.Component {
       url += `&includeRetired=true`
     if(this.state.updatedSince)
       url += `&updatedSince=${this.state.updatedSince}`
+    if(window.location.hash.includes('configs=true'))
+      url += `&configs=true`
+    if(window.location.hash.includes('new=true'))
+      url += `&new=true`
 
-    return url
+    return window.location.hash.split('?')[0] + '?' + url.split('?')[1];
   }
 
   getFilterControls() {

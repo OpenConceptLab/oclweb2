@@ -26,7 +26,9 @@ import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 const DEFAULT_VISIBLE_ATTRIBUTES = ORG_DEFAULT_CONFIG.config.header.attributes
 
-const HomeHeader = ({ org, url, fhir, extraComponents, config, ...rest }) => {
+const HomeHeader = ({
+  org, url, fhir, extraComponents, config, ...rest
+}) => {
   const downloadFileName = `Org-${get(org, 'id')}`;
   const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
@@ -166,8 +168,8 @@ const HomeHeader = ({ org, url, fhir, extraComponents, config, ...rest }) => {
                 {
                   map(
                     getVisibleAttributes(),
-                    attr => <HeaderAttribute
-                              key={attr.label}
+                    (attr, index) => <HeaderAttribute
+                              key={index}
                               label={attr.label}
                               value={org[attr.value]}
                               type={attr.type}

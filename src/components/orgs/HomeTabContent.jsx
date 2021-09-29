@@ -1,11 +1,12 @@
 import React from 'react';
 import { get, map, includes, pickBy, isString, isObject, reject } from 'lodash';
+import { TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID } from '../../common/constants';
 import CustomText from '../common/CustomText';
 import About from '../common/About';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 
 const HomeTabContent = ({
-  org, tab, selectedConfig, location, match, url, pins, showPin, onPinCreate, onPinDelete, aboutTab,
+  org, tab, selectedConfig, location, match, url, pins, showPin, onPinCreate, onPinDelete, aboutTab
 }) => {
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const about = get(org, 'text')
@@ -57,7 +58,13 @@ const HomeTabContent = ({
           viewFilters={pickBy(selectedTabConfig.filters, isString)}
           extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
           viewFields={selectedTabConfig.fields}
-          fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
+          fixedFilters={{
+            limit: selectedTabConfig.page_size,
+            isList: selectedTabConfig.layout === LIST_LAYOUT_ID,
+            isSplit: selectedTabConfig.layout === SPLIT_LAYOUT_ID,
+            isTable: !selectedTabConfig.layout || selectedTabConfig.layout === TABLE_LAYOUT_ID,
+            sortParams: getSortParams()
+          }}
           configQueryParams={selectedTabConfig.query_params}
         />
       }
