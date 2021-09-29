@@ -18,7 +18,6 @@ import MappingButton from '../common/MappingButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
-import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
@@ -180,14 +179,6 @@ const MappingHomeHeader = ({
               <div className='col-sm-11 no-side-padding'>
                 <ToConceptLabel {...mapping} />
               </div>
-            </div>
-            <div className='col-md-12 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '3px'}}>
-                Custom Attributes:
-              </span>
-              <span>
-                <CustomAttributesPopup attributes={mapping.extras} />
-              </span>
             </div>
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               <span>

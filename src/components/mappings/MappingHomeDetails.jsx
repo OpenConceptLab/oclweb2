@@ -6,6 +6,7 @@ import {
 import { DATETIME_FORMAT } from '../../common/constants';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
+import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -103,6 +104,11 @@ const MappingHomeDetails = ({ mapping }) => {
             </div>
           </AccordionDetails>
         </Accordion>
+        <CustomAttributesAccordian
+          attributes={mapping.extras || {}}
+          headingStyles={ACCORDIAN_HEADING_STYLES}
+          detailStyles={ACCORDIAN_DETAILS_STYLES}
+        />
       </div>
     </div>
   );

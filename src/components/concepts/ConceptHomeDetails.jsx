@@ -6,6 +6,7 @@ import { map, get, isEmpty } from 'lodash';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from './ConceptCollections';
+import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -62,6 +63,11 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingC
             }
           </AccordionDetails>
         </Accordion>
+        <CustomAttributesAccordian
+          attributes={concept.extras || {}}
+          headingStyles={ACCORDIAN_HEADING_STYLES}
+          detailStyles={ACCORDIAN_DETAILS_STYLES}
+        />
       </div>
       <div className='col-md-6 no-right-padding'>
         <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} />
