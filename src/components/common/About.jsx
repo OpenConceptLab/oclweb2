@@ -3,7 +3,7 @@ import React from 'react';
 const About = ({id, about}) => {
   return (
     <div className='col-md-12 about-home-tab'>
-      <h3 className='light-gray-bg' style={{padding: '10px', borderRadius: '3px'}}>
+      <h3 style={{padding: '10px'}}>
         {`About ${id}`}
       </h3>
       {
