@@ -447,7 +447,7 @@ const ExpandibleRow = props => {
       else
         url = `/fhir${getOCLFHIRResourceURL(item)}`
     } else {
-      if(isSourceChild && window.location.hash.includes('/collections/'))
+      if(isSourceChild && (!item.is_latest_version || window.location.hash.includes('/collections/')))
         url = item.version_url
       else
         url = item.url
@@ -738,10 +738,10 @@ const ExpandibleRow = props => {
           formComponent={
             item.concept_class ?
                          <ConceptHome
-                           noRedirect concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: window.location.hash.includes('/collections/') ? item.version : null }}}
+                           noRedirect concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: (!item.is_latest_version || window.location.hash.includes('/collections/')) ? item.version : null }}}
                          /> :
                          <MappingHome
-                           noRedirect mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: window.location.hash.includes('/collections/') ? item.version : null}}}
+                           noRedirect mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: (!item.is_latest_version || window.location.hash.includes('/collections/')) ? item.version : null}}}
                          />
           }
         />

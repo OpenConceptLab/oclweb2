@@ -9,11 +9,11 @@ const DEFAULT_FIELDS = [{concept_class: 'Class'}, {datatype: 'Datatype'}]
 const LABEL_FIELDS = ['id', 'display_name', 'name', 'owner', 'source']
 
 const Concept = props => {
-  const { viewFields, history, currentLayoutURL, url, hideAttributes, version_url } = props;
+  const { viewFields, history, currentLayoutURL, url, hideAttributes, version_url, is_latest_version } = props;
   const customFields = isArray(viewFields) ? reject(viewFields, fieldConfig => includes(LABEL_FIELDS, keys(fieldConfig)[0])) : [];
   const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
   const getNavigationURL = () => {
-    if(window.location.hash.includes('/collections/'))
+    if(window.location.hash.includes('/collections/') || !is_latest_version)
       return version_url || url
     return url
   }
