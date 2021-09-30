@@ -35,7 +35,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
       >
         <span className='col-md-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
           <span>
-            <Typography style={headingStyles}>Custom Attributes</Typography>
+            <Typography style={headingStyles}>Attributes</Typography>
           </span>
           {
             hasAttributes &&
