@@ -50,6 +50,7 @@ const HomeTabContent = ({
           location={location}
           match={match}
           url={selectedTabConfig.uri || url}
+          defaultURI={selectedTabConfig.defaultURI || selectedTabConfig.uri}
           pins={pins}
           showPin={showPin}
           onPinCreate={onPinCreate}

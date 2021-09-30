@@ -130,6 +130,7 @@ const CollectionHomeTabs = props => {
             match={match}
             location={location}
             versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
+            defaultURI={selectedTabConfig.defaultURI || selectedTabConfig.uri}
             versions={versions}
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}
@@ -140,9 +141,9 @@ const CollectionHomeTabs = props => {
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
           />
         }
-      </div>
-      <CommonFormDrawer
-        isOpen={referenceForm}
+    </div>
+    <CommonFormDrawer
+    isOpen={referenceForm}
         onClose={() => setReferenceForm(false)}
         size='large'
         formComponent={

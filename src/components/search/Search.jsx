@@ -3,7 +3,7 @@ import { withRouter } from "react-router";
 import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit, isString
+  map, omit, isString, values
 } from 'lodash';
 import { Share as ShareIcon } from '@material-ui/icons'
 import { CircularProgress, Chip, Tooltip } from '@material-ui/core';
@@ -313,6 +313,32 @@ class Search extends React.Component {
     return {...queryParam, ...viewFilters}
   }
 
+  prepareBaseURL = () => {
+    const { extraControlFilters, defaultURI } = this.props
+    let baseURL = this.props.baseURL
+    if(isEmpty(extraControlFilters) || !baseURL.includes('[:') || isEmpty(this.state.userFilters))
+      return defaultURI || baseURL
+    if(baseURL.includes('[:')) {
+      const vars = baseURL.match(/\[:\w+]/g)
+      const varValues = {}
+      forEach(vars, _var => {
+        let found;
+        forEach(extraControlFilters, (data, key) => data.key === _var.replace('[:', '').replace(']', '') ? found = key : null)
+        if(found)
+          varValues[_var] = get(this.state.userFilters, found)
+      })
+      if(values(varValues).length !== keys(varValues).length)
+        return defaultURI || baseURL
+
+      forEach(varValues, (value, _var) => baseURL = baseURL.replaceAll(_var, value))
+      return baseURL
+    }
+  }
+
+  filterQueryParamsfromUserFilters = () => pickBy(
+    this.state.userFilters, (v, k) => includes(keys(pickBy(this.props.extraControlFilters, f => !f.url)), k)
+  )
+
   fetchNewResults(attrsToSet, counts=true, resetItems=true, updateURL=false, facets=true) {
     if(!attrsToSet)
       attrsToSet = {}
@@ -334,7 +360,7 @@ class Search extends React.Component {
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
-        includeRetired, fhirParams, staticParams, userFilters
+        includeRetired, fhirParams, staticParams
       } = this.state;
       const { configQueryParams, noQuery, noHeaders, fhir, hapi } = this.props;
       let queryParams = {};
@@ -351,7 +377,7 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
-      let params = {...staticParams, ...userFilters}
+      let params = {...staticParams, ...this.filterQueryParamsfromUserFilters()}
       if(!noQuery)
         params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
       if(fhir) {
@@ -361,10 +387,12 @@ class Search extends React.Component {
           params = {...params, page: page, ...fhirParams}
       }
 
+      const baseURL = this.prepareBaseURL()
+
       fetchSearchResults(
         _resource,
         params,
-        this.props.baseURL,
+        baseURL,
         null,
         response => {
           if(updateURL && !fhir)
@@ -376,7 +404,7 @@ class Search extends React.Component {
       if(counts && !this.props.nested)
         fetchCounts(_resource, queryParams, this.onCountsLoad)
       if(!noHeaders && facets && !fhir && resource !== 'references')
-        fetchFacets(_resource, queryParams, this.props.baseURL, this.onFacetsLoad)
+        fetchFacets(_resource, queryParams, baseURL, this.onFacetsLoad)
     })
   }
 
