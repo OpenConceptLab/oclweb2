@@ -397,10 +397,12 @@ div.login-paper {
 }
 .logo-container {
     justify-content: center;
-    height: 130px;
+    height: auto;
     position: relative;
     width:100%;
     max-width: 100px;
+    border-radius: 10px;
+    padding: 2px;
     &.small {
         height: 70px;
     }

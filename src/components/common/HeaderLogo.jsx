@@ -22,13 +22,14 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink }) => {
   }
 
   const containerClasses = 'logo-container flex-vertical-center' + (shrink ? ' small' : '')
+  const logo = base64 || logoURL
 
   return (
     <React.Fragment>
-      <div className={containerClasses}>
+      <div className={containerClasses} style={ logo ? {marginLeft : '15px', marginTop: '10px'} : {marginLeft : '15px', height: '130px'}}>
         {
-          (base64 || logoURL) ?
-          <img className='header-logo' src={base64 || logoURL} /> :
+          logo ?
+          <img className='header-logo' src={logo} /> :
           defaultIcon
         }
         {
