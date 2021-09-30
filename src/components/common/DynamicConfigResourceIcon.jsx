@@ -1,12 +1,15 @@
 import React from 'react';
+import { Icon } from '@material-ui/core';
 import {
   List as SourceIcon, Loyalty as CollectionIcon, Person as UserIcon,
   Info as InfoIcon, Home as HomeIcon, Link as MappingIcon,
   AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon
 } from '@material-ui/icons';
-import { includes } from 'lodash';
+import { includes, snakeCase } from 'lodash';
 
-const DynamicConfigResourceIcon = ({resource, index, style}) => {
+const DynamicConfigResourceIcon = ({resource, index, style, icon}) => {
+  if(icon)
+    return (<Icon style={{fontSize: '20px'}}>{snakeCase(icon)}</Icon>)
   if(resource === 'sources')
     return (<SourceIcon style={style} />)
   if(resource === 'collections')

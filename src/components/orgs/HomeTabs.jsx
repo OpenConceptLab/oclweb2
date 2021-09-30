@@ -64,6 +64,12 @@ const HomeTabs = props => {
             const key = config.label + index
             const isSelected = index === tab
             const color = config.color || tabColor
+            const label = (
+              <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
+              <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
+              <span style={{marginLeft: '4px'}}>{config.label}</span>
+            </span>
+            );
             if(isOCLDefaultConfigSelected)
               return (
                 <Tab
@@ -71,12 +77,7 @@ const HomeTabs = props => {
                   index={index}
                   key={key}
                   id={key}
-                  label={
-                    <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
-                      <DynamicConfigResourceIcon resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
-                      <span style={{marginLeft: '4px'}}>{config.label}</span>
-                    </span>
-                  }
+                  label={label}
                   component="a"
                   href={getTABHref(config)}
                 />
@@ -87,12 +88,7 @@ const HomeTabs = props => {
                 index={index}
                 key={key}
                 id={key}
-                label={
-                  <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
-                    <DynamicConfigResourceIcon resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
-                    <span style={{marginLeft: '4px'}}>{config.label}</span>
-                  </span>
-                }
+                label={label}
               />
             )
           })

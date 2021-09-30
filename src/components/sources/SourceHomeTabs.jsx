@@ -10,6 +10,7 @@ import CustomText from '../common/CustomText';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConfigSelect from '../common/ConfigSelect';
+import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import ConceptForm from '../concepts/ConceptForm';
 import MappingForm from '../mappings/MappingForm';
 import SourceVersionForm from './SourceVersionForm';
@@ -99,10 +100,16 @@ const SourceHomeTabs = props => {
           map(
             tabConfigs,
             config => {
+              const label = (
+                <span className='flex-vertical-center'>
+                  <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.8em'}} />
+                  <span style={{marginLeft: '4px'}}>{config.label}</span>
+                </span>
+              );
               if(isOCLDefaultConfigSelected)
-                return (<Tab key={config.label} label={config.label} component="a" href={getTABHref(config)} />)
+                return (<Tab key={config.label} label={label} component="a" href={getTABHref(config)} />)
 
-              return (<Tab key={config.label} label={config.label} />)
+              return (<Tab key={config.label} label={label} />)
             }
           )
         }
