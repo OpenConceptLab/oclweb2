@@ -80,6 +80,7 @@ const HomeTabs = props => {
                   label={label}
                   component="a"
                   href={getTABHref(config)}
+                  className='capitalize'
                 />
               )
             return (
@@ -89,6 +90,7 @@ const HomeTabs = props => {
                 key={key}
                 id={key}
                 label={label}
+                className='capitalize'
               />
             )
           })

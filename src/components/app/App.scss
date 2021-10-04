@@ -263,7 +263,7 @@ span.separator-small {
             text-transform: capitalize;
             border-bottom: 1px solid #e0e0e0;
             span {
-                font-size: 1.150rem;
+                font-size: 1rem;
                 color: $blue;
             }
         }
@@ -363,7 +363,11 @@ div.login-paper {
     height: 40px !important;
     min-height: 40px !important;
 }
+.capitalize {
+    text-transform: capitalize;
+}
 .material-tab {
+    text-transform: capitalize;
     span {
         flex-direction: row;
         display: flex;

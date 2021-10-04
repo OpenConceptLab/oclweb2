@@ -51,7 +51,7 @@ const OrgHomeTabs = props => {
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
         {
-          map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
+          map(tabConfigs, config => <Tab key={config.label} label={config.label} style={{textTransform: 'capitalize'}} />)
         }
       </Tabs>
       {

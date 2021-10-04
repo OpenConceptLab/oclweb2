@@ -102,14 +102,14 @@ const SourceHomeTabs = props => {
             config => {
               const label = (
                 <span className='flex-vertical-center'>
-                  <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.8em'}} />
+                  <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
                   <span style={{marginLeft: '4px'}}>{config.label}</span>
                 </span>
               );
               if(isOCLDefaultConfigSelected)
-                return (<Tab key={config.label} label={label} component="a" href={getTABHref(config)} />)
+                return (<Tab key={config.label} label={label} component="a" href={getTABHref(config)} style={{textTransform: 'capitalize'}} />)
 
-              return (<Tab key={config.label} label={label} />)
+              return (<Tab key={config.label} label={label} style={{textTransform: 'capitalize'}} />)
             }
           )
         }
