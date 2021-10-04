@@ -18,7 +18,7 @@ import {
 import { Pagination } from '@material-ui/lab'
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact, flatten, last
+  isFunction, compact, flatten, last, isArray
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -129,6 +129,8 @@ const getValue = (item, column) => {
     return column.formatter(value)
   if(get(column, 'renderer'))
     return column.renderer(item)
+  if(isArray(value))
+    return value.join(', ')
   return value
 }
 

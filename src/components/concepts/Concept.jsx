@@ -23,6 +23,14 @@ const Concept = props => {
     history.push(getNavigationURL())
   }
 
+  const getValue = attr => {
+    const value = get(props, attr, '')
+    if(isArray(value))
+      return value.join(', ')
+    return value
+  }
+
+
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <span onClick={navigateTo} style={{cursor: 'pointer'}}>
@@ -45,7 +53,7 @@ const Concept = props => {
                     {label}:
                   </span>
                   <span className='resource-value' style={{marginRight: '0px'}}>
-                    {get(props, attr, '')}
+                    {getValue(attr)}
                   </span>
                   {i < fields.length - 1 && <span style={{marginRight: '5px'}}>, </span>}
                 </React.Fragment>
