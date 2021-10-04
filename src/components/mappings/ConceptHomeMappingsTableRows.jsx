@@ -43,7 +43,7 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
                        <span><span>{mapType}</span><sup>-1</sup></span>:
                        mapType
                 }
-                style={{border: 'none', paddingTop: '20px'}}
+                style={{border: 'none'}}
               />
               </Tooltip>
             </TableCell>
