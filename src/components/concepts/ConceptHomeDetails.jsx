@@ -1,13 +1,9 @@
 import React from 'react';
-import {
-  Accordion, AccordionSummary, AccordionDetails
-} from '@material-ui/core';
-import { map, get, isEmpty } from 'lodash';
-import ConceptDetailsLocale from './ConceptDetailsLocale';
+import { get } from 'lodash';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from './ConceptCollections';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
-import TabCountLabel from '../common/TabCountLabel';
+import HomeLocales from './HomeLocales';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -16,54 +12,25 @@ const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
-const None = () => {
-  return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
-}
-
-const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingCollections }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
-  const namesCount = names.length;
-  const descCount = descriptions.length;
   return (
     <React.Fragment>
       <div className='col-md-6 no-left-padding'>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<span />}
-            aria-controls="panel1a-content"
-          >
-            <TabCountLabel label='Names & Synonyms' count={namesCount} style={ACCORDIAN_HEADING_STYLES} />
-          </AccordionSummary>
-          <AccordionDetails style={{...ACCORDIAN_DETAILS_STYLES, padding: '10px 0'}}>
-            {
-              isEmpty(names) ?
-              None() :
-              map(names, name => (
-                <ConceptDetailsLocale locale={name} key={name.uuid} url={`${encodeURI(currentURL)}names/${name.uuid}/`} />
-              ))
-            }
-          </AccordionDetails>
-        </Accordion>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<span />}
-            aria-controls="panel1a-content"
-          >
-            <TabCountLabel label='Descriptions' count={descCount} style={ACCORDIAN_HEADING_STYLES} />
-          </AccordionSummary>
-          <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
-            {
-              isEmpty(descriptions) ?
-              None() :
-              map(descriptions, description => (
-                <ConceptDetailsLocale locale={description} isDescription key={description.uuid} url={`${encodeURI(currentURL)}descriptions/${description.uuid}/`} />
-              ))
-            }
-          </AccordionDetails>
-        </Accordion>
+        <HomeLocales
+          concept={concept}
+          locales={names}
+          source={source}
+          label='Names & Synonyms'
+        />
+        <HomeLocales
+          concept={concept}
+          locales={descriptions}
+          source={source}
+          label='Descriptions'
+          isDescription
+        />
         <CustomAttributesAccordian
           attributes={concept.extras || {}}
           headingStyles={ACCORDIAN_HEADING_STYLES}

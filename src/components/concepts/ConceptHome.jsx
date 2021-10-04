@@ -1,7 +1,7 @@
 import React from 'react';
 import Split from 'react-split'
 import { CircularProgress } from '@material-ui/core';
-import { includes, get, isObject, isBoolean, has } from 'lodash';
+import { includes, get, isObject, isBoolean, has, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -28,6 +28,7 @@ class ConceptHome extends React.Component {
       isLoading: true,
       isLoadingMappings: false,
       isLoadingCollections: false,
+      parent: null,
       concept: {},
       versions: [],
       mappings: [],
@@ -105,10 +106,19 @@ class ConceptHome extends React.Component {
                         this.getMappings()
                         this.getCollectionVersions()
                       }
+                      if(!isEmpty(get(this.state.concept, 'names', [])) || !isEmpty(get(this.state.concept, 'descriptions', [])))
+                        this.fetchParent()
                     })
                 })
 
     })
+  }
+
+  fetchParent() {
+    const { concept } = this.state
+
+    if(concept)
+      APIService.new().overrideURL(toParentURI(concept.url)).get().then(response => this.setState({source: response.data}))
   }
 
   getHierarchy = () => this.setState({isLoadingHierarchy: true}, () => {
@@ -208,7 +218,7 @@ class ConceptHome extends React.Component {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading, tab,
       notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
-      isLoadingHierarchy, collections, isLoadingCollections
+      isLoadingHierarchy, collections, isLoadingCollections, source
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -242,9 +252,9 @@ class ConceptHome extends React.Component {
               isLoadingMappings={isLoadingMappings}
               collections={collections}
               isLoadingCollections={isLoadingCollections}
-              currentURL={currentURL}
               isVersionedObject={isVersionedObject}
               onTabChange={this.onTabChange}
+              source={source}
             />
           </React.Fragment>
         }
