@@ -523,7 +523,7 @@ class Search extends React.Component {
 
   onInfiniteToggle = () => this.setState({isInfinite: !this.state.isInfinite})
 
-  onShareClick = () => copyURL(this.convertURLToFQDN(this.getCurrentLayoutURL()))
+  onShareClick = () => copyURL(this.convertURLToFQDN(this.getCurrentLayoutURL().replace('#/', '/')))
 
   convertURLToFQDN = url => window.location.origin + '/#' + url
 
