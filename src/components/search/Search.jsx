@@ -3,7 +3,7 @@ import { withRouter } from "react-router";
 import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit, isString, values
+  map, omit, isString, values, omitBy
 } from 'lodash';
 import { Share as ShareIcon } from '@material-ui/icons'
 import { CircularProgress, Chip, Tooltip } from '@material-ui/core';
@@ -320,14 +320,16 @@ class Search extends React.Component {
       return defaultURI || baseURL
     if(baseURL.includes('[:')) {
       const vars = baseURL.match(/\[:\w+]/g)
-      const varValues = {}
+      let varValues = {}
       forEach(vars, _var => {
         let found;
         forEach(extraControlFilters, (data, key) => data.key === _var.replace('[:', '').replace(']', '') ? found = key : null)
         if(found)
           varValues[_var] = get(this.state.userFilters, found)
       })
-      if(values(varValues).length !== keys(varValues).length)
+      varValues = omitBy(varValues, v => !v)
+
+      if(!varValues || isEmpty(varValues) || (values(varValues).length !== keys(varValues).length))
         return defaultURI || baseURL
 
       forEach(varValues, (value, _var) => baseURL = baseURL.replaceAll(_var, value))
