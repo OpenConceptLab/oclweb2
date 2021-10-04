@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography, CircularProgress, IconButton, Tooltip,
+  Accordion, AccordionSummary, AccordionDetails, CircularProgress, IconButton, Tooltip,
 } from '@material-ui/core';
 import {
   Loyalty as LoyaltyIcon, Info as InfoIcon,
@@ -10,6 +10,7 @@ import {
 import { map, get, isEmpty, find, groupBy, orderBy, without, includes } from 'lodash';
 import ResourceLabel from '../common/ResourceLabel';
 import { DARKGRAY } from '../../common/constants';
+import TabCountLabel from '../common/TabCountLabel';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -23,7 +24,7 @@ const None = () => (<div style={{padding: '20px', fontWeight: '300'}}>None</div>
 
 const ConceptCollections = ({ concept, isLoadingCollections }) => {
   const conceptCollections = get(concept, 'collections') || []
-  const count = isLoadingCollections ? '' : `(${conceptCollections.length})`
+  const count = isLoadingCollections ? null : conceptCollections.length
   const getProminentCollectionVersion = collectionVersions => {
     const orderedVersions = orderBy(collectionVersions, 'created_at', ['desc'])
     const releasedVersion = find(orderedVersions, {released: true, retired: false})
@@ -56,26 +57,24 @@ const ConceptCollections = ({ concept, isLoadingCollections }) => {
           aria-controls="panel1a-content"
         >
           <span className='flex-vertical-center'>
-            <span>
-              <Typography style={ACCORDIAN_HEADING_STYLES}>{`Collection Membership ${count}`}</Typography>
-            </span>
+            <TabCountLabel style={ACCORDIAN_HEADING_STYLES} label='Collection Membership' count={count} />
             <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
               <Tooltip title='Showing internal collection versions only, i.e., collection versions from same owner'>
-                <InfoIcon fontSize='small' color='primary'/>
+                <InfoIcon fontSize='small' color='action' />
               </Tooltip>
             </span>
           </span>
         </AccordionSummary>
         <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
           {
-            isLoadingCollections ?
-            <div style={{textAlign: 'center', padding: '10px'}}>
-              <CircularProgress />
-            </div> : (
-              isEmpty(conceptCollections) ?
-              None() :
-              map(groupBy(conceptCollections, 'short_code'), (collections, short_code) => {
-                const prominentVersion = getProminentCollectionVersion(collections)
+          isLoadingCollections ?
+          <div style={{textAlign: 'center', padding: '10px'}}>
+            <CircularProgress />
+          </div> : (
+            isEmpty(conceptCollections) ?
+            None() :
+            map(groupBy(conceptCollections, 'short_code'), (collections, short_code) => {
+              const prominentVersion = getProminentCollectionVersion(collections)
                 const moreCount = collections.length - 1
                 const isExpanded = includes(expand, prominentVersion.version_url)
                 return (

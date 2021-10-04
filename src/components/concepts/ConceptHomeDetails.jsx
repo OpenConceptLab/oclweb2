@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography
+  Accordion, AccordionSummary, AccordionDetails
 } from '@material-ui/core';
 import { map, get, isEmpty } from 'lodash';
 import ConceptDetailsLocale from './ConceptDetailsLocale';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from './ConceptCollections';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
+import TabCountLabel from '../common/TabCountLabel';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -33,7 +34,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingC
             expandIcon={<span />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Names & Synonyms (${namesCount})`}</Typography>
+            <TabCountLabel label='Names & Synonyms' count={namesCount} style={ACCORDIAN_HEADING_STYLES} />
           </AccordionSummary>
           <AccordionDetails style={{...ACCORDIAN_DETAILS_STYLES, padding: '10px 0'}}>
             {
@@ -51,7 +52,7 @@ const ConceptHomeDetails = ({ concept, currentURL, isLoadingMappings, isLoadingC
             expandIcon={<span />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>{`Descriptions (${descCount})`}</Typography>
+            <TabCountLabel label='Descriptions' count={descCount} style={ACCORDIAN_HEADING_STYLES} />
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {

@@ -1,9 +1,12 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography, Button,
+  Accordion, AccordionSummary, AccordionDetails, Button,
 } from '@material-ui/core';
-import { map, isEmpty, isBoolean, isArray, isObject, find, startCase } from 'lodash';
+import {
+  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys
+} from 'lodash';
 import CustomAttributes from './CustomAttributes'
+import TabCountLabel from './TabCountLabel'
 
 const None = () => {
   return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
@@ -34,9 +37,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
         aria-controls="panel1a-content"
       >
         <span className='col-md-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
-          <span>
-            <Typography style={headingStyles}>Attributes</Typography>
-          </span>
+          <TabCountLabel label='Attributes' style={headingStyles} count={keys(attributes).length}/>
           {
             hasAttributes &&
             <span>

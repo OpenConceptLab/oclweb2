@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography, CircularProgress,
+  Accordion, AccordionSummary, AccordionDetails, CircularProgress,
   Table, TableHead, TableRow, TableCell, TableBody
 } from '@material-ui/core';
 import { get, isEmpty, forEach, map } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
+import TabCountLabel from '../common/TabCountLabel';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -34,7 +35,7 @@ const groupMappings = (concept, mappings) => {
 
 const HomeMappings = ({ concept, isLoadingMappings }) => {
   const conceptMappings = get(concept, 'mappings') || [];
-  const count = isLoadingMappings ? '' : `(${conceptMappings.length})`;
+  const count = isLoadingMappings ? null : conceptMappings.length;
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
   const orderedMappings = groupMappings(concept, conceptMappings)
 
@@ -45,7 +46,7 @@ const HomeMappings = ({ concept, isLoadingMappings }) => {
         expandIcon={<span />}
         aria-controls="panel1a-content"
       >
-        <Typography style={ACCORDIAN_HEADING_STYLES}>{`Associations ${count}`}</Typography>
+        <TabCountLabel label='Associations' count={count} style={{ACCORDIAN_HEADING_STYLES}} />
       </AccordionSummary>
       <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
         {
