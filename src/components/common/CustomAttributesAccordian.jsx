@@ -3,7 +3,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Button,
 } from '@material-ui/core';
 import {
-  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys
+  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
 } from 'lodash';
 import CustomAttributes from './CustomAttributes'
 import TabCountLabel from './TabCountLabel'
@@ -41,7 +41,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
           {
             hasAttributes &&
             <span>
-              <Button color='primary' onClick={onRawClick }>
+              <Button color='primary' onClick={onRawClick} style={{textTransform: 'capitalize'}}>
                 { raw ? 'Formatted' : 'Raw' }
               </Button>
             </span>
@@ -59,7 +59,8 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
             /> :
             <div className='col-md-12 no-side-padding'>
               {
-                map(attributes, (value, name) => {
+                map(orderBy(keys(attributes)), name => {
+                  const value = attributes[name]
                   const isBool = isBoolean(value)
                   const needNesting = !isBool && shouldBeNested(value)
                   const isArr = isArray(value)
