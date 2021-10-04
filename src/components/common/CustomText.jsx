@@ -10,8 +10,8 @@ const CustomText = ({title, value, format, url}) => {
     fetch(url).then(response => response.text()).then(text => setURLText(text))
   }
   return (
-    <div className='col-md-12 no-side-padding'>
-      { title && <h3> { title } </h3> }
+    <div className='col-md-12'>
+      { title && <h3 style={{padding: '10px'}}> { title } </h3> }
       { format === 'md' && <CustomMarkdown markdown={value} /> }
       { format === 'text' && <div> { value } </div> }
       { (!format || format === 'html') && <CustomMarkup markup={value} /> }
