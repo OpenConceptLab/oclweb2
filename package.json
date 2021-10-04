@@ -67,7 +67,7 @@
     "react-is": "^16.13.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^5.56.0",
+    "webpack": "^5.56.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2"
   }
