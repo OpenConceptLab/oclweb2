@@ -14,6 +14,12 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
   if(includeCSV && !includes(downloadableFormats, 'csv'))
     downloadableFormats.splice(1, 0, 'csv')
 
+  const getQueryString = prefix => {
+    if(!queryParams)
+      return ''
+    const params = new URLSearchParams(queryParams)
+    return prefix + params.toString()
+  }
   const onFormatClick = format => {
     const name = `${fileName}.${format}`;
     if(format === 'json') {
@@ -25,7 +31,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
     if(format === 'csv')
       downloadObject(arrayToCSV(isArray(resource) ? resource : [resource]), 'text/csv', name)
     if(format === 'zip' && resource.url)
-      downloadFromURL(toFullAPIURL(resource.url) + '?format=zip', name)
+      downloadFromURL(toFullAPIURL(resource.url) + '?format=zip' + getQueryString('&'), name)
 
     setAnchorEl(null)
   }

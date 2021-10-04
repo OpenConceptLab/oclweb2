@@ -150,7 +150,7 @@ const ConceptHomeHeader = ({
                     </Button>
                   </Tooltip>
                 }
-                <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} />
+                <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} queryParams={{includeInverseMappings: true, includeHierarchyPath: true, includeParentConceptURLs: true}} />
               </ButtonGroup>
             </span>
           </div>
