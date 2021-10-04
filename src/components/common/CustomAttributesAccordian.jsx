@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Button,
+  Accordion, AccordionSummary, AccordionDetails, FormControlLabel, Switch
 } from '@material-ui/core';
 import {
   map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
 } from 'lodash';
+import { BLUE } from '../../common/constants';
 import CustomAttributes from './CustomAttributes'
 import TabCountLabel from './TabCountLabel'
 
@@ -19,6 +20,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
     event.stopPropagation()
     event.preventDefault()
     setRaw(!raw)
+    return false;
   }
   const shouldBeNested = value => {
     return isArray(value) && Boolean(find(value, isObject))
@@ -30,7 +32,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   }
 
   return (
-    <Accordion defaultExpanded>
+    <Accordion defaultExpanded expanded>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
@@ -40,10 +42,11 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
           <TabCountLabel label='Attributes' style={headingStyles} count={keys(attributes).length}/>
           {
             hasAttributes &&
-            <span>
-              <Button color='primary' onClick={onRawClick} style={{textTransform: 'capitalize'}}>
-                { raw ? 'Formatted' : 'Raw' }
-              </Button>
+            <span onClick={onRawClick}>
+              <FormControlLabel
+                control={<Switch size='small' checked={raw} onChange={onRawClick} name="raw" color='primary' />}
+                label={<span style={{fontSize: '14px', color: raw ? BLUE : 'gray'}}>Raw</span>}
+              />
             </span>
           }
         </span>
