@@ -1,3 +1,18 @@
+##### 2.0.37 - Mon Oct 4 05:59:51 2021 +0000
+- [OpenConceptLab/ocl_issues#1020](https://github.com/OpenConceptLab/ocl_issues/issues/1020) | concept ZIP and JSON should be consistent
+- eslint | removed unused constant
+- [OpenConceptLab/ocl_issues#1019](https://github.com/OpenConceptLab/ocl_issues/issues/1019) | List attributes to be concatenated with a ', ' in between list entries
+- [OpenConceptLab/ocl_issues#1017](https://github.com/OpenConceptLab/ocl_issues/issues/1017) | custom text tab to have same left padding as about
+- [OpenConceptLab/ocl_issues#1015](https://github.com/OpenConceptLab/ocl_issues/issues/1015) | concept search results | aligned expand button to right
+- [OpenConceptLab/ocl_issues#1014](https://github.com/OpenConceptLab/ocl_issues/issues/1014) | fixing share url button
+- [OpenConceptLab/ocl_issues#1011](https://github.com/OpenConceptLab/ocl_issues/issues/1011) | Org/Source/Collection tabs can be configured with any material ui icon by name
+- [OpenConceptLab/ocl_issues#1010](https://github.com/OpenConceptLab/ocl_issues/issues/1010) | configurations | interpolatable URI from user filter value
+- [OpenConceptLab/ocl_issues#847](https://github.com/OpenConceptLab/ocl_issues/issues/847) | concept/mapping requested from source version to open concept/mapping version
+- [OpenConceptLab/ocl_issues#999](https://github.com/OpenConceptLab/ocl_issues/issues/999) | Custom Attributes renamed to Attributes
+- [OpenConceptLab/ocl_issues#1002](https://github.com/OpenConceptLab/ocl_issues/issues/1002) | image upload without aspect ratio | styling header logo
+- [OpenConceptLab/ocl_issues#992](https://github.com/OpenConceptLab/ocl_issues/issues/992) | collection membership styling | released/retired indicators | grouped versions
+- [OpenConceptLab/ocl_issues#999](https://github.com/OpenConceptLab/ocl_issues/issues/999) | styling custom attributes
+- [OpenConceptLab/ocl_issues#847](https://github.com/OpenConceptLab/ocl_issues/issues/847) | concept/mapping details requested from collections will render concept/mapping version from collection
 ##### 2.0.35 - Wed Sep 29 11:40:20 2021 +0000
 - [OpenConceptLab/ocl_issues#1007](https://github.com/OpenConceptLab/ocl_issues/issues/1007) | fixing checkbox column width
 - [OpenConceptLab/ocl_issues#999](https://github.com/OpenConceptLab/ocl_issues/issues/999) | concept/mapping home custom attributes panel
