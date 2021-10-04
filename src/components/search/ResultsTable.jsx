@@ -643,7 +643,7 @@ const ExpandibleRow = props => {
         }
         {
           (resourceDefinition.expandible || showPin) &&
-          <TableCell align={nested ? 'center' : 'left'}>
+          <TableCell align='right' style={{width: '50px'}}>
             {
               resourceDefinition.expandible &&
               (
