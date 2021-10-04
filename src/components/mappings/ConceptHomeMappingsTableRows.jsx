@@ -32,7 +32,7 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
       {
         mapType &&
         <TableRow hover>
-          <TableCell align='left' rowSpan={mappings.length + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '5px'}}>
+          <TableCell align='left' rowSpan={mappings.length + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
             <Tooltip title={isIndirect ? 'Inverse Mappings' : 'Direct Mappings'}>
               <Chip
                 size='small'
@@ -62,7 +62,7 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
             <TableRow
               hover key={mapping.uuid} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
               <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
-                <span className='flex-vertical-center'>
+                <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                   <span className='flex-vertical-center' style={{marginRight: '4px'}}>
                     {
                       targetURL ?
