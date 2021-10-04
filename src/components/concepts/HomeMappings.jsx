@@ -1,8 +1,11 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
-  Table, TableHead, TableRow, TableCell, TableBody
+  Table, TableHead, TableRow, TableCell, TableBody, Tooltip
 } from '@material-ui/core';
+import {
+  Info as InfoIcon,
+} from '@material-ui/icons'
 import { get, isEmpty, forEach, map } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString } from '../../common/utils'
@@ -46,65 +49,72 @@ const HomeMappings = ({ concept, isLoadingMappings }) => {
         expandIcon={<span />}
         aria-controls="panel1a-content"
       >
-        <TabCountLabel label='Associations' count={count} style={{ACCORDIAN_HEADING_STYLES}} />
+        <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
+          <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
+          <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
+            <Tooltip title='Showing only associations in the same source'>
+              <InfoIcon fontSize='small' color='action' />
+            </Tooltip>
+          </span>
+        </span>
       </AccordionSummary>
       <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
         {
-        isLoadingMappings ?
-        <div style={{textAlign: 'center', padding: '10px'}}>
-          <CircularProgress />
-        </div> : (
-          isEmpty(conceptMappings) ?
-          None() :
-          <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
-            <TableHead>
-              <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
-                <TableCell align='left' style={tbHeadCellStyles}><b>Relationship</b></TableCell>
-                <TableCell align='left' style={tbHeadCellStyles}><b>Code</b></TableCell>
-                <TableCell align='left' style={tbHeadCellStyles}><b>Name</b></TableCell>
-                <TableCell align='left' style={tbHeadCellStyles}><b>Source</b></TableCell>
-                <TableCell align='left' />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                map(orderedMappings, (oMappings, mapType) => {
-                  const key = generateRandomString()
-                  const hasDirectMappings = !isEmpty(oMappings.direct)
-                  return (
-                    <React.Fragment key={key}>
-                      {
-                        hasDirectMappings &&
-                        <ConceptHomeMappingsTableRows
-                          mappings={oMappings.direct}
-                          mapType={mapType}
-                        />
-                      }
-                    </React.Fragment>
-                  )
-                })
-              }
-              {
-                map(orderedMappings, (oMappings, mapType) => {
-                  const key = generateRandomString()
-                  const hasInDirectMappings = !isEmpty(oMappings.indirect)
-                  return (
-                    <React.Fragment key={key}>
-                      {
-                        hasInDirectMappings &&
-                        <ConceptHomeMappingsTableRows
-                          mappings={oMappings.indirect}
-                          mapType={mapType}
-                          isIndirect
-                        />
-                      }
-                    </React.Fragment>
-                  )
-                })
-              }
-            </TableBody>
-          </Table>
-        )
+          isLoadingMappings ?
+          <div style={{textAlign: 'center', padding: '10px'}}>
+            <CircularProgress />
+          </div> : (
+            isEmpty(conceptMappings) ?
+            None() :
+            <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
+              <TableHead>
+                <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
+                  <TableCell align='left' style={tbHeadCellStyles}><b>Relationship</b></TableCell>
+                  <TableCell align='left' style={tbHeadCellStyles}><b>Code</b></TableCell>
+                  <TableCell align='left' style={tbHeadCellStyles}><b>Name</b></TableCell>
+                  <TableCell align='left' style={tbHeadCellStyles}><b>Source</b></TableCell>
+                  <TableCell align='left' />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  map(orderedMappings, (oMappings, mapType) => {
+                    const key = generateRandomString()
+                    const hasDirectMappings = !isEmpty(oMappings.direct)
+                    return (
+                      <React.Fragment key={key}>
+                        {
+                          hasDirectMappings &&
+                          <ConceptHomeMappingsTableRows
+                            mappings={oMappings.direct}
+                            mapType={mapType}
+                          />
+                        }
+                      </React.Fragment>
+                    )
+                  })
+                }
+                {
+                  map(orderedMappings, (oMappings, mapType) => {
+                    const key = generateRandomString()
+                    const hasInDirectMappings = !isEmpty(oMappings.indirect)
+                    return (
+                      <React.Fragment key={key}>
+                        {
+                          hasInDirectMappings &&
+                          <ConceptHomeMappingsTableRows
+                            mappings={oMappings.indirect}
+                            mapType={mapType}
+                            isIndirect
+                          />
+                        }
+                      </React.Fragment>
+                    )
+                  })
+                }
+              </TableBody>
+            </Table>
+          )
         }
       </AccordionDetails>
     </Accordion>

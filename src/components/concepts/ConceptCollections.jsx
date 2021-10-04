@@ -56,7 +56,7 @@ const ConceptCollections = ({ concept, isLoadingCollections }) => {
           expandIcon={<span />}
           aria-controls="panel1a-content"
         >
-          <span className='flex-vertical-center'>
+          <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
             <TabCountLabel style={ACCORDIAN_HEADING_STYLES} label='Collection Membership' count={count} />
             <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
               <Tooltip title='Showing internal collection versions only, i.e., collection versions from same owner'>
@@ -67,14 +67,14 @@ const ConceptCollections = ({ concept, isLoadingCollections }) => {
         </AccordionSummary>
         <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
           {
-          isLoadingCollections ?
-          <div style={{textAlign: 'center', padding: '10px'}}>
-            <CircularProgress />
-          </div> : (
-            isEmpty(conceptCollections) ?
-            None() :
-            map(groupBy(conceptCollections, 'short_code'), (collections, short_code) => {
-              const prominentVersion = getProminentCollectionVersion(collections)
+            isLoadingCollections ?
+            <div style={{textAlign: 'center', padding: '10px'}}>
+              <CircularProgress />
+            </div> : (
+              isEmpty(conceptCollections) ?
+              None() :
+              map(groupBy(conceptCollections, 'short_code'), (collections, short_code) => {
+                const prominentVersion = getProminentCollectionVersion(collections)
                 const moreCount = collections.length - 1
                 const isExpanded = includes(expand, prominentVersion.version_url)
                 return (
