@@ -81,7 +81,7 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
               <TableCell align='left'>
                 { `${get(mapping, ownerAttr)} / ${get(mapping, sourceAttr)}` }
               </TableCell>
-              <TableCell align='left'>
+              <TableCell align='right' style={{width: '24px', paddingRight: '5px'}}>
                 <MappingOptions mapping={mapping} />
               </TableCell>
             </TableRow>

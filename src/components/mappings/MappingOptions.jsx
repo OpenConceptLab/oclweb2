@@ -39,7 +39,7 @@ const MappingOptions = ({ mapping }) => {
 
   return (
     <React.Fragment>
-      <IconButton color='primary' ref={anchorRef} onClick={onMenuToogle}>
+      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToogle}>
         <MenuIcon fontSize='inherit' />
       </IconButton>
       <Menu open={open} anchorEl={anchorRef.current} onClose={onMenuToogle}>

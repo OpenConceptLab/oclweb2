@@ -73,7 +73,7 @@ const HomeMappings = ({ concept, isLoadingMappings }) => {
                   <TableCell align='left' style={tbHeadCellStyles}><b>Code</b></TableCell>
                   <TableCell align='left' style={tbHeadCellStyles}><b>Name</b></TableCell>
                   <TableCell align='left' style={tbHeadCellStyles}><b>Source</b></TableCell>
-                  <TableCell align='left' />
+                  <TableCell align='right' />
                 </TableRow>
               </TableHead>
               <TableBody>
