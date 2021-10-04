@@ -22,9 +22,7 @@ import SortButton from './SortButton';
 import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
 import SearchByAttributeInput from './SearchByAttributeInput';
-import ResourcesHorizontal from './ResourcesHorizontal';
 import ResourceTabs from './ResourceTabs';
-//import Resources from './Resources';
 import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
@@ -746,12 +744,6 @@ class Search extends React.Component {
               }
             </span>
           </div>
-          {
-            !nested &&
-            <div className='col-sm-12 search-resources' style={{marginTop: '10px', display: 'none'}}>
-              <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
-            </div>
-          }
           {
             !nested &&
             <div className='col-sm-12' style={{marginTop: '5px', padding: '0px'}}>
