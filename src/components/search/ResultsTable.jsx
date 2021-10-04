@@ -345,7 +345,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested, showPin, columns, hapi, fhir, history
+    showPin, columns, hapi, fhir, history
   } = props;
   const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
