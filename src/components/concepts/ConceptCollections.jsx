@@ -59,7 +59,7 @@ const ConceptCollections = ({ concept, isLoadingCollections }) => {
           <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
             <TabCountLabel style={ACCORDIAN_HEADING_STYLES} label='Collection Membership' count={count} />
             <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-              <Tooltip title='Showing internal collection versions only, i.e., collection versions from same owner'>
+              <Tooltip title='Showing only collections owned by the same organization or user'>
                 <InfoIcon fontSize='small' color='action' />
               </Tooltip>
             </span>
