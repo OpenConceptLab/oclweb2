@@ -181,12 +181,13 @@ const SourceHomeHeader = ({
                 {source.description}
               </div>
             }
-            {map(getVisibleAttributes(), (attr) => {
-              if (attr.value === "supported_locales" || attr.value === "default_locale"){
-                return <HeaderAttribute key={attr.label} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-md-12" type="component" />
-              }
-              return <HeaderAttribute key={attr.label} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-md-12"/>
-            })}
+            {
+              map(getVisibleAttributes(), (attr, index) => {
+                if (attr.value === "supported_locales" || attr.value === "default_locale")
+                  return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-md-12" type="component" />;
+                return <HeaderAttribute key={attr.label + index} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-md-12"/>;
+              })
+            }
             <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
             {
               hasManyHiddenAttributes ?
@@ -198,8 +199,8 @@ const SourceHomeHeader = ({
               </div> :
               <React.Fragment>
                 {
-                  map(getHiddenAttributes(), (attr) => (
-                    <HeaderAttribute key={attr.label} label={attr.label} value={get(source, attr.value)} gridClass="col-md-12" type={attr.type} />
+                  map(getHiddenAttributes(), (attr, index) => (
+                    <HeaderAttribute key={attr.label + index} label={attr.label} value={get(source, attr.value)} gridClass="col-md-12" type={attr.type} />
                   ))
                 }
               </React.Fragment>
