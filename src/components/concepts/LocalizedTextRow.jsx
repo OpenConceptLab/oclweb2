@@ -14,11 +14,12 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
   const nameAttr = isDescription ? 'description' : 'name'
   const urlAttr = isDescription ? 'descriptions' : 'names'
   const onCopyClick = localizedTextId => copyURL(toFullAPIURL(concept.url + urlAttr + '/' + localizedTextId + '/'))
+  const count = get(localizedTexts, 'length') || 0
 
   return (
     <React.Fragment key={locale}>
       <TableRow hover>
-        <TableCell align='left' rowSpan={localizedTexts.length + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingLeft: '15px', width: '50px', paddingTop: '5px'}}>
+        <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingLeft: '15px', width: '50px', paddingTop: '5px'}}>
           <div className='gray-italics-small flex-vertical-center'>
             {`[${locale}]`}
           </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   TableRow, TableCell, Chip
 } from '@material-ui/core';
-import { map } from 'lodash';
+import { map, get } from 'lodash';
 
 const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
   const onDefaultClick = (event, concept) => {
@@ -11,12 +11,14 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
     window.location.hash = concept.url
   }
 
+  const count = get(concepts, 'length') || 0
+
   return (
     <React.Fragment>
       {
         mapType &&
         <TableRow hover>
-          <TableCell align='left' rowSpan={concepts.length + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
+          <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
               <Chip
                 size='small'
                 variant='outlined'

@@ -26,12 +26,14 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
     return get(mapping, `${attr.split('_name')[0]}.display_name`)
   }
 
+  const count = get(mappings, 'length') || 0
+
   return (
     <React.Fragment>
       {
         mapType &&
         <TableRow hover>
-          <TableCell align='left' rowSpan={mappings.length + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
+          <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
             <Tooltip title={isIndirect ? 'Inverse Mappings' : 'Direct Mappings'}>
               <Chip
                 size='small'
