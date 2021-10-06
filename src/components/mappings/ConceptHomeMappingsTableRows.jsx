@@ -10,7 +10,6 @@ import MappingOptions from './MappingOptions';
 const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
   const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
-  const ownerAttr = isIndirect ? 'from_source_owner' : 'to_source_owner';
   const sourceAttr = isIndirect ? 'from_source_name' : 'to_source_name';
 
   const onDefaultClick = (event, targetURL) => {
