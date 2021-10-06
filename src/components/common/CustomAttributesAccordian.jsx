@@ -68,11 +68,11 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                   const needNesting = !isBool && shouldBeNested(value)
                   const isArr = isArray(value)
                   return (
-                    <div className='col-md-12 no-side-padding flex-vertical-center custom-attributes-accordion-content' key={name}>
+                    <div className='col-md-12 no-side-padding custom-attributes-accordion-content' key={name}>
                       <div className='col-md-3 no-right-padding' style={{color: '#777'}}>
                         <b>{startCase(name)}</b>
                       </div>
-                      <div className='col-md-9 no-left-padding' style={{maxWidth: '100%'}}>
+                      <div className='col-md-9 no-left-padding flex-vertical-center' style={{maxWidth: '100%'}}>
                         {
                           isBool && value.toString()
                         }
