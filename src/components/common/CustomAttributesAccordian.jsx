@@ -31,6 +31,12 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
            <code key={index}>{JSON.stringify(value)}</code>
   }
 
+  const getAttributeKeys = () => {
+    if(!hasAttributes)
+      return []
+    return orderBy(keys(attributes), attr => attr.toLowerCase())
+  }
+
   return (
     <Accordion defaultExpanded expanded>
       <AccordionSummary
@@ -62,7 +68,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
             /> :
             <div className='col-md-12 no-side-padding'>
               {
-                map(orderBy(keys(attributes)), name => {
+                map(getAttributeKeys(), name => {
                   const value = attributes[name]
                   const isBool = isBoolean(value)
                   const needNesting = !isBool && shouldBeNested(value)
