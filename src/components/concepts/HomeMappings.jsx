@@ -83,7 +83,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
           <div style={{textAlign: 'center', padding: '10px'}}>
             <CircularProgress />
           </div> : (
-            isEmpty(conceptMappings) ?
+            isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts) ?
             None() :
             <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
               <TableHead>
