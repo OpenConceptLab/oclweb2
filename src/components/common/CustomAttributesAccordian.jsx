@@ -52,13 +52,13 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
               <Typography component="div">
                 <Grid component="label" container alignItems="center" spacing={1}>
                   <Grid item>
-                    <span style={{fontSize: '14px', color: raw ? 'gray' : BLUE}}>formatted</span>
+                    <span style={{fontSize: '14px', color: raw ? 'gray' : BLUE}}>Formatted</span>
                   </Grid>
                   <Grid item>
                     <Switch size='small' checked={raw} onChange={onRawClick} name="raw" color='primary' />
                   </Grid>
                   <Grid item>
-                    <span style={{fontSize: '14px', color: raw ? BLUE : 'gray'}}>raw</span>
+                    <span style={{fontSize: '14px', color: raw ? BLUE : 'gray'}}>Raw</span>
                   </Grid>
                 </Grid>
               </Typography>
