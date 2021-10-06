@@ -10,6 +10,7 @@ import { get, isEmpty, forEach, map } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
+import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -36,11 +37,29 @@ const groupMappings = (concept, mappings) => {
   return orderedMappings;
 }
 
-const HomeMappings = ({ concept, isLoadingMappings }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents }) => {
   const conceptMappings = get(concept, 'mappings') || [];
-  const count = isLoadingMappings ? null : conceptMappings.length;
+  const count = isLoadingMappings ? null : conceptMappings.length + get(childConcepts, 'length', 0) + get(parentConcepts, 'length', 0);
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
   const orderedMappings = groupMappings(concept, conceptMappings)
+  const hierarchyMapType = isChild => {
+    const hierarchyMeaning = get(source, 'hierarchy_meaning')
+    return (
+      <span>
+        <span>{isChild ? 'Has child' : 'Has parent'}</span>
+        {
+          hierarchyMeaning &&
+          <div>
+            <span>{`(${hierarchyMeaning})`}</span>
+            {
+              isChild &&
+              <sup>-1</sup>
+            }
+          </div>
+        }
+      </span>
+    )
+  }
 
   return (
     <Accordion defaultExpanded>
@@ -111,6 +130,38 @@ const HomeMappings = ({ concept, isLoadingMappings }) => {
                       </React.Fragment>
                     )
                   })
+                }
+                {
+                  isLoadingChildren ?
+                  <TableRow>
+                    <TableCell colSpan={5} align='center'>
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow> :
+                  (
+                    !isEmpty(childConcepts) &&
+                    <ConceptHierarchyRow
+                      source={source}
+                      concepts={childConcepts}
+                      mapType={hierarchyMapType(true)}
+                    />
+                  )
+                }
+                {
+                  isLoadingParents ?
+                  <TableRow>
+                    <TableCell colSpan={5} align='center'>
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow> :
+                  (
+                    !isEmpty(parentConcepts) &&
+                    <ConceptHierarchyRow
+                      source={source}
+                      concepts={parentConcepts}
+                      mapType={hierarchyMapType()}
+                    />
+                  )
                 }
               </TableBody>
             </Table>

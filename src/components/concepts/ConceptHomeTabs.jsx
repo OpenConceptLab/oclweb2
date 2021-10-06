@@ -6,7 +6,8 @@ import VersionList from '../common/VersionList';
 const ConceptHomeTabs = props => {
   const {
     tab, concept, versions, mappings, isVersionedObject, isLoadingMappings, noRedirect,
-    onTabChange, collections, isLoadingCollections, source
+    onTabChange, collections, isLoadingCollections, source, isLoadingParents, isLoadingChildren,
+    parentConcepts, childConcepts
   } = props;
   const resourceRelativeURL = isVersionedObject ? concept.url : concept.version_url;
   const conceptWithMappings = {...concept, mappings: mappings, collections: collections}
@@ -21,8 +22,26 @@ const ConceptHomeTabs = props => {
         <Tab label="History" {...historyRedirectionProps} />
       </Tabs>
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%', minHeight: '100vh'}}>
-        { tab === 0 && <ConceptHomeDetails source={source} concept={conceptWithMappings} isLoadingMappings={isLoadingMappings} isLoadingCollections={isLoadingCollections} /> }
-        { tab === 1 && <VersionList versions={versions} resource='concept' /> }
+        {
+          tab === 0 &&
+          <ConceptHomeDetails
+            source={source}
+            concept={conceptWithMappings}
+            parentConcepts={parentConcepts}
+            childConcepts={childConcepts}
+            isLoadingMappings={isLoadingMappings}
+            isLoadingCollections={isLoadingCollections}
+            isLoadingChildren={isLoadingChildren}
+            isLoadingParents={isLoadingParents}
+          />
+        }
+        {
+          tab === 1 &&
+          <VersionList
+            versions={versions}
+            resource='concept'
+          />
+        }
       </div>
     </div>
   );

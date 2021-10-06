@@ -12,7 +12,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
-const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   return (
@@ -38,7 +38,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
         />
       </div>
       <div className='col-md-6 no-right-padding'>
-        <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} />
+        <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} childConcepts={childConcepts} parentConcepts={parentConcepts} isLoadingChildren={isLoadingChildren} isLoadingParents={isLoadingParents} source={source} />
         <ConceptCollections concept={concept} isLoadingCollections={isLoadingCollections} />
       </div>
     </React.Fragment>
