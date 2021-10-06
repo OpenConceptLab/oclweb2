@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, FormControlLabel, Switch
+  Accordion, AccordionSummary, AccordionDetails, Switch, Grid, Typography
 } from '@material-ui/core';
 import {
   map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
@@ -49,10 +49,19 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
           {
             hasAttributes &&
             <span onClick={onRawClick}>
-              <FormControlLabel
-                control={<Switch size='small' checked={raw} onChange={onRawClick} name="raw" color='primary' />}
-                label={<span style={{fontSize: '14px', color: raw ? BLUE : 'gray'}}>Raw</span>}
-              />
+              <Typography component="div">
+                <Grid component="label" container alignItems="center" spacing={1}>
+                  <Grid item>
+                    <span style={{fontSize: '14px', color: raw ? 'gray' : BLUE}}>formatted</span>
+                  </Grid>
+                  <Grid item>
+                    <Switch size='small' checked={raw} onChange={onRawClick} name="raw" color='primary' />
+                  </Grid>
+                  <Grid item>
+                    <span style={{fontSize: '14px', color: raw ? BLUE : 'gray'}}>raw</span>
+                  </Grid>
+                </Grid>
+              </Typography>
             </span>
           }
         </span>
