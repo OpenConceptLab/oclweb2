@@ -30,21 +30,20 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
         </TableRow>
       }
       {
-        map(concepts, concept => {
+        map(concepts, (concept, index) => {
           return (
             <TableRow
-              hover key={concept.uuid} onClick={event => onDefaultClick(event, concept)} style={{cursor: 'pointer'}} className='underline-text'>
+              hover key={get(concept, 'uuid') || index} onClick={event => onDefaultClick(event, concept)} style={{cursor: 'pointer'}} className='underline-text'>
               <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
-                {concept.id}
+                {get(concept, 'id')}
               </TableCell>
               <TableCell align='left'>
-                { concept.name }
+                { get(concept, 'name') }
               </TableCell>
               <TableCell align='left'>
-                {source.id}
+                {get(source, 'id')}
               </TableCell>
-              <TableCell align='right' style={{width: '24px', paddingRight: '5px'}}>
-              </TableCell>
+              <TableCell />
             </TableRow>
           )
         })
