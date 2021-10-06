@@ -39,7 +39,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
                 { concept.name }
               </TableCell>
               <TableCell align='left'>
-                { `${source.owner} / ${source.id}` }
+                {source.id}
               </TableCell>
               <TableCell align='right' style={{width: '24px', paddingRight: '5px'}}>
               </TableCell>
