@@ -12,7 +12,7 @@
     "@material-ui/pickers": "^3.3.10",
     "alertifyjs": "^1.13.1",
     "axios": "^0.21.4",
-    "core-js": "^3.17.2",
+    "core-js": "^3.18.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
@@ -67,7 +67,7 @@
     "react-is": "^16.13.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^5.56.1",
+    "webpack": "^5.57.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2"
   }
