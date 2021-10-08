@@ -1,6 +1,6 @@
 import React from 'react';
-import { TextField, CircularProgress } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField, CircularProgress } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { get, debounce, map, orderBy, isEmpty } from 'lodash'
 import APIService from '../../services/APIService';
 
@@ -51,7 +51,7 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
       onClose={() => {
           setOpen(false);
       }}
-      getOptionSelected={(option, value) => option.uuid === get(value, 'uuid')}
+      isOptionEqualToValue={(option, value) => option.uuid === get(value, 'uuid')}
       defaultValue={isEmpty(selected) ? (multiple ? [] : '') : selected}
       value={selected}
       id={id || 'localesAutoComplete'}
@@ -87,7 +87,7 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
       }
       {...rest}
     />
-  )
+  );
 }
 
 export default LocaleAutoComplete;

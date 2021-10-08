@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocalOffer as LocalOfferIcon } from '@material-ui/icons'
+import { LocalOffer as LocalOfferIcon } from '@mui/icons-material'
 import { merge, get, isArray, reject, keys, isEmpty, includes, map } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Button, IconButton } from '@material-ui/core'
-import { Edit as EditIcon, CloudUpload as UploadIcon } from '@material-ui/icons';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Button, IconButton } from '@mui/material'
+import { Edit as EditIcon, CloudUpload as UploadIcon } from '@mui/icons-material';
 import { last } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
 import ImageUploader from './ImageUploader';
@@ -26,7 +26,7 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink }) => {
 
   return (
     <React.Fragment>
-      <div className={containerClasses} style={ logo ? {marginLeft : '15px', marginTop: '10px'} : {marginLeft : '15px', height: '130px'}}>
+      <div className={containerClasses} style={ logo ? {marginLeft : '15px', marginTop: '10px'} : {marginLeft : '15px', height: shrink ? '70px' : '130px'}}>
         {
           logo ?
           <img className='header-logo' src={logo} /> :
@@ -35,7 +35,11 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink }) => {
         {
           hasAccess &&
           <Tooltip arrow title={logoURL ? 'Edit Logo' : 'Upload Logo'}>
-            <IconButton onClick={() => setOpen(true)} className='logo-edit-button' color='secondary'>
+            <IconButton
+              onClick={() => setOpen(true)}
+              className='logo-edit-button'
+              color='secondary'
+              size="large">
               {
                 logoURL ?
                 <EditIcon fontSize='small' color='secondary' /> :

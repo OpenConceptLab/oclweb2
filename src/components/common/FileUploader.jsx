@@ -2,8 +2,8 @@ import React from 'react';
 import './FileUploader.scss'
 import { useDropzone } from 'react-dropzone';
 import { isEmpty, last, uniq } from 'lodash';
-import { Button } from '@material-ui/core';
-import { CloudUpload as UploadIcon } from '@material-ui/icons'
+import { Button } from '@mui/material';
+import { CloudUpload as UploadIcon } from '@mui/icons-material'
 import { humanFileSize, arrayToSentence } from '../../common/utils';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 

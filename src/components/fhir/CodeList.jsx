@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   CircularProgress, Accordion, AccordionDetails, AccordionSummary, Divider
-} from '@material-ui/core';
+} from '@mui/material';
 import { get, map, isEmpty, startCase, filter, has, isArray, flatten } from 'lodash';
 import { formatWebsiteLink } from '../../common/utils';
 import ConceptTable from './ConceptTable';

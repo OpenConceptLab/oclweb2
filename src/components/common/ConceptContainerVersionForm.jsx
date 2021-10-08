@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core';
+import { TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
 import { set, get, cloneDeep, isEmpty, pickBy, startCase } from 'lodash';
 import APIService from '../../services/APIService';
 

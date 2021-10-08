@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Person as UserIcon,
   Home as OrgIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { getAppliedServerConfig } from '../../common/utils';
 import FhirTabs from './FhirTabs';
 import OwnerButton from '../common/OwnerButton';

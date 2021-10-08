@@ -1,6 +1,6 @@
 import React from 'react';
-import { Menu, MenuItem, MenuList, IconButton } from '@material-ui/core';
-import { MoreVert as MenuIcon } from '@material-ui/icons';
+import { Menu, MenuItem, MenuList, IconButton } from '@mui/material';
+import { MoreVert as MenuIcon } from '@mui/icons-material';
 import { map } from 'lodash';
 
 const MappingOptions = ({ mapping }) => {

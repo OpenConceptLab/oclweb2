@@ -1,6 +1,6 @@
 import React from 'react'
-import { TreeView, TreeItem } from '@material-ui/lab'
-import { CircularProgress } from '@material-ui/core'
+import { TreeView, TreeItem } from '@mui/lab'
+import { CircularProgress } from '@mui/material'
 import { find, reject, isEmpty, isEqual, forEach, get } from 'lodash'
 import { BLUE, BLACK } from '../../common/constants';
 import { generateRandomString, toParentURI } from '../../common/utils';
@@ -71,7 +71,7 @@ class HierarchyTraversalList extends React.Component {
     const showName = child.name && child.name !== child._id
     return (
       <React.Fragment>
-        <span style={labelStyles} className='flex-vertical-center'>
+        <span style={labelStyles} className='flex-vertical-center' onClick={() => this.onLabelClick(child)}>
           <span style={{width: '100%'}}>
             {
               child._id && (showName ? <React.Fragment><b>{child._id}</b>&nbsp;</React.Fragment> : <React.Fragment>{child._id} &nbsp;</React.Fragment>)
@@ -140,7 +140,6 @@ class HierarchyTraversalList extends React.Component {
         <TreeItem
           id={child.id}
           style={{overflow: 'hidden'}}
-          onLabelClick={() => this.onLabelClick(child)}
           key={child.id}
           nodeId={child.id}
           label={this.getNodeLabel(child, isCurrentNode, loading)}

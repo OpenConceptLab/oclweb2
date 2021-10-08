@@ -2,8 +2,8 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   TextField, Button, IconButton, FormControlLabel, Checkbox
-} from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+} from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import {
   set, get, isEmpty, cloneDeep, merge, map, pullAt, isEqual, uniq, without, includes,
 } from 'lodash';
@@ -253,7 +253,7 @@ class UserForm extends React.Component {
                 <h3>Custom Attributes</h3>
               </div>
               <div className='col-md-4' style={{textAlign: 'right'}}>
-                <IconButton color='primary' onClick={this.onAddExtras}>
+                <IconButton color='primary' onClick={this.onAddExtras} size="large">
                   <AddIcon />
                 </IconButton>
               </div>
@@ -281,7 +281,7 @@ class UserForm extends React.Component {
           </form>
         </div>
       </div>
-    )
+    );
   }
 }
 

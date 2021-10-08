@@ -1,6 +1,6 @@
 import React from 'react';
 import './Tasks.scss';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { get, map, isEmpty } from 'lodash';
 import Task from './Task'
 

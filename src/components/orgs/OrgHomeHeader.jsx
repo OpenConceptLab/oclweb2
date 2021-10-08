@@ -3,8 +3,8 @@ import {
   Home as HomeIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
-} from '@material-ui/icons';
-import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import { isEmpty, get, map } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import APIService from '../../services/APIService';

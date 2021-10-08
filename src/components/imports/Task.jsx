@@ -2,10 +2,10 @@ import React from 'react';
 import moment from 'moment';
 import alertifyjs from 'alertifyjs';
 import './Tasks.scss';
-import { ExpandMore as ExpandIcon } from '@material-ui/icons';
+import { ExpandMore as ExpandIcon } from '@mui/icons-material';
 import {
   Accordion, AccordionDetails, AccordionSummary, Tooltip, Divider, Button, Chip,
-} from '@material-ui/core';
+} from '@mui/material';
 import { get, includes, last } from 'lodash';
 import { formatDateTime } from '../../common/utils';
 import { ERROR_RED, GREEN, WHITE } from '../../common/constants';

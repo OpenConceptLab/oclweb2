@@ -4,8 +4,8 @@ import {
   LocalOffer as LocalOfferIcon,
   Link as LinkIcon,
   AccountTreeRounded as TreeIcon,
-} from '@material-ui/icons'
-import { Tooltip } from '@material-ui/core';
+} from '@mui/icons-material'
+import { Tooltip } from '@mui/material';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '4px', marginTop: '2px'}
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { isEmpty, get, isObject, map, find } from 'lodash';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import NotFound from '../common/NotFound';
 import APIService from '../../services/APIService';
 import ContainerHomeHeader from './ContainerHomeHeader';

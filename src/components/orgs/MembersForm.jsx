@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Autocomplete, Alert } from '@material-ui/lab';
-import { Button, TextField } from '@material-ui/core';
+import { Autocomplete, Alert } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { reject, get, map, includes, forEach, compact } from 'lodash';
 import APIService from '../../services/APIService';
 
@@ -137,7 +137,7 @@ class MembersForm extends React.Component {
               multiple
               openOnFocus
               filterSelectedOptions
-              getOptionSelected={(option, value) => option.username === get(value, 'username')}
+              isOptionEqualToValue={(option, value) => option.username === get(value, 'username')}
               value={selectedMembers}
               options={users}
               getOptionLabel={this.getMemberDisplayName}
@@ -179,7 +179,7 @@ class MembersForm extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

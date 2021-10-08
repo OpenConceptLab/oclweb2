@@ -1,7 +1,7 @@
 /*eslint no-process-env: 0*/
 
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import APIService from '../../services/APIService';
 import { isFHIRServer } from '../../common/utils';
 import packageJson from '../../../package.json';

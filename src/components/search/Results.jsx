@@ -1,6 +1,6 @@
 import React from 'react';
-import { CircularProgress } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab'
+import { CircularProgress } from '@mui/material';
+import { Pagination } from '@mui/material';
 import { map, startCase, uniq, without, filter, includes, isEmpty, get, find, last } from 'lodash';
 import RowComponent from './RowComponent';
 import MinimalRowComponent from './MinimalRowComponent';

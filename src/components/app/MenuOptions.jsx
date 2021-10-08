@@ -16,7 +16,7 @@ import {
   ContactSupport as FAQIcon,
   Map as MapIcon,
   QuestionAnswer as ContactIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 
 export const SITE_URL = 'https://openconceptlab.org/';

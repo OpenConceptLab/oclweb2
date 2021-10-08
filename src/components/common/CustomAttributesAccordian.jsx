@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, Switch, Grid, Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
 } from 'lodash';

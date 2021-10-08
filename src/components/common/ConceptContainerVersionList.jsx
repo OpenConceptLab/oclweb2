@@ -4,13 +4,13 @@ import alertifyjs from 'alertifyjs';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton, CircularProgress
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
   Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';

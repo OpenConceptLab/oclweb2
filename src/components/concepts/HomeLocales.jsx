@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails,
   Table, TableBody, Tooltip
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Info as InfoIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { get, isEmpty, forEach, map, groupBy, without, keys, compact } from 'lodash';
 import TabCountLabel from '../common/TabCountLabel';
 import LocalizedTextRow from './LocalizedTextRow';

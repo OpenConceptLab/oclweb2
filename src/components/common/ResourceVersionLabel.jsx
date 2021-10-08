@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   AccountTreeRounded as TreeIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import ReleasedChip from './ReleasedChip';
 import RetiredChip from './RetiredChip';
 import ProcessingChip from './ProcessingChip';

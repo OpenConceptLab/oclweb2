@@ -3,11 +3,11 @@ import alertifyjs from 'alertifyjs';
 import {
   IconButton, MenuItem, Menu, Tooltip, CircularProgress, Button,
   Dialog, DialogActions, DialogContent, DialogTitle,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   GetApp as DownloadIcon,
-} from '@material-ui/icons';
-import Alert from '@material-ui/lab/Alert';
+} from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
 import { get, map } from 'lodash';
 import APIService from '../../services/APIService';
 import { downloadFromURL, isLoggedIn, isAdminUser } from '../../common/utils';

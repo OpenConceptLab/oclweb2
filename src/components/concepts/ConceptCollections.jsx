@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress, IconButton, Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Loyalty as LoyaltyIcon, Info as InfoIcon,
   NewReleases as ReleaseIcon, Block as RetireIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { map, get, isEmpty, find, groupBy, orderBy, without, includes } from 'lodash';
 import ResourceLabel from '../common/ResourceLabel';
 import { DARKGRAY } from '../../common/constants';

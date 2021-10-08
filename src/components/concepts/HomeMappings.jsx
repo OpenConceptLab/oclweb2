@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
   Table, TableHead, TableRow, TableCell, TableBody, Tooltip
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Info as InfoIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { get, isEmpty, forEach, map } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString } from '../../common/utils'

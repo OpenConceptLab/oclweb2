@@ -1,6 +1,6 @@
 import React from 'react';
 import { get, isArray, forEach, filter, find, reject, orderBy, includes } from 'lodash';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import APIService from '../../services/APIService';
 import { getCurrentUserUsername, downloadObject } from '../../common/utils';
 import NewImport from './NewImport';

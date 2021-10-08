@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab } from '@mui/material';
 import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';

@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import {Event as EventIcon} from '@material-ui/icons'
+import {Event as EventIcon} from '@mui/icons-material'
 import { merge } from 'lodash';
 import { DATE_FORMAT } from '../../common/constants'
 

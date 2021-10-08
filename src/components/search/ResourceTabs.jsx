@@ -1,9 +1,9 @@
 import React from 'react';
-import { CircularProgress, Tabs, Tab, AppBar, } from '@material-ui/core';
+import { CircularProgress, Tabs, Tab, AppBar, } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon, List as ListIcon,
   Loyalty as LoyaltyIcon, Home as HomeIcon, Person as PersonIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { get, startCase, invert } from 'lodash';
 import { BLUE, WHITE, GREEN, ORANGE, DARKGRAY } from '../../common/constants';
 

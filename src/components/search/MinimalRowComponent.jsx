@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Checkbox } from '@material-ui/core';
+import { Divider, Checkbox } from '@mui/material';
 import ResourceLabel from '../common/ResourceLabel';
 
 const MinimalRowComponent = ({resource, item, onSelect}) => {

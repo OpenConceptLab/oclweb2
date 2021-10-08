@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider } from '@material-ui/core'
+import { Divider } from '@mui/material'
 import { isEmpty, map } from 'lodash';
 
 const Contact = ({name, telecom}) => {

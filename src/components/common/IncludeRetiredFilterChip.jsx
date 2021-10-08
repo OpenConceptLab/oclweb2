@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 
 const IncludeRetiredFilterChip = ({ size, applied, onClick }) => {
   const label = applied ? 'Exclude Retired' : 'Include Retired';

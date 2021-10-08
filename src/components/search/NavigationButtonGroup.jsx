@@ -1,9 +1,9 @@
 import React from 'react';
-import {ButtonGroup, Button} from '@material-ui/core';
+import {ButtonGroup, Button} from '@mui/material';
 import {
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 
 const NavigationButtonGroup = ({ onClick, prev, next }) => {

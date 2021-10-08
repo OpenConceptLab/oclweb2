@@ -7,7 +7,7 @@ import {
   Person as PersonIcon,
   Home as HomeIcon,
   Loyalty as LoyaltyIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { get, find, isEmpty, flatten, compact } from 'lodash';
 import {
   formatDate, formatWebsiteLink, formatDateTime

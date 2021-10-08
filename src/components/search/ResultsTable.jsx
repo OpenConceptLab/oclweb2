@@ -4,7 +4,7 @@ import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
   CircularProgress,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -14,8 +14,8 @@ import {
   Lock as PrivateIcon,
   Warning as WarningIcon,
   PriorityHigh as PriorityIcon,
-} from '@material-ui/icons'
-import { Pagination } from '@material-ui/lab'
+} from '@mui/icons-material'
+import { Pagination } from '@mui/material';
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
   isFunction, compact, flatten, last, isArray

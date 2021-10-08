@@ -1,11 +1,11 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, Button, CircularProgress, IconButton, Tooltip } from '@material-ui/core';
+import Autocomplete from '@mui/material/Autocomplete';
+import { TextField, Button, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import {
   Add as AddIcon,
   SwapVert as SwapIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
   set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
@@ -255,7 +255,7 @@ class MappingForm extends React.Component {
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
                   openOnFocus
-                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
+                  isOptionEqualToValue={(option, value) => option.id === get(value, 'id')}
                   value={selected_map_type}
                   id="fields.map_type"
                   options={mapTypes}
@@ -367,7 +367,7 @@ class MappingForm extends React.Component {
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%', textAlign: 'center'}}>
                 <Tooltip arrow title="Swap From and To Concepts">
-                  <IconButton color="primary" onClick={this.swapConcepts}>
+                  <IconButton color="primary" onClick={this.swapConcepts} size="large">
                     <SwapIcon />
                   </IconButton>
                 </Tooltip>
@@ -442,7 +442,7 @@ class MappingForm extends React.Component {
                   <h3>Custom Attributes</h3>
                 </div>
                 <div className='col-md-4' style={{textAlign: 'right'}}>
-                  <IconButton color='primary' onClick={this.onAddExtras}>
+                  <IconButton color='primary' onClick={this.onAddExtras} size="large">
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -471,7 +471,7 @@ class MappingForm extends React.Component {
           </div>
         }
       </div>
-    )
+    );
   }
 }
 

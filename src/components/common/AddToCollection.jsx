@@ -4,14 +4,14 @@ import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   FormControlLabel, Checkbox, Divider, TextField, InputAdornment
-} from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert';
+} from '@mui/material'
+import MuiAlert from '@mui/material/Alert';
 import {
   ArrowDropDown as ArrowDropDownIcon,
   Loyalty as LoyaltyIcon,
   Help as HelpIcon,
   Search as SearchIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { map, isEmpty, get, filter, cloneDeep } from 'lodash';
 import APIService from '../../services/APIService';
 import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
@@ -128,13 +128,13 @@ class AddToCollection extends React.Component {
     if(iconButton)
       return (
         <Tooltip arrow title='Add to Collection'>
-          <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest}>
+          <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest} color='secondary'>
             <LoyaltyIcon fontSize='inherit' />
           </Button>
         </Tooltip>
       )
     return (
-      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} {...rest}>
+      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} {...rest}  color='secondary'>
         Add to Collection
       </Button>
     )

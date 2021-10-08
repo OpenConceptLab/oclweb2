@@ -2,14 +2,14 @@ import React from 'react';
 import moment from 'moment';
 import {
   Collapse, IconButton, Tooltip, Chip, Badge
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import { Alert } from '@mui/material';
 import {
   FilterList as FilterIcon,
   Refresh as RefreshIcon,
   Check as CheckIcon,
   Info as InfoIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { filter, map, startCase, includes, without, uniqBy, isEmpty, orderBy, forEach } from 'lodash';
 import { BLACK } from '../../common/constants';
 import { formatDate } from '../../common/utils';
@@ -123,7 +123,13 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
           <span>
             <Tooltip arrow title='Filter by queue or status'>
               <span>
-                <IconButton style={{marginRight: '5px'}} variant='outlined' color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'} disabled={isLoading} onClick={toggleFilters}>
+                <IconButton
+                  style={{marginRight: '5px'}}
+                  variant='outlined'
+                  color={appliedStatusQueueFilterCount || openFilters ? 'primary' : 'secondary'}
+                  disabled={isLoading}
+                  onClick={toggleFilters}
+                  size="large">
                   <Badge badgeContent={appliedStatusQueueFilterCount} color='primary'>
                     <FilterIcon />
                   </Badge>
@@ -132,7 +138,12 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
             </Tooltip>
             <Tooltip arrow title='Refresh List'>
               <span>
-                <IconButton variant='outlined' color='secondary' disabled={isLoading} onClick={onRefresh}>
+                <IconButton
+                  variant='outlined'
+                  color='secondary'
+                  disabled={isLoading}
+                  onClick={onRefresh}
+                  size="large">
                   <RefreshIcon />
                 </IconButton>
               </span>
@@ -234,7 +245,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
         />
       </div>
     </React.Fragment>
-  )
+  );
 }
 
 export default ExistingImports;

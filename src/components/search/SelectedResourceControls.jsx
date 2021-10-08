@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import {
   CompareArrows as CompareArrowsIcon,
   GetApp as DownloadIcon,
   Repeat as RepeatIcon,
   Link as LinkIcon,
   Delete as DeleteIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { map, includes, get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn } from '../../common/utils'
 import DownloadButton from '../common/DownloadButton';

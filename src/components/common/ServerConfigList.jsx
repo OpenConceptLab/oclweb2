@@ -2,10 +2,10 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   List, ListItem, ListItemIcon, ListItemText
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Check as CheckIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get, map } from 'lodash';
 import {
   getAppliedServerConfig, getDefaultServerConfig,  isServerSwitched, getServerConfigsForCurrentUser

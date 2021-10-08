@@ -3,8 +3,8 @@ import {
   Home as HomeIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
-} from '@material-ui/icons';
-import { Tooltip, ButtonGroup, Button } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip, ButtonGroup, Button } from '@mui/material';
 import { isEmpty, get, has, isObject, merge, isBoolean, map } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import { HEADER_GRAY } from '../../common/constants';
@@ -124,14 +124,14 @@ const HomeHeader = ({
                   <span style={{marginLeft: '15px'}}>
                     <ButtonGroup variant='text' size='large'>
                       <Tooltip arrow title="Copy URL">
-                        <Button onClick={onIconClick}>
+                        <Button onClick={onIconClick} color='secondary'>
                           <CopyIcon fontSize="inherit" style={customTitleColor ? {color: customTitleColor} : {}} />
                         </Button>
                       </Tooltip>
                       {
                         hasAccess &&
                         <Tooltip arrow title='Edit Organization'>
-                          <Button onClick={() => setOrgForm(true)}>
+                          <Button onClick={() => setOrgForm(true)} color='secondary'>
                             <EditIcon fontSize='inherit' style={customTitleColor ? {color: customTitleColor} : {}} />
                           </Button>
                         </Tooltip>
@@ -169,12 +169,12 @@ const HomeHeader = ({
                   map(
                     getVisibleAttributes(),
                     (attr, index) => <HeaderAttribute
-                              key={index}
-                              label={attr.label}
-                              value={org[attr.value]}
-                              type={attr.type}
-                              gridClass="col-md-12"
-                              color={customDescriptionColor}
+                                       key={index}
+                                       label={attr.label}
+                                       value={org[attr.value]}
+                                       type={attr.type}
+                                       gridClass="col-md-12"
+                                       color={customDescriptionColor}
                     />
                   )
                 }

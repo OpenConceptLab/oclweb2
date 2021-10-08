@@ -1,5 +1,5 @@
 import React from 'react';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { includes, isEmpty, get, findIndex, isEqual, find, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';

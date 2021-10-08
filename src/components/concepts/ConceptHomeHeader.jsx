@@ -1,13 +1,13 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
   FormatIndentIncrease as HierarchyIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -107,14 +107,14 @@ const ConceptHomeHeader = ({
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
                 <Tooltip arrow title="Copy URL">
-                  <Button onClick={onIconClick}>
+                  <Button onClick={onIconClick} color='secondary' >
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip arrow title='Edit Concept'>
-                    <Button onClick={() => setConceptForm(true)}>
+                    <Button onClick={() => setConceptForm(true)} color='secondary'>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -124,12 +124,12 @@ const ConceptHomeHeader = ({
                   (
                     isRetired ?
                     <Tooltip arrow title='Un-Retire Concept'>
-                      <Button onClick={onUnretire}>
+                      <Button onClick={onUnretire} color='secondary'>
                         <RestoreIcon fontSize='inherit' />
                       </Button>
                     </Tooltip> :
                     <Tooltip arrow title='Retire Concept'>
-                      <Button onClick={onRetire}>
+                      <Button onClick={onRetire} color='secondary'>
                         <DeleteIcon fontSize='inherit' />
                       </Button>
                     </Tooltip>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router';
-import { Apps as AppsIcon , Web as MetadataBrowserIcon, Publish as ImportsIcon } from '@material-ui/icons';
-import { Popper, ClickAwayListener, Tooltip, Grow, Paper, IconButton, Box, Typography } from '@material-ui/core';
+import { Apps as AppsIcon , Web as MetadataBrowserIcon, Publish as ImportsIcon } from '@mui/icons-material';
+import { Popper, ClickAwayListener, Tooltip, Grow, Paper, IconButton, Box, Typography } from '@mui/material';
 import useToggle from '../../hooks/useToggle';
 import OpenMRSLogo from '../common/OpenMRSLogo';
 import { getOpenMRSURL } from '../../common/utils';
@@ -21,7 +21,13 @@ const AppsMenu = () => {
   return (
     <React.Fragment>
       <Tooltip arrow title="Apps menu">
-        <IconButton className={open.value ? "app-menu-toggle selected" : "app-menu-toggle"} style={{marginRight:"5px"}} touch='true' onClick={open.toggle} ref={anchorRef}>
+        <IconButton
+          className={open.value ? "app-menu-toggle selected" : "app-menu-toggle"}
+          style={{marginRight:"5px"}}
+          touch='true'
+          onClick={open.toggle}
+          ref={anchorRef}
+          size="large">
           <AppsIcon/>
         </IconButton>
       </Tooltip>

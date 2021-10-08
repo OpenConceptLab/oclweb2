@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import MuiAlert from '@material-ui/lab/Alert';
+import MuiAlert from '@mui/material/Alert';
 
 const ForgotPasswordSuccessMessage = () => {
   return (

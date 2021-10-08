@@ -1,6 +1,6 @@
 import React from 'react';
-import { Divider, Collapse, Chip } from '@material-ui/core'
-import {ArrowRight as RightIcon, ArrowDropDown as DownIcon} from '@material-ui/icons'
+import { Divider, Collapse, Chip } from '@mui/material'
+import {ArrowRight as RightIcon, ArrowDropDown as DownIcon} from '@mui/icons-material'
 import { get, isObject } from 'lodash';
 import { ERROR_RED } from '../../common/constants';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, CircularProgress, IconButton, Tooltip, Chip } from '@material-ui/core';
+import { Divider, CircularProgress, IconButton, Tooltip, Chip } from '@mui/material';
 import {
   Person as PersonIcon,
   FileCopy as CopyIcon,
@@ -9,7 +9,7 @@ import {
   Link as WebsiteIcon,
   MailOutline as MailIcon,
   EventAvailable as DateJoinedIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import {

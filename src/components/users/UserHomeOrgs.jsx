@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, CircularProgress,
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, isEmpty } from 'lodash';
 import OwnerLabel from '../common/OwnerLabel';
 

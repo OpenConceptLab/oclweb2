@@ -1,7 +1,7 @@
 import React from 'react';
-import {Person as PersonIcon, Home as HomeIcon} from '@material-ui/icons';
-import { TextField, CircularProgress } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import {Person as PersonIcon, Home as HomeIcon} from '@mui/icons-material';
+import { TextField, CircularProgress } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { get, debounce, map, orderBy, isEmpty } from 'lodash'
 import APIService from '../../services/APIService';
 import { ORANGE } from '../../common/constants';
@@ -57,7 +57,7 @@ const MixedOwnersAutocomplete = ({onChange, label, id, required, minCharactersFo
       onClose={() => {
           setOpen(false);
       }}
-      getOptionSelected={(option, value) => option.id === get(value, 'id')}
+      isOptionEqualToValue={(option, value) => option.id === get(value, 'id')}
       value={selected}
       id={id || 'owner'}
       options={owners}
@@ -107,7 +107,7 @@ const MixedOwnersAutocomplete = ({onChange, label, id, required, minCharactersFo
         )
       }
     />
-  )
+  );
 }
 
 export default MixedOwnersAutocomplete;

@@ -3,13 +3,13 @@ import {
   AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, IconButton,
   ListItem, ListItemText, Collapse, ListItemIcon, Tooltip, Paper,
   Popper, Grow, ClickAwayListener
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Menu as MenuIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
-} from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import { map, isEmpty, get } from 'lodash';
 import {
   isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig
@@ -128,8 +128,13 @@ const Header = props => {
       <CssBaseline />
       <AppBar
         position="fixed"
-        variant="outlined"
-        style={{backgroundColor: WHITE, color: BLACK, borderLeft: 'none'}}
+        style={{
+          backgroundColor: WHITE,
+          color: BLACK,
+          borderLeft: 'none',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+          boxShadow: 'none'
+        }}
         className={classes.appBar}
       >
         <Toolbar style={{padding: '0 15px'}}>
@@ -139,7 +144,7 @@ const Header = props => {
             onClick={toggleOpen}
             edge="start"
             className={classes.menuButton}
-          >
+            size="large">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
@@ -272,7 +277,7 @@ const Header = props => {
               edge="start"
               className={open ? classes.menuButton + ' ' + classes.hide : classes.menuButton}
               style={{marginLeft: 0}}
-            >
+              size="large">
               <MenuIcon />
             </IconButton>
           </div>
@@ -359,7 +364,7 @@ const Header = props => {
 
       }
     </React.Fragment>
-  )
+  );
 }
 
 export default Header;

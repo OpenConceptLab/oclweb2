@@ -6,8 +6,8 @@ import {
   Replay as RetryIcon,
   PanTool as RevokedIcon,
   Timer as ReceivedIcon,
-} from '@material-ui/icons';
-import { CircularProgress } from '@material-ui/core';
+} from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
 import { get } from 'lodash';
 import { ERROR_RED, GREEN, ORANGE, DARKGRAY, BLUE } from '../../common/constants';
 

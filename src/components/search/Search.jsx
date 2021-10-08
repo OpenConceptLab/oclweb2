@@ -5,8 +5,8 @@ import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
   map, omit, isString, values, omitBy
 } from 'lodash';
-import { Share as ShareIcon } from '@material-ui/icons'
-import { CircularProgress, Chip, Tooltip } from '@material-ui/core';
+import { Share as ShareIcon } from '@mui/icons-material'
+import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
 import { formatDate, copyURL } from '../../common/utils';
 import {

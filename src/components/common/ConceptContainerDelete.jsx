@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import { RED } from '../../common/constants';
 
 const ConceptContainerDelete = ({open, resource, onClose, onDelete}) => {

@@ -1,7 +1,7 @@
 import React from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import Autocomplete from '@mui/material/Autocomplete';
+import { TextField, Checkbox, IconButton, FormControlLabel } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { find, get } from 'lodash'
 import { ERROR_RED } from '../../common/constants';
 import LocaleAutoComplete from '../common/LocaleAutoComplete';
@@ -67,7 +67,7 @@ const LocaleForm = ({
               required
               onChange={onTextFieldChange}
               size='small'
-              value={get(locale, nameAttr, '')}
+              value={get(locale, nameAttr, '') || ''}
             />
           </div>
           <div className="col-md-6 no-left-padding" style={{marginTop: '15px'}}>
@@ -78,7 +78,7 @@ const LocaleForm = ({
               fullWidth
               onChange={onTextFieldChange}
               size='small'
-              value={get(locale, 'external_id', '')}
+              value={get(locale, 'external_id', '') || ''}
             />
           </div>
         </div>
@@ -96,12 +96,12 @@ const LocaleForm = ({
             />
           </div>
           <div className="col-md-12">
-            <IconButton onClick={() => onDelete(index)}><DeleteIcon /></IconButton>
+            <IconButton onClick={() => onDelete(index)} size="large"><DeleteIcon /></IconButton>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default LocaleForm;

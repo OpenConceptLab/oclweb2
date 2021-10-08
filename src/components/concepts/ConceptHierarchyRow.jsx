@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   TableRow, TableCell, Chip
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, get } from 'lodash';
 
 const ConceptHierarchyRow = ({ mapType, concepts, source }) => {

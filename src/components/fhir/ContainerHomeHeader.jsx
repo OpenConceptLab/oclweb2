@@ -1,11 +1,11 @@
 import React from 'react';
-import { ButtonGroup, Tooltip, Button } from '@material-ui/core'
+import { ButtonGroup, Tooltip, Button } from '@mui/material'
 import {
   FileCopy as CopyIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   Link as LinkIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { nonEmptyCount, copyURL, toFullAPIURL } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';

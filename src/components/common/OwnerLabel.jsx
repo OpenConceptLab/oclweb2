@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Home as HomeIcon,
   Person as PersonIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const OwnerLabel = props => {
   let icon = <HomeIcon fontSize='small' />;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Icon } from '@material-ui/core';
+import { Icon } from '@mui/material';
 import {
   List as SourceIcon, Loyalty as CollectionIcon, Person as UserIcon,
   Info as InfoIcon, Home as HomeIcon, Link as MappingIcon,
   AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { includes, snakeCase } from 'lodash';
 
 const DynamicConfigResourceIcon = ({resource, index, style, icon}) => {

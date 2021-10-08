@@ -1,8 +1,8 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import ReactSuggestionBox from 'react-suggestion-box';
-import { TextField } from '@material-ui/core';
-import { ReportProblem as Icon } from '@material-ui/icons';
+import { TextField } from '@mui/material';
+import { ReportProblem as Icon } from '@mui/icons-material';
 import Captcha from './Captcha';
 import { isLoggedIn } from '../../common/utils';
 import { WHITE } from '../../common/constants';

@@ -1,6 +1,6 @@
 import React from 'react';
 import Split from 'react-split'
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach } from 'lodash';
 import { BLUE } from '../../common/constants';
 import APIService from '../../services/APIService';

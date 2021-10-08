@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as LinkIcon } from '@material-ui/icons';
+import { Link as LinkIcon } from '@mui/icons-material';
 import { merge } from 'lodash';
 import { formatWebsiteLink } from '../../common/utils';
 

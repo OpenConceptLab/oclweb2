@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Button, Switch, FormControlLabel } from '@material-ui/core';
+import { Button, Switch, FormControlLabel } from '@mui/material';
 import { set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map, compact } from 'lodash';
 import APIService from '../../services/APIService';
 import { SOURCE_CHILD_URI_REGEX } from '../../common/constants';

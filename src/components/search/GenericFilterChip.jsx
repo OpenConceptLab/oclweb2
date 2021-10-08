@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Chip, Tooltip, Menu, MenuItem, MenuList
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   FilterList as FilterIcon,
   Cancel as CancelIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { startCase, map } from 'lodash';
 
 const GenericFilterChip = ({id, name, options, tooltip, onChange, value, size}) => {

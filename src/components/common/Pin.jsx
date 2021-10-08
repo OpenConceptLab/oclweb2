@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import {
   Card, CardHeader, CardContent, CardActions, IconButton, Chip, Avatar, Typography,
   CircularProgress, Tooltip
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   List as ListIcon, Loyalty as LoyaltyIcon, Home as HomeIcon,
   LocalOffer as LocalOfferIcon, Link as LinkIcon,
   AccountTreeRounded as TreeIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { isEmpty, get, last, compact } from 'lodash';
 import { ORANGE, GREEN } from '../../common/constants';
 import PinIcon from './PinIcon';

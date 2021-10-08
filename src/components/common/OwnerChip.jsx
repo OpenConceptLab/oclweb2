@@ -1,8 +1,8 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 import {
   Home as HomeIcon, Person as PersonIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { startCase } from 'lodash';
 
 const OwnerChip = ({owner, ownerType, ...rest}) => {

@@ -1,6 +1,6 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { set, map, orderBy, get, includes } from 'lodash';
 import MixedOwnersAutocomplete from '../common/MixedOwnersAutocomplete';
 import ConceptContainersAutocomplete from '../common/ConceptContainersAutocomplete';
@@ -112,7 +112,7 @@ class ResourceReferenceForm extends React.Component {
           <Autocomplete
             blurOnSelect
             openOnFocus
-            getOptionSelected={(option, value) => option.version === get(value, 'version')}
+            isOptionEqualToValue={(option, value) => option.version === get(value, 'version')}
             value={version}
             id='version'
             options={versions}
@@ -161,7 +161,7 @@ class ResourceReferenceForm extends React.Component {
           </React.Fragment>
         }
       </div>
-    )
+    );
   }
 }
 

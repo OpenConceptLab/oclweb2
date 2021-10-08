@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   TableRow, TableCell, Tooltip, Chip, IconButton
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Flag as FlagIcon, FileCopy as CopyIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { get, map, orderBy } from 'lodash';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import { toFullAPIURL, copyURL } from '../../common/utils';
@@ -42,7 +42,7 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
                     {
                       type &&
                       <span style={{marginRight: '5px'}}>
-                        <Chip style={{height: '20px', fontSize: '10px'}} size='small' variant='default' label={type} />
+                        <Chip style={{height: '20px', fontSize: '10px'}} size='small' label={type} />
                       </span>
                     }
                     {
@@ -70,11 +70,11 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
                 </Tooltip>
               </TableCell>
             </TableRow>
-          )
+          );
         })
       }
     </React.Fragment>
-  )
+  );
 }
 
 export default LocalizedTextRow;

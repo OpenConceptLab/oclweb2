@@ -1,6 +1,6 @@
 import React from 'react';
-import { Chip, MenuItem, Menu, Tooltip } from '@material-ui/core';
-import { AccountTreeRounded as TreeIcon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
+import { Chip, MenuItem, Menu, Tooltip } from '@mui/material';
+import { AccountTreeRounded as TreeIcon, ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 import { map, without } from 'lodash';
 
 const VersionFilter = props => {

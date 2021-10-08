@@ -1,7 +1,7 @@
 import React from 'react';
-import {List as ListIcon, Loyalty as LoyaltyIcon} from '@material-ui/icons';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import {List as ListIcon, Loyalty as LoyaltyIcon} from '@mui/icons-material';
+import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { get } from 'lodash'
 import { GREEN } from '../../common/constants';
 
@@ -10,7 +10,7 @@ const ConceptContainersAutocomplete = ({onChange, items, label, id, required, se
     <Autocomplete
       openOnFocus
       blurOnSelect
-      getOptionSelected={(option, value) => (option.id === get(value, 'id') && option.type === get(value, 'type'))}
+      isOptionEqualToValue={(option, value) => (option.id === get(value, 'id') && option.type === get(value, 'type'))}
       value={selected}
       id={id || 'conceptContainer'}
       options={items}
@@ -38,7 +38,7 @@ const ConceptContainersAutocomplete = ({onChange, items, label, id, required, se
       }
       onChange={(event, item) => onChange(get(item, 'type') || 'source', item)}
     />
-  )
+  );
 }
 
 export default ConceptContainersAutocomplete;

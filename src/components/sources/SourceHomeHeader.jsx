@@ -5,8 +5,8 @@ import {
   FileCopy as CopyIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-} from '@material-ui/icons';
-import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import { isEmpty, map, filter, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
@@ -144,14 +144,14 @@ const SourceHomeHeader = ({
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
                 <Tooltip arrow title="Copy URL">
-                  <Button onClick={onIconClick}>
+                  <Button onClick={onIconClick} color='secondary'>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip arrow title='Edit Source'>
-                    <Button onClick={() => setSourceForm(true)}>
+                    <Button onClick={() => setSourceForm(true)} color='secondary'>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -159,7 +159,7 @@ const SourceHomeHeader = ({
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip arrow title='Delete Source'>
-                    <Button onClick={() => setDeleteDialog(true) }>
+                    <Button onClick={() => setDeleteDialog(true) } color='secondary'>
                       <DeleteIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>

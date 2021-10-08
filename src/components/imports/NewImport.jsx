@@ -3,13 +3,13 @@ import alertifyjs from 'alertifyjs';
 import {
   Tooltip, Button, ButtonGroup, TextField, FormControlLabel, Checkbox, CircularProgress,
   FormHelperText
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   CloudUpload as UploadIcon,
   Http as URLIcon,
   Description as DocIcon
-} from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+} from '@mui/icons-material';
+import { Alert } from '@mui/material';
 import { cloneDeep, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatWebsiteLink } from '../../common/utils';

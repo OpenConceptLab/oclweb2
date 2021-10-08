@@ -1,5 +1,5 @@
 import React from 'react';
-import {LocationOn as LocationIcon} from '@material-ui/icons'
+import {LocationOn as LocationIcon} from '@mui/icons-material'
 import { merge } from 'lodash';
 
 const STYLES = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, Paper } from '@material-ui/core';
+import { TextField, Button, Paper } from '@mui/material';
 import {set, get, isEmpty, cloneDeep, startCase, map, includes} from 'lodash';
 import APIService from '../../services/APIService';
 import { ROUTE_ID_PATTERN } from '../../common/constants';

@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   Table, TableHead, TableBody, TableCell, TableRow, CircularProgress
-} from '@material-ui/core';
-import { Pagination } from '@material-ui/lab'
+} from '@mui/material';
+import { Pagination } from '@mui/material';
 import { find, get, map, isEmpty } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants';
 import PageResultsLabel from '../search/PageResultsLabel';

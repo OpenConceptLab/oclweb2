@@ -1,10 +1,10 @@
 import React from 'react';
 import { startCase, map, find } from 'lodash';
-import { IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import {
   Settings as SettingsIcon,
   Add as AddIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 
 const NewResourceButton = ({resources, onClick, color}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -21,7 +21,7 @@ const NewResourceButton = ({resources, onClick, color}) => {
   return (
     <React.Fragment>
       <Tooltip arrow title='Manage Content'>
-        <IconButton color='primary' onClick={toggleAnchorEl}>
+        <IconButton color='primary' onClick={toggleAnchorEl} size="large">
           { hasEdit ? <SettingsIcon style={color ? {color: color} : {}} /> : <AddIcon style={color ? {color: color} : {}} />}
         </IconButton>
       </Tooltip>
@@ -35,7 +35,7 @@ const NewResourceButton = ({resources, onClick, color}) => {
         }
       </Menu>
     </React.Fragment>
-  )
+  );
 }
 
 export default NewResourceButton;

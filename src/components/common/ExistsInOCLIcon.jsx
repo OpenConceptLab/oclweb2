@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link as Icon } from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
+import { Link as Icon } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import { merge } from 'lodash';
 import { GREEN } from '../../common/constants';
 

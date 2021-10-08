@@ -2,11 +2,11 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton, Button, Checkbox
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, isEmpty, startCase, uniq, without, orderBy } from 'lodash';
 import {
   Search as SearchIcon, CompareArrows as CompareArrowsIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import Tip from './Tip';
 import SourceChildVersionAssociationWithContainer from './SourceChildVersionAssociationWithContainer';

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Tooltip, MenuItem, Menu, ButtonGroup, Button } from '@material-ui/core'
+import { Tooltip, MenuItem, Menu, ButtonGroup, Button } from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { map, get } from 'lodash';
 import ResponsiveDrawer from './ResponsiveDrawer';
 import ViewConfigForm from './ViewConfigForm';

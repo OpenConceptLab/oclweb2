@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider
-} from '@material-ui/core';
+} from '@mui/material';
 import { DATETIME_FORMAT } from '../../common/constants';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';

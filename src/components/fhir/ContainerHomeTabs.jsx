@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab } from '@mui/material';
 import { get, reject, map, isEmpty } from 'lodash';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import About from '../common/About';

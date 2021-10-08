@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {LocalOffer as LocalOfferIcon} from '@material-ui/icons'
+import {LocalOffer as LocalOfferIcon} from '@mui/icons-material'
 import { get } from 'lodash';
 import ResourceLabelVertical from '../common/ResourceLabelVertical';
 import { DARKGRAY } from '../../common/constants';

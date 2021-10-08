@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab } from '@mui/material';
 import { map } from 'lodash';
 import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
 import { DEFAULT_LIMIT } from '../../common/constants';

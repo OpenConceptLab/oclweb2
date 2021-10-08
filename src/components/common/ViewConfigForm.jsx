@@ -4,17 +4,17 @@ import {
   get, set, findIndex, cloneDeep, find, reject, values, isEmpty, isArray, isNumber,
   isEqual
 } from 'lodash';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import {
   TextField, Button, MenuItem,
   FormHelperText, IconButton, Menu, MenuList, Chip
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Visibility as PreviewIcon,
   Save as SaveIcon,
   Cancel as CancelIcon,
   MoreVert as MenuIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { ORANGE, WHITE } from '../../common/constants';
 import JSONEditor from './JSONEditor';
@@ -242,7 +242,7 @@ class ViewConfigForm extends React.Component {
           <div className='col-md-11 no-side-padding' style={{}}>
             <Autocomplete
               openOnFocus
-              getOptionSelected={(option, value) => option.id === get(value, 'id')}
+              isOptionEqualToValue={(option, value) => option.id === get(value, 'id')}
               value={findIndex(configOptions, selected)}
               id="config"
               options={configOptions}
@@ -265,7 +265,7 @@ class ViewConfigForm extends React.Component {
                 />
               }
               onChange={(event, item) => this.onConfigurationChange(item)}
-              closeIcon={false}
+              clearIcon={false}
               renderOption={
                 option => (
                   <React.Fragment>
@@ -361,7 +361,7 @@ class ViewConfigForm extends React.Component {
           </form>
         </div>
       </div>
-    )
+    );
   }
 }
 

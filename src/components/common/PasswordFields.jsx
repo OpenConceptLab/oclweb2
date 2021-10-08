@@ -1,9 +1,9 @@
 import React from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
-import { TextField, InputAdornment, IconButton } from '@material-ui/core';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
 import {
   Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get } from 'lodash';
 import { isValidPassword } from '../../common/utils';
 import HtmlTooltip from './HtmlTooltip';
@@ -48,7 +48,10 @@ const PasswordFields = ({
             InputProps={{
               endAdornment:(
                 <InputAdornment position="end">
-                  <IconButton aria-label="Toggle password visibility" onClick={handleClickShowPassword}>
+                  <IconButton
+                    aria-label="Toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    size="large">
                     {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                   </IconButton>
                 </InputAdornment>
@@ -70,7 +73,7 @@ const PasswordFields = ({
       </div>
       <PasswordStrengthBar password={password} minLength={8} className='password-strength' onChangeScore={strength => setStrength(strength)} />
     </React.Fragment>
-  )
+  );
 }
 
 export default PasswordFields;

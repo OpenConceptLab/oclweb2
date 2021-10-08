@@ -252,7 +252,7 @@ span.separator-small {
 
     &-header {
         margin-left: -1px;
-        div:first-child {
+        div:first-of-type {
             overflow: auto !important;
         }
 
@@ -368,6 +368,7 @@ div.login-paper {
 }
 .material-tab {
     text-transform: capitalize;
+    flex-direction: row;
     span {
         flex-direction: row;
         display: flex;
@@ -512,6 +513,9 @@ div.login-paper {
     }
 }
 .custom-drawer {
+    top: 65px;
+    height: auto;
+    bottom: 0;
     &.large {
         width: 75%;
     }
@@ -947,5 +951,14 @@ div.custom-attributes-accordion-content {
     padding: 5px 0;
     &:last-child {
         border-bottom: none;
+    }
+}
+
+#chip-date-picker {
+    input#hidden-date-input {
+        display: none;
+    }
+    input#hidden-date-input + div > button {
+        display: none;
     }
 }

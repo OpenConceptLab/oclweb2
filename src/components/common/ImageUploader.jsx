@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 import { get } from 'lodash';
 import ReactCrop from 'react-image-crop';
 import "react-image-crop/dist/ReactCrop.css";

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, MenuItem, Popper, Paper, Grow, MenuList } from '@material-ui/core';
+import { Chip, MenuItem, Popper, Paper, Grow, MenuList } from '@mui/material';
 import { min, isNaN, get, map } from 'lodash';
 import { DEFAULT_LIMIT } from '../../common/constants';
 

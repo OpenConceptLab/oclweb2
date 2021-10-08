@@ -1,6 +1,6 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
-import { Timer as ProcessingIcon } from '@material-ui/icons';
+import { Chip, Tooltip } from '@mui/material';
+import { Timer as ProcessingIcon } from '@mui/icons-material';
 import { ORANGE } from '../../common/constants';
 
 const ProcessingChip = props => {

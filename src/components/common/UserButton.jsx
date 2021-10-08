@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
-import { Person as PersonIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { Person as PersonIcon } from '@mui/icons-material';
 import { ORANGE, WHITE } from '../../common/constants';
 
 const UserButton = ({label, onClick, href}) => {

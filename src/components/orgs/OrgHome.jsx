@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { reject, get, values, find, findIndex, isEmpty, isObject, includes, isEqual } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';

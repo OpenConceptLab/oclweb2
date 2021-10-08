@@ -1,8 +1,8 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 import {
   FilterList as FilterListIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const FilterButton = ({tooltipTitle, label, count, disabled, onClick, size}) => {
   const hasFilters = count && count > 0;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { map, isEmpty, compact, values } from 'lodash';
-import { Collapse } from '@material-ui/core';
+import { Collapse } from '@mui/material';
 import ConceptContainerLabel from './ConceptContainerLabel';
 import CollapsibleDivider from './CollapsibleDivider';
 

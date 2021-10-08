@@ -1,11 +1,11 @@
 import React from 'react';
-import { Chip, MenuItem, Menu, ListItemIcon, Tooltip } from '@material-ui/core';
+import { Chip, MenuItem, Menu, ListItemIcon, Tooltip } from '@mui/material';
 import {
   TableChart as TableIcon,
   ViewStream as RowsIcon,
   VerticalSplit as SplitIcon,
   ArrowDropDown as ArrowDropDownIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { find, map } from 'lodash';
 import { isAdminUser } from '../../common/utils';
 import {

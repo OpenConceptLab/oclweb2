@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   Chip, Dialog, DialogTitle, DialogContent, DialogActions, Button
-} from '@material-ui/core';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+} from '@mui/material';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { isEmpty } from 'lodash';
 import CustomAttributes from './CustomAttributes'
 import CustomAttributesFormatted from './CustomAttributesFormatted'

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Tooltip, Chip, MenuItem, Menu } from '@material-ui/core'
-import { FormatListNumberedRtl as NumberListIcon } from '@material-ui/icons'
+import { Tooltip, Chip, MenuItem, Menu } from '@mui/material'
+import { FormatListNumberedRtl as NumberListIcon } from '@mui/icons-material'
 import { map } from 'lodash';
 import { DEFAULT_LIMIT } from '../../common/constants';
 

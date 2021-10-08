@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Link as LinkIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { merge, get, isArray, map, isEmpty, keys } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';

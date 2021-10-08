@@ -1,6 +1,6 @@
 import React from 'react';
-import { Divider } from '@material-ui/core';
-import { Copyright as CopyrightIcon } from '@material-ui/icons';
+import { Divider } from '@mui/material';
+import { Copyright as CopyrightIcon } from '@mui/icons-material';
 import AppVersions from './AppVersions';
 
 const Footer = () => {

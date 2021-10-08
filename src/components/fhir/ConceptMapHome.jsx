@@ -1,7 +1,7 @@
 import React from 'react';
 import { get, isObject, find } from 'lodash';
-import { Pagination } from '@material-ui/lab'
-import { CircularProgress } from '@material-ui/core';
+import { Pagination } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import APIService from '../../services/APIService';
 import { getAppliedServerConfig } from '../../common/utils';
 import NotFound from '../common/NotFound';

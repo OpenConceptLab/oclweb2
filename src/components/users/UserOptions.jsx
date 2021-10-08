@@ -3,11 +3,11 @@ import alertifyjs from 'alertifyjs';
 import {
   Paper, IconButton, Popper, Grow, ClickAwayListener, Tooltip,
   List, ListItem, ListItemIcon, ListItemText, Chip, Divider, Button, Collapse
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ExitToApp as LogoutIcon, AccountCircle as AccountIcon,
   Storage as ServerIcon, ExpandLess as LessIcon, ExpandMore as MoreIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get } from 'lodash';
 import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer } from '../../common/utils';
 import ServerConfigList from '../common/ServerConfigList';
@@ -47,7 +47,7 @@ const UserOptions = () => {
       <Tooltip arrow title={username || ''}>
         {
           user.logo_url ?
-          <IconButton touch='true' onClick={handleToggle} ref={anchorRef}>
+          <IconButton touch='true' onClick={handleToggle} ref={anchorRef} size="large">
             <img src={user.logo_url} className='user-img-small' />
           </IconButton> :
           <IconButton
@@ -59,7 +59,7 @@ const UserOptions = () => {
             onClick={handleToggle}
             touch='true'
             className='user-info-icon'
-            >
+            size="large">
             {initials}
           </IconButton>
         }
@@ -117,7 +117,7 @@ const UserOptions = () => {
         )}
       </Popper>
     </React.Fragment>
-  )
+  );
 }
 
 export default UserOptions;

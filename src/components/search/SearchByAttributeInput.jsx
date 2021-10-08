@@ -1,10 +1,10 @@
 import React from 'react';
-import { InputBase, Divider, IconButton, Tooltip, Menu, Button, MenuItem  } from '@material-ui/core';
+import { InputBase, Divider, IconButton, Tooltip, Menu, Button, MenuItem  } from '@mui/material';
 import {
   Search as SearchIcon,
   Clear as ClearIcon,
   Menu as MenuIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { map, get } from 'lodash';
 
 const DEFAULT_HAPI_FHIR_ATTRIBUTE = {id: 'name', label: 'Name'}
@@ -80,7 +80,12 @@ class SearchByAttributeInput extends React.Component {
             <React.Fragment>
               <Tooltip arrow title='Clear'>
                 <span>
-                  <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
+                  <IconButton
+                    type="submit"
+                    style={{padding: '10px'}}
+                    aria-label="clear"
+                    onClick={this.clearSearch}
+                    size="large">
                     <ClearIcon />
                   </IconButton>
                 </span>
@@ -90,7 +95,12 @@ class SearchByAttributeInput extends React.Component {
           }
           <Tooltip arrow title='Search'>
             <span>
-              <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
+              <IconButton
+                type="submit"
+                style={{padding: '10px'}}
+                aria-label="search"
+                onClick={this.performSearch}
+                size="large">
                 <SearchIcon />
               </IconButton>
             </span>
@@ -106,7 +116,7 @@ class SearchByAttributeInput extends React.Component {
           }
         </Menu>
       </div>
-    )
+    );
   }
 }
 

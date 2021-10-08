@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Checkbox } from '@material-ui/core';
+import { Divider, Checkbox } from '@mui/material';
 import { includes } from 'lodash';
 import Concept from '../concepts/Concept';
 import Mapping from '../mappings/Mapping';

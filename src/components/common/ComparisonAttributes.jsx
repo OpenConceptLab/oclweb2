@@ -2,8 +2,8 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import {
   Drawer, Checkbox,
-} from '@material-ui/core';
-import { DragIndicator } from '@material-ui/icons';
+} from '@mui/material';
+import { DragIndicator } from '@mui/icons-material';
 import { map, keys } from 'lodash';
 
 const getItemStyle = draggableStyle => ({
@@ -18,7 +18,7 @@ const getListStyle = () => ({
 
 const ComparisonAttributes = ({attributes, open, onClose, onCheckboxClick, onDragEnd}) => {
   return (
-    <Drawer anchor='left' open={open} onClose={onClose}>
+    <Drawer anchor='left' open={open} onClose={onClose} classes={{paper: 'custom-drawer'}}>
       <div className='col-md-4' style={{width: '300px'}}>
         <h3>
           Toggle Attributes:

@@ -1,7 +1,7 @@
 import React from 'react'
-import { CircularProgress, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
-import { Search as SearchIcon } from '@material-ui/icons'
+import { CircularProgress, TextField } from '@mui/material'
+import { Autocomplete } from '@mui/material';
+import { Search as SearchIcon } from '@mui/icons-material'
 import { debounce, isEmpty, get } from 'lodash'
 import APIService from '../../services/APIService'
 
@@ -84,7 +84,7 @@ class HierarchySearch extends React.Component {
         getOptionLabel={this.getLabel}
         onOpen={() => this.setState({open: true})}
         onClose={() => this.setState({open: false})}
-        getOptionSelected={(option, value) => option.id === get(value, 'id')}
+        isOptionEqualToValue={(option, value) => option.id === get(value, 'id')}
         loadingText={loading ? 'Loading...' : `Type atleast ${minLength} characters to search`}
         noOptionsText={(isSearchable && !loading) ? "No results" : 'Start typing...'}
         onInputChange={this.onInputChange}
@@ -115,7 +115,7 @@ class HierarchySearch extends React.Component {
         }
         renderOption={this.getLabelDom}
       />
-    )
+    );
   }
 }
 

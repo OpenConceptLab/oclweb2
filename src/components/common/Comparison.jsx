@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   CircularProgress, IconButton, Tooltip
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon,
   Settings as SettingsIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
   get, startCase, map, isEmpty, isEqual, size, keys, maxBy, pickBy, forEach, includes, has, values
 } from 'lodash';
@@ -293,7 +293,7 @@ class Comparison extends React.Component {
                   <TableRow colSpan="12">
                     <TableCell colSpan="2" style={{width: '10%'}}>
                       <Tooltip arrow title='Customize attributes' placement='top'>
-                        <IconButton onClick={this.onDrawerClick}>
+                        <IconButton onClick={this.onDrawerClick} size="large">
                           <SettingsIcon />
                         </IconButton>
                       </Tooltip>
@@ -369,7 +369,7 @@ class Comparison extends React.Component {
           onDragEnd={this.onAttributeDragEnd}
         />
       </React.Fragment>
-    )
+    );
   }
 }
 

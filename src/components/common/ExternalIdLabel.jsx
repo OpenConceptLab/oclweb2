@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowForward as ForwardIcon } from '@material-ui/icons';
+import { ArrowForward as ForwardIcon } from '@mui/icons-material';
 import { merge } from 'lodash';
 
 const STYLES = {

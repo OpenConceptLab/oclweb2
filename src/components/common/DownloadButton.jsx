@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { MenuItem, Menu, Tooltip, Button } from '@material-ui/core';
-import { GetApp as DownloadIcon } from '@material-ui/icons';
+import { MenuItem, Menu, Tooltip, Button } from '@mui/material';
+import { GetApp as DownloadIcon } from '@mui/icons-material';
 import { isArray, map, toUpper, includes, forEach, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import { downloadObject, arrayToCSV, downloadFromURL, toFullAPIURL } from '../../common/utils';
@@ -66,7 +66,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
       <Tooltip arrow title={tooltipTitle}>
         {
           buttonFunc ? buttonFunc({onClick: event => setAnchorEl(event.currentTarget)}) :
-          <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}}>
+          <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}} color='secondary'>
             <DownloadIcon fontSize='inherit' style={merge({marginTop: '3px'}, (iconStyle || {}))} />
           </Button>
         }

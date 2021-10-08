@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import {
   Person as PersonIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   Home as HomeIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { merge, get } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';

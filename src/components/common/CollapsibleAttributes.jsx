@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   ArrowDropDown as ArrowDownIcon, ArrowDropUp as ArrowUpIcon
-} from '@material-ui/icons';
-import { Collapse, Chip } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Collapse, Chip } from '@mui/material';
 import { map, get } from 'lodash';
 import HeaderAttribute from './HeaderAttribute';
 import SupportedLocales from '../common/SupportedLocales';
