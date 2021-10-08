@@ -1,3 +1,27 @@
+##### 2.0.41 - Thu Oct 7 05:38:41 2021 +0000
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | custom attributes | raw/formatted label captialize
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | fixing hierarchy listing
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | fixing counts
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | unused constant
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | concept mappings displaying none only if no mappings or hierarchy
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | concept mappings | showing only source id
+- [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | concept hierarchy as part of mappings
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | custom attributes | raw/formatted switch with labels
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | custom attributes | ordering attributes by ignoring the case
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | custom attributes | vertical alignment
+- [OpenConceptLab/ocl_issues#1023](https://github.com/OpenConceptLab/ocl_issues/issues/1023) | tabs to have capitalize text (not all uppercase)
+- [OpenConceptLab/ocl_issues#1017](https://github.com/OpenConceptLab/ocl_issues/issues/1017) | about tab | using h1 for heading
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | mappings | vertical alignment
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | grouping locales
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | fixing mapping vertical alignment
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | custom attrs | using switch for raw/formatted toggle
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | updated collection membersship tooltip
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | custom attrs ordering alphabatically
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | mapping actions styles
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | added info label on mappings
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | concept details | using count label tags
+- removed dead code | old style tabs for global search
+- configurations | fixing url interpolation
 ##### 2.0.37 - Mon Oct 4 05:59:51 2021 +0000
 - [OpenConceptLab/ocl_issues#1020](https://github.com/OpenConceptLab/ocl_issues/issues/1020) | concept ZIP and JSON should be consistent
 - eslint | removed unused constant
