@@ -170,7 +170,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip arrow title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
-                                  <IconButton className={version.retired && 'retired-red'} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)} size='small'>
+                                  <IconButton className={version.retired ? 'retired-red' : ''} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)} size='small'>
                                     <RetireIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>

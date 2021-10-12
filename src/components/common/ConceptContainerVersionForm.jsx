@@ -37,8 +37,6 @@ class ConceptContainerVersionForm extends React.Component {
 
   onCheckboxChange = event => this.setFieldValue(event.target.name, event.target.checked)
 
-  onAutoCompleteChange = (id, item) => this.setFieldValue(id, get(item, 'id', ''), true)
-
   setFieldValue(id, value, setObject=false) {
     const newState = {...this.state}
     set(newState, id, value)

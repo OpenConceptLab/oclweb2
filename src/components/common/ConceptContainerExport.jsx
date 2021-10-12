@@ -145,11 +145,11 @@ class ConceptContainerExport extends React.Component {
       anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport, exportURL,
       serverError, errorDetails, options
     } = this.state;
-    const { version, title } = this.props;
+    const { version, title, disabled } = this.props;
     return (
       <React.Fragment>
         <Tooltip arrow title={title}>
-          <IconButton onClick={this.toggleAnchorEl} size='small'>
+          <IconButton onClick={this.toggleAnchorEl} size='small' disabled={disabled || false}>
             <DownloadIcon fontSize='inherit' />
           </IconButton>
         </Tooltip>
