@@ -6,7 +6,7 @@ import {
 import {
   Info as InfoIcon
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, groupBy, without, keys, compact } from 'lodash';
+import { get, isEmpty, forEach, map, groupBy, without, keys, compact, omitBy } from 'lodash';
 import TabCountLabel from '../common/TabCountLabel';
 import LocalizedTextRow from './LocalizedTextRow';
 
@@ -73,7 +73,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
           <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
             <TableBody>
               {
-                map(groupedLocales.defaultLocales, (localizedTexts, locale) => (
+                map(omitBy(groupedLocales.defaultLocales, isEmpty), (localizedTexts, locale) => (
                   <LocalizedTextRow
                     concept={concept}
                     key={locale}
@@ -84,7 +84,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                 ))
               }
               {
-                map(groupedLocales.supportedLocales, (localizedTexts, locale) => (
+                map(omitBy(groupedLocales.supportedLocales, isEmpty), (localizedTexts, locale) => (
                   <LocalizedTextRow
                     concept={concept}
                     key={locale}
@@ -95,7 +95,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                 ))
               }
               {
-                map(groupedLocales.rest, (localizedTexts, locale) => (
+                map(omitBy(groupedLocales.rest, isEmpty), (localizedTexts, locale) => (
                   <LocalizedTextRow
                     concept={concept}
                     key={locale}
