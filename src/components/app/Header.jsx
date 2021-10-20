@@ -18,7 +18,7 @@ import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
-import Feedback from '../common/Feedback';
+/* import Feedback from '../common/Feedback'; */
 import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 
@@ -255,7 +255,7 @@ const Header = props => {
                   )
                 })
               }
-              <Feedback mainButtonLabel='Feedback' containerClassName='feedback-div-open' />
+              {/* <Feedback mainButtonLabel='Feedback' containerClassName='feedback-div-open' /> */}
             </List>
           </div>
         </Drawer> :
@@ -358,7 +358,7 @@ const Header = props => {
                 )
               })
             }
-            <Feedback mainButtonLabel={false} containerClassName='feedback-div' />
+            {/* <Feedback mainButtonLabel={false} containerClassName='feedback-div' /> */}
           </List>
         </Drawer>
 
