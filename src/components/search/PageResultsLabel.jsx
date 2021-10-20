@@ -44,8 +44,8 @@ const PageResultsLabel = ({ results, limit, isInfinite, onChange, disabled }) =>
       <Chip
         disabled={disabled}
         id='results-chip'
-        onMouseOver={event => setAnchorEl(event.currentTarget)}
-        onMouseOut={() => setAnchorEl(null)}
+        onMouseEnter={event => setAnchorEl(event.currentTarget)}
+        onMouseLeave={() => setAnchorEl(null)}
         variant='outlined'
         onClick={event => setAnchorEl(event.currentTarget)}
         label={
@@ -57,14 +57,14 @@ const PageResultsLabel = ({ results, limit, isInfinite, onChange, disabled }) =>
         }
       />
       <Popper
+        className="page-results-popper"
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         role={undefined}
         transition
         disablePortal
-        style={{zIndex: 1}}
         onMouseOver={() => anchorEl ? null : setAnchorEl(document.getElementById('results-chip'))}
-        onMouseOut={() => setAnchorEl(null)}>
+        onMouseLeave={() => setAnchorEl(null)}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
