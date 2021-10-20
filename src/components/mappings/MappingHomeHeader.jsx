@@ -154,7 +154,7 @@ const MappingHomeHeader = ({
                 {
                   conceptCompareURL &&
                   <Tooltip arrow title='Compare Concepts'>
-                    <Button component='a' href={`/#${conceptCompareURL}`} color='secondary'>
+                    <Button onClick={() => window.location.hash = conceptCompareURL} color='secondary'>
                       <CompareArrowsIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
