@@ -93,7 +93,11 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                         }
                         {
                           needNesting &&
-                          map(value, (val, index) => getNestedValueDom(val, index))
+                          <div>
+                            {
+                              map(value, (val, index) => getNestedValueDom(val, index))
+                            }
+                          </div>
                         }
                         {
                           isArr && !needNesting &&
