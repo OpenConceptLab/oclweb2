@@ -19,7 +19,7 @@ const MappingHomeDetails = ({ mapping }) => {
   return (
     <div className='col-md-12'>
       <div className='col-md-12 no-side-padding'>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded expanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
             expandIcon={<span />}
