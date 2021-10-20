@@ -10,7 +10,7 @@ const MappingIcon = ({ url, shrink }) => {
   const classes = 'no-side-padding col-md-1 home-icon mapping flex-vertical-center' + (shrink ? ' xsmall' : '')
 
   return (
-    <div className={classes} style={{width: '5%'}}>
+    <div className={classes} style={{width: '5%', cursor: 'auto'}}>
       {
         url ?
         <Tooltip arrow title='Copy URL'>

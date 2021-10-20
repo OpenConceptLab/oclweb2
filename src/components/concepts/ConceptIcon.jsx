@@ -10,7 +10,7 @@ const ConceptIcon = ({ url, shrink }) => {
   const classes = 'no-side-padding col-md-1 home-icon concept flex-vertical-center' + (shrink ? ' small' : '')
 
   return (
-    <div className={classes} style={{width: '5%'}}>
+    <div className={classes} style={{width: '5%', cursor: 'auto'}}>
       {
         url ?
         <Tooltip arrow title='Copy URL'>
