@@ -91,8 +91,8 @@ const MixedOwnersAutocomplete = ({onChange, label, id, required, minCharactersFo
         )
       }
       renderOption={
-        option => (
-          <React.Fragment>
+        (props, option) => (
+          <li {...props} key={`${option.ownerType}-${option.name}`}>
             <span className='flex-vertical-center'>
               <span style={{marginRight: '5px'}}>
                 {
@@ -103,7 +103,7 @@ const MixedOwnersAutocomplete = ({onChange, label, id, required, minCharactersFo
               </span>
               {option.name}
             </span>
-          </React.Fragment>
+          </li>
         )
       }
     />

@@ -267,8 +267,8 @@ class ViewConfigForm extends React.Component {
               onChange={(event, item) => this.onConfigurationChange(item)}
               clearIcon={false}
               renderOption={
-                option => (
-                  <React.Fragment>
+                (props, option) => (
+                  <li {...props} key={option.name}>
                     <span className='flex-vertical-center'>
                       {
                         option.id === 'new' ?
@@ -283,7 +283,7 @@ class ViewConfigForm extends React.Component {
                       }
 
                     </span>
-                  </React.Fragment>
+                  </li>
                 )
               }
             />

@@ -29,18 +29,20 @@ class HierarchySearch extends React.Component {
     return name
   }
 
-  getLabelDom = option => {
+  getLabelDom = (props, option) => {
     const showName = option.display_name && option.display_name !== option.id
     return (
-      <span style={{fontSize: '12px'}}>
-        <span>
-          {
-            showName ?
-            <React.Fragment><b>{option.id}</b>&nbsp;{option.display_name}</React.Fragment> :
-            <React.Fragment>{option.id}</React.Fragment>
-          }
+      <li {...props} key={option.id}>
+        <span style={{fontSize: '12px'}}>
+          <span>
+            {
+              showName ?
+              <React.Fragment><b>{option.id}</b>&nbsp;{option.display_name}</React.Fragment> :
+              <React.Fragment>{option.id}</React.Fragment>
+            }
+          </span>
         </span>
-      </span>
+      </li>
     )
   }
 

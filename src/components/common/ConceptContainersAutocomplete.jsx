@@ -21,8 +21,8 @@ const ConceptContainersAutocomplete = ({onChange, items, label, id, required, se
         params => <TextField {...params} required label={label || "Collection/Source"} variant="outlined" fullWidth />
       }
       renderOption={
-        option => (
-          <React.Fragment>
+        (props, option) => (
+          <li {...props} key={option.type + '-' + option.name}>
             <span className='flex-vertical-center'>
               <span style={{marginRight: '5px'}}>
                 {
@@ -33,7 +33,7 @@ const ConceptContainersAutocomplete = ({onChange, items, label, id, required, se
               </span>
               {option.name}
             </span>
-          </React.Fragment>
+          </li>
         )
       }
       onChange={(event, item) => onChange(get(item, 'type') || 'source', item)}
