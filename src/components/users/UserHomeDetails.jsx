@@ -149,7 +149,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
       }
       <CommonFormDrawer
         isOpen={editForm}
-        onClose={onEditClick}
+        onClose={onEditClose}
         formComponent={
           <UserForm
             loggedIn={user.username === getCurrentUserUsername()}

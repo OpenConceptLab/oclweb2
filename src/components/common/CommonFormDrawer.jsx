@@ -5,7 +5,8 @@ const CommonFormDrawer = ({ isOpen, onClose, formComponent, size, ...rest }) => 
   const className = 'custom-drawer ' + (size || 'medium')
   const [open, setOpen] = React.useState(isOpen);
   const onDrawerClose = () => setOpen(() => {
-    onClose(); return false;
+    onClose();
+    return false;
   })
 
   React.useEffect(() => setOpen(isOpen), [isOpen])
