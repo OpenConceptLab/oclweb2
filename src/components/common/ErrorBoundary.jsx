@@ -1,5 +1,8 @@
+/*eslint no-process-env: 0*/
 import React from 'react';
 import ErrorUI from './ErrorUI';
+import { getCurrentUser, getEnv } from '../../common/utils';
+import { Notifier } from '@airbrake/browser';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -11,8 +14,34 @@ class ErrorBoundary extends React.Component {
     };
   }
 
+  getNotifier = () => {
+    /*eslint no-undef: 0*/
+    this.ERRBIT_KEY = window.ERRBIT_KEY || process.env.ERRBIT_KEY
+    /*eslint no-undef: 0*/
+    this.ERRBIT_URL = window.ERRBIT_URL || process.env.ERRBIT_URL
+    if(this.ERRBIT_URL && this.ERRBIT_KEY)
+      return new Notifier({
+        projectId: 1,
+        projectKey: this.ERRBIT_KEY,
+        environment: getEnv(),
+        host: this.ERRBIT_URL
+      })
+  }
+
   componentDidCatch(error, errorInfo) {
-    this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)})
+    this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)}, () => {
+      const notifier = this.getNotifier()
+      if(notifier) {
+        const user = getCurrentUser() || {};
+        notifier.notify({
+          error: this.state.error,
+          params: {info: this.state.errorInfo},
+          context: {
+            component: window.location.href, user: {id: user.id, email: user.email}
+          }
+        });
+      }
+    })
   }
 
   getErrorUIProps() {
