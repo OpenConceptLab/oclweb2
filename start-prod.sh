@@ -17,6 +17,12 @@ fi
 if [[ ! -z "${RECAPTCHA_SITE_KEY}" ]]; then
     echo "var RECAPTCHA_SITE_KEY = \"${RECAPTCHA_SITE_KEY}\";" >> ${ENV_FILE}
 fi
+if [[ ! -z "${ERRBIT_URL}" ]]; then
+    echo "var ERRBIT_URL = \"${ERRBIT_URL}\";" >> ${ENV_FILE}
+fi
+if [[ ! -z "${ERRBIT_KEY}" ]]; then
+    echo "var ERRBIT_KEY = \"${ERRBIT_KEY}\";" >> ${ENV_FILE}
+fi
 
 echo "Adjusting nginx configuration"
 envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
