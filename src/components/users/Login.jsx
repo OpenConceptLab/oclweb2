@@ -28,6 +28,8 @@ class Login extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault()
+    const form = document.getElementsByTagName('form')[0];
+    form.reportValidity()
     const { username, password } = this.state;
     if(username && password)
       this.handleLogin(username, password)
