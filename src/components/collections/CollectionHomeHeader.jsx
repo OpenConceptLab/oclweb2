@@ -7,13 +7,14 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 import { Tooltip, Button, ButtonGroup, Collapse } from '@material-ui/core';
-import { keys, map, startCase, get } from 'lodash';
+import { keys, map, startCase, get, isEmpty } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import CollectionButton from '../common/CollectionButton';
 import VersionButton from '../common/VersionButton';
+import ExpansionButton from '../common/ExpansionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
@@ -50,7 +51,7 @@ const HIDDEN_ATTRIBUTES = {
   experimental: 'boolean'
 }
 const CollectionHomeHeader = ({
-  collection, isVersionedObject, versionedObjectURL, currentURL, config
+  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const hasAccess = currentUserHasAccess();
@@ -58,7 +59,7 @@ const CollectionHomeHeader = ({
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
-  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
+  const onIconClick = () => copyURL(toFullAPIURL(get(expansion, 'url') || currentURL))
   const hasManyHiddenAttributes = nonEmptyCount(collection, keys(HIDDEN_ATTRIBUTES)) >= 4;
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
@@ -104,6 +105,13 @@ const CollectionHomeHeader = ({
               <React.Fragment>
                 <span className='separator'>/</span>
                 <VersionButton label={collection.version} href={`#${currentURL}`} bgColor={GREEN} />
+              </React.Fragment>
+            }
+            {
+              !isEmpty(expansion) &&
+              <React.Fragment>
+                <span className='separator'>/</span>
+                <ExpansionButton label={expansion.mnemonic} href={`#${expansion.url}`} bgColor={GREEN} />
               </React.Fragment>
             }
             {

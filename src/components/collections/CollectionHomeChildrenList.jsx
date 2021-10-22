@@ -15,9 +15,10 @@ class CollectionHomeChildrenList extends React.Component {
 
   getURL() {
     const { selectedVersion } = this.state;
-    const { versionedObjectURL, resource } = this.props;
-    let url = versionedObjectURL;
-    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
+    const { versionedObjectURL, resource, expansion } = this.props;
+    const expansionURL = get(expansion, 'url')
+    let url = get(expansion, 'url') || versionedObjectURL;
+    if(!expansionURL && selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
       url += `${selectedVersion}/`
     url += `${resource}/`
 

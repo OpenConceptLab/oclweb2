@@ -19,7 +19,7 @@ const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, isLoadingExpansions
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, isLoadingExpansions, expansion
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -38,7 +38,7 @@ const CollectionHomeTabs = props => {
     if(resource === 'expansion')
       setExpansionForm(true)
   }
-  const currentResourceURL = isVersionedObject ? collection.url : collection.version_url
+  const currentResourceURL = isVersionedObject ? collection.url : (expansion.url || collection.version_url)
   const getTABHref = tabConfig => {
     let href = '';
     if(tabConfig.type === 'about')
@@ -53,7 +53,7 @@ const CollectionHomeTabs = props => {
       href = `#${currentResourceURL}${tabConfig.href}`
     else {
       const urlAttr = tabConfig.type + '_url'
-      href = `#${collection[urlAttr]}`
+      href = expansion ? `#${expansion.url}${tabConfig.type}/` : `#${collection[urlAttr]}`
     }
     return href + location.search
   }
@@ -69,7 +69,6 @@ const CollectionHomeTabs = props => {
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references', 'expansions'], selectedTabConfig.type) && !selectedTabConfig.uri;
-
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="collection-home-tabs"  classes={{indicator: 'hidden'}}>
@@ -143,6 +142,7 @@ const CollectionHomeTabs = props => {
             versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
             versions={versions}
             expansions={expansions}
+            expansion={expansion}
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}
             references={selectedTabConfig.type === 'references'}

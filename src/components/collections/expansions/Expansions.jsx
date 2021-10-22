@@ -179,7 +179,7 @@ const Expansions = ({ collectionVersion, expansions, canEdit, onUpdate, fhir, is
                               !fhir &&
                               <React.Fragment>
                                 <Tooltip arrow title='Explore Expansion'>
-                                  <IconButton href={`#${expansion.url}`} color='primary' size='small' disabled>
+                                  <IconButton href={`#${expansion.url}`} color='primary' size='small'>
                                     <SearchIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>

@@ -166,6 +166,14 @@ const App = props => {
             />
             { /* Collection Home */ }
             <Route
+              path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)"
+              component={CollectionHome}
+            />
+            <Route
+              path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)"
+              component={CollectionHome}
+            />
+            <Route
               path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)"
               component={CollectionHome}
             />
