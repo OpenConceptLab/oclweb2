@@ -1,3 +1,18 @@
+##### 2.0.42 - Fri Oct 22 02:14:11 2021 +0000
+- Login form | html5 validation trigger
+- Added who.staging and dev servers
+- [OpenConceptLab/ocl_issues#923](https://github.com/OpenConceptLab/ocl_issues/issues/923) | errbit client setup
+- [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | custom attributes nested object formatting
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | mapping/concept header icon | cursor auto
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | mapping details cannot be collapsed
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | mapping home | compare arrow button fix
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | upgrading Autocomplete to use new renderOption
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | Hiding Feedback until react-suggestion-box is stable with react17
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | about editor alignment styles to be applied
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | fixing page results component flicker
+- [OpenConceptLab/ocl_issues#985](https://github.com/OpenConceptLab/ocl_issues/issues/985) | fixing user edit drawer
+- Concept Home | Fixing dormant locales display
+- [OpenConceptLab/ocl_issues#986](https://github.com/OpenConceptLab/ocl_issues/issues/986) | updated to React 17 and MUI5
 ##### 2.0.41 - Thu Oct 7 05:38:41 2021 +0000
 - [OpenConceptLab/ocl_issues#1013](https://github.com/OpenConceptLab/ocl_issues/issues/1013) | custom attributes | raw/formatted label captialize
 - [OpenConceptLab/ocl_issues#991](https://github.com/OpenConceptLab/ocl_issues/issues/991) | fixing hierarchy listing
