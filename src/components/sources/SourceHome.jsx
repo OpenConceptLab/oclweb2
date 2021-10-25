@@ -105,7 +105,10 @@ class SourceHome extends React.Component {
                 .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
                 .get(null, null, {verbose: true})
                 .then(response => {
-                  this.setState({versions: response.data, isLoadingVersions: false}, this.fetchVersionsSummary)
+                  this.setState({versions: response.data, isLoadingVersions: false}, () => {
+                    if(this.isVersionTabSelected())
+                      this.fetchVersionsSummary()
+                  })
                 })
     })
   }
@@ -140,6 +143,8 @@ class SourceHome extends React.Component {
     this.setState({tab: value, selected: null, splitView: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
+      if(this.isVersionTabSelected())
+        this.fetchVersionsSummary()
     })
   }
 
@@ -228,6 +233,10 @@ class SourceHome extends React.Component {
   onResourceSelect = selected => this.setState({selected: selected})
 
   toggleSplitView = () => this.setState({splitView: !this.state.splitView})
+
+  currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
+
+  isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
 
   render() {
     const {
