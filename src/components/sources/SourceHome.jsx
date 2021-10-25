@@ -172,7 +172,7 @@ class SourceHome extends React.Component {
                       selectedConfig: defaultCustomConfig || SOURCE_DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
-                      this.fetchSummary()
+                      setTimeout(() => this.fetchSummary(), 8000) // Fixme: Summary to load later than the search results -- Sunny
                       const tab = this.getDefaultTabIndex()
                       if(tab === 0)
                         this.setTab()
