@@ -150,7 +150,7 @@ const getTag = (tag, item, hapi) => {
   );
 
   return (
-    <React.Fragment>
+    <React.Fragment key={tag.id}>
       {
         tag.noTooltip ?
         getTagDom() :
@@ -192,7 +192,7 @@ const FHIRHistoryTable = ({ versions, resource }) => {
           map(versions, (version, index) => {
             const versionLabel = getVersionLabel(version)
             return (
-              <TableRow hover key={index}>
+              <TableRow hover key={versionLabel + '-' + index}>
                 {
                   isValueSet &&
                   <TableCell align='center'>
