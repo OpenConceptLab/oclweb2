@@ -136,7 +136,7 @@ const VersionList = ({ versions, resource }) => {
                     </div>
                     {
                       !isAssociated(version) && ((index + 1) < versions.length) &&
-                      <Divider style={{width: '100%'}} />
+                      <Divider style={{width: '100%', display: 'inline-block'}} />
                     }
                   </React.Fragment>
                 )

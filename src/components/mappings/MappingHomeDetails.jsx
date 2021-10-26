@@ -52,7 +52,7 @@ const MappingHomeDetails = ({ mapping }) => {
                 {mapping.map_type}
               </div>
             </div>
-            <Divider style={{width: '100%'}} />
+            <Divider style={{width: '100%', display: 'inline-block'}} />
             <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
                 From Concept
@@ -69,7 +69,7 @@ const MappingHomeDetails = ({ mapping }) => {
                 <ToConceptLabel {...mapping} />
               </div>
             </div>
-            <Divider style={{width: '100%'}} />
+            <Divider style={{width: '100%', display: 'inline-block'}} />
             <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
                 Updated By

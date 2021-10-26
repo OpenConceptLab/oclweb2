@@ -209,7 +209,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                         </div>
                       </div>
                       {
-                        (index + 1) < versions.length && <Divider style={{width: '100%'}} />
+                        (index + 1) < versions.length && <Divider style={{width: '100%', display: 'inline-block'}} />
                       }
                     </div>
                   )

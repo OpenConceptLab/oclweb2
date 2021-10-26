@@ -36,7 +36,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
         <div className='col-md-9 no-right-padding' style={{margin: '5px 0', overflow: 'auto'}}>
           {formattedValue || ' - '}
         </div>
-        <Divider style={{width: '100%'}}/>
+        <Divider style={{width: '100%', display: 'inline-block'}}/>
       </React.Fragment>
     )
   }
