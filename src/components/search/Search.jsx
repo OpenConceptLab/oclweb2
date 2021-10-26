@@ -356,7 +356,6 @@ class Search extends React.Component {
     }
     if(!this.props.fhir)
       newState.isURLUpdatedByActionChange = true
-    newState.facets = {}
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
