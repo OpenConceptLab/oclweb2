@@ -1,3 +1,7 @@
+##### 2.0.44 - Mon Oct 25 10:45:16 2021 +0000
+- Making sure version summary is not loaded by default
+- React warning fix
+- Can switch to WHO Staging server as well
 ##### 2.0.42 - Fri Oct 22 02:14:11 2021 +0000
 - Login form | html5 validation trigger
 - Added who.staging and dev servers
