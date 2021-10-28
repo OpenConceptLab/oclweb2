@@ -83,8 +83,8 @@ class ExpansionForm extends React.Component {
     if(selectedVersion && isFormValid) {
       this.alert = alertifyjs.warning('Starting Expansion Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
-
-      APIService.new().overrideURL(selectedVersion.version_url).appendToUrl('expansions/').post(fields).then(response => this.handleSubmitResponse(response))
+      const url = selectedVersion.version === 'HEAD' ? selectedVersion.url + selectedVersion.version + '/' : selectedVersion.version_url
+      APIService.new().overrideURL(url).appendToUrl('expansions/').post(fields).then(response => this.handleSubmitResponse(response))
     }
   }
 
@@ -194,7 +194,7 @@ class ExpansionForm extends React.Component {
                                   PARAMETER_TOOLTIPS[attr] :
                                   PARAMETER_TOOLTIPS.DEFAULT;
                   return (
-                    <div className='col-md-4'>
+                    <div className='col-md-4' key={attr}>
                       <FormControlLabel
                         control={<Checkbox style={{paddingRight: '5px'}} size='small' checked={fields.parameters[attr]} onChange={this.onCheckboxChange} name={`fields.parameters.${attr}`} />}
                         label={
@@ -218,7 +218,7 @@ class ExpansionForm extends React.Component {
               {
                 map(pickBy(fields.parameters, isNumber), (value, attr) => {
                   return (
-                    <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}}>
+                    <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
                       <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
                         <TextField
                           size='small'
@@ -244,7 +244,7 @@ class ExpansionForm extends React.Component {
               {
                 map(pickBy(fields.parameters, isString), (value, attr) => {
                   return (
-                    <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}}>
+                    <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
                       <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
                         <TextField
                           size='small'
