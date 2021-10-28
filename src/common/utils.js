@@ -498,3 +498,20 @@ export const arrayToSentence = (arr, separator, lastSeparator=' and ') => {
 }
 
 export const generateRandomString = () => Math.random().toString(36).substring(7);
+
+export const getEnv = forURL => {
+  const fqdn = window.location.origin;
+
+  if(fqdn.match('app.staging.openconceptlab'))
+    return 'staging';
+  if(fqdn.match('app.qa.openconceptlab'))
+    return 'qa';
+  if(fqdn.match('app.demo.openconceptlab'))
+    return 'demo';
+  if(fqdn.match('app.dev.openconceptlab'))
+    return 'dev';
+  if(fqdn.match('app.openconceptlab'))
+    return forURL ? '' : 'production';
+
+  return 'development';
+}
