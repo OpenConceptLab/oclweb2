@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Tab } from '@material-ui/core';
-import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
+import { get, reject, includes, map, pickBy, isString, isObject, isEmpty } from 'lodash';
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
@@ -53,7 +53,7 @@ const CollectionHomeTabs = props => {
       href = `#${currentResourceURL}${tabConfig.href}`
     else {
       const urlAttr = tabConfig.type + '_url'
-      href = expansion ? `#${expansion.url}${tabConfig.type}/` : `#${collection[urlAttr]}`
+      href = isEmpty(expansion) ? `#${collection[urlAttr]}` : `#${expansion.url}${tabConfig.type}/`
     }
     return href + location.search
   }
