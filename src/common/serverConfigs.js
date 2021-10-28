@@ -12,6 +12,12 @@ export const SERVER_CONFIGS = [
     url: 'https://api.qa.openconceptlab.org'
   },
   {
+    id: 10,
+    name: 'OCL Dev',
+    type: 'ocl',
+    url: 'https://api.dev.openconceptlab.org'
+  },
+  {
     id: 3,
     name: 'OCL Demo',
     type: 'ocl',
