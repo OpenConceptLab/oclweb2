@@ -127,8 +127,9 @@ class SourceHome extends React.Component {
 
   fetchVersionsSummary() {
     forEach(this.state.versions, version => {
-      if(version.id === 'HEAD')
-        this.setHEADSummary()
+      if(version.id === 'HEAD') {
+        this.fetchSummary()
+      }
       else
         APIService.new().overrideURL(version.version_url).appendToUrl('summary/').get().then(response => {
           const newState = {...this.state}
@@ -172,7 +173,6 @@ class SourceHome extends React.Component {
                       selectedConfig: defaultCustomConfig || SOURCE_DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
-                      setTimeout(() => this.fetchSummary(), 8000) // Fixme: Summary to load later than the search results -- Sunny
                       const tab = this.getDefaultTabIndex()
                       if(tab === 0)
                         this.setTab()
