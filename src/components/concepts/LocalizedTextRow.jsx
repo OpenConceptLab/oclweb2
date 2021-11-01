@@ -26,7 +26,7 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
         </TableCell>
       </TableRow>
       {
-        map(orderBy(localizedTexts, [text => get(text, nameAttr, '').toLowerCase()], ['asc']), localizedText => {
+        map(orderBy(localizedTexts, ['locale_preferred', typeAttr, nameAttr], ['desc', 'asc', 'asc']), localizedText => {
           const type = get(localizedText, typeAttr)
           return (
             <TableRow

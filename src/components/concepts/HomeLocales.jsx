@@ -6,7 +6,7 @@ import {
 import {
   Info as InfoIcon
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, groupBy, without, keys, compact, omitBy } from 'lodash';
+import { get, isEmpty, forEach, map, groupBy, without, keys, compact, has } from 'lodash';
 import TabCountLabel from '../common/TabCountLabel';
 import LocalizedTextRow from './LocalizedTextRow';
 
@@ -30,13 +30,16 @@ const groupLocales = (locales, source) => {
     groupedBySource.defaultLocales[source.default_locale] = grouped[source.default_locale]
 
   forEach(supportedLocales, locale => {
-    if(locale !== source.default_locale)
+    if(locale !== source.default_locale && has(grouped, locale))
       groupedBySource.supportedLocales[locale] = grouped[locale]
   })
 
   forEach(
     without(keys(grouped), ...compact([get(source, 'default_locale'), ...supportedLocales])),
-    locale => groupedBySource.rest[locale] = grouped[locale]
+    locale => {
+      if(has(grouped, locale))
+        groupedBySource.rest[locale] = grouped[locale]
+    }
   )
 
   return groupedBySource
@@ -73,7 +76,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
           <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
             <TableBody>
               {
-                map(omitBy(groupedLocales.defaultLocales, isEmpty), (localizedTexts, locale) => (
+                map(groupedLocales.defaultLocales, (localizedTexts, locale) => (
                   <LocalizedTextRow
                     concept={concept}
                     key={locale}
@@ -84,7 +87,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                 ))
               }
               {
-                map(omitBy(groupedLocales.supportedLocales, isEmpty), (localizedTexts, locale) => (
+                map(groupedLocales.supportedLocales, (localizedTexts, locale) => (
                   <LocalizedTextRow
                     concept={concept}
                     key={locale}
@@ -95,7 +98,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                 ))
               }
               {
-                map(omitBy(groupedLocales.rest, isEmpty), (localizedTexts, locale) => (
+                map(groupedLocales.rest, (localizedTexts, locale) => (
                   <LocalizedTextRow
                     concept={concept}
                     key={locale}
