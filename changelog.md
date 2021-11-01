@@ -1,3 +1,11 @@
+##### 2.0.45 - Wed Oct 27 08:40:01 2021 +0000
+- [OpenConceptLab/ocl_issues#1050](https://github.com/OpenConceptLab/ocl_issues/issues/1050) | fixing horizontal divider display/width
+- FHIR Components | react updates
+- [OpenConceptLab/ocl_issues#1056](https://github.com/OpenConceptLab/ocl_issues/issues/1056) | fixing mapping to concept label
+- [OpenConceptLab/ocl_issues#1049](https://github.com/OpenConceptLab/ocl_issues/issues/1049) | fixing facets filter drawer
+- [OpenConceptLab/ocl_issues#1056](https://github.com/OpenConceptLab/ocl_issues/issues/1056) | fixing typo
+- Source | Making sure HEAD summary load is delayed
+- [OpenConceptLab/ocl_issues#37](https://github.com/OpenConceptLab/ocl_issues/issues/37) | added name/description types as concept facet filters
 ##### 2.0.44 - Mon Oct 25 10:45:16 2021 +0000
 - Making sure version summary is not loaded by default
 - React warning fix
