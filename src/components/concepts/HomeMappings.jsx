@@ -71,7 +71,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
           <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-            <Tooltip title='Showing only associations in the same source'>
+            <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
               <InfoIcon fontSize='small' color='action' />
             </Tooltip>
           </span>
