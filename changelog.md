@@ -1,3 +1,8 @@
+##### 2.0.46 - Mon Nov 1 10:56:24 2021 +0000
+- [OpenConceptLab/ocl_issues#1078](https://github.com/OpenConceptLab/ocl_issues/issues/1078) | sorting concepts locales with preferred, name/description-type and name/description
+- [OpenConceptLab/ocl_issues#1078](https://github.com/OpenConceptLab/ocl_issues/issues/1078) | mappings/collections section tooltip updates
+- Not fetching source summary by default
+- [OpenConceptLab/ocl_issues#1057](https://github.com/OpenConceptLab/ocl_issues/issues/1057) | Collection References | cascade source to concepts option
 ##### 2.0.45 - Wed Oct 27 08:40:01 2021 +0000
 - [OpenConceptLab/ocl_issues#1050](https://github.com/OpenConceptLab/ocl_issues/issues/1050) | fixing horizontal divider display/width
 - FHIR Components | react updates
