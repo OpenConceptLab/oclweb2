@@ -6,26 +6,30 @@ import {
   AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon
 } from '@mui/icons-material';
 import { includes, snakeCase } from 'lodash';
+import { GREEN, BLUE, ORANGE } from '../../common/constants';
 
-const DynamicConfigResourceIcon = ({resource, index, style, icon}) => {
+const DynamicConfigResourceIcon = ({resource, index, style, icon, enableColor, ...rest}) => {
+  const styles = style || {}
   if(icon)
-    return (<Icon style={{fontSize: '20px'}}>{snakeCase(icon)}</Icon>)
-  if(resource === 'sources')
-    return (<SourceIcon style={style} />)
-  if(resource === 'collections')
-    return <CollectionIcon style={style} />
-  if(resource === 'users')
-    return <UserIcon style={style} />
-  if(resource === 'concepts')
-    return <ConceptIcon style={style} />
-  if(resource === 'mappings')
-    return <MappingIcon style={style} />
-  if(includes(['versions', 'history'], resource))
-    return <VersionIcon style={style} />
+    return (<Icon style={{fontSize: '20px'}} {...rest}>{snakeCase(icon)}</Icon>)
+  if(includes(['source', 'sources'], resource))
+    return <SourceIcon style={{...styles, color: enableColor ? GREEN : ''}} {...rest} />;
+  if(includes(['collection', 'collections'], resource))
+    return <CollectionIcon style={{...styles, color: enableColor ? GREEN : ''}} {...rest} />;
+  if(includes(['user', 'users'], resource))
+    return <UserIcon style={{...styles, color: enableColor ? ORANGE : ''}} {...rest} />;
+  if(includes(['org', 'orgs', 'organizations', 'organization'], resource))
+    return <HomeIcon style={{...styles, color: enableColor ? ORANGE : ''}} {...rest} />;
+  if(includes(['concept', 'concepts'], resource))
+    return <ConceptIcon style={{...styles, color: enableColor ? BLUE : ''}} {...rest} />;
+  if(includes(['mapping', 'mappings'], resource))
+    return <MappingIcon style={{...styles, color: enableColor ? BLUE : ''}} {...rest} />;
+  if(includes(['versions', 'history', 'version'], resource))
+    return <VersionIcon style={styles} {...rest} />;
   if(index === 0)
-    return <HomeIcon style={style} />
+    return <HomeIcon style={styles} />;
   if(includes(['about', 'text'], resource))
-    return <InfoIcon style={style} />
+    return <InfoIcon style={styles} {...rest} />;
 
   return '';
 }

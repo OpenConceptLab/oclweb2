@@ -17,6 +17,7 @@ import {
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
+import Favorites from './Favorites';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 /* import Feedback from '../common/Feedback'; */
 import AppsMenu from '../common/AppsMenu';
@@ -166,6 +167,7 @@ const Header = props => {
             {
               authenticated ?
               <span style={{marginLeft: '20px'}}>
+                <Favorites />
                 <AppsMenu/>
                 <UserOptions />
               </span> :
