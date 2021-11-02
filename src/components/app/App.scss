@@ -882,9 +882,6 @@ div.divider-highlight-hover:hover {
     }
 }
 .app-menu {
-    border: 1px solid lightgray;
-    justify-content: center;
-    padding: 0px;
     .app-container {
         .app:hover {
             background-color: rgba(0, 0, 0, 0.03);
@@ -892,7 +889,7 @@ div.divider-highlight-hover:hover {
         .app {
             border-radius: 5px;
             padding: 10px;
-            margin: 4px;
+            margin: 0 6px;
             width: 120px;
             cursor: pointer;
             &.selected, &.selected:hover {

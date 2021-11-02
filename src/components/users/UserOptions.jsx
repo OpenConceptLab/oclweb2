@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Paper, IconButton, Popper, Grow, ClickAwayListener, Tooltip,
+  IconButton, Tooltip,
   List, ListItem, ListItemIcon, ListItemText, Chip, Divider, Button, Collapse
 } from '@mui/material';
 import {
@@ -11,6 +11,7 @@ import {
 import { get } from 'lodash';
 import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer } from '../../common/utils';
 import ServerConfigList from '../common/ServerConfigList';
+import PopperGrow from '../common/PopperGrow';
 
 const onLogoutClick = msg => {
   localStorage.removeItem('token');
@@ -64,58 +65,45 @@ const UserOptions = () => {
           </IconButton>
         }
       </Tooltip>
-      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex: 1}}>
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-            >
-            <Paper style={{minWidth: '330px', border: '1px solid lightgray'}}>
-              <ClickAwayListener onClickAway={handleClose}>
-                <List style={{paddingBottom: 0, paddingTop: 0}}>
-                  <ListItem>
-                    <ListItemText style={{textAlign: 'center'}}>
-                      <div className='col-md-12'>
-                        {
-                          user.logo_url ?
-                          <img src={user.logo_url} className='user-img-medium' /> :
-                          <AccountIcon style={{width: '80px', height: '80px', color: 'gray'}} />
-                        }
-                      </div>
-                      <ListItemText className='list-item-text-bold-primary' primary={displayName} secondary={user.email} />
-                      <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} />
-                    </ListItemText>
-                  </ListItem>
-                  <Divider />
-                  {
-                    canSwitchServer() &&
-                    <Tooltip arrow placement='left' title='Switch Server'>
-                      <ListItem className='user-option-list-item' onClick={() => setServerOpen(!serverOpen)}>
-                        <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
-                          <ServerIcon fontSize='small' />
-                        </ListItemIcon>
-                        <ListItemText className='list-item-text' primary='Switch Server' secondary={get(serverConfig, 'name')} />
-                        {serverOpen ? <LessIcon /> : <MoreIcon />}
-                      </ListItem>
-                    </Tooltip>
-                  }
-                  <Collapse in={serverOpen} style={{maxHeight: '250px', overflow: 'auto'}}>
-                    <ServerConfigList onClose={() => setOpen(false)}/>
-                  </Collapse>
-                  <Divider />
-                  <ListItem style={{display: 'flex', justifyContent: 'center', padding: '16px'}}>
-                    <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={onLogoutClick}>
-                      Sign Out
-                    </Button>
-                  </ListItem>
-                </List>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+      <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose}>
+        <List style={{paddingBottom: 0, paddingTop: 0}}>
+          <ListItem>
+            <ListItemText style={{textAlign: 'center'}}>
+              <div className='col-md-12'>
+                {
+                  user.logo_url ?
+                  <img src={user.logo_url} className='user-img-medium' /> :
+                  <AccountIcon style={{width: '80px', height: '80px', color: 'gray'}} />
+                }
+              </div>
+              <ListItemText className='list-item-text-bold-primary' primary={displayName} secondary={user.email} />
+              <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} />
+            </ListItemText>
+          </ListItem>
+          <Divider />
+          {
+            canSwitchServer() &&
+            <Tooltip arrow placement='left' title='Switch Server'>
+              <ListItem className='user-option-list-item' onClick={() => setServerOpen(!serverOpen)}>
+                <ListItemIcon style={{minWidth: 'auto', marginRight: '15px'}}>
+                  <ServerIcon fontSize='small' />
+                </ListItemIcon>
+                <ListItemText className='list-item-text' primary='Switch Server' secondary={get(serverConfig, 'name')} />
+                {serverOpen ? <LessIcon /> : <MoreIcon />}
+              </ListItem>
+            </Tooltip>
+          }
+          <Collapse in={serverOpen} style={{maxHeight: '250px', overflow: 'auto'}}>
+            <ServerConfigList onClose={() => setOpen(false)}/>
+          </Collapse>
+          <Divider />
+          <ListItem style={{display: 'flex', justifyContent: 'center', padding: '16px'}}>
+            <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={onLogoutClick}>
+              Sign Out
+            </Button>
+          </ListItem>
+        </List>
+      </PopperGrow>
     </React.Fragment>
   );
 }
