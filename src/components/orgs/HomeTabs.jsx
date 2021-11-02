@@ -57,7 +57,7 @@ const HomeTabs = props => {
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   return (
-    <div className='col-md-12 no-side-padding' style={{width: width}}>
+    <div className='col-md-12 no-right-padding' style={{width: width, paddingLeft: '10px'}}>
       <Tabs className='col-md-11 no-side-padding' value={tab} onChange={onTabChange} TabIndicatorProps={{style: {background: selectedTabColor}}} indicatorColor='primary'>
         {
           map(tabConfigs, (config, index) => {
