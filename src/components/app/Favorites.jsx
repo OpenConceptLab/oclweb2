@@ -40,7 +40,7 @@ const Favorites = () => {
 
   const __fetchFavorites = () => {
     getService()
-      .get()
+      .get(null, null, {includeCreatorPins: true})
       .then(
         response => {
           setObjects(response.data)
