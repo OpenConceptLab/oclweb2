@@ -5,7 +5,7 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { Tooltip, ButtonGroup, Button } from '@mui/material';
-import { isEmpty, get, has, isObject, merge, isBoolean, map } from 'lodash';
+import { isEmpty, get, has, isObject, merge, isBoolean, map, includes } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import { HEADER_GRAY } from '../../common/constants';
 import APIService from '../../services/APIService';
@@ -50,18 +50,24 @@ const HomeHeader = ({
               })
   }
 
+  const tab = rest.tab
+  const selectedTabConfig = config.config.tabs[tab];
+  const isExpandedHeader = tab === 0 && includes(['text', 'about'], get(selectedTabConfig, 'type'))
   const showLogo = has(config, 'config.header.logo') ?
                    config.config.header.logo : true;
-  const showControls = has(config, 'config.header.controls') ? config.config.header.controls : true;
+  const showControls = !isExpandedHeader || has(config, 'config.header.controls') ? config.config.header.controls : true;
   const showAttributes = has(config, 'config.header.attributes') ? config.config.header.attributes : true
   const showSignatures = has(config, 'config.header.signatures') ? config.config.header.signatures : true;
   const customTitle = get(config, 'config.header.forground.title')
   const customDescription = get(config, 'config.header.forground.description')
-  const forgroundTextColor = get(config, 'config.header.forground.color')
-  const customTitleColor = get(config, 'config.header.forground.titleColor') || forgroundTextColor
-  const customDescriptionColor = get(config, 'config.header.forground.descriptionColor') || forgroundTextColor
+  const forgroundTextColor = isExpandedHeader && get(config, 'config.header.forground.color')
+  const customTitleColor = isExpandedHeader && (get(config, 'config.header.forground.titleColor') || forgroundTextColor)
+  const customDescriptionColor = isExpandedHeader && (get(config, 'config.header.forground.descriptionColor') || forgroundTextColor)
   const hasBackgroundImage = Boolean(get(config, 'config.header.background.image'))
   const getBackgroundStyles = () => {
+    const defaultStyles = {backgroundColor: HEADER_GRAY}
+    if(!isExpandedHeader)
+      return defaultStyles
     const headerBackgroundStyles = get(config, 'config.header.background')
     let styles = {}
     if(headerBackgroundStyles && isObject(headerBackgroundStyles)) {
@@ -74,7 +80,7 @@ const HomeHeader = ({
       } else if (backgroundColor) {
         styles['backgroundColor'] = backgroundColor
       } else {
-        styles['backgroundColor'] = HEADER_GRAY
+        return defaultStyles
       }
     }
 
@@ -97,8 +103,8 @@ const HomeHeader = ({
       return isBoolean(attributes) ? DEFAULT_VISIBLE_ATTRIBUTES : attributes
   }
 
-  const shouldShowOverlay = Boolean(get(config, 'config.header.background.imageOverlay') && get(config, 'config.header.background.image'));
 
+  const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && get(config, 'config.header.background.image'));
   return (
     <header className='home-header col-md-12' style={merge({marginBottom: '0px', padding: 0}, getBackgroundStyles())}>
       <div className='col-md-12 no-side-padding' style={shouldShowOverlay ? {paddingBottom: '2px', backgroundColor: 'rgba(0,0,0,0.6)'} : {}}>
@@ -110,13 +116,13 @@ const HomeHeader = ({
                 logoURL={logoURL}
                 onUpload={onLogoUpload}
                 defaultIcon={<HomeIcon className='default-svg' />}
-                shrink={!openHeader}
+                shrink={!openHeader || !isExpandedHeader}
               />
             </div>
           }
           <div className='col-md-11'>
             {
-              showControls &&
+              (showControls || !isExpandedHeader) &&
               <div className='col-md-12 no-side-padding flex-vertical-center'>
                 <OwnerButton owner={org.id} ownerType='Organization' href={url} />
                 {
@@ -154,16 +160,16 @@ const HomeHeader = ({
               }
             </div>
             {
-              customDescription ?
+              (customDescription && isExpandedHeader) ?
               <div className='col-md-12 no-side-padding header-custom-html resource-description' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
-                org.description &&
+                org.description && isExpandedHeader &&
                 <div className='col-md-12 no-side-padding flex-vertical-center resource-description' style={getDescriptionStyles()}>
                   {org.description}
                 </div>
               )
             }
             {
-              showAttributes &&
+              showAttributes && !isExpandedHeader &&
               <React.Fragment>
                 {
                   map(
@@ -182,7 +188,7 @@ const HomeHeader = ({
               </React.Fragment>
             }
             {
-              showSignatures &&
+              showSignatures && !isExpandedHeader &&
               <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
                 {
                   org.location &&
