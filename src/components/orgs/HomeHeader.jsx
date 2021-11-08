@@ -52,7 +52,7 @@ const HomeHeader = ({
 
   const tab = rest.tab
   const selectedTabConfig = config.config.tabs[tab];
-  const isExpandedHeader = tab === 0 && includes(['text', 'about'], get(selectedTabConfig, 'type'))
+  const isExpandedHeader = tab === 0 || includes(['text', 'about'], get(selectedTabConfig, 'type'));
   const showLogo = has(config, 'config.header.logo') ?
                    config.config.header.logo : true;
   const showControls = !isExpandedHeader || has(config, 'config.header.controls') ? config.config.header.controls : true;
@@ -102,7 +102,6 @@ const HomeHeader = ({
     if(attributes)
       return isBoolean(attributes) ? DEFAULT_VISIBLE_ATTRIBUTES : attributes
   }
-
 
   const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && get(config, 'config.header.background.image'));
   return (
@@ -169,7 +168,7 @@ const HomeHeader = ({
               )
             }
             {
-              showAttributes && !isExpandedHeader &&
+              showAttributes && isExpandedHeader &&
               <React.Fragment>
                 {
                   map(
@@ -188,7 +187,7 @@ const HomeHeader = ({
               </React.Fragment>
             }
             {
-              showSignatures && !isExpandedHeader &&
+              showSignatures && isExpandedHeader &&
               <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
                 {
                   org.location &&
