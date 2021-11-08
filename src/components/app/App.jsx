@@ -54,7 +54,7 @@ const App = props => {
       if(event.key === 'token' && !event.newValue) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        if(!get(localstorage, 'server'))
+        if(!get(localStorage, 'server'))
           window.location = '/';
       }
     });
