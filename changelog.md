@@ -1,3 +1,11 @@
+##### 2.0.49 - Mon Nov 8 12:05:31 2021 +0000
+- Errbit | Fixing typo
+- [OpenConceptLab/ocl_issues#1081](https://github.com/OpenConceptLab/ocl_issues/issues/1081) | Org Header | expanded for first/text/about tabs only
+- [OpenConceptLab/ocl_issues#1081](https://github.com/OpenConceptLab/ocl_issues/issues/1081) | collapsed org header for tabs other than overview (or first text tab)
+- Extracted common popper container for all header poppers
+- [OpenConceptLab/ocl_issues#1059](https://github.com/OpenConceptLab/ocl_issues/issues/1059) | including user as creator pins
+- [OpenConceptLab/ocl_issues#1059](https://github.com/OpenConceptLab/ocl_issues/issues/1059) | Favorite/Pinned items header panel
+- Org Header | correcting left padding
 ##### 2.0.46 - Mon Nov 1 10:56:24 2021 +0000
 - [OpenConceptLab/ocl_issues#1078](https://github.com/OpenConceptLab/ocl_issues/issues/1078) | sorting concepts locales with preferred, name/description-type and name/description
 - [OpenConceptLab/ocl_issues#1078](https://github.com/OpenConceptLab/ocl_issues/issues/1078) | mappings/collections section tooltip updates
