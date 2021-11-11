@@ -1,9 +1,9 @@
 /*eslint no-process-env: 0*/
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import { get } from 'lodash';
-import { isFHIRServer, isLoggedIn } from '../../common/utils';
+import { isFHIRServer, isLoggedIn, setUpRecentHistory } from '../../common/utils';
 import Search from '../search/Search';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
@@ -41,6 +41,8 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 )
 
 const App = props => {
+  // For recent history
+  setUpRecentHistory(props.history);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const setupGA = () => {
     /*eslint no-undef: 0*/
@@ -247,5 +249,5 @@ const App = props => {
   );
 }
 
-export default App;
+export default withRouter(App);
 

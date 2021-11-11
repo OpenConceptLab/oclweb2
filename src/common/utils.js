@@ -5,7 +5,7 @@ import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep
+  uniqBy, cloneDeep, isEqual, without, capitalize, last
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
@@ -525,4 +525,67 @@ export const getOpenMRSURL = () => {
   if(env) env += '.';
 
   return OPENMRS_URL.replace('openmrs.', `openmrs.${env}`);
+}
+
+export const setUpRecentHistory = history => {
+  history.listen(location => {
+    let visits = JSON.parse(get(localStorage, 'visits', '[]'));
+    let urlParts = compact(location.pathname.split('/'));
+    let type = '';
+    let category = '';
+    let format = false;
+    if(location.pathname.match('/login') || location.pathname === '/')
+      return;
+    if(location.pathname.match('/imports')) {
+      type = category = 'import';
+      format = true;
+    } else if(location.pathname.match('/search/')) {
+      category = 'search';
+      const queryParams = new URLSearchParams(location.search);
+      type = queryParams.get('type');
+      format = true;
+    } else if(location.pathname.match('/compare')) {
+      category = 'compare';
+      type = 'concepts';
+      format = true;
+    } else {
+      if(urlParts.length <= 3) {
+        type = category = urlParts[0];
+        urlParts = without(urlParts, 'orgs', 'users');
+      }
+      if(urlParts.length == 4) {
+        type = category = urlParts[2];
+        urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
+      }
+      if(urlParts.length == 5) {
+        if(includes(['mappings', 'concepts', 'versions', 'references'], last(urlParts))) {
+          type = category = last(urlParts);
+        }
+        urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
+      }
+      if(urlParts.length >= 6) {
+        if(location.pathname.match('/concepts/')) {
+          type = category = 'concept';
+        }
+          if(location.pathname.match('/mappings/')) {
+            type = category = 'mapping';
+          }
+        if(location.pathname.match('/references')) {
+          type = category = 'reference';
+        }
+        urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
+      }
+    }
+    if(!includes(['concepts', 'mappings'], last(urlParts)))
+      urlParts = without(urlParts, 'concepts', 'mappings');
+    let name = format ? map(urlParts, capitalize).join(' / ') : urlParts.join(' / ');
+    if(category !== type && type)
+      name += ' / ' + type;
+    const lastVisit =  visits[0];
+    if(isEqual(get(lastVisit, 'name'), name))
+      visits.shift();
+    visits.push({name: name, location: location, type: type || '', category: category || '', at: new Date().getTime()});
+    visits = orderBy(visits, 'at', 'desc').slice(0, 10);
+    localStorage.setItem('visits', JSON.stringify(visits));
+  });
 }

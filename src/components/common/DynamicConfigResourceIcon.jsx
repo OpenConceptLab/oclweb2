@@ -3,7 +3,9 @@ import { Icon } from '@mui/material';
 import {
   List as SourceIcon, Loyalty as CollectionIcon, Person as UserIcon,
   Info as InfoIcon, Home as HomeIcon, Link as MappingIcon,
-  AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon
+  AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon,
+  Search as SearchIcon, Publish as ImportsIcon,
+  CompareArrows as CompareIcon
 } from '@mui/icons-material';
 import { includes, snakeCase } from 'lodash';
 import { GREEN, BLUE, ORANGE } from '../../common/constants';
@@ -30,6 +32,12 @@ const DynamicConfigResourceIcon = ({resource, index, style, icon, enableColor, .
     return <HomeIcon style={styles} />;
   if(includes(['about', 'text'], resource))
     return <InfoIcon style={styles} {...rest} />;
+  if(includes(['search'], resource))
+    return <SearchIcon style={{...styles, color: enableColor ? BLUE : ''}} {...rest} />;
+  if(includes(['import', 'imports'], resource))
+    return <ImportsIcon color='secondary' {...rest} />;
+  if(includes(['compare'], resource))
+    return <CompareIcon color='primary' {...rest} />;
 
   return '';
 }

@@ -16,6 +16,7 @@ import PopperGrow from '../common/PopperGrow';
 const onLogoutClick = msg => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+  localStorage.removeItem('visits');
   alertifyjs.success(msg || 'You have signed out.')
   window.location.hash = '#/'
   window.location.reload()
