@@ -1,3 +1,5 @@
+##### 2.0.51 - Fri Nov 12 05:50:57 2021 +0000
+- [OpenConceptLab/ocl_issues#1058](https://github.com/OpenConceptLab/ocl_issues/issues/1058) | Recent history component | navigation back to previous visited pages
 ##### 2.0.49 - Mon Nov 8 12:05:31 2021 +0000
 - Errbit | Fixing typo
 - [OpenConceptLab/ocl_issues#1081](https://github.com/OpenConceptLab/ocl_issues/issues/1081) | Org Header | expanded for first/text/about tabs only
