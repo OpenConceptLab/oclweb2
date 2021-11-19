@@ -14,12 +14,27 @@ const ExpansionLabel = props => {
         <span style={{paddingTop: '5px'}}>
           <ExpansionIcon fontSize='small' style={{width: '14px'}} />
         </span>
-        <span>{props.owner}</span>
-        <span>{SEPARATOR}</span>
-        <span>{props.short_code}</span>
-        <span>{SEPARATOR}</span>
-        <span>{props.version}</span>
-        <span>{SEPARATOR}</span>
+        {
+          props.owner &&
+          <React.Fragment>
+            <span>{props.owner}</span>
+            <span>{SEPARATOR}</span>
+          </React.Fragment>
+        }
+        {
+          props.short_code &&
+          <React.Fragment>
+            <span>{props.short_code}</span>
+            <span>{SEPARATOR}</span>
+          </React.Fragment>
+        }
+        {
+          props.version &&
+          <React.Fragment>
+            <span>{props.version}</span>
+            <span>{SEPARATOR}</span>
+          </React.Fragment>
+        }
         <span className='resource-name' style={{marginTop: '-2px'}}>[{props.mnemonic}]</span>
       </span>
       {

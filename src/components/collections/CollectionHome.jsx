@@ -8,7 +8,7 @@ import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
 
-const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'expansions', 'about']
+const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
 const DEFAULT_CONFIG = {
   name: 'OCL Default (Collection)',
   web_default: true,
@@ -19,7 +19,6 @@ const DEFAULT_CONFIG = {
       {type: "mappings", label: "Mappings", page_size: 25, layout: 'table'},
       {type: "references", label: "References", page_size: 25, layout: 'table'},
       {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
-      {type: "expansions", label: "Expansions", page_size: 25, layout: 'table'},
       {type: "about", label: "About"},
     ]
   }
@@ -37,8 +36,6 @@ class CollectionHome extends React.Component {
       collection: {},
       expansion: {},
       versions: [],
-      expansions: [],
-      isLoadingExpansions: true,
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
@@ -59,12 +56,10 @@ class CollectionHome extends React.Component {
   }
 
   getDefaultTabIndex() {
-    const { location, match } = this.props;
+    const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
       return 5;
-    if(location.pathname.indexOf('/expansions') > -1 && !match.params.expansion)
-      return 4;
     if(location.pathname.indexOf('/versions') > -1)
       return 3;
     if(location.pathname.indexOf('/references') > -1)
@@ -100,8 +95,6 @@ class CollectionHome extends React.Component {
       return location.pathname.split('/references')[0] + '/'
     if(location.pathname.indexOf('/versions') > -1)
       return location.pathname.split('/versions')[0] + '/'
-    if(location.pathname.indexOf('/expansions') > -1 && !match.params.expansion)
-      return location.pathname.split('/expansions')[0] + '/'
     if(location.pathname.indexOf('/mappings') > -1)
       return location.pathname.split('/mappings')[0] + '/'
     if(location.pathname.indexOf('/concepts') > -1)
@@ -140,23 +133,6 @@ class CollectionHome extends React.Component {
               .then(response => {
                 this.setState({versions: response.data, isLoadingVersions: false})
               })
-    })
-  }
-
-  getExpansions() {
-    this.setState({isLoadingExpansions: true}, () => {
-      const { collection } = this.state;
-      let url = collection.version_url || collection.url
-
-      if(collection.version === 'HEAD')
-        url += 'HEAD/'
-      APIService.new()
-                .overrideURL(url)
-      .appendToUrl('expansions/')
-                .get(null, null, {verbose: true, includeSummary: true})
-                .then(response => {
-                  this.setState({expansions: response.data, isLoadingVersions: false})
-                })
     })
   }
 
@@ -215,8 +191,6 @@ class CollectionHome extends React.Component {
                         this.fetchExpansion()
                       if(isEmpty(this.state.versions))
                         this.getVersions()
-                      if(isEmpty(this.state.expansions))
-                        this.getExpansions()
                     })
                   }
                 })
@@ -258,7 +232,7 @@ class CollectionHome extends React.Component {
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, expansions, expansion,
+      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion,
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -287,7 +261,6 @@ class CollectionHome extends React.Component {
               collection={collection}
               expansion={expansion}
               versions={versions}
-              expansions={expansions}
               match={this.props.match}
               location={this.props.location}
               versionedObjectURL={versionedObjectURL}

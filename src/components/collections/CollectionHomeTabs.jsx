@@ -3,7 +3,6 @@ import { Tabs, Tab } from '@material-ui/core';
 import { get, reject, includes, map, pickBy, isString, isObject, isEmpty } from 'lodash';
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
-import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
 import About from '../common/About';
 import CustomText from '../common/CustomText';
@@ -13,13 +12,13 @@ import ConfigSelect from '../common/ConfigSelect';
 import CollectionVersionForm from './CollectionVersionForm';
 import ReferenceForm from './ReferenceForm';
 import ExpansionForm from './ExpansionForm';
-import Expansions from './expansions/Expansions';
+import VersionList from './VersionList';
 
 const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, isLoadingExpansions, expansion
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -85,10 +84,10 @@ const CollectionHomeTabs = props => {
         }
       </Tabs>
       {
-        hasAccess && isVersionedObject &&
+        hasAccess &&
         <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
-            showConfigSelection &&
+            isVersionedObject && showConfigSelection &&
             <span style={{marginRight: '10px'}}>
               <ConfigSelect
                 selected={selectedConfig}
@@ -101,7 +100,7 @@ const CollectionHomeTabs = props => {
               />
             </span>
           }
-          <NewResourceButton resources={['references', 'version', 'expansion']} onClick={onNewClick} />
+          <NewResourceButton resources={isVersionedObject ? ['references', 'version', 'expansion'] : ['expansion']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
@@ -115,11 +114,7 @@ const CollectionHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
-          <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
-        }
-        {
-          !isInvalidTabConfig && selectedTabConfig.type === 'expansions' &&
-          <Expansions expansions={expansions} canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingExpansions} collectionVersion={collection} />
+          <VersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
@@ -167,14 +162,14 @@ const CollectionHomeTabs = props => {
         formComponent={
           <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} resource="collection" />
         }
-    />
-    <CommonFormDrawer
-      isOpen={expansionForm}
-      onClose={() => setExpansionForm(false)}
-      formComponent={
-        <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==4} version={collection} versions={versions} />
-      }
-    />
+      />
+      <CommonFormDrawer
+        isOpen={expansionForm}
+        onClose={() => setExpansionForm(false)}
+        formComponent={
+          <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==3} version={collection} versions={versions} />
+        }
+      />
     </div>
   );
 }

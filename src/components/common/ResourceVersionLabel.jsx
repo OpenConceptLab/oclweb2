@@ -1,15 +1,20 @@
 import React from 'react';
 import {
-  AccountTreeRounded as TreeIcon
+  AccountTreeRounded as TreeIcon,
+  AspectRatio as ExpansionIcon
 } from '@material-ui/icons';
+import { Tooltip } from '@material-ui/core';
 import ReleasedChip from './ReleasedChip';
 import RetiredChip from './RetiredChip';
 import ProcessingChip from './ProcessingChip';
+import ExpansionChip from './ExpansionChip';
+import { GREEN } from '../../common/constants';
 
 const SEPARATOR = '/'
 const ResourceVersionLabel = props => {
+  const gridClass = props.gridClass || 'col-sm-12'
   return (
-    <div className='col-sm-12 no-side-padding'>
+    <div className={`${gridClass} no-side-padding`}>
       <span className='resource-label'>
         <span style={{paddingTop: '5px'}}>
           <TreeIcon fontSize='small' style={{width: '14px'}} />
@@ -36,6 +41,20 @@ const ResourceVersionLabel = props => {
         props.is_processing &&
         <span style={{marginLeft: '10px'}}>
           <ProcessingChip size='small' />
+        </span>
+      }
+      {
+        props.includeExpanded && props.autoexpand &&
+        <span style={{marginLeft: '10px'}}>
+          <ExpansionChip size='small' expanded />
+        </span>
+      }
+      {
+        props.includeExpansionIcon && props.autoexpand &&
+        <span style={{marginLeft: '10px', display: 'inline-flex', verticalAlign: 'middle'}}>
+          <Tooltip arrow title='Auto Expanded' placement='right'>
+            <ExpansionIcon style={{color: GREEN}}/>
+          </Tooltip>
         </span>
       }
     </div>
