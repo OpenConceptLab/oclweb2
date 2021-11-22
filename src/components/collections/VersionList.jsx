@@ -4,7 +4,9 @@ import {
   Divider, Tooltip,
   IconButton, CircularProgress, Card, CardContent, Collapse
 } from '@material-ui/core';
-import { map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject } from 'lodash';
+import {
+  map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject
+} from 'lodash';
 import {
   Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
@@ -52,7 +54,7 @@ const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url)
 
 const VersionList = ({ versions, canEdit, onUpdate }) => {
   const resource = 'collection'
-  const sortedVersions = headFirst(versions);
+  const sortedVersions = headFirst(versions)
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
   const [expansions, setExpansions] = React.useState({})
@@ -77,6 +79,18 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
 
     handleOnClick(title, message, () => deleteExpansion(expansion))
   }
+  const onMarkExpansionDefault = (version, expansion) => {
+    const service = getService(version)
+    if(version.version === 'HEAD')
+      service.appendToUrl('HEAD/')
+    service.put({expansion_url: expansion.url}).then(response => {
+      if(response.status === 200){
+        alertifyjs.success('Successfully marked expansion as version default')
+        onUpdate({...version, expansion_url: expansion.url})
+        setExpansions({...expansions, [version.uuid]: getFormattedExpansions({...version, expansion_url: expansion.url}, expansions[version.uuid])})
+      }
+    })
+  }
   const handleOnClick = (title, message, onOk) => {
     const confirm = alertifyjs.confirm()
     confirm.setHeader(title);
@@ -93,7 +107,6 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
 
     handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, onUpdate))
   }
-
   const fetchExpansions = version => {
     if(isExpansionsLoading(version))
       return
@@ -104,23 +117,26 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
       service.appendToUrl('HEAD/')
 
     service.appendToUrl('expansions/?includeSummary=true&verbose=true').get().then(response => {
-      let _expansions = orderBy(response.data, 'id', 'desc')
-      if(version.autoexpand) {
-        _expansions = [{...last(_expansions), auto: true}, ..._expansions.slice(0, -1)]
-      }
-      if(version.expansion_url) {
-        const defaultExpansion = find(_expansions, {url: version.expansion_url})
-        const otherExpansions = reject(_expansions, {url: version.expansion_url})
-        _expansions = [{...defaultExpansion, "default": true}, ...otherExpansions]
-      }
-      setExpansions({...expansions, [version.uuid]: _expansions})
+      setExpansions({...expansions, [version.uuid]: getFormattedExpansions(version, response.data)})
       setLoadingExpansions({...loadingExpansions, [version.uuid]: false})
     })
   }
 
+  const getFormattedExpansions = (version, versionExpansions) => {
+    let _expansions = map(orderBy(versionExpansions, 'id', 'desc'), expansion => ({...expansion, "default": false}))
+    if(version.autoexpand) {
+      _expansions = [{...last(_expansions), auto: true}, ..._expansions.slice(0, -1)]
+    }
+    if(version.expansion_url) {
+      const defaultExpansion = find(_expansions, {url: version.expansion_url})
+      const otherExpansions = reject(_expansions, {url: version.expansion_url})
+      _expansions = [{...defaultExpansion, "default": true}, ...otherExpansions]
+    }
+    return _expansions
+  }
+
   const isExpansionsLoaded = version => Boolean(!isEmpty(get(expansions, version.uuid)))
   const isExpansionsLoading = version => Boolean(get(loadingExpansions, version.uuid))
-
   const toggleOpen = version => {
     const newOpen = !get(open, version.uuid)
     if(newOpen && !isExpansionsLoaded(version))
@@ -288,13 +304,20 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
                             </div>
                             <Divider orientation='vertical' style={{height: '50px', margin: '0 15px'}}/>
                             <div className='col-md-4' style={{textAlign: 'center'}}>
+                              <Tooltip arrow title={isDefault ? 'Default Expansion' : 'Mark this expansion as default'}>
+                                <span>
+                                  <IconButton disabled={isDefault} onClick={() => onMarkExpansionDefault(version, expansion)}>
+                                    <DefaultIcon fontSize='inherit' />
+                                  </IconButton>
+                                </span>
+                              </Tooltip>
                               {
                                 canEdit &&
                                 <Tooltip arrow title='Delete Expansion'>
                                   <span>
-                                  <IconButton disabled={expansion.retired || isAuto || isDefault} onClick={() => onDeleteExpansionClick(expansion)}>
-                                    <DeleteIcon fontSize='inherit' />
-                                  </IconButton>
+                                    <IconButton disabled={expansion.retired || isDefault} onClick={() => onDeleteExpansionClick(expansion)}>
+                                      <DeleteIcon fontSize='inherit' />
+                                    </IconButton>
                                   </span>
                                 </Tooltip>
                               }
