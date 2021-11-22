@@ -12,7 +12,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import { map, isEmpty, get } from 'lodash';
 import {
-  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig
+  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv
 } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
@@ -124,6 +124,8 @@ const Header = props => {
   })
 
   const isFHIRServer = get(getAppliedServerConfig(), 'type') === 'fhir';
+  const env = getEnv()
+  const isProduction = env === 'production';
 
   return (
     <React.Fragment>
@@ -150,7 +152,7 @@ const Header = props => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
-            <a className="no-anchor-styles" href={SITE_URL} rel="noopener noreferrer">
+            <a className="no-anchor-styles" href={isProduction ? SITE_URL : '/'} rel="noopener noreferrer">
               OCL
             </a>
           </Typography>
