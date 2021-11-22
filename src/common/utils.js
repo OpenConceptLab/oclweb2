@@ -510,6 +510,8 @@ export const getEnv = forURL => {
     return 'demo';
   if(fqdn.match('app.dev.openconceptlab'))
     return 'dev';
+  if(fqdn.match('app.staging.who.openconceptlab'))
+    return forURL ? 'staging.who' : 'staging-who';
   if(fqdn.match('app.openconceptlab'))
     return forURL ? '' : 'production';
 
