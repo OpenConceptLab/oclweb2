@@ -1,3 +1,7 @@
+##### 2.0.53 - Tue Nov 23 03:01:25 2021 +0000
+- [OpenConceptLab/ocl_issues#929](https://github.com/OpenConceptLab/ocl_issues/issues/929) | OCL Logo should redirect to root for non-prod environments
+- WEB | utils | Added staging-who env
+- Fixing to use docker cache for builds
 ##### 2.0.51 - Fri Nov 12 05:50:57 2021 +0000
 - [OpenConceptLab/ocl_issues#1058](https://github.com/OpenConceptLab/ocl_issues/issues/1058) | Recent history component | navigation back to previous visited pages
 ##### 2.0.49 - Mon Nov 8 12:05:31 2021 +0000
