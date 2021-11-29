@@ -1,8 +1,8 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Info as InfoIcon } from '@material-ui/icons';
-import { TextField, Button, FormControlLabel, Checkbox, Tooltip } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Info as InfoIcon } from '@mui/icons-material';
+import { TextField, Button, FormControlLabel, Checkbox, Tooltip } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import {
   set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString
 } from 'lodash';
@@ -150,7 +150,7 @@ class ExpansionForm extends React.Component {
               <Autocomplete
                 openOnFocus
                 disableClearable
-                getOptionSelected={(option, value) => option.version === get(value, 'version')}
+                isOptionEqualToValue={(option, value) => option.version === get(value, 'version')}
                 value={selectedVersion}
                 id="selectedVersion"
                 options={versions}
@@ -278,7 +278,7 @@ class ExpansionForm extends React.Component {
           </form>
         </div>
       </div>
-    )
+    );
   }
 }
 

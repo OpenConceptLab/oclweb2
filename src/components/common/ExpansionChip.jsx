@@ -2,8 +2,8 @@ import React from 'react';
 import {
   Check as YesIcon,
   Close as NoIcon,
-} from '@material-ui/icons';
-import { Tooltip, Chip } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip, Chip } from '@mui/material';
 import { ERROR_RED } from '../../common/constants';
 
 const ExpansionChip = ({ expanded }) => {

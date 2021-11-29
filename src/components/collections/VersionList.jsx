@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import {
   Divider, Tooltip,
   IconButton, CircularProgress, Card, CardContent, Collapse
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject
 } from 'lodash';
@@ -14,7 +14,7 @@ import {
   AspectRatio as ExpansionIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
   CheckCircle as DefaultIcon, BrightnessAuto as AutoIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -200,22 +200,32 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
                     canEdit && !isHEAD &&
                     <React.Fragment>
                       <Tooltip arrow title='Edit Version'>
-                        <IconButton onClick={() => onEditClick(version)}>
+                        <IconButton onClick={() => onEditClick(version)} size="large">
                           <EditIcon fontSize='inherit' />
                         </IconButton>
                       </Tooltip>
                       <Tooltip arrow title={version.released ? 'UnRelease Version' : 'Release Version'}>
-                        <IconButton color={version.released ? 'primary' : 'default' } onClick={() => onReleaseClick(version)}>
+                        <IconButton
+                          color={version.released ? 'primary' : 'default' }
+                          onClick={() => onReleaseClick(version)}
+                          size="large">
                           <ReleaseIcon fontSize='inherit' />
                         </IconButton>
                       </Tooltip>
                       <Tooltip arrow title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
-                        <IconButton className={version.retired ? 'retired-red' : ''} color={version.retired ? 'primary' : 'default' } onClick={() => onRetireClick(version)}>
+                        <IconButton
+                          className={version.retired ? 'retired-red' : ''}
+                          color={version.retired ? 'primary' : 'default' }
+                          onClick={() => onRetireClick(version)}
+                          size="large">
                           <RetireIcon fontSize='inherit' />
                         </IconButton>
                       </Tooltip>
                       <Tooltip arrow title='Delete Version'>
-                        <IconButton disabled={version.retired} onClick={() => onDeleteClick(version)}>
+                        <IconButton
+                          disabled={version.retired}
+                          onClick={() => onDeleteClick(version)}
+                          size="large">
                           <DeleteIcon fontSize='inherit' />
                         </IconButton>
                       </Tooltip>
@@ -232,12 +242,12 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
                     />
                   }
                   <Tooltip arrow title='Explore Version'>
-                    <IconButton href={`#${version.concepts_url}`} color='primary'>
+                    <IconButton href={`#${version.concepts_url}`} color='primary' size="large">
                       <SearchIcon fontSize='inherit' />
                     </IconButton>
                   </Tooltip>
                   <Tooltip arrow title='Copy URL'>
-                    <IconButton onClick={() => onCopyClick(version.version_url)}>
+                    <IconButton onClick={() => onCopyClick(version.version_url)} size="large">
                       <CopyIcon fontSize='inherit' />
                     </IconButton>
                   </Tooltip>
@@ -306,7 +316,10 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
                             <div className='col-md-4' style={{textAlign: 'center'}}>
                               <Tooltip arrow title={isDefault ? 'Default Expansion' : 'Mark this expansion as default'}>
                                 <span>
-                                  <IconButton disabled={isDefault} onClick={() => onMarkExpansionDefault(version, expansion)}>
+                                  <IconButton
+                                    disabled={isDefault}
+                                    onClick={() => onMarkExpansionDefault(version, expansion)}
+                                    size="large">
                                     <DefaultIcon fontSize='inherit' />
                                   </IconButton>
                                 </span>
@@ -315,26 +328,29 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
                                 canEdit &&
                                 <Tooltip arrow title='Delete Expansion'>
                                   <span>
-                                    <IconButton disabled={expansion.retired || isDefault} onClick={() => onDeleteExpansionClick(expansion)}>
+                                    <IconButton
+                                      disabled={expansion.retired || isDefault}
+                                      onClick={() => onDeleteExpansionClick(expansion)}
+                                      size="large">
                                       <DeleteIcon fontSize='inherit' />
                                     </IconButton>
                                   </span>
                                 </Tooltip>
                               }
                               <Tooltip arrow title='Explore Expansion'>
-                                <IconButton href={`#${expansion.url}`} color='primary'>
+                                <IconButton href={`#${expansion.url}`} color='primary' size="large">
                                   <SearchIcon fontSize='inherit' />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip arrow title='Copy URL'>
-                                <IconButton onClick={() => onCopyClick(expansion.url)}>
+                                <IconButton onClick={() => onCopyClick(expansion.url)} size="large">
                                   <CopyIcon fontSize='inherit' />
                                 </IconButton>
                               </Tooltip>
                             </div>
                           </CardContent>
                         </Card>
-                      )
+                      );
                     })
                   )
                 }
@@ -350,7 +366,7 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
                 />
               }
             </Card>
-          )
+          );
         })
       }
       <CommonFormDrawer
@@ -361,7 +377,7 @@ const VersionList = ({ versions, canEdit, onUpdate }) => {
         }
       />
     </div>
-  )
+  );
 }
 
 export default VersionList;
