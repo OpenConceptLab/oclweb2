@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   Card, CardHeader, CardContent
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Highlight as HighlightIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const Tip = ({ content }) => {
   return (

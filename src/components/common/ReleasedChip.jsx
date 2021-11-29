@@ -1,8 +1,8 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 import {
   NewReleases as ReleaseIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const ReleasedChip = props => {
   const icon = <ReleaseIcon fontSize='inherit' color='primary' />;

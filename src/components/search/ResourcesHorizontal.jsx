@@ -1,9 +1,9 @@
 import React from 'react';
-import { CircularProgress, Card, CardHeader, Avatar } from '@material-ui/core';
+import { CircularProgress, Card, CardHeader, Avatar } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon, List as ListIcon,
   Loyalty as LoyaltyIcon, Home as HomeIcon, Person as PersonIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { map, get } from 'lodash';
 import { BLUE, WHITE, GREEN, ORANGE } from '../../common/constants';
 

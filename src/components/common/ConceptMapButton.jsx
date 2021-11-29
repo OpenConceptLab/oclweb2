@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
-import { Link as LinkIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
 import { GREEN, WHITE } from '../../common/constants';
 
 const ConceptMapButton = ({label, onClick, href}) => {

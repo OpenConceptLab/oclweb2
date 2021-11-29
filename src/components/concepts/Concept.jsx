@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocalOffer as LocalOfferIcon } from '@material-ui/icons'
+import { LocalOffer as LocalOfferIcon } from '@mui/icons-material'
 import { merge, get, isArray, reject, keys, isEmpty, includes, map } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
@@ -9,15 +9,27 @@ const DEFAULT_FIELDS = [{concept_class: 'Class'}, {datatype: 'Datatype'}]
 const LABEL_FIELDS = ['id', 'display_name', 'name', 'owner', 'source']
 
 const Concept = props => {
-  const { viewFields, history, currentLayoutURL, url, hideAttributes } = props;
+  const { viewFields, history, currentLayoutURL, url, hideAttributes, version_url, is_latest_version } = props;
   const customFields = isArray(viewFields) ? reject(viewFields, fieldConfig => includes(LABEL_FIELDS, keys(fieldConfig)[0])) : [];
   const fields = isEmpty(customFields) ? DEFAULT_FIELDS : customFields;
-
+  const getNavigationURL = () => {
+    if(window.location.hash.includes('/collections/') || !is_latest_version)
+      return version_url || url
+    return url
+  }
   const navigateTo = () => {
     if(currentLayoutURL)
       history.replace(currentLayoutURL)
-    history.push(url)
+    history.push(getNavigationURL())
   }
+
+  const getValue = attr => {
+    const value = get(props, attr, '')
+    if(isArray(value))
+      return value.join(', ')
+    return value
+  }
+
 
   return (
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
@@ -41,7 +53,7 @@ const Concept = props => {
                     {label}:
                   </span>
                   <span className='resource-value' style={{marginRight: '0px'}}>
-                    {get(props, attr, '')}
+                    {getValue(attr)}
                   </span>
                   {i < fields.length - 1 && <span style={{marginRight: '5px'}}>, </span>}
                 </React.Fragment>

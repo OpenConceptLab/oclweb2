@@ -1,7 +1,7 @@
 import React from 'react';
 import Split from 'react-split'
-import { CircularProgress } from '@material-ui/core';
-import { includes, get, isObject, isBoolean, has } from 'lodash';
+import { CircularProgress } from '@mui/material';
+import { includes, get, isObject, isBoolean, has, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -27,9 +27,16 @@ class ConceptHome extends React.Component {
       permissionDenied: false,
       isLoading: true,
       isLoadingMappings: false,
+      isLoadingCollections: false,
+      isLoadingParents: false,
+      isLoadingChildren: false,
+      parentConcepts: null,
       concept: {},
       versions: [],
       mappings: [],
+      collections: [],
+      parents: [],
+      childConcepts: [],
       tab: this.getDefaultTabIndex(),
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
     }
@@ -99,12 +106,25 @@ class ConceptHome extends React.Component {
                       this.getHierarchy()
                       if(this.state.tab === 1)
                         this.getVersions()
-                      else
+                      else {
                         this.getMappings()
+                        this.getParents()
+                        this.getChildren()
+                        this.getCollectionVersions()
+                      }
+                      if(!isEmpty(get(this.state.concept, 'names', [])) || !isEmpty(get(this.state.concept, 'descriptions', [])))
+                        this.fetchParent()
                     })
                 })
 
     })
+  }
+
+  fetchParent() {
+    const { concept } = this.state
+
+    if(concept)
+      APIService.new().overrideURL(toParentURI(concept.url)).get().then(response => this.setState({source: response.data}))
   }
 
   getHierarchy = () => this.setState({isLoadingHierarchy: true}, () => {
@@ -135,7 +155,7 @@ class ConceptHome extends React.Component {
 
   fetchConceptChildren = (url, callback) => APIService.new()
                                                       .overrideURL(url)
-                                                      .appendToUrl(`children/`)
+                                                      .appendToUrl(`children/?includeChildConcepts=true`)
                                                       .get()
                                                       .then(response => callback(response.data))
 
@@ -155,6 +175,39 @@ class ConceptHome extends React.Component {
                 .get()
                 .then(response => {
                   this.setState({mappings: response.data, isLoadingMappings: false})
+                })
+    })
+  }
+
+  getParents() {
+    this.setState({isLoadingParents: true}, () => {
+      APIService.new()
+                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'parents/?limit=100')
+                .get()
+                .then(response => {
+                  this.setState({parentConcepts: response.data, isLoadingParents: false})
+                })
+    })
+  }
+
+  getChildren() {
+    this.setState({isLoadingChildren: true}, () => {
+      APIService.new()
+                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'children/?limit=100')
+                .get()
+                .then(response => {
+                  this.setState({childConcepts: response.data, isLoadingChildren: false})
+                })
+    })
+  }
+
+  getCollectionVersions() {
+    this.setState({isLoadingCollections: true}, () => {
+      APIService.new()
+                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'collection-versions/?limit=100')
+                .get()
+                .then(response => {
+                  this.setState({collections: response.data, isLoadingCollections: false})
                 })
     })
   }
@@ -193,7 +246,8 @@ class ConceptHome extends React.Component {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading, tab,
       notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
-      isLoadingHierarchy
+      isLoadingHierarchy, collections, isLoadingCollections, source, isLoadingChildren, isLoadingParents,
+      childConcepts, parentConcepts
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -225,9 +279,15 @@ class ConceptHome extends React.Component {
               versions={versions}
               mappings={mappings}
               isLoadingMappings={isLoadingMappings}
-              currentURL={currentURL}
+              childConcepts={childConcepts}
+              parentConcepts={parentConcepts}
+              isLoadingParents={isLoadingParents}
+              isLoadingChildren={isLoadingChildren}
+              collections={collections}
+              isLoadingCollections={isLoadingCollections}
               isVersionedObject={isVersionedObject}
               onTabChange={this.onTabChange}
+              source={source}
             />
           </React.Fragment>
         }

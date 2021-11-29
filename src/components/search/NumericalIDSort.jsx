@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tooltip, Chip } from '@material-ui/core';
+import { Tooltip, Chip } from '@mui/material';
 import {
   ArrowDownward as ArrowDownwardIcon,
   ArrowUpward as ArrowUpwardIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get } from 'lodash';
 
 const SORT_ICON_STYLES = {width: '14px', height: '14px'};

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import {
   CompareArrows as CompareArrowsIcon,
   GetApp as DownloadIcon,
   Repeat as RepeatIcon,
   Link as LinkIcon,
   Delete as DeleteIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { map, includes, get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn } from '../../common/utils'
 import DownloadButton from '../common/DownloadButton';
@@ -22,7 +22,7 @@ const SelectedResourceControls = ({
   const isSourceChild = includes(['concepts', 'mappings'], resource);
   const hasSelectedItems = selectedItems.length > 0;
   const shouldShowDownloadOption = isSourceChild && hasSelectedItems;
-  const shouldShowCompareOption = isConceptResource && selectedItems.length === 2;
+  const shouldShowCompareOption = isSourceChild && selectedItems.length === 2;
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedItems.length == 1 && onCreateSimilarClick;
   const shouldShowAddToCollection = isSourceChild && isAuthenticated && hasSelectedItems;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && hasSelectedItems && selectedItems.length <= 2 && onCreateMappingClick;
@@ -41,7 +41,7 @@ const SelectedResourceControls = ({
     event.preventDefault()
     const urls = map(selectedItems, 'url')
     if(urls.length == 2) {
-      const url = `#/concepts/compare?lhs=${urls[0]}&rhs=${urls[1]}`
+      const url = `#/${resource}/compare?lhs=${urls[0]}&rhs=${urls[1]}`
       window.open(url, '_blank')
     }
   }

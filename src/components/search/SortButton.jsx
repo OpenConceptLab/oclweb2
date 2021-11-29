@@ -2,12 +2,12 @@ import React from 'react';
 import {
   Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   Chip,
-} from '@material-ui/core'
+} from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDownward as ArrowDownwardIcon,
   ArrowUpward as ArrowUpwardIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { map, startCase, get, includes } from 'lodash';
 import { SORT_ATTRS } from './ResultConstants'
 

@@ -1,11 +1,12 @@
 import React from 'react';
 import { withRouter } from "react-router";
+import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit, isString
+  map, omit, isString, values, omitBy
 } from 'lodash';
-import { Share as ShareIcon } from '@material-ui/icons'
-import { CircularProgress, Chip, Tooltip } from '@material-ui/core';
+import { Share as ShareIcon } from '@mui/icons-material'
+import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
 import { formatDate, copyURL } from '../../common/utils';
 import {
@@ -21,10 +22,8 @@ import SortButton from './SortButton';
 import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
 import SearchByAttributeInput from './SearchByAttributeInput';
-import ResourcesHorizontal from './ResourcesHorizontal';
 import ResourceTabs from './ResourceTabs';
-//import Resources from './Resources';
-import { fetchSearchResults, fetchCounts } from './utils';
+import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
 import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
@@ -70,6 +69,7 @@ class Search extends React.Component {
       includeRetired: false,
       userFilters: {},
       isURLUpdatedByActionChange: false,
+      facets: {},
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -229,8 +229,7 @@ class Search extends React.Component {
     const numReturned = parseInt(get(response, 'headers.num_returned', 0))
     const next = get(response, 'headers.next')
     const previous = get(response, 'headers.previous')
-    const facets = get(response, 'data.facets', {})
-    let items = get(response, 'data.results', [])
+    let items = get(response, 'data', [])
     if(this.state.isInfinite && !resetItems)
       items = [...this.state.results[resource].items, ...items]
     return {
@@ -240,7 +239,7 @@ class Search extends React.Component {
       pages: parseInt(get(response, 'headers.pages', 1)),
       next: next,
       prev: previous,
-      facets: facets,
+      facets: this.state.facets,
       items: items,
     }
   }
@@ -257,9 +256,20 @@ class Search extends React.Component {
         if(includes(['sources', 'collections'], resource))
           this.loadSummary(resource)
       })
-    } else {
-      this.setState({isLoading: false}, () => {
-        throw response
+    } else if (get(response, 'detail'))
+      this.setState({isLoading: false}, () => alertifyjs.error(response.detail, 0))
+    else
+      this.setState({isLoading: false}, () => {throw response})
+  }
+
+  onFacetsLoad = (response, resource) => {
+    if(response.status === 200) {
+      this.setState({facets: get(response, 'data.facets', {})}, () => {
+        if(has(this.state, `results.${resource}.facets`)) {
+          const newState = {...this.state}
+          newState.results[resource].facets = this.state.facets
+          this.setState(newState)
+        }
       })
     }
   }
@@ -301,7 +311,35 @@ class Search extends React.Component {
     return {...queryParam, ...viewFilters}
   }
 
-  fetchNewResults(attrsToSet, counts=true, resetItems=true, updateURL=false) {
+  prepareBaseURL = () => {
+    const { extraControlFilters, defaultURI } = this.props
+    let baseURL = this.props.baseURL
+    if(isEmpty(extraControlFilters) || !baseURL.includes('[:') || isEmpty(this.state.userFilters))
+      return defaultURI || baseURL
+    if(baseURL.includes('[:')) {
+      const vars = baseURL.match(/\[:\w+]/g)
+      let varValues = {}
+      forEach(vars, _var => {
+        let found;
+        forEach(extraControlFilters, (data, key) => data.key === _var.replace('[:', '').replace(']', '') ? found = key : null)
+        if(found)
+          varValues[_var] = get(this.state.userFilters, found)
+      })
+      varValues = omitBy(varValues, v => !v)
+
+      if(!varValues || isEmpty(varValues) || (values(varValues).length !== keys(varValues).length))
+        return defaultURI || baseURL
+
+      forEach(varValues, (value, _var) => baseURL = baseURL.replaceAll(_var, value))
+      return baseURL
+    }
+  }
+
+  filterQueryParamsfromUserFilters = () => pickBy(
+    this.state.userFilters, (v, k) => includes(keys(pickBy(this.props.extraControlFilters, f => !f.url)), k)
+  )
+
+  fetchNewResults(attrsToSet, counts=true, resetItems=true, updateURL=false, facets=true) {
     if(!attrsToSet)
       attrsToSet = {}
 
@@ -321,7 +359,7 @@ class Search extends React.Component {
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
-        includeRetired, fhirParams, staticParams, userFilters
+        includeRetired, fhirParams, staticParams
       } = this.state;
       const { configQueryParams, noQuery, noHeaders, fhir, hapi } = this.props;
       let queryParams = {};
@@ -338,7 +376,7 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
-      let params = {...staticParams, ...userFilters}
+      let params = {...staticParams, ...this.filterQueryParamsfromUserFilters()}
       if(!noQuery)
         params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
       if(fhir) {
@@ -348,11 +386,12 @@ class Search extends React.Component {
           params = {...params, page: page, ...fhirParams}
       }
 
+      const baseURL = this.prepareBaseURL()
+
       fetchSearchResults(
         _resource,
         params,
-        !noHeaders,
-        this.props.baseURL,
+        baseURL,
         null,
         response => {
           if(updateURL && !fhir)
@@ -363,11 +402,13 @@ class Search extends React.Component {
       )
       if(counts && !this.props.nested)
         fetchCounts(_resource, queryParams, this.onCountsLoad)
+      if(!noHeaders && facets && !fhir && resource !== 'references')
+        fetchFacets(_resource, queryParams, baseURL, this.onFacetsLoad)
     })
   }
 
   loadMore = () => {
-    this.fetchNewResults({page: this.state.page + 1}, false, false, true);
+    this.fetchNewResults({page: this.state.page + 1}, false, false, true, false);
   }
 
   onPageChange = page => {
@@ -381,7 +422,7 @@ class Search extends React.Component {
           }
         }, () => this.fetchNewResults(null, false, false))
       else
-        this.fetchNewResults({page: page}, false, false, true)
+        this.fetchNewResults({page: page}, false, false, true, false)
 
     }
   }
@@ -395,7 +436,7 @@ class Search extends React.Component {
       }, () => this.fetchNewResults(null, false, true))
     }
     else
-      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true, true))
+      this.setState({sortParams: params}, () => this.fetchNewResults(null, false, true, true, false))
   }
 
   hasPrev() {
@@ -441,7 +482,7 @@ class Search extends React.Component {
     return 'All Time'
   }
 
-  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true, true)
+  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true, true, false)
 
   onLayoutChange = newLayoutId => {
     const existingLayoutId = this.getLayoutTypeName()
@@ -481,7 +522,7 @@ class Search extends React.Component {
 
   onInfiniteToggle = () => this.setState({isInfinite: !this.state.isInfinite})
 
-  onShareClick = () => copyURL(this.convertURLToFQDN(this.getCurrentLayoutURL()))
+  onShareClick = () => copyURL(this.convertURLToFQDN(this.getCurrentLayoutURL().replace('#/', '/')))
 
   convertURLToFQDN = url => window.location.origin + '/#' + url
 
@@ -490,7 +531,7 @@ class Search extends React.Component {
     let resource = this.state.resource || 'concepts'
     if(resource === 'organizations')
       resource = 'orgs'
-    if(this.props.nested && !url.match('/'+resource))
+    if(this.props.nested && !url.match('/' + resource))
       url += url.endsWith('/') ? resource : '/' + resource
     url += `?q=${this.state.searchStr || ''}`
     url += `&isTable=${this.state.isTable}`
@@ -500,8 +541,6 @@ class Search extends React.Component {
     url += `&exactMatch=${this.state.exactMatch || 'off'}`
     if(!this.props.nested)
       url += `&type=${this.state.resource || 'concepts'}`
-
-
     if(this.state.limit !== DEFAULT_LIMIT)
       url += `&limit=${this.state.limit || DEFAULT_LIMIT}`
     if(!isEqual(this.state.sortParams, DEFAULT_SORT_PARAMS))
@@ -512,8 +551,12 @@ class Search extends React.Component {
       url += `&includeRetired=true`
     if(this.state.updatedSince)
       url += `&updatedSince=${this.state.updatedSince}`
+    if(window.location.hash.includes('configs=true'))
+      url += `&configs=true`
+    if(window.location.hash.includes('new=true'))
+      url += `&new=true`
 
-    return url
+    return window.location.hash.split('?')[0] + '?' + url.split('?')[1];
   }
 
   getFilterControls() {
@@ -627,14 +670,14 @@ class Search extends React.Component {
 
   onLimitChange = limit => this.props.fhir ?
                          this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false)) :
-                         this.fetchNewResults({limit: limit}, false, true, true)
+                         this.fetchNewResults({limit: limit}, false, true, true, false)
 
   toggleFacetsDrawer = () => this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
 
   onCloseFacetsDrawer = () => this.setState({openFacetsDrawer: false})
 
   onApplyFacets = filters => this.setState(
-    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true)
+    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true, false, false)
   )
 
   onApplyUserFilters = (id, value) => {
@@ -700,12 +743,6 @@ class Search extends React.Component {
               }
             </span>
           </div>
-          {
-            !nested &&
-            <div className='col-sm-12 search-resources' style={{marginTop: '10px', display: 'none'}}>
-              <ResourcesHorizontal active={resource} results={results} onClick={this.onResourceChange} />
-            </div>
-          }
           {
             !nested &&
             <div className='col-sm-12' style={{marginTop: '5px', padding: '0px'}}>

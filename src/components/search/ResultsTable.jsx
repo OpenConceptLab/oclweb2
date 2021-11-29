@@ -4,7 +4,7 @@ import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
   CircularProgress,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -14,11 +14,11 @@ import {
   Lock as PrivateIcon,
   Warning as WarningIcon,
   PriorityHigh as PriorityIcon,
-} from '@material-ui/icons'
-import { Pagination } from '@material-ui/lab'
+} from '@mui/icons-material'
+import { Pagination } from '@mui/material';
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact, flatten, last
+  isFunction, compact, flatten, last, isArray
 } from 'lodash';
 import {
   BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -129,6 +129,8 @@ const getValue = (item, column) => {
     return column.formatter(value)
   if(get(column, 'renderer'))
     return column.renderer(item)
+  if(isArray(value))
+    return value.join(', ')
   return value
 }
 
@@ -148,7 +150,7 @@ const getTag = (tag, item, hapi) => {
   );
 
   return (
-    <React.Fragment>
+    <React.Fragment key={tag.id}>
       {
         tag.noTooltip ?
         getTagDom() :
@@ -190,7 +192,7 @@ const FHIRHistoryTable = ({ versions, resource }) => {
           map(versions, (version, index) => {
             const versionLabel = getVersionLabel(version)
             return (
-              <TableRow hover key={index}>
+              <TableRow hover key={versionLabel + '-' + index}>
                 {
                   isValueSet &&
                   <TableCell align='center'>
@@ -343,7 +345,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    nested, showPin, columns, hapi, fhir, history
+    showPin, columns, hapi, fhir, history
   } = props;
   const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
@@ -356,6 +358,7 @@ const ExpandibleRow = props => {
   const [tab, setTab] = React.useState(0);
   const [selected, setSelected] = React.useState(isSelected);
   const isConceptContainer = includes(['sources', 'collections'], resource);
+  const isSourceChild = includes(['concepts', 'mappings'], resource)
   const isValueSet = resource === 'ValueSet';
   const isConceptMap = resource === 'ConceptMap';
   const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
@@ -445,7 +448,12 @@ const ExpandibleRow = props => {
         url = `/fhir/${resource}/${item.resource.id}`;
       else
         url = `/fhir${getOCLFHIRResourceURL(item)}`
-    } else url = item.url;
+    } else {
+      if(isSourceChild && (!item.is_latest_version || window.location.hash.includes('/collections/')))
+        url = item.version_url
+      else
+        url = item.url
+    };
 
     history.push(url)
   }
@@ -610,7 +618,7 @@ const ExpandibleRow = props => {
         }
         {
           isSelectable &&
-          <TableCell>
+          <TableCell style={{width: '50px'}}>
             <Checkbox size='small' checked={selected} onClick={onCheckboxClick} />
           </TableCell>
         }
@@ -637,7 +645,7 @@ const ExpandibleRow = props => {
         }
         {
           (resourceDefinition.expandible || showPin) &&
-          <TableCell align={nested ? 'center' : 'left'}>
+          <TableCell align='right' style={{width: '50px'}}>
             {
               resourceDefinition.expandible &&
               (
@@ -732,10 +740,10 @@ const ExpandibleRow = props => {
           formComponent={
             item.concept_class ?
                          <ConceptHome
-                           noRedirect concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: null}}}
+                           noRedirect concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: (!item.is_latest_version || window.location.hash.includes('/collections/')) ? item.version : null }}}
                          /> :
                          <MappingHome
-                           noRedirect mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: null}}}
+                           noRedirect mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: (!item.is_latest_version || window.location.hash.includes('/collections/')) ? item.version : null}}}
                          />
           }
         />
@@ -864,15 +872,29 @@ const ResultsTable = (
                           sortDirection={orderBy === column.id ? order : false}
                           align={column.align || 'left'}
                           style={{color: theadTextColor}}>
-                          <TableSortLabel
-                            className='table-sort-label-white'
-                            active={orderBy === column.id}
-                            direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
-                            onClick={(event) => onSort(event, column.id)}
-                            style={{color: theadTextColor}}
-                          >
-                            { column.label }
-                          </TableSortLabel>
+                          {
+                            column.tooltip ?
+                            <Tooltip arrow placement='top' title={column.tooltip}>
+                              <TableSortLabel
+                                className='table-sort-label-white'
+                                active={orderBy === column.id}
+                                direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
+                                onClick={(event) => onSort(event, column.id)}
+                                style={{color: theadTextColor}}
+                              >
+                                { column.label }
+                              </TableSortLabel>
+                            </Tooltip> :
+                            <TableSortLabel
+                              className='table-sort-label-white'
+                              active={orderBy === column.id}
+                              direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
+                              onClick={(event) => onSort(event, column.id)}
+                              style={{color: theadTextColor}}
+                              >
+                              { column.label }
+                            </TableSortLabel>
+                          }
                         </TableCell>
                       ) : (
                         <TableCell key={column.id} align='left' style={{color: theadTextColor}}>

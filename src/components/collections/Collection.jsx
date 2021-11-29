@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loyalty as LoyaltyIcon } from '@material-ui/icons'
+import { Loyalty as LoyaltyIcon } from '@mui/icons-material'
 import { merge, get, isEmpty, map, isArray, reject, includes, keys } from 'lodash'
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';

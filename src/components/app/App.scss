@@ -252,7 +252,7 @@ span.separator-small {
 
     &-header {
         margin-left: -1px;
-        div:first-child {
+        div:first-of-type {
             overflow: auto !important;
         }
 
@@ -263,7 +263,7 @@ span.separator-small {
             text-transform: capitalize;
             border-bottom: 1px solid #e0e0e0;
             span {
-                font-size: 1.150rem;
+                font-size: 1rem;
                 color: $blue;
             }
         }
@@ -363,7 +363,12 @@ div.login-paper {
     height: 40px !important;
     min-height: 40px !important;
 }
+.capitalize {
+    text-transform: capitalize;
+}
 .material-tab {
+    text-transform: capitalize;
+    flex-direction: row;
     span {
         flex-direction: row;
         display: flex;
@@ -397,10 +402,12 @@ div.login-paper {
 }
 .logo-container {
     justify-content: center;
-    height: 130px;
+    height: auto;
     position: relative;
     width:100%;
     max-width: 100px;
+    border-radius: 10px;
+    padding: 2px;
     &.small {
         height: 70px;
     }
@@ -506,6 +513,9 @@ div.login-paper {
     }
 }
 .custom-drawer {
+    top: 65px;
+    height: auto;
+    bottom: 0;
     &.large {
         width: 75%;
     }
@@ -866,6 +876,28 @@ span.app-version-container {
 div.divider-highlight-hover:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
+.app-menu-toggle {
+    &.selected{
+        background-color: rgba(51, 115, 170, 0.08);
+    }
+}
+.app-menu {
+    .app-container {
+        .app:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        .app {
+            border-radius: 5px;
+            padding: 10px;
+            margin: 0 6px;
+            width: 120px;
+            cursor: pointer;
+            &.selected, &.selected:hover {
+                background-color: rgba(51, 115, 170, 0.25);
+            }
+        }
+    }
+}
 .hierarchy-node-selected {
     background-color: rgba(51, 115, 170, 0.08);
 }
@@ -903,4 +935,52 @@ div.divider-highlight-hover:hover {
     h4 {
         margin: 5px 0;
     }
+}
+.user-home-username {
+    font-weight: 400;
+    color: #586069;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 8px;
+}
+.header-custom-html {
+    button, a {
+        color: inherit;
+        text-decoration: underline;
+    }
+}
+
+div.custom-attributes-accordion-content {
+    border-bottom: 1px solid lightgray;
+    min-height: 30px;
+    padding: 5px 0;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+#chip-date-picker {
+    input#hidden-date-input {
+        display: none;
+    }
+    input#hidden-date-input + div > button {
+        display: none;
+    }
+}
+.page-results-popper {
+    z-index: 2;
+    position: absolute;
+}
+.ql-align-center {
+    text-align: center;
+}
+.ql-align-justify {
+    text-align: justify;
+}
+.ql-align-left {
+    text-align: left;
+}
+.ql-align-right {
+    text-align: right;
 }

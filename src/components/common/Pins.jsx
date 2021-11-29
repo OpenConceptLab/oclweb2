@@ -54,7 +54,7 @@ const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
   }
 
   return (
-    <div className='col-md-12' style={{marginBottom: '10px'}}>
+    <div className='col-md-12' style={{marginBottom: isEmpty(orderedPins) ? '5px' : '10px'}}>
       {
         !isEmpty(orderedPins) &&
         <h3 style={{margin: '10px 5px', display: 'flex', alignItems: 'center'}}>

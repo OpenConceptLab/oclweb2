@@ -1,12 +1,12 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { MenuItem, Menu, Tooltip, Button } from '@material-ui/core';
-import { GetApp as DownloadIcon } from '@material-ui/icons';
-import { isArray, map, toUpper, includes, forEach } from 'lodash';
+import { MenuItem, Menu, Tooltip, Button } from '@mui/material';
+import { GetApp as DownloadIcon } from '@mui/icons-material';
+import { isArray, map, toUpper, includes, forEach, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import { downloadObject, arrayToCSV, downloadFromURL, toFullAPIURL } from '../../common/utils';
 
-const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip}) => {
+const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip, iconStyle}) => {
   const fileName = filename || 'download';
   const [fetchedResources, setFetchedResources] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -14,6 +14,12 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
   if(includeCSV && !includes(downloadableFormats, 'csv'))
     downloadableFormats.splice(1, 0, 'csv')
 
+  const getQueryString = prefix => {
+    if(!queryParams)
+      return ''
+    const params = new URLSearchParams(queryParams)
+    return prefix + params.toString()
+  }
   const onFormatClick = format => {
     const name = `${fileName}.${format}`;
     if(format === 'json') {
@@ -25,7 +31,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
     if(format === 'csv')
       downloadObject(arrayToCSV(isArray(resource) ? resource : [resource]), 'text/csv', name)
     if(format === 'zip' && resource.url)
-      downloadFromURL(toFullAPIURL(resource.url) + '?format=zip', name)
+      downloadFromURL(toFullAPIURL(resource.url) + '?format=zip' + getQueryString('&'), name)
 
     setAnchorEl(null)
   }
@@ -60,8 +66,8 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
       <Tooltip arrow title={tooltipTitle}>
         {
           buttonFunc ? buttonFunc({onClick: event => setAnchorEl(event.currentTarget)}) :
-          <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}}>
-            <DownloadIcon fontSize='inherit' style={{marginTop: '3px'}} />
+          <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}} color='secondary'>
+            <DownloadIcon fontSize='inherit' style={merge({marginTop: '3px'}, (iconStyle || {}))} />
           </Button>
         }
       </Tooltip>

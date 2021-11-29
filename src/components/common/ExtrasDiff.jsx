@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDiffViewer from 'react-diff-viewer';
-import { TableRow, TableCell } from '@material-ui/core';
+import { TableRow, TableCell } from '@mui/material';
 import {
   keys, startCase, map, compact, uniq, get, isEmpty, isObject, isEqual, isBoolean, isString, every,
   isNumber, isArray

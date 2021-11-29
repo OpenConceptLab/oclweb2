@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
+import AdapterMoment from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme, StylesProvider } from '@material-ui/core/styles';
+import { ThemeProvider, StyledEngineProvider, createTheme, alpha } from '@mui/material/styles';
+import { grey } from "@mui/material/colors";
+import StylesProvider from '@mui/styles/StylesProvider';
 import alertifyjs from 'alertifyjs';
 import App from './components/app/App';
 import './index.scss';
@@ -19,7 +21,8 @@ alertifyjs.defaults = {
   },
 };
 
-const theme = createMuiTheme({
+const theme = createTheme();
+const v5Theme = createTheme(theme, {
   palette: {
     primary: {
       main: BLUE,
@@ -33,20 +36,73 @@ const theme = createMuiTheme({
       light: BLACK,
       contrastText: WHITE,
     },
+    "default": {
+      main: grey[600],
+      dark: grey[600]
+    }
   },
-});
+  components: {
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: "contained", color: "grey" },
+          style: {
+            color: theme.palette.getContrastText(theme.palette.grey[300])
+          }
+        },
+        {
+          props: { variant: "outlined", color: "grey" },
+          style: {
+            color: theme.palette.text.primary,
+            borderColor:
+                    theme.palette.mode === "light"
+                    ? "rgba(0, 0, 0, 0.23)"
+                    : "rgba(255, 255, 255, 0.23)",
+            "&.Mui-disabled": {
+              border: `1px solid ${theme.palette.action.disabledBackground}`
+            },
+            "&:hover": {
+              borderColor:
+                      theme.palette.mode === "light"
+                      ? "rgba(0, 0, 0, 0.23)"
+                      : "rgba(255, 255, 255, 0.23)",
+              backgroundColor: alpha(
+                theme.palette.text.primary,
+                theme.palette.action.hoverOpacity
+              )
+            }
+          }
+        },
+        {
+          props: { color: "grey", variant: "text" },
+          style: {
+            color: theme.palette.text.primary,
+            "&:hover": {
+              backgroundColor: alpha(
+                theme.palette.text.primary,
+                theme.palette.action.hoverOpacity
+              )
+            }
+          }
+        }
+      ]
+    }
+  }
+})
 
 ReactDOM.render(
   <HashRouter>
     <StylesProvider injectFirst>
-      <MuiThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-          <Switch>
-            <Route exact path="/" component={App} />
-            <App />
-          </Switch>
-        </MuiPickersUtilsProvider>
-      </MuiThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={v5Theme}>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <Switch>
+              <Route exact path="/" component={App} />
+              <App />
+            </Switch>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </StylesProvider>
   </HashRouter>,
   document.getElementById('root')

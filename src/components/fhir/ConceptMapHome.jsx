@@ -1,26 +1,14 @@
 import React from 'react';
 import { get, isObject, find } from 'lodash';
-import { Pagination } from '@material-ui/lab'
-import { CircularProgress } from '@material-ui/core';
+import { Pagination } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import APIService from '../../services/APIService';
 import { getAppliedServerConfig } from '../../common/utils';
 import NotFound from '../common/NotFound';
 import NavigationButtonGroup from '../search/NavigationButtonGroup';
 import ContainerHomeHeader from './ContainerHomeHeader';
 import ConceptMapGroups from './ConceptMapGroups';
-
-const CONCEPT_MAP_DEFAULT_CONFIG = {
-  name: 'FHIR Default (ConceptMap)',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      {type: "codes", label: "Codes", page_size: 25, "default": true, layout: 'table'},
-      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
-      {type: "about", label: "About"},
-    ]
-  }
-}
+import { CONCEPT_MAP_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 class ConceptMapHome extends React.Component {
   constructor(props) {

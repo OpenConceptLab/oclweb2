@@ -1,10 +1,10 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, IconButton, Button, CircularProgress } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import Autocomplete from '@mui/material/Autocomplete';
+import { TextField, IconButton, Button, CircularProgress } from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
-  set, get, map, cloneDeep, pullAt, filter, isEmpty, pick
+  set, get, map, cloneDeep, pullAt, filter, isEmpty, pick, isObject, values, startCase,
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
@@ -213,7 +213,9 @@ class ConceptForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br/>'))
+      } else if (isObject(response)) {
+        alertifyjs.error(map(values(response), startCase).join('.<br/>'))
       } else {
         this.setState(
           {fieldErrors: response || {}},
@@ -284,7 +286,7 @@ class ConceptForm extends React.Component {
               <div style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
                   openOnFocus
-                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
+                  isOptionEqualToValue={(option, value) => option.id === get(value, 'id')}
                   id="fields.datatype"
                   value={selected_datatype}
                   options={datatypes}
@@ -325,7 +327,7 @@ class ConceptForm extends React.Component {
                   <h3>Parent Concept URLs</h3>
                 </div>
                 <div className='col-md-4' style={{textAlign: 'right'}}>
-                  <IconButton color='primary' onClick={this.onAddParentConceptURL}>
+                  <IconButton color='primary' onClick={this.onAddParentConceptURL} size="large">
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -343,7 +345,10 @@ class ConceptForm extends React.Component {
                         />
                       </div>
                       <div className='col-md-2 no-right-padding'>
-                        <IconButton style={{}} onClick={() => this.onDeleteParentConceptURL(index)}><DeleteIcon /></IconButton>
+                        <IconButton
+                          style={{}}
+                          onClick={() => this.onDeleteParentConceptURL(index)}
+                          size="large"><DeleteIcon /></IconButton>
                       </div>
                     </div>
                   ))
@@ -354,7 +359,7 @@ class ConceptForm extends React.Component {
                   <h3 style={fieldErrors.names && isEmpty(fields.names) ? {color: ERROR_RED} : {}}>Names & Synonyms</h3>
                 </div>
                 <div className='col-md-4' style={{textAlign: 'right'}}>
-                  <IconButton color='primary' onClick={this.onAddNameLocale}>
+                  <IconButton color='primary' onClick={this.onAddNameLocale} size="large">
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -381,7 +386,7 @@ class ConceptForm extends React.Component {
                   <h3>Descriptions</h3>
                 </div>
                 <div className='col-md-4' style={{textAlign: 'right'}}>
-                  <IconButton color='primary' onClick={this.onAddDescLocale}>
+                  <IconButton color='primary' onClick={this.onAddDescLocale} size="large">
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -407,7 +412,7 @@ class ConceptForm extends React.Component {
                   <h3>Custom Attributes</h3>
                 </div>
                 <div className='col-md-4' style={{textAlign: 'right'}}>
-                  <IconButton color='primary' onClick={this.onAddExtras}>
+                  <IconButton color='primary' onClick={this.onAddExtras} size="large">
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -436,7 +441,7 @@ class ConceptForm extends React.Component {
           </div>
         }
       </div>
-    )
+    );
   }
 }
 

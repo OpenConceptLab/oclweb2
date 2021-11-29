@@ -2,23 +2,11 @@ import React from 'react';
 import {
   Person as UserIcon,
   Home as OrgIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { getAppliedServerConfig } from '../../common/utils';
 import FhirTabs from './FhirTabs';
 import OwnerButton from '../common/OwnerButton';
-
-const DEFAULT_CONFIG = {
-  name: 'FHIR Default',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      { type: "CodeSystem", label: "Code Systems", "default": true },
-      { type: "ValueSet", label: "Value Sets" },
-      { type: "ConceptMap", label: "Concept Maps" },
-    ]
-  }
-}
+import { FHIR_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 class OwnerHome extends React.Component {
   constructor(props) {
@@ -36,7 +24,7 @@ class OwnerHome extends React.Component {
     this.state = {
       owner: {ownerType: ownerType, owner: owner, id: owner,},
       tab: this.getDefaultTab(),
-      config: DEFAULT_CONFIG
+      config: FHIR_DEFAULT_CONFIG
     }
   }
 

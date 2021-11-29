@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab } from '@mui/material';
 import { get, map, reject, pickBy, isString, isObject, includes } from 'lodash';
 import { ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
@@ -51,7 +51,7 @@ const OrgHomeTabs = props => {
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="concept-home-tabs" classes={{indicator: 'hidden'}}>
         {
-          map(tabConfigs, config => <Tab key={config.label} label={config.label} />)
+          map(tabConfigs, config => <Tab key={config.label} label={config.label} style={{textTransform: 'capitalize'}} />)
         }
       </Tabs>
       {
@@ -111,6 +111,7 @@ const OrgHomeTabs = props => {
             extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
+            configQueryParams={selectedTabConfig.query_params}
           />
         }
       </div>

@@ -3,19 +3,7 @@ import { getAppliedServerConfig } from '../../common/utils';
 import OrgHomeHeader from '../orgs/OrgHomeHeader';
 import FhirTabs from './FhirTabs';
 import HeaderAttribute from '../common/HeaderAttribute';
-
-const DEFAULT_CONFIG = {
-  name: 'FHIR Default',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      { type: "CodeSystem", label: "Code Systems", "default": true },
-      { type: "ValueSet", label: "Value Sets" },
-      { type: "ConceptMap", label: "Concept Maps" },
-    ]
-  }
-}
+import { FHIR_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 class Fhir extends React.Component {
   constructor(props) {
@@ -23,7 +11,7 @@ class Fhir extends React.Component {
     this.serverConfig = getAppliedServerConfig()
     this.state = {
       tab: this.getDefaultTab(),
-      config: DEFAULT_CONFIG
+      config: FHIR_DEFAULT_CONFIG
     }
   }
 

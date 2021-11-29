@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import DragIcon from '@material-ui/icons/MoreVert';
+import makeStyles from '@mui/styles/makeStyles';
+import Drawer from "@mui/material/Drawer";
+import DragIcon from '@mui/icons-material/MoreVert';
 
 export const defaultWidth = 360;
 const minWidth = 50;

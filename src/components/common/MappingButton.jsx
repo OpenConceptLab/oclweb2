@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, ButtonGroup } from '@material-ui/core';
-import { Link as LinkIcon } from '@material-ui/icons';
+import { Button, ButtonGroup } from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
 import { BLUE, WHITE, RED, BLACK } from '../../common/constants';
 
 const MappingButton = ({label, mapType, onClick, retired, href}) => {

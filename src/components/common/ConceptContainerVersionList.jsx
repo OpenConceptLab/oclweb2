@@ -4,13 +4,13 @@ import alertifyjs from 'alertifyjs';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton, CircularProgress
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
-  ExpandMore as ExpandMoreIcon, Search as SearchIcon, Edit as EditIcon,
+  Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
@@ -102,7 +102,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<span />}
             aria-controls="panel1a-content"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>{`${startCase(resource)} Version History`}</Typography>
@@ -185,7 +185,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                               version && !fhir &&
                               <ConceptContainerExport
                                 isHEAD={isHEAD}
-                                title={`Export Version ${version.id}`}
+                                title={`Export ${startCase(resource)} Version: ${version.short_code} / ${version.id}`}
                                 version={version}
                                 resource={resource}
                               />
@@ -209,7 +209,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                         </div>
                       </div>
                       {
-                        (index + 1) < versions.length && <Divider style={{width: '100%'}} />
+                        (index + 1) < versions.length && <Divider style={{width: '100%', display: 'inline-block'}} />
                       }
                     </div>
                   )

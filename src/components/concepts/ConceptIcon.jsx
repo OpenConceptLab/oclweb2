@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   LocalOffer as LocalOfferIcon
-} from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 
 const ConceptIcon = ({ url, shrink }) => {
@@ -10,7 +10,7 @@ const ConceptIcon = ({ url, shrink }) => {
   const classes = 'no-side-padding col-md-1 home-icon concept flex-vertical-center' + (shrink ? ' small' : '')
 
   return (
-    <div className={classes} style={{width: '5%'}}>
+    <div className={classes} style={{width: '5%', cursor: 'auto'}}>
       {
         url ?
         <Tooltip arrow title='Copy URL'>

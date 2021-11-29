@@ -113,10 +113,7 @@ module.exports = (env) => {
         'process.env.ERRBIT_URL': JSON.stringify(env.ERRBIT_URL),
         'process.env.ERRBIT_KEY': JSON.stringify(env.ERRBIT_KEY),
       }),
-      new IgnorePlugin({
-        resourceRegExp: /^\.\/locale$/,
-        contextRegExp: /moment$/,
-      })
+      new IgnorePlugin({ resourceRegExp: /moment\/locale\// })
     ],
     resolve: {
       extensions: ['.js', '.jsx'],

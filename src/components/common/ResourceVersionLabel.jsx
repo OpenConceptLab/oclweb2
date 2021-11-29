@@ -2,8 +2,8 @@ import React from 'react';
 import {
   AccountTreeRounded as TreeIcon,
   AspectRatio as ExpansionIcon
-} from '@material-ui/icons';
-import { Tooltip } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import ReleasedChip from './ReleasedChip';
 import RetiredChip from './RetiredChip';
 import ProcessingChip from './ProcessingChip';

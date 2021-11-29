@@ -1,9 +1,9 @@
 import React from 'react';
-import MuiAlert from '@material-ui/lab/Alert';
+import MuiAlert from '@mui/material/Alert';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   Divider
-} from '@material-ui/core'
+} from '@mui/material'
 import { filter, map, get, isEmpty } from 'lodash';
 
 const ReferencesResult = ({references, severity, title, messageKey}) => (

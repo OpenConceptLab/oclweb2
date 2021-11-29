@@ -1,13 +1,13 @@
 import React from 'react';
-import { TextField, IconButton, Button } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import { TextField, IconButton, Button } from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { map, isNumber } from 'lodash';
 
 const URLReferenceForm = ({expressions, onAdd, onChange, onBlur, onDelete}) => {
   return (
     <div className='col-md-12 no-side-padding'>
       <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
-        <Button onClick={onAdd} startIcon={<AddIcon />} variant='outlined' color='default'>Expression</Button>
+        <Button onClick={onAdd} startIcon={<AddIcon />} variant='outlined'>Expression</Button>
       </div>
       {
         map(expressions, (expression, index) => {
@@ -32,15 +32,15 @@ const URLReferenceForm = ({expressions, onAdd, onChange, onBlur, onDelete}) => {
               {
                 index > 0 &&
                 <div className='col-md-1 no-side-padding'>
-                  <IconButton onClick={() => onDelete(index)}><DeleteIcon fontSize='inherit'/></IconButton>
+                  <IconButton onClick={() => onDelete(index)} size="large"><DeleteIcon fontSize='inherit'/></IconButton>
                 </div>
               }
             </div>
-          )
+          );
         })
       }
     </div>
-  )
+  );
 }
 
 export default URLReferenceForm;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Paper, CircularProgress } from '@material-ui/core';
+import { Button, Paper, CircularProgress } from '@mui/material';
 import {set, get, map, values} from 'lodash';
 import APIService from '../../services/APIService';
 import ForgotPasswordSuccessMessage from './ForgotPasswordSuccessMessage';

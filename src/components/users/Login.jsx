@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
-import { Paper, TextField, Button, Divider, InputAdornment, IconButton } from '@material-ui/core';
+import { Paper, TextField, Button, Divider, InputAdornment, IconButton } from '@mui/material';
 import {
   PermIdentity as UserIcon, LockOutlined as LockIcon,
   Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
 import {
@@ -28,6 +28,8 @@ class Login extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault()
+    const form = document.getElementsByTagName('form')[0];
+    form.reportValidity()
     const { username, password } = this.state;
     if(username && password)
       this.handleLogin(username, password)
@@ -132,7 +134,10 @@ class Login extends React.Component {
                           ),
                           endAdornment:(
                             <InputAdornment position="end">
-                              <IconButton aria-label="Toggle password visibility" onClick={this.handleClickShowPassword}>
+                              <IconButton
+                                aria-label="Toggle password visibility"
+                                onClick={this.handleClickShowPassword}
+                                size="large">
                                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                               </IconButton>
                             </InputAdornment>
@@ -156,7 +161,7 @@ class Login extends React.Component {
         </div>
         <div className='col-md-3' />
       </div>
-    )
+    );
   }
 }
 

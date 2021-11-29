@@ -1,6 +1,6 @@
 import React from 'react';
 import Split from 'react-split'
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach } from 'lodash';
 import { BLUE } from '../../common/constants';
 import APIService from '../../services/APIService';
@@ -12,22 +12,9 @@ import PermissionDenied from '../common/PermissionDenied';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import '../common/Split.scss';
+import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
-
-const DEFAULT_CONFIG = {
-  name: 'OCL Default (Source)',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      {type: "concepts", label: "Concepts", page_size: 25, "default": true, layout: 'table'},
-      {type: "mappings", label: "Mappings", page_size: 25, layout: 'table'},
-      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
-      {type: "about", label: "About"},
-    ]
-  }
-}
 
 class SourceHome extends React.Component {
   constructor(props) {
@@ -118,7 +105,10 @@ class SourceHome extends React.Component {
                 .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
                 .get(null, null, {verbose: true})
                 .then(response => {
-                  this.setState({versions: response.data, isLoadingVersions: false}, this.fetchVersionsSummary)
+                  this.setState({versions: response.data, isLoadingVersions: false}, () => {
+                    if(this.isVersionTabSelected())
+                      this.fetchVersionsSummary()
+                  })
                 })
     })
   }
@@ -137,8 +127,9 @@ class SourceHome extends React.Component {
 
   fetchVersionsSummary() {
     forEach(this.state.versions, version => {
-      if(version.id === 'HEAD')
-        this.setHEADSummary()
+      if(version.id === 'HEAD') {
+        this.fetchSummary()
+      }
       else
         APIService.new().overrideURL(version.version_url).appendToUrl('summary/').get().then(response => {
           const newState = {...this.state}
@@ -153,6 +144,8 @@ class SourceHome extends React.Component {
     this.setState({tab: value, selected: null, splitView: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
+      if(this.isVersionTabSelected())
+        this.fetchVersionsSummary()
     })
   }
 
@@ -177,10 +170,9 @@ class SourceHome extends React.Component {
                     this.setState({
                       isLoading: false,
                       source: source,
-                      selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
+                      selectedConfig: defaultCustomConfig || SOURCE_DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
-                      this.fetchSummary()
                       const tab = this.getDefaultTabIndex()
                       if(tab === 0)
                         this.setTab()
@@ -242,6 +234,10 @@ class SourceHome extends React.Component {
 
   toggleSplitView = () => this.setState({splitView: !this.state.splitView})
 
+  currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
+
+  isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
+
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
@@ -263,11 +259,11 @@ class SourceHome extends React.Component {
         currentVersion={this.getCurrentVersion()}
         aboutTab={showAboutTab}
         onVersionUpdate={this.onVersionUpdate}
-        customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+        customConfigs={[...customConfigs, SOURCE_DEFAULT_CONFIG]}
         onConfigChange={this.onConfigChange}
         selectedConfig={selectedConfig}
         showConfigSelection={this.customConfigFeatureApplicable()}
-        isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
+        isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
         isLoadingVersions={isLoadingVersions}
         splitView={splitView}
         onSelect={this.onResourceSelect}

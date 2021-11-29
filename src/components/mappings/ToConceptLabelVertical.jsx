@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {LocalOffer as LocalOfferIcon} from '@material-ui/icons'
+import {LocalOffer as LocalOfferIcon} from '@mui/icons-material'
 import { get } from 'lodash';
 import ResourceLabelVertical from '../common/ResourceLabelVertical';
 import { DARKGRAY } from '../../common/constants';
@@ -14,7 +14,7 @@ const ToConceptLabelVertical = props => {
                            owner={props.to_source_owner}
                            parent={props.to_source_name}
                            id={props.to_concept_code}
-                           parentURL={props.from_source_url}
+                           parentURL={props.to_source_url}
                            name={conceptName}
                            icon={
                              <LocalOfferIcon

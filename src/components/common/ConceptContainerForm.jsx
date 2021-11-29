@@ -1,11 +1,11 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Add as AddIcon } from '@material-ui/icons';
+import Autocomplete from '@mui/material/Autocomplete';
+import { Add as AddIcon } from '@mui/icons-material';
 import {
   TextField, IconButton, Button, CircularProgress, Select, MenuItem, FormControl, InputLabel,
   FormControlLabel, Checkbox, FormHelperText
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   set, get, map, cloneDeep, pullAt, isEmpty, startCase, pickBy, isObject, isArray,
   find, intersectionBy
@@ -262,7 +262,7 @@ class ConceptContainerForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br />'))
       } else {
         this.setState(
           {fieldErrors: response || {}},
@@ -389,7 +389,7 @@ class ConceptContainerForm extends React.Component {
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}}>
                 <Autocomplete
                   openOnFocus
-                  getOptionSelected={(option, value) => option.id === get(value, 'id')}
+                  isOptionEqualToValue={(option, value) => option.id === get(value, 'id')}
                   value={selected_type}
                   id={`fields.${typeAttr}`}
                   options={types}
@@ -591,7 +591,7 @@ class ConceptContainerForm extends React.Component {
                   <h3>Custom Attributes</h3>
                 </div>
                 <div className='col-md-4' style={{textAlign: 'right'}}>
-                  <IconButton color='primary' onClick={this.onAddExtras}>
+                  <IconButton color='primary' onClick={this.onAddExtras} size="large">
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -628,7 +628,7 @@ class ConceptContainerForm extends React.Component {
           </div>
         }
       </div>
-    )
+    );
   }
 }
 

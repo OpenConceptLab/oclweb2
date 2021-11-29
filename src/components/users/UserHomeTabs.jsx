@@ -1,11 +1,11 @@
 import React from 'react';
-import { Tabs, Tab, AppBar, CircularProgress, Button } from '@material-ui/core';
+import { Tabs, Tab, AppBar, CircularProgress, Button } from '@mui/material';
 import {
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   Home as HomeIcon,
   Add as AddIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { isEmpty, startCase } from 'lodash';
 import { WHITE, GREEN, ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
@@ -99,6 +99,7 @@ const UserHomeTabs = props => {
             <Search
               {...props}
               nested
+              essentialColumns
               parentResource="user"
               baseURL={user.sources_url}
               fixedFilters={{isTable: true, limit: 25}}
@@ -116,6 +117,7 @@ const UserHomeTabs = props => {
             <Search
               {...props}
               nested
+              essentialColumns
               parentResource="user"
               baseURL={user.collections_url}
               fixedFilters={{isTable: true, limit: 25}}

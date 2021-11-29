@@ -2,11 +2,11 @@ import React from 'react';
 import moment from 'moment';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider
-} from '@material-ui/core';
+} from '@mui/material';
 import { DATETIME_FORMAT } from '../../common/constants';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
+import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -19,10 +19,10 @@ const MappingHomeDetails = ({ mapping }) => {
   return (
     <div className='col-md-12'>
       <div className='col-md-12 no-side-padding'>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded expanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<span />}
             aria-controls="panel1a-content"
           >
             <Typography style={ACCORDIAN_HEADING_STYLES}>Mapping Details</Typography>
@@ -52,7 +52,7 @@ const MappingHomeDetails = ({ mapping }) => {
                 {mapping.map_type}
               </div>
             </div>
-            <Divider style={{width: '100%'}} />
+            <Divider style={{width: '100%', display: 'inline-block'}} />
             <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
                 From Concept
@@ -69,7 +69,7 @@ const MappingHomeDetails = ({ mapping }) => {
                 <ToConceptLabel {...mapping} />
               </div>
             </div>
-            <Divider style={{width: '100%'}} />
+            <Divider style={{width: '100%', display: 'inline-block'}} />
             <div className='col-md-12' style={{marginBottom: '5px', marginTop: '15px'}}>
               <div style={{fontWeight: '300'}} className='col-md-4 no-left-padding'>
                 Updated By
@@ -104,6 +104,11 @@ const MappingHomeDetails = ({ mapping }) => {
             </div>
           </AccordionDetails>
         </Accordion>
+        <CustomAttributesAccordian
+          attributes={mapping.extras || {}}
+          headingStyles={ACCORDIAN_HEADING_STYLES}
+          detailStyles={ACCORDIAN_DETAILS_STYLES}
+        />
       </div>
     </div>
   );

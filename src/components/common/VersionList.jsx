@@ -2,12 +2,11 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
   IconButton, Button, Checkbox
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, isEmpty, startCase, uniq, without, orderBy } from 'lodash';
 import {
-  ExpandMore as ExpandMoreIcon, Search as SearchIcon,
-  CompareArrows as CompareArrowsIcon,
-} from '@material-ui/icons';
+  Search as SearchIcon, CompareArrows as CompareArrowsIcon,
+} from '@mui/icons-material';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import Tip from './Tip';
 import SourceChildVersionAssociationWithContainer from './SourceChildVersionAssociationWithContainer';
@@ -35,14 +34,15 @@ const VersionList = ({ versions, resource }) => {
     setSelectedList(newSelectedList)
   }
   const isConcept = resource === 'concept';
-  const canSelect = isConcept && sortedVersions.length > 1;
+  const isMapping = resource === 'mapping';
+  const canSelect = (isConcept || isMapping) && sortedVersions.length > 1;
   const gridClass = canSelect ? 'col-md-11' : 'col-md-12'
-  const showCompareOption = isConcept && selectedList.length === 2;
+  const showCompareOption = (isConcept || isMapping) && selectedList.length === 2;
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
 
-    const url = `#/concepts/compare?lhs=${selectedList[0]}&rhs=${selectedList[1]}`
+    const url = `#/${resource}s/compare?lhs=${selectedList[0]}&rhs=${selectedList[1]}`
     window.open(url, '_blank')
   }
 
@@ -54,7 +54,6 @@ const VersionList = ({ versions, resource }) => {
         <Accordion defaultExpanded>
           <AccordionSummary
             className='light-gray-bg less-paded-accordian-header'
-            expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
           >
             <span className='flex-vertical-center'>
@@ -132,11 +131,12 @@ const VersionList = ({ versions, resource }) => {
                           source: version.source_versions,
                           collection: version.collection_versions
                         }}
+                        resource={resource}
                       />
                     </div>
                     {
                       !isAssociated(version) && ((index + 1) < versions.length) &&
-                      <Divider style={{width: '100%'}} />
+                      <Divider style={{width: '100%', display: 'inline-block'}} />
                     }
                   </React.Fragment>
                 )

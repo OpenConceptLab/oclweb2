@@ -6,7 +6,7 @@ import {
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   AccountTreeRounded as TreeIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const SEPARATOR = '/'
 const ConceptContainerLabel = props => {

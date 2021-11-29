@@ -3,22 +3,25 @@ import {
   AppBar, Toolbar, Typography, Button, Drawer, CssBaseline, List, IconButton,
   ListItem, ListItemText, Collapse, ListItemIcon, Tooltip, Paper,
   Popper, Grow, ClickAwayListener
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Menu as MenuIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
-} from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import { map, isEmpty, get } from 'lodash';
 import {
-  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig
+  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv
 } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
 import UserOptions from '../users/UserOptions';
+import Favorites from './Favorites';
+import RecentHistory from './RecentHistory';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
-import Feedback from '../common/Feedback';
+/* import Feedback from '../common/Feedback'; */
+import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 
 const drawerWidth = 250;
@@ -121,14 +124,21 @@ const Header = props => {
   })
 
   const isFHIRServer = get(getAppliedServerConfig(), 'type') === 'fhir';
+  const env = getEnv()
+  const isProduction = env === 'production';
 
   return (
     <React.Fragment>
       <CssBaseline />
       <AppBar
         position="fixed"
-        variant="outlined"
-        style={{backgroundColor: WHITE, color: BLACK, borderLeft: 'none'}}
+        style={{
+          backgroundColor: WHITE,
+          color: BLACK,
+          borderLeft: 'none',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+          boxShadow: 'none'
+        }}
         className={classes.appBar}
       >
         <Toolbar style={{padding: '0 15px'}}>
@@ -138,11 +148,11 @@ const Header = props => {
             onClick={toggleOpen}
             edge="start"
             className={classes.menuButton}
-          >
+            size="large">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
-            <a className="no-anchor-styles" href={SITE_URL} rel="noopener noreferrer">
+            <a className="no-anchor-styles" href={isProduction ? SITE_URL : '/'} rel="noopener noreferrer">
               OCL
             </a>
           </Typography>
@@ -160,6 +170,9 @@ const Header = props => {
             {
               authenticated ?
               <span style={{marginLeft: '20px'}}>
+                <RecentHistory />
+                <Favorites />
+                <AppsMenu/>
                 <UserOptions />
               </span> :
               (
@@ -248,7 +261,7 @@ const Header = props => {
                   )
                 })
               }
-              <Feedback mainButtonLabel='Feedback' containerClassName='feedback-div-open' />
+              {/* <Feedback mainButtonLabel='Feedback' containerClassName='feedback-div-open' /> */}
             </List>
           </div>
         </Drawer> :
@@ -270,7 +283,7 @@ const Header = props => {
               edge="start"
               className={open ? classes.menuButton + ' ' + classes.hide : classes.menuButton}
               style={{marginLeft: 0}}
-            >
+              size="large">
               <MenuIcon />
             </IconButton>
           </div>
@@ -351,13 +364,13 @@ const Header = props => {
                 )
               })
             }
-            <Feedback mainButtonLabel={false} containerClassName='feedback-div' />
+            {/* <Feedback mainButtonLabel={false} containerClassName='feedback-div' /> */}
           </List>
         </Drawer>
 
       }
     </React.Fragment>
-  )
+  );
 }
 
 export default Header;

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import {
   AccountTreeRounded as TreeIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { BLUE, WHITE, RED, BLACK } from '../../common/constants';
 
 const VersionButton = ({label, onClick, retired, href, bgColor, textColor}) => {

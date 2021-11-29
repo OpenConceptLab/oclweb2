@@ -1,6 +1,5 @@
 # Stage-1 Build and Development Environment
 FROM node:14.11 as build
-ARG SOURCE_COMMIT
 ARG NODE_ENV=production
 ARG NODE_OPTIONS=--max_old_space_size=700
 ENV NPM_CONFIG_LOGLEVEL warn
@@ -30,6 +29,7 @@ RUN chmod +x start.sh
 ADD set_build_version.sh /app/
 RUN chmod +X set_build_version.sh
 
+ARG SOURCE_COMMIT
 RUN ["bash", "-c", "./set_build_version.sh"]
 
 RUN npm run build

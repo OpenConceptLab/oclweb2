@@ -3,8 +3,8 @@ import {
   Search as SearchIcon,
   CenterFocusStrong as ExactMatchIcon,
   Clear as ClearIcon,
-} from '@material-ui/icons';
-import { InputBase, Divider, IconButton, Tooltip  } from '@material-ui/core';
+} from '@mui/icons-material';
+import { InputBase, Divider, IconButton, Tooltip  } from '@mui/material';
 import { get } from 'lodash';
 import { isAtGlobalSearch } from '../../common/utils';
 
@@ -112,13 +112,23 @@ class SearchInput extends React.Component {
           {
             input &&
             <Tooltip arrow title='Clear'>
-              <IconButton type="submit" style={{padding: '10px'}} aria-label="clear" onClick={this.clearSearch}>
+              <IconButton
+                type="submit"
+                style={{padding: '10px'}}
+                aria-label="clear"
+                onClick={this.clearSearch}
+                size="large">
                 <ClearIcon />
               </IconButton>
             </Tooltip>
           }
           <Tooltip arrow title='Search'>
-            <IconButton type="submit" style={{padding: '10px'}} aria-label="search" onClick={this.performSearch}>
+            <IconButton
+              type="submit"
+              style={{padding: '10px'}}
+              aria-label="search"
+              onClick={this.performSearch}
+              size="large">
               <SearchIcon />
             </IconButton>
           </Tooltip>
@@ -127,7 +137,12 @@ class SearchInput extends React.Component {
             <React.Fragment>
               <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
               <Tooltip arrow title='Exact Match'>
-                <IconButton color={exactMatch === 'on' ? "primary" : "default"} style={{padding: '10px'}} aria-label="exact" onClick={this.handleExactMatchChange}>
+                <IconButton
+                  color={exactMatch === 'on' ? "primary" : "default"}
+                  style={{padding: '10px'}}
+                  aria-label="exact"
+                  onClick={this.handleExactMatchChange}
+                  size="large">
                   <ExactMatchIcon />
                 </IconButton>
               </Tooltip>
@@ -138,7 +153,7 @@ class SearchInput extends React.Component {
           {moreControls}
         </div>
       </div>
-    )
+    );
   }
 }
 

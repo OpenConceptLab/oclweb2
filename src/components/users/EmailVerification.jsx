@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
-import { Paper, Button, CircularProgress } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import { Paper, Button, CircularProgress } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import { get } from 'lodash';
 import APIService from '../../services/APIService';
 import { refreshCurrentUserCache } from '../../common/utils';

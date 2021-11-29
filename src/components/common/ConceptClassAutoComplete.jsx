@@ -1,6 +1,6 @@
 import React from 'react';
-import { TextField, CircularProgress } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField, CircularProgress } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { get, debounce, map, orderBy, isEmpty, uniqBy } from 'lodash'
 import APIService from '../../services/APIService';
 
@@ -23,9 +23,10 @@ const ConceptClassAutoComplete = ({ id, selected, multiple, minCharactersForSear
 
   const searchItems = searchStr => {
     APIService
+      .orgs('OCL')
       .sources('Classes')
-      .concepts()
-      .get(null, null, {limit: 25, q: searchStr, is_latest: true})
+      .appendToUrl('concepts/')
+      .get(null, null, {limit: 25, q: searchStr, brief: true})
       .then(response => {
         setItems(orderBy(uniqBy(map(response.data, cc => ({id: cc.id, name: cc.id})), 'name'), 'name'))
         setFetched(true)
@@ -45,7 +46,7 @@ const ConceptClassAutoComplete = ({ id, selected, multiple, minCharactersForSear
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      getOptionSelected={(option, value) => option.uuid === get(value, 'uuid')}
+      isOptionEqualToValue={(option, value) => option.uuid === get(value, 'uuid')}
       defaultValue={isEmpty(selected) ? (multiple ? [] : '') : selected}
       value={selected}
       id={id}
@@ -81,7 +82,7 @@ const ConceptClassAutoComplete = ({ id, selected, multiple, minCharactersForSear
       }
       {...rest}
     />
-  )
+  );
 }
 
 export default ConceptClassAutoComplete;

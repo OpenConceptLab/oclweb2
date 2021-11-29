@@ -2,8 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, CircularProgress,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+} from '@mui/material';
 import { map, isEmpty } from 'lodash';
 import OwnerLabel from '../common/OwnerLabel';
 
@@ -20,7 +19,7 @@ const UserHomeOrgs = ({ isLoadingOrgs, orgs }) => {
       <Accordion defaultExpanded>
         <AccordionSummary
           className='light-gray-bg less-paded-accordian-header'
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<span />}
           aria-controls="panel1a-content"
         >
           <Typography style={ACCORDIAN_HEADING_STYLES}>Organization Membership</Typography>

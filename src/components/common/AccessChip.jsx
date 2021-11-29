@@ -2,8 +2,8 @@ import React from 'react';
 import {
   Public as PublicIcon,
   Lock as PrivateIcon,
-} from '@material-ui/icons';
-import { Tooltip, Chip } from '@material-ui/core';
+} from '@mui/icons-material';
+import { Tooltip, Chip } from '@mui/material';
 import { startCase, includes } from 'lodash';
 
 const AccessChip = props => {
@@ -22,6 +22,7 @@ const AccessChip = props => {
                 <PublicIcon fontSize='inherit' /> :
                 <PrivateIcon fontSize='inherit' />
           }
+          style={{backgroundColor: '#e0e0e0'}}
         />
       </Tooltip>
     </span>

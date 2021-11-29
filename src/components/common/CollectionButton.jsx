@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
-import { Loyalty as LoyaltyIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { Loyalty as LoyaltyIcon } from '@mui/icons-material';
 import { GREEN, WHITE } from '../../common/constants';
 import { toParentURI } from '../../common/utils';
 

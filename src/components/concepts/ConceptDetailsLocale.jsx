@@ -1,6 +1,6 @@
 import React from 'react';
-import { Flag as FlagIcon, FileCopy as CopyIcon } from '@material-ui/icons';
-import { Chip, Tooltip, IconButton } from '@material-ui/core';
+import { Flag as FlagIcon, FileCopy as CopyIcon } from '@mui/icons-material';
+import { Chip, Tooltip, IconButton } from '@mui/material';
 import { get } from 'lodash';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import { toFullAPIURL, copyURL } from '../../common/utils';
@@ -20,7 +20,7 @@ const ConceptDetailsLocale = ({ locale, isDescription, url }) => {
           {
             type && type !== 'None' &&
             <span style={{marginRight: '10px'}}>
-              <Chip style={{height: '20px', fontSize: '10px'}} size='small' variant='default' label={type} />
+              <Chip style={{height: '20px', fontSize: '10px'}} size='small' label={type} />
             </span>
           }
           <span className='gray-italics-small'>{`[${locale.locale}]`}</span>

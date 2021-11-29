@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab } from '@mui/material';
 import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
 import { GREEN, TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
@@ -10,6 +10,7 @@ import CustomText from '../common/CustomText';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConfigSelect from '../common/ConfigSelect';
+import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import ConceptForm from '../concepts/ConceptForm';
 import MappingForm from '../mappings/MappingForm';
 import SourceVersionForm from './SourceVersionForm';
@@ -99,10 +100,16 @@ const SourceHomeTabs = props => {
           map(
             tabConfigs,
             config => {
+              const label = (
+                <span className='flex-vertical-center'>
+                  <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
+                  <span style={{marginLeft: '4px'}}>{config.label}</span>
+                </span>
+              );
               if(isOCLDefaultConfigSelected)
-                return (<Tab key={config.label} label={config.label} component="a" href={getTABHref(config)}/>)
-              else
-                return (<Tab key={config.label} label={config.label} />)
+                return (<Tab key={config.label} label={label} component="a" href={getTABHref(config)} style={{textTransform: 'capitalize'}} />)
+
+              return (<Tab key={config.label} label={label} style={{textTransform: 'capitalize'}} />)
             }
           )
         }
@@ -159,6 +166,7 @@ const SourceHomeTabs = props => {
             match={match}
             location={location}
             versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
+            defaultURI={selectedTabConfig.defaultURI || selectedTabConfig.uri}
             versions={versions}
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}

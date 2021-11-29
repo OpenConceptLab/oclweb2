@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   CheckCircle as CorrectIcon, Cancel as WrongIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { ERROR_RED, BLUE } from '../../common/constants';
 import { merge } from 'lodash';
 

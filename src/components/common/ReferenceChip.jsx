@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Chip } from '@material-ui/core';
+import { Chip } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const ReferenceChip = props => {
   const isResolved = Boolean(props.last_resolved_at)

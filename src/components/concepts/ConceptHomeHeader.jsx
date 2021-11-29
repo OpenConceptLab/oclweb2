@@ -1,13 +1,13 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
   FormatIndentIncrease as HierarchyIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -17,13 +17,13 @@ import ConceptButton from '../common/ConceptButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
-import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
+import ConceptDisplayName from './ConceptDisplayName';
 
 const ConceptHomeHeader = ({
   concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick,
@@ -107,14 +107,14 @@ const ConceptHomeHeader = ({
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
                 <Tooltip arrow title="Copy URL">
-                  <Button onClick={onIconClick}>
+                  <Button onClick={onIconClick} color='secondary' >
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip arrow title='Edit Concept'>
-                    <Button onClick={() => setConceptForm(true)}>
+                    <Button onClick={() => setConceptForm(true)} color='secondary'>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -124,12 +124,12 @@ const ConceptHomeHeader = ({
                   (
                     isRetired ?
                     <Tooltip arrow title='Un-Retire Concept'>
-                      <Button onClick={onUnretire}>
+                      <Button onClick={onUnretire} color='secondary'>
                         <RestoreIcon fontSize='inherit' />
                       </Button>
                     </Tooltip> :
                     <Tooltip arrow title='Retire Concept'>
-                      <Button onClick={onRetire}>
+                      <Button onClick={onRetire} color='secondary'>
                         <DeleteIcon fontSize='inherit' />
                       </Button>
                     </Tooltip>
@@ -150,17 +150,12 @@ const ConceptHomeHeader = ({
                     </Button>
                   </Tooltip>
                 }
-                <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} />
+                <DownloadButton resource={{...concept, mappings: mappings}} filename={downloadFileName} queryParams={{includeInverseMappings: true, includeHierarchyPath: true, includeParentConceptURLs: true}} />
               </ButtonGroup>
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <span style={{marginRight: '10px'}} className={isRetired ? 'retired': ''}>
-              {concept.display_name}
-            </span>
-            <span className='gray-italics-small'>
-              [{concept.display_locale}]
-            </span>
+            <ConceptDisplayName concept={concept} style={{marginRight: '10px'}} />
           </div>
           <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -175,14 +170,6 @@ const ConceptHomeHeader = ({
               </span>
               <span>
                 {concept.datatype}
-              </span>
-            </div>
-            <div className='col-md-12 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '3px'}}>
-                Custom Attributes:
-              </span>
-              <span>
-                <CustomAttributesPopup attributes={concept.extras} />
               </span>
             </div>
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { includes, isEmpty, get, findIndex, isEqual, find, isObject } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
@@ -7,22 +7,10 @@ import CollectionHomeTabs from './CollectionHomeTabs';
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
+import { COLLECTION_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
-const DEFAULT_CONFIG = {
-  name: 'OCL Default (Collection)',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      {type: "concepts", label: "Concepts", page_size: 25, "default": true, layout: 'table'},
-      {type: "mappings", label: "Mappings", page_size: 25, layout: 'table'},
-      {type: "references", label: "References", page_size: 25, layout: 'table'},
-      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
-      {type: "about", label: "About"},
-    ]
-  }
-}
+
 
 class CollectionHome extends React.Component {
   constructor(props) {
@@ -184,7 +172,7 @@ class CollectionHome extends React.Component {
                     this.setState({
                       isLoading: false,
                       collection: collection,
-                      selectedConfig: defaultCustomConfig || DEFAULT_CONFIG,
+                      selectedConfig: defaultCustomConfig || COLLECTION_DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
                       if(this.URLs.expansion)
@@ -267,11 +255,11 @@ class CollectionHome extends React.Component {
               currentVersion={this.getCurrentVersion()}
               aboutTab={showAboutTab}
               onVersionUpdate={this.onVersionUpdate}
-              customConfigs={[...customConfigs, DEFAULT_CONFIG]}
+              customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
               onConfigChange={this.onConfigChange}
               selectedConfig={selectedConfig}
               showConfigSelection={this.customConfigFeatureApplicable()}
-              isOCLDefaultConfigSelected={isEqual(selectedConfig, DEFAULT_CONFIG)}
+              isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
               isLoadingVersions={isLoadingVersions}
             />
           </div>

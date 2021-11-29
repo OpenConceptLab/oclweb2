@@ -16,6 +16,7 @@ class OrgHomeChildrenList extends React.Component {
       <Search
         {...this.props}
         nested
+        essentialColumns
         baseURL={this.getURL()}
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         searchInputPlaceholder={`Search ${org.id} ${resource}...`}

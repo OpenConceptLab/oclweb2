@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Chip, Dialog, DialogTitle, DialogContent, DialogActions, Button
-} from '@material-ui/core';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+} from '@mui/material';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { isEmpty } from 'lodash';
 import CustomAttributes from './CustomAttributes'
 import CustomAttributesFormatted from './CustomAttributesFormatted'
 
-const CustomAttributesPopup = ({attributes}) => {
+const CustomAttributesPopup = ({attributes, color}) => {
   const [raw, setRaw] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false)
@@ -25,9 +25,9 @@ const CustomAttributesPopup = ({attributes}) => {
             color="primary"
             variant="outlined"
             size="small"
-            deleteIcon={<ArrowRightIcon fontSize="inherit" /> }
+            deleteIcon={<ArrowRightIcon fontSize="inherit" style={color ? {color: color} : {}} /> }
             onDelete={onOpen}
-            style={{border: 'none'}}
+            style={color ? {border: 'none', color: color} : {border: 'none'}}
           />
           <Dialog onClose={handleClose} open={open} fullWidth maxWidth="md">
             <DialogTitle>Custom Attributes</DialogTitle>

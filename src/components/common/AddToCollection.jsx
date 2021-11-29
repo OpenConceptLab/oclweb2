@@ -4,14 +4,14 @@ import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   FormControlLabel, Checkbox, Divider, TextField, InputAdornment
-} from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert';
+} from '@mui/material'
+import MuiAlert from '@mui/material/Alert';
 import {
   ArrowDropDown as ArrowDropDownIcon,
   Loyalty as LoyaltyIcon,
   Help as HelpIcon,
   Search as SearchIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { map, isEmpty, get, filter, cloneDeep } from 'lodash';
 import APIService from '../../services/APIService';
 import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
@@ -32,6 +32,7 @@ class AddToCollection extends React.Component {
       allCollections: [],
       collections: [],
       cascadeMappings: true,
+      cascadeToConcepts: false,
       notAdded: [],
       added: [],
       collectionForm: false,
@@ -67,7 +68,7 @@ class AddToCollection extends React.Component {
 
   handleDialogClose = () => this.setState({selectedCollection: null, notAdded: []})
 
-  onCheckboxChange = event => this.setState({cascadeMappings: event.target.checked})
+  onCheckboxChange = event => this.setState({[event.target.name]: event.target.checked})
 
   handleMenuItemClick = (event, collection) => {
     if(get(collection, 'id') === '__new__')
@@ -77,11 +78,16 @@ class AddToCollection extends React.Component {
   }
 
   handleAdd = () => {
-    const { selectedCollection, cascadeMappings } = this.state
+    const { selectedCollection, cascadeMappings, cascadeToConcepts } = this.state
     const { references } = this.props
     this.setState({isAdding: true}, () => {
       const expressions = map(references, 'url')
-      const queryParams = cascadeMappings ? {cascade: 'sourcemappings'} : {}
+      let queryParams = {}
+      if(cascadeToConcepts)
+        queryParams = {cascade: 'sourceToConcepts'}
+      else if(cascadeMappings)
+        queryParams = {cascade: 'sourceMappings'}
+
       APIService.new().overrideURL(selectedCollection.url)
                 .appendToUrl('references/')
                 .put({data: {expressions: expressions}}, null, null, queryParams)
@@ -128,13 +134,13 @@ class AddToCollection extends React.Component {
     if(iconButton)
       return (
         <Tooltip arrow title='Add to Collection'>
-          <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest}>
+          <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest} color='secondary'>
             <LoyaltyIcon fontSize='inherit' />
           </Button>
         </Tooltip>
       )
     return (
-      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} {...rest}>
+      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} {...rest}  color='secondary'>
         Add to Collection
       </Button>
     )
@@ -142,7 +148,7 @@ class AddToCollection extends React.Component {
 
   render() {
     const {
-      open, allCollections, collections, selectedCollection, cascadeMappings, notAdded, added, isAdding, isLoading, searchedValue, collectionForm
+      open, allCollections, collections, selectedCollection, cascadeMappings, cascadeToConcepts, notAdded, added, isAdding, isLoading, searchedValue, collectionForm
     } = this.state;
     const { references } = this.props
     const openDialog = Boolean(selectedCollection)
@@ -269,6 +275,17 @@ class AddToCollection extends React.Component {
                   label={
                     <span className='flex-vertical-center'>
                       <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings</span>
+                      <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
+                        <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                      </Tooltip>
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={cascadeToConcepts} onChange={this.onCheckboxChange} name="cascadeToConcepts" size='small' style={{paddingRight: '4px'}}/>}
+                  label={
+                    <span className='flex-vertical-center'>
+                      <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings to concepts</span>
                       <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
                         <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
                       </Tooltip>

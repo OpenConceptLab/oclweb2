@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core';
+import { TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
 import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values } from 'lodash';
 import APIService from '../../services/APIService';
 
@@ -102,7 +102,7 @@ class ConceptContainerVersionForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br />'))
       } else if(get(response, 'detail')) {
         alertifyjs.error(response.detail)
       } else if (isObject(response)) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Table, TableHead, TableRow, TableCell, TableBody, Chip
-} from '@material-ui/core';
+} from '@mui/material';
 import { map, isEmpty, get } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip } from '@mui/material';
 
 const InfiniteScrollChip = ({isInfinite, onClick, size}) => {
   const label = isInfinite ? 'Paginated List' : 'Infinite Scroll';

@@ -2,11 +2,11 @@ import React from 'react';
 import {
   Drawer, List, ListItem, ListItemText, ListItemIcon, InputBase, IconButton,
   Checkbox, Typography, Button, Tooltip, Divider
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Clear as ClearIcon,
   Search as SearchIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
   set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has, includes,
   isObject
@@ -144,7 +144,7 @@ const FilterDrawer = props => {
   }
 
   return (
-    <Drawer anchor='left' open={open} onClose={onClose}>
+    <Drawer anchor='left' open={open} onClose={onClose} classes={{paper: 'custom-drawer'}}>
       <div className='col-md-12 no-side-padding' style={{width: '350px', height: 'calc(100% - 60px)', overflow: 'auto'}}>
         <div className="col-md-12" style={{padding: '0 5px', margin: '5px 0', marginBottom: '0px'}}>
           <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px', height: '40px'}}>
@@ -166,7 +166,7 @@ const FilterDrawer = props => {
                   style={{padding: '10px'}}
                   aria-label="clear"
                   onClick={onSearchClear}
-                >
+                  size="large">
                   <ClearIcon />
                 </IconButton>
               </Tooltip>
@@ -177,7 +177,7 @@ const FilterDrawer = props => {
                 style={{padding: '10px'}}
                 aria-label="search"
                 onClick={onSearch}
-              >
+                size="large">
                 <SearchIcon />
               </IconButton>
             </Tooltip>
@@ -229,7 +229,7 @@ const FilterDrawer = props => {
         <Button onClick={onClear} variant='contained' color='secondary' style={{margin: 'auto 5px'}}>
           Clear
         </Button>
-        <Button onClick={onClose} variant='contained' color='default' style={{margin: 'auto 5px'}}>
+        <Button onClick={onClose} variant='contained' style={{margin: 'auto 5px'}}>
           Close
         </Button>
       </div>

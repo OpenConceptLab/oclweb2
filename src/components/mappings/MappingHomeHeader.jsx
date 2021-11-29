@@ -1,13 +1,13 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Tooltip, ButtonGroup, Button, Collapse } from '@material-ui/core';
+import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
   CompareArrows as CompareArrowsIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { get } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL } from '../../common/utils';
@@ -18,7 +18,6 @@ import MappingButton from '../common/MappingButton';
 import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
-import CustomAttributesPopup from '../common/CustomAttributesPopup';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
@@ -117,14 +116,14 @@ const MappingHomeHeader = ({
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
                 <Tooltip arrow title="Copy URL">
-                  <Button onClick={onIconClick}>
+                  <Button onClick={onIconClick} color='secondary'>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>
                 {
                   hasAccess && isVersionedObject &&
                   <Tooltip arrow title='Edit Mapping'>
-                    <Button onClick={() => setMappingForm(true)}>
+                    <Button onClick={() => setMappingForm(true)} color='secondary'>
                       <EditIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -134,12 +133,12 @@ const MappingHomeHeader = ({
                   (
                     isRetired ?
                     <Tooltip arrow title='Un-Retire Mapping'>
-                      <Button onClick={onUnretire}>
+                      <Button onClick={onUnretire} color='secondary'>
                         <RestoreIcon fontSize='inherit' />
                       </Button>
                     </Tooltip> :
                     <Tooltip arrow title='Retire Mapping'>
-                      <Button onClick={onRetire}>
+                      <Button onClick={onRetire} color='secondary'>
                         <DeleteIcon fontSize='inherit' />
                       </Button>
                     </Tooltip>
@@ -155,7 +154,7 @@ const MappingHomeHeader = ({
                 {
                   conceptCompareURL &&
                   <Tooltip arrow title='Compare Concepts'>
-                    <Button component='a' href={`/#${conceptCompareURL}`}>
+                    <Button onClick={() => window.location.hash = conceptCompareURL} color='secondary'>
                       <CompareArrowsIcon fontSize='inherit' />
                     </Button>
                   </Tooltip>
@@ -180,14 +179,6 @@ const MappingHomeHeader = ({
               <div className='col-sm-11 no-side-padding'>
                 <ToConceptLabel {...mapping} />
               </div>
-            </div>
-            <div className='col-md-12 no-side-padding flex-vertical-center'>
-              <span className='italic' style={{marginRight: '3px'}}>
-                Custom Attributes:
-              </span>
-              <span>
-                <CustomAttributesPopup attributes={mapping.extras} />
-              </span>
             </div>
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               <span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, Paper } from '@material-ui/core';
+import { TextField, Button, Paper } from '@mui/material';
 import { set, get } from 'lodash';
 import APIService from '../../services/APIService';
 import ForgotPasswordEmailSentMessage from './ForgotPasswordEmailSentMessage';

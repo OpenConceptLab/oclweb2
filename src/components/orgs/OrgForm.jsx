@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, IconButton } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { TextField, Button, IconButton } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import {
   set, get, cloneDeep, isEmpty, pullAt, map
 } from 'lodash';
@@ -111,7 +111,7 @@ class OrgForm extends React.Component {
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {
-        alertifyjs.error(genericError.join('\n'))
+        alertifyjs.error(genericError.join('<br />'))
       } else {
         this.setState(
           {fieldErrors: response || {}},
@@ -233,7 +233,7 @@ class OrgForm extends React.Component {
                 <h3>Custom Attributes</h3>
               </div>
               <div className='col-md-4' style={{textAlign: 'right'}}>
-                <IconButton color='primary' onClick={this.onAddExtras}>
+                <IconButton color='primary' onClick={this.onAddExtras} size="large">
                   <AddIcon />
                 </IconButton>
               </div>
@@ -269,7 +269,7 @@ class OrgForm extends React.Component {
           </form>
         </div>
       </div>
-    )
+    );
   }
 }
 

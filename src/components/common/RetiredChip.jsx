@@ -1,6 +1,6 @@
 import React from 'react';
-import { Chip, Tooltip } from '@material-ui/core';
-import { Block as RetireIcon } from '@material-ui/icons';
+import { Chip, Tooltip } from '@mui/material';
+import { Block as RetireIcon } from '@mui/icons-material';
 import { RED } from '../../common/constants';
 
 const RetiredChip = props => {

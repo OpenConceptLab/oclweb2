@@ -1,10 +1,15 @@
 import React from 'react';
-import { Divider, CircularProgress, IconButton, Tooltip, Chip } from '@material-ui/core';
+import { Divider, CircularProgress, IconButton, Tooltip, Chip } from '@mui/material';
 import {
   Person as PersonIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
-} from '@material-ui/icons';
+  Business as CompanyIcon,
+  LocationOn as LocationIcon,
+  Link as WebsiteIcon,
+  MailOutline as MailIcon,
+  EventAvailable as DateJoinedIcon
+} from '@mui/icons-material';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import {
@@ -62,11 +67,10 @@ const UserHomeDetails = ({ user, isLoading }) => {
               defaultIcon={<PersonIcon style={{width: '120px', height: '120px'}} />}
             />
           </div>
-          <h2 style={{marginBottom: '5px'}}>
-            {startCase(name)}
-            <br />
-            <small>{user.username}</small>
-          </h2>
+          <h2 style={{marginBottom: '-2px'}}> {startCase(name)} </h2>
+          <div className='user-home-username'>
+            {user.username}
+          </div>
           <div>
             <Chip
               className='underline-text'
@@ -79,25 +83,62 @@ const UserHomeDetails = ({ user, isLoading }) => {
               onClick={onEditClick}
             />
           </div>
-          <Divider style={{width: '100%'}} />
-          <p><strong>Company</strong><br />{user.company || 'N/A'}</p>
-          <p><strong>Location</strong><br />{user.location || 'N/A'}</p>
+          <Divider style={{width: '100%', margin: '5px 0'}} />
+          {
+            user.company &&
+            <div style={{marginTop: '5px'}}>
+              <Tooltip title='Company' arrow>
+                <span className='flex-vertical-center' placement='right'>
+                  <span style={{marginRight: '5px'}}><CompanyIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                  <span>{user.company}</span>
+                </span>
+              </Tooltip>
+            </div>
+          }
+          {
+            user.location &&
+            <div>
+              <Tooltip title='Location' arrow placement='right'>
+                <span className='flex-vertical-center'>
+                  <span style={{marginRight: '5px'}}><LocationIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                  <span>{user.location}</span>
+                </span>
+              </Tooltip>
+            </div>
+          }
           {
             user.website &&
-            <p>
-              <strong>Website</strong>
-              <br />
-              {formatWebsiteLink(user.website)}
-            </p>
+            <div>
+              <Tooltip title='Website' arrow placement='right'>
+                <span className='flex-vertical-center'>
+                  <span style={{marginRight: '5px'}}><WebsiteIcon fontSize='small' style={{marginTop: '4px', transform: 'rotate(-30deg)'}} /></span>
+                  <span>{formatWebsiteLink(user.website)}</span>
+                </span>
+              </Tooltip>
+            </div>
           }
-          <p><strong>Email</strong><br />{user.email}</p>
-          <p><strong>Joined</strong><br />{formatDate(user.created_on)}</p>
-          <Divider style={{width: '100%'}} />
+          <div>
+            <Tooltip title='Email' arrow placement='right'>
+              <span className='flex-vertical-center'>
+                <span style={{marginRight: '5px'}}><MailIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                <span>{user.email}</span>
+              </span>
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip title='Date Joined' arrow placement='right'>
+              <span className='flex-vertical-center'>
+                <span style={{marginRight: '5px'}}><DateJoinedIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                <span>{formatDate(user.created_on)}</span>
+              </span>
+            </Tooltip>
+          </div>
+          <Divider style={{width: '100%', margin: '5px 0'}} />
           {
             token &&
             <p>
               <strong>API Token</strong>
-              <Tooltip arrow title="Click to copy Token">
+              <Tooltip arrow title="Click to copy Token" placement='right'>
                 <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
                   <CopyIcon fontSize="small" />
                 </IconButton>
@@ -108,13 +149,13 @@ const UserHomeDetails = ({ user, isLoading }) => {
       }
       <CommonFormDrawer
         isOpen={editForm}
-        onClose={onEditClick}
+        onClose={onEditClose}
         formComponent={
           <UserForm
             loggedIn={user.username === getCurrentUserUsername()}
-            edit
-            reloadOnSuccess
-            onCancel={onEditClose} user={user}
+                     edit
+                     reloadOnSuccess
+                     onCancel={onEditClose} user={user}
           />
         }
       />

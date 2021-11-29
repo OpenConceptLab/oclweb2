@@ -1,37 +1,12 @@
 import React from 'react';
 import { isEmpty, get, isObject, map, find } from 'lodash';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import NotFound from '../common/NotFound';
 import APIService from '../../services/APIService';
 import ContainerHomeHeader from './ContainerHomeHeader';
 import ContainerHomeTabs from './ContainerHomeTabs';
 import { getAppliedServerConfig } from '../../common/utils';
-
-const CODE_SYSTEM_DEFAULT_CONFIG = {
-  name: 'FHIR Default (CodeSystem)',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      {type: "codes", label: "Codes", page_size: 25, "default": true, layout: 'table'},
-      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
-      {type: "about", label: "About"},
-    ]
-  }
-}
-
-const VALUE_SET_DEFAULT_CONFIG = {
-  name: 'FHIR Default (ValueSet)',
-  web_default: true,
-  is_default: false,
-  config: {
-    tabs: [
-      {type: "codes", label: "Codes", page_size: 25, "default": true, layout: 'table'},
-      {type: "versions", label: "Versions", page_size: 25, layout: 'table'},
-      {type: "about", label: "About"},
-    ]
-  }
-}
+import { CODE_SYSTEM_DEFAULT_CONFIG, VALUE_SET_DEFAULT_CONFIG} from "../../common/defaultConfigs"
 
 class ContainerHome extends React.Component {
   constructor(props) {

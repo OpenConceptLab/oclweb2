@@ -1,11 +1,11 @@
 import React from 'react';
-import { ButtonGroup, Tooltip, Button } from '@material-ui/core'
+import { ButtonGroup, Tooltip, Button } from '@mui/material'
 import {
   FileCopy as CopyIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   Link as LinkIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { nonEmptyCount, copyURL, toFullAPIURL } from '../../common/utils';
 import OwnerButton from '../common/OwnerButton';
@@ -92,7 +92,7 @@ const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL, isHAP
             <span style={{marginLeft: '15px'}}>
               <ButtonGroup variant='text' size='large'>
                 <Tooltip arrow title="Copy URL">
-                  <Button onClick={onCopyClick}>
+                  <Button onClick={onCopyClick} color='secondary'>
                     <CopyIcon fontSize="inherit" />
                   </Button>
                 </Tooltip>

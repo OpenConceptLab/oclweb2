@@ -5,11 +5,11 @@ import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep
+  uniqBy, cloneDeep, isEqual, without, capitalize, last
 } from 'lodash';
 import {
-  DATE_FORMAT, DATETIME_FORMAT,
-  OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
+  DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
+  OPENMRS_URL,
 } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
@@ -218,38 +218,38 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = callback => {
-  APIService.sources('Locales').concepts().get(null, null, {limit: 1000, is_latest: true}).then(response => {
+  APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/').get(null, null, {limit: 1000}).then(response => {
     callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
-  APIService.sources('Classes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback));
+  APIService.orgs('OCL').sources('Classes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
-  APIService.sources('MapTypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback));
+  APIService.orgs('OCL').sources('MapTypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
-  APIService.sources('Datatypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback));
+  APIService.orgs('OCL').sources('Datatypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
-  APIService.sources('NameTypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+  APIService.orgs('OCL').sources('NameTypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDescriptionTypes = callback => {
-  APIService.sources('DescriptionTypes').concepts()
-            .get(null, null, {limit: 1000, is_latest: true})
-            .then(response => handleLookupValuesResponse(response.data, callback, 'display_name'));
+  APIService.orgs('OCL').sources('DescriptionTypes').appendToUrl('concepts/')
+    .get(null, null, {limit: 1000, brief: true})
+    .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const downloadObject = (obj, format, filename) => {
@@ -510,8 +510,84 @@ export const getEnv = forURL => {
     return 'demo';
   if(fqdn.match('app.dev.openconceptlab'))
     return 'dev';
+  if(fqdn.match('app.staging.who.openconceptlab'))
+    return forURL ? 'staging.who' : 'staging-who';
   if(fqdn.match('app.openconceptlab'))
     return forURL ? '' : 'production';
 
   return 'development';
+}
+
+export const getOpenMRSURL = () => {
+  let env = getEnv(true);
+
+  if(env === 'development')
+    env = 'qa';
+
+  if(env) env += '.';
+
+  return OPENMRS_URL.replace('openmrs.', `openmrs.${env}`);
+}
+
+export const setUpRecentHistory = history => {
+  history.listen(location => {
+    let visits = JSON.parse(get(localStorage, 'visits', '[]'));
+    let urlParts = compact(location.pathname.split('/'));
+    let type = '';
+    let category = '';
+    let format = false;
+    if(location.pathname.match('/login') || location.pathname === '/')
+      return;
+    if(location.pathname.match('/imports')) {
+      type = category = 'import';
+      format = true;
+    } else if(location.pathname.match('/search/')) {
+      category = 'search';
+      const queryParams = new URLSearchParams(location.search);
+      type = queryParams.get('type');
+      format = true;
+    } else if(location.pathname.match('/compare')) {
+      category = 'compare';
+      type = 'concepts';
+      format = true;
+    } else {
+      if(urlParts.length <= 3) {
+        type = category = urlParts[0];
+        urlParts = without(urlParts, 'orgs', 'users');
+      }
+      if(urlParts.length == 4) {
+        type = category = urlParts[2];
+        urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
+      }
+      if(urlParts.length == 5) {
+        if(includes(['mappings', 'concepts', 'versions', 'references'], last(urlParts))) {
+          type = category = last(urlParts);
+        }
+        urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
+      }
+      if(urlParts.length >= 6) {
+        if(location.pathname.match('/concepts/')) {
+          type = category = 'concept';
+        }
+          if(location.pathname.match('/mappings/')) {
+            type = category = 'mapping';
+          }
+        if(location.pathname.match('/references')) {
+          type = category = 'reference';
+        }
+        urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
+      }
+    }
+    if(!includes(['concepts', 'mappings'], last(urlParts)))
+      urlParts = without(urlParts, 'concepts', 'mappings');
+    let name = format ? map(urlParts, capitalize).join(' / ') : urlParts.join(' / ');
+    if(category !== type && type)
+      name += ' / ' + type;
+    const lastVisit =  visits[0];
+    if(isEqual(get(lastVisit, 'name'), name))
+      visits.shift();
+    visits.push({name: name, location: location, type: type || '', category: category || '', at: new Date().getTime()});
+    visits = orderBy(visits, 'at', 'desc').slice(0, 10);
+    localStorage.setItem('visits', JSON.stringify(visits));
+  });
 }

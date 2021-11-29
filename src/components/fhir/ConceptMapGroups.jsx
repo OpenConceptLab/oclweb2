@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   Accordion, AccordionDetails, AccordionSummary, Divider, CircularProgress
-} from '@material-ui/core';
-import { ExpandMore as ExpandIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
+} from '@mui/material';
+import { ExpandMore as ExpandIcon, LocalOffer as LocalOfferIcon } from '@mui/icons-material';
 import { get, map, compact, groupBy, startCase, has, filter, isEmpty, uniqWith, isEqual } from 'lodash';
 import { DARKGRAY } from '../../common/constants';
 import { formatWebsiteLink } from '../../common/utils';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Divider, IconButton, Tooltip } from '@material-ui/core';
-import { ArrowDropDown as DownIcon, ArrowDropUp as UpIcon } from '@material-ui/icons';
+import { Divider, IconButton, Tooltip } from '@mui/material';
+import { ArrowDropDown as DownIcon, ArrowDropUp as UpIcon } from '@mui/icons-material';
 import { BLACK } from '../../common/constants';
 import { merge } from 'lodash';
 const LIGHT_GRAY = 'rgba(0, 0, 0, 0.12)';
