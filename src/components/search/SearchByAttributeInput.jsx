@@ -18,7 +18,7 @@ const HAPI_FHIR_ATTRIBUTES = [
   {id: 'version', label: 'Version'},
   {id: 'description', label: 'Description'},
 ]
-const OCL_FHIR_ATTRIBUTESS = [
+const OCL_FHIR_ATTRIBUTES = [
   DEFAULT_OCL_FHIR_ATTRIBUTE,
   {id: 'content-mode', label: 'Content Mode'},
   {id: 'publisher', label: 'Publisher'},
@@ -26,10 +26,11 @@ const OCL_FHIR_ATTRIBUTESS = [
 class SearchByAttributeInput extends React.Component {
   constructor(props) {
     super(props);
+    const isHAPISearchMode = props.hapi || props.searchMode === 'hapi'
     this.state = {
       input: '',
-      attrs: props.hapi ? HAPI_FHIR_ATTRIBUTES : OCL_FHIR_ATTRIBUTESS,
-      selectedAttribute: props.hapi ? DEFAULT_HAPI_FHIR_ATTRIBUTE : DEFAULT_OCL_FHIR_ATTRIBUTE,
+      attrs: isHAPISearchMode ? HAPI_FHIR_ATTRIBUTES : OCL_FHIR_ATTRIBUTES,
+      selectedAttribute: isHAPISearchMode ? DEFAULT_HAPI_FHIR_ATTRIBUTE : DEFAULT_OCL_FHIR_ATTRIBUTE,
       anchorEl: null,
     }
   }

@@ -5,7 +5,9 @@ import OrgHomeChildrenList from '../orgs/OrgHomeChildrenList';
 import { DEFAULT_LIMIT } from '../../common/constants';
 
 
-const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url, limit, hapi, nested}) => {
+const FhirTabs = ({
+  tab, onTabChange, selectedConfig, org, location, match, url, limit, hapi, nested, paginationParams, searchMode
+}) => {
   const tabConfigs = selectedConfig.config.tabs;
   const selectedTabConfig = tabConfigs[tab];
   const getTABHref = config => {
@@ -35,19 +37,21 @@ const FhirTabs = ({ tab, onTabChange, selectedConfig, org, location, match, url,
             isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list',
             sortParams: {sortAsc: '_id'}
           }}
-          fhirParams={{
+          fhirParams={paginationParams ? paginationParams : {
             _getpagesoffset: 0,
             _count: limit || DEFAULT_LIMIT,
             _sort: '_id'
           }}
-          staticParams={{
+          staticParams={ hapi ? {
             _total: 'accurate',
-          }}
+          } : {}}
           noQuery
           noHeaders
           nested
           fhir
           hapi={hapi}
+          paginationParams={paginationParams}
+          searchMode={searchMode}
         />
       </div>
     </div>

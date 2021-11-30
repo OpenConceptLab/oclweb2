@@ -107,4 +107,26 @@ export const SERVER_CONFIGS = [
       }
     }
   },
+  {
+    id: 12,
+    name: 'ICD 11',
+    type: 'fhir',
+    hapi: false,
+    url: 'https://icdapitest2.azurewebsites.net',
+    info: {
+      baseURI: '/fhir/',
+      type: 'HAPI FHIR 4.2.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
+      org: {
+        id: 'ICD-11 (v2.1.0)',
+        name: "FHIR capability statement for ICD-API FHIR Extension",
+        logo_url: '/fhir.svg'
+      },
+      paginationParams: {
+        _getpagesoffset: 0,
+        _count: 25,
+        _sort: '_id'
+      },
+      searchMode: 'hapi'
+    }
+  },
 ]

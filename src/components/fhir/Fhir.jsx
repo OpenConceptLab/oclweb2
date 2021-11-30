@@ -28,7 +28,7 @@ class Fhir extends React.Component {
   render() {
     const { tab, config } = this.state;
     const { info, url, hapi } = this.serverConfig;
-    const { org, pageSize } = info;
+    const { org, pageSize, paginationParams, searchMode } = info;
     return (
       <div className='col-md-12 home-container no-side-padding'>
         <OrgHomeHeader
@@ -54,6 +54,8 @@ class Fhir extends React.Component {
             selectedConfig={config}
             limit={pageSize}
             hapi={hapi}
+            paginationParams={paginationParams}
+            searchMode={searchMode}
           />
         }
       </div>
