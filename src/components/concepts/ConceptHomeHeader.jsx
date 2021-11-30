@@ -27,7 +27,7 @@ import ConceptDisplayName from './ConceptDisplayName';
 
 const ConceptHomeHeader = ({
   concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick,
-  header
+  header, tab
 }) => {
   const downloadFileName = isVersionedObject ?
                            `concept-${concept.id}` :
@@ -36,7 +36,7 @@ const ConceptHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const isAuthenticated = isLoggedIn();
   const resourceRelativeURL = isVersionedObject ? concept.url : concept.version_url;
-  const [openHeader, setOpenHeader] = React.useState(header);
+  const [openHeader, setOpenHeader] = React.useState((!tab || tab === 0) && header);
   const [conceptForm, setConceptForm] = React.useState(false);
   const onRetire = () => {
     const prompt = alertifyjs.prompt()

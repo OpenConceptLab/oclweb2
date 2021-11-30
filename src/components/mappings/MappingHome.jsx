@@ -130,6 +130,7 @@ class MappingHome extends React.Component {
               versionedObjectURL={this.getVersionedObjectURLFromPath()}
               currentURL={currentURL}
               header={has(this.props, 'header') ? this.props.header : true}
+              tab={tab}
             />
             <MappingHomeTabs
               tab={tab}

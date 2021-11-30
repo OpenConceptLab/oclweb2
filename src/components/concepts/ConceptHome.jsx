@@ -270,6 +270,7 @@ class ConceptHome extends React.Component {
               hierarchy={openHierarchy}
               onHierarchyClick={this.toggleHierarchy}
               header={has(this.props, 'header') ? this.props.header : true}
+              tab={tab}
             />
             <ConceptHomeTabs
               noRedirect={this.props.noRedirect}
