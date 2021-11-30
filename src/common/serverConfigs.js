@@ -30,7 +30,7 @@ export const SERVER_CONFIGS = [
     url: 'https://api.staging.openconceptlab.org'
   },
   {
-    id: 10,
+    id: 11,
     name: 'WHO Staging',
     type: 'ocl',
     url: 'https://api.staging.who.openconceptlab.org'
