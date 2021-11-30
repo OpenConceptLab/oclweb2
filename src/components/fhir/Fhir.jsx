@@ -1,4 +1,5 @@
 import React from 'react';
+import { cloneDeep, reject } from 'lodash';
 import { getAppliedServerConfig } from '../../common/utils';
 import OrgHomeHeader from '../orgs/OrgHomeHeader';
 import FhirTabs from './FhirTabs';
@@ -11,8 +12,24 @@ class Fhir extends React.Component {
     this.serverConfig = getAppliedServerConfig()
     this.state = {
       tab: this.getDefaultTab(),
-      config: FHIR_DEFAULT_CONFIG
+      config: this.getTabConfig()
     }
+  }
+
+  getTabConfig = () => {
+    let config = cloneDeep(FHIR_DEFAULT_CONFIG)
+    if(this.serverConfig) {
+      const { info } = this.serverConfig
+      const { noConceptMap, noCodeSystem, noValueSet } = info;
+      if(noConceptMap)
+        config.config.tabs = reject(config.config.tabs, {type: 'ConceptMap'})
+      if(noCodeSystem)
+        config.config.tabs = reject(config.config.tabs, {type: 'CodeSystem'})
+      if(noValueSet)
+        config.config.tabs = reject(config.config.tabs, {type: 'ValueSet'})
+    }
+
+    return config
   }
 
   getDefaultTab = () => {

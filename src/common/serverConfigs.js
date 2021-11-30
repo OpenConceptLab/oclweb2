@@ -126,7 +126,8 @@ export const SERVER_CONFIGS = [
         _count: 25,
         _sort: '_id'
       },
-      searchMode: 'hapi'
+      searchMode: 'hapi',
+      noConceptMap: true
     }
   },
 ]
