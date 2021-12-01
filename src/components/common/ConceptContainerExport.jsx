@@ -145,7 +145,7 @@ class ConceptContainerExport extends React.Component {
       anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport, exportURL,
       serverError, errorDetails, options
     } = this.state;
-    const { version, title, disabled, size, resource } = this.props;
+    const { title, disabled, size, resource } = this.props;
     return (
       <React.Fragment>
         <Tooltip arrow title={title}>

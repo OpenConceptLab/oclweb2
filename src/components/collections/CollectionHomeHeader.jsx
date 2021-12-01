@@ -7,7 +7,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { Tooltip, Button, ButtonGroup, Collapse } from '@mui/material';
-import { filter, map, get, keys, startCase, isEmpty } from 'lodash';
+import { filter, map, get, isEmpty } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
