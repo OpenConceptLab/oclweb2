@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { ThemeProvider, StyledEngineProvider, createTheme, alpha, adaptV4Theme } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider, createTheme, alpha } from '@mui/material/styles';
 import { grey } from "@mui/material/colors";
 import StylesProvider from '@mui/styles/StylesProvider';
 import alertifyjs from 'alertifyjs';
@@ -22,7 +22,7 @@ alertifyjs.defaults = {
 };
 
 const theme = createTheme();
-const v5Theme = createTheme(adaptV4Theme(theme, {
+const v5Theme = createTheme(theme, {
   palette: {
     primary: {
       main: BLUE,
@@ -88,7 +88,7 @@ const v5Theme = createTheme(adaptV4Theme(theme, {
       ]
     }
   }
-}))
+})
 
 ReactDOM.render(
   <HashRouter>
