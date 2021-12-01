@@ -111,7 +111,7 @@ export const SERVER_CONFIGS = [
     id: 12,
     name: 'ICD 11',
     type: 'fhir',
-    hapi: false,
+    hapi: true,
     url: 'https://icdapitest2.azurewebsites.net',
     info: {
       baseURI: '/fhir/',
