@@ -64,10 +64,10 @@ const CollectionHomeHeader = ({
   }
   const getHiddenAttributes = () => {
     if (get(config, 'config.header.invisibleAttributes') === 'object'){
-      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()} 
+      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
     }
     else if (get(config, 'config.header.invisibleAttributes')) {
-      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() } 
+      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() }
     }
     else return []
   }

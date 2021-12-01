@@ -984,3 +984,10 @@ div.custom-attributes-accordion-content {
 .ql-align-right {
     text-align: right;
 }
+.flex-column-center {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
