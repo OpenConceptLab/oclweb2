@@ -1,4 +1,5 @@
 import React from 'react';
+import { cloneDeep, reject } from 'lodash';
 import { getAppliedServerConfig } from '../../common/utils';
 import OrgHomeHeader from '../orgs/OrgHomeHeader';
 import FhirTabs from './FhirTabs';
@@ -11,8 +12,24 @@ class Fhir extends React.Component {
     this.serverConfig = getAppliedServerConfig()
     this.state = {
       tab: this.getDefaultTab(),
-      config: FHIR_DEFAULT_CONFIG
+      config: this.getTabConfig()
     }
+  }
+
+  getTabConfig = () => {
+    let config = cloneDeep(FHIR_DEFAULT_CONFIG)
+    if(this.serverConfig) {
+      const { info } = this.serverConfig
+      const { noConceptMap, noCodeSystem, noValueSet } = info;
+      if(noConceptMap)
+        config.config.tabs = reject(config.config.tabs, {type: 'ConceptMap'})
+      if(noCodeSystem)
+        config.config.tabs = reject(config.config.tabs, {type: 'CodeSystem'})
+      if(noValueSet)
+        config.config.tabs = reject(config.config.tabs, {type: 'ValueSet'})
+    }
+
+    return config
   }
 
   getDefaultTab = () => {
@@ -28,7 +45,7 @@ class Fhir extends React.Component {
   render() {
     const { tab, config } = this.state;
     const { info, url, hapi } = this.serverConfig;
-    const { org, pageSize } = info;
+    const { org, pageSize, paginationParams, searchMode } = info;
     return (
       <div className='col-md-12 home-container no-side-padding'>
         <OrgHomeHeader
@@ -54,6 +71,8 @@ class Fhir extends React.Component {
             selectedConfig={config}
             limit={pageSize}
             hapi={hapi}
+            paginationParams={paginationParams}
+            searchMode={searchMode}
           />
         }
       </div>

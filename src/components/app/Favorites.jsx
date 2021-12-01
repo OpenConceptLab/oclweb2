@@ -63,7 +63,7 @@ const Favorites = () => {
 
   return (
     <React.Fragment>
-      <Tooltip arrow title='Favorites'>
+      <Tooltip arrow title='My Pins'>
         <IconButton
           ref={anchorRef}
           aria-controls={open ? 'favorite-menu' : undefined}
@@ -88,7 +88,7 @@ const Favorites = () => {
             <React.Fragment>
               <div style={{width: '100%', padding: '5px 10px', justifyContent: 'space-between', background: 'rgba(0, 0, 0, 0.1)', marginBottom: '5px'}} className='flex-vertical-center'>
                 <span style={{textAlign: 'left'}}>
-                  <b>Favorites</b>
+                  <b>My Pins</b>
                 </span>
                 <span style={{textAlign: 'right'}}>
                   <IconButton color='primary' size='small' onClick={() => fetchFavorites(true)}>

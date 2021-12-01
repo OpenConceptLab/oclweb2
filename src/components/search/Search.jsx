@@ -361,7 +361,7 @@ class Search extends React.Component {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
         includeRetired, fhirParams, staticParams
       } = this.state;
-      const { configQueryParams, noQuery, noHeaders, fhir, hapi } = this.props;
+      const { configQueryParams, noQuery, noHeaders, fhir, hapi, paginationParams } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
@@ -380,14 +380,13 @@ class Search extends React.Component {
       if(!noQuery)
         params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
       if(fhir) {
-        if(hapi)
+        if(hapi || paginationParams)
           params = {...params, ...fhirParams}
         else
           params = {...params, page: page, ...fhirParams}
       }
 
       const baseURL = this.prepareBaseURL()
-
       fetchSearchResults(
         _resource,
         params,

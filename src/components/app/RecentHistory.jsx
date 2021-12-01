@@ -41,7 +41,7 @@ const RecentHistory = () => {
         <div>
           <div style={{width: '100%', padding: '5px 10px', justifyContent: 'space-between', background: 'rgba(0, 0, 0, 0.1)'}} className='flex-vertical-center'>
             <span style={{textAlign: 'left'}}>
-              <b>Recent</b> (showing last 10)
+              <b>Recent</b> (showing last 10 pages visited)
             </span>
           </div>
           {
