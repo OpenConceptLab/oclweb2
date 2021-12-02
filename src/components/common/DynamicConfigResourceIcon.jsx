@@ -38,6 +38,8 @@ const DynamicConfigResourceIcon = ({resource, index, style, icon, enableColor, .
     return <ImportsIcon color='secondary' {...rest} />;
   if(includes(['compare'], resource))
     return <CompareIcon color='primary' {...rest} />;
+  if(includes(['reference', 'references'], resource))
+    return <i className="icon-link" style={{ fontSize: "inherit", color: enableColor ? BLUE : '' }} />;
 
   return '';
 }

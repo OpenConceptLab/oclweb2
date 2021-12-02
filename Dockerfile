@@ -37,6 +37,7 @@ RUN cp public/bootstrap.min.css dist/
 RUN cp public/favicon.ico dist/
 RUN cp public/fhir.svg dist/
 RUN cp public/openmrs_logo_white.gif dist/
+RUN cp -rf public/fontello dist/
 
 EXPOSE ${WEB_PORT}
 

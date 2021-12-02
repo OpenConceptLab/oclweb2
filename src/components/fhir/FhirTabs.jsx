@@ -38,13 +38,11 @@ const FhirTabs = ({
             sortParams: {sortAsc: '_id'}
           }}
           fhirParams={paginationParams ? paginationParams : {
-            _getpagesoffset: 0,
-            _count: limit || DEFAULT_LIMIT,
-            _sort: '_id'
+              _getpagesoffset: 0,
+              _count: limit || DEFAULT_LIMIT,
+              _sort: '_id'
           }}
-          staticParams={ hapi ? {
-            _total: 'accurate',
-          } : {}}
+          staticParams={ paginationParams ? {} : {_total: 'accurate'}}
           noQuery
           noHeaders
           nested
