@@ -242,6 +242,7 @@ class CollectionHome extends React.Component {
               currentURL={currentURL}
               config={selectedConfig}
               expansion={expansion}
+              tab={tab}
             />
             <CollectionHomeTabs
               tab={tab}

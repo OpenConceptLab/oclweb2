@@ -39,11 +39,13 @@ const DEFAULT_VISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.visib
 const DEFAULT_INVISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const CollectionHomeHeader = ({
-  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion
+  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion, tab
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
+  const tabConfig = get(config, `config.tabs.${tab}`);
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.header.shrink', false));
+  const isExpandedHeader = () => !get(config, 'config.header.shrink', false) && tabConfig.type !== 'versions';
+  const [openHeader, setOpenHeader] = React.useState(isExpandedHeader);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
@@ -84,7 +86,7 @@ const CollectionHomeHeader = ({
 
 
   React.useEffect(
-    () => setOpenHeader(!get(config, 'config.header.shrink', false)),
+    () => setOpenHeader(isExpandedHeader()),
     [get(config, 'config.header.shrink')]
   )
 

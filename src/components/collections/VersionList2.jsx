@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Divider, Tooltip,
+  Divider, Tooltip, Button,
   IconButton, CircularProgress, Card, CardContent
 } from '@mui/material';
 import {
@@ -51,7 +51,7 @@ const deleteVersion = version => getService(version).delete().then(response => h
 const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
 const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url).delete().then(response => handleExpansionResponse(response, 'Deleted'))
 
-const VersionList2 = ({ versions, canEdit, onUpdate }) => {
+const VersionList2 = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) => {
   const resource = 'collection'
   const sortedVersions = headFirst(versions)
   const [versionForm, setVersionForm] = React.useState(false);
@@ -116,7 +116,7 @@ const VersionList2 = ({ versions, canEdit, onUpdate }) => {
 
     service.appendToUrl('expansions/?includeSummary=true&verbose=true').get().then(response => {
       setExpansions(prevExpansions => ({...prevExpansions, [version.uuid]: getFormattedExpansions(version, response.data)}))
-      setLoadingExpansions({...loadingExpansions, [version.uuid]: false})
+      setLoadingExpansions(prevLoading => ({...prevLoading, [version.uuid]: false}))
     })
   }
 
@@ -151,7 +151,7 @@ const VersionList2 = ({ versions, canEdit, onUpdate }) => {
       {
         map(sortedVersions, version => {
           const isHEAD = version.id.toLowerCase() === 'head';
-          const isLoadingExpansions = get(loadingExpansions, version.uuid)
+          const isLoadingExpansions = isExpansionsLoading(version)
           const style = {margin: '5px 0'}
           const versionExpansions = get(expansions, version.uuid, [])
           return (
@@ -254,6 +254,16 @@ const VersionList2 = ({ versions, canEdit, onUpdate }) => {
                       <CircularProgress />
                     </div> :
                     (
+                      isEmpty(versionExpansions) && loadingExpansions[version.uuid] === false ?
+                      <div className='flex-column-center' style={{height: '100%'}}>
+                        <Button
+                          onClick={() => onCreateExpansionClick(version)}
+                          variant="text"
+                          size='small'
+                          style={{textTransform: 'inherit'}}>
+                          Create First Expansion for this version
+                        </Button>
+                      </div> :
                       map(versionExpansions, expansion => {
                         const isDefault = expansion.default
                         const isAuto = expansion.auto
