@@ -13,8 +13,8 @@ const ExpansionSelectorButton = ({version, selected, expansions}) => {
   const anchorRef = React.useRef(null);
   const getDefaultSelectedExpansion = () => {
     if(isEmpty(selected) && !isEmpty(expansions) && get(version, 'expansion_url'))
-      return find(expansions, {url: version.expansion_url})
-    return selected
+      return find(expansions, {url: version.expansion_url}) || {}
+    return selected || {}
   }
   const [selectedExpansion, setSelectedExpansion] = React.useState(getDefaultSelectedExpansion)
 
@@ -23,7 +23,7 @@ const ExpansionSelectorButton = ({version, selected, expansions}) => {
     textTransform: 'none',
     minWidth: '30px',
   };
-  const expansionButtonStyle = selectedExpansion.retired ?
+  const expansionButtonStyle = selectedExpansion && selectedExpansion.retired ?
                                {
                                  ...commonButtonStyle,
                                  borderRight: WHITE,
