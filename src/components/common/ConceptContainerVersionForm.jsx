@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
-import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values } from 'lodash';
+import { TextField, Button, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
+import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map } from 'lodash';
 import APIService from '../../services/APIService';
 
 class ConceptContainerVersionForm extends React.Component {
@@ -179,20 +179,20 @@ class ConceptContainerVersionForm extends React.Component {
             {
               resource === 'collection' && edit &&
               <div className='col-md-12 no-side-padding' style={{width: '100%', marginTop: '15px'}}>
-                <TextField
+                <Autocomplete
+                  disablePortal
                   id="fields.expansion_url"
-                  label="Expansion URL"
-                  placeholder={`e.g. ${version.version_url}expansions/<exp-id>/`}
-                  variant="outlined"
-                  fullWidth
-                  onChange={this.onTextFieldChange}
+                  options={map(this.props.expansions, expansion => ({...expansion, label: `${expansion.mnemonic} (${expansion.url})`}))}
+                  renderInput={params => <TextField {...params} label="Expansion URL" />}
+                  onChange={(event, value) => this.setFieldValue('fields.expansion_url', get(value, 'url', ''))}
                   value={fields.expansion_url}
+                  isOptionEqualToValue={(option, value) => value && option.url === value}
                 />
               </div>
             }
             <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
               <FormControlLabel
-                control={<Checkbox checked={fields.released} onChange={this.onCheckboxChange} name="fields.released" />}
+                control={<Checkbox checked={Boolean(fields.released)} onChange={this.onCheckboxChange} name="fields.released" />}
                 label="Release"
               />
             </div>
@@ -200,7 +200,7 @@ class ConceptContainerVersionForm extends React.Component {
               resource === 'collection' &&
               <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
                 <FormControlLabel
-                  control={<Checkbox checked={fields.autoexpand} onChange={this.onCheckboxChange} name="fields.autoexpand" />}
+                  control={<Checkbox checked={Boolean(fields.autoexpand)} onChange={this.onCheckboxChange} name="fields.autoexpand" />}
                   label="Auto Expand"
                   disabled={edit}
                 />

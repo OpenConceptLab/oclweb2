@@ -366,13 +366,16 @@ const VersionList2 = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =
           );
         })
       }
-      <CommonFormDrawer
-        isOpen={versionForm}
-        onClose={onEditCancel}
-        formComponent={
-          <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={onUpdate} resource={resource} />
-        }
-      />
+      {
+        selectedVersion &&
+        <CommonFormDrawer
+          isOpen={versionForm}
+          onClose={onEditCancel}
+          formComponent={
+            <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} resource={resource} expansions={get(expansions, selectedVersion.uuid, [])} reloadOnSuccess />
+          }
+        />
+      }
     </div>
   );
 }
