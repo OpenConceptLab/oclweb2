@@ -9,12 +9,11 @@ import {
 import { Tooltip, Button, ButtonGroup, Collapse } from '@mui/material';
 import { filter, map, get, isEmpty } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
-import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import CollectionButton from '../common/CollectionButton';
-import VersionButton from '../common/VersionButton';
-import ExpansionButton from '../common/ExpansionButton';
+import VersionSelectorButton from '../common/VersionSelectorButton';
+import ExpansionSelectorButton from '../common/ExpansionSelectorButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
@@ -39,7 +38,8 @@ const DEFAULT_VISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.visib
 const DEFAULT_INVISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const CollectionHomeHeader = ({
-  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion, tab
+  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion, tab, versions,
+  expansions, isLoadingExpansions
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const tabConfig = get(config, `config.tabs.${tab}`);
@@ -115,18 +115,22 @@ const CollectionHomeHeader = ({
             <OwnerButton {...collection} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <CollectionButton label={collection.short_code} href={`#${versionedObjectURL}`} />
+            <React.Fragment>
+              <span className='separator'>/</span>
+              <VersionSelectorButton
+                selected={collection}
+                versions={versions}
+              />
+            </React.Fragment>
             {
-              !isVersionedObject &&
+              !isEmpty(expansions) && !isLoadingExpansions &&
               <React.Fragment>
                 <span className='separator'>/</span>
-                <VersionButton label={collection.version} href={`#${currentURL}`} bgColor={GREEN} />
-              </React.Fragment>
-            }
-            {
-              !isEmpty(expansion) &&
-              <React.Fragment>
-                <span className='separator'>/</span>
-                <ExpansionButton label={expansion.mnemonic} href={`#${expansion.url}`} bgColor={GREEN} />
+                <ExpansionSelectorButton
+                  selected={expansion}
+                  expansions={expansions}
+                  version={collection}
+                />
               </React.Fragment>
             }
             {

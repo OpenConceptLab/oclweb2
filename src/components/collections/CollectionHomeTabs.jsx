@@ -13,8 +13,7 @@ import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import CollectionVersionForm from './CollectionVersionForm';
 import ReferenceForm from './ReferenceForm';
 import ExpansionForm from './ExpansionForm';
-//import VersionList from './VersionList';
-import VersionList2 from './VersionList2';
+import VersionList from './VersionList';
 
 const CollectionHomeTabs = props => {
   const {
@@ -129,7 +128,7 @@ const CollectionHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
-          <VersionList2 versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} onCreateExpansionClick={onCreateExpansionClick} />
+          <VersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} onCreateExpansionClick={onCreateExpansionClick} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&

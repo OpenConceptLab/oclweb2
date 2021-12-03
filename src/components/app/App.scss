@@ -2,6 +2,8 @@ $blue: rgb(51, 115, 170);
 $green: rgb(92, 184, 92);
 $orange: rgb(253, 164, 41);
 $black: #000;
+$gray: rgb(119, 119, 119);
+$white: #fff;
 @media only screen and (max-width: 600px) {
     div#left-menu-collapsed {
         display: none !important;
@@ -990,4 +992,25 @@ div.custom-attributes-accordion-content {
     flex-direction: column;
     justify-content: center;
     text-align: center;
+}
+.btn-group-concept-container-hover-appear {
+    &:hover {
+        button {
+            border-style: solid;
+            border-color: $green;
+            color: $green;
+        }
+    }
+    button {
+        border-color: $gray;
+        border-style: dashed;
+        color: $gray;
+    }
+}
+.btn-group-concept-container {
+    button, button:hover {
+        background: $green;
+        color: $white;
+        border-color: $white !important;
+    }
 }

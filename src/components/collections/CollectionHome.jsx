@@ -20,10 +20,12 @@ class CollectionHome extends React.Component {
       accessDenied: false,
       permissionDenied: false,
       isLoading: true,
+      isLoadingExpansions: true,
       isLoadingVersions: true,
       collection: {},
       expansion: {},
       versions: [],
+      expansions: [],
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
@@ -124,6 +126,17 @@ class CollectionHome extends React.Component {
     })
   }
 
+  getExpansions() {
+    this.setState({isLoadingExpansions: true}, () => {
+      const URL = this.getVersionedObjectURLFromPath()
+      const version = this.getCurrentVersion()
+      APIService.new().overrideURL(URL).appendToUrl(version || 'HEAD').appendToUrl('/expansions/').get().then(response => {
+        this.setState({expansions: response.data, isLoadingExpansions: false})
+      })
+
+    })
+  }
+
   onTabChange = (event, value) => {
     this.setState({tab: value}, () => {
       if(isEmpty(this.state.versions))
@@ -179,6 +192,7 @@ class CollectionHome extends React.Component {
                         this.fetchExpansion()
                       if(isEmpty(this.state.versions))
                         this.getVersions()
+                      this.getExpansions()
                     })
                   }
                 })
@@ -220,7 +234,8 @@ class CollectionHome extends React.Component {
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion,
+      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions,
+      isLoadingExpansions,
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -243,6 +258,9 @@ class CollectionHome extends React.Component {
               config={selectedConfig}
               expansion={expansion}
               tab={tab}
+              versions={versions}
+              expansions={expansions}
+              isLoadingExpansions={isLoadingExpansions}
             />
             <CollectionHomeTabs
               tab={tab}
