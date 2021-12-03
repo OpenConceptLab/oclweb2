@@ -290,6 +290,7 @@ class SourceHome extends React.Component {
               currentURL={currentURL}
               config={selectedConfig}
               splitView={splitView}
+              versions={versions}
             />
             <Split className='split' sizes={splitViewSizes} minSize={[50, 0]}>
               {tabsView}
