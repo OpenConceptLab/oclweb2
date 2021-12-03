@@ -190,8 +190,7 @@ class CollectionHome extends React.Component {
                     }, () => {
                       if(this.URLs.expansion)
                         this.fetchExpansion()
-                      if(isEmpty(this.state.versions))
-                        this.getVersions()
+                      this.getVersions()
                       this.getExpansions()
                     })
                   }

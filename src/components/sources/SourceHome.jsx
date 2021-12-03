@@ -176,8 +176,7 @@ class SourceHome extends React.Component {
                       const tab = this.getDefaultTabIndex()
                       if(tab === 0)
                         this.setTab()
-                      if(isEmpty(this.state.versions))
-                        this.getVersions()
+                      this.getVersions()
                     })
                   }
                 })
