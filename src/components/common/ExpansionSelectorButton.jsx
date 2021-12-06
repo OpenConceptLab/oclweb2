@@ -5,7 +5,7 @@ import {
   AspectRatio as ExpansionIcon
 } from '@mui/icons-material';
 import { get, isEmpty, find } from 'lodash';
-import { WHITE, RED, BLACK } from '../../common/constants';
+import { WHITE, RED, BLACK, DARKGRAY } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
 const ExpansionSelectorButton = ({version, selected, expansions}) => {
@@ -79,7 +79,10 @@ const ExpansionSelectorButton = ({version, selected, expansions}) => {
         </Button>
       </ButtonGroup>
       <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="150px">
-        <MenuList id="split-button-menu">
+        <MenuList id="split-button-menu" style={{paddingTop: '0px'}}>
+          <p style={{margin: 0, padding: '5px 10px', borderBottom: `1px solid ${DARKGRAY}`}}>
+            <b>Expansions</b>
+          </p>
           {
             expansions.map(expansion => {
               let label = expansion.mnemonic
