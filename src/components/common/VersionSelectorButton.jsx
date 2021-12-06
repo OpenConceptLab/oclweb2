@@ -1,10 +1,12 @@
 import React from 'react';
-import { Button, ButtonGroup, MenuList, MenuItem } from '@mui/material';
+import { Button, ButtonGroup, MenuList, MenuItem, Tooltip } from '@mui/material';
 import {
   AccountTreeRounded as VersionIcon,
-  ArrowDropDown as DownIcon
+  ArrowDropDown as DownIcon,
+  NewReleases as ReleaseIcon,
+  BrightnessAuto as AutoIcon
 } from '@mui/icons-material';
-import { WHITE, RED, BLACK } from '../../common/constants';
+import { WHITE, RED, BLACK, GREEN } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
 const HEAD = 'HEAD';
@@ -79,7 +81,27 @@ const VersionSelectorButton = ({selected, versions}) => {
                 selected={version.version === selectedVersion.version}
                 onClick={() => handleMenuItemClick(version)}
                 >
-                {version.version}
+                <span className='flex-vertical-center'>
+                  <span>
+                    {version.version}
+                  </span>
+                  {
+                    version.released &&
+                    <Tooltip title='Released'>
+                      <span className='flex-vertical-center' style={{marginLeft: '5px'}}>
+                        <ReleaseIcon fontSize='inherit' color='primary' />
+                      </span>
+                    </Tooltip>
+                  }
+                  {
+                    (version.autoexpand || version.autoexpand_head) &&
+                    <Tooltip title='Auto Expanded'>
+                      <span className='flex-vertical-center' style={{marginLeft: '5px'}}>
+                        <AutoIcon fontSize='inherit' style={{color: GREEN}} />
+                      </span>
+                    </Tooltip>
+                  }
+                </span>
               </MenuItem>
             ))
           }
