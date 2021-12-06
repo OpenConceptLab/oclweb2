@@ -51,7 +51,7 @@ const deleteVersion = version => getService(version).delete().then(response => h
 const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
 const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url).delete().then(response => handleExpansionResponse(response, 'Deleted'))
 
-const VersionList2 = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) => {
+const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) => {
   const resource = 'collection'
   const sortedVersions = headFirst(versions)
   const [versionForm, setVersionForm] = React.useState(false);
@@ -247,7 +247,7 @@ const VersionList2 = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =
                     </Tooltip>
                   </div>
                 </div>
-                <div className='col-md-9' style={{padding: '2px 5px', maxHeight: '175px', overflow: 'auto'}}>
+                <div className='col-md-9' style={{padding: '2px 5px'}}>
                   {
                     isLoadingExpansions ?
                     <div className='col-md-12' style={{textAlign: 'center', marginTop: '20px'}}>
@@ -380,4 +380,4 @@ const VersionList2 = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =
   );
 }
 
-export default VersionList2;
+export default VersionList;

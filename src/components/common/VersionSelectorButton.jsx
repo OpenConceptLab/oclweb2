@@ -6,12 +6,14 @@ import {
   NewReleases as ReleaseIcon,
   BrightnessAuto as AutoIcon
 } from '@mui/icons-material';
-import { WHITE, RED, BLACK, GREEN } from '../../common/constants';
+import { startCase } from 'lodash';
+import { headFirst } from '../../common/utils';
+import { WHITE, RED, BLACK, GREEN, DARKGRAY } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
 const HEAD = 'HEAD';
 
-const VersionSelectorButton = ({selected, versions}) => {
+const VersionSelectorButton = ({selected, versions, resource}) => {
   const [open, setOpen] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState(selected)
   const anchorRef = React.useRef(null);
@@ -73,9 +75,12 @@ const VersionSelectorButton = ({selected, versions}) => {
         </Button>
       </ButtonGroup>
       <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="150px">
-        <MenuList id="split-button-menu">
+        <MenuList id="split-button-menu" style={{paddingTop: '0px'}}>
+          <p style={{margin: 0, padding: '5px 10px', borderBottom: `1px solid ${DARKGRAY}`}}>
+            <b>{`${startCase(resource)} Versions`}</b>
+          </p>
           {
-            versions.map(version => (
+            headFirst(versions).map(version => (
               <MenuItem
                 key={version.version}
                 selected={version.version === selectedVersion.version}

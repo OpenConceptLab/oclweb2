@@ -120,6 +120,7 @@ const CollectionHomeHeader = ({
               <VersionSelectorButton
                 selected={collection}
                 versions={versions}
+                resource='collection'
               />
             </React.Fragment>
             {

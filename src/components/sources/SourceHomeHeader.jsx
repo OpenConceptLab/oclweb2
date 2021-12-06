@@ -70,7 +70,7 @@ const SourceHomeHeader = ({
   }
   const getHiddenAttributes = () => {
     if (get(config, 'config.header.invisibleAttributes') === 'object'){
-      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()} 
+      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
     }
     else if (get(config, 'config.header.invisibleAttributes')) {
       return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() } 
@@ -117,7 +117,7 @@ const SourceHomeHeader = ({
             <SourceButton label={source.short_code} href={`#${versionedObjectURL}`} />
             <React.Fragment>
               <span className='separator'>/</span>
-              <VersionSelectorButton selected={source} versions={versions} />
+              <VersionSelectorButton selected={source} versions={versions} resource='source' />
             </React.Fragment>
             {
               source.retired &&
