@@ -82,7 +82,7 @@ const VersionSelectorButton = ({selected, versions}) => {
                 onClick={() => handleMenuItemClick(version)}
                 >
                 <span className='flex-vertical-center'>
-                  <span>
+                  <span style={version.version === 'HEAD' ? {color: 'gray', fontStyle: 'italic'} : {}}>
                     {version.version}
                   </span>
                   {
