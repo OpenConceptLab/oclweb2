@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, ButtonGroup, MenuList, MenuItem } from '@mui/material';
+import { Button, ButtonGroup, MenuList, MenuItem, Tooltip } from '@mui/material';
 import {
   ArrowDropDown as DownIcon,
   AspectRatio as ExpansionIcon
 } from '@mui/icons-material';
 import { get, isEmpty, find } from 'lodash';
-import { WHITE, RED, BLACK, DARKGRAY } from '../../common/constants';
+import { WHITE, RED, BLACK, DARKGRAY, GREEN } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
 const ExpansionSelectorButton = ({version, selected, expansions}) => {
@@ -84,18 +84,25 @@ const ExpansionSelectorButton = ({version, selected, expansions}) => {
             <b>Expansions</b>
           </p>
           {
-            expansions.map(expansion => {
-              let label = expansion.mnemonic
-              label += expansion.url === version.expansion_url ? ' (default)' : ''
-              return (
+            expansions.map(expansion => (
               <MenuItem
                 key={expansion.id}
                 selected={expansion.id === selectedExpansion.id}
                 onClick={() => handleMenuItemClick(expansion)}
                 >
-                {label}
+                <span className='flex-vertical-center'>
+                  <span>{expansion.mnemonic}</span>
+                  {
+                    expansion.url === version.expansion_url &&
+                    <Tooltip title='Default Expansion'>
+                      <span className='flex-vertical-center' style={{marginLeft: '5px'}}>
+                        <ExpansionIcon fontSize='inherit' style={{color: GREEN}} />
+                      </span>
+                    </Tooltip>
+                  }
+                </span>
               </MenuItem>
-            )})
+            ))
           }
         </MenuList>
       </PopperGrow>
