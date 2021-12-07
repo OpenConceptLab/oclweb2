@@ -4,6 +4,9 @@ import { TextField, Button, Paper } from '@mui/material';
 import { set, get } from 'lodash';
 import APIService from '../../services/APIService';
 import ForgotPasswordEmailSentMessage from './ForgotPasswordEmailSentMessage';
+import { getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 class ForgotPasswordRequest extends React.Component {
   constructor(props) {
@@ -34,7 +37,7 @@ class ForgotPasswordRequest extends React.Component {
                               if(get(response, 'status') === 200)
                                 this.setState({success: true})
                               else
-                                alertifyjs.error('This email is known to OCL.')
+                                alertifyjs.error(`This email is known to ${SITE_TITLE}.`)
                             })
   }
 

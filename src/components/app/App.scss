@@ -22,6 +22,10 @@ $black: #000;
         width: calc(100% - 250px) !important;
         margin-left: 250px !important;
     }
+    &.no-menu {
+        width: 100%;
+        margin-left: 0px;
+    }
 }
 .search-input input {
     height: 0.3em;

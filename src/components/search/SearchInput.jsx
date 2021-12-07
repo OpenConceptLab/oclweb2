@@ -4,15 +4,16 @@ import {
   CenterFocusStrong as ExactMatchIcon,
   Clear as ClearIcon,
 } from '@mui/icons-material';
-import { InputBase, Divider, IconButton, Tooltip  } from '@mui/material';
+import { InputBase, Divider, IconButton, Tooltip } from '@mui/material';
 import { get } from 'lodash';
-import { isAtGlobalSearch } from '../../common/utils';
+import { isAtGlobalSearch, getSiteTitle } from '../../common/utils';
 
 class SearchInput extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
+      siteTitle: getSiteTitle(),
       input: undefined,
       exactMatch: 'off',
       queryParams: {},
@@ -94,7 +95,7 @@ class SearchInput extends React.Component {
   }
 
   render() {
-    const { input, exactMatch } = this.state
+    const { input, exactMatch, siteTitle } = this.state
     const { moreControls, searchInputPlaceholder, nested, noExactMatch } = this.props
     const marginBottom = (isAtGlobalSearch() || nested) ? '10px' : '0px';
     return (
@@ -102,7 +103,7 @@ class SearchInput extends React.Component {
         <div className='col-sm-12 no-side-padding' style={{marginBottom: marginBottom, display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
           <InputBase
             style={{flex: 1, marginLeft: '10px'}}
-            placeholder={searchInputPlaceholder || "Search OCL"}
+            placeholder={searchInputPlaceholder || `Search ${siteTitle}`}
             inputProps={{ 'aria-label': 'search ocl' }}
             value={input || ''}
             fullWidth

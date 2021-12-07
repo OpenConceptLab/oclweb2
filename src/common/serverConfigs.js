@@ -5,6 +5,21 @@ export const SERVER_CONFIGS = [
     type: 'ocl',
     url: 'http://127.0.0.1:8000'
   },
+  // {
+  //   id: 13,
+  //   name: 'My WHO',
+  //   type: 'ocl',
+  //   url: 'http://localhost:8000',
+  //   info: {
+  //     site: {
+  //       title: 'WHO',
+  //       noOpenMRS: true,
+  //       logoText: 'WHO',
+  //       noLeftMenu: true,
+  //       footerText: 'Powered by Open Concept Lab'
+  //     }
+  //   }
+  // },
   {
     id: 2,
     name: 'OCL QA',
@@ -27,7 +42,16 @@ export const SERVER_CONFIGS = [
     id: 10,
     name: 'WHO Staging',
     type: 'ocl',
-    url: 'https://api.staging.who.openconceptlab.org'
+    url: 'https://api.staging.who.openconceptlab.org',
+    info: {
+      site: {
+        title: 'WHO',
+        noOpenMRS: true,
+        logoText: 'WHO',
+        noLeftMenu: true,
+        footerText: 'Powered by Open Concept Lab'
+      }
+    }
   },
   {
     id: 5,
@@ -55,6 +79,14 @@ export const SERVER_CONFIGS = [
         id: 'FHIR',
         name: "Fast Healthcare Interoperability Resources",
         logo_url: '/fhir.svg'
+      },
+      site: {
+        title: 'FHIR',
+        noOpenMRS: true,
+        logoText: 'WHO',
+        logoURL: '/fhir.svg',
+        noLeftMenu: true,
+        footerText: 'FHIR Server Powered by Open Concept Lab'
       }
     }
   },

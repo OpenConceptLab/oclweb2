@@ -15,6 +15,9 @@ import APIService from '../../services/APIService';
 import { formatWebsiteLink } from '../../common/utils';
 import JSONIcon from '../common/JSONIcon';
 import FileUploader from '../common/FileUploader';
+import { getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 class NewImport extends React.Component {
   constructor(props) {
@@ -273,13 +276,15 @@ class NewImport extends React.Component {
         <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
           <Alert icon={<DocIcon fontSize='small' />} severity="info" className='flex-vertical-center'>
             <span>
-              OCL processes bulk import asynchronously. A bulk import may include creates, updates, or deletes for multiple owners and repositories.&nbsp;
+              {
+                `${SITE_TITLE} processes bulk import asynchronously. A bulk import may include creates, updates, or deletes for multiple owners and repositories.`
+              }
+              &nbsp;
               {
                 formatWebsiteLink('https://docs.openconceptlab.org/en/latest/oclapi/apireference/bulkimporting.html', null, 'Read More...')
               }
             </span>
           </Alert>
-
         </div>
       </React.Fragment>
     )

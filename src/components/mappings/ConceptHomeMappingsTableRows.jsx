@@ -6,6 +6,9 @@ import { map, get } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
+import { getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
   const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
@@ -55,9 +58,9 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
           const targetURL = isIndirect ? get(mapping, 'from_concept_url') : get(mapping, 'to_concept_url');
           let title;
           if(targetURL)
-            title = isIndirect ? 'Source concept is defined in OCL' : 'Target concept is defined in OCL'
+            title = isIndirect ? `Source concept is defined in ${SITE_TITLE}` : `Target concept is defined in ${SITE_TITLE}`
           else
-            title = isIndirect ? 'Source concept is not defined in OCL' : 'Target concept is not defined in OCL'
+            title = isIndirect ? `Source concept is not defined in ${SITE_TITLE}` : `Target concept is not defined in ${SITE_TITLE}`
           const cursor = targetURL ? 'pointer' : 'not-allowed'
           return (
             <TableRow

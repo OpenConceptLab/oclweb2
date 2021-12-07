@@ -591,3 +591,5 @@ export const setUpRecentHistory = history => {
     localStorage.setItem('visits', JSON.stringify(visits));
   });
 }
+
+export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title', 'OCL');
