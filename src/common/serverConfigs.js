@@ -83,7 +83,6 @@ export const SERVER_CONFIGS = [
       site: {
         title: 'FHIR',
         noOpenMRS: true,
-        logoText: 'WHO',
         logoURL: '/fhir.svg',
         noLeftMenu: true,
         footerText: 'FHIR Server Powered by Open Concept Lab'
