@@ -87,7 +87,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
           {
             user.company &&
             <div style={{marginTop: '5px'}}>
-              <Tooltip title='Company' arrow>
+              <Tooltip title='Company' arrow placement='right'>
                 <span className='flex-vertical-center' placement='right'>
                   <span style={{marginRight: '5px'}}><CompanyIcon fontSize='small' style={{marginTop: '4px'}} /></span>
                   <span>{user.company}</span>
