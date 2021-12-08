@@ -158,7 +158,14 @@ export const SERVER_CONFIGS = [
         _sort: '_id'
       },
       searchMode: 'hapi',
-      noConceptMap: true
+      noConceptMap: true,
+      site: {
+        title: 'WHO',
+        noOpenMRS: true,
+        logoURL: 'https://www.who.int/images/default-source/infographics/who-emblem.png?sfvrsn=877bb56a_2',
+        noLeftMenu: true,
+        footerText: 'Powered by Open Concept Lab'
+      }
     }
   },
 ]
