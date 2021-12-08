@@ -47,7 +47,7 @@ export const SERVER_CONFIGS = [
       site: {
         title: 'WHO',
         noOpenMRS: true,
-        logoText: 'WHO',
+        logoURL: 'https://www.who.int/images/default-source/infographics/who-emblem.png?sfvrsn=877bb56a_2',
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
       }

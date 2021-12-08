@@ -135,7 +135,7 @@ const Header = props => {
     if(get(siteConfiguration, 'logoText'))
       logo = siteConfiguration.logoText
     if(get(siteConfiguration, 'logoURL'))
-      logo = (<img src={siteConfiguration.logoURL} style={{width: '30px', height: '30px', marginTop: '-10px'}} />);
+      logo = (<img src={siteConfiguration.logoURL} style={{width: '50px', height: '50px', marginTop: '-10px'}} />);
     return logo
   }
 
