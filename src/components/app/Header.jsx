@@ -141,6 +141,10 @@ const Header = props => {
 
   const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
 
+  const hideOpenMRSApp = get(siteConfiguration, 'hideOpenMRSApp', false)
+  const hideTermBrowserApp = get(siteConfiguration, 'hideTermBrowserApp', false)
+  const hideImportApp = get(siteConfiguration, 'hideImportApp', false)
+  const hideAppsMenu = hideOpenMRSApp && hideImportApp && hideTermBrowserApp;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -189,7 +193,14 @@ const Header = props => {
               <span style={{marginLeft: '20px'}}>
                 <RecentHistory />
                 <Favorites />
-                <AppsMenu noOpenMRS={get(siteConfiguration, 'noOpenMRS', false)} />
+                {
+                  !hideAppsMenu &&
+                  <AppsMenu
+                    hideOpenMRSApp={hideOpenMRSApp}
+                    hideTermBrowserApp={hideTermBrowserApp}
+                    hideImportApp={hideImportApp}
+                  />
+                }
                 <UserOptions />
               </span> :
               (

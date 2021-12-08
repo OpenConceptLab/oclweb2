@@ -13,7 +13,7 @@ export const SERVER_CONFIGS = [
   //   info: {
   //     site: {
   //       title: 'WHO',
-  //       noOpenMRS: true,
+  //       hideOpenMRSApp: true,
   //       logoText: 'WHO',
   //       noLeftMenu: true,
   //       footerText: 'Powered by Open Concept Lab'
@@ -46,7 +46,7 @@ export const SERVER_CONFIGS = [
     info: {
       site: {
         title: 'WHO',
-        noOpenMRS: true,
+        hideOpenMRSApp: true,
         logoURL: 'https://www.who.int/images/default-source/infographics/who-emblem.png?sfvrsn=877bb56a_2',
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
@@ -82,7 +82,7 @@ export const SERVER_CONFIGS = [
       },
       site: {
         title: 'FHIR',
-        noOpenMRS: true,
+        hideOpenMRSApp: true,
         logoURL: '/fhir.svg',
         noLeftMenu: true,
         footerText: 'FHIR Server Powered by Open Concept Lab'
@@ -161,7 +161,7 @@ export const SERVER_CONFIGS = [
       noConceptMap: true,
       site: {
         title: 'WHO',
-        noOpenMRS: true,
+        hideOpenMRSApp: true,
         logoURL: 'https://www.who.int/images/default-source/infographics/who-emblem.png?sfvrsn=877bb56a_2',
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
