@@ -85,7 +85,8 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
       if(response.status === 200){
         alertifyjs.success('Successfully marked expansion as version default')
         onUpdate({...version, expansion_url: expansion.url})
-        setExpansions({...expansions, [version.uuid]: getFormattedExpansions({...version, expansion_url: expansion.url}, expansions[version.uuid])})
+        const newExpansions = getFormattedExpansions({...version, expansion_url: expansion.url}, expansions[version.uuid]);
+        setExpansions({...expansions, [version.uuid]: newExpansions})
       }
     })
   }

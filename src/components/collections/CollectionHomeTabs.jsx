@@ -19,7 +19,7 @@ const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion, isLoadingExpansions
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -143,8 +143,9 @@ const CollectionHomeTabs = props => {
           </div>
         }
         {
-          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions'], selectedTabConfig.type) &&
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions'], selectedTabConfig.type) && !isLoadingExpansions &&
           <CollectionHomeChildrenList
+            isLoadingExpansions={isLoadingExpansions}
             collection={collection}
             match={match}
             location={location}
@@ -162,9 +163,9 @@ const CollectionHomeTabs = props => {
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
           />
         }
-    </div>
-    <CommonFormDrawer
-    isOpen={referenceForm}
+      </div>
+      <CommonFormDrawer
+        isOpen={referenceForm}
         onClose={() => setReferenceForm(false)}
         size='large'
         formComponent={
