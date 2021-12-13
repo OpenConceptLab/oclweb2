@@ -1,8 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { map, includes, compact, isEmpty, get, merge } from 'lodash';
+import { includes, compact, isEmpty, get, merge } from 'lodash';
 import Search from '../search/Search';
-import VersionFilter from '../common/VersionFilter';
 import APIService from '../../services/APIService';
 
 class CollectionHomeChildrenList extends React.Component {
@@ -33,23 +32,6 @@ class CollectionHomeChildrenList extends React.Component {
     return `${versionedObjectURL}/${resource}/`
   }
 
-  onChange = version => {
-    this.setState({selectedVersion: version || 'HEAD'})
-  }
-
-  getExtraControls() {
-    const { selectedVersion } = this.state;
-    const { versions } = this.props;
-    return (
-      <VersionFilter
-        size='small'
-        onChange={this.onChange}
-        versions={map(versions, 'id')}
-        selected={selectedVersion}
-      />
-    )
-  }
-
   onReferencesDelete = expressions => {
     const references = compact(expressions)
     const url = this.props.versionedObjectURL + 'references/'
@@ -73,7 +55,6 @@ class CollectionHomeChildrenList extends React.Component {
         nested
         baseURL={this.getURL()}
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
-        extraControls={this.getExtraControls()}
         searchInputPlaceholder={`Search ${collection.name} ${resource}...`}
         onReferencesDelete={isVersionedObject && this.onReferencesDelete}
         isVersionedObject={isVersionedObject}
