@@ -43,7 +43,7 @@ const CollectionHomeHeader = ({
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const tabConfig = get(config, `config.tabs.${tab}`);
   const hasAccess = currentUserHasAccess();
-  const isExpandedHeader = () => !get(config, 'config.header.shrink', false) && tabConfig.type !== 'versions';
+  const isExpandedHeader = () => !get(config, 'config.header.shrink', false) && get(tabConfig, 'type') !== 'versions';
   const [openHeader, setOpenHeader] = React.useState(isExpandedHeader);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
