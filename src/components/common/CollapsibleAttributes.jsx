@@ -20,7 +20,6 @@ const CollapsibleAttributes = ({
           map(hiddenAttributes, (attr) => {
             const value = get(object, attr.value)
             if (!value) return null
-            
             if (attr.value === "supported_locales" || attr.value === "default_locale"){
               return <HeaderAttribute key={attr.label} label="Supported Locales" value={<SupportedLocales {...object} />} gridClass="col-md-12" type="component" />
             }
