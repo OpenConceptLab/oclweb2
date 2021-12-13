@@ -8,6 +8,9 @@ import {
 import { History as HistoryIcon } from '@mui/icons-material';
 import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon';
 import PopperGrow from '../common/PopperGrow';
+import { getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 const RecentHistory = () => {
   const [open, setOpen] = React.useState(false);
@@ -65,7 +68,7 @@ const RecentHistory = () => {
                           enableColor
                         />
                       </ListItemIcon>
-                      <ListItemText primary={visit.name.replaceAll('- OCL', '')} />
+                      <ListItemText primary={visit.name.replaceAll(`- ${SITE_TITLE}`, '')} />
                     </ListItemButton>
                   </ListItem>
                 )

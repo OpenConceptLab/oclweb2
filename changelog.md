@@ -1,3 +1,18 @@
+##### 2.0.55 - Wed Dec 8 04:43:33 2021 +0000
+- [OpenConceptLab/ocl_issues#1146](https://github.com/OpenConceptLab/ocl_issues/issues/1146) | WHO site config for ICD-11 FHIR connector
+- [OpenConceptLab/ocl_issues#1146](https://github.com/OpenConceptLab/ocl_issues/issues/1146) | WHO logo in server configs
+- User Profile | keeping tooltip direction consistent
+- [OpenConceptLab/ocl_issues#1146](https://github.com/OpenConceptLab/ocl_issues/issues/1146) | Customizations for TermBrowser in stand-alone mode via server configs
+- [OpenConceptLab/ocl_issues#1134](https://github.com/OpenConceptLab/ocl_issues/issues/1134) | References tab icon
+- [OpenConceptLab/ocl_issues#1134](https://github.com/OpenConceptLab/ocl_issues/issues/1134) | added fontello
+- [OpenConceptLab/ocl_issues#1068](https://github.com/OpenConceptLab/ocl_issues/issues/1068) | ICD-11 fhir connector | using hapi configuration for navigations
+- Updated Recent history panel header
+- Favorites -> My Pins
+- Concept/Mapping home | header shrunk by default for any tab except first
+- [OpenConceptLab/ocl_issues#1068](https://github.com/OpenConceptLab/ocl_issues/issues/1068) | ICD-11 fhir connector | ConceptMaps are not supported
+- [OpenConceptLab/ocl_issues#1068](https://github.com/OpenConceptLab/ocl_issues/issues/1068) | ICD-11 fhir connector | initial listing/pagination/search
+- Delete smart-guidelines3605ec7f91dac45e999da992319de0109-crop.jpg
+- Image for DDCC Test Config
 ##### 2.0.53 - Tue Nov 23 03:01:25 2021 +0000
 - [OpenConceptLab/ocl_issues#929](https://github.com/OpenConceptLab/ocl_issues/issues/929) | OCL Logo should redirect to root for non-prod environments
 - WEB | utils | Added staging-who env

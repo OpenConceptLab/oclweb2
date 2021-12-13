@@ -2,6 +2,9 @@ import React from 'react';
 import { TextField, IconButton, Button } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { map, isNumber } from 'lodash';
+import { getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 const URLReferenceForm = ({expressions, onAdd, onChange, onBlur, onDelete}) => {
   return (
@@ -26,7 +29,7 @@ const URLReferenceForm = ({expressions, onAdd, onChange, onBlur, onDelete}) => {
                   onChange={onChange}
                   onBlur={event => onBlur(event, index)}
                   value={expression.uri}
-                  helperText={expression.error || resultLabel || 'Any relative URL which is valid in OCL'}
+                  helperText={expression.error || resultLabel || `Any relative URL which is valid in ${SITE_TITLE}`}
                 />
               </div>
               {

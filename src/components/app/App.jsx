@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import { get } from 'lodash';
-import { isFHIRServer, isLoggedIn, setUpRecentHistory } from '../../common/utils';
+import { isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle } from '../../common/utils';
 import Search from '../search/Search';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
@@ -32,6 +32,7 @@ import RootView from './RootView';
 import DocumentTitle from "./DocumentTitle"
 import './App.scss';
 
+const SITE_TITLE = getSiteTitle()
 
 const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
   <Route
@@ -67,13 +68,26 @@ const App = props => {
   })
 
   const isFHIR = isFHIRServer();
+  const setSiteTitle = () => document.getElementsByTagName('title')[0].text = SITE_TITLE;
+  const serverConfig = getAppliedServerConfig()
+  const siteConfiguration = get(serverConfig, 'info.site')
+  const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
+  const getClasses = () => {
+    if(hideLeftNav)
+      return 'content no-menu'
+    if(menuOpen)
+      return 'content menu-open'
+    return 'content'
+  }
+
+  setSiteTitle()
 
   return (
     <div>
       <DocumentTitle/>
       <Header {...props} onOpen={setMenuOpen} />
       <ErrorBoundary>
-        <main className={menuOpen ? 'content menu-open' : 'content'}>
+        <main className={getClasses()}>
           <Switch>
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
             <Route path="/search" component={isFHIR ? Fhir : Search} />

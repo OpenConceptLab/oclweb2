@@ -12,7 +12,8 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import { map, isEmpty, get } from 'lodash';
 import {
-  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv
+  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv,
+  getSiteTitle
 } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
@@ -123,10 +124,27 @@ const Header = props => {
     return newOpen
   })
 
-  const isFHIRServer = get(getAppliedServerConfig(), 'type') === 'fhir';
+  const serverConfig = getAppliedServerConfig()
+  const siteConfiguration = get(serverConfig, 'info.site')
+  const isFHIRServer = get(serverConfig, 'type') === 'fhir';
   const env = getEnv()
   const isProduction = env === 'production';
 
+  const getLogo = () => {
+    let logo = getSiteTitle()
+    if(get(siteConfiguration, 'logoText'))
+      logo = siteConfiguration.logoText
+    if(get(siteConfiguration, 'logoURL'))
+      logo = (<img src={siteConfiguration.logoURL} style={{width: '50px', height: '50px', marginTop: '-10px'}} />);
+    return logo
+  }
+
+  const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
+
+  const hideOpenMRSApp = get(siteConfiguration, 'hideOpenMRSApp', false)
+  const hideTermBrowserApp = get(siteConfiguration, 'hideTermBrowserApp', false)
+  const hideImportApp = get(siteConfiguration, 'hideImportApp', false)
+  const hideAppsMenu = hideOpenMRSApp && hideImportApp && hideTermBrowserApp;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -142,18 +160,21 @@ const Header = props => {
         className={classes.appBar}
       >
         <Toolbar style={{padding: '0 15px'}}>
-          <IconButton
-            color="primary"
-            aria-label="open drawer"
-            onClick={toggleOpen}
-            edge="start"
-            className={classes.menuButton}
-            size="large">
-            <MenuIcon />
-          </IconButton>
+          {
+            !hideLeftNav &&
+            <IconButton
+              color="primary"
+              aria-label="open drawer"
+              onClick={toggleOpen}
+              edge="start"
+              className={classes.menuButton}
+              size="large">
+              <MenuIcon />
+            </IconButton>
+          }
           <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
             <a className="no-anchor-styles" href={isProduction ? SITE_URL : '/'} rel="noopener noreferrer">
-              OCL
+              {getLogo()}
             </a>
           </Typography>
           <div className="col-sm-8">
@@ -172,7 +193,14 @@ const Header = props => {
               <span style={{marginLeft: '20px'}}>
                 <RecentHistory />
                 <Favorites />
-                <AppsMenu/>
+                {
+                  !hideAppsMenu &&
+                  <AppsMenu
+                    hideOpenMRSApp={hideOpenMRSApp}
+                    hideTermBrowserApp={hideTermBrowserApp}
+                    hideImportApp={hideImportApp}
+                  />
+                }
                 <UserOptions />
               </span> :
               (
@@ -197,6 +225,7 @@ const Header = props => {
           classes={{
             paper: classes.drawerPaper,
           }}
+          style={hideLeftNav ? {display: 'none'} : {}}
           >
           <Toolbar />
           <div className={classes.drawerContainer}>
@@ -267,7 +296,7 @@ const Header = props => {
         </Drawer> :
         <Drawer
           id='left-menu-collapsed'
-          style={{flexShrink: 0, width: 'auto'}}
+          style={{flexShrink: 0, width: 'auto', display: hideLeftNav ? 'none' : 'inherit'}}
           variant="permanent"
           anchor="left"
           open

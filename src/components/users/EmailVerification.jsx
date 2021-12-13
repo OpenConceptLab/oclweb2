@@ -5,7 +5,9 @@ import { Paper, Button, CircularProgress } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import { get } from 'lodash';
 import APIService from '../../services/APIService';
-import { refreshCurrentUserCache } from '../../common/utils';
+import { refreshCurrentUserCache, getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 class EmailVerification extends React.Component {
   constructor(props) {
@@ -64,7 +66,9 @@ class EmailVerification extends React.Component {
   getNotFoundDOM() {
     return (
       <MuiAlert elevation={6} variant="filled" severity="error">
-        Unable to verify the user. Either verification link expired or wrong. Please contact OCL Team.
+        {
+          `Unable to verify the user. Either verification link expired or wrong. Please contact ${SITE_TITLE} Team.`
+        }
       </MuiAlert>
     )
   }

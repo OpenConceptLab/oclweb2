@@ -5,10 +5,12 @@ import { Apps as AppsIcon , Web as MetadataBrowserIcon, Publish as ImportsIcon }
 import { Tooltip, IconButton, Box, Typography } from '@mui/material';
 import useToggle from '../../hooks/useToggle';
 import OpenMRSLogo from '../common/OpenMRSLogo';
-import { getOpenMRSURL } from '../../common/utils';
+import { getOpenMRSURL, getSiteTitle } from '../../common/utils';
 import PopperGrow from './PopperGrow';
 
-const AppsMenu = () => {
+const SITE_TITLE = getSiteTitle()
+const AppsMenu = props => {
+  const { hideOpenMRSApp, hideTermBrowserApp, hideImportApp } = props;
   const open = useToggle()
   const location = useLocation()
   const handleClose = event => {
@@ -35,32 +37,41 @@ const AppsMenu = () => {
         </IconButton>
       </Tooltip>
       <PopperGrow open={open.value} anchorRef={anchorRef} handleClose={handleClose}>
-        <div className='app-menu flex-vertical-center'>
+        <div className='app-menu' style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           <Box className="app-container" display="flex" justifyContent="space-around">
-            <Link to="/" className='no-anchor-styles flex-vertical-center'>
-              <Box className={location.pathname !== "/imports" ? "app selected" : "app"} display="flex" flexDirection="column" alignItems="center">
-                <MetadataBrowserIcon fontSize="large"/>
-                <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
-                  OCL <br/> TermBrowser
-                </Typography>
-              </Box>
-            </Link>
-            <a href={getOpenMRSURL()} className='no-anchor-styles flex-vertical-center'>
-              <Box className="app" display="flex" flexDirection="column" alignItems="center">
-                <OpenMRSLogo style={{width:"30px"}} />
-                <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
-                  OpenMRS <br/> Dictionary <br/> Manager
-                </Typography>
-              </Box>
-            </a>
-            <Link to='/imports' className='no-anchor-styles flex-vertical-center' onClick={handleClose}>
-              <Box className={location.pathname == "/imports" ? "app selected" : "app"} display="flex" flexDirection="column" alignItems="center">
-                <ImportsIcon fontSize="large"/>
-                <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
-                  Bulk <br/> Importer
-                </Typography>
-              </Box>
-            </Link>
+            {
+              !hideTermBrowserApp &&
+              <Link to="/" className='no-anchor-styles flex-vertical-center'>
+                <Box className={location.pathname !== "/imports" ? "app selected" : "app"} display="flex" flexDirection="column" alignItems="center">
+                  <MetadataBrowserIcon fontSize="large"/>
+                  <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
+                    {SITE_TITLE} <br/> TermBrowser
+                  </Typography>
+                </Box>
+              </Link>
+            }
+            {
+              !hideOpenMRSApp &&
+              <a href={getOpenMRSURL()} className='no-anchor-styles flex-vertical-center'>
+                <Box className="app" display="flex" flexDirection="column" alignItems="center">
+                  <OpenMRSLogo style={{width:"30px"}} />
+                  <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
+                    OpenMRS <br/> Dictionary <br/> Manager
+                  </Typography>
+                </Box>
+              </a>
+            }
+            {
+              !hideImportApp &&
+              <Link to='/imports' className='no-anchor-styles flex-vertical-center' onClick={handleClose}>
+                <Box className={location.pathname == "/imports" ? "app selected" : "app"} display="flex" flexDirection="column" alignItems="center">
+                  <ImportsIcon fontSize="large"/>
+                  <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
+                    Bulk <br/> Importer
+                  </Typography>
+                </Box>
+              </Link>
+            }
           </Box>
         </div>
       </PopperGrow>
