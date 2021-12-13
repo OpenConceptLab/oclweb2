@@ -90,9 +90,13 @@ const HomeHeader = ({
   const getTitleStyles = () => customTitleColor ? {color: customTitleColor} : {}
 
   const getDescriptionStyles = () => {
-    const style = customDescriptionColor ? {color: customDescriptionColor, width: '60%'} : {width: '60%'};
+    const descriptionWidth = get(config, 'config.header.forground.descriptionWidth') || '50%'
+    const style = customDescriptionColor ? {color: customDescriptionColor} : {};
     if(hasBackgroundImage)
       style['minHeight'] = get(config, 'config.header.height') || '140px'
+
+    style['alignItems'] = 'start'
+    style['width'] = descriptionWidth
 
     return style;
   }
