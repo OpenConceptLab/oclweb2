@@ -75,7 +75,7 @@ const CollectionHomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
-  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references', 'expansions'], selectedTabConfig.type) && !selectedTabConfig.uri;
+  const isInvalidTabConfig = selectedTabConfig && !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references', 'expansions'], selectedTabConfig.type) && !selectedTabConfig.uri;
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="collection-home-tabs"  classes={{indicator: 'hidden'}}>

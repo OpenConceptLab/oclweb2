@@ -49,7 +49,7 @@ class CollectionHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
-      return 5;
+      return 4;
     if(location.pathname.indexOf('/versions') > -1)
       return 3;
     if(location.pathname.indexOf('/references') > -1)
