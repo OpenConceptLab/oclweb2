@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 
-const HtmlTooltipRaw = withStyles(theme => ({
+const HtmlToolTipRaw = withStyles(theme => ({
   tooltip: {
     backgroundColor: '#FFF',
     color: 'rgba(0, 0, 0, 0.87)',
@@ -20,4 +20,4 @@ const HtmlTooltipRaw = withStyles(theme => ({
   }
 }))(Tooltip);
 
-export default HtmlTooltipRaw;
+export default HtmlToolTipRaw;

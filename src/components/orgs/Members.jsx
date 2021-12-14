@@ -6,7 +6,7 @@ import {
 } from '@mui/icons-material';
 import { map } from 'lodash';
 import { getUserInitials } from '../../common/utils';
-import HtmlTooltipRaw from '../common/HtmlTooltipRaw';
+import HtmlToolTipRaw from '../common/HtmlToolTipRaw';
 
 const Identity = ({member, size}) => {
   const width = size || '50px';
@@ -93,11 +93,11 @@ const Members = ({ members }) => {
       <Stack direction="row" spacing={1}>
         {
           map(members, member => (
-            <HtmlTooltipRaw title={<Info member={member} />} key={member.username} arrow>
+            <HtmlToolTipRaw title={<Info member={member} />} key={member.username} arrow>
               <span>
                 <Identity member={member} />
               </span>
-            </HtmlTooltipRaw>
+            </HtmlToolTipRaw>
           ))
         }
       </Stack>
