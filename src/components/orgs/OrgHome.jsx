@@ -1,10 +1,9 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@mui/material';
-import { reject, get, values, find, findIndex, isEmpty, isObject, includes, isEqual } from 'lodash';
+import { reject, get, values, find, findIndex, isObject, isEqual } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
-import Pins from '../common/Pins';
 import HomeHeader from './HomeHeader';
 import HomeTabContent from './HomeTabContent';
 import NotFound from '../common/NotFound';
@@ -25,6 +24,7 @@ class OrgHome extends React.Component {
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
+      members: [],
     }
   }
 
@@ -35,14 +35,16 @@ class OrgHome extends React.Component {
   getDefaultTabIndex() {
     const { location } = this.props;
 
-    if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
-      return 3;
-    if(location.pathname.indexOf('/members') > -1)
-      return 2;
-    if(location.pathname.indexOf('/collections') > -1)
-      return 1;
-    if(location.pathname.indexOf('/sources') > -1)
+    if(location.pathname.indexOf('/about') > -1)
       return 0;
+    if(location.pathname.indexOf('/overview') > -1)
+      return 0;
+    if(location.pathname.indexOf('/members') > -1)
+      return 3;
+    if(location.pathname.indexOf('/collections') > -1)
+      return 2;
+    if(location.pathname.indexOf('/sources') > -1)
+      return 1;
 
     return 0;
   }
@@ -122,7 +124,10 @@ class OrgHome extends React.Component {
                 org: org,
                 selectedConfig: defaultCustomConfig || ORG_DEFAULT_CONFIG,
                 customConfigs: customConfigs,
-              }, this.setTab)
+              }, () => {
+                this.getMembersSummary()
+                this.setTab()
+              })
             }
           }))
     }
@@ -136,6 +141,10 @@ class OrgHome extends React.Component {
     const service = this.getPinsService()
     if(service)
       service.get().then(response => this.setState({pins: response.data}))
+  }
+
+  getMembersSummary() {
+    this.getOrgService().appendToUrl('members').get(null, null, {summary: true}).then(response => this.setState({members: response.data}))
   }
 
   createPin = (resourceType, resourceId) => {
@@ -170,23 +179,16 @@ class OrgHome extends React.Component {
                                             .put({order: newOrder})
                                             .then(() => {})
 
-  shouldShowAboutTab() {
-    return !isEmpty(get(this, 'state.org.text'));
-  }
-
   isOCLDefaultConfigSelected = () => isEqual(this.state.selectedConfig, ORG_DEFAULT_CONFIG);
 
   render() {
     const {
       org, isLoading, tab, pins, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied
+      notFound, accessDenied, permissionDenied, members
     } = this.state;
-    const showAboutTab = this.shouldShowAboutTab();
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
     const hasError = notFound || accessDenied || permissionDenied;
-    const selectedTabConfig = get(selectedConfig, `config.tabs.${tab}`);
-
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -213,20 +215,10 @@ class OrgHome extends React.Component {
                   showPin={isCurrentUserMemberOfOrg}
                   customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
-
                   isOCLDefaultConfigSelected={this.isOCLDefaultConfigSelected()}
-                  aboutTab={showAboutTab}
+                  aboutTab
                   showConfigSelection={this.customConfigFeatureApplicable()}
                 />
-                {
-                  !includes(['about', 'text'], get(selectedTabConfig, 'type')) &&
-                  <Pins
-                    pins={pins}
-                    onDelete={this.deletePin}
-                    canDelete={isCurrentUserMemberOfOrg}
-                    onOrderUpdate={this.updatePinOrder}
-                  />
-                }
                 <HomeTabContent
                   org={org}
                   url={url}
@@ -239,10 +231,12 @@ class OrgHome extends React.Component {
                   onPinCreate={this.createPin}
                   onPinDelete={this.deletePin}
                   showPin={isCurrentUserMemberOfOrg}
+                  onPinOrderUpdate={this.updatePinOrder}
                   customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
-                  aboutTab={showAboutTab}
+                  aboutTab
                   showConfigSelection={this.customConfigFeatureApplicable()}
+                  members={members}
                 />
               </React.Fragment>
             }

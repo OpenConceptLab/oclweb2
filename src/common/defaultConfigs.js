@@ -104,6 +104,7 @@ export const ORG_DEFAULT_CONFIG = {
       shrink: false,
     },
     tabs: [
+      { type: "about", label: "Overview", color: "" },
       {
         type: "sources",
         label: "Sources",
@@ -126,7 +127,6 @@ export const ORG_DEFAULT_CONFIG = {
         layout: "table",
         color: "",
       },
-      { type: "about", label: "About", color: "" },
     ],
   },
 };
