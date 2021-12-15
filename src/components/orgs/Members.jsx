@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Stack, IconButton, Divider } from '@mui/material'
+import { Avatar, Stack, IconButton, Divider, Badge } from '@mui/material'
 import {
-  List as SourceIcon, Loyalty as CollectionIcon, Home as OrgIcon
+  List as SourceIcon, Loyalty as CollectionIcon, Home as OrgIcon,
+  AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
 import { map } from 'lodash';
+import { DARKGRAY } from '../../common/constants'
 import { getUserInitials } from '../../common/utils';
 import HtmlToolTipRaw from '../common/HtmlToolTipRaw';
 
@@ -25,12 +27,31 @@ const Identity = ({member, size}) => {
   )
 }
 
+const IdentityBadge = ({member, size}) => {
+  const isAdmin = member.is_superuser || member.is_staff;
+  return (
+    <React.Fragment>
+      {
+        isAdmin ?
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={<AdminIcon style={{color: DARKGRAY}} />}
+          >
+          <Identity member={member} size={size} />
+        </Badge> :
+        <Identity member={member} size={size} />
+      }
+    </React.Fragment>
+  )
+}
+
 const Info = ({ member }) => {
   return (
     <div className='col-xs-12 no-side-padding' style={{fontSize: '14px'}}>
       <div className='col-xs-12 flex-vertical-center' style={{padding: '8px 0'}}>
         <span style={{marginRight: '10px', display: 'inline-block'}}>
-          <Identity member={member} />
+          <IdentityBadge member={member} />
         </span>
         <Link to={member.url} className='no-anchor-styles'>
           <span style={{fontWeight: 'bold', marginRight: '5px', fontSize: '16px'}}>
@@ -38,7 +59,9 @@ const Info = ({ member }) => {
           </span>
         </Link>
         <Link to={member.url} className='no-anchor-styles'>
-          <span style={{color: 'rgba(0, 0, 0, 0.7)', fontSize: '16px'}}>{member.username}</span>
+          <span style={{color: 'rgba(0, 0, 0, 0.7)', fontSize: '16px'}}>
+            {member.username}
+          </span>
         </Link>
       </div>
       <Divider style={{width: '100%'}} />
@@ -95,7 +118,7 @@ const Members = ({ members }) => {
           map(members, member => (
             <HtmlToolTipRaw placement='top' title={<Info member={member} />} key={member.username} arrow>
               <span>
-                <Identity member={member} />
+                <IdentityBadge member={member} />
               </span>
             </HtmlToolTipRaw>
           ))
