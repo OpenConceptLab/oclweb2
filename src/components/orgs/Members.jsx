@@ -33,22 +33,22 @@ const Info = ({ member }) => {
           <Identity member={member} />
         </span>
         <Link to={member.url} className='no-anchor-styles'>
-          <span style={{fontWeight: 'bold', marginRight: '5px'}}>
+          <span style={{fontWeight: 'bold', marginRight: '5px', fontSize: '16px'}}>
             {member.name}
           </span>
         </Link>
         <Link to={member.url} className='no-anchor-styles'>
-          <span style={{color: 'rgba(0, 0, 0, 0.7)'}}>{member.username}</span>
+          <span style={{color: 'rgba(0, 0, 0, 0.7)', fontSize: '16px'}}>{member.username}</span>
         </Link>
       </div>
       <Divider style={{width: '100%'}} />
       <div className='col-xs-12' style={{padding: '8px 0'}}>
         {
           member.sources > 0 &&
-          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '12px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '14px'}}>
             <Link to={`${member.url}sources`} className='no-anchor-styles flex-vertical-center'>
               <React.Fragment>
-                <SourceIcon color='disabled' style={{marginRight: '5px', width: '15px'}} />
+                <SourceIcon color='disabled' style={{marginRight: '5px', width: '18px'}} />
                 <span>{`Owner of ${member.sources} public sources`}</span>
               </React.Fragment>
             </Link>
@@ -56,10 +56,10 @@ const Info = ({ member }) => {
         }
         {
           member.collections > 0 &&
-          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '12px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '14px'}}>
             <Link to={`${member.url}collections`} className='no-anchor-styles flex-vertical-center'>
               <React.Fragment>
-                <CollectionIcon color='disabled' style={{marginRight: '5px', width: '15px'}} />
+                <CollectionIcon color='disabled' style={{marginRight: '5px', width: '18px'}} />
                 <span>{`Owner of ${member.collections} public collections`}</span>
               </React.Fragment>
             </Link>
@@ -68,11 +68,11 @@ const Info = ({ member }) => {
 
         {
           member.organizations > 0 &&
-          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '12px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '14px'}}>
             <Link to={`${member.url}organizations`} className='no-anchor-styles flex-vertical-center'>
               <React.Fragment>
 
-                <OrgIcon color='disabled' style={{marginRight: '5px', width: '15px'}} />
+                <OrgIcon color='disabled' style={{marginRight: '5px', width: '18px'}} />
                 <span>{`Member of ${member.organizations} organizations`}</span>
               </React.Fragment>
             </Link>
@@ -93,7 +93,7 @@ const Members = ({ members }) => {
       <Stack direction="row" spacing={1}>
         {
           map(members, member => (
-            <HtmlToolTipRaw title={<Info member={member} />} key={member.username} arrow>
+            <HtmlToolTipRaw placement='top' title={<Info member={member} />} key={member.username} arrow>
               <span>
                 <Identity member={member} />
               </span>
