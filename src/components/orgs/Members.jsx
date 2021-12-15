@@ -14,7 +14,7 @@ const Identity = ({member, size}) => {
     <React.Fragment>
       {
         member.logo_url ?
-        <Link to={`/#${member.url}`}>
+        <Link to={member.url}>
           <Avatar alt={member.name} src={member.logo_url} style={{width: width, height: width}} />
         </Link> :
         <IconButton touch='true' href={`/#${member.url}`} className='no-anchor-styles' style={{border: `1px solid gray`, width: width, height: width}}>
