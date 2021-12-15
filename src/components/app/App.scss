@@ -341,6 +341,9 @@ div.bottom-fixed-center {
     &.small {
         font-size: 18px;
     }
+    &.large {
+        font-size: 24px;
+    }
 }
 .clickable {
     cursor: pointer !important;
@@ -452,6 +455,9 @@ div.login-paper {
 .resource-description {
     color: rgb(107,115,125);
     margin-bottom: 8px;
+    &.large {
+        font-size: 16px;
+    }
 }
 .pin-icon {
     &.pinned {

@@ -20,6 +20,9 @@ import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import RetiredChip from '../common/RetiredChip';
 import DownloadButton from '../common/DownloadButton';
+import { SOURCE_DEFAULT_CONFIG } from '../../common/defaultConfigs';
+const DEFAULT_VISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.visibleAttributes
+const DEFAULT_INVISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const HIDDEN_ATTRIBUTES = {
   canonical_url: 'url',
@@ -118,10 +121,7 @@ const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL, isHAP
             <div className='col-md-12 no-side-padding'>
               <CollapsibleAttributes
                 object={source}
-                urlAttrs={['canonical_url']}
-                textAttrs={['publisher', 'purpose', 'copyright', 'content_type']}
-                dateAttrs={['revision_date', 'release_date']}
-                jsonAttrs={['identifier', 'contact', 'jurisdiction']}
+                hiddenAttributes={[...DEFAULT_VISIBLE_ATTRIBUTES, ...DEFAULT_INVISIBLE_ATTRIBUTES]}
               />
             </div> :
             <React.Fragment>

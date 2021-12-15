@@ -2,14 +2,13 @@ import React from 'react';
 import { get, map, includes, pickBy, isString, isObject, reject } from 'lodash';
 import { TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID } from '../../common/constants';
 import CustomText from '../common/CustomText';
-import About from '../common/About';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
+import Overview from './Overview'
 
 const HomeTabContent = ({
-  org, tab, selectedConfig, location, match, url, pins, showPin, onPinCreate, onPinDelete, aboutTab
+  org, tab, selectedConfig, location, match, url, pins, showPin, onPinCreate, onPinDelete, aboutTab, onPinOrderUpdate, members
 }) => {
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
-  const about = get(org, 'text')
   const selectedTabConfig = tabConfigs[tab];
   const getSortParams = () => {
     if(selectedTabConfig) {
@@ -29,7 +28,14 @@ const HomeTabContent = ({
       }
       {
         !isInvalidTabConfig && selectedTabConfig.type === 'about' &&
-        <About id={org.id} about={about} />
+        <Overview
+          org={org}
+          pins={pins}
+          onPinDelete={onPinDelete}
+          onPinOrderUpdate={onPinOrderUpdate}
+          canDeletePin={showPin}
+          members={members}
+        />
       }
       {
         !isInvalidTabConfig && selectedTabConfig.type === 'text' &&

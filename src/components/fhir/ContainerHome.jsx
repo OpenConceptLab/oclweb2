@@ -85,7 +85,8 @@ class ContainerHome extends React.Component {
               .overrideURL(versionURL)
               .get()
               .then(response => {
-                this.setState({versions: map(response.data.entry, entry => ({...entry.resource, owner: server.info.org.id}))})
+                if(isObject(get(response, 'data')))
+                  this.setState({versions: map(response.data.entry, entry => ({...entry.resource, owner: server.info.org.id}))})
               })
   }
 

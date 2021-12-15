@@ -90,9 +90,13 @@ const HomeHeader = ({
   const getTitleStyles = () => customTitleColor ? {color: customTitleColor} : {}
 
   const getDescriptionStyles = () => {
-    const style = customDescriptionColor ? {color: customDescriptionColor, width: '60%'} : {width: '60%'};
+    const descriptionWidth = get(config, 'config.header.forground.descriptionWidth') || '40%'
+    const style = customDescriptionColor ? {color: customDescriptionColor} : {};
     if(hasBackgroundImage)
       style['minHeight'] = get(config, 'config.header.height') || '140px'
+
+    style['alignItems'] = 'start'
+    style['width'] = descriptionWidth
 
     return style;
   }
@@ -147,7 +151,7 @@ const HomeHeader = ({
                 }
               </div>
             }
-            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name large'>
               <span style={merge({marginRight: '10px'}, getTitleStyles())}>
                 {
                   customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
@@ -160,9 +164,9 @@ const HomeHeader = ({
             </div>
             {
               (customDescription && isExpandedHeader) ?
-              <div className='col-md-12 no-side-padding header-custom-html resource-description' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
+              <div className='col-md-12 no-side-padding header-custom-html resource-description large' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
                 org.description && isExpandedHeader &&
-                <div className='col-md-12 no-side-padding flex-vertical-center resource-description' style={getDescriptionStyles()}>
+                <div className='col-md-12 no-side-padding flex-vertical-center resource-description large' style={getDescriptionStyles()}>
                   {org.description}
                 </div>
               )

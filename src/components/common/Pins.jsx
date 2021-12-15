@@ -1,5 +1,5 @@
 import React from 'react';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, merge } from 'lodash';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import PinIcon from './PinIcon';
 import Pin from './Pin';
@@ -29,10 +29,8 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 
-const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
+const Pins = ({ pins, onDelete, canDelete, onOrderUpdate, style }) => {
   const [orderedPins, setPins] = React.useState(pins)
-  const gridClassName = `col-md-3`;
-
   React.useEffect(() => {
     setPins(pins)
   }, [pins])
@@ -54,10 +52,10 @@ const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
   }
 
   return (
-    <div className='col-md-12' style={{marginBottom: isEmpty(orderedPins) ? '5px' : '10px'}}>
+    <div className='col-md-12' style={merge({marginBottom: isEmpty(orderedPins) ? '5px' : '10px'}, style || {})}>
       {
         !isEmpty(orderedPins) &&
-        <h3 style={{margin: '10px 5px', display: 'flex', alignItems: 'center'}}>
+        <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}}>
           <PinIcon pinned="true" fontSize='small' style={{marginRight: '5px'}} />
           Pinned
         </h3>
@@ -84,8 +82,8 @@ const Pins = ({ pins, onDelete, canDelete, onOrderUpdate }) => {
                           {
                             (provided, snapshot) => (
                               <div
-                                className={gridClassName}
-                                style={{padding: '0 5px', height: '150px'}}>
+                                className='col-md-3'
+                                style={{padding: 0, paddingRight: '5px', height: '150px'}}>
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.dragHandleProps}
