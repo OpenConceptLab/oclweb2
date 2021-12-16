@@ -4,7 +4,7 @@ import { Close as CloseIcon, InfoOutlined as InfoIcon } from '@mui/icons-materia
 import {
   FormControlLabel, Checkbox, IconButton, Tooltip, TextField, InputAdornment, Button
 } from '@mui/material';
-import { startCase, set, cloneDeep, isEmpty } from 'lodash';
+import { startCase, set, cloneDeep, isEmpty, isString } from 'lodash';
 import APIService from '../../services/APIService';
 
 class OverviewSettings extends React.Component {
@@ -33,8 +33,17 @@ class OverviewSettings extends React.Component {
 
   componentDidMount() {
     const { org } = this.props
-    if(!isEmpty(org.overview))
-      this.setState(org.overview)
+    if(!isEmpty(org.overview)) {
+      let descriptionWidth = org.overview.forground.descriptionWidth
+      let height = org.overview.height
+      if(isString(descriptionWidth)) {
+        descriptionWidth = parseInt(descriptionWidth.replace('%'))
+      }
+      if(isString(height)) {
+        height = parseInt(height.replace('px'))
+      }
+      this.setState({...org.overview, height: height, forground: {...org.overview, descriptionWidth: descriptionWidth}})
+    }
   }
 
   onCheckboxChange = event => this.setFieldValue(event.target.id, event.target.checked)
