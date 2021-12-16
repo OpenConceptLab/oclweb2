@@ -42,7 +42,7 @@ class OverviewSettings extends React.Component {
       if(isString(height)) {
         height = parseInt(height.replace('px'))
       }
-      this.setState({...org.overview, height: height, forground: {...org.overview, descriptionWidth: descriptionWidth}})
+      this.setState({...org.overview, height: height, forground: {...org.overview.forground, descriptionWidth: descriptionWidth}})
     }
   }
 
