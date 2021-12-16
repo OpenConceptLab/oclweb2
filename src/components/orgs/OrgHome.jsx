@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@mui/material';
-import { reject, get, values, find, findIndex, isObject, isEqual } from 'lodash';
+import { reject, get, values, find, findIndex, isObject, isEqual, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import HomeHeader from './HomeHeader';
@@ -98,6 +98,12 @@ class OrgHome extends React.Component {
     return location.pathname.split('/').slice(0, 3).join('/') + '/';
   }
 
+  getAppliedViewConfig = () => {
+    const { selectedConfig, org } = this.state
+    const headerConfig = this.isOCLDefaultConfigSelected() ? merge(selectedConfig.config.header, org.overview) : merge(org.overview, selectedConfig.config.header)
+    return {...selectedConfig, config: {...selectedConfig.config, header: headerConfig}}
+  }
+
   refreshDataByURL() {
     const service = this.getOrgService()
     const customConfigFeatureApplicable = this.customConfigFeatureApplicable();
@@ -105,7 +111,7 @@ class OrgHome extends React.Component {
       this.setState(
         {isLoading: true, notFound: false, accessDenied: false, permissionDenied: false},
         () => service
-          .get(null, null, {includeClientConfigs: customConfigFeatureApplicable})
+          .get(null, null, {includeClientConfigs: customConfigFeatureApplicable, includeOverview: true})
           .then(response => {
             if(get(response, 'detail') === "Not found.")
               this.setState({isLoading: false, notFound: true, org: {}, accessDenied: false, permissionDenied: false})
@@ -183,9 +189,10 @@ class OrgHome extends React.Component {
 
   render() {
     const {
-      org, isLoading, tab, pins, selectedConfig, customConfigs,
+      org, isLoading, tab, pins, customConfigs,
       notFound, accessDenied, permissionDenied, members
     } = this.state;
+    const selectedConfig = this.getAppliedViewConfig()
     const url = this.getURLFromPath()
     const isCurrentUserMemberOfOrg = isCurrentUserMemberOf(this.getOrgId()) || isAdminUser();
     const hasError = notFound || accessDenied || permissionDenied;
@@ -212,7 +219,6 @@ class OrgHome extends React.Component {
                   pins={pins}
                   onPinCreate={this.createPin}
                   onPinDelete={this.deletePin}
-                  showPin={isCurrentUserMemberOfOrg}
                   customConfigs={[...customConfigs, ORG_DEFAULT_CONFIG]}
                   onConfigChange={this.onConfigChange}
                   isOCLDefaultConfigSelected={this.isOCLDefaultConfigSelected()}

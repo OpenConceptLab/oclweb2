@@ -27,10 +27,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChange}) => {
+const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChange, width}) => {
   const [open, setOpen] = React.useState(isOpen);
   const classes = useStyles();
-  const [drawerWidth, setDrawerWidth] = React.useState(defaultWidth);
+  const [drawerWidth, setDrawerWidth] = React.useState(width || defaultWidth);
 
   const handleMouseDown = () => {
     document.addEventListener("mouseup", handleMouseUp, true);
