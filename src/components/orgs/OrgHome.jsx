@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@mui/material';
-import { reject, get, values, find, findIndex, isObject, isEqual, merge } from 'lodash';
+import { reject, get, values, find, findIndex, isObject, isEqual, merge, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import HomeHeader from './HomeHeader';
@@ -100,6 +100,9 @@ class OrgHome extends React.Component {
 
   getAppliedViewConfig = () => {
     const { selectedConfig, org } = this.state
+    if(isEmpty(selectedConfig) || isEmpty(org))
+      return {}
+
     const headerConfig = this.isOCLDefaultConfigSelected() ? merge(selectedConfig.config.header, org.overview) : merge(org.overview, selectedConfig.config.header)
     return {...selectedConfig, config: {...selectedConfig.config, header: headerConfig}}
   }
