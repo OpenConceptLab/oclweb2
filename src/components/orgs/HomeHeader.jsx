@@ -5,7 +5,7 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { Tooltip, ButtonGroup, Button } from '@mui/material';
-import { isEmpty, get, has, isObject, merge, isBoolean, map, includes } from 'lodash';
+import { isEmpty, get, has, merge, isBoolean, map, includes } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import { HEADER_GRAY } from '../../common/constants';
 import APIService from '../../services/APIService';
