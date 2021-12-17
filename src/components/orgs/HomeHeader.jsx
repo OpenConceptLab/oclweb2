@@ -66,21 +66,17 @@ const HomeHeader = ({
   const hasBackgroundImage = Boolean(get(config, 'config.header.background.image'))
   const getBackgroundStyles = () => {
     const defaultStyles = {backgroundColor: HEADER_GRAY}
-    if(!isExpandedHeader)
-      return defaultStyles
+    let styles = {...defaultStyles}
     const headerBackgroundStyles = get(config, 'config.header.background')
-    let styles = {}
-    if(headerBackgroundStyles && isObject(headerBackgroundStyles)) {
-      const image = get(headerBackgroundStyles, 'image')
-      const backgroundColor = get(headerBackgroundStyles, 'backgroundColor')
+    const backgroundColor = get(headerBackgroundStyles, 'backgroundColor')
+    const image = get(headerBackgroundStyles, 'image')
+    if(isExpandedHeader) {
       if(image) {
         styles['backgroundImage'] = `url(${image})`;
         styles['backgroundSize'] = 'cover';
         styles['backgroundAttachment'] = 'fixed';
-      } else if (backgroundColor) {
+      } else if(backgroundColor) {
         styles['backgroundColor'] = backgroundColor
-      } else {
-        return defaultStyles
       }
     }
 

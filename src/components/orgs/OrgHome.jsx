@@ -49,7 +49,7 @@ class OrgHome extends React.Component {
   }
 
   getDefaultTabIndexFromConfig() {
-    if(this.isOCLDefaultConfigSelected())
+    if(get(this.state.selectedConfig, 'name') === 'OCL Default (Org)')
       return this.getDefaultTabIndex()
 
     const index = findIndex(this.state.selectedConfig.config.tabs, {"default": true});
@@ -187,7 +187,7 @@ class OrgHome extends React.Component {
                                             .put({order: newOrder})
                                             .then(() => {})
 
-  isOCLDefaultConfigSelected = () => isEqual(this.state.selectedConfig, ORG_DEFAULT_CONFIG);
+  isOCLDefaultConfigSelected = () => isEqual(this.state.selectedConfig, ORG_DEFAULT_CONFIG)
 
   render() {
     const {
