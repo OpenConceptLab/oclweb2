@@ -22,7 +22,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
       {
         !isEmpty(members) &&
         <div className='col-xs-3 no-side-padding'>
-          <Members members={members} />
+          <Members members={members} org={org} />
         </div>
       }
     </div>

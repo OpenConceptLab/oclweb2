@@ -5,7 +5,7 @@ import {
   List as SourceIcon, Loyalty as CollectionIcon, Home as OrgIcon,
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
-import { map } from 'lodash';
+import { map, chunk, isEmpty } from 'lodash';
 import { DARKGRAY } from '../../common/constants'
 import { getUserInitials } from '../../common/utils';
 import HtmlToolTipRaw from '../common/HtmlToolTipRaw';
@@ -54,14 +54,12 @@ const Info = ({ member }) => {
           <IdentityBadge member={member} />
         </span>
         <Link to={member.url} className='no-anchor-styles'>
-          <span style={{fontWeight: 'bold', marginRight: '5px', fontSize: '16px'}}>
+          <div style={{fontWeight: 'bold', fontSize: '16px'}}>
             {member.name}
-          </span>
-        </Link>
-        <Link to={member.url} className='no-anchor-styles'>
-          <span style={{color: 'rgba(0, 0, 0, 0.7)', fontSize: '16px'}}>
+          </div>
+          <div style={{color: 'rgba(0, 0, 0, 0.7)', fontSize: '16px'}}>
             {member.username}
-          </span>
+          </div>
         </Link>
       </div>
       <Divider style={{width: '100%'}} />
@@ -107,23 +105,41 @@ const Info = ({ member }) => {
 }
 
 
-const Members = ({ members }) => {
+const Members = ({ members, org }) => {
+  const hasMore = members.length > 15
+  const chunks = chunk(members.slice(0, 15), 5)
   return (
     <div className='col-xs-12' style={{padding: 0, paddingLeft: '20px'}}>
       <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}}>
         Members
       </h3>
-      <Stack direction="row" spacing={1}>
-        {
-          map(members, member => (
-            <HtmlToolTipRaw placement='top' title={<Info member={member} />} key={member.username} arrow>
-              <span>
-                <IdentityBadge member={member} />
-              </span>
-            </HtmlToolTipRaw>
-          ))
-        }
-      </Stack>
+      {
+        isEmpty(members) ?
+        <div className='col-xs-12'>
+          No members
+        </div> :
+        <React.Fragment>
+          {
+            map(chunks, (group, index) => (
+              <Stack direction="row" spacing={1} key={index} style={{padding: '5px 0'}}>
+                {
+                  map(group, member => (
+                    <HtmlToolTipRaw placement='top' title={<Info member={member} />} key={member.username} arrow>
+                      <span>
+                        <IdentityBadge member={member} />
+                      </span>
+                    </HtmlToolTipRaw>
+                  ))
+                }
+              </Stack>
+            ))
+          }
+          {
+            hasMore &&
+            <Link style={{marginLeft: '5px', fontSize: '16px'}} to={`${org.url}members`}>View All</Link>
+          }
+        </React.Fragment>
+      }
     </div>
   )
 }

@@ -152,7 +152,7 @@ class OrgHome extends React.Component {
   }
 
   getMembersSummary() {
-    this.getOrgService().appendToUrl('members').get(null, null, {summary: true}).then(response => this.setState({members: response.data}))
+    this.getOrgService().appendToUrl('members/').get(null, null, {summary: true}).then(response => this.setState({members: response.data}))
   }
 
   createPin = (resourceType, resourceId) => {
