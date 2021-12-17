@@ -5,7 +5,7 @@ import { last } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
 import ImageUploader from './ImageUploader';
 
-const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink }) => {
+const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink, className }) => {
   const hasAccess = currentUserHasAccess();
   const [base64, setBase64] = React.useState(null);
   const [open, setOpen] = React.useState(false);
@@ -21,12 +21,17 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink }) => {
     return last(logoURL.split('/'))
   }
 
-  const containerClasses = 'logo-container flex-vertical-center' + (shrink ? ' small' : '')
+  let containerClasses = 'logo-container flex-vertical-center'
+  if(className)
+    containerClasses += ` ${className}`
+  else if(shrink)
+    containerClasses += ' small'
+
   const logo = base64 || logoURL
 
   return (
     <React.Fragment>
-      <div className={containerClasses} style={ logo ? {marginLeft : '15px', marginTop: '10px'} : {marginLeft : '15px', height: shrink ? '70px' : '130px'}}>
+      <div className={containerClasses}>
         {
           logo ?
           <img className='header-logo' src={logo} /> :

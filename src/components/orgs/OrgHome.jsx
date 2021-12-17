@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@mui/material';
-import { reject, get, values, find, findIndex, isObject, isEqual, merge, isEmpty } from 'lodash';
+import { reject, get, values, find, findIndex, isObject, isEqual, merge, isEmpty, cloneDeep } from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import HomeHeader from './HomeHeader';
@@ -34,7 +34,6 @@ class OrgHome extends React.Component {
 
   getDefaultTabIndex() {
     const { location } = this.props;
-
     if(location.pathname.indexOf('/about') > -1)
       return 0;
     if(location.pathname.indexOf('/overview') > -1)
@@ -112,7 +111,7 @@ class OrgHome extends React.Component {
     const customConfigFeatureApplicable = this.customConfigFeatureApplicable();
     if(service) {
       this.setState(
-        {isLoading: true, notFound: false, accessDenied: false, permissionDenied: false},
+        {isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, org: {}, customConfigs: [], selectedConfig: null},
         () => service
           .get(null, null, {includeClientConfigs: customConfigFeatureApplicable, includeOverview: true})
           .then(response => {
@@ -131,7 +130,7 @@ class OrgHome extends React.Component {
               this.setState({
                 isLoading: false,
                 org: org,
-                selectedConfig: defaultCustomConfig || ORG_DEFAULT_CONFIG,
+                selectedConfig: cloneDeep(defaultCustomConfig || ORG_DEFAULT_CONFIG),
                 customConfigs: customConfigs,
               }, () => {
                 this.getMembersSummary()

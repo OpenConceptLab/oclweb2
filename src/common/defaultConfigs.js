@@ -109,7 +109,6 @@ export const ORG_DEFAULT_CONFIG = {
         type: "sources",
         label: "Sources",
         page_size: 25,
-        default: true,
         layout: "table",
         color: "",
       },
