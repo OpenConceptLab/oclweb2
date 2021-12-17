@@ -187,16 +187,6 @@ class OverviewSettings extends React.Component {
               }
             </div>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
-              <TextField
-                label='Title'
-                id='forground.title'
-                value={this.state.forground.title}
-                onChange={this.onTextFieldChange}
-                margin="dense"
-                fullWidth
-              />
-            </div>
-            <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
                   'forground.titleColor',
@@ -204,16 +194,6 @@ class OverviewSettings extends React.Component {
                   this.state.forground.titleColor
                 )
               }
-            </div>
-            <div className='col-xs-12 no-side-padding flex-vertical-center'>
-              <TextField
-                label='Description'
-                id='forground.description'
-                value={this.state.forground.description}
-                onChange={this.onTextFieldChange}
-                margin="dense"
-                fullWidth
-              />
             </div>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
