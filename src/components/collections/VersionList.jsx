@@ -257,13 +257,17 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                     (
                       isEmpty(versionExpansions) && loadingExpansions[version.uuid] === false ?
                       <div className='flex-column-center' style={{height: '100%'}}>
-                        <Button
-                          onClick={() => onCreateExpansionClick(version)}
-                          variant="text"
-                          size='small'
-                          style={{textTransform: 'inherit'}}>
-                          Create First Expansion for this version
-                        </Button>
+                        {
+                          canEdit ?
+                          <Button
+                            onClick={() => onCreateExpansionClick(version)}
+                            variant="text"
+                            size='small'
+                            style={{textTransform: 'inherit'}}>
+                            Create First Expansion for this version
+                          </Button> :
+                          <p>No expansions yet</p>
+                        }
                       </div> :
                       map(versionExpansions, expansion => {
                         const isDefault = expansion.default
