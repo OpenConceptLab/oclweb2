@@ -31,7 +31,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
             />
           }
         </div>
-        <div className='col-xs-12 no-side-padding'>
+        <div className='col-xs-12'>
           <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center', marginTop: '30px'}}>
             <OrgIcon fontSize='small' style={{marginRight: '5px'}} />
             {`About ${org.id}`}
