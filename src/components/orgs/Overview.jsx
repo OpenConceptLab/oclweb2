@@ -9,7 +9,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
       <div className='col-xs-9 no-side-padding'>
         {
           isEmpty(pins) ?
-          <h2 style={{textAlign: 'center'}}>
+          <h2 style={{marginLeft: '50px', marginTop: '50px'}}>
             {`${org.id} doesn't have any pinned content yet.`}
           </h2> :
           <Pins
