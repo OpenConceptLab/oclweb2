@@ -5,7 +5,7 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { Tooltip, ButtonGroup, Button } from '@mui/material';
-import { isEmpty, get, has, isObject, merge, isBoolean, map, includes } from 'lodash';
+import { isEmpty, get, has, merge, isBoolean, map, includes } from 'lodash';
 import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
 import { HEADER_GRAY } from '../../common/constants';
 import APIService from '../../services/APIService';
@@ -66,21 +66,17 @@ const HomeHeader = ({
   const hasBackgroundImage = Boolean(get(config, 'config.header.background.image'))
   const getBackgroundStyles = () => {
     const defaultStyles = {backgroundColor: HEADER_GRAY}
-    if(!isExpandedHeader)
-      return defaultStyles
+    let styles = {...defaultStyles}
     const headerBackgroundStyles = get(config, 'config.header.background')
-    let styles = {}
-    if(headerBackgroundStyles && isObject(headerBackgroundStyles)) {
-      const image = get(headerBackgroundStyles, 'image')
-      const backgroundColor = get(headerBackgroundStyles, 'backgroundColor')
+    const backgroundColor = get(headerBackgroundStyles, 'backgroundColor')
+    const image = get(headerBackgroundStyles, 'image')
+    if(isExpandedHeader) {
       if(image) {
         styles['backgroundImage'] = `url(${image})`;
         styles['backgroundSize'] = 'cover';
         styles['backgroundAttachment'] = 'fixed';
-      } else if (backgroundColor) {
+      } else if(backgroundColor) {
         styles['backgroundColor'] = backgroundColor
-      } else {
-        return defaultStyles
       }
     }
 
@@ -90,13 +86,12 @@ const HomeHeader = ({
   const getTitleStyles = () => customTitleColor ? {color: customTitleColor} : {}
 
   const getDescriptionStyles = () => {
-    const descriptionWidth = get(config, 'config.header.forground.descriptionWidth') || '40%'
-    const style = customDescriptionColor ? {color: customDescriptionColor} : {};
-    if(hasBackgroundImage)
-      style['minHeight'] = get(config, 'config.header.height') || '140px'
-
-    style['alignItems'] = 'start'
-    style['width'] = descriptionWidth
+    const style = {
+      alignItems: 'start',
+      width: get(config, 'config.header.forground.descriptionWidth') || '40%'
+    }
+    if(customDescriptionColor)
+      style['color'] = customDescriptionColor
 
     return style;
   }
@@ -107,9 +102,9 @@ const HomeHeader = ({
       return isBoolean(attributes) ? DEFAULT_VISIBLE_ATTRIBUTES : attributes
   }
 
-  const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && get(config, 'config.header.background.image'));
+  const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && hasBackgroundImage);
   return (
-    <header className='home-header col-md-12' style={merge({marginBottom: '0px', padding: 0}, getBackgroundStyles())}>
+    <header className='home-header col-md-12' style={merge({marginBottom: tab === 0 ? 0 : '5px', padding: 0}, getBackgroundStyles())}>
       <div className='col-md-12 no-side-padding' style={shouldShowOverlay ? {paddingBottom: '2px', backgroundColor: 'rgba(0,0,0,0.6)'} : {}}>
         <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
           {
@@ -119,11 +114,11 @@ const HomeHeader = ({
                 logoURL={logoURL}
                 onUpload={onLogoUpload}
                 defaultIcon={<HomeIcon className='default-svg' />}
-                shrink={!openHeader || !isExpandedHeader}
+                className={(!openHeader || !isExpandedHeader) ? 'xsmall' : ''}
               />
             </div>
           }
-          <div className='col-md-11'>
+          <div className='col-md-11' style={isExpandedHeader ? {minHeight: get(config, 'config.header.height') || '140px'} : {}}>
             {
               (showControls || !isExpandedHeader) &&
               <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -151,17 +146,20 @@ const HomeHeader = ({
                 }
               </div>
             }
-            <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name large'>
-              <span style={merge({marginRight: '10px'}, getTitleStyles())}>
+            {
+              isExpandedHeader &&
+              <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name large'>
+                <span style={merge({marginRight: '10px'}, getTitleStyles())}>
+                  {
+                    customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
+                  }
+                </span>
                 {
-                  customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
+                  !fhir && showAttributes &&
+                  <AccessChip publicAccess={org.public_access} />
                 }
-              </span>
-              {
-                !fhir && showAttributes &&
-                <AccessChip publicAccess={org.public_access} />
-              }
-            </div>
+              </div>
+            }
             {
               (customDescription && isExpandedHeader) ?
               <div className='col-md-12 no-side-padding header-custom-html resource-description large' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (

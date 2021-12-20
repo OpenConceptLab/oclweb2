@@ -411,18 +411,16 @@ div.login-paper {
 }
 .logo-container {
     justify-content: center;
-    height: auto;
+    max-height: 130px;
     position: relative;
     width:100%;
     max-width: 100px;
     border-radius: 10px;
     padding: 2px;
-    &.small {
-        height: 70px;
-    }
 
     img {
         display:block;
+        border-radius: 5px;
     }
     .logo-edit-button {
         position: absolute;
@@ -432,6 +430,31 @@ div.login-paper {
         -ms-transform: translate(-50%, -50%);
         opacity:0;
         border: 1px solid black;
+    }
+    &.small {
+        height: 70px;
+        img {
+            height: 70px;
+        }
+    }
+    &.xsmall {
+        img {
+            height: 36.5px;
+        }
+        margin-top: 0px;
+        height: 36.5px;
+        svg {
+            width: 40px;
+            height: 40px;
+        }
+        .logo-edit-button {
+            height: 30px;
+            width: 30px;
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
     }
 }
 

@@ -8,7 +8,8 @@ import {
   LocationOn as LocationIcon,
   Link as WebsiteIcon,
   MailOutline as MailIcon,
-  EventAvailable as DateJoinedIcon
+  EventAvailable as DateJoinedIcon,
+  AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
@@ -59,7 +60,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
         (isLoading || uploading) ?
         <CircularProgress color='primary' style={{marginTop: '50px', marginLeft: '50px'}} /> :
         <div className="col-md-12 no-side-padding">
-          <div className='home-icon'>
+          <div className='home-icon' style={{display: 'flex'}}>
             <HeaderLogo
               isCircle
               logoURL={logoURL}
@@ -67,9 +68,23 @@ const UserHomeDetails = ({ user, isLoading }) => {
               defaultIcon={<PersonIcon style={{width: '120px', height: '120px'}} />}
             />
           </div>
-          <h2 style={{marginBottom: '-2px'}}> {startCase(name)} </h2>
-          <div className='user-home-username'>
+          <h2 style={{marginBottom: '-2px'}}>
+            {startCase(name)}
+          </h2>
+          <div className='user-home-username flex-vertical-center'>
             {user.username}
+            {
+              user.is_superuser &&
+              <Tooltip title='OCL Super Admin'>
+                <AdminIcon />
+              </Tooltip>
+            }
+            {
+              user.is_staff && !user.is_superuser &&
+              <Tooltip title='OCL Admin'>
+                <AdminIcon />
+              </Tooltip>
+            }
           </div>
           <div>
             <Chip

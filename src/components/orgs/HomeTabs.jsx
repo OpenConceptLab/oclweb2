@@ -5,11 +5,13 @@ import { ORANGE, BLUE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
+import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import SourceForm from '../sources/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConfigSelect from '../common/ConfigSelect';
 import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import MembersForm from './MembersForm'
+import OverviewSettings from './OverviewSettings';
 
 const HomeTabs = props => {
   const {
@@ -23,6 +25,7 @@ const HomeTabs = props => {
   const [sourceForm, setSourceForm] = React.useState(false);
   const [collectionForm, setCollectionForm] = React.useState(false);
   const [membersForm, setMembersForm] = React.useState(false);
+  const [overviewSettings, setOverviewSettings] = React.useState(false);
   const [configFormWidth, setConfigFormWidth] = React.useState(false);
   const hasAccess = currentUserHasAccess()
   const onNewClick = resource => {
@@ -32,6 +35,8 @@ const HomeTabs = props => {
       setCollectionForm(true)
     if(resource === 'editMembership')
       setMembersForm(true)
+    if(resource === 'editOverviewSettings')
+      setOverviewSettings(true)
   }
 
   const getTABHref = tabConfig => {
@@ -56,6 +61,9 @@ const HomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
+  let settingsOptions = ['source', 'collection', 'editMembership']
+  if(tab === 0 && hasAccess)
+    settingsOptions = [...settingsOptions, 'editOverviewSettings']
   return (
     <div className='col-md-12 no-right-padding' style={{width: width, paddingLeft: '10px'}}>
       <Tabs className='col-md-11 no-side-padding' value={tab} onChange={onTabChange} TabIndicatorProps={{style: {background: selectedTabColor}}} indicatorColor='primary'>
@@ -66,9 +74,9 @@ const HomeTabs = props => {
             const color = config.color || tabColor
             const label = (
               <span className='flex-vertical-center' style={isSelected ? {color: color || BLUE} : {}}>
-              <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
-              <span style={{marginLeft: '4px'}}>{config.label}</span>
-            </span>
+                <DynamicConfigResourceIcon icon={config.icon} resource={config.type} index={tabConfigs.indexOf(config)} style={{width: '0.7em'}} />
+                <span style={{marginLeft: '4px'}}>{config.label}</span>
+              </span>
             );
             if(isOCLDefaultConfigSelected)
               return (
@@ -113,7 +121,7 @@ const HomeTabs = props => {
               />
             </span>
           }
-          <NewResourceButton color={tabColor} resources={['source', 'collection', 'editMembership']} onClick={onNewClick} />
+          <NewResourceButton color={tabColor} resources={settingsOptions} onClick={onNewClick} />
         </div>
       }
       <CommonFormDrawer
@@ -135,6 +143,24 @@ const HomeTabs = props => {
         onClose={() => setMembersForm(false)}
         formComponent={
           <MembersForm onCancel={() => setMembersForm(false)} reloadOnSuccess={tab==2} parentURL={url} />
+        }
+      />
+      <ResponsiveDrawer
+        variant='persistent'
+        isOpen={overviewSettings}
+        onClose={() => setOverviewSettings(false)}
+        onWidthChange={setConfigFormWidth}
+        width={450}
+        formComponent={
+          <OverviewSettings
+            org={org}
+                onCancel={() => setOverviewSettings(false)}
+                onChange={headerConfig => {
+                    const config = {...selectedConfig}
+                    config.config.header = {...headerConfig}
+                    onConfigChange(config)
+                }}
+          />
         }
       />
     </div>
