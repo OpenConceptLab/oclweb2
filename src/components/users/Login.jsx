@@ -47,6 +47,8 @@ class Login extends React.Component {
           this.afterLoginSuccess(response.data.token)
         } else if(get(response, 'detail', '').match('verification email')) {
           this.setState({verificationMsg: response.detail, email: get(response, 'email')})
+        } else if(get(response, 'detail', '').match('deactivated')) {
+          this.setState({serverError: [response.detail]})
         } else if(get(response, 'non_field_errors')) {
           this.setState({serverError: values(response)})
         } else {
