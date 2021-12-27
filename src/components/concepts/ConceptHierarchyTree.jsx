@@ -36,11 +36,11 @@ class ConceptHierarchyTree extends React.Component {
   })
 
   renderTree = () => {
+    const width = this.props.width || 960;
     const fontSize = this.props.fontSize || '16';
     const dx = this.props.dx || 30;
     const data = this.state.tree
     const margin = { top: 10, right: 120, bottom: 10, left: 60 };
-    const width = d3.width || 960;
     const root = d3.hierarchy(data);
     const dy = width / 6;
     const tree = d3.tree().nodeSize([dx, dy]);
@@ -82,7 +82,7 @@ class ConceptHierarchyTree extends React.Component {
     document.querySelector("#treeWrapper").appendChild(svg.node());
 
     function update(source) {
-      const duration = d3.event && d3.event.altKey ? 2500 : 250;
+      const duration = 250;
       const nodes = root.descendants().reverse();
       const links = root.links();
 
