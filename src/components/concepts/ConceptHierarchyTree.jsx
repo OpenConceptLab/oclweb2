@@ -113,12 +113,12 @@ class ConceptHierarchyTree extends React.Component {
         (event, d) => (
           `<div>
             <div>
-              <span class='gray-italics-no-margin'>ID:</span>
-              <span>${d.data.id}</span>
+              <span class='gray'>ID:</span>
+              <span><b>${d.data.id}</b></span>
             </div>
             <div>
-              <span class='gray-italics-no-margin'>Name:</span>
-              <span>${d.data.display_name}</span>
+              <span class='gray'>Name:</span>
+              <span><b>${d.data.display_name}</b></span>
             </div>
           </div>`
         )
