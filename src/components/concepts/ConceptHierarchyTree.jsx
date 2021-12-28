@@ -1,5 +1,6 @@
 import React from 'react';
 import * as d3 from "d3";
+import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
 import { isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
@@ -108,6 +109,21 @@ class ConceptHierarchyTree extends React.Component {
 
       // Update the nodes…
       const node = gNode.selectAll("g").data(nodes, d => d.id);
+      const tip = d3tip().attr('class', 'd3-tip').html(
+        (event, d) => (
+          `<div>
+            <div>
+              <span class='gray-italics-no-margin'>ID:</span>
+              <span>${d.data.id}</span>
+            </div>
+            <div>
+              <span class='gray-italics-no-margin'>Name:</span>
+              <span>${d.data.display_name}</span>
+            </div>
+          </div>`
+        )
+      );
+      svg.call(tip);
 
       // Enter any new nodes at the parent's previous position.
       const nodeEnter = node
@@ -116,6 +132,8 @@ class ConceptHierarchyTree extends React.Component {
         .attr("transform", () => `translate(${source.y0},${source.x0})`)
         .attr("fill-opacity", 0)
         .attr("stroke-opacity", 0)
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide)
         .on("click", (event, d) => {
           d.children = d.children ? null : d._children;
           update(d);
