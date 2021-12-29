@@ -1,3 +1,25 @@
+##### 2.0.65 - Wed Dec 29 07:08:55 2021 +0000
+- [OpenConceptLab/ocl_issues#1170](https://github.com/OpenConceptLab/ocl_issues/issues/1170) | ConceptForm | concept class auto populates list | concept class can be any free text except when its under OpenMRS validation schema
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | added tooltip
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | Concept hierarchy visualization
+- [OpenConceptLab/ocl_issues#1167](https://github.com/OpenConceptLab/ocl_issues/issues/1167) | showing token of and to the current user only
+- [OpenConceptLab/ocl_issues#1167](https://github.com/OpenConceptLab/ocl_issues/issues/1167) | login to provide info on deactivated account
+- [OpenConceptLab/ocl_issues#1133](https://github.com/OpenConceptLab/ocl_issues/issues/1133) | org overview | empty content styling
+- [OpenConceptLab/ocl_issues#1133](https://github.com/OpenConceptLab/ocl_issues/issues/1133) | org overview | no pinned content yet message
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | org members | limited results to 15 and added view all option | stylings
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | org header | removed title in shrink format | styled logo container
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | overview settings | removed title/description
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | org overview settings | fixing descriptionwidth and hieght of banner editing
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | org overview settings
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | header height config is not dependent on description to be present
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | members/profile | Admin indicator
+- Org overview tab
+- About Content | aligning margins and paddings
+- Org Home Header | updated description/title font size
+- Org Home Header | fixing description alignment | allowing description width to be configurable
+- [OpenConceptLab/ocl_issues#1068](https://github.com/OpenConceptLab/ocl_issues/issues/1068) | FHIR | collapsible header attributes
+- [OpenConceptLab/ocl_issues#1068](https://github.com/OpenConceptLab/ocl_issues/issues/1068) | FHIR | handling version API failure
+- [OpenConceptLab/ocl_issues#1146](https://github.com/OpenConceptLab/ocl_issues/issues/1146) | customizations | can hide all apps and aps menu
 ##### 2.0.55 - Wed Dec 8 04:43:33 2021 +0000
 - [OpenConceptLab/ocl_issues#1146](https://github.com/OpenConceptLab/ocl_issues/issues/1146) | WHO site config for ICD-11 FHIR connector
 - [OpenConceptLab/ocl_issues#1146](https://github.com/OpenConceptLab/ocl_issues/issues/1146) | WHO logo in server configs
