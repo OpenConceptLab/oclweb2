@@ -9,10 +9,9 @@ import {
 import APIService from '../../services/APIService';
 import {
   arrayToObject, getCurrentURL, fetchDatatypes, fetchNameTypes,
-  fetchDescriptionTypes
+  fetchDescriptionTypes, fetchConceptClasses,
 } from '../../common/utils';
 import { ERROR_RED, CONCEPT_CODE_REGEX } from '../../common/constants';
-import ConceptClassAutoComplete from '../common/ConceptClassAutoComplete';
 import LocaleForm from './LocaleForm';
 import ExtrasForm from '../common/ExtrasForm';
 
@@ -48,6 +47,7 @@ class ConceptForm extends React.Component {
 
   componentDidMount() {
     fetchDatatypes(data => this.setState({datatypes: data}))
+    fetchConceptClasses(data => this.setState({conceptClasses: data}))
     fetchNameTypes(data => this.setState({nameTypes: data}))
     fetchDescriptionTypes(data => this.setState({descriptionTypes: data}))
     if(this.props.edit && this.props.concept)
@@ -235,11 +235,11 @@ class ConceptForm extends React.Component {
 
   render() {
     const {
-      fieldErrors, fields, datatypes, nameTypes,
+      fieldErrors, fields, datatypes, nameTypes, conceptClasses,
       descriptionTypes, selected_concept_class, selected_datatype
     } = this.state;
     const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(nameTypes);
-    const { onCancel, edit } = this.props;
+    const { onCancel, edit, source } = this.props;
     const header = edit ? `Edit Concept: ${fields.id}` : 'New Concept'
 
     return (
@@ -275,12 +275,30 @@ class ConceptForm extends React.Component {
                 </div>
               }
               <div style={{marginTop: '15px', width: '100%'}}>
-                <ConceptClassAutoComplete
+                <Autocomplete
+                  freeSolo={get(source, 'custom_validation_schema') !== "OpenMRS"}
+                  openOnFocus
                   id="fields.concept_class"
-                  label="Concept Class"
-                  selected={selected_concept_class}
-                  onChange={this.onAutoCompleteChange}
+                  value={selected_concept_class}
+                  options={conceptClasses}
+                  getOptionLabel={option => option.name}
+                  fullWidth
                   required
+                  renderInput={
+                    params => <TextField
+                                {...params}
+                                error={Boolean(fieldErrors.concept_class)}
+                                      required
+                                      label="Concept Class"
+                                      variant="outlined"
+                                      fullWidth />
+                  }
+                  onChange={(event, item) => {
+                      this.onAutoCompleteChange('fields.concept_class', item)}
+                  }
+                  onInputChange={(event, value) => {
+                      this.setFieldValue('fields.concept_class', value)}
+                  }
                 />
               </div>
               <div style={{marginTop: '15px', width: '100%'}}>
@@ -290,10 +308,18 @@ class ConceptForm extends React.Component {
                   id="fields.datatype"
                   value={selected_datatype}
                   options={datatypes}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={option => option.name}
                   fullWidth
                   required
-                  renderInput={(params) => <TextField {...params} error={Boolean(fieldErrors.datatype)} required label="Datatype" variant="outlined" fullWidth />}
+                  renderInput={
+                    params => <TextField
+                                {...params}
+                                error={Boolean(fieldErrors.datatype)}
+                                      required
+                                      label="Datatype"
+                                      variant="outlined"
+                                      fullWidth />
+                  }
                   onChange={(event, item) => this.onAutoCompleteChange('fields.datatype', item)}
                 />
               </div>

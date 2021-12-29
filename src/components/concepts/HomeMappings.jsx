@@ -1,10 +1,11 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
-  Table, TableHead, TableRow, TableCell, TableBody, Tooltip
+  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton
 } from '@mui/material';
 import {
   Info as InfoIcon,
+  FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
@@ -12,12 +13,13 @@ import { generateRandomString } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
 import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
+import ConceptHierarchyTree from './ConceptHierarchyTree';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
+  maxHeight: '600px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
 const None = () => {
@@ -38,6 +40,7 @@ const groupMappings = (concept, mappings) => {
 }
 
 const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents }) => {
+  const [hierarchy, setHierarchy] = React.useState(false);
   const conceptMappings = get(concept, 'mappings') || [];
   const count = isLoadingMappings ? null : conceptMappings.length + get(childConcepts, 'length', 0) + get(parentConcepts, 'length', 0);
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
@@ -61,6 +64,12 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
     )
   }
 
+  const onHierarchyViewToggle = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setHierarchy(!hierarchy)
+  }
+
   return (
     <Accordion defaultExpanded>
       <AccordionSummary
@@ -70,21 +79,35 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
       >
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
-          <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-            <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
-              <InfoIcon fontSize='small' color='action' />
-            </Tooltip>
+          <span className='flex-vertical-center'>
+            <span>
+              <Tooltip title={hierarchy ? 'Table Format' : 'Visualize'}>
+                <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
+                  <HierarchyIcon fontSize='inherit' />
+                </IconButton>
+              </Tooltip>
+            </span>
+            <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
+              <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
+                <InfoIcon fontSize='small' color='action' />
+              </Tooltip>
+            </span>
           </span>
         </span>
       </AccordionSummary>
       <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
         {
-          isLoadingMappings ?
-          <div style={{textAlign: 'center', padding: '10px'}}>
-            <CircularProgress />
-          </div> : (
-            isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts) ?
-            None() :
+        isLoadingMappings ?
+        <div style={{textAlign: 'center', padding: '10px'}}>
+          <CircularProgress />
+        </div> : (
+          isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts) ?
+          None() :
+          (
+            hierarchy ?
+            <div className='col-xs-12' style={{padding: '10px'}}>
+              <ConceptHierarchyTree concept={concept} fontSize='20' dx={40} />
+            </div>:
             <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
               <TableHead>
                 <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
@@ -165,6 +188,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
                 }
               </TableBody>
             </Table>
+          )
           )
         }
       </AccordionDetails>

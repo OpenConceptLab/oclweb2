@@ -193,7 +193,7 @@ const SourceHomeTabs = props => {
         isOpen={conceptForm}
         onClose={closeConceptForm}
         formComponent={
-          <ConceptForm copyFrom={selectedChild} onCancel={closeConceptForm} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
+          <ConceptForm source={source} copyFrom={selectedChild} onCancel={closeConceptForm} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
         }
       />
       <CommonFormDrawer

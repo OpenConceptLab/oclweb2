@@ -52,7 +52,10 @@ const UserHomeDetails = ({ user, isLoading }) => {
                 setUploading(false)
               })
   }
+
+  const currentUserUsername = getCurrentUserUsername()
   const token = currentUserToken();
+  const isSameAsCurrentUser = user.username === currentUserUsername;
 
   return (
     <div className="col-md-12 no-side-padding">
@@ -148,9 +151,10 @@ const UserHomeDetails = ({ user, isLoading }) => {
               </span>
             </Tooltip>
           </div>
-          <Divider style={{width: '100%', margin: '5px 0'}} />
           {
-            token &&
+            token && isSameAsCurrentUser &&
+            <React.Fragment>
+            <Divider style={{width: '100%', margin: '5px 0'}} />
             <p>
               <strong>API Token</strong>
               <Tooltip arrow title="Click to copy Token" placement='right'>
@@ -159,6 +163,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
                 </IconButton>
               </Tooltip>
             </p>
+            </React.Fragment>
           }
         </div>
       }
