@@ -1,7 +1,7 @@
 import React from 'react';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { includes, get, isObject, isBoolean, has, isEmpty } from 'lodash';
+import { includes, get, isObject, isBoolean, has } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -37,6 +37,7 @@ class ConceptHome extends React.Component {
       collections: [],
       parents: [],
       childConcepts: [],
+      source: {},
       tab: this.getDefaultTabIndex(),
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
     }
@@ -112,8 +113,7 @@ class ConceptHome extends React.Component {
                         this.getChildren()
                         this.getCollectionVersions()
                       }
-                      if(!isEmpty(get(this.state.concept, 'names', [])) || !isEmpty(get(this.state.concept, 'descriptions', [])))
-                        this.fetchParent()
+                      this.fetchParent()
                     })
                 })
 
