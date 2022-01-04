@@ -151,7 +151,7 @@ class ConceptHierarchyTree extends React.Component {
       const tip = d3tip().attr('class', 'd3-tip').html(
         (event, d) => {
           const existInOCL = that.existsInOCL(d)
-          let mapType = that.getMapType(d)
+          let mapType = that.props.concept.id == d.data.id && !d.parent ? null : that.getMapType(d)
           if(mapType === HIERARCHY_CHILD_REL)
             mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
           const idLabel = mapType ? 'Map Type:' : 'ID:'
