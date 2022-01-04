@@ -2,19 +2,36 @@ import React from 'react';
 import * as d3 from "d3";
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty } from 'lodash';
+import { isEmpty, get, reject, cloneDeep, find } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
+import { getRandomColor } from '../../common/utils';
 import './d3Tree.scss';
+
+const HIERARCHY_CHILD_REL = '-haschild-'
 
 class ConceptHierarchyTree extends React.Component {
   constructor(props) {
     super(props);
+    this.colors = {
+      "default": '#555',
+    }
     this.state = {
       tree: {},
       isLoading: true,
       hasEntries: true,
     }
+  }
+
+  generateColor = item => {
+    const key = item.map_type || "default"
+    const cleanKey = key.replaceAll(' ', '').replaceAll('-', '').toLowerCase()
+    const existingColor = get(this.colors, cleanKey)
+    if(existingColor)
+      return existingColor
+    const newColor = getRandomColor()
+    this.colors[cleanKey] = newColor
+    return newColor
   }
 
   componentDidMount() {
@@ -25,7 +42,7 @@ class ConceptHierarchyTree extends React.Component {
     .new()
     .overrideURL(concept.url)
     .appendToUrl('$cascade/')
-    .get(null, null, {includeMappings: false, view: 'hierarchy'})
+    .get(null, null, {view: 'hierarchy'})
     .then(response => callback(response.data.entry));
 
   makeInitialTree = () => this.getChildren(this.props.concept, tree => {
@@ -36,6 +53,25 @@ class ConceptHierarchyTree extends React.Component {
     })
   })
 
+  formatChildren = (children, node=true) => {
+    return (!children || isEmpty(children)) ?
+           children :
+           reject(children, child => {
+             const data = node ? child.data : child;
+             return data.map_type ? Boolean(data.to_concept_url) : false
+           });
+  }
+
+  getMapType = node => {
+    if(node.data.map_type)
+      return node.data.map_type
+    const siblings = get(node, 'parent.allChildren', [])
+    const mappingForConcept = find(siblings, sibling => sibling.data.to_concept_url === node.data.url)
+    return mappingForConcept ? mappingForConcept.data.map_type : HIERARCHY_CHILD_REL;
+  }
+
+  existsInOCL = node => Boolean(node.data.type === 'Concept' || (node.data.type === 'Mapping' && node.data.to_concept_url))
+
   renderTree = () => {
     const width = this.props.width || 960;
     const fontSize = this.props.fontSize || '16';
@@ -45,17 +81,15 @@ class ConceptHierarchyTree extends React.Component {
     const root = d3.hierarchy(data);
     const dy = width / 6;
     const tree = d3.tree().nodeSize([dx, dy]);
-    const diagonal = d3
-      .linkHorizontal()
-      .x(d => d.y)
-      .y(d => d.x);
+    const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
 
     root.x0 = dy / 2;
     root.y0 = 0;
     root.descendants().forEach((d, i) => {
       d.id = i;
-      d._children = d.children;
-      // if (d.depth && d.data.name.length !== 7) d.children = null;
+      d.allChildren = cloneDeep(d.children)
+      d.children = this.formatChildren(d.children)
+      d._children = d.children
     });
 
     tree(root);
@@ -78,11 +112,11 @@ class ConceptHierarchyTree extends React.Component {
       .attr("cursor", "pointer")
       .attr("pointer-events", "all");
 
-    update(root);
+    update(root, this);
 
     document.querySelector("#treeWrapper").appendChild(svg.node());
 
-    function update(source) {
+    function update(source, that) {
       const duration = 250;
       const nodes = root.descendants().reverse();
       const links = root.links();
@@ -91,13 +125,11 @@ class ConceptHierarchyTree extends React.Component {
 
       let left = root;
       let right = root;
-      root.eachBefore((node) => {
+      root.eachBefore(node => {
         if (node.x < left.x) left = node;
         if (node.x > right.x) right = node;
       });
-
       const height = right.x - left.x + margin.top + margin.bottom;
-
       const transition = svg
         .transition()
         .duration(duration)
@@ -109,19 +141,29 @@ class ConceptHierarchyTree extends React.Component {
 
       // Update the nodes…
       const node = gNode.selectAll("g").data(nodes, d => d.id);
+
+      //Tooltip
       const tip = d3tip().attr('class', 'd3-tip').html(
-        (event, d) => (
-          `<div>
-            <div>
-              <span class='gray'>ID:</span>
-              <span><b>${d.data.id}</b></span>
-            </div>
-            <div>
-              <span class='gray'>Name:</span>
-              <span><b>${d.data.display_name}</b></span>
-            </div>
-          </div>`
-        )
+        (event, d) => {
+          const existInOCL = that.existsInOCL(d)
+          let mapType = that.getMapType(d)
+          if(mapType === HIERARCHY_CHILD_REL)
+            mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
+          const idLabel = mapType ? 'Map Type:' : 'ID:'
+          const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
+          return (
+            `<div>
+              ${header}
+              <div>
+                <span class='gray'>${idLabel}</span>
+                <span><b>${mapType || d.data.id}</b></span>
+              </div>
+              <div>
+                <span class='gray'>Name:</span>
+                <span><b>${d.data.display_name || d.data.to_concept_code}</b></span>
+              </div>
+            </div>`
+          )}
       );
       svg.call(tip);
 
@@ -135,24 +177,31 @@ class ConceptHierarchyTree extends React.Component {
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide)
         .on("click", (event, d) => {
-          d.children = d.children ? null : d._children;
-          update(d);
+          d.children = d.children ? null : d._children
+          update(d, that);
         });
 
       nodeEnter
         .append("circle")
         .attr("r", 4.5)
-        .attr("fill", d => (d._children ? BLUE : "#999"))
+        .attr("fill", d => {
+          const mapType = that.getMapType(d)
+          if(mapType)
+            d.data.map_type = mapType
+          return (!mapType || mapType === HIERARCHY_CHILD_REL) ? (d._children ? BLUE : "#999") : that.generateColor(d.data)
+        })
         .attr("stroke-width", 10);
 
       nodeEnter
         .append("text")
         .attr("dy", "0.31em")
         .attr('font-size', `${fontSize}px`)
-        .attr('fill', d => d._children ? BLUE : '#000')
+        .attr('fill', d => that.existsInOCL(d) ? (d._children ? BLUE : '#000') : 'rgba(0, 0, 0, 0.5)')
+        .attr('font-weight', d => d._children ? BLUE : '#000')
+        .attr('font-style', d => that.existsInOCL(d) ? 'inherit': 'italic')
         .attr("x", d => (d._children ? -6 : 6))
         .attr("text-anchor", d => (d._children ? "end" : "start"))
-        .text(d => d.data.name)
+        .text(d => d.data.name || d.data.to_concept_code)
         .clone(true)
         .lower()
         .attr("stroke-linejoin", "round")
@@ -182,11 +231,12 @@ class ConceptHierarchyTree extends React.Component {
       // Enter any new links at the parent's previous position.
       const linkEnter = link
         .enter()
-        .append("path")
+        .insert("path", "g")
+        .attr("stroke-width", d => d.target.data.map_type === HIERARCHY_CHILD_REL ? 3 : 1)
         .attr("d", () => {
           const o = { x: source.x0, y: source.y0 };
           return diagonal({ source: o, target: o });
-        });
+        }).attr("stroke", d => (!d.target.data.map_type || d.target.data.map_type) === HIERARCHY_CHILD_REL ? '#000' : that.generateColor(d.target.data));
 
       // Transition links to their new position.
       link.merge(linkEnter).transition(transition).attr("d", diagonal);
