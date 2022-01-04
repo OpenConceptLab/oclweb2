@@ -13,6 +13,11 @@ const HIERARCHY_CHILD_REL = '-haschild-'
 class ConceptHierarchyTree extends React.Component {
   constructor(props) {
     super(props);
+    this.availableColors = [
+      '#c10e75', '#57bdd4', '#4b24f5', '#2f6c81', '#ef8fa7', '#762bff', '#e45a44', '#105274', '#d1cc49',
+      '#846413', '#c96d8f', '#645304', '#dc9416', '#f979e3', '#422b9c', '#f59f0f', '#1a4d0a', '#b3406d',
+      '#bd09d1', '#d914b2', '#41c3bb'
+    ]
     this.colors = {
       "default": '#555',
     }
@@ -29,7 +34,7 @@ class ConceptHierarchyTree extends React.Component {
     const existingColor = get(this.colors, cleanKey)
     if(existingColor)
       return existingColor
-    const newColor = getRandomColor()
+    const newColor = this.availableColors.length > 0 ? this.availableColors.pop() : getRandomColor()
     this.colors[cleanKey] = newColor
     return newColor
   }
