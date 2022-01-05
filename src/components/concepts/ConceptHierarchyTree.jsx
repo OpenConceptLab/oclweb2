@@ -80,7 +80,7 @@ class ConceptHierarchyTree extends React.Component {
   renderTree = () => {
     const width = this.props.width || 960;
     const fontSize = this.props.fontSize || '16';
-    const dx = this.props.dx || 30;
+    const dx = this.props.dx || 60;
     const data = this.state.tree
     const margin = { top: 10, right: 120, bottom: 10, left: 120 };
     const root = d3.hierarchy(data);
@@ -122,7 +122,7 @@ class ConceptHierarchyTree extends React.Component {
     document.querySelector("#treeWrapper").appendChild(svg.node());
 
     function update(source, that) {
-      const duration = 250;
+      const duration = 150;
       const nodes = root.descendants().reverse();
       const links = root.links();
 
@@ -231,22 +231,30 @@ class ConceptHierarchyTree extends React.Component {
         .attr("stroke-opacity", 0);
 
       // Update the links…
-      const link = gLink.selectAll("path").data(links, d => d.target.id);
 
-      // Enter any new links at the parent's previous position.
-      const linkEnter = link
-        .enter()
-        .insert("path", "g")
-        .attr("stroke-width", d => d.target.data.map_type === HIERARCHY_CHILD_REL ? 3 : 1)
-        .attr("d", () => {
-          const o = { x: source.x0, y: source.y0 };
-          return diagonal({ source: o, target: o });
-        }).attr("stroke", d => (!d.target.data.map_type || d.target.data.map_type) === HIERARCHY_CHILD_REL ? '#000' : that.generateColor(d.target.data));
+      const link = gLink.selectAll(".link").data(links, d => d.target.id);
+      var linkEnter = link
+                    .enter()
+                    .append("g")
+                    .attr("class", "link")
+                    .attr("fill", "none");
 
-      // Transition links to their new position.
+      linkEnter.append("path")
+          .attr("d", diagonal)
+          .attr("stroke-width", d => d.target.data.map_type === HIERARCHY_CHILD_REL ? 1 : 1)
+          .attr("stroke", d => (!d.target.data.map_type || d.target.data.map_type) === HIERARCHY_CHILD_REL ? '#000' : that.generateColor(d.target.data));
+
+      linkEnter.append("text")
+          .attr("transform", d => `translate(${(d.source.y + d.target.y)/2}, ${(d.source.x + d.target.x)/2})`)
+          .attr("text-anchor", "middle")
+          .attr("fill", "black")
+          .text(d => {
+            let mapType = that.getMapType(d.target)
+            if(mapType === HIERARCHY_CHILD_REL)
+              mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
+            return mapType;
+          });
       link.merge(linkEnter).transition(transition).attr("d", diagonal);
-
-      // Transition exiting nodes to the parent's new position.
       link
         .exit()
         .transition(transition)
