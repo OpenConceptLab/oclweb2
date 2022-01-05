@@ -5,7 +5,7 @@ import { Paper, Button, CircularProgress } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import { get } from 'lodash';
 import APIService from '../../services/APIService';
-import { refreshCurrentUserCache, getSiteTitle } from '../../common/utils';
+import { getSiteTitle } from '../../common/utils';
 
 const SITE_TITLE = getSiteTitle()
 
@@ -42,24 +42,12 @@ class EmailVerification extends React.Component {
     const { username, token } = this.state
     APIService.users(username).verify(token).get().then(response => {
       if(get(response, 'status') === 200 && get(response, 'data.token')) {
+        window.location.hash = '#/accounts/login'
         alertifyjs.success('Successfully Verified Email.')
-        this.afterLoginSuccess(response.data.token)
       } else if(get(response, 'detail'))
         this.setState({failureMsg: response.detail})
       else
         alertifyjs.error('Something bad happend')
-    })
-  }
-
-  afterLoginSuccess(token) {
-    localStorage.setItem('token', token)
-    this.cacheUserData()
-  }
-
-  cacheUserData() {
-    refreshCurrentUserCache(response => {
-      alertifyjs.success(`Successfully signed in as ${this.state.username}.`)
-      window.location.hash  = '#' + response.data.url
     })
   }
 
@@ -95,11 +83,9 @@ class EmailVerification extends React.Component {
     const { user } = this.state;
     return (
       <React.Fragment>
-        <h1 style={{textAlign: 'center'}}>Confirm Email Address</h1>
-        <p>
-          {
-            `Please confirm that ${user.email} is an email address for user ${user.username}.`
-          }
+        <h1 style={{textAlign: 'center', margin: '10px 0'}}>Confirm Email Address</h1>
+        <p style={{marginTop: '5px'}}>
+          Please confirm that <b>{user.email}</b> is an email address for user <b>{user.username}</b>.
         </p>
         <Button onClick={() => this.onSubmit()} variant='outlined' color='primary'>
           Confirm
