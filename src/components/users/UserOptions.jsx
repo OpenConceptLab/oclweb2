@@ -9,18 +9,9 @@ import {
   Storage as ServerIcon, ExpandLess as LessIcon, ExpandMore as MoreIcon,
 } from '@mui/icons-material';
 import { get } from 'lodash';
-import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer } from '../../common/utils';
+import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer, logoutUser } from '../../common/utils';
 import ServerConfigList from '../common/ServerConfigList';
 import PopperGrow from '../common/PopperGrow';
-
-const onLogoutClick = msg => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  localStorage.removeItem('visits');
-  alertifyjs.success(msg || 'You have signed out.')
-  window.location.hash = '#/'
-  window.location.reload()
-}
 
 const UserOptions = () => {
   const initials = getUserInitials()
@@ -99,7 +90,7 @@ const UserOptions = () => {
           </Collapse>
           <Divider />
           <ListItem style={{display: 'flex', justifyContent: 'center', padding: '16px'}}>
-            <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={onLogoutClick}>
+            <Button size='small' startIcon={<LogoutIcon fontSize='inherit' color='inherit' />} variant='outlined' onClick={() => logoutUser(true)}>
               Sign Out
             </Button>
           </ListItem>
