@@ -14,7 +14,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
           {
             isEmpty(pins) ?
             <React.Fragment>
-              <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}}>
+              <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center', padding: '0 10px'}}>
                 <PinIcon pinned="true" fontSize='small' style={{marginRight: '5px'}} />
                 Pinned
               </h3>
@@ -31,9 +31,9 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
             />
           }
         </div>
-        <div className='col-xs-12 no-side-padding'>
+        <div className='col-xs-12' style={{padding: '0 10px'}}>
           <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center', marginTop: '30px'}}>
-            <OrgIcon fontSize='small' style={{marginRight: '5px'}} />
+            <OrgIcon fontSize='small' style={{marginRight: '5px', marginLeft: '2px'}} />
             {`About ${org.id}`}
           </h3>
           {

@@ -45,8 +45,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
   const count = isLoadingMappings ? null : conceptMappings.length + get(childConcepts, 'length', 0) + get(parentConcepts, 'length', 0);
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
   const orderedMappings = groupMappings(concept, conceptMappings)
+  const hierarchyMeaning = get(source, 'hierarchy_meaning')
   const hierarchyMapType = isChild => {
-    const hierarchyMeaning = get(source, 'hierarchy_meaning')
     return (
       <span>
         <span>{isChild ? 'Has child' : 'Has parent'}</span>
@@ -70,6 +70,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
     setHierarchy(!hierarchy)
   }
 
+  const noAssociations = isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts);
+
   return (
     <Accordion defaultExpanded>
       <AccordionSummary
@@ -80,13 +82,16 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
           <span className='flex-vertical-center'>
-            <span>
-              <Tooltip title={hierarchy ? 'Table Format' : 'Visualize'}>
-                <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
-                  <HierarchyIcon fontSize='inherit' />
-                </IconButton>
-              </Tooltip>
-            </span>
+            {
+              !noAssociations &&
+              <span>
+                <Tooltip title={hierarchy ? 'Table Format' : 'Visualize'}>
+                  <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
+                    <HierarchyIcon fontSize='inherit' />
+                  </IconButton>
+                </Tooltip>
+              </span>
+            }
             <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
               <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
                 <InfoIcon fontSize='small' color='action' />
@@ -101,12 +106,12 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
         <div style={{textAlign: 'center', padding: '10px'}}>
           <CircularProgress />
         </div> : (
-          isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts) ?
+          noAssociations ?
           None() :
           (
             hierarchy ?
             <div className='col-xs-12' style={{padding: '10px'}}>
-              <ConceptHierarchyTree concept={concept} fontSize='20' dx={40} />
+              <ConceptHierarchyTree concept={concept} fontSize='20' dx={40} hierarchyMeaning={hierarchyMeaning} />
             </div>:
             <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
               <TableHead>
@@ -189,7 +194,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
               </TableBody>
             </Table>
           )
-          )
+        )
         }
       </AccordionDetails>
     </Accordion>

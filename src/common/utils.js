@@ -596,3 +596,20 @@ export const setUpRecentHistory = history => {
 }
 
 export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title', 'OCL');
+
+export const getRandomColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`;
+
+export const logoutUser = (alert = true, redirectToLogin) => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  localStorage.removeItem('visits');
+  if(alert)
+    alertifyjs.success('You have signed out.');
+
+  if(redirectToLogin)
+    window.location.hash = '#/accounts/login';
+  else {
+    window.location.hash = '#/';
+    window.location.reload();
+  }
+}
