@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from "d3";
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty, get, reject, cloneDeep, find } from 'lodash';
+import { isEmpty, get, reject, find } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import { getRandomColor } from '../../common/utils';
@@ -92,7 +92,7 @@ class ConceptHierarchyTree extends React.Component {
     root.y0 = 0;
     root.descendants().forEach((d, i) => {
       d.id = i;
-      d.allChildren = cloneDeep(d.children)
+      d.allChildren = d.children
       d.children = this.formatChildren(d.children)
       d._children = d.children
     });
