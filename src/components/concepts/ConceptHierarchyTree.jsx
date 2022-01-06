@@ -234,26 +234,28 @@ class ConceptHierarchyTree extends React.Component {
 
       const link = gLink.selectAll(".link").data(links, d => d.target.id);
       var linkEnter = link
-                    .enter()
-                    .append("g")
-                    .attr("class", "link")
-                    .attr("fill", "none");
+        .enter()
+        .append("g")
+        .attr("class", "link")
+        .attr("fill", "none");
 
       linkEnter.append("path")
-          .attr("d", diagonal)
-          .attr("stroke-width", d => d.target.data.map_type === HIERARCHY_CHILD_REL ? 1 : 1)
-          .attr("stroke", d => (!d.target.data.map_type || d.target.data.map_type) === HIERARCHY_CHILD_REL ? '#000' : that.generateColor(d.target.data));
+               .attr("d", diagonal)
+               .attr("stroke-width", d => d.target.data.map_type === HIERARCHY_CHILD_REL ? 3 : 2)
+               .attr("stroke-dasharray", d => d.target.data.map_type === HIERARCHY_CHILD_REL ? "" : "5, 5")
+               .attr("stroke", d => (!d.target.data.map_type || d.target.data.map_type) === HIERARCHY_CHILD_REL ? '#000' : that.generateColor(d.target.data));
 
       linkEnter.append("text")
-          .attr("transform", d => `translate(${(d.source.y + d.target.y)/2}, ${(d.source.x + d.target.x)/2})`)
-          .attr("text-anchor", "middle")
-          .attr("fill", "black")
-          .text(d => {
-            let mapType = that.getMapType(d.target)
-            if(mapType === HIERARCHY_CHILD_REL)
-              mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
-            return mapType;
-          });
+               .attr("transform", d => `translate(${(d.source.y + d.target.y)/2}, ${(d.source.x + d.target.x)/2})`)
+               .attr("text-anchor", "middle")
+               .attr("fill", "black")
+               .attr("font-size", "12px")
+               .text(d => {
+                 let mapType = that.getMapType(d.target)
+                 if(mapType === HIERARCHY_CHILD_REL)
+                   mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
+                 return mapType;
+               });
       link.merge(linkEnter).transition(transition).attr("d", diagonal);
       link
         .exit()
