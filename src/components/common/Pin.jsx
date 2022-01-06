@@ -22,6 +22,13 @@ const getIcon = resourceURI => {
     return <HomeIcon size='small' style={{color: ORANGE, width: '20px', marginRight: '0px'}} />;
 }
 
+const localizeCount = count => {
+  if(count === null)
+    return '-'
+
+  return count.toLocaleString()
+}
+
 const Pin = ({ pin, canDelete, onDelete, style }) => {
   const mnemonic = last(compact(pin.resource_uri.split('/')))
   const isOrg = pin.resource_uri.indexOf('/sources/') === -1 && pin.resource_uri.indexOf('/collections/') === -1;
@@ -90,7 +97,7 @@ const Pin = ({ pin, canDelete, onDelete, style }) => {
                 className='clickable'
                 variant='outlined'
                 size='small'
-                label={get(pin, 'resource.summary.active_concepts', '0').toLocaleString()}
+                label={localizeCount(get(pin, 'resource.summary.active_concepts', null))}
                 icon={<LocalOfferIcon fontSize='small' style={{width: '14px'}} />}
                 style={{border: 'none', margin: '0 5px', padding: '5px'}}
               />
@@ -101,7 +108,7 @@ const Pin = ({ pin, canDelete, onDelete, style }) => {
                 className='clickable'
                 variant='outlined'
                 size='small'
-                label={get(pin, 'resource.summary.active_mappings', '0').toLocaleString()}
+                label={localizeCount(get(pin, 'resource.summary.active_mappings', null))}
                 icon={<LinkIcon fontSize='small' style={{width: '14px'}} />}
                 style={{border: 'none', margin: '0 5px', padding: '5px'}}
               />

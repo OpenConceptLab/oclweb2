@@ -135,7 +135,8 @@ const getValue = (item, column) => {
 }
 
 const getTag = (tag, item, hapi) => {
-  const value = isFunction(tag.getValue) ? tag.getValue(item, hapi) : get(item, tag.value, '0').toLocaleString();
+  const formatCount = count => count === null ? '-' : count.toLocaleString()
+  const value = isFunction(tag.getValue) ? tag.getValue(item, hapi) : formatCount(get(item, tag.value, null));
   const icon = isFunction(tag.getIcon) ? tag.getIcon(item) : tag.icon;
   const getTagDom = () => (
     <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
