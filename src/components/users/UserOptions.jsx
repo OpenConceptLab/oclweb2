@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import {
   IconButton, Tooltip,
   List, ListItem, ListItemIcon, ListItemText, Chip, Divider, Button, Collapse

@@ -3,11 +3,12 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
 import APIService from '../../services/APIService';
-import { isFHIRServer } from '../../common/utils';
+import { isFHIRServer, toFullAPIURL } from '../../common/utils';
 import packageJson from '../../../package.json';
 import config from '../../../config.json';
 
 const VERSION = `${packageJson.version}-${config.build}`
+const SWAGGER_URL = toFullAPIURL('/swagger/')
 
 const AppVersionChip = ({version, label, tooltip}) => {
   return (
@@ -41,7 +42,9 @@ class AppVersions extends React.Component {
         <AppVersionChip tooltip='Web Version' label='Web' version={VERSION} />
         {
           this.state.version &&
-          <AppVersionChip tooltip='API Version' label='API' version={this.state.version} />
+          <a href={SWAGGER_URL} target='_blank' rel="noopener noreferrer">
+            <AppVersionChip tooltip='API Version' label='API' version={this.state.version} />
+          </a>
         }
       </React.Fragment>
     )

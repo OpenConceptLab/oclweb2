@@ -87,14 +87,15 @@ export const getMappingsDistributionByMapType = (mappings, concept_url) => {
   }
 }
 
+export const getAPIURL = () => {
+  const savedConfigs = getSelectedServerConfig();
+  /*eslint no-undef: 0*/
+  return get(savedConfigs, 'url') || window.API_URL || process.env.API_URL;
+}
+
 export const toFullURL = uri => window.location.origin + '/#' + uri;
 
-export const toFullAPIURL = uri => {
-  /*eslint no-undef: 0*/
-  const config = getAppliedServerConfig()
-  const APIURL = config.url;
-  return APIURL + uri;
-}
+export const toFullAPIURL = uri => getAPIURL() + uri;
 
 export const copyURL = url => {
   copyToClipboard(url, 'Copied URL to clipboard!');
