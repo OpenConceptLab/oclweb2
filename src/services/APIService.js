@@ -1,7 +1,7 @@
 /*eslint no-process-env: 0*/
 import axios from 'axios';
 import {get, omit, isPlainObject, isString, defaults } from 'lodash';
-import { currentUserToken, getSelectedServerConfig } from '../common/utils';
+import { currentUserToken, getAPIURL } from '../common/utils';
 
 const APIServiceProvider = {};
 const RESOURCES = [
@@ -16,12 +16,6 @@ const RESOURCES = [
   { name: 'version', relations: [] },
   { name: 'new', relations: [] },
 ];
-
-const getAPIURL = () => {
-  const savedConfigs = getSelectedServerConfig();
-  /*eslint no-undef: 0*/
-  return get(savedConfigs, 'url') || window.API_URL || process.env.API_URL;
-}
 
 class APIService {
   constructor(name, id, relations) {
