@@ -6,6 +6,7 @@ import {
   AccountTreeRounded as TreeIcon,
 } from '@mui/icons-material'
 import { Tooltip } from '@mui/material';
+import { isNumber } from 'lodash';
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '4px', marginTop: '2px'}
 
@@ -16,7 +17,7 @@ const ConceptContainerSummaryHorizontal = props => {
         <Tooltip arrow title='Concepts'>
           <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px',}}>
             <LocalOfferIcon fontSize='small' style={TAG_ICON_STYLES} />
-            {props.summary.active_concepts}
+            {isNumber(props.summary.active_concepts) ? props.summary.active_concepts : '-'}
           </span>
         </Tooltip>
       </Link>
@@ -24,7 +25,7 @@ const ConceptContainerSummaryHorizontal = props => {
         <Tooltip arrow title='Mappings'>
           <span className='flex-vertical-center' style={{paddingRight: '20px', fontSize: '14px'}}>
             <LinkIcon fontSize='small' style={TAG_ICON_STYLES} />
-            {props.summary.active_mappings}
+            {isNumber(props.summary.active_mappings) ? props.summary.active_mappings : '-'}
           </span>
         </Tooltip>
       </Link>

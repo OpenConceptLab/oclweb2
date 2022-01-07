@@ -29,7 +29,9 @@ const ACCORDIAN_DETAILS_STYLES = {
 }
 
 const getTag = (tag, item) => {
-  const value = get(item, tag.value, '0').toLocaleString();
+  let value = get(item, tag.value, null)
+  value = value === null ? '-' : value.toLocaleString()
+
   return (
     <Tooltip arrow title={tag.label} key={tag.id}>
       <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>

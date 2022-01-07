@@ -111,7 +111,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
           (
             hierarchy ?
             <div className='col-xs-12' style={{padding: '10px'}}>
-              <ConceptHierarchyTree concept={concept} fontSize='20' dx={40} hierarchyMeaning={hierarchyMeaning} />
+              <ConceptHierarchyTree concept={concept} fontSize='20' dx={80} hierarchyMeaning={hierarchyMeaning} />
             </div>:
             <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
               <TableHead>
