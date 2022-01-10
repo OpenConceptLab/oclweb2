@@ -38,10 +38,10 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
           </h3>
           {
             isEmpty(about) ?
-            <p style={{marginLeft: '15px', marginTop: '10px'}}>
+            <p style={{marginLeft: '5px', marginTop: '10px'}}>
               {`${org.id} doesn't have any about text yet.`}
             </p> :
-            <div className='col-md-12' dangerouslySetInnerHTML={{__html: org.text.replaceAll('href="/', 'href="/#/')}} />
+            <div className='col-md-12 no-side-padding' style={{marginLeft: '5px'}} dangerouslySetInnerHTML={{__html: org.text.replaceAll('href="/', 'href="/#/')}} />
           }
         </div>
       </div>
