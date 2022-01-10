@@ -16,6 +16,7 @@ import APIService from '../../services/APIService';
 import {
   formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername
 } from '../../common/utils';
+import { ORANGE } from '../../common/constants';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
@@ -79,13 +80,13 @@ const UserHomeDetails = ({ user, isLoading }) => {
             {
               user.is_superuser &&
               <Tooltip title='OCL Super Admin'>
-                <AdminIcon />
+                <AdminIcon style={{color: ORANGE}} />
               </Tooltip>
             }
             {
               user.is_staff && !user.is_superuser &&
               <Tooltip title='OCL Admin'>
-                <AdminIcon />
+                <AdminIcon style={{color: ORANGE}} />
               </Tooltip>
             }
           </div>
@@ -154,15 +155,15 @@ const UserHomeDetails = ({ user, isLoading }) => {
           {
             token && isSameAsCurrentUser &&
             <React.Fragment>
-            <Divider style={{width: '100%', margin: '5px 0'}} />
-            <p>
-              <strong>API Token</strong>
-              <Tooltip arrow title="Click to copy Token" placement='right'>
-                <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
-                  <CopyIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </p>
+              <Divider style={{width: '100%', margin: '5px 0'}} />
+              <p>
+                <strong>API Token</strong>
+                <Tooltip arrow title="Click to copy Token" placement='right'>
+                  <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
+                    <CopyIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </p>
             </React.Fragment>
           }
         </div>

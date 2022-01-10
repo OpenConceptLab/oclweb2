@@ -6,7 +6,7 @@ import {
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
 import { map, chunk, isEmpty } from 'lodash';
-import { DARKGRAY } from '../../common/constants'
+import { GREEN, ORANGE } from '../../common/constants'
 import { getUserInitials } from '../../common/utils';
 import HtmlToolTipRaw from '../common/HtmlToolTipRaw';
 
@@ -36,7 +36,7 @@ const IdentityBadge = ({member, size}) => {
         <Badge
           overlap="circular"
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          badgeContent={<AdminIcon style={{color: DARKGRAY}} />}
+          badgeContent={<AdminIcon style={{color: ORANGE}} />}
           >
           <Identity member={member} size={size} />
         </Badge> :
@@ -69,7 +69,7 @@ const Info = ({ member }) => {
           <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '14px'}}>
             <Link to={`${member.url}sources`} className='no-anchor-styles flex-vertical-center'>
               <React.Fragment>
-                <SourceIcon color='disabled' style={{marginRight: '5px', width: '18px'}} />
+                <SourceIcon style={{marginRight: '5px', width: '18px', color: GREEN}} />
                 <span>{`Owner of ${member.sources} public sources`}</span>
               </React.Fragment>
             </Link>
@@ -80,7 +80,7 @@ const Info = ({ member }) => {
           <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '14px'}}>
             <Link to={`${member.url}collections`} className='no-anchor-styles flex-vertical-center'>
               <React.Fragment>
-                <CollectionIcon color='disabled' style={{marginRight: '5px', width: '18px'}} />
+                <CollectionIcon style={{marginRight: '5px', width: '18px', color: GREEN}} />
                 <span>{`Owner of ${member.collections} public collections`}</span>
               </React.Fragment>
             </Link>
@@ -92,8 +92,7 @@ const Info = ({ member }) => {
           <div className='col-xs-12 no-side-padding flex-vertical-center' style={{fontSize: '14px'}}>
             <Link to={`${member.url}organizations`} className='no-anchor-styles flex-vertical-center'>
               <React.Fragment>
-
-                <OrgIcon color='disabled' style={{marginRight: '5px', width: '18px'}} />
+                <OrgIcon style={{marginRight: '5px', width: '18px', color: ORANGE}} />
                 <span>{`Member of ${member.organizations} organizations`}</span>
               </React.Fragment>
             </Link>
