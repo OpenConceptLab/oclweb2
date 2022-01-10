@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from "d3";
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty, get, reject, find } from 'lodash';
+import { isEmpty, get, reject, find, merge, isEqual } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import { getRandomColor } from '../../common/utils';
@@ -43,11 +43,16 @@ class ConceptHierarchyTree extends React.Component {
     this.makeInitialTree()
   }
 
+  componentDidUpdate(prevProps) {
+    if(!isEqual(prevProps.filters, this.props.filters))
+      this.setState({isLoading: true}, this.makeInitialTree)
+  }
+
   getChildren = (concept, callback) => APIService
     .new()
     .overrideURL(concept.url)
     .appendToUrl('$cascade/')
-    .get(null, null, {view: 'hierarchy'})
+    .get(null, null, merge({view: 'hierarchy'}, (this.props.filters || {})))
     .then(response => callback(response.data.entry));
 
   makeInitialTree = () => this.getChildren(this.props.concept, tree => {
