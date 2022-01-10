@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from "d3";
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty, get, reject, find, merge, isEqual } from 'lodash';
+import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import { getRandomColor } from '../../common/utils';
@@ -63,13 +63,20 @@ class ConceptHierarchyTree extends React.Component {
     })
   })
 
-  formatChildren = (children, node=true) => {
-    return (!children || isEmpty(children)) ?
-           children :
-           reject(children, child => {
-             const data = node ? child.data : child;
-             return data.map_type ? Boolean(data.to_concept_url) : false
-           });
+  formatChildren = (children) => {
+    if(!children || isEmpty(children))
+      return children
+
+    let result = []
+    children.forEach(child => {
+      if(!child.data.map_type)
+        child.data.map_type = this.getMapType(child)
+      if(!child.data.to_concept_url)
+        result.push(child)
+    })
+    const hierarchicalNodes = orderBy(filter(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
+    const nonHierarchicalNodes = orderBy(reject(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
+    return [...hierarchicalNodes, ...nonHierarchicalNodes]
   }
 
   getMapType = node => {
@@ -97,6 +104,8 @@ class ConceptHierarchyTree extends React.Component {
     root.y0 = 0;
     root.descendants().forEach((d, i) => {
       d.id = i;
+      if(!d.data.map_type)
+        d.data.mapType = this.getMapType(d)
       d.allChildren = d.children
       d.children = this.formatChildren(d.children)
       d._children = d.children
@@ -156,7 +165,7 @@ class ConceptHierarchyTree extends React.Component {
       const tip = d3tip().attr('class', 'd3-tip').html(
         (event, d) => {
           const existInOCL = that.existsInOCL(d)
-          let mapType = that.props.concept.id == d.data.id && !d.parent ? null : that.getMapType(d)
+          let mapType = that.props.concept.id == d.data.id && !d.parent ? null : d.data.map_type
           if(mapType === HIERARCHY_CHILD_REL)
             mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
           const idLabel = mapType ? 'Map Type:' : 'ID:'
@@ -195,9 +204,7 @@ class ConceptHierarchyTree extends React.Component {
         .append("circle")
         .attr("r", 4.5)
         .attr("fill", d => {
-          const mapType = that.getMapType(d)
-          if(mapType)
-            d.data.map_type = mapType
+          const mapType = d.data.map_type
           return (!mapType || mapType === HIERARCHY_CHILD_REL) ? (d._children ? BLUE : "#999") : that.generateColor(d.data)
         })
         .attr("stroke-width", 10);
@@ -256,7 +263,7 @@ class ConceptHierarchyTree extends React.Component {
                .attr("fill", "black")
                .attr("font-size", "12px")
                .text(d => {
-                 let mapType = that.getMapType(d.target)
+                 let mapType = d.target.data.map_type
                  if(mapType === HIERARCHY_CHILD_REL)
                    mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
                  return mapType;
