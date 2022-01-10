@@ -16,7 +16,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   return (
-    <React.Fragment>
+    <div className='row' style={{width: '100%', margin: 0}}>
       <div className='col-md-6 no-left-padding'>
         <HomeLocales
           concept={concept}
@@ -37,11 +37,11 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           detailStyles={ACCORDIAN_DETAILS_STYLES}
         />
       </div>
-      <div className='col-md-6 no-right-padding'>
+      <div className='col-md-6 no-side-padding'>
         <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} childConcepts={childConcepts} parentConcepts={parentConcepts} isLoadingChildren={isLoadingChildren} isLoadingParents={isLoadingParents} source={source} />
         <ConceptCollections concept={concept} isLoadingCollections={isLoadingCollections} />
       </div>
-    </React.Fragment>
+    </div>
   );
 }
 

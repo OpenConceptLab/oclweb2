@@ -71,7 +71,7 @@ class ConceptHierarchyTree extends React.Component {
     children.forEach(child => {
       if(!child.data.map_type)
         child.data.map_type = this.getMapType(child)
-      if(!child.data.to_concept_url)
+      if(!child.data.target_concept_url)
         result.push(child)
     })
     const hierarchicalNodes = orderBy(filter(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
@@ -83,11 +83,11 @@ class ConceptHierarchyTree extends React.Component {
     if(node.data.map_type)
       return node.data.map_type
     const siblings = get(node, 'parent.allChildren', [])
-    const mappingForConcept = find(siblings, sibling => sibling.data.to_concept_url === node.data.url)
+    const mappingForConcept = find(siblings, sibling => sibling.data.target_concept_url === node.data.url)
     return mappingForConcept ? mappingForConcept.data.map_type : HIERARCHY_CHILD_REL;
   }
 
-  existsInOCL = node => Boolean(node.data.type === 'Concept' || (node.data.type === 'Mapping' && node.data.to_concept_url))
+  existsInOCL = node => Boolean(node.data.type === 'Concept' || (node.data.type === 'Mapping' && node.data.target_concept_url))
 
   renderTree = () => {
     const width = this.props.width || 960;
@@ -179,7 +179,7 @@ class ConceptHierarchyTree extends React.Component {
               </div>
               <div>
                 <span class='gray'>Name:</span>
-                <span><b>${d.data.display_name || d.data.to_concept_code}</b></span>
+                <span><b>${d.data.display_name || d.data.target_concept_code}</b></span>
               </div>
             </div>`
           )}
@@ -218,7 +218,7 @@ class ConceptHierarchyTree extends React.Component {
         .attr('font-style', d => that.existsInOCL(d) ? 'inherit': 'italic')
         .attr("x", d => (d._children ? -6 : 6))
         .attr("text-anchor", d => (d._children ? "end" : "start"))
-        .text(d => d.data.name || d.data.to_concept_code)
+        .text(d => d.data.name || d.data.target_concept_code)
         .clone(true)
         .lower()
         .attr("stroke-linejoin", "round")
