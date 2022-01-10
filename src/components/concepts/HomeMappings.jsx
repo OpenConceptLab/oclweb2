@@ -46,6 +46,7 @@ const DEFAULT_CASCADE_FILTERS = {
   cascadeLevels: '*',
   cascadeHierarchy: true,
   cascadeMappings: true,
+  reverse: false,
 }
 
 const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents }) => {
@@ -93,9 +94,10 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
+        style={hierarchy ? {padding: '0 8px'} : {}}
       >
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
-          <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
+          <TabCountLabel label='Associations' count={hierarchy ? null : count} style={ACCORDIAN_HEADING_STYLES} />
           {
             !noAssociations && hierarchy &&
             <HierarchyTreeFilters
@@ -115,11 +117,14 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
                 </Tooltip>
               </span>
             }
-            <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-              <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
-                <InfoIcon fontSize='small' color='action' />
-              </Tooltip>
-            </span>
+            {
+              !hierarchy &&
+              <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
+                <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
+                  <InfoIcon fontSize='small' color='action' />
+                </Tooltip>
+              </span>
+            }
           </span>
         </span>
       </AccordionSummary>

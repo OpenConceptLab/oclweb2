@@ -92,6 +92,17 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
           />
         </Tooltip>
       }
+      <Tooltip title={filters.reverse ? 'Cascade Forward/Down' : 'Cascade Backward/Up'} arrow placement='top'>
+        <Chip
+          color="primary"
+          variant="outlined"
+          label={filters.reverse ? 'Forward' : 'Backward'}
+          size="small"
+          style={{marginLeft: '2px'}}
+          clickable
+          onClick={() => onChange('reverse', !filters.reverse) }
+        />
+      </Tooltip>
       <Menu
         id="hierarchy-tree-filter-level-menu"
         anchorEl={levelAnchorEl}
