@@ -445,7 +445,6 @@ div.login-paper {
     &.xsmall {
         img {
             height: 36.5px;
-            width: 36.5px;
         }
         margin-top: 0px;
         height: 36.5px;
@@ -475,6 +474,7 @@ div.login-paper {
     height:100%;
     top:0;left:0;right:0;
     background-color:rgba(0,0,0,0);
+}
 .logo-container:hover {
     img {
         opacity: 0.5;
