@@ -447,6 +447,7 @@ div.login-paper {
     &.xsmall {
         img {
             height: 36.5px;
+            width: 36.5px;
         }
         margin-top: 0px;
         height: 36.5px;
@@ -479,7 +480,7 @@ div.login-paper {
 }
 .logo-container:hover {
     img {
-        opacity: 0.1;
+        opacity: 0.5;
     }
 }
 .resource-description {
