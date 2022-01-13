@@ -93,6 +93,7 @@ module.exports = (env) => {
         index: 'index.html',
       },
     },
+    devtool: env.NODE_ENV == 'production' ? "source-map" : undefined,
     plugins: [
       new HtmlWebpackPlugin({
         template: './public/index.html',
