@@ -1,5 +1,10 @@
 import React from 'react';
-import * as d3 from "d3";
+import {
+  hierarchy as d3Hierarchy,
+  tree as d3Tree,
+  linkHorizontal as d3LinkHorizontal,
+}  from "d3";
+import * as d3Selection from 'd3-selection';
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
 import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter } from 'lodash';
@@ -95,10 +100,10 @@ class ConceptHierarchyTree extends React.Component {
     const dx = this.props.dx || 60;
     const data = this.state.tree
     const margin = { top: 10, right: 120, bottom: 10, left: 120 };
-    const root = d3.hierarchy(data);
+    const root = d3Hierarchy(data);
     const dy = width / 6;
-    const tree = d3.tree().nodeSize([dx, dy]);
-    const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
+    const tree = d3Tree().nodeSize([dx, dy]);
+    const diagonal = d3LinkHorizontal().x(d => d.y).y(d => d.x);
 
     root.x0 = dy / 2;
     root.y0 = 0;
@@ -113,8 +118,8 @@ class ConceptHierarchyTree extends React.Component {
 
     tree(root);
 
-    const svg = d3
-      .create("svg")
+    const svg = d3Selection.select('body')
+      .append("svg")
       .attr("viewBox", [-margin.left, -margin.top, width, dx])
       .style("font", "10px sans-serif")
       .style("user-select", "none");
