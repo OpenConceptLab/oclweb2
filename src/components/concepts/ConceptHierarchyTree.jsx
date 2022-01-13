@@ -1,8 +1,13 @@
 import React from 'react';
-import * as d3 from "d3";
+import {
+  hierarchy as d3Hierarchy,
+  tree as d3Tree,
+  linkHorizontal as d3LinkHorizontal,
+}  from "d3";
+import * as d3Selection from 'd3-selection';
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter } from 'lodash';
+import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import { getRandomColor } from '../../common/utils';
@@ -73,6 +78,8 @@ class ConceptHierarchyTree extends React.Component {
         child.data.map_type = this.getMapType(child)
       if(!child.data.target_concept_url)
         result.push(child)
+      if(child.data.target_concept_url && !find(children, c => c.data.url === child.data.target_concept_url && c.data.type === 'Concept'))
+        result.push(child)
     })
     const hierarchicalNodes = orderBy(filter(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
     const nonHierarchicalNodes = orderBy(reject(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
@@ -95,10 +102,10 @@ class ConceptHierarchyTree extends React.Component {
     const dx = this.props.dx || 60;
     const data = this.state.tree
     const margin = { top: 10, right: 120, bottom: 10, left: 120 };
-    const root = d3.hierarchy(data);
+    const root = d3Hierarchy(data);
     const dy = width / 6;
-    const tree = d3.tree().nodeSize([dx, dy]);
-    const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
+    const tree = d3Tree().nodeSize([dx, dy]);
+    const diagonal = d3LinkHorizontal().x(d => d.y).y(d => d.x);
 
     root.x0 = dy / 2;
     root.y0 = 0;
@@ -107,14 +114,18 @@ class ConceptHierarchyTree extends React.Component {
       if(!d.data.map_type)
         d.data.mapType = this.getMapType(d)
       d.allChildren = d.children
-      d.children = this.formatChildren(d.children)
+      const newChildren = this.formatChildren(d.children)
+      if(isArray(newChildren) && newChildren.length === 0)
+        d.children = null
+      else
+        d.children = newChildren
       d._children = d.children
     });
 
     tree(root);
 
-    const svg = d3
-      .create("svg")
+    const svg = d3Selection.select('body')
+      .append("svg")
       .attr("viewBox", [-margin.left, -margin.top, width, dx])
       .style("font", "10px sans-serif")
       .style("user-select", "none");
