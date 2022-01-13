@@ -1,8 +1,10 @@
 /*eslint no-process-env: 0*/
 import React from 'react';
-import ErrorUI from './ErrorUI';
-import { getCurrentUser, getEnv } from '../../common/utils';
+import StackTrace from "stacktrace-js";
 import { Notifier } from '@airbrake/browser';
+import { map } from 'lodash';
+import { getCurrentUser, getEnv } from '../../common/utils';
+import ErrorUI from './ErrorUI';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -29,18 +31,31 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)}, () => {
-      const notifier = this.getNotifier()
-      if(notifier) {
-        const user = getCurrentUser() || {};
-        notifier.notify({
-          error: this.state.error,
-          params: {info: this.state.errorInfo},
-          context: {
-            component: window.location.href, user: {id: user.id, email: user.email}
-          }
-        });
-      }
+    StackTrace.fromError(error).then(traces => {
+      const newTraces = map(traces, trace => ({
+        column: trace.columnNumber,
+        file: trace.fileName,
+        'function': trace.functionName,
+        line: trace.lineNumber
+      }));
+
+      this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)}, () => {
+        const notifier = this.getNotifier()
+        if(notifier) {
+          const user = getCurrentUser() || {};
+          notifier.addFilter(notice => {
+            notice.errors[0].backtrace = newTraces;
+            return notice;
+          });
+          notifier.notify({
+            error: this.state.error,
+            params: {info: this.state.errorInfo},
+            context: {
+              component: window.location.href, user: {id: user.id, email: user.email}
+            }
+          });
+        }
+      })
     })
   }
 
