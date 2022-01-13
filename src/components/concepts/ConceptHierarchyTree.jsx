@@ -78,6 +78,8 @@ class ConceptHierarchyTree extends React.Component {
         child.data.map_type = this.getMapType(child)
       if(!child.data.target_concept_url)
         result.push(child)
+      if(child.data.target_concept_url && !find(children, c => c.data.url === child.data.target_concept_url && c.data.type === 'Concept'))
+        result.push(child)
     })
     const hierarchicalNodes = orderBy(filter(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
     const nonHierarchicalNodes = orderBy(reject(result, node => node.data.map_type === HIERARCHY_CHILD_REL), 'data.map_type')
