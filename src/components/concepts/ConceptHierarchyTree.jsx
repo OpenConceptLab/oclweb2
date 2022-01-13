@@ -7,7 +7,7 @@ import {
 import * as d3Selection from 'd3-selection';
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter } from 'lodash';
+import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import { getRandomColor } from '../../common/utils';
@@ -112,7 +112,11 @@ class ConceptHierarchyTree extends React.Component {
       if(!d.data.map_type)
         d.data.mapType = this.getMapType(d)
       d.allChildren = d.children
-      d.children = this.formatChildren(d.children)
+      const newChildren = this.formatChildren(d.children)
+      if(isArray(newChildren) && newChildren.length === 0)
+        d.children = null
+      else
+        d.children = newChildren
       d._children = d.children
     });
 
