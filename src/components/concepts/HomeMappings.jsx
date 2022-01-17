@@ -110,7 +110,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
             {
               !noAssociations &&
               <span>
-                <Tooltip title={hierarchy ? 'Table Format' : 'Visualize'}>
+                <Tooltip title={hierarchy ? 'Table Format' : 'Visualize (Beta)'}>
                   <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
                     <HierarchyIcon fontSize='inherit' />
                   </IconButton>
