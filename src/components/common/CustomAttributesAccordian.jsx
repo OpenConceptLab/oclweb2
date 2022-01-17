@@ -10,7 +10,7 @@ import CustomAttributes from './CustomAttributes'
 import TabCountLabel from './TabCountLabel'
 
 const None = () => {
-  return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
+  return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
 }
 
 const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) => {
@@ -38,7 +38,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   }
 
   return (
-    <Accordion defaultExpanded expanded>
+    <Accordion expanded>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
