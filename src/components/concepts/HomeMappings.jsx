@@ -87,14 +87,17 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
 
   const noAssociations = isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts);
 
+  let style = {minHeight: '40px', height: '100%'}
+  if(hierarchy)
+    style['padding'] = '0 8px'
 
   return (
     <Accordion expanded>
       <AccordionSummary
-        className='light-gray-bg less-paded-accordian-header'
+        className='light-gray-bg less-margin-accordian-summary-content'
         expandIcon={<span />}
         aria-controls="panel1a-content"
-        style={hierarchy ? {padding: '0 8px'} : {}}
+        style={style}
       >
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label='Associations' count={hierarchy ? null : count} style={ACCORDIAN_HEADING_STYLES} />

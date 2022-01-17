@@ -388,6 +388,11 @@ div.login-paper {
     height: 40px !important;
     min-height: 40px !important;
 }
+.less-margin-accordian-summary-content {
+    div:first-child {
+        margin: 2px 5px;
+    }
+}
 .capitalize {
     text-transform: capitalize;
 }

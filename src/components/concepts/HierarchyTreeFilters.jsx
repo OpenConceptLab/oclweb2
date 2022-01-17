@@ -38,7 +38,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
   }
 
   return (
-    <span className="flex-vertical-center">
+    <span className="flex-vertical-center" style={{flexWrap: 'wrap'}}>
       <Tooltip title={cascadeLevelText} arrow placement='top'>
         <Chip
           color="primary"
