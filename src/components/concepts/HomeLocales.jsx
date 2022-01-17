@@ -4,7 +4,7 @@ import {
   Table, TableBody, Tooltip
 } from '@mui/material';
 import {
-  Info as InfoIcon
+  InfoOutlined as InfoIcon
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map, groupBy, without, keys, compact, has } from 'lodash';
 import TabCountLabel from '../common/TabCountLabel';
@@ -14,11 +14,11 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
+  maxHeight: '300px', overflow: 'auto', width: '100%', padding: '0'
 }
 
 const None = () => {
-  return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
+  return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
 }
 
 const groupLocales = (locales, source) => {

@@ -4,7 +4,7 @@ import {
   Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton
 } from '@mui/material';
 import {
-  Info as InfoIcon,
+  InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map } from 'lodash';
@@ -20,11 +20,11 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '600px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
+  maxHeight: '600px', overflow: 'auto', width: '100%', padding: '0'
 }
 
 const None = () => {
-  return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
+  return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
 }
 
 const groupMappings = (concept, mappings) => {
