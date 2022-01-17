@@ -279,7 +279,7 @@ span.separator-small {
             }
         }
 
-        a[aria-selected="true"],button[aria-selected="true"]{
+        a[aria-selected="true"], button[aria-selected="true"]{
             border-bottom: 1px solid #fff !important;
             border: 1px solid #e0e0e0;
 
@@ -287,6 +287,17 @@ span.separator-small {
                 color: #555;
             }
         }
+        &.scoped {
+            a[aria-selected="true"], button[aria-selected="true"]{
+                border-bottom: 1px solid #fafbfc !important;
+                border: 1px solid #e0e0e0;
+
+                & span {
+                    color: #555;
+                }
+            }
+        }
+
         a:hover,a:focus {
             text-decoration: none !important;
             color: inherit !important;
@@ -1015,4 +1026,7 @@ div.custom-attributes-accordion-content {
 }
 .ql-align-right {
     text-align: right;
+}
+.padding-5 {
+    padding: 5px !important;
 }
