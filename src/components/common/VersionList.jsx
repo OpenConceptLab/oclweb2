@@ -26,27 +26,22 @@ const None = () => {
 
 const VersionList = ({ versions, resource }) => {
   const sortedVersions = orderBy(versions, 'version_created_on', 'desc');
-
   const [selectedList, setSelectedList] = React.useState([]);
-  const onSelectChange = (event, id) => {
-    const newSelectedList = event.target.checked ? uniq([...selectedList, id]) : without(selectedList, id);
-
-    setSelectedList(newSelectedList)
-  }
+  const onSelectChange = (event, id) => setSelectedList(
+    event.target.checked ? uniq([...selectedList, id]) : without(selectedList, id)
+  )
   const isConcept = resource === 'concept';
   const isMapping = resource === 'mapping';
   const canSelect = (isConcept || isMapping) && sortedVersions.length > 1;
   const gridClass = canSelect ? 'col-md-11' : 'col-md-12'
   const showCompareOption = (isConcept || isMapping) && selectedList.length === 2;
+  const isAssociated = version => !isEmpty(version.source_versions) || !isEmpty(version.collection_versions)
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
-
     const url = `#/${resource}s/compare?lhs=${selectedList[0]}&rhs=${selectedList[1]}`
     window.open(url, '_blank')
   }
-
-  const isAssociated = version => !isEmpty(version.source_versions) || !isEmpty(version.collection_versions)
 
   return (
     <React.Fragment>
@@ -137,6 +132,7 @@ const VersionList = ({ versions, resource }) => {
                           collection: version.collection_versions
                         }}
                         resource={resource}
+                        style={canSelect ? {marginLeft: '55px'} : {}}
                       />
                     </div>
                   }
