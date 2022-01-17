@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  LocalOffer as LocalOfferIcon
+  LocalOfferOutlined as LocalOfferIcon
 } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import { toFullAPIURL, copyURL } from '../../common/utils';
