@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { Avatar, Stack, IconButton, Divider, Badge } from '@mui/material'
 import {
   List as SourceIcon, Loyalty as CollectionIcon, Home as OrgIcon,
-  AdminPanelSettings as AdminIcon
+  AdminPanelSettings as AdminIcon, PersonOff as UserDisabledIcon,
+  PrivacyTip as UnverifiedIcon,
 } from '@mui/icons-material';
 import { map, chunk, isEmpty } from 'lodash';
-import { GREEN, ORANGE } from '../../common/constants'
+import { GREEN, ORANGE, ERROR_RED } from '../../common/constants'
 import { getUserInitials } from '../../common/utils';
 import HtmlToolTipRaw from '../common/HtmlToolTipRaw';
 
@@ -29,14 +30,22 @@ const Identity = ({member, size}) => {
 
 const IdentityBadge = ({member, size}) => {
   const isAdmin = member.is_superuser || member.is_staff;
+  let icon = null;
+  if(isAdmin)
+    icon = <AdminIcon style={{color: GREEN}} />;
+  if (member.status === 'deactivated')
+    icon = <UserDisabledIcon style={{color: ERROR_RED, width: '20px'}} />;
+  if (member.status === 'unverified')
+    icon = <UnverifiedIcon style={{color: ORANGE, width: '20px'}} />;
+
   return (
     <React.Fragment>
       {
-        isAdmin ?
+        icon ?
         <Badge
           overlap="circular"
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          badgeContent={<AdminIcon style={{color: ORANGE}} />}
+          badgeContent={icon}
           >
           <Identity member={member} size={size} />
         </Badge> :
