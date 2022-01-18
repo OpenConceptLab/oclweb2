@@ -4,7 +4,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress, IconButton, Tooltip,
 } from '@mui/material';
 import {
-  Loyalty as LoyaltyIcon, Info as InfoIcon,
+  Loyalty as LoyaltyIcon, InfoOutlined as InfoIcon,
   NewReleases as ReleaseIcon, Block as RetireIcon
 } from '@mui/icons-material'
 import { map, get, isEmpty, find, groupBy, orderBy, without, includes } from 'lodash';
@@ -19,7 +19,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
-const None = () => (<div style={{padding: '20px', fontWeight: '300'}}>None</div>);
+const None = () => (<div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>);
 
 
 const ConceptCollections = ({ concept, isLoadingCollections }) => {

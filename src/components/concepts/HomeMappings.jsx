@@ -4,7 +4,7 @@ import {
   Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton
 } from '@mui/material';
 import {
-  Info as InfoIcon,
+  InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map } from 'lodash';
@@ -20,11 +20,11 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '600px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
+  maxHeight: '600px', overflow: 'auto', width: '100%', padding: '0'
 }
 
 const None = () => {
-  return <div style={{padding: '20px', fontWeight: '300'}}>None</div>
+  return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
 }
 
 const groupMappings = (concept, mappings) => {
@@ -87,14 +87,17 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
 
   const noAssociations = isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts);
 
+  let style = {minHeight: '40px', height: '100%'}
+  if(hierarchy)
+    style['padding'] = '0 8px'
 
   return (
     <Accordion expanded>
       <AccordionSummary
-        className='light-gray-bg less-paded-accordian-header'
+        className='light-gray-bg less-margin-accordian-summary-content'
         expandIcon={<span />}
         aria-controls="panel1a-content"
-        style={hierarchy ? {padding: '0 8px'} : {}}
+        style={style}
       >
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label='Associations' count={hierarchy ? null : count} style={ACCORDIAN_HEADING_STYLES} />
@@ -110,7 +113,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
             {
               !noAssociations &&
               <span>
-                <Tooltip title={hierarchy ? 'Table Format' : 'Visualize'}>
+                <Tooltip title={hierarchy ? 'Table Format' : 'Visualize (Beta)'}>
                   <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
                     <HierarchyIcon fontSize='inherit' />
                   </IconButton>

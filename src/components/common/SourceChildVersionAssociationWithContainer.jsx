@@ -1,12 +1,8 @@
 import React from 'react';
 import { map, isEmpty, compact, values } from 'lodash';
-import { Collapse } from '@mui/material';
 import ConceptContainerLabel from './ConceptContainerLabel';
-import CollapsibleDivider from './CollapsibleDivider';
 
-const SourceChildVersionAssociationWithContainer = ({ associatedWith, resource }) => {
-  const [open, setOpen] = React.useState(false)
-  const toggleOpen = () => setOpen(!open)
+const SourceChildVersionAssociationWithContainer = ({ associatedWith, resource, style }) => {
   const getResourceDetails = uri => {
     const parts = compact(uri.split('/'))
     return {
@@ -25,33 +21,26 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith, resource }
     <React.Fragment>
       {
         isPresent &&
-        <div className='col-md-12 no-side-padding'>
-          <Collapse in={open} className="col-md-12" style={{padding: '0px', display: `${open ? 'block' : 'none'}`, margin: '5px 0 5px 15px'}}>
-            <div style={{textAlign: 'left'}} className='gray-italics-small'>
-              {`This ${resource} version is referenced in the following ${count} source and collection versions:`}
-            </div>
-            {
-              map(associatedWith.source, uri => (
+        <div className='col-md-12 no-right-padding' style={style || {}}>
+          <div style={{textAlign: 'left'}} className='gray-italics-small'>
+            {`This ${resource} version is referenced in the following ${count} source and collection versions:`}
+          </div>
+          {
+            map(associatedWith.source, uri => (
+              <div className='col-md-12 no-right-padding' key={uri}>
+                <ConceptContainerLabel resource='source' {...getResourceDetails(uri)} />
+              </div>
+            ))
+          }
+          {
+            map(associatedWith.collection, uri => {
+              return (
                 <div className='col-md-12 no-right-padding' key={uri}>
-                  <ConceptContainerLabel resource='source' {...getResourceDetails(uri)} />
+                  <ConceptContainerLabel resource='collection' {...getResourceDetails(uri)} />
                 </div>
-              ))
-            }
-            {
-              map(associatedWith.collection, uri => {
-                return (
-                  <div className='col-md-12 no-right-padding' key={uri}>
-                    <ConceptContainerLabel resource='collection' {...getResourceDetails(uri)} />
-                  </div>
-                )
-              })
-            }
-          </Collapse>
-          <CollapsibleDivider
-            open={open}
-            tooltip='View associations with Sources/Collections'
-            onClick={toggleOpen}
-          />
+              )
+            })
+          }
         </div>
       }
     </React.Fragment>

@@ -9,14 +9,16 @@ import {
   Link as WebsiteIcon,
   MailOutline as MailIcon,
   EventAvailable as DateJoinedIcon,
-  AdminPanelSettings as AdminIcon
+  AdminPanelSettings as AdminIcon,
+  PersonOff as UserDisabledIcon,
+  PrivacyTip as UnverifiedIcon,
 } from '@mui/icons-material';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import {
   formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername
 } from '../../common/utils';
-import { ORANGE } from '../../common/constants';
+import { ORANGE, ERROR_RED, GREEN } from '../../common/constants';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
@@ -80,13 +82,25 @@ const UserHomeDetails = ({ user, isLoading }) => {
             {
               user.is_superuser &&
               <Tooltip title='OCL Super Admin'>
-                <AdminIcon style={{color: ORANGE}} />
+                <AdminIcon style={{color: GREEN}} />
               </Tooltip>
             }
             {
               user.is_staff && !user.is_superuser &&
               <Tooltip title='OCL Admin'>
-                <AdminIcon style={{color: ORANGE}} />
+                <AdminIcon style={{color: GREEN}} />
+              </Tooltip>
+            }
+            {
+              user.status === 'deactivated' &&
+              <Tooltip title='Deactivated'>
+                <UserDisabledIcon style={{color: ERROR_RED, width: '20px'}} />
+              </Tooltip>
+            }
+            {
+              user.status === 'unverified' &&
+              <Tooltip title='Unverified'>
+                <UnverifiedIcon style={{color: ORANGE, width: '20px'}} />
               </Tooltip>
             }
           </div>

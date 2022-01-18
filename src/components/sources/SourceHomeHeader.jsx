@@ -9,6 +9,7 @@ import {
 import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import { isEmpty, map, filter, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
+import { WHITE } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
@@ -69,12 +70,10 @@ const SourceHomeHeader = ({
     else return []
   }
   const getHiddenAttributes = () => {
-    if (get(config, 'config.header.invisibleAttributes') === 'object'){
+    if (get(config, 'config.header.invisibleAttributes') === 'object')
       return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
-    }
-    else if (get(config, 'config.header.invisibleAttributes')) {
-      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() } 
-    }
+    else if (get(config, 'config.header.invisibleAttributes'))
+      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() }
     else return []
   }
   const hasManyHiddenAttributes = nonEmptyCount(source, map(getHiddenAttributes(),(attr) => attr.value)) >= 4;
@@ -100,7 +99,7 @@ const SourceHomeHeader = ({
   }
 
   return (
-    <header className='home-header col-md-12'>
+    <header className='home-header col-md-12' style={{backgroundColor: WHITE}}>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <div className='no-side-padding col-md-1 home-icon'>
           <HeaderLogo

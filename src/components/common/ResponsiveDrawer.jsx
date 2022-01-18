@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     bottom: 0,
     zIndex: 100,
-    backgroundColor: "#f4f7f9",
-    height: 'calc(100vh - 64px)',
+    backgroundColor: "#fafbfc",
+    height: '1000px'
   }
 }));
 
