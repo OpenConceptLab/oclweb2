@@ -185,7 +185,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                       <span className='gray-italics'>References:</span>
                       <span>{version.summary.active_references}</span>
                     </div>
-                    <div className='col-md-4 no-left-padding'>
+                    <div className='col-md-4'>
                       <span className='gray-italics'>Expansions:</span>
                       <span>{version.summary.expansions}</span>
                     </div>
