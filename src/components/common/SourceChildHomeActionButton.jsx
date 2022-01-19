@@ -5,7 +5,7 @@ import {
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
-  SettingsOutlined as SettingsIcon,
+  MoreVert as SettingsIcon,
   GetApp as DownloadIcon,
   CompareArrows as CompareIcon
 } from '@mui/icons-material';

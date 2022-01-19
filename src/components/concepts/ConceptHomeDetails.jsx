@@ -1,7 +1,7 @@
 import React from 'react';
 import { get } from 'lodash';
 import HomeMappings from './HomeMappings';
-import ConceptCollections from './ConceptCollections';
+import ConceptCollections from '../common/SourceChildCollections';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 import HomeLocales from './HomeLocales';
 import VersionList from '../common/VersionList';
@@ -43,8 +43,8 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
       </div>
       <div className={classes}>
         <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} childConcepts={childConcepts} parentConcepts={parentConcepts} isLoadingChildren={isLoadingChildren} isLoadingParents={isLoadingParents} source={source} />
+        <ConceptCollections instance={concept} isLoadingCollections={isLoadingCollections} />
         <VersionList versions={versions} resource='concept' />
-        <ConceptCollections concept={concept} isLoadingCollections={isLoadingCollections} />
       </div>
     </div>
   );

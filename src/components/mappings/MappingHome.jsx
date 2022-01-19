@@ -17,8 +17,10 @@ class MappingHome extends React.Component {
       accessDenied: false,
       permissionDenied: false,
       isLoading: true,
+      isLoadingCollections: false,
       mapping: {},
       versions: [],
+      collections: [],
     }
   }
 
@@ -64,7 +66,10 @@ class MappingHome extends React.Component {
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else
-                    this.setState({isLoading: false, mapping: response.data}, this.getVersions)
+                    this.setState({isLoading: false, mapping: response.data}, () => {
+                      this.getVersions()
+                      this.getCollectionVersions()
+                    })
                 })
 
     })
@@ -79,13 +84,24 @@ class MappingHome extends React.Component {
               })
   }
 
+  getCollectionVersions() {
+    this.setState({isLoadingCollections: true}, () => {
+      APIService.new()
+                .overrideURL(this.getMappingURLFromPath() + 'collection-versions/?limit=100')
+                .get()
+                .then(response => {
+                  this.setState({collections: response.data, isLoadingCollections: false})
+                })
+    })
+  }
+
   isVersionedObject() {
     return !this.props.match.params.mappingVersion;
   }
 
   render() {
     const {
-      mapping, versions, isLoading, notFound, accessDenied, permissionDenied
+      mapping, versions, isLoading, notFound, accessDenied, permissionDenied, collections, isLoadingCollections
     } = this.state;
     const currentURL = this.getMappingURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -115,7 +131,8 @@ class MappingHome extends React.Component {
               <MappingHomeDetails
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}
-                mapping={mapping}
+                isLoadingCollections={isLoadingCollections}
+                mapping={{...mapping, collections: collections}}
                 versions={versions}
               />
             </div>

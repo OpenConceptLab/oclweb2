@@ -22,11 +22,11 @@ const ACCORDIAN_DETAILS_STYLES = {
 const None = () => (<div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>);
 
 
-const ConceptCollections = ({ concept, isLoadingCollections }) => {
-  const conceptCollections = get(concept, 'collections') || []
-  const count = isLoadingCollections ? null : conceptCollections.length
-  const getProminentCollectionVersion = collectionVersions => {
-    const orderedVersions = orderBy(collectionVersions, 'created_at', ['desc'])
+const SourceChildCollections = ({ instance, isLoadingCollections }) => {
+  const collectionVersions = get(instance, 'collections') || []
+  const count = isLoadingCollections ? null : collectionVersions.length
+  const getProminentCollectionVersion = versions => {
+    const orderedVersions = orderBy(versions, 'created_at', ['desc'])
     const releasedVersion = find(orderedVersions, {released: true, retired: false})
     if(releasedVersion)
       return releasedVersion
@@ -71,9 +71,9 @@ const ConceptCollections = ({ concept, isLoadingCollections }) => {
             <div style={{textAlign: 'center', padding: '10px'}}>
               <CircularProgress />
             </div> : (
-              isEmpty(conceptCollections) ?
+              isEmpty(collectionVersions) ?
               None() :
-              map(groupBy(conceptCollections, 'short_code'), (collections, short_code) => {
+              map(groupBy(collectionVersions, 'short_code'), (collections, short_code) => {
                 const prominentVersion = getProminentCollectionVersion(collections)
                 const moreCount = collections.length - 1
                 const isExpanded = includes(expand, prominentVersion.version_url)
@@ -137,4 +137,4 @@ const ConceptCollections = ({ concept, isLoadingCollections }) => {
   )
 }
 
-export default ConceptCollections;
+export default SourceChildCollections;
