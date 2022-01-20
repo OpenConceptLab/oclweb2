@@ -148,11 +148,11 @@ const CollectionHomeTabs = props => {
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
           />
         }
-    </div>
-    <CommonFormDrawer
-    isOpen={referenceForm}
-        onClose={() => setReferenceForm(false)}
+      </div>
+      <CommonFormDrawer
         size='large'
+        isOpen={referenceForm}
+        onClose={() => setReferenceForm(false)}
         formComponent={
           <ReferenceForm onCancel={() => setReferenceForm(false)} reloadOnSuccess={tab < 3} parentURL={versionedObjectURL} collection={collection} />
         }

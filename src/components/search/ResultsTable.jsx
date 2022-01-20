@@ -346,7 +346,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    showPin, columns, hapi, fhir, history
+    showPin, columns, hapi, fhir, history, asReference
   } = props;
   const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
@@ -367,10 +367,10 @@ const ExpandibleRow = props => {
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
-                                       ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
-                                          (isSelectable ? 1 : 0) + // select column
-                                           ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                         (tags ? 1 : 0); //tags column
+                                        ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
+                                           (isSelectable ? 1 : 0) + // select column
+                                            ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                          (tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -439,6 +439,8 @@ const ExpandibleRow = props => {
   }
 
   const onRowClick = event => {
+    if(asReference)
+      return;
     if(includes(['references'], resource))
       return
     event.stopPropagation();
@@ -758,7 +760,7 @@ const ResultsTable = (
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
-    onSelect
+    onSelect, asReference, onSelectChange
   }
 ) => {
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
@@ -791,6 +793,8 @@ const ResultsTable = (
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
 
+    if(onSelectChange)
+      onSelectChange(map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
     if(onSelect)
       onSelect(find(results.items, {id: last(newList)}))
   };
@@ -843,13 +847,16 @@ const ResultsTable = (
                   <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
                     <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
                       <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
-                      <SelectedResourceControls
-                        selectedItems={getSelectedItems()}
-                        resource={resource}
-                        onCreateSimilarClick={onCreateSimilarClick}
-                        onCreateMappingClick={onCreateMappingClick}
-                        onReferencesDelete={onReferencesDelete}
-                      />
+                      {
+                        !asReference &&
+                        <SelectedResourceControls
+                          selectedItems={getSelectedItems()}
+                          resource={resource}
+                          onCreateSimilarClick={onCreateSimilarClick}
+                          onCreateMappingClick={onCreateMappingClick}
+                          onReferencesDelete={onReferencesDelete}
+                        />
+                      }
                     </TableCell>
                   </TableRow>
                 }
@@ -934,6 +941,7 @@ const ResultsTable = (
                       hapi={hapi}
                       fhir={fhir}
                       history={history}
+                      asReference={asReference}
                     />
                   ))
                 }

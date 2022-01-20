@@ -1,13 +1,15 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Button, Switch, FormControlLabel } from '@mui/material';
+import { Button, ButtonGroup } from '@mui/material';
 import { set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map, compact } from 'lodash';
 import APIService from '../../services/APIService';
 import { SOURCE_CHILD_URI_REGEX } from '../../common/constants';
 import { isConcept } from '../../common/utils';
 import URLReferenceForm from './URLReferenceForm';
 import ResourceReferenceForm from './ResourceReferenceForm';
-import AddReferencesResult from './AddReferencesResult';
+import AddReferencesResult from '../common/AddReferencesResult';
+import ReferenceCascadeDialog from '../common/ReferenceCascadeDialog';
+import Search from '../search/Search';
 
 const EXPRESSION_MODEL = {uri: '', valid: false, count: undefined, error: ''}
 
@@ -16,8 +18,13 @@ class ReferenceForm extends React.Component {
     super(props);
     this.expressionRegex = new RegExp(SOURCE_CHILD_URI_REGEX);
     this.state = {
+      isSubmitting: false,
+      cascadeDialog: false,
       result: null,
       byURL: false,
+      byResource: false,
+      cascadeMappings: true,
+      cascadeToConcepts: false,
       fields: {
         concepts: [],
         mappings: [],
@@ -97,10 +104,26 @@ class ReferenceForm extends React.Component {
       return
     }
 
-    if(!this.anyInvalidExpression()) {
-      const { parentURL } = this.props
-      APIService.new().overrideURL(parentURL).appendToUrl('references/').put({data: {expressions: expressions}}).then(response => this.handleSubmitResponse(response))
+    if(!this.anyInvalidExpression()){
+      this.setState({cascadeDialog: true})
     }
+  }
+
+  submitReferences = () => {
+    this.setState({isSubmitting: true}, () => {
+      const { cascadeMappings, cascadeToConcepts, fields } = this.state
+      const { parentURL } = this.props
+      let queryParams = {}
+      if(cascadeToConcepts)
+        queryParams = {cascade: 'sourceToConcepts'}
+      else if(cascadeMappings)
+        queryParams = {cascade: 'sourceMappings'}
+      APIService.new().overrideURL(parentURL).appendToUrl('references/').put(
+        {data: {expressions: compact(map(fields.expressions, 'uri'))}}, null, null, queryParams
+      ).then(response => this.setState(
+        {cascadeDialog: false, isSubmitting: false}, () => this.handleSubmitResponse(response))
+      )
+    })
   }
 
   handleSubmitResponse(response) {
@@ -132,50 +155,83 @@ class ReferenceForm extends React.Component {
   }
 
   render() {
-    const { byURL, fields, result } = this.state;
+    const { byURL, byResource, fields, result, cascadeDialog, isSubmitting } = this.state;
     const { onCancel, collection } = this.props;
+    const byGlobal = !byResource && !byURL;
     const header = `Add Reference(s)`;
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>
-          <h2>{header}</h2>
+          <h2 style={{margin: '10px 0'}}>{header}</h2>
         </div>
         <div className='col-md-12 no-side-padding'>
-          <div className='col-md-3'>
-            <FormControlLabel
-              control={<Switch checked={byURL} onChange={this.onSwitchChange} color='primary' name="byURL" />}
-              label="Add by URL"
-              style={{marginBottom: '20px'}}
-            />
+          <div className='col-md-6 no-left-padding'>
+            <ButtonGroup>
+              <Button variant={byGlobal ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: false, byResource: false})}>
+                By Global Search
+              </Button>
+              <Button variant={byURL ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: true, byResource: false})}>
+                By URL
+              </Button>
+              <Button variant={byResource ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: false, byResource: true})}>
+                By Resource Search
+              </Button>
+            </ButtonGroup>
           </div>
-          <div className='col-md-9' style={{textAlign: 'right'}}>
+          <div className='col-md-6 no-right-padding' style={{textAlign: 'right'}}>
             <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
               Add
             </Button>
-            <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
+            <Button style={{margin: '0 10px'}} variant='outlined' color='secondary' onClick={onCancel}>
               Cancel
             </Button>
           </div>
-          <form>
-            {
-              byURL ?
-              <URLReferenceForm
-                expressions={fields.expressions}
-                onAdd={this.onExpressionAdd}
-                onChange={this.onExpressionURIChange}
-                onBlur={this.onExpressionBlur}
-                onDelete={this.onExpressionDelete}
-              /> :
-              <ResourceReferenceForm onChange={this.onExpressionChange} />
-            }
-          </form>
+          <div className='col-md-12 no-side-padding'>
+            <form style={{margin: '15px 0'}}>
+              {
+                byGlobal &&
+                <Search {...this.props} resource='concepts' nested asReference onSelectChange={this.onExpressionChange} />
+              }
+              {
+                byURL &&
+                <URLReferenceForm
+                  expressions={fields.expressions}
+                  onAdd={this.onExpressionAdd}
+                  onChange={this.onExpressionURIChange}
+                  onBlur={this.onExpressionBlur}
+                  onDelete={this.onExpressionDelete}
+                />
+              }
+              {
+                byResource &&
+                <ResourceReferenceForm onChange={this.onExpressionChange} />
+              }
+            </form>
+          </div>
         </div>
-        <AddReferencesResult
-          title={`Add to Collection: ${collection.id}`}
-          open={Boolean(result)}
-          onClose={this.onResultClose}
-          result={result}
-        />
+        {
+          Boolean(result) &&
+          <AddReferencesResult
+            title={`Add to Collection: ${collection.id}`}
+            open={Boolean(result)}
+            onClose={this.onResultClose}
+            result={result}
+          />
+        }
+        {
+          cascadeDialog &&
+          <ReferenceCascadeDialog
+            open={cascadeDialog}
+            references={fields.expressions}
+            onCascadeChange={states => this.setState({
+                cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings
+            })}
+            collectionName={`${collection.owner}/${collection.short_code}`}
+            onClose={() => this.setState({cascadeDialog: false})}
+            onAdd={this.submitReferences}
+            isAdding={isSubmitting}
+          />
+        }
       </div>
     )
   }
