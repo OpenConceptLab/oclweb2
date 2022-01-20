@@ -526,6 +526,9 @@ class Search extends React.Component {
   convertURLToFQDN = url => window.location.origin + '/#' + url
 
   getCurrentLayoutURL() {
+    if(this.props.nested && this.props.asReference)
+      return window.location.hash
+
     let url = this.props.match.url;
     let resource = this.state.resource || 'concepts'
     if(resource === 'organizations')
@@ -560,7 +563,7 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { nested, extraControls, fhir, extraControlFilters, parentResource } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters, parentResource, asReference } = this.props;
     const {
       updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams, userFilters
@@ -612,10 +615,9 @@ class Search extends React.Component {
               </span>
             }
           </React.Fragment>
-
         }
         {
-          resource !== 'references' && !fhir &&
+          resource !== 'references' && !fhir && !asReference &&
           <span style={{paddingLeft: '4px'}}>
             <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} includeSplitView={nested && isSourceChild && parentResource === 'source'} />
           </span>
@@ -649,7 +651,7 @@ class Search extends React.Component {
           ))
         }
         {
-          resource !== 'references' && !fhir &&
+          resource !== 'references' && !fhir && !asReference &&
           <span style={{paddingLeft: '4px'}}>
             <Tooltip title='Copy Link to this results'>
               <Chip
@@ -694,7 +696,8 @@ class Search extends React.Component {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
-      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi, onSelect
+      onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi, onSelect,
+      asReference
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite,
@@ -779,6 +782,7 @@ class Search extends React.Component {
                   hapi={hapi}
                   history={this.props.history}
                   onSelect={onSelect}
+                  asReference={asReference}
                 /> :
                 <Results
                   resource={resource}
@@ -795,6 +799,7 @@ class Search extends React.Component {
                   history={this.props.history}
                   onSelect={onSelect}
                   splitView={isSplit}
+                  asReference={asReference}
                 />
               }
             </div>

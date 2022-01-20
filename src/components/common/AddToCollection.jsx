@@ -2,14 +2,12 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
-  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-  FormControlLabel, Checkbox, Divider, TextField, InputAdornment
+  CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle,
+  TextField, InputAdornment
 } from '@mui/material'
-import MuiAlert from '@mui/material/Alert';
 import {
   ArrowDropDown as ArrowDropDownIcon,
   Loyalty as LoyaltyIcon,
-  Help as HelpIcon,
   Search as SearchIcon,
 } from '@mui/icons-material'
 import { map, isEmpty, get, filter, cloneDeep } from 'lodash';
@@ -17,6 +15,8 @@ import APIService from '../../services/APIService';
 import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from '../collections/CollectionForm';
+import AddReferencesResult from './AddReferencesResult';
+import ReferenceCascadeDialog from './ReferenceCascadeDialog';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -33,8 +33,7 @@ class AddToCollection extends React.Component {
       collections: [],
       cascadeMappings: true,
       cascadeToConcepts: false,
-      notAdded: [],
-      added: [],
+      result: false,
       collectionForm: false,
     }
     this.anchorRef = React.createRef(null);
@@ -66,7 +65,7 @@ class AddToCollection extends React.Component {
 
   toggleOpen = () => this.setState({open: !this.state.open})
 
-  handleDialogClose = () => this.setState({selectedCollection: null, notAdded: []})
+  handleDialogClose = () => this.setState({selectedCollection: null})
 
   onCheckboxChange = event => this.setState({[event.target.name]: event.target.checked})
 
@@ -94,13 +93,9 @@ class AddToCollection extends React.Component {
                 .then(response => {
                   this.setState({isAdding: false}, () => {
                     if(response.status === 200) {
-                      const notAddedReferences = filter(response.data, {added: false})
-                      const addedReferences = filter(response.data, {added: true})
-                      this.setState({notAdded: notAddedReferences, added: addedReferences})
-                      if(isEmpty(notAddedReferences)) {
-                        alertifyjs.success('Successfully added reference(s)')
-                        this.handleDialogClose()
-                      }
+                      this.setState({result: response.data})
+                      alertifyjs.success('Successfully added reference(s)')
+                      this.handleDialogClose()
                     } else {
                       alertifyjs.error('Something bad happened')
                       this.handleDialogClose()
@@ -148,12 +143,11 @@ class AddToCollection extends React.Component {
 
   render() {
     const {
-      open, allCollections, collections, selectedCollection, cascadeMappings, cascadeToConcepts, notAdded, added, isAdding, isLoading, searchedValue, collectionForm
+      open, allCollections, collections, selectedCollection, isAdding, isLoading, searchedValue, collectionForm, result
     } = this.state;
     const { references } = this.props
     const openDialog = Boolean(selectedCollection)
     const collectionName = openDialog ? `${selectedCollection.owner}/${selectedCollection.short_code}`: '';
-    const unableToAdd = !isEmpty(notAdded)
     const _collections = [...collections, cloneDeep(NEW_COLLECTION)]
     const noOverallCollections = !isLoading && allCollections.length === 0;
     const noSearchResults = !isLoading && searchedValue && collections.length === 0;
@@ -241,77 +235,28 @@ class AddToCollection extends React.Component {
           {
             isAdding ?
             <DialogContent style={{textAlign: 'center', margin: '50px'}}><CircularProgress /></DialogContent> :
-            (
-              unableToAdd ?
-              <DialogContent>
-                {
-                  !isEmpty(added) &&
-                  <MuiAlert variant="filled" severity="success" style={{margin: '5px 0'}}>
-                    {`${added.length} Reference(s) successfully added.`}
-                  </MuiAlert>
-                }
-                <MuiAlert variant="filled" severity="warning" style={{margin: '5px 0'}}>
-                  {`${notAdded.length} Reference(s) listed below could not be added.`}
-                </MuiAlert>
-                {
-                  map(notAdded, (reference, index) => (
-                    <React.Fragment key={index}>
-                      <div style={{padding: '10px', background: 'rgba(0, 0, 0, 0.05)'}}>
-                        <span style={{marginRight: '5px'}}><b>{reference.expression}:</b></span>
-                        <span>{get(reference, 'message.0', '')}</span>
-                      </div>
-                      <Divider />
-                    </React.Fragment>
-
-                  ))
-                }
-              </DialogContent> :
-              <DialogContent>
-                <DialogContentText style={{color: 'black', marginBottom: '20px'}}>
-                  {`${references.length} selected reference(s) will be added to collection ${collectionName}`}
-                </DialogContentText>
-                <FormControlLabel
-                  control={<Checkbox checked={cascadeMappings} onChange={this.onCheckboxChange} name="cascadeMappings" size='small' style={{paddingRight: '4px'}}/>}
-                  label={
-                    <span className='flex-vertical-center'>
-                      <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings</span>
-                      <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
-                        <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                      </Tooltip>
-                    </span>
-                  }
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={cascadeToConcepts} onChange={this.onCheckboxChange} name="cascadeToConcepts" size='small' style={{paddingRight: '4px'}}/>}
-                  label={
-                    <span className='flex-vertical-center'>
-                      <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings to concepts</span>
-                      <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
-                        <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                      </Tooltip>
-                    </span>
-                  }
-                />
-              </DialogContent>
-            )
+            <ReferenceCascadeDialog references={references} onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings})} collectionName={collectionName} />
           }
           <DialogActions>
-            {
-              unableToAdd ?
+            <React.Fragment>
               <Button onClick={this.handleDialogClose} color="primary" disabled={isAdding}>
-                Close
-              </Button> :
-              <React.Fragment>
-                <Button onClick={this.handleDialogClose} color="primary" disabled={isAdding}>
-                  Cancel
-                </Button>
-                <Button onClick={this.handleAdd} color="primary" disabled={isAdding}>
-                  Add
-                </Button>
-              </React.Fragment>
-            }
+                Cancel
+              </Button>
+              <Button onClick={this.handleAdd} color="primary" disabled={isAdding}>
+                Add
+              </Button>
+            </React.Fragment>
           </DialogActions>
         </Dialog>
+        {
+          result &&
+          <AddReferencesResult
+            title={`Add Reference(s) Result`}
+            open={Boolean(result)}
+            onClose={() => this.setState({result: false})}
+            result={result}
+          />
+        }
         <CommonFormDrawer
           isOpen={collectionForm}
           onClose={this.toggleCollectionForm}

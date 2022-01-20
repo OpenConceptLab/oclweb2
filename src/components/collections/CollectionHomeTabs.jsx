@@ -165,9 +165,9 @@ const CollectionHomeTabs = props => {
         }
       </div>
       <CommonFormDrawer
+        size='large'
         isOpen={referenceForm}
         onClose={() => setReferenceForm(false)}
-        size='large'
         formComponent={
           <ReferenceForm onCancel={() => setReferenceForm(false)} reloadOnSuccess={tab < 3} parentURL={versionedObjectURL} collection={collection} />
         }

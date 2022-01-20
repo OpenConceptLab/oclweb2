@@ -11,7 +11,7 @@ const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
     onLoadMore, isInfinite, noControls, onReferencesDelete, history, onSelect,
-    splitView
+    splitView, asReference
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
@@ -24,7 +24,7 @@ const Results = props => {
                             without(selectedList, id);
     setSelectedList(newSelectedList)
     if (props.onSelectChange)
-      props.onSelectChange(newSelectedList);
+      props.onSelectChange(map(filter(results.items, item => includes(newSelectedList, item.url)), 'version_url'));
 
     if(onSelect)
       onSelect(find(results.items, {url: last(newSelectedList)}))
@@ -78,7 +78,7 @@ const Results = props => {
   return (
     <div className='col-sm-12 no-side-padding'>
       {
-        !isEmpty(selectedItemObjects) && !noControls && !splitView &&
+        !isEmpty(selectedItemObjects) && !noControls && !splitView && !asReference &&
         <div className='col-sm-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
           <SelectedResourceControls
             selectedItems={selectedItemObjects}
