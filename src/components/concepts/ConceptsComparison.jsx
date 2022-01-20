@@ -55,6 +55,7 @@ export default function ConceptsComparison() {
   const location = useLocation()
   const attributeState = {show: true, type: 'text'}
   const attributes = {
+    concept_class: {...cloneDeep(attributeState), position: 1},
     datatype: {...cloneDeep(attributeState), position: 1},
     display_locale: {...cloneDeep(attributeState), position: 2},
     external_id: {...cloneDeep(attributeState), position: 3},
@@ -137,11 +138,6 @@ export default function ConceptsComparison() {
         name: "Source:",
         value: concept.source,
         url: toParentURI(concept.url)
-      },
-      {
-        name: "Type:",
-        value: concept.concept_class,
-        url: null
       },
       {
         name: "UID:",
