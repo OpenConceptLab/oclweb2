@@ -1,9 +1,8 @@
 import React from 'react';
+import { get, reject, includes, map, pickBy, isString, isObject, isEmpty } from 'lodash';
 import { Tabs, Tab } from '@mui/material';
-import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
-import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
 import About from '../common/About';
 import CustomText from '../common/CustomText';
@@ -13,12 +12,14 @@ import ConfigSelect from '../common/ConfigSelect';
 import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import CollectionVersionForm from './CollectionVersionForm';
 import ReferenceForm from './ReferenceForm';
+import ExpansionForm from './ExpansionForm';
+import VersionList from './VersionList';
 
 const CollectionHomeTabs = props => {
   const {
-    tab, collection, versions, match, location, versionedObjectURL, currentVersion,
+    tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion, isLoadingExpansions
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -27,14 +28,24 @@ const CollectionHomeTabs = props => {
   const about = get(collection, 'text')
   const [versionForm, setVersionForm] = React.useState(false);
   const [referenceForm, setReferenceForm] = React.useState(false);
+  const [expansionForm, setExpansionForm] = React.useState(false);
   const [configFormWidth, setConfigFormWidth] = React.useState(false);
+  const [selectedVersion, setSelectedVersion] = React.useState();
   const onNewClick = resource => {
     if(resource === 'version')
       setVersionForm(true)
     if(resource === 'references')
       setReferenceForm(true)
+    if(resource === 'expansion')
+      setExpansionForm(true)
   }
-  const currentResourceURL = isVersionedObject ? collection.url : collection.version_url
+
+  const onCreateExpansionClick = version => {
+    setSelectedVersion(version)
+    setExpansionForm(true)
+  }
+
+  const currentResourceURL = isVersionedObject ? collection.url : (expansion.url || collection.version_url)
   const getTABHref = tabConfig => {
     let href = '';
     if(tabConfig.type === 'about')
@@ -43,11 +54,13 @@ const CollectionHomeTabs = props => {
       href = `#${currentResourceURL}references`
     else if(tabConfig.type === 'versions')
       href = `#${currentResourceURL}versions`
+    else if(tabConfig.type === 'expansions')
+      href = `#${currentResourceURL}expansions`
     else if(tabConfig.href)
       href = `#${currentResourceURL}${tabConfig.href}`
     else {
       const urlAttr = tabConfig.type + '_url'
-      href = `#${collection[urlAttr]}`
+      href = isEmpty(expansion) ? `#${collection[urlAttr]}` : `#${expansion.url}${tabConfig.type}/`
     }
     return href + location.search
   }
@@ -62,8 +75,7 @@ const CollectionHomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
-  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references'], selectedTabConfig.type) && !selectedTabConfig.uri;
-
+  const isInvalidTabConfig = selectedTabConfig && !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references', 'expansions'], selectedTabConfig.type) && !selectedTabConfig.uri;
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="collection-home-tabs"  classes={{indicator: 'hidden'}}>
@@ -86,10 +98,10 @@ const CollectionHomeTabs = props => {
         }
       </Tabs>
       {
-        hasAccess && isVersionedObject &&
+        hasAccess &&
         <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
-            showConfigSelection &&
+            isVersionedObject && showConfigSelection &&
             <span style={{marginRight: '10px'}}>
               <ConfigSelect
                 selected={selectedConfig}
@@ -102,7 +114,7 @@ const CollectionHomeTabs = props => {
               />
             </span>
           }
-          <NewResourceButton resources={['references', 'version']} onClick={onNewClick} />
+          <NewResourceButton resources={isVersionedObject ? ['references', 'version', 'expansion'] : ['expansion']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
@@ -116,7 +128,7 @@ const CollectionHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
-          <ConceptContainerVersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
+          <VersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} onCreateExpansionClick={onCreateExpansionClick} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
@@ -131,14 +143,17 @@ const CollectionHomeTabs = props => {
           </div>
         }
         {
-          !isInvalidTabConfig && !includes(['about', 'text', 'versions'], selectedTabConfig.type) &&
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions'], selectedTabConfig.type) && !isLoadingExpansions &&
           <CollectionHomeChildrenList
+            isLoadingExpansions={isLoadingExpansions}
             collection={collection}
             match={match}
             location={location}
             versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
             defaultURI={selectedTabConfig.defaultURI || selectedTabConfig.uri}
             versions={versions}
+            expansions={expansions}
+            expansion={expansion}
             currentVersion={currentVersion}
             resource={selectedTabConfig.type}
             references={selectedTabConfig.type === 'references'}
@@ -161,7 +176,14 @@ const CollectionHomeTabs = props => {
         isOpen={versionForm}
         onClose={() => setVersionForm(false)}
         formComponent={
-          <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} />
+          <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} resource="collection" />
+        }
+      />
+      <CommonFormDrawer
+        isOpen={expansionForm}
+        onClose={() => setExpansionForm(false)}
+        formComponent={
+          <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==3} version={selectedVersion || collection} versions={versions} />
         }
       />
     </div>

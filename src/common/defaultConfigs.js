@@ -377,7 +377,7 @@ export const COLLECTION_DEFAULT_CONFIG = {
         page_size: 25,
         layout: "table",
       },
-      { type: "versions", label: "Versions", page_size: 25, layout: "table" },
+      { type: "versions", label: "Versions & Expansions", page_size: 25, layout: "table" },
       { type: "about", label: "About" },
     ],
   },

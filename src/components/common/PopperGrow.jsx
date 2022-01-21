@@ -3,7 +3,7 @@ import {
   Paper, Popper, Grow, ClickAwayListener
 } from '@mui/material';
 
-const PopperGrow = ({open, anchorRef, handleClose, children}) => {
+const PopperGrow = ({open, anchorRef, handleClose, children, minWidth}) => {
   return (
     <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex: 1}}>
       {({ TransitionProps, placement }) => (
@@ -13,7 +13,7 @@ const PopperGrow = ({open, anchorRef, handleClose, children}) => {
             transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
           }}
           >
-          <Paper style={{minWidth: '330px', border: '1px solid lightgray'}}>
+          <Paper style={{minWidth: minWidth || '330px', border: '1px solid lightgray'}}>
             <ClickAwayListener onClickAway={handleClose}>
               {children}
             </ClickAwayListener>

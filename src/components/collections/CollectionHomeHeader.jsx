@@ -7,13 +7,13 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { Tooltip, Button, ButtonGroup, Collapse } from '@mui/material';
-import { filter, map, get } from 'lodash';
+import { filter, map, get, isEmpty } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
-import { GREEN } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import CollectionButton from '../common/CollectionButton';
-import VersionButton from '../common/VersionButton';
+import VersionSelectorButton from '../common/VersionSelectorButton';
+import ExpansionSelectorButton from '../common/ExpansionSelectorButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
@@ -37,15 +37,18 @@ const DEFAULT_VISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.visib
 const DEFAULT_INVISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const CollectionHomeHeader = ({
-  collection, isVersionedObject, versionedObjectURL, currentURL, config
+  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion, tab, versions,
+  expansions, isLoadingExpansions
 }) => {
   const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
+  const tabConfig = get(config, `config.tabs.${tab}`);
   const hasAccess = currentUserHasAccess();
-  const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.header.shrink', false));
+  const isExpandedHeader = () => !get(config, 'config.header.shrink', false) && get(tabConfig, 'type') !== 'versions';
+  const [openHeader, setOpenHeader] = React.useState(isExpandedHeader);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
-  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
+  const onIconClick = () => copyURL(toFullAPIURL(get(expansion, 'url') || currentURL))
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
               .post({base64: base64, name: name})
@@ -62,10 +65,10 @@ const CollectionHomeHeader = ({
   }
   const getHiddenAttributes = () => {
     if (get(config, 'config.header.invisibleAttributes') === 'object'){
-      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()} 
+      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
     }
     else if (get(config, 'config.header.invisibleAttributes')) {
-      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() } 
+      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() }
     }
     else return []
   }
@@ -82,7 +85,7 @@ const CollectionHomeHeader = ({
 
 
   React.useEffect(
-    () => setOpenHeader(!get(config, 'config.header.shrink', false)),
+    () => setOpenHeader(isExpandedHeader()),
     [get(config, 'config.header.shrink')]
   )
 
@@ -111,11 +114,23 @@ const CollectionHomeHeader = ({
             <OwnerButton {...collection} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <CollectionButton label={collection.short_code} href={`#${versionedObjectURL}`} />
+            <React.Fragment>
+              <span className='separator'>/</span>
+              <VersionSelectorButton
+                selected={collection}
+                versions={versions}
+                resource='collection'
+              />
+            </React.Fragment>
             {
-              !isVersionedObject &&
+              !isEmpty(expansions) && !isLoadingExpansions &&
               <React.Fragment>
                 <span className='separator'>/</span>
-                <VersionButton label={collection.version} href={`#${currentURL}`} bgColor={GREEN} />
+                <ExpansionSelectorButton
+                  selected={expansion}
+                  expansions={expansions}
+                  version={collection}
+                />
               </React.Fragment>
             }
             {

@@ -20,9 +20,12 @@ class CollectionHome extends React.Component {
       accessDenied: false,
       permissionDenied: false,
       isLoading: true,
+      isLoadingExpansions: true,
       isLoadingVersions: true,
       collection: {},
+      expansion: {},
       versions: [],
+      expansions: [],
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
@@ -92,18 +95,45 @@ class CollectionHome extends React.Component {
       return location.pathname.split('/details')[0] + '/'
     if(match.params.version)
       return location.pathname.split('/').slice(0, 6).join('/') + '/';
+    if(match.params.expansion)
+      return location.pathname.split('/').slice(0, 8).join('/') + '/';
 
     return this.getVersionedObjectURLFromPath();
   }
 
+  getResourceURLs() {
+    const { match, location } = this.props
+    const collectionURL = location.pathname.split('/').slice(0, 5).join('/') + '/'
+    let urls = {collection: collectionURL, version: null, expansion: null}
+    if(match.params.version && !includes(['references', 'versions', 'expansions', 'concepts', 'mappings', 'about', 'details'], match.params.version)) {
+      urls.version = collectionURL + match.params.version + '/'
+
+      if(match.params.expansion && !includes(['references', 'versions', 'expansions', 'concepts', 'mappings', 'about', 'details'], match.params.expansion))
+        urls.expansion= collectionURL + match.params.version + '/' + 'expansions/' + match.params.expansion + '/'
+    }
+
+    return urls
+  }
+
   getVersions() {
     this.setState({isLoadingVersions: true}, () => {
-    APIService.new()
-              .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get(null, null, {verbose: true, includeSummary: true})
-              .then(response => {
-                this.setState({versions: response.data, isLoadingVersions: false})
-              })
+      APIService.new()
+                .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
+                .get(null, null, {verbose: true, includeSummary: true})
+                .then(response => {
+                  this.setState({versions: response.data, isLoadingVersions: false})
+                })
+    })
+  }
+
+  getExpansions() {
+    this.setState({isLoadingExpansions: true}, () => {
+      const URL = this.getVersionedObjectURLFromPath()
+      const version = this.getCurrentVersion()
+      APIService.new().overrideURL(URL).appendToUrl(version || 'HEAD').appendToUrl('/expansions/').get().then(response => {
+        this.setState({expansions: response.data, isLoadingExpansions: false})
+      })
+
     })
   }
 
@@ -114,36 +144,58 @@ class CollectionHome extends React.Component {
     })
   }
 
-  refreshDataByURL() {
-    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
-      APIService.new()
-                .overrideURL(this.getURLFromPath())
-                .get(null, null, {includeSummary: true, includeClientConfigs: true})
-                .then(response => {
-                  if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, notFound: true, collection: {}, accessDenied: false, permissionDenied: false})
-                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
-                    this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: true, permissionDenied: false})
-                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
-                    this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: false, permissionDenied: true})
-                  else if(!isObject(response))
-                    this.setState({isLoading: false}, () => {throw response})
-                  else {
-                    const collection = response.data;
-                    const customConfigs = get(collection, 'client_configs', [])
-                    const defaultCustomConfig = find(customConfigs, {is_default: true});
-                    this.setState({
-                      isLoading: false,
-                      collection: collection,
-                      selectedConfig: defaultCustomConfig || COLLECTION_DEFAULT_CONFIG,
-                      customConfigs: customConfigs,
-                    }, () => {
-                      if(isEmpty(this.state.versions))
-                        this.getVersions()
-                    })
-                  }
-                })
+  fetchExpansion(expansionURL) {
+    if(expansionURL) {
+      APIService.new().overrideURL(expansionURL).get().then(response => {
+        if(get(response, 'detail') === "Not found.")
+          this.setState({isLoading: false, notFound: true, collection: {}, accessDenied: false, permissionDenied: false})
+        else if(get(response, 'detail') === "Authentication credentials were not provided.")
+          this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: true, permissionDenied: false})
+        else if(get(response, 'detail') === "You do not have permission to perform this action.")
+          this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: false, permissionDenied: true})
+        else if(!isObject(response))
+          this.setState({isLoading: false}, () => {throw response})
+        else {
+          this.setState({expansion: response.data})
+        }
+      })
+    }
+  }
 
+  refreshDataByURL() {
+    this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, expansion: {}}, () => {
+      this.URLs = this.getResourceURLs()
+      const url = this.URLs.version ? this.URLs.version : this.URLs.collection
+      APIService.new()
+                                                              .overrideURL(url)
+                                                              .get(null, null, {includeSummary: true, includeClientConfigs: true})
+                                                              .then(response => {
+                                                                if(get(response, 'detail') === "Not found.")
+                                                                  this.setState({isLoading: false, notFound: true, collection: {}, accessDenied: false, permissionDenied: false})
+                                                                else if(get(response, 'detail') === "Authentication credentials were not provided.")
+                                                                  this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: true, permissionDenied: false})
+                                                                else if(get(response, 'detail') === "You do not have permission to perform this action.")
+                                                                  this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: false, permissionDenied: true})
+                                                                else if(!isObject(response))
+                                                                  this.setState({isLoading: false}, () => {throw response})
+                                                                else {
+                                                                  const collection = response.data;
+                                                                  const customConfigs = get(collection, 'client_configs', [])
+                                                                  const defaultCustomConfig = find(customConfigs, {is_default: true});
+                                                                  this.setState({
+                                                                    isLoading: false,
+                                                                    collection: collection,
+                                                                    selectedConfig: defaultCustomConfig || COLLECTION_DEFAULT_CONFIG,
+                                                                    customConfigs: customConfigs,
+                                                                  }, () => {
+                                                                    const expansionURL = this.URLs.expansion || collection.expansion_url
+                                                                    if(expansionURL)
+                                                                      this.fetchExpansion(expansionURL)
+                                                                    this.getVersions()
+                                                                    this.getExpansions()
+                                                                  })
+                                                                }
+                                                              })
     })
   }
 
@@ -181,7 +233,8 @@ class CollectionHome extends React.Component {
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions
+      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions,
+      isLoadingExpansions,
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -202,11 +255,17 @@ class CollectionHome extends React.Component {
               versionedObjectURL={versionedObjectURL}
               currentURL={currentURL}
               config={selectedConfig}
+              expansion={expansion}
+              tab={tab}
+              versions={versions}
+              expansions={expansions}
+              isLoadingExpansions={isLoadingExpansions}
             />
             <CollectionHomeTabs
               tab={tab}
               onTabChange={this.onTabChange}
               collection={collection}
+              expansion={expansion}
               versions={versions}
               match={this.props.match}
               location={this.props.location}
@@ -220,6 +279,7 @@ class CollectionHome extends React.Component {
               showConfigSelection={this.customConfigFeatureApplicable()}
               isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
               isLoadingVersions={isLoadingVersions}
+              isLoadingExpansions={isLoadingExpansions}
             />
           </div>
         }

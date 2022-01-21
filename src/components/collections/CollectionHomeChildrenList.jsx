@@ -1,8 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { map, includes, compact, isEmpty, get, merge } from 'lodash';
+import { includes, compact, isEmpty, get, merge } from 'lodash';
 import Search from '../search/Search';
-import VersionFilter from '../common/VersionFilter';
 import APIService from '../../services/APIService';
 
 class CollectionHomeChildrenList extends React.Component {
@@ -15,30 +14,23 @@ class CollectionHomeChildrenList extends React.Component {
 
   getURL() {
     const { selectedVersion } = this.state;
-    const { versionedObjectURL, resource } = this.props;
-    let url = versionedObjectURL;
-    if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
-      url += `${selectedVersion}/`
-    url += `${resource}/`
-
-    return url
-  }
-
-  onChange = version => {
-    this.setState({selectedVersion: version || 'HEAD'})
-  }
-
-  getExtraControls() {
-    const { selectedVersion } = this.state;
-    const { versions } = this.props;
-    return (
-      <VersionFilter
-        size='small'
-        onChange={this.onChange}
-        versions={map(versions, 'id')}
-        selected={selectedVersion}
-      />
-    )
+    const { versionedObjectURL, resource, expansion, expansions } = this.props;
+    const expansionURL = get(expansion, 'url')
+    let url = versionedObjectURL
+    if(resource === 'references') {
+      if(selectedVersion)
+        return url + selectedVersion + '/' + resource + '/'
+      return url + resource + '/'
+    }
+    if(expansionURL)
+      return `${expansionURL}${resource}/`
+    if(isEmpty(expansions)) {
+      if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
+        url += `${selectedVersion}/`
+      url += `${resource}/`
+      return url
+    }
+    return `${versionedObjectURL}/${resource}/`
   }
 
   onReferencesDelete = expressions => {
@@ -64,7 +56,6 @@ class CollectionHomeChildrenList extends React.Component {
         nested
         baseURL={this.getURL()}
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
-        extraControls={this.getExtraControls()}
         searchInputPlaceholder={`Search ${collection.name} ${resource}...`}
         onReferencesDelete={isVersionedObject && this.onReferencesDelete}
         isVersionedObject={isVersionedObject}

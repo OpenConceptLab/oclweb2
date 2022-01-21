@@ -9,11 +9,10 @@ import {
 import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
 import { isEmpty, map, filter, get } from 'lodash';
 import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
-import { GREEN, WHITE } from '../../common/constants';
+import { WHITE } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
-import VersionButton from '../common/VersionButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
@@ -32,12 +31,13 @@ import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import { SOURCE_DEFAULT_CONFIG } from '../../common/defaultConfigs';
+import VersionSelectorButton from '../common/VersionSelectorButton';
 
 const DEFAULT_VISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.visibleAttributes
 const DEFAULT_INVISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const SourceHomeHeader = ({
-  source, isVersionedObject, versionedObjectURL, currentURL, config, splitView
+  source, isVersionedObject, versionedObjectURL, currentURL, config, splitView, versions
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
@@ -114,13 +114,10 @@ const SourceHomeHeader = ({
             <OwnerButton {...source} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <SourceButton label={source.short_code} href={`#${versionedObjectURL}`} />
-            {
-              !isVersionedObject &&
-              <React.Fragment>
-                <span className='separator'>/</span>
-                <VersionButton label={source.version} href={`#${currentURL}`} bgColor={GREEN} />
-              </React.Fragment>
-            }
+            <React.Fragment>
+              <span className='separator'>/</span>
+              <VersionSelectorButton selected={source} versions={versions} resource='source' />
+            </React.Fragment>
             {
               source.retired &&
               <span style={{marginLeft: '10px'}}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { TextField, Button, FormControlLabel, Checkbox } from '@mui/material';
-import { set, get, cloneDeep, isEmpty, pickBy, startCase } from 'lodash';
+import { TextField, Button, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
+import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map } from 'lodash';
 import APIService from '../../services/APIService';
 
 class ConceptContainerVersionForm extends React.Component {
@@ -13,6 +13,8 @@ class ConceptContainerVersionForm extends React.Component {
         description: '',
         external_id: '',
         released: false,
+        autoexpand: true,
+        expansion_url: '',
       },
       fieldErrors: {},
     }
@@ -25,7 +27,7 @@ class ConceptContainerVersionForm extends React.Component {
 
   setFieldsForEdit() {
     const { version } = this.props;
-    const attrs = ['id', 'description', 'external_id', 'released']
+    const attrs = ['id', 'description', 'external_id', 'released', 'expansion_url', 'autoexpand']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(version, attr, '') || ''))
     this.setState(newState);
@@ -34,8 +36,6 @@ class ConceptContainerVersionForm extends React.Component {
   onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
   onCheckboxChange = event => this.setFieldValue(event.target.name, event.target.checked)
-
-  onAutoCompleteChange = (id, item) => this.setFieldValue(id, get(item, 'id', ''), true)
 
   setFieldValue(id, value, setObject=false) {
     const newState = {...this.state}
@@ -52,16 +52,29 @@ class ConceptContainerVersionForm extends React.Component {
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-
-    const { parentURL, edit } = this.props
+    const { parentURL, edit, resource } = this.props
     let fields = cloneDeep(this.state.fields);
+
+
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
       this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
-      fields.released = this.state.fields.released
+
+      if(isBoolean(this.state.fields.released))
+        fields.released = this.state.fields.released
+
+      if(resource === 'collection') {
+        fields.autoexpand = isBoolean(this.state.fields.autoexpand) ? this.state.fields.autoexpand : false
+        fields.expansion_url = this.state.fields.expansion_url || null
+      } else {
+        delete fields.autoexpand
+        delete fields.expansion_url
+      }
+
+
       let service = APIService.new().overrideURL(parentURL)
       if(edit) {
         service.put(fields).then(response => this.handleSubmitResponse(response))
@@ -73,9 +86,9 @@ class ConceptContainerVersionForm extends React.Component {
 
   handleSubmitResponse(response) {
     const { edit, reloadOnSuccess, onCancel, resourceType, onSubmit } = this.props
+    if(this.alert)
+      this.alert.dismiss();
     if(response.status === 201 || response.status === 200) { // success
-      if(this.alert)
-        this.alert.dismiss();
       const verb = edit ? 'updated' : 'created'
       const successMsg = `Successfully ${verb} ${resourceType} version`;
       const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
@@ -92,6 +105,8 @@ class ConceptContainerVersionForm extends React.Component {
         alertifyjs.error(genericError.join('<br />'))
       } else if(get(response, 'detail')) {
         alertifyjs.error(response.detail)
+      } else if (isObject(response)) {
+        alertifyjs.error(values(response).join('\n'))
       } else {
         this.setState(
           {fieldErrors: response || {}},
@@ -103,7 +118,7 @@ class ConceptContainerVersionForm extends React.Component {
 
   render() {
     const { fields, fieldErrors } = this.state;
-    const { onCancel, edit, version, resourceType } = this.props;
+    const { onCancel, edit, version, resourceType, resource } = this.props;
     const idLabel = fields.id ? fields.id : 'version-id';
     const resourceTypeLabel = startCase(resourceType)
     const versionLabel = `${version.short_code} [${idLabel}]`;
@@ -161,12 +176,36 @@ class ConceptContainerVersionForm extends React.Component {
                 value={fields.external_id}
               />
             </div>
+            {
+              resource === 'collection' && edit &&
+              <div className='col-md-12 no-side-padding' style={{width: '100%', marginTop: '15px'}}>
+                <Autocomplete
+                  disablePortal
+                  id="fields.expansion_url"
+                  options={map(this.props.expansions, expansion => ({...expansion, label: `${expansion.mnemonic} (${expansion.url})`}))}
+                  renderInput={params => <TextField {...params} label="Expansion URL" />}
+                  onChange={(event, value) => this.setFieldValue('fields.expansion_url', get(value, 'url', ''))}
+                  value={fields.expansion_url}
+                  isOptionEqualToValue={(option, value) => value && option.url === value}
+                />
+              </div>
+            }
             <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
               <FormControlLabel
-                control={<Checkbox checked={fields.released} onChange={this.onCheckboxChange} name="fields.released" />}
+                control={<Checkbox checked={Boolean(fields.released)} onChange={this.onCheckboxChange} name="fields.released" />}
                 label="Release"
               />
             </div>
+            {
+              resource === 'collection' &&
+              <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
+                <FormControlLabel
+                  control={<Checkbox checked={Boolean(fields.autoexpand)} onChange={this.onCheckboxChange} name="fields.autoexpand" />}
+                  label="Auto Expand"
+                  disabled={edit}
+                />
+              </div>
+            }
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
               <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
                 {edit ? 'Update' : 'Create'}

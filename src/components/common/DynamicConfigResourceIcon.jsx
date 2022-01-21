@@ -5,7 +5,8 @@ import {
   Info as InfoIcon, Home as HomeIcon, Link as MappingIcon,
   AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon,
   Search as SearchIcon, Publish as ImportsIcon,
-  CompareArrows as CompareIcon
+  CompareArrows as CompareIcon,
+  AspectRatio as ExpansionIcon
 } from '@mui/icons-material';
 import { includes, snakeCase } from 'lodash';
 import { GREEN, BLUE, ORANGE } from '../../common/constants';
@@ -40,6 +41,8 @@ const DynamicConfigResourceIcon = ({resource, index, style, icon, enableColor, .
     return <CompareIcon color='primary' {...rest} />;
   if(includes(['reference', 'references'], resource))
     return <i className="icon-link" style={{ fontSize: "inherit", color: enableColor ? BLUE : '' }} />;
+  if(includes(['expansion', 'expansions'], resource))
+    return <ExpansionIcon style={{...styles, color: enableColor ? GREEN : ''}} {...rest} />;
 
   return '';
 }

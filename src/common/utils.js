@@ -570,11 +570,14 @@ export const setUpRecentHistory = history => {
         if(location.pathname.match('/concepts/')) {
           type = category = 'concept';
         }
-          if(location.pathname.match('/mappings/')) {
-            type = category = 'mapping';
-          }
+        if(location.pathname.match('/mappings/')) {
+          type = category = 'mapping';
+        }
         if(location.pathname.match('/references')) {
           type = category = 'reference';
+        }
+        if(location.pathname.match('/expansions')) {
+          type = category = 'expansion';
         }
         urlParts = without(urlParts, 'orgs', 'users', 'sources', 'collections');
       }
