@@ -100,7 +100,12 @@ class ReferenceForm extends React.Component {
     const fields = cloneDeep(this.state.fields);
     const expressions = compact(map(fields.expressions, 'uri'))
     if(isEmpty(expressions)) {
-      alertifyjs.error('Please add/select reference(s) to add')
+      if(this.state.byURL)
+        alertifyjs.error('Please add at least one expression')
+      if(this.state.byResource)
+        alertifyjs.error('Please select at least one concept or mapping')
+      else
+        alertifyjs.error('Please select at least one concept')
       return
     }
 
@@ -165,20 +170,20 @@ class ReferenceForm extends React.Component {
           <h2 style={{margin: '10px 0'}}>{header}</h2>
         </div>
         <div className='col-md-12 no-side-padding'>
-          <div className='col-md-6 no-left-padding'>
+          <div className='col-md-8 no-left-padding'>
             <ButtonGroup>
               <Button variant={byGlobal ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: false, byResource: false})}>
-                By Global Search
-              </Button>
-              <Button variant={byURL ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: true, byResource: false})}>
-                By URL
+                Search Concepts
               </Button>
               <Button variant={byResource ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: false, byResource: true})}>
-                By Resource Search
+                Find a Source/Collection
+              </Button>
+              <Button variant={byURL ? 'contained' : 'outlined'} onClick={() => this.setState({byURL: true, byResource: false})}>
+                Add Expression
               </Button>
             </ButtonGroup>
           </div>
-          <div className='col-md-6 no-right-padding' style={{textAlign: 'right'}}>
+          <div className='col-md-4 no-right-padding' style={{textAlign: 'right'}}>
             <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
               Add
             </Button>
