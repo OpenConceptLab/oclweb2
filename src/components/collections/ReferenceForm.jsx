@@ -102,7 +102,7 @@ class ReferenceForm extends React.Component {
     if(isEmpty(expressions)) {
       if(this.state.byURL)
         alertifyjs.error('Please add at least one expression')
-      if(this.state.byResource)
+      else if(this.state.byResource)
         alertifyjs.error('Please select at least one concept or mapping')
       else
         alertifyjs.error('Please select at least one concept')
