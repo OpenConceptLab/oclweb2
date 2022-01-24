@@ -71,7 +71,7 @@ const ScopeHeader = ({
         <span style={{marginLeft: '5px', display: 'block'}}>
           <ConceptIcon shrink={false} />
         </span>
-        <div className='col-md-11'>
+        <div className='col-md-10 no-right-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
             <span style={{color: BLUE}}>
               <b>{concept.id}</b>
@@ -91,11 +91,6 @@ const ScopeHeader = ({
                 resource='concept'
               />
             </span>
-            <div style={{display: 'inline-block', float: 'right'}}>
-              <IconButton size='small' color='secondary' onClick={onClose}>
-                <CancelIcon fontSize='inherit' />
-              </IconButton>
-            </div>
           </div>
           <div className='col-md-12 no-side-padding' style={{marginLeft: '4px'}}>
             <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -139,6 +134,11 @@ const ScopeHeader = ({
             }
           </div>
         </div>
+        <span className='col-md-1 no-side-padding' style={{marginLeft: '5px', display: 'block', textAlign: 'right'}}>
+          <IconButton size='small' color='secondary' onClick={onClose}>
+            <CancelIcon fontSize='inherit' />
+          </IconButton>
+        </span>
       </div>
       <CommonFormDrawer
         isOpen={conceptForm}
