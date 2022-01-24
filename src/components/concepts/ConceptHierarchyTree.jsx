@@ -79,8 +79,10 @@ class ConceptHierarchyTree extends React.Component {
       if(!child.data.target_concept_url)
         result.push(child)
       if(child.data.target_concept_url && !find(children, c => c.data.url === child.data.target_concept_url && c.data.type === 'Concept')) {
-        const sourceName = child.data.target_concept_url.split('/')[4]
-        child.data.target_concept_code = `${sourceName} / ${child.data.target_concept_code}`
+        const urlParts = child.data.target_concept_url.split('/')
+        const ownerName = urlParts[2]
+        const sourceName = urlParts[4]
+        child.data.target_source = `${ownerName} / ${sourceName}`
         result.push(child)
       }
     })
@@ -184,9 +186,11 @@ class ConceptHierarchyTree extends React.Component {
             mapType = that.props.hierarchyMeaning ? `Has Child (${that.props.hierarchyMeaning})` : 'Has Child'
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
+          const sourceHeader = d.data.target_source ? `<div><span class='gray'>Source: </span><span><b>${d.data.target_source}</b></span></div> ` : '';
           return (
             `<div>
               ${header}
+              ${sourceHeader}
               <div>
                 <span class='gray'>${idLabel}</span>
                 <span><b>${mapType || d.data.id}</b></span>
