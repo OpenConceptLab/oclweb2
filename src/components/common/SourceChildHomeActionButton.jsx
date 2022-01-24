@@ -42,7 +42,7 @@ const SourceChildHomeActionButton = ({
     <React.Fragment>
       <Tooltip title='Edit, Copy and more...'>
         <IconButton size='small' onClick={toggleMenu} style={{marginTop: '-2px'}}>
-          <SettingsIcon />
+          <SettingsIcon fontSize='inherit' />
         </IconButton>
       </Tooltip>
       <Menu
