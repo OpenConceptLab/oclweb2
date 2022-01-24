@@ -6,7 +6,7 @@ import {
   NewReleases as ReleaseIcon,
   BrightnessAuto as AutoIcon
 } from '@mui/icons-material';
-import { startCase } from 'lodash';
+import { startCase, isEmpty } from 'lodash';
 import { headFirst } from '../../common/utils';
 import { WHITE, RED, BLACK, GREEN, DARKGRAY } from '../../common/constants';
 import PopperGrow from './PopperGrow';
@@ -80,6 +80,9 @@ const VersionSelectorButton = ({selected, versions, resource}) => {
             <b>{`${startCase(resource)} Versions`}</b>
           </p>
           {
+
+            isEmpty(versions) ?
+            <MenuItem disabled>No versions found</MenuItem> :
             headFirst(versions).map(version => (
               <MenuItem
                 key={version.version}
