@@ -93,9 +93,9 @@ const CollectionHomeHeader = ({
     APIService.new().overrideURL(collection.url).delete().then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success('Collection Deleted', 1, () => window.location.hash = collection.owner_url)
-      if(get(response, 'status') === 202)
+      else if(get(response, 'status') === 202)
         alertifyjs.success('Collection Delete Accepted. This may take few minutes.')
-      if(get(response, 'status') === 400)
+      else if(get(response, 'status') === 400)
         alertifyjs.error(get(response, 'data.detail', 'Collection Delete Failed'))
       else
         alertifyjs.error('Something bad happened!')

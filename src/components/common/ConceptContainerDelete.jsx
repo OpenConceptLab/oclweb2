@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import { RED } from '../../common/constants';
@@ -12,7 +11,6 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete}) => {
   const canDelete = input === resourceId
   const opacity = canDelete ? 1 : 0.5;
   const onSubmit = () => {
-    alertifyjs.warning(`Deleting ${resourceEntity}. This may take few seconds..`, 2)
     onClose();
     onDelete();
   }
