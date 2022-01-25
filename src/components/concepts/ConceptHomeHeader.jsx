@@ -86,11 +86,11 @@ const ConceptHomeHeader = ({
 
   const onIconClick = () => copyURL(toFullAPIURL(encodeURI(currentURL)))
   return (
-    <header className='home-header col-md-12'>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
+    <header className='home-header col-xs-12'>
+      <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <ConceptIcon shrink={!openHeader} />
-        <div className='col-md-11' style={{width: '95%', marginBottom: '5px'}}>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
+        <div className='col-xs-11' style={{width: '95%', marginBottom: '5px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...concept} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <SourceButton label={concept.source} childURI={versionedObjectURL} />
@@ -154,11 +154,11 @@ const ConceptHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
             <ConceptDisplayName concept={concept} style={{marginRight: '10px'}} />
           </div>
-          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
-            <div className='col-md-12 no-side-padding flex-vertical-center'>
+          <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+            <div className='col-xs-12 no-side-padding flex-vertical-center'>
               <span className='italic' style={{marginRight: '3px'}}>
                 Class:
               </span>
@@ -172,7 +172,7 @@ const ConceptHomeHeader = ({
                 {concept.datatype}
               </span>
             </div>
-            <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
+            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
               <span>
                 <LastUpdatedOnLabel
                   date={concept.updated_on}

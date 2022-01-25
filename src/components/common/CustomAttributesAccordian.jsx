@@ -44,7 +44,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
         expandIcon={<span />}
         aria-controls="panel1a-content"
       >
-        <span className='col-md-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
+        <span className='col-xs-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
           <TabCountLabel label='Attributes' style={headingStyles} count={keys(attributes).length}/>
           {
             hasAttributes &&
@@ -75,7 +75,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
               attributes={attributes}
               preStyles={{marginLeft: '20px'}}
             /> :
-            <div className='col-md-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding'>
               {
                 map(getAttributeKeys(), name => {
                   const value = attributes[name]
@@ -83,11 +83,11 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                   const needNesting = !isBool && shouldBeNested(value)
                   const isArr = isArray(value)
                   return (
-                    <div className='col-md-12 no-side-padding custom-attributes-accordion-content' key={name}>
-                      <div className='col-md-3 no-right-padding' style={{color: '#777'}}>
+                    <div className='col-xs-12 no-side-padding custom-attributes-accordion-content' key={name}>
+                      <div className='col-xs-3 no-right-padding' style={{color: '#777'}}>
                         <b>{startCase(name)}</b>
                       </div>
-                      <div className='col-md-9 no-left-padding flex-vertical-center' style={{maxWidth: '100%'}}>
+                      <div className='col-xs-9 no-left-padding flex-vertical-center' style={{maxWidth: '100%'}}>
                         {
                           isBool && value.toString()
                         }

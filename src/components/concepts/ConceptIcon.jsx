@@ -7,7 +7,7 @@ import { toFullAPIURL, copyURL } from '../../common/utils';
 
 const ConceptIcon = ({ url, shrink }) => {
   const onIconClick = () => copyURL(toFullAPIURL(url))
-  const classes = 'no-side-padding col-md-1 home-icon concept flex-vertical-center' + (shrink ? ' small' : '')
+  const classes = 'no-side-padding col-xs-1 home-icon concept flex-vertical-center' + (shrink ? ' small' : '')
 
   return (
     <div className={classes} style={{width: '5%', cursor: 'auto'}}>

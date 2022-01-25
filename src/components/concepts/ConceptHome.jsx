@@ -263,7 +263,7 @@ class ConceptHome extends React.Component {
                 header={has(this.props, 'header') ? this.props.header : true}
               />
             }
-            <div className='col-md-12'>
+            <div className='col-xs-12'>
             <ConceptHomeDetails
               singleColumn={this.props.singleColumn}
               source={source}
@@ -282,7 +282,7 @@ class ConceptHome extends React.Component {
       </div>
     )
     return (
-      <div className='col-md-12 home-container no-side-padding' style={this.props.scoped ? {background: '#fafbfc'} : {}}>
+      <div className='col-xs-12 home-container no-side-padding' style={this.props.scoped ? {background: '#fafbfc'} : {}}>
         {
           openHierarchy ?
           <Split className='split' sizes={[25, 75]} minSize={50}>

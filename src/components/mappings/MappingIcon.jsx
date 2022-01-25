@@ -7,7 +7,7 @@ import { toFullAPIURL, copyURL } from '../../common/utils';
 
 const MappingIcon = ({ url, shrink }) => {
   const onIconClick = () => copyURL(toFullAPIURL(url))
-  const classes = 'no-side-padding col-md-1 home-icon mapping flex-vertical-center' + (shrink ? ' xsmall' : '')
+  const classes = 'no-side-padding col-xs-1 home-icon mapping flex-vertical-center' + (shrink ? ' xsmall' : '')
 
   return (
     <div className={classes} style={{width: '5%', cursor: 'auto'}}>
