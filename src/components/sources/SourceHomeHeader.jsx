@@ -103,7 +103,7 @@ const SourceHomeHeader = ({
   }
 
   return (
-    <header className='home-header col-xs-12' style={{backgroundColor: WHITE}}>
+    <header className='home-header col-xs-12 no-side-padding' style={{backgroundColor: WHITE}}>
       <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
         <div className='no-side-padding col-xs-1 home-icon'>
           <HeaderLogo

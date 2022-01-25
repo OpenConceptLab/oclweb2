@@ -103,9 +103,9 @@ const CollectionHomeHeader = ({
   }
 
   return (
-    <header className='home-header col-md-12'>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon'>
+    <header className='home-header col-xs-12 no-side-padding'>
+      <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
+        <div className='no-side-padding col-xs-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
             onUpload={onLogoUpload}
@@ -113,8 +113,8 @@ const CollectionHomeHeader = ({
             shrink={!openHeader}
           />
         </div>
-        <div className='col-md-11' style={{marginBottom: '5px'}}>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
+        <div className='col-xs-11' style={{marginBottom: '5px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...collection} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <CollectionButton label={collection.short_code} href={`#${versionedObjectURL}`} />
@@ -182,30 +182,30 @@ const CollectionHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>
               {collection.full_name}
             </span>
             <AccessChip publicAccess={collection.public_access} />
           </div>
-          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+          <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
               collection.description &&
-              <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
                 {collection.description}
               </div>
             }
             {
               map(getVisibleAttributes(), (attr, index) => {
                 if (attr.value === "supported_locales" || attr.value === "default_locale")
-                  return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-md-12" type="component" />;
-                return <HeaderAttribute key={attr.label + index} label={attr.label} value={collection[attr.value]} type={attr.type} gridClass="col-md-12"/>;
+                  return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-xs-12" type="component" />;
+                return <HeaderAttribute key={attr.label + index} label={attr.label} value={collection[attr.value]} type={attr.type} gridClass="col-xs-12"/>;
               })
             }
-            <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-md-12" />
+            <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-xs-12" />
             {
               hasManyHiddenAttributes ?
-              <div className='col-md-12 no-side-padding'>
+              <div className='col-xs-12 no-side-padding'>
                 <CollapsibleAttributes
                   hiddenAttributes={getHiddenAttributes()}
                   object={collection}
@@ -214,12 +214,12 @@ const CollectionHomeHeader = ({
               <React.Fragment>
                 {
                   map(getHiddenAttributes(), (attr, index) => (
-                    <HeaderAttribute key={attr.label + index} label={attr.label} value={get(collection, attr.value)} gridClass="col-md-12" type={attr.type} />
+                    <HeaderAttribute key={attr.label + index} label={attr.label} value={get(collection, attr.value)} gridClass="col-xs-12" type={attr.type} />
                   ))
                 }
               </React.Fragment>
             }
-            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {
                 collection.website &&
                 <span>
