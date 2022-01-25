@@ -93,6 +93,10 @@ const SourceHomeHeader = ({
     APIService.new().overrideURL(source.url).delete().then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success('Source Deleted', 1, () => window.location.hash = source.owner_url)
+      if(get(response, 'status') === 202)
+        alertifyjs.success('Source Delete Accepted. This may take few minutes.')
+      if(get(response, 'status') === 400)
+        alertifyjs.error(get(response, 'data.detail', 'Source Delete Failed'))
       else
         alertifyjs.error('Something bad happened!')
     })
