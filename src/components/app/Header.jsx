@@ -177,13 +177,13 @@ const Header = props => {
               {getLogo()}
             </a>
           </Typography>
-          <div className="col-sm-8">
+          <div className="col-sm-8 col-xs-6">
             {
               !isAtGlobalSearch() &&
               <SearchInput {...props} />
             }
           </div>
-          <div className='col-sm-4 pull-right no-side-padding'style={{textAlign: 'right'}}>
+          <div className='col-sm-4 col-xs-6 pull-right no-side-padding'style={{textAlign: 'right'}}>
             {
               canSwitchServer() && isServerSwitched() &&
               <ServerConfigsChip />

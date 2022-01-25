@@ -99,9 +99,9 @@ const SourceHomeHeader = ({
   }
 
   return (
-    <header className='home-header col-md-12' style={{backgroundColor: WHITE}}>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon'>
+    <header className='home-header col-xs-12' style={{backgroundColor: WHITE}}>
+      <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
+        <div className='no-side-padding col-xs-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
             onUpload={onLogoUpload}
@@ -109,8 +109,8 @@ const SourceHomeHeader = ({
             shrink={!openHeader}
           />
         </div>
-        <div className='col-md-11'>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
+        <div className='col-xs-11'>
+          <div className='col-xs-12 no-side-padding flex-vertical-center'>
             <OwnerButton {...source} href={versionedObjectURL} />
             <span className='separator'>/</span>
             <SourceButton label={source.short_code} href={`#${versionedObjectURL}`} />
@@ -163,30 +163,30 @@ const SourceHomeHeader = ({
               </ButtonGroup>
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name'>
             <span style={{marginRight: '10px'}}>
               {source.full_name}
             </span>
             <AccessChip publicAccess={source.public_access} />
           </div>
-          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+          <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
               source.description &&
-              <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
                 {source.description}
               </div>
             }
             {
               map(getVisibleAttributes(), (attr, index) => {
                 if (attr.value === "supported_locales" || attr.value === "default_locale")
-                  return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-md-12" type="component" />;
-                return <HeaderAttribute key={attr.label + index} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-md-12"/>;
+                  return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-xs-12" type="component" />;
+                return <HeaderAttribute key={attr.label + index} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-xs-12"/>;
               })
             }
-            <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-md-12" />
+            <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-xs-12" />
             {
               hasManyHiddenAttributes ?
-              <div className='col-md-12 no-side-padding'>
+              <div className='col-xs-12 no-side-padding'>
                 <CollapsibleAttributes
                   object={source}
                   hiddenAttributes={getHiddenAttributes()}
@@ -195,12 +195,12 @@ const SourceHomeHeader = ({
               <React.Fragment>
                 {
                   map(getHiddenAttributes(), (attr, index) => (
-                    <HeaderAttribute key={attr.label + index} label={attr.label} value={get(source, attr.value)} gridClass="col-md-12" type={attr.type} />
+                    <HeaderAttribute key={attr.label + index} label={attr.label} value={get(source, attr.value)} gridClass="col-xs-12" type={attr.type} />
                   ))
                 }
               </React.Fragment>
             }
-            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {
                 source.website &&
                 <span style={{marginRight: '10px'}}>

@@ -710,9 +710,9 @@ class Search extends React.Component {
     const isUnderUserHome = nested && parentResource === 'user';
     const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
     return (
-      <div className='col-sm-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
+      <div className='col-xs-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-9 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
+          <div className='col-sm-9 col-xs-7 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
             {
               fhir ?
               <SearchByAttributeInput
@@ -727,7 +727,7 @@ class Search extends React.Component {
               />
             }
           </div>
-          <div className='col-sm-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
+          <div className='col-xs-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
             <span style={{margin: '0 20px', marginTop: '-4px'}}>
               <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} disabled={fhir && !hapi} />
             </span>
@@ -747,16 +747,16 @@ class Search extends React.Component {
           </div>
           {
             !nested &&
-            <div className='col-sm-12' style={{marginTop: '5px', padding: '0px'}}>
+            <div className='col-xs-12' style={{marginTop: '5px', padding: '0px'}}>
               <ResourceTabs active={resource} results={results} onClick={this.onResourceChange} />
             </div>
           }
           {
             isLoading ?
-            <div className='col-sm-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center', width: '100%'}}>
+            <div className='col-xs-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center', width: '100%'}}>
               <CircularProgress style={{color: BLUE}}/>
             </div> :
-            <div className='col-sm-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
+            <div className='col-xs-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               {
                 isTable ?
                 <ResultsTable

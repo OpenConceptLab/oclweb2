@@ -27,14 +27,14 @@ const RowComponent = ({resource, item, onSelect, viewFields, history, currentLay
   }
 
   return (
-    <div className='col-sm-12 no-side-padding' key={item.uuid || item.id} style={{width: '100%'}}>
+    <div className='col-xs-12 no-side-padding' key={item.uuid || item.id} style={{width: '100%'}}>
       {
         isSourceChild &&
-        <div className='col-sm-1 no-left-padding' style={{textAlign: 'right', maxWidth: '2%'}}>
+        <div className='col-xs-1 no-left-padding' style={{textAlign: 'right', maxWidth: '2%'}}>
           <Checkbox size='small' onChange={event => onSelect(event, item.url)} />
         </div>
       }
-      <div className='col-sm-11 no-right-padding' style={{maxWidth: '97%', overflow: 'auto'}}>
+      <div className='col-xs-11 no-right-padding' style={{maxWidth: '97%', overflow: 'auto'}}>
         {getComponent()}
       </div>
       <Divider style={{width: '100%', display: 'inline-block'}} />

@@ -3,7 +3,6 @@ import { CircularProgress } from '@mui/material';
 import { Pagination } from '@mui/material';
 import { map, startCase, uniq, without, filter, includes, isEmpty, get, find, last } from 'lodash';
 import RowComponent from './RowComponent';
-import MinimalRowComponent from './MinimalRowComponent';
 import SelectedResourceControls from './SelectedResourceControls';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -32,11 +31,7 @@ const Results = props => {
   const selectedItemObjects = filter(items, item => includes(selectedList, item.url));
   const resultDOM = () => map(
     items,
-    item => splitView ?
-          <MinimalRowComponent
-            key={item.uuid || item.id} onSelect={onSelectChange}
-            item={item} resource={resource} /> :
-          <RowComponent
+    item => <RowComponent
             key={item.uuid || item.id} onSelect={onSelectChange}
             item={item} resource={resource} viewFields={viewFields}
             history={history} />
@@ -60,7 +55,7 @@ const Results = props => {
   const paginatedResults = () => (
     <React.Fragment>
       { resultDOM() }
-      <div className='col-sm-12 no-side-padding pagination' style={{textAlign: 'center', marginTop: '10px'}}>
+      <div className='col-xs-12 no-side-padding pagination' style={{textAlign: 'center', marginTop: '10px'}}>
         <Pagination
           onChange={(event, page) => onPageChange(page)}
           count={results.pages}
@@ -76,10 +71,10 @@ const Results = props => {
   )
 
   return (
-    <div className='col-sm-12 no-side-padding'>
+    <div className='col-xs-12 no-side-padding'>
       {
         !isEmpty(selectedItemObjects) && !noControls && !splitView && !asReference &&
-        <div className='col-sm-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
+        <div className='col-xs-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
           <SelectedResourceControls
             selectedItems={selectedItemObjects}
             resource={resource}
@@ -91,7 +86,7 @@ const Results = props => {
       }
       {
         total ?
-        <div className='col-sm-12 no-side-padding'>
+        <div className='col-xs-12 no-side-padding'>
           { isInfinite ? infiniteResults() : paginatedResults() }
         </div> :
         <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>

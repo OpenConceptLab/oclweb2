@@ -18,7 +18,7 @@ const STYLES = {
 const LastUpdatedOnLabel = props => {
   const byLabel = props.by ? `by ${props.by}` : '';
   const mainLabel = props.label || 'Last updated';
-  const containerClass = props.noContainerClass ? '' : 'col-sm-12 no-side-padding';
+  const containerClass = props.noContainerClass ? '' : 'col-xs-12 no-side-padding';
   const styles = STYLES[props.iconSize || 'small']
 
   return (

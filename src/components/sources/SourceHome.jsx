@@ -266,7 +266,7 @@ class SourceHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
+          <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
             <SourceHomeHeader
               source={source}
               isVersionedObject={this.isVersionedObject()}

@@ -94,8 +94,8 @@ const SourceHomeTabs = props => {
   const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text'], selectedTabConfig.type) && !selectedTabConfig.uri;
 
   return (
-    <div className='col-md-12 sub-tab' style={{width: width}}>
-      <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
+    <div className='col-xs-12 sub-tab' style={{width: width}}>
+      <Tabs className='sub-tab-header col-xs-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="source-home-tabs" classes={{indicator: 'hidden'}}>
         {
           map(
             tabConfigs,
@@ -116,7 +116,7 @@ const SourceHomeTabs = props => {
       </Tabs>
       {
         hasAccess && isVersionedObject &&
-        <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
+        <div className='col-xs-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>
@@ -149,7 +149,7 @@ const SourceHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
-          <div className='col-md-12'>
+          <div className='col-xs-12'>
             {
               map(selectedTabConfig.fields, field => {
                 const value = field.value || get(source, field.id);
