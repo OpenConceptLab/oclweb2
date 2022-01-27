@@ -132,6 +132,7 @@ class ResourceReferenceForm extends React.Component {
               <Search
                 {...this.props}
                 resource='concepts'
+                asReference
                 nested
                 essentialColumns
                 baseURL={version.url + 'concepts/'}
@@ -147,6 +148,7 @@ class ResourceReferenceForm extends React.Component {
               <Search
                 {...this.props}
                 resource='mappings'
+                asReference
                 nested
                 essentialColumns
                 baseURL={version.url + 'mappings/'}
