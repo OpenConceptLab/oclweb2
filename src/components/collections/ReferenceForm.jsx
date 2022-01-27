@@ -74,14 +74,15 @@ class ReferenceForm extends React.Component {
   }
 
   getResourcesFromExpression(index) {
-    const newState = {...this.state};
-    const expression = get(newState.fields.expressions, index)
+    const expression = get(this.state.fields.expressions, index)
     if(expression.uri) {
       const service = isConcept(expression.uri) ? APIService.concepts() : APIService.mappings()
       service.head(null, null, {uri: expression.uri}).then(response => {
         if(get(response, 'status') === 200) {
           const found = parseInt(get(response, 'headers.num_found'))
           expression.count = (!isNaN(found) && isNumber(found)) ? found : undefined
+          const newState = {...this.state};
+          newState.expressions.splice(index, 1, expression)
           this.setState(newState)
         }
       })
