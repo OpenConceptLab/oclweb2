@@ -8,9 +8,9 @@ import {
 import { Share as ShareIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
-import { formatDate, copyURL } from '../../common/utils';
+import { formatDate, copyURL, toRelativeURL } from '../../common/utils';
 import {
-  BLUE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID
+  BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID
 } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
 import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
@@ -393,6 +393,7 @@ class Search extends React.Component {
         baseURL,
         null,
         response => {
+          this.searchURL = this.convertToExpressionURL(response.request.responseURL)
           if(updateURL && !fhir)
             window.location.hash = this.getCurrentLayoutURL()
           this.onSearchResultsLoad(resource, response, resetItems)
@@ -404,6 +405,24 @@ class Search extends React.Component {
       if(!noHeaders && facets && !fhir && resource !== 'references')
         fetchFacets(_resource, queryParams, baseURL, this.onFacetsLoad)
     })
+  }
+
+  convertToExpressionURL = url => {
+    const urlParts = url.split('?')
+    const queryString = urlParts[1]
+    if(queryString) {
+      let queryParams = new URLSearchParams(queryString)
+      queryParams.delete('sortDesc')
+      queryParams.delete('sortAsc')
+      queryParams.delete('verbose')
+      if(!queryParams.get('q'))
+        queryParams.delete('q')
+      if(queryParams.get('exact_match') === 'off')
+        queryParams.delete('exact_match')
+
+      return urlParts[0] + '?' + queryParams.toString()
+    }
+    return url
   }
 
   loadMore = () => {
@@ -563,7 +582,7 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { nested, extraControls, fhir, extraControlFilters, parentResource, asReference } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters, parentResource, asReference, onAddExpressionClick } = this.props;
     const {
       updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams, userFilters
@@ -575,97 +594,114 @@ class Search extends React.Component {
     const sortOn = sortDesc || sortAsc;
     const sortBy = sortDesc ? 'desc' : 'asc'
     return (
-      <span style={{display: 'inline-flex', alignItems: 'center', width: '135%', overflow: 'auto'}}>
-        {
-          extraControls &&
-          <span style={{paddingRight: '4px'}}>
-            {
-              extraControls
-            }
-          </span>
-        }
-        {
-          resource !== 'references' && !fhir &&
-          <React.Fragment>
-            {
-              includes(['concepts', 'mappings'], resource) &&
-              <span style={{paddingRight: '4px'}}>
-                <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
-              </span>
-            }
+      <React.Fragment>
+        <span style={{display: 'inline-flex', alignItems: 'center', width: '135%', overflow: 'auto'}}>
+          {
+            extraControls &&
             <span style={{paddingRight: '4px'}}>
-              <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
+              {
+                extraControls
+              }
             </span>
-            <span style={{paddingRight: '4px', cursor: isDisabledFilters ? 'not-allowed' : 'pointer'}}>
-              <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
-            </span>
-            {
-              resource === 'concepts' && isTable &&
+          }
+          {
+            resource !== 'references' && !fhir &&
+            <React.Fragment>
+              {
+                includes(['concepts', 'mappings'], resource) &&
+                <span style={{paddingRight: '4px'}}>
+                  <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
+                </span>
+              }
               <span style={{paddingRight: '4px'}}>
-                <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+                <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
               </span>
-            }
-            {
-              isTable ?
-              <span>
-                <BestMatchSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
-              </span> :
-              <span style={{paddingRight: '4px'}}>
-                <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={sortOn} sortBy={sortBy} />
+              <span style={{paddingRight: '4px', cursor: isDisabledFilters ? 'not-allowed' : 'pointer'}}>
+                <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
               </span>
-            }
-          </React.Fragment>
-        }
-        {
-          resource !== 'references' && !fhir && !asReference &&
-          <span style={{paddingLeft: '4px'}}>
-            <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} includeSplitView={nested && isSourceChild && parentResource === 'source'} />
-          </span>
-        }
-        {
-          !isTable &&
-          <span style={{paddingLeft: '4px'}}>
-            <InfiniteScrollChip isInfinite={isInfinite} size={nested ? 'small' : 'medium'} onClick={this.onInfiniteToggle} />
-          </span>
-        }
-        {
-          !isEmpty(viewFilters) &&
-          map(viewFilters, (value, attr) => (
-            <span style={{paddingLeft: '4px'}} key={attr}>
-              <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
+              {
+                resource === 'concepts' && isTable && !asReference &&
+                <span style={{paddingRight: '4px'}}>
+                  <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+                </span>
+              }
+              {
+                isTable ?
+                <span>
+                  <BestMatchSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+                </span> :
+                <span style={{paddingRight: '4px'}}>
+                  <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={sortOn} sortBy={sortBy} />
+                </span>
+              }
+            </React.Fragment>
+          }
+          {
+            resource !== 'references' && !fhir && !asReference &&
+            <span style={{paddingLeft: '4px'}}>
+              <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} includeSplitView={nested && isSourceChild && parentResource === 'source'} />
             </span>
-          ))
-        }
-        {
-          extraControlFilters &&
-          map(extraControlFilters, (definition, id) => (
-            <span style={{paddingLeft: '4px'}} key={id}>
-              <GenericFilterChip
-                id={id}
-                size={nested ? 'small' : 'medium'}
-                onChange={this.onApplyUserFilters}
-                value={get(userFilters, id)}
-                {...definition}
-              />
+          }
+          {
+            !isTable &&
+            <span style={{paddingLeft: '4px'}}>
+              <InfiniteScrollChip isInfinite={isInfinite} size={nested ? 'small' : 'medium'} onClick={this.onInfiniteToggle} />
             </span>
-          ))
-        }
+          }
+          {
+            !isEmpty(viewFilters) &&
+            map(viewFilters, (value, attr) => (
+              <span style={{paddingLeft: '4px'}} key={attr}>
+                <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
+              </span>
+            ))
+          }
+          {
+            extraControlFilters &&
+            map(extraControlFilters, (definition, id) => (
+              <span style={{paddingLeft: '4px'}} key={id}>
+                <GenericFilterChip
+                  id={id}
+                  size={nested ? 'small' : 'medium'}
+                  onChange={this.onApplyUserFilters}
+                  value={get(userFilters, id)}
+                  {...definition}
+                />
+              </span>
+            ))
+          }
+          {
+            resource !== 'references' && !fhir && !asReference &&
+            <span style={{paddingLeft: '4px'}}>
+              <Tooltip title='Copy Link to this results'>
+                <Chip
+                  onClick={this.onShareClick}
+                  icon={<ShareIcon fontSize='small' />}
+                  label='Share'
+                  color='secondary'
+                  variant='outlined'
+                  size={nested ? 'small' : 'medium'}
+                />
+              </Tooltip>
+            </span>
+          }
+        </span>
         {
-          resource !== 'references' && !fhir && !asReference &&
-          <span style={{paddingLeft: '4px'}}>
-            <Tooltip title='Copy Link to this results'>
-              <Chip
-                onClick={this.onShareClick}
-                icon={<ShareIcon fontSize='small' />}
-                label='Share'
-                color='secondary'
-                variant='outlined'
-                size={nested ? 'small' : 'medium'}
-              />
+          asReference && onAddExpressionClick && this.searchURL &&
+          <div style={{width: '100%', display: 'inline-flex', marginTop: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold'}} onClick={event => onAddExpressionClick(event, toRelativeURL(this.searchURL))}>
+            <Tooltip arrow placement='top' title='Add following results as single expression'>
+              <span style={{backgroundColor: GREEN, color: WHITE, padding: '4px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px', border: `1px solid ${GREEN}`}}>
+                Add Expression
+              </span>
             </Tooltip>
-          </span>
+            <Tooltip arrow placement='right' title='Add following results as single expression'>
+              <span style={{color: GREEN, padding: '4px', borderTopRightRadius: '16px', borderBottomRightRadius: '16px', border: `1px solid ${GREEN}`, maxWidth: 'calc(100% - 105px)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>
+                {toRelativeURL(this.searchURL)}
+              </span>
+            </Tooltip>
+          </div>
         }
-      </span>
+      </React.Fragment>
     )
   }
 

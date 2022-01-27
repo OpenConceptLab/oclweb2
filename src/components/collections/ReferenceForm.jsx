@@ -160,6 +160,18 @@ class ReferenceForm extends React.Component {
       window.location.reload()
   }
 
+  onAddSearchExpressionClick = (event, expression) => {
+    event.persist()
+    this.setState(
+      {
+        fields: {
+          ...this.state.fields, expressions: [{...EXPRESSION_MODEL, valid: true, uri: expression}]
+        }
+      },
+      () => this.onSubmit(event)
+    )
+  }
+
   render() {
     const { byURL, byResource, fields, result, cascadeDialog, isSubmitting } = this.state;
     const { onCancel, collection } = this.props;
@@ -196,7 +208,14 @@ class ReferenceForm extends React.Component {
             <form style={{margin: '15px 0'}}>
               {
                 byGlobal &&
-                <Search {...this.props} resource='concepts' nested asReference onSelectChange={this.onExpressionChange} />
+                <Search
+                  {...this.props}
+                  nested
+                  asReference
+                  resource='concepts'
+                  onSelectChange={this.onExpressionChange}
+                  onAddExpressionClick={this.onAddSearchExpressionClick}
+                />
               }
               {
                 byURL &&

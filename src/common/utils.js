@@ -97,6 +97,8 @@ export const toFullURL = uri => window.location.origin + '/#' + uri;
 
 export const toFullAPIURL = uri => getAPIURL() + uri;
 
+export const toRelativeURL = url => url.replace(getAPIURL(), '');
+
 export const copyURL = url => {
   copyToClipboard(url, 'Copied URL to clipboard!');
 }
