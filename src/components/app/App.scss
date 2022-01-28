@@ -462,8 +462,11 @@ div.login-paper {
     }
     &.xsmall {
         img {
-            height: 36.5px;
-            width: 36.5px;
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 100px;
+            max-height: 37px;
         }
         margin-top: 0px;
         height: 36.5px;
