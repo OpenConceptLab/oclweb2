@@ -238,11 +238,11 @@ class SourceHome extends React.Component {
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
 
   getContainerWidth = () => {
-    const { splitView, selected, width } = this.state;
-    if(selected && splitView) {
+    const { selected, width } = this.state;
+    if(selected) {
       if(width)
         return `calc(100% - ${width - 15}px)`
-      return '50%'
+      return '55%'
     }
     return '100%'
   }
@@ -298,12 +298,12 @@ class SourceHome extends React.Component {
           </div>
         }
         {
-          splitView && (isMappingSelected || isConceptSelected) &&
+          (isMappingSelected || isConceptSelected) &&
           <ResponsiveDrawer
-            width="50%"
+            width="45%"
             variant='persistent'
             isOpen
-            onClose={() => this.setState({splitView: false})}
+            onClose={() => this.setState({selected: null})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
               <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#fafbfc'}}>

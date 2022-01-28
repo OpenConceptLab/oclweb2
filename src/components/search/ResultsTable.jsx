@@ -31,7 +31,7 @@ import ReleasedChip from '../common/ReleasedChip';
 import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
-import CommonFormDrawer from '../common/CommonFormDrawer';
+import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import MappingOptions from '../mappings/MappingOptions';
@@ -346,9 +346,8 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    showPin, columns, hapi, fhir, history, asReference
+    showPin, columns, hapi, fhir, history, asReference, onContextMenu
   } = props;
-  const [details, setDetails] = React.useState(false);
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
   const [mappings, setMappings] = React.useState([]);
   const [versions, setVersions] = React.useState([]);
@@ -367,10 +366,10 @@ const ExpandibleRow = props => {
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
-                                        ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
-                                           (isSelectable ? 1 : 0) + // select column
-                                            ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                          (tags ? 1 : 0); //tags column
+                                         ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
+                                            (isSelectable ? 1 : 0) + // select column
+                                             ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                           (tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -452,20 +451,18 @@ const ExpandibleRow = props => {
       else
         url = `/fhir${getOCLFHIRResourceURL(item)}`
     } else {
-      if(isSourceChild && (!item.is_latest_version || window.location.hash.includes('/collections/')))
-        url = item.version_url
-      else
-        url = item.url
+      if(props.containerOnSelectChange) {
+        event.persist()
+        onCheckboxClick(event)
+      } else {
+        if(isSourceChild && (!item.is_latest_version || window.location.hash.includes('/collections/')))
+          url = item.version_url
+        else
+          url = item.url
+      }
     };
 
     history.push(url)
-  }
-
-  const onContextMenu = event => {
-    if(item.concept_class || item.map_type) {
-      event.preventDefault()
-      setDetails(true)
-    }
   }
 
   const handleTabChange = (event, newValue) => setTab(newValue);
@@ -576,7 +573,7 @@ const ExpandibleRow = props => {
       <TableRow
         hover
         style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
-        onContextMenu={onContextMenu}
+        onContextMenu={event => onContextMenu(event, item)}
         onClick={onRowClick}>
         {
           isConceptContainer &&
@@ -734,23 +731,6 @@ const ExpandibleRow = props => {
           </TableCell>
         </TableRow>
       }
-      {
-        details &&
-        <CommonFormDrawer
-          size='large'
-          isOpen={details}
-          onClose={() => setDetails(false)}
-          formComponent={
-            item.concept_class ?
-                         <ConceptHome
-                           noRedirect concept={item} location={{pathname: item.version_url}} match={{params: {conceptVersion: (!item.is_latest_version || window.location.hash.includes('/collections/')) ? item.version : null }}}
-                         /> :
-                         <MappingHome
-                           noRedirect mapping={item} location={{pathname: item.version_url}} match={{params: {mappingVersion: (!item.is_latest_version || window.location.hash.includes('/collections/')) ? item.version : null}}}
-                         />
-          }
-        />
-      }
     </React.Fragment>
   )
 }
@@ -763,6 +743,7 @@ const ResultsTable = (
     onSelect, asReference, onSelectChange
   }
 ) => {
+  const [details, setDetails] = React.useState(null);
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
   const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
   const theadTextColor = get(resourceDefinition, 'headTextColor', WHITE);
@@ -833,6 +814,18 @@ const ResultsTable = (
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
   const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
+
+  const onContextMenu = (event, item) => {
+    if(item.concept_class || item.map_type) {
+      event.preventDefault()
+      if(onSelectChange) {
+        event.persist()
+        updateSelected(item.id, true)
+      } else {
+        setDetails(item)
+      }
+    }
+  }
 
   return (
     <div className='col-sm-12 no-side-padding'>
@@ -930,7 +923,9 @@ const ResultsTable = (
                       resource={resource}
                       resourceDefinition={resourceDefinition}
                       isSelected={includes(selectedList, item.id)}
+                      onContextMenu={onContextMenu}
                       onSelectChange={updateSelected}
+                      containerOnSelectChange={onSelectChange}
                       isSelectable={isSelectable}
                       onPinCreate={onPinCreate}
                       onPinDelete={onPinDelete}
@@ -964,6 +959,30 @@ const ResultsTable = (
           </TableContainer>
         </div> :
         <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
+      }
+      {
+        details &&
+        <ResponsiveDrawer
+          width='45%'
+          variant='persistent'
+          isOpen={Boolean(details)}
+          onClose={() => setDetails(null)}
+          formComponent={
+            details.concept_class ?
+                         <ConceptHome
+                           scoped
+                           singleColumn
+                           onClose={() => setDetails(null)}
+                                   concept={details} location={{pathname: details.version_url || details.url}} match={{params: {conceptVersion: (!details.is_latest_version || window.location.hash.includes('/collections/')) ? details.version : null }}}
+                         /> :
+                         <MappingHome
+                           scoped
+                           singleColumn
+                           onClose={() => setDetails(null)}
+                                   noRedirect mapping={details} location={{pathname: details.version_url || details.url}} match={{params: {mappingVersion: (!details.is_latest_version || window.location.hash.includes('/collections/')) ? details.version : null}}}
+                         />
+          }
+        />
       }
     </div>
   )
