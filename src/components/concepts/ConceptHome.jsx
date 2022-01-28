@@ -54,8 +54,11 @@ class ConceptHome extends React.Component {
   }
 
   getConceptURLFromPath() {
+    const { location, match, scoped } = this.props;
+    if(scoped)
+      return location.pathname
+
     let uri;
-    const { location, match } = this.props;
     if(location.pathname.indexOf('/details') > -1)
       uri = location.pathname.split('/details')[0] + '/'
     else if(location.pathname.indexOf('/history') > -1)
