@@ -47,7 +47,8 @@ const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChang
       document.body.offsetWidth - (e.clientX - document.body.offsetLeft);
     if (offsetRight > minWidth && offsetRight < maxWidth) {
       setDrawerWidth(offsetRight)
-      onWidthChange(offsetRight)
+      if(onWidthChange)
+        onWidthChange(offsetRight)
     }
 
   }, []);

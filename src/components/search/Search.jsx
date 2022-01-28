@@ -21,6 +21,7 @@ import ResultsTable from './ResultsTable';
 import SortButton from './SortButton';
 import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
+import SearchFilters from './SearchFilters';
 import SearchByAttributeInput from './SearchByAttributeInput';
 import ResourceTabs from './ResourceTabs';
 import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
@@ -595,7 +596,7 @@ class Search extends React.Component {
     const sortBy = sortDesc ? 'desc' : 'asc'
     return (
       <React.Fragment>
-        <span style={{display: 'inline-flex', alignItems: 'center', width: '135%', overflow: 'auto'}}>
+        <span style={{display: 'inline-flex', alignItems: 'center', overflow: 'auto'}}>
           {
             extraControls &&
             <span style={{paddingRight: '4px'}}>
@@ -748,19 +749,11 @@ class Search extends React.Component {
     return (
       <div className='col-xs-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-9 col-xs-7 no-side-padding' style={{textAlign: 'center', marginBottom: '5px'}}>
+          <div className='col-sm-9 col-xs-7 no-side-padding' style={{textAlign: 'center'}}>
             {
               fhir ?
-              <SearchByAttributeInput
-                {...this.props}
-                onSearch={this.onFhirSearch}
-              /> :
-              <SearchInput
-                {...this.props}
-                onSearch={this.onSearch}
-                exactMatchOnNewLine
-                moreControls={!noFilters && this.getFilterControls()}
-              />
+              <SearchByAttributeInput {...this.props} onSearch={this.onFhirSearch} /> :
+              <SearchInput {...this.props} onSearch={this.onSearch} />
             }
           </div>
           <div className='col-xs-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
@@ -780,6 +773,9 @@ class Search extends React.Component {
                 )
               }
             </span>
+          </div>
+          <div className='col-sm-12 no-side-padding'>
+            <SearchFilters nested={nested} controls={!noFilters && this.getFilterControls()} />
           </div>
           {
             !nested &&

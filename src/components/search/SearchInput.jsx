@@ -96,63 +96,58 @@ class SearchInput extends React.Component {
 
   render() {
     const { input, exactMatch, siteTitle } = this.state
-    const { moreControls, searchInputPlaceholder, nested, noExactMatch } = this.props
-    const marginBottom = (isAtGlobalSearch() || nested) ? '10px' : '0px';
+    const { searchInputPlaceholder, nested, noExactMatch } = this.props
+    const marginBottom = (isAtGlobalSearch() || nested) ? '5px' : '0px';
     return (
-      <div className='col-sm-12 no-side-padding'>
-        <div className='col-sm-12 no-side-padding' style={{marginBottom: marginBottom, display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
-          <InputBase
-            style={{flex: 1, marginLeft: '10px'}}
-            placeholder={searchInputPlaceholder || `Search ${siteTitle}`}
-            inputProps={{ 'aria-label': 'search ocl' }}
-            value={input || ''}
-            fullWidth
-            onChange={this.handleInputChange}
-            onKeyPress={this.handleKeyPress}
-          />
-          {
-            input &&
-            <Tooltip arrow title='Clear'>
-              <IconButton
-                type="submit"
-                style={{padding: '10px'}}
-                aria-label="clear"
-                onClick={this.clearSearch}
-                size="large">
-                <ClearIcon />
-              </IconButton>
-            </Tooltip>
-          }
-          <Tooltip arrow title='Search'>
+      <div className='col-sm-12 no-side-padding' style={{marginBottom: marginBottom, display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
+        <InputBase
+          style={{flex: 1, marginLeft: '10px'}}
+          placeholder={searchInputPlaceholder || `Search ${siteTitle}`}
+          inputProps={{ 'aria-label': 'search ocl' }}
+          value={input || ''}
+          fullWidth
+          onChange={this.handleInputChange}
+          onKeyPress={this.handleKeyPress}
+        />
+        {
+          input &&
+          <Tooltip arrow title='Clear'>
             <IconButton
               type="submit"
               style={{padding: '10px'}}
-              aria-label="search"
-              onClick={this.performSearch}
+              aria-label="clear"
+              onClick={this.clearSearch}
               size="large">
-              <SearchIcon />
+              <ClearIcon />
             </IconButton>
           </Tooltip>
-          {
-            !noExactMatch &&
-            <React.Fragment>
-              <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
-              <Tooltip arrow title='Exact Match'>
-                <IconButton
-                  color={exactMatch === 'on' ? "primary" : "default"}
-                  style={{padding: '10px'}}
-                  aria-label="exact"
-                  onClick={this.handleExactMatchChange}
-                  size="large">
-                  <ExactMatchIcon />
-                </IconButton>
-              </Tooltip>
-            </React.Fragment>
-          }
-        </div>
-        <div style={{textAlign: 'left'}}>
-          {moreControls}
-        </div>
+        }
+        <Tooltip arrow title='Search'>
+          <IconButton
+            type="submit"
+            style={{padding: '10px'}}
+            aria-label="search"
+            onClick={this.performSearch}
+            size="large">
+            <SearchIcon />
+          </IconButton>
+        </Tooltip>
+        {
+          !noExactMatch &&
+          <React.Fragment>
+            <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
+            <Tooltip arrow title='Exact Match'>
+              <IconButton
+                color={exactMatch === 'on' ? "primary" : "default"}
+                style={{padding: '10px'}}
+                aria-label="exact"
+                onClick={this.handleExactMatchChange}
+                size="large">
+                <ExactMatchIcon />
+              </IconButton>
+            </Tooltip>
+          </React.Fragment>
+        }
       </div>
     );
   }
