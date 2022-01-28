@@ -187,9 +187,11 @@ class ConceptHierarchyTree extends React.Component {
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
           const sourceHeader = d.data.target_source ? `<div><span class='gray'>Source: </span><span><b>${d.data.target_source}</b></span></div> ` : '';
+          const terminalHeader = (!d.data.terminal && isEmpty(d.data.children)) ? `<div class="gray-italics-small">(not terminal - cascaded elsewhere)</div> ` : '';
           return (
             `<div>
               ${header}
+              ${terminalHeader}
               ${sourceHeader}
               <div>
                 <span class='gray'>${idLabel}</span>
@@ -236,7 +238,17 @@ class ConceptHierarchyTree extends React.Component {
         .attr('font-style', d => that.existsInOCL(d) ? 'inherit': 'italic')
         .attr("x", d => (d._children ? -6 : 6))
         .attr("text-anchor", d => (d._children ? "end" : "start"))
-        .text(d => d.data.name || d.data.target_concept_code)
+        .text(d => {
+          let name;
+          if(d.data.target_concept_code)
+            name = d.data.target_concept_code
+          else {
+            name = d.data.name
+            if(!d.data.terminal && isEmpty(d.data.children))
+              name += '⁺'
+          }
+          return name
+        })
         .clone(true)
         .lower()
         .attr("stroke-linejoin", "round")
