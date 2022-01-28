@@ -106,7 +106,7 @@ class ConceptHierarchyTree extends React.Component {
     const fontSize = this.props.fontSize || '16';
     const dx = this.props.dx || 60;
     const data = this.state.tree
-    const margin = { top: 10, right: 120, bottom: 10, left: 120 };
+    const margin = { top: 10, right: 120, bottom: 10, left: 150 };
     const root = d3Hierarchy(data);
     const dy = width / 6;
     const tree = d3Tree().nodeSize([dx, dy]);
