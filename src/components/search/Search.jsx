@@ -395,6 +395,8 @@ class Search extends React.Component {
         null,
         response => {
           this.searchURL = this.convertToExpressionURL(response.request.responseURL)
+          if(this.props.onSearchResponse)
+            this.props.onSearchResponse(response, this.searchURL)
           if(updateURL && !fhir)
             window.location.hash = this.getCurrentLayoutURL()
           this.onSearchResultsLoad(resource, response, resetItems)
@@ -420,6 +422,8 @@ class Search extends React.Component {
         queryParams.delete('q')
       if(queryParams.get('exact_match') === 'off')
         queryParams.delete('exact_match')
+      if(queryParams.get('includeRetired') === 'false')
+        queryParams.delete('includeRetired')
 
       return urlParts[0] + '?' + queryParams.toString()
     }
@@ -583,7 +587,7 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { nested, extraControls, fhir, extraControlFilters, parentResource, asReference, onAddExpressionClick } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters, parentResource, asReference } = this.props;
     const {
       updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams, userFilters
@@ -687,21 +691,6 @@ class Search extends React.Component {
             </span>
           }
         </span>
-        {
-          asReference && onAddExpressionClick && this.searchURL &&
-          <div style={{width: '100%', display: 'inline-flex', marginTop: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold'}} onClick={event => onAddExpressionClick(event, toRelativeURL(this.searchURL))}>
-            <Tooltip arrow placement='top' title='Add following results as single expression'>
-              <span style={{backgroundColor: GREEN, color: WHITE, padding: '4px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px', border: `1px solid ${GREEN}`}}>
-                Add Expression
-              </span>
-            </Tooltip>
-            <Tooltip arrow placement='right' title='Add following results as single expression'>
-              <span style={{color: GREEN, padding: '4px', borderTopRightRadius: '16px', borderBottomRightRadius: '16px', border: `1px solid ${GREEN}`, maxWidth: 'calc(100% - 105px)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>
-                {toRelativeURL(this.searchURL)}
-              </span>
-            </Tooltip>
-          </div>
-        }
       </React.Fragment>
     )
   }
@@ -777,6 +766,19 @@ class Search extends React.Component {
           <div className='col-sm-12 no-side-padding'>
             <SearchFilters nested={nested} controls={!noFilters && this.getFilterControls()} />
           </div>
+          {
+            nested && asReference && this.searchURL &&
+            <div className='col-sm-12 no-side-padding'>
+              <div style={{width: '100%', display: 'inline-flex', marginTop: '4px', fontSize: '12px', fontWeight: 'bold'}}>
+                <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{backgroundColor: GREEN, color: WHITE, padding: '4px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px', border: `1px solid ${GREEN}`, textAlign: 'center', cursor: 'pointer'}}>
+                  Copy Expression
+                </span>
+                <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{color: GREEN, padding: '4px', borderTopRightRadius: '16px', borderBottomRightRadius: '16px', border: `1px solid ${GREEN}`, maxWidth: 'calc(100% - 105px)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', cursor: 'pointer'}}>
+                  {toRelativeURL(this.searchURL)}
+                </span>
+              </div>
+            </div>
+          }
           {
             !nested &&
             <div className='col-xs-12' style={{marginTop: '5px', padding: '0px'}}>

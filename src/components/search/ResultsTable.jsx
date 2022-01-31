@@ -767,9 +767,13 @@ const ResultsTable = (
   const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
 
-  const onAllSelect = event => event.target.checked ?
-                             setSelectedList(map(results.items, 'id')) :
-                             setSelectedList([]);
+  const onAllSelect = event => {
+    const newList = event.target.checked ? map(results.items, 'id') : [];
+    setSelectedList(newList)
+
+    if(onSelectChange)
+      onSelectChange(isEmpty(newList) ? [] : map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
+  };
   const updateSelected = (id, selected) => {
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
