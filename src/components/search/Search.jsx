@@ -763,9 +763,12 @@ class Search extends React.Component {
               }
             </span>
           </div>
-          <div className='col-sm-12 no-side-padding'>
-            <SearchFilters nested={nested} controls={!noFilters && this.getFilterControls()} />
-          </div>
+          {
+            resource !== 'references' &&
+            <div className='col-sm-12 no-side-padding'>
+              <SearchFilters nested={nested} controls={!noFilters && this.getFilterControls()} />
+            </div>
+          }
           {
             nested && asReference && this.searchURL &&
             <div className='col-sm-12 no-side-padding'>
