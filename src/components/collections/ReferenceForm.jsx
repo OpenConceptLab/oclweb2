@@ -92,7 +92,7 @@ class ReferenceForm extends React.Component {
           const found = parseInt(get(response, 'headers.num_found'))
           expression.count = (!isNaN(found) && isNumber(found)) ? found : undefined
           const newState = {...this.state};
-          newState.expressions.splice(index, 1, expression)
+          newState.fields.expressions.splice(index, 1, expression)
           this.setState(newState)
         }
       })
@@ -184,11 +184,6 @@ class ReferenceForm extends React.Component {
 
   onSearchResponse = (response, searchExpression) => this.setState({searchExpression: toRelativeURL(searchExpression)})
 
-  onSelectedOptionClick = event => {
-    event.persist()
-    this.onOptionClick(event, this.state.selectedOption)
-  }
-
   handleOptionsToggle = () => this.setState({openOptions: !this.state.openOptions})
 
   getSecondaryOptions = () => {
@@ -196,9 +191,9 @@ class ReferenceForm extends React.Component {
       return []
     let options = []
     if(this.state.selectedOption.id === 'addExpression')
-      options = [ADD_SELECTED_OPTION, ...options]
+      options = [ADD_EXPRESSION_OPTION, ADD_SELECTED_OPTION, ...options]
     else if(this.state.selectedOption.id === 'addSelected')
-      options = [ADD_EXPRESSION_OPTION, ...options]
+      options = [ADD_SELECTED_OPTION, ADD_EXPRESSION_OPTION, ...options]
     return uniqBy(options, 'id')
   }
 
@@ -214,7 +209,7 @@ class ReferenceForm extends React.Component {
   render() {
     const {
       byURL, byResource, fields, result, cascadeDialog, isSubmitting,
-      selectedOption, openOptions
+      openOptions
     } = this.state;
     const { onCancel, collection } = this.props;
     const byGlobal = !byResource && !byURL;
@@ -246,19 +241,13 @@ class ReferenceForm extends React.Component {
                 Add
               </Button> :
               <React.Fragment>
-                <ButtonGroup variant="outlined" ref={this.anchorRef}>
-                  <Button onClick={this.onSelectedOptionClick}>{selectedOption.label}</Button>
-                  {
-                    !isEmpty(secondaryOptions) &&
-                    <Button size='small' onClick={this.handleOptionsToggle}>
-                      <DownIcon />
-                    </Button>
-                  }
-                </ButtonGroup>
+                <Button color='primary' variant='outlined' onClick={isEmpty(secondaryOptions) ? this.onSelectedOptionClick : this.handleOptionsToggle} ref={this.anchorRef} endIcon={!isEmpty(secondaryOptions) ? <DownIcon /> : null}>
+                  Add
+                </Button>
                 <PopperGrow minWidth='100px' open={openOptions} anchorRef={this.anchorRef} handleClose={this.handleOptionsToggle}>
                   <List dense>
                     {
-                      map(this.getSecondaryOptions(), option => (
+                      map(secondaryOptions, option => (
                         <ListItem key={option.id}>
                           <ListItemButton onClick={event => this.onOptionClick(event, option)}>{option.label}</ListItemButton>
                         </ListItem>
