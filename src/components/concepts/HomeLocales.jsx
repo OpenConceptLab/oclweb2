@@ -26,7 +26,7 @@ const groupLocales = (locales, source) => {
   const grouped = groupBy(locales, 'locale')
   const supportedLocales = get(source, 'supported_locales') || []
 
-  if(get(source, 'default_locale'))
+  if(get(source, 'default_locale') && grouped[source.default_locale])
     groupedBySource.defaultLocales[source.default_locale] = grouped[source.default_locale]
 
   forEach(supportedLocales, locale => {
