@@ -455,7 +455,7 @@ const ExpandibleRow = props => {
         event.persist()
         onCheckboxClick(event)
       } else {
-        if(isSourceChild && (!item.is_latest_version || window.location.hash.includes('/collections/')))
+        if(isSourceChild && (item.uuid !== item.versioned_object_id.toString() || window.location.hash.includes('/collections/')))
           url = item.version_url
         else
           url = item.url
