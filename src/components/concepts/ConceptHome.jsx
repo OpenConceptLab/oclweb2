@@ -93,11 +93,13 @@ class ConceptHome extends React.Component {
                     this.setState({isLoading: false}, () => {throw response})
                   else
                     this.setState({isLoading: false, concept: response.data}, () => {
-                      this.getHierarchy()
                       this.getVersions()
                       this.getMappings()
-                      this.getParents()
-                      this.getChildren()
+                      if(!this.props.scoped) {
+                        this.getHierarchy()
+                        this.getParents()
+                        this.getChildren()
+                      }
                       this.getCollectionVersions()
                       this.fetchParent()
                     })
