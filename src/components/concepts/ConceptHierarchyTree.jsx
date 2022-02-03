@@ -187,7 +187,16 @@ class ConceptHierarchyTree extends React.Component {
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
           const sourceHeader = d.data.target_source ? `<div><span class='gray'>Source: </span><span><b>${d.data.target_source}</b></span></div> ` : '';
-          const terminalHeader = (!d.data.terminal && isEmpty(d.data.children)) ? `<div class="gray-italics-small">(not terminal - cascaded elsewhere)</div> ` : '';
+          let terminalHeader = '';
+          if(!d.data.target_concept_code && isEmpty(d.data.children)) {
+
+            if(d.data.uuid === d.parent.data.uuid)
+              terminalHeader = '<div class="gray-italics-small">(Same As Parent)</div> ';
+            else if(d.data.terminal === false)
+              terminalHeader = '<div class="gray-italics-small">(not terminal - cascaded elsewhere)</div> ';
+            else if(d.data.terminal === null)
+              terminalHeader = '<div class="gray-italics-small">(may be not terminal)</div> ';
+          }
           return (
             `<div>
               ${header}
@@ -244,8 +253,12 @@ class ConceptHierarchyTree extends React.Component {
             name = d.data.target_concept_code
           else {
             name = d.data.name
-            if(!d.data.terminal && isEmpty(d.data.children))
-              name += '⁺'
+            if(isEmpty(d.data.children) && d.data.uuid !== d.parent.data.uuid) {
+              if(d.data.terminal === false)
+                name += '⁺'
+              else if (d.data.terminal === null)
+                name += '^'
+            }
           }
           return name
         })
