@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import { Button, ButtonGroup, List, ListItem, ListItemButton } from '@mui/material';
 import { ArrowDropDown as DownIcon } from '@mui/icons-material';
 import {
-  set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map, compact, uniqBy
+  set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map, compact
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { SOURCE_CHILD_URI_REGEX } from '../../common/constants';
@@ -17,6 +17,9 @@ import Search from '../search/Search';
 
 const EXPRESSION_MODEL = {uri: '', valid: false, count: undefined, error: ''}
 const ADD_EXPRESSION_OPTION = {id: 'addExpression', label: 'Add as Expression'}
+const ADD_CONCEPTS_EXPRESSION_OPTION = {id: 'addConceptsExpression', label: 'Add Concepts Expression'}
+const ADD_MAPPINGS_EXPRESSION_OPTION = {id: 'addMappingsExpression', label: 'Add Mappings Expression'}
+const ADD_BOTH_EXPRESSION_OPTION = {id: 'addBothExpression', label: 'Add Concepts and Mappings Expression'}
 const ADD_SELECTED_OPTION = {id: 'addSelected', label: 'Add Selected'}
 class ReferenceForm extends React.Component {
   constructor(props) {
@@ -25,6 +28,8 @@ class ReferenceForm extends React.Component {
     this.anchorRef = React.createRef()
     this.state = {
       searchExpression: null,
+      conceptsSearchExpression: null,
+      mappingsSearchExpression: null,
       openOptions: false,
       selectedOption: ADD_EXPRESSION_OPTION,
       isSubmitting: false,
@@ -170,12 +175,12 @@ class ReferenceForm extends React.Component {
       window.location.reload()
   }
 
-  onAddSearchExpressionClick = (event, expression) => {
+  onAddSearchExpressionClick = (event, expressions) => {
     event.persist()
     this.setState(
       {
         fields: {
-          ...this.state.fields, expressions: [{...EXPRESSION_MODEL, valid: true, uri: expression}]
+          ...this.state.fields, expressions: map(expressions, expression => ({...EXPRESSION_MODEL, valid: true, uri: expression}))
         }
       },
       () => this.onSubmit(event)
@@ -184,24 +189,33 @@ class ReferenceForm extends React.Component {
 
   onSearchResponse = (response, searchExpression) => this.setState({searchExpression: toRelativeURL(searchExpression)})
 
+  onConceptsSearchResponse = (response, searchExpression) => this.setState({conceptsSearchExpression: toRelativeURL(searchExpression)})
+
+  onMappingsSearchResponse = (response, searchExpression) => this.setState({mappingsSearchExpression: toRelativeURL(searchExpression)})
+
   handleOptionsToggle = () => this.setState({openOptions: !this.state.openOptions})
 
   getSecondaryOptions = () => {
-    if(this.state.byURL || this.state.byResource)
+    if(this.state.byURL)
       return []
-    let options = []
-    if(this.state.selectedOption.id === 'addExpression')
-      options = [ADD_EXPRESSION_OPTION, ADD_SELECTED_OPTION, ...options]
-    else if(this.state.selectedOption.id === 'addSelected')
-      options = [ADD_SELECTED_OPTION, ADD_EXPRESSION_OPTION, ...options]
-    return uniqBy(options, 'id')
+
+    if(this.state.byResource)
+      return [ADD_SELECTED_OPTION, ADD_CONCEPTS_EXPRESSION_OPTION, ADD_MAPPINGS_EXPRESSION_OPTION, ADD_BOTH_EXPRESSION_OPTION]
+
+    return [ADD_EXPRESSION_OPTION, ADD_SELECTED_OPTION]
   }
 
   onOptionClick = (event, option) => {
     event.persist()
     const selectedOption = option || this.state.selectedOption
     if(selectedOption.id === 'addExpression')
-      this.onAddSearchExpressionClick(event, this.state.searchExpression)
+      this.onAddSearchExpressionClick(event, [this.state.searchExpression])
+    else if(selectedOption.id === 'addConceptsExpression')
+      this.onAddSearchExpressionClick(event, [this.state.conceptsSearchExpression])
+    else if(selectedOption.id === 'addMappingsExpression')
+      this.onAddSearchExpressionClick(event, [this.state.mappingsSearchExpression])
+    else if(selectedOption.id === 'addBothExpression')
+      this.onAddSearchExpressionClick(event, [this.state.conceptsSearchExpression, this.state.mappingsSearchExpression])
     else if(selectedOption.id === 'addSelected')
       this.onSubmit(event)
   }
@@ -245,10 +259,10 @@ class ReferenceForm extends React.Component {
                   Add
                 </Button>
                 <PopperGrow minWidth='100px' open={openOptions} anchorRef={this.anchorRef} handleClose={this.handleOptionsToggle}>
-                  <List dense>
+                  <List dense style={{padding: '0px'}}>
                     {
                       map(secondaryOptions, option => (
-                        <ListItem key={option.id}>
+                        <ListItem key={option.id} style={{padding: '2px 0'}}>
                           <ListItemButton onClick={event => this.onOptionClick(event, option)}>{option.label}</ListItemButton>
                         </ListItem>
                       ))
@@ -286,7 +300,11 @@ class ReferenceForm extends React.Component {
               }
               {
                 byResource &&
-                <ResourceReferenceForm onChange={this.onExpressionChange} />
+                <ResourceReferenceForm
+                  onChange={this.onExpressionChange}
+                  onConceptsSearchResponse={this.onConceptsSearchResponse}
+                  onMappingsSearchResponse={this.onMappingsSearchResponse}
+                />
               }
             </form>
           </div>

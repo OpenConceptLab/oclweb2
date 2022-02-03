@@ -92,6 +92,7 @@ class ResourceReferenceForm extends React.Component {
 
   render() {
     const { source, collection, sources, collections, version, versions } = this.state;
+    const { onConceptsSearchResponse, onMappingsSearchResponse } = this.props
     return (
       <div className='col-md-12 no-side-padding'>
         <div className='col-md-4 no-left-padding'>
@@ -142,6 +143,7 @@ class ResourceReferenceForm extends React.Component {
                 noNav
                 noControls
                 onSelectChange={selectedList => this.onSelectChange('concepts', selectedList)}
+                onSearchResponse={onConceptsSearchResponse}
               />
             </div>
             <div className='col-md-6 no-right-padding' style={{marginTop: '15px', width: '50%', minWidth: '50%'}}>
@@ -158,6 +160,7 @@ class ResourceReferenceForm extends React.Component {
                 noNav
                 noControls
                 onSelectChange={selectedList => this.onSelectChange('mappings', selectedList)}
+                onSearchResponse={onMappingsSearchResponse}
               />
             </div>
           </React.Fragment>
