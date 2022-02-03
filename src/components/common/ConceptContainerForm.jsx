@@ -152,19 +152,23 @@ class ConceptContainerForm extends React.Component {
   }
 
   getIdHelperText() {
-    const { defaultIdText, resourceType, urlPath } = this.props
+    const { defaultIdText, resourceType, urlPath, parentURL } = this.props
     const id = this.state.fields.id || `[${defaultIdText}]`
+    const parentURLPath = parentURL || (getCurrentURL() + '/')
     return (
       <span>
         <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
         <span>
-          <span>{`Your new ${resourceType} will live at: `}<br />
-      {
-        `${getCurrentURL()}/${urlPath}/`
-      }
+          <span>
+            {`Your new ${resourceType} will live at: `}
+            <br />
+            {`${parentURLPath}${urlPath}/`}
           </span>
-          <span><b>{id}</b>/</span>
+          <span>
+            <b>{id}</b>
+            /
+          </span>
         </span>
       </span>
     )
