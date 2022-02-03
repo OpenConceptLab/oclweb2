@@ -262,6 +262,7 @@ class AddToCollection extends React.Component {
           onClose={this.toggleCollectionForm}
           formComponent={
             <CollectionForm
+              anonymous
               newCollectionProps={{
                 name: (searchedValue || '').trim()
               }}

@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon , Person as PersonIcon, Home as HomeIcon } from '@mui/icons-material';
 import {
   TextField, IconButton, Button, CircularProgress, Select, MenuItem, FormControl, InputLabel,
   FormControlLabel, Checkbox, FormHelperText
@@ -11,7 +11,8 @@ import {
   find, intersectionBy
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, getCurrentURL } from '../../common/utils';
+import { arrayToObject, getCurrentURL, getCurrentUserUsername, getCurrentUser } from '../../common/utils';
+import { ORANGE } from '../../common/constants';
 import ExtrasForm from './ExtrasForm';
 import RTEditor from './RTEditor';
 import LocaleAutoComplete from './LocaleAutoComplete';
@@ -25,7 +26,11 @@ const JSON_MODEL = {key: '', value: ''}
 class ConceptContainerForm extends React.Component {
   constructor(props) {
     super(props);
+    const currentUser = getCurrentUser()
+    this.CURRENT_USER_OPTION = {id: currentUser.username, url: currentUser.url, type: 'user'}
     this.state = {
+      owners: [this.CURRENT_USER_OPTION],
+      selectedOwner: this.CURRENT_USER_OPTION,
       fields: {
         id: '',
         name: '',
@@ -73,15 +78,22 @@ class ConceptContainerForm extends React.Component {
     }
   }
 
+  isNewCollectionAnonymous() {
+    return !this.props.edit && !this.isSource() && this.props.anonymous
+  }
+
   componentDidMount() {
     const { edit, resource, newCollectionProps } = this.props
+    const isSource = this.isSource()
 
-    this.setState({typeAttr: this.isSource() ? 'source_type' : 'collection_type'}, () => {
+    this.setState({typeAttr: isSource ? 'source_type' : 'collection_type'}, () => {
       if(edit && resource)
         this.setFieldsForEdit()
     })
     if(get(newCollectionProps, 'name'))
       this.setState({fields: {...this.state.fields, name: newCollectionProps.name}})
+    if(this.isNewCollectionAnonymous())
+      this.fetchOrgs()
   }
 
   isSource() {
@@ -151,10 +163,16 @@ class ConceptContainerForm extends React.Component {
     else set(state.fields, field, value)
   }
 
+  getOwnerURL = () => {
+    if(this.isNewCollectionAnonymous())
+      return this.state.selectedOwner.url
+    return this.props.parentURL || (getCurrentURL() + '/')
+  }
+
   getIdHelperText() {
-    const { defaultIdText, resourceType, urlPath, parentURL } = this.props
+    const { defaultIdText, resourceType, urlPath } = this.props
     const id = this.state.fields.id || `[${defaultIdText}]`
-    const parentURLPath = parentURL || (getCurrentURL() + '/')
+    const parentURLPath = this.getOwnerURL()
     return (
       <span>
         <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
@@ -172,6 +190,13 @@ class ConceptContainerForm extends React.Component {
         </span>
       </span>
     )
+  }
+
+  fetchOrgs = () => {
+    const username = getCurrentUserUsername()
+    if(username) {
+      APIService.users(username).orgs().get().then(response => this.setState({owners: [...this.state.owners, ...map(response.data, org => ({...org, type: 'organization'}))]}))
+    }
   }
 
   onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
@@ -201,13 +226,13 @@ class ConceptContainerForm extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { parentURL, edit, urlPath } = this.props
+    const { edit, urlPath } = this.props
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
-    if(parentURL && isFormValid) {
+    if(isFormValid) {
       const fields = this.getPayload()
-      const service = APIService.new().overrideURL(parentURL)
+      const service = APIService.new().overrideURL(this.getOwnerURL())
       if(edit)
         service.put(fields).then(response => this.handleSubmitResponse(response))
       else
@@ -298,7 +323,7 @@ class ConceptContainerForm extends React.Component {
   render() {
     const {
       fields, fieldErrors, locales, selected_default_locale, selected_supported_locales, typeAttr,
-      selected_source_type, selected_collection_type,
+      selected_source_type, selected_collection_type, selectedOwner, owners
     } = this.state;
     const {
       onCancel, edit, types, resourceType, placeholders,
@@ -309,6 +334,7 @@ class ConceptContainerForm extends React.Component {
     const isLoading = false && isEmpty(locales);
     const resourceTypeLabel = startCase(resourceType)
     const header = edit ? `Edit ${resourceTypeLabel}: ${fields.id}` : `New ${resourceTypeLabel}`
+    const shouldShowOwner = this.isNewCollectionAnonymous()
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>
@@ -321,6 +347,48 @@ class ConceptContainerForm extends React.Component {
           </div>:
           <div className='col-md-12 no-side-padding'>
             <form>
+              {
+                shouldShowOwner &&
+                <div className='col-md-12 no-side-padding' style={{marginBottom: '15px'}}>
+                  <Autocomplete
+                    disableClearable
+                    openOnFocus
+                    isOptionEqualToValue={(option, value) => option.id === get(value, 'id') && option.type === get(value, 'type')}
+                    value={selectedOwner}
+                    id='selectedOwner'
+                    options={owners}
+                    getOptionLabel={option => option ? `${option.name || option.id} (${startCase(option.type)})` : ''}
+                    fullWidth
+                    required
+                    renderInput={
+                      params => <TextField
+                                  {...params}
+                                  required
+                                  label='Owner'
+                                         variant="outlined"
+                                         fullWidth
+                      />
+                    }
+                    renderOption={
+                      (props, option) => (
+                        <li {...props} key={`${option.type}-${option.id}`}>
+                          <span className='flex-vertical-center'>
+                            <span style={{marginRight: '5px'}}>
+                              {
+                                option.type === 'organization' ?
+                                <HomeIcon fontSize='small' style={{marginTop: '5px', color: ORANGE, fontSize: '1rem'}} />:
+                                <PersonIcon fontSize='small' style={{marginTop: '5px', color: ORANGE, fontSize: '1rem'}} />
+                              }
+                            </span>
+                            {option.name || option.id}
+                          </span>
+                        </li>
+                      )
+                    }
+                    onChange={(event, item) => this.setFieldValue('selectedOwner', item)}
+                  />
+                </div>
+              }
               {
                 !edit &&
                 <div className='col-md-12 no-side-padding'>
