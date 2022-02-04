@@ -27,6 +27,16 @@ class OverviewSettings extends React.Component {
         description: props.org.description,
         descriptionColor: '',
         descriptionWidth: 40,
+      },
+      shrunkHeader: {
+        background: {
+          image: '',
+          imageOverlay: false,
+          backgroundColor: ''
+        },
+        forground: {
+          color: '',
+        },
       }
     }
   }
@@ -222,6 +232,46 @@ class OverviewSettings extends React.Component {
                 margin="dense"
                 fullWidth
               />
+            </div>
+          </fieldset>
+          <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
+            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Shrunk Header Background &nbsp;</legend>
+            <div className='col-xs-12 no-side-padding flex-vertical-center'>
+              <TextField
+                type='url'
+                label='Background Image URL'
+                id='shrunkHeader.background.image'
+                value={this.state.shrunkHeader.background.image}
+                onChange={this.onTextFieldChange}
+                margin="dense"
+                fullWidth
+              />
+              <span style={{marginLeft: '10px'}}>
+                {
+                  this.getCheckboxControl('shrunkHeader.background.imageOverlay', 'Overlay', !this.state.shrunkHeader.background.image)
+                }
+              </span>
+            </div>
+            <div className='col-xs-12 no-side-padding flex-vertical-center'>
+              {
+                this.getColorField(
+                  'shrunkHeader.background.backgroundColor',
+                  'Background Color',
+                  this.state.shrunkHeader.background.backgroundColor
+                )
+              }
+            </div>
+          </fieldset>
+          <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
+            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Shrunk Header Foreground &nbsp;</legend>
+            <div className='col-xs-12 no-side-padding flex-vertical-center'>
+              {
+                this.getColorField(
+                  'shrunkHeader.forground.color',
+                  'Text Color',
+                  this.state.shrunkHeader.forground.color
+                )
+              }
             </div>
           </fieldset>
           <div className='col-xs-12 no-side-padding flex-vertical-center' style={{margin: '10px', justifyContent: 'center'}}>

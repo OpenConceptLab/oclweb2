@@ -60,8 +60,8 @@ const HomeHeader = ({
   const showSignatures = has(config, 'config.header.signatures') ? config.config.header.signatures : true;
   const customTitle = get(config, 'config.header.forground.title')
   const customDescription = get(config, 'config.header.forground.description')
-  const forgroundTextColor = isExpandedHeader && get(config, 'config.header.forground.color')
-  const customTitleColor = isExpandedHeader && (get(config, 'config.header.forground.titleColor') || forgroundTextColor)
+  const forgroundTextColor = isExpandedHeader ? get(config, 'config.header.forground.color') : get(config, 'config.header.shrunkHeader.forground.color')
+  const customTitleColor = isExpandedHeader ? (get(config, 'config.header.forground.titleColor') || forgroundTextColor) : get(config, 'config.header.shrunkHeader.forground.color')
   const customDescriptionColor = isExpandedHeader && (get(config, 'config.header.forground.descriptionColor') || forgroundTextColor)
   const hasBackgroundImage = Boolean(get(config, 'config.header.background.image'))
   const getBackgroundStyles = () => {
@@ -70,6 +70,7 @@ const HomeHeader = ({
     const headerBackgroundStyles = get(config, 'config.header.background')
     const backgroundColor = get(headerBackgroundStyles, 'backgroundColor')
     const image = get(headerBackgroundStyles, 'image')
+    const shrunkHeaderBackgroundStyles = get(config, 'config.header.shrunkHeader.background')
     if(isExpandedHeader) {
       if(image) {
         styles['backgroundImage'] = `url(${image})`;
@@ -78,6 +79,13 @@ const HomeHeader = ({
       } else if(backgroundColor) {
         styles['backgroundColor'] = backgroundColor
       }
+    } else {
+      if(get(shrunkHeaderBackgroundStyles, 'image')) {
+        styles['backgroundImage'] = `url(${shrunkHeaderBackgroundStyles['image']})`;
+        styles['backgroundSize'] = 'cover';
+        styles['backgroundAttachment'] = 'fixed';
+      } else if (get(shrunkHeaderBackgroundStyles, 'backgroundColor'))
+        styles['backgroundColor'] = shrunkHeaderBackgroundStyles['backgroundColor']
     }
 
     return styles
