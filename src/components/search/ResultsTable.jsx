@@ -50,14 +50,14 @@ const RESOURCE_DEFINITIONS = {
     headTextColor: WHITE,
     columns: ALL_COLUMNS.concepts.slice(0, 7),
     tabs: ['Mappings', 'Synonyms', 'Descriptions', 'History',],
-    expandible: true,
+    expandible: false,
   },
   mappings: {
     headBgColor: BLUE,
     headTextColor: WHITE,
     columns: ALL_COLUMNS.mappings.slice(0, 7),
     tabs: ['History',],
-    expandible: true,
+    expandible: false,
   },
   sources: {
     headBgColor: GREEN,
@@ -366,10 +366,10 @@ const ExpandibleRow = props => {
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
-                                         ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
-                                            (isSelectable ? 1 : 0) + // select column
-                                             ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                           (tags ? 1 : 0); //tags column
+                                            ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
+                                               (isSelectable ? 1 : 0) + // select column
+                                                ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                              (tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -618,8 +618,8 @@ const ExpandibleRow = props => {
         }
         {
           isSelectable &&
-          <TableCell style={{width: '50px'}}>
-            <Checkbox size='small' checked={selected} onClick={onCheckboxClick} />
+          <TableCell style={{maxWidth: '30px', padding: '2px'}} align="center">
+            <Checkbox size='small' style={{padding: '0px'}} checked={selected} onClick={onCheckboxClick} />
           </TableCell>
         }
         {
@@ -743,6 +743,7 @@ const ResultsTable = (
     onSelect, asReference, onSelectChange
   }
 ) => {
+  const [width, setWidth] = React.useState(false);
   const [details, setDetails] = React.useState(null);
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
   const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
@@ -822,7 +823,7 @@ const ResultsTable = (
   const onContextMenu = (event, item) => {
     if(item.concept_class || item.map_type) {
       event.preventDefault()
-      if(onSelectChange) {
+      if(onSelectChange || onSelect) {
         event.persist()
         updateSelected(item.id, true)
       } else {
@@ -831,164 +832,181 @@ const ResultsTable = (
     }
   }
 
+  const getContainerWidth = () => {
+    if(details) {
+      if(width)
+        return `calc(100% - ${width - 15}px)`
+      return '55%'
+    }
+    return '100%'
+  }
+
+  const onCloseSideDrawer = () => {
+    setWidth(false)
+    setDetails(null);
+  }
+
   return (
-    <div className='col-sm-12 no-side-padding'>
-      {
-        canRender ?
-        <div className='col-sm-12 no-side-padding search-results'>
-          <TableContainer style={{borderRadius: '4px'}}>
-            <Table size='small'>
-              <TableHead style={theadStyles}>
-                {
-                  selectedList.length > 0 &&
-                  <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
-                    <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
-                      <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
-                      {
-                        !asReference &&
-                        <SelectedResourceControls
-                          selectedItems={getSelectedItems()}
-                          resource={resource}
-                          onCreateSimilarClick={onCreateSimilarClick}
-                          onCreateMappingClick={onCreateMappingClick}
-                          onReferencesDelete={onReferencesDelete}
-                        />
-                      }
-                    </TableCell>
-                  </TableRow>
-                }
-                <TableRow>
+    <React.Fragment>
+      <div className='col-sm-12 no-side-padding' style={{width: getContainerWidth()}}>
+        {
+          canRender ?
+          <div className='col-sm-12 no-side-padding search-results'>
+            <TableContainer style={{borderRadius: '4px'}}>
+              <Table size='small'>
+                <TableHead style={theadStyles}>
                   {
-                    (isConceptContainer || isValueSet || isConceptMap) &&
-                    <TableCell />
+                    selectedList.length > 0 &&
+                    <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
+                      <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
+                        <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
+                        {
+                          !asReference &&
+                          <SelectedResourceControls
+                            selectedItems={getSelectedItems()}
+                            resource={resource}
+                            onCreateSimilarClick={onCreateSimilarClick}
+                            onCreateMappingClick={onCreateMappingClick}
+                            onReferencesDelete={onReferencesDelete}
+                          />
+                        }
+                      </TableCell>
+                    </TableRow>
                   }
-                  {
-                    isSelectable &&
-                    <TableCell>
-                      <Checkbox size='small' style={{color: theadTextColor}} onChange={onAllSelect} />
-                    </TableCell>
-                  }
-                  {
-                    map(columns, column => {
-                      const isSortable = column.sortable !== false;
-                      return isSortable ? (
-                        <TableCell
-                          key={column.id}
-                          sortDirection={orderBy === column.id ? order : false}
-                          align={column.align || 'left'}
-                          style={{color: theadTextColor}}>
-                          {
-                            column.tooltip ?
-                            <Tooltip arrow placement='top' title={column.tooltip}>
+                  <TableRow>
+                    {
+                      (isConceptContainer || isValueSet || isConceptMap) &&
+                      <TableCell />
+                    }
+                    {
+                      isSelectable &&
+                      <TableCell style={{maxWidth: '30px', padding: '2px'}} align="center">
+                        <Checkbox size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
+                      </TableCell>
+                    }
+                    {
+                      map(columns, column => {
+                        const isSortable = column.sortable !== false;
+                        return isSortable ? (
+                          <TableCell
+                            key={column.id}
+                            sortDirection={orderBy === column.id ? order : false}
+                            align={column.align || 'left'}
+                            style={{color: theadTextColor}}>
+                            {
+                              column.tooltip ?
+                              <Tooltip arrow placement='top' title={column.tooltip}>
+                                <TableSortLabel
+                                  className='table-sort-label-white'
+                                  active={orderBy === column.id}
+                                  direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
+                                  onClick={(event) => onSort(event, column.id)}
+                                  style={{color: theadTextColor}}
+                                >
+                                  { column.label }
+                                </TableSortLabel>
+                              </Tooltip> :
                               <TableSortLabel
                                 className='table-sort-label-white'
                                 active={orderBy === column.id}
                                 direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
                                 onClick={(event) => onSort(event, column.id)}
                                 style={{color: theadTextColor}}
-                              >
+                                >
                                 { column.label }
                               </TableSortLabel>
-                            </Tooltip> :
-                            <TableSortLabel
-                              className='table-sort-label-white'
-                              active={orderBy === column.id}
-                              direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
-                              onClick={(event) => onSort(event, column.id)}
-                              style={{color: theadTextColor}}
-                              >
-                              { column.label }
-                            </TableSortLabel>
-                          }
-                        </TableCell>
-                      ) : (
-                        <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
-                          {column.label}
-                        </TableCell>
-                      )
-                    })
-                  }
+                            }
+                          </TableCell>
+                        ) : (
+                          <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
+                            {column.label}
+                          </TableCell>
+                        )
+                      })
+                    }
+                    {
+                      !isSelectable &&
+                      <TableCell />
+                    }
+                    {
+                      (resourceDefinition.expandible || shouldShowPin) &&
+                      <TableCell />
+                    }
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {
-                    !isSelectable &&
-                    <TableCell />
+                    map(results.items, (item, index) => (
+                      <ExpandibleRow
+                        key={item.uuid || item.id || index}
+                        item={item}
+                        resource={resource}
+                        resourceDefinition={resourceDefinition}
+                        isSelected={includes(selectedList, item.id)}
+                        onContextMenu={onContextMenu}
+                        onSelectChange={updateSelected}
+                        containerOnSelectChange={onSelectChange}
+                        isSelectable={isSelectable}
+                        onPinCreate={onPinCreate}
+                        onPinDelete={onPinDelete}
+                        pins={pins}
+                        nested={nested}
+                        showPin={shouldShowPin}
+                        columns={columns}
+                        hapi={hapi}
+                        fhir={fhir}
+                        history={history}
+                        asReference={asReference}
+                      />
+                    ))
                   }
-                  {
-                    (resourceDefinition.expandible || shouldShowPin) &&
-                    <TableCell />
-                  }
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {
-                  map(results.items, (item, index) => (
-                    <ExpandibleRow
-                      key={item.uuid || item.id || index}
-                      item={item}
-                      resource={resource}
-                      resourceDefinition={resourceDefinition}
-                      isSelected={includes(selectedList, item.id)}
-                      onContextMenu={onContextMenu}
-                      onSelectChange={updateSelected}
-                      containerOnSelectChange={onSelectChange}
-                      isSelectable={isSelectable}
-                      onPinCreate={onPinCreate}
-                      onPinDelete={onPinDelete}
-                      pins={pins}
-                      nested={nested}
-                      showPin={shouldShowPin}
-                      columns={columns}
-                      hapi={hapi}
-                      fhir={fhir}
-                      history={history}
-                      asReference={asReference}
-                    />
-                  ))
-                }
-                <TableRow colSpan={columnsCount}>
-                  <TableCell colSpan={columnsCount} align='center' className='pagination-center'>
-                    <Pagination
-                      onChange={(event, page) => onPageChange(page)}
-                      count={results.pages}
-                      variant="outlined"
-                      shape="rounded"
-                      color="primary"
-                      showFirstButton
-                      showLastButton
-                      page={results.pageNumber}
-                    />
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div> :
-        <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
-      }
+                  <TableRow colSpan={columnsCount}>
+                    <TableCell colSpan={columnsCount} align='center' className='pagination-center'>
+                      <Pagination
+                        onChange={(event, page) => onPageChange(page)}
+                        count={results.pages}
+                        variant="outlined"
+                        shape="rounded"
+                        color="primary"
+                        showFirstButton
+                        showLastButton
+                        page={results.pageNumber}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div> :
+          <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
+        }
+      </div>
       {
         details &&
         <ResponsiveDrawer
           width='45%'
           variant='persistent'
           isOpen={Boolean(details)}
-          onClose={() => setDetails(null)}
+          onClose={onCloseSideDrawer}
+          onWidthChange={newWidth => setWidth(newWidth)}
           formComponent={
             details.concept_class ?
                          <ConceptHome
                            scoped
                            singleColumn
-                           onClose={() => setDetails(null)}
+                           onClose={onCloseSideDrawer}
                                    concept={details} location={{pathname: details.version_url || details.url}} match={{params: {conceptVersion: (!details.is_latest_version || window.location.hash.includes('/collections/')) ? details.version : null }}}
                          /> :
                          <MappingHome
                            scoped
                            singleColumn
-                           onClose={() => setDetails(null)}
+                           onClose={onCloseSideDrawer}
                                    noRedirect mapping={details} location={{pathname: details.version_url || details.url}} match={{params: {mappingVersion: (!details.is_latest_version || window.location.hash.includes('/collections/')) ? details.version : null}}}
                          />
           }
         />
       }
-    </div>
+    </React.Fragment>
   )
 }
 

@@ -303,7 +303,7 @@ class SourceHome extends React.Component {
             width="45%"
             variant='persistent'
             isOpen
-            onClose={() => this.setState({selected: null})}
+            onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
               <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#fafbfc'}}>
@@ -315,7 +315,7 @@ class SourceHome extends React.Component {
                     mapping={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {mappingVersion: null}}}
-                            onClose={() => this.setState({selected: null})}
+                            onClose={() => this.setState({selected: null, width: false})}
                             header={false}
                             noRedirect
                   /> :
@@ -325,7 +325,7 @@ class SourceHome extends React.Component {
                     concept={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {conceptVersion: null}}}
-                            onClose={() => this.setState({selected: null})}
+                            onClose={() => this.setState({selected: null, width: false})}
                             openHierarchy={false}
                             header={false}
                             noRedirect
