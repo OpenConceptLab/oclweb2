@@ -158,7 +158,7 @@ class OverviewSettings extends React.Component {
             </div>
           </fieldset>
           <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
-            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Background &nbsp;</legend>
+            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Background (Overview tab) &nbsp;</legend>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               <TextField
                 type='url'
@@ -186,7 +186,7 @@ class OverviewSettings extends React.Component {
             </div>
           </fieldset>
           <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
-            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Foreground &nbsp;</legend>
+            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Foreground (Overview tab) &nbsp;</legend>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
@@ -235,7 +235,7 @@ class OverviewSettings extends React.Component {
             </div>
           </fieldset>
           <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
-            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Shrunk Header Background &nbsp;</legend>
+            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Background (Other tabs) &nbsp;</legend>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               <TextField
                 type='url'
@@ -263,7 +263,7 @@ class OverviewSettings extends React.Component {
             </div>
           </fieldset>
           <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
-            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Shrunk Header Foreground &nbsp;</legend>
+            <legend style={{color: 'rgba(0, 0, 0, 0.6)'}}>&nbsp; Foreground (Other tabs) &nbsp;</legend>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
