@@ -8,6 +8,9 @@ import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
 import { COLLECTION_DEFAULT_CONFIG } from "../../common/defaultConfigs"
+import ConceptHome from '../concepts/ConceptHome';
+import MappingHome from '../mappings/MappingHome';
+import ResponsiveDrawer from '../common/ResponsiveDrawer';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
 
@@ -16,6 +19,7 @@ class CollectionHome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      width: false,
       notFound: false,
       accessDenied: false,
       permissionDenied: false,
@@ -29,6 +33,7 @@ class CollectionHome extends React.Component {
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
+      selected: null,
     }
   }
 
@@ -138,7 +143,7 @@ class CollectionHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value}, () => {
+    this.setState({tab: value, selected: null}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
     })
@@ -230,16 +235,30 @@ class CollectionHome extends React.Component {
     this.setState(newState)
   }
 
+  onResourceSelect = selected => this.setState({selected: selected})
+
+  getContainerWidth = () => {
+    const { selected, width } = this.state;
+    if(selected) {
+      if(width)
+        return `calc(100% - ${width - 15}px)`
+      return '55%'
+    }
+    return '100%'
+  }
+
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions,
+      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions, selected,
       isLoadingExpansions,
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
     const showAboutTab = this.shouldShowAboutTab();
     const hasError = notFound || accessDenied || permissionDenied;
+    const isMappingSelected = Boolean(selected && get(selected, 'map_type'))
+    const isConceptSelected = Boolean(selected && !isMappingSelected)
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -248,7 +267,7 @@ class CollectionHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-md-12 home-container no-side-padding'>
+          <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
             <CollectionHomeHeader
               collection={collection}
               isVersionedObject={this.isVersionedObject()}
@@ -280,8 +299,47 @@ class CollectionHome extends React.Component {
               isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
               isLoadingVersions={isLoadingVersions}
               isLoadingExpansions={isLoadingExpansions}
+              onSelect={this.onResourceSelect}
             />
           </div>
+        }
+        {
+          (isMappingSelected || isConceptSelected) &&
+          <ResponsiveDrawer
+            width="45%"
+            variant='persistent'
+            isOpen
+            onClose={() => this.setState({selected: null, width: false})}
+            onWidthChange={newWidth => this.setState({width: newWidth})}
+            formComponent={
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#fafbfc'}}>
+                {
+                  isMappingSelected ?
+                  <MappingHome
+                    singleColumn
+                    scoped
+                    mapping={selected}
+                            location={{pathname: selected.version_url || selected.url}}
+                            match={{params: {mappingVersion: selected.verison}}}
+                            onClose={() => this.setState({selected: null, width: false})}
+                            header={false}
+                            noRedirect
+                  /> :
+                  <ConceptHome
+                    singleColumn
+                    scoped
+                    concept={selected}
+                            location={{pathname: selected.version_url || selected.url}}
+                            match={{params: {conceptVersion: selected.version}}}
+                            onClose={() => this.setState({selected: null, width: false})}
+                            openHierarchy={false}
+                            header={false}
+                            noRedirect
+                  />
+                }
+              </div>
+            }
+          />
         }
       </div>
     )

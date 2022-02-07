@@ -19,7 +19,7 @@ const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion, isLoadingExpansions
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion, isLoadingExpansions, onSelect
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -161,6 +161,7 @@ const CollectionHomeTabs = props => {
             extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
             fixedFilters={{limit: selectedTabConfig.page_size, isTable: (selectedTabConfig.layout || '').toLowerCase() !== 'list', sortParams: getSortParams() }}
+            onSelect={onSelect}
           />
         }
       </div>
