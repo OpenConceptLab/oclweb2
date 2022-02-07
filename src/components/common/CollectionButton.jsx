@@ -14,7 +14,7 @@ const CollectionButton = ({label, onClick, href, childURI}) => {
       startIcon={<LoyaltyIcon />}
       onClick={onClick}
       href={uri}
-      style={{background: GREEN, color: WHITE, boxShadow: 'none'}}>
+      style={{background: GREEN, color: WHITE, boxShadow: 'none', textTransform: 'none'}}>
       {label}
     </Button>
   )
