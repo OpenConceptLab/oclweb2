@@ -1,8 +1,9 @@
 import React from 'react';
 import { BLUE, WHITE } from '../../common/constants';
+import { isNumber } from 'lodash';
 
 const TabCountLabel = ({label, count, style, color}) => {
-  if(!count)
+  if(!isNumber(count))
     return <span style={style}>{label}</span>;
 
   return (
