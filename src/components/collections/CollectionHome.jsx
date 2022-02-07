@@ -306,7 +306,7 @@ class CollectionHome extends React.Component {
         {
           (isMappingSelected || isConceptSelected) &&
           <ResponsiveDrawer
-            width="45%"
+            width="44.5%"
             variant='persistent'
             isOpen
             onClose={() => this.setState({selected: null, width: false})}
