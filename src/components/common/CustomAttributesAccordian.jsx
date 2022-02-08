@@ -3,7 +3,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Switch, Grid, Typography
 } from '@mui/material';
 import {
-  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
+  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy, isNumber
 } from 'lodash';
 import { BLUE } from '../../common/constants';
 import CustomAttributes from './CustomAttributes'
@@ -37,15 +37,17 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
     return orderBy(keys(attributes), attr => attr.toLowerCase())
   }
 
+  const count = keys(attributes).length
+
   return (
-    <Accordion expanded>
+    <Accordion expanded={isNumber(count) && count > 0}>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
       >
         <span className='col-xs-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
-          <TabCountLabel label='Attributes' style={headingStyles} count={keys(attributes).length}/>
+          <TabCountLabel label='Attributes' style={headingStyles} count={count}/>
           {
             hasAttributes &&
             <span onClick={onRawClick}>

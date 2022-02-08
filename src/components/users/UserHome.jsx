@@ -147,14 +147,14 @@ class UserHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !hasError &&
-          <div className="col-md-12">
+          <div className="col-xs-12">
             {
               user &&
-              <div className="col-md-2 no-right-padding" style={{width: '20%'}}>
+              <div className="col-xs-2 no-right-padding" style={{width: '20%'}}>
                 <UserHomeDetails user={user} />
               </div>
             }
-            <div className='col-md-10 no-side-padding' style={{width: '80%'}}>
+            <div className='col-xs-10 no-side-padding' style={{width: '80%'}}>
               <Pins
                 pins={pins}
                 onDelete={this.deletePin}

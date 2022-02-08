@@ -401,11 +401,6 @@ div.login-paper {
 .material-tab {
     text-transform: capitalize;
     flex-direction: row;
-    span {
-        flex-direction: row;
-        display: flex;
-        align-items: center;
-    }
 }
 .material-tab:hover {
     background-color: rgba(32,33,36,0.059);

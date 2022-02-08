@@ -50,6 +50,8 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      width: false,
+      detailsView: false,
       isTable: has(props, 'fixedFilters.isTable') ? props.fixedFilters.isTable : true,
       isList: get(props, 'fixedFilters.isList', false),
       isSplit: get(props, 'fixedFilters.isSplit', false),
@@ -718,6 +720,19 @@ class Search extends React.Component {
     this.setState({userFilters: newFilters}, () => this.fetchNewResults(null, false, true, true))
   }
 
+  getContainerWidth = () => {
+    if(this.state.detailsView) {
+      if(this.state.width)
+        return `calc(100% - ${this.state.width - 15}px)`
+      return '70%'
+    }
+    return '100%'
+  }
+
+  onDetailsToggle = state => this.setState({detailsView: state})
+
+  onWidthChange = newWidth => this.setState({width: newWidth})
+
   render() {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
@@ -735,8 +750,9 @@ class Search extends React.Component {
     const hasNext = this.hasNext()
     const isUnderUserHome = nested && parentResource === 'user';
     const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
+    const newWidth = this.getContainerWidth()
     return (
-      <div className='col-xs-12' style={nested ? {padding: '0px'} : {paddingTop: '10px'}}>
+      <div className='col-xs-12' style={nested ? {padding: '0px', width: newWidth} : {paddingTop: '10px', width: newWidth}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
           <div className='col-sm-9 col-xs-7 no-side-padding' style={{textAlign: 'center'}}>
             {
@@ -820,6 +836,8 @@ class Search extends React.Component {
                   history={this.props.history}
                   onSelect={onSelect}
                   asReference={asReference}
+                  onIndependentDetailsToggle={this.onDetailsToggle}
+                  onWidthChange={this.onWidthChange}
                 /> :
                 <Results
                   resource={resource}

@@ -7,7 +7,7 @@ import {
   InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map } from 'lodash';
+import { get, isEmpty, forEach, map, isNumber } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
@@ -92,7 +92,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
     style['padding'] = '0 8px'
 
   return (
-    <Accordion expanded>
+    <Accordion expanded={isNumber(count) && count > 0}>
       <AccordionSummary
         className='light-gray-bg less-margin-accordian-summary-content'
         expandIcon={<span />}

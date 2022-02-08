@@ -7,7 +7,7 @@ import {
   Loyalty as LoyaltyIcon, InfoOutlined as InfoIcon,
   NewReleases as ReleaseIcon, Block as RetireIcon
 } from '@mui/icons-material'
-import { map, get, isEmpty, find, groupBy, orderBy, without, includes } from 'lodash';
+import { map, get, isEmpty, find, groupBy, orderBy, without, includes, isNumber } from 'lodash';
 import ResourceLabel from '../common/ResourceLabel';
 import { DARKGRAY } from '../../common/constants';
 import TabCountLabel from '../common/TabCountLabel';
@@ -50,7 +50,7 @@ const SourceChildCollections = ({ instance, isLoadingCollections }) => {
 
   return (
     <React.Fragment>
-      <Accordion defaultExpanded>
+      <Accordion expanded={isNumber(count) && count > 0}>
         <AccordionSummary
           className='light-gray-bg less-paded-accordian-header'
           expandIcon={<span />}

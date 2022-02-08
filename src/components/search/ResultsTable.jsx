@@ -740,10 +740,9 @@ const ResultsTable = (
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
-    onSelect, asReference, onSelectChange
+    onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange
   }
 ) => {
-  const [width, setWidth] = React.useState(false);
   const [details, setDetails] = React.useState(null);
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
   const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
@@ -827,28 +826,25 @@ const ResultsTable = (
         event.persist()
         updateSelected(item.id, true)
       } else {
-        setDetails(item)
+        onDetailsToggle(item)
       }
     }
   }
 
-  const getContainerWidth = () => {
-    if(details) {
-      if(width)
-        return `calc(100% - ${width - 15}px)`
-      return '55%'
-    }
-    return '100%'
+  const onDetailsToggle = item => {
+    setDetails(item)
+    if(onIndependentDetailsToggle)
+      onIndependentDetailsToggle(item)
   }
 
   const onCloseSideDrawer = () => {
-    setWidth(false)
-    setDetails(null);
+    onWidthChange(false)
+    onDetailsToggle(null)
   }
 
   return (
     <React.Fragment>
-      <div className='col-sm-12 no-side-padding' style={{width: getContainerWidth()}}>
+      <div className='col-sm-12 no-side-padding'>
         {
           canRender ?
           <div className='col-sm-12 no-side-padding search-results'>
@@ -984,11 +980,11 @@ const ResultsTable = (
       {
         details &&
         <ResponsiveDrawer
-          width='44.5%'
+          width='29.5%'
           variant='persistent'
           isOpen={Boolean(details)}
           onClose={onCloseSideDrawer}
-          onWidthChange={newWidth => setWidth(newWidth)}
+          onWidthChange={newWidth => onWidthChange(newWidth)}
           formComponent={
             details.concept_class ?
                          <ConceptHome

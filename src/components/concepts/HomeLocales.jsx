@@ -6,7 +6,7 @@ import {
 import {
   InfoOutlined as InfoIcon
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, groupBy, without, keys, compact, has } from 'lodash';
+import { get, isEmpty, forEach, map, groupBy, without, keys, compact, has, isNumber } from 'lodash';
 import TabCountLabel from '../common/TabCountLabel';
 import LocalizedTextRow from './LocalizedTextRow';
 
@@ -51,7 +51,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
   const groupedLocales = groupLocales(locales, source)
 
   return (
-    <Accordion defaultExpanded>
+    <Accordion expanded={isNumber(count) && count > 0}>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
