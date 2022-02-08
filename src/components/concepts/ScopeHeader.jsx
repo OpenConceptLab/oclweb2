@@ -65,8 +65,6 @@ const ScopeHeader = ({
     })
   }
 
-  const version = concept.versioned_object_id === concept.id ? null : concept.version;
-
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '5px', lineHeight: 'normal'}}>
@@ -77,10 +75,6 @@ const ScopeHeader = ({
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
             <span style={{color: BLUE}}>
               <b>{concept.id}</b>
-              {
-                version &&
-                <span><span>/</span><span>{version}</span></span>
-              }
             </span>
             <span style={{marginLeft: '5px'}}>
               <b>{concept.display_name}</b>
