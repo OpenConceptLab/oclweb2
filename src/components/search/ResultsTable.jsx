@@ -980,7 +980,7 @@ const ResultsTable = (
       {
         details &&
         <ResponsiveDrawer
-          width='29.5%'
+          width='39.5%'
           variant='persistent'
           isOpen={Boolean(details)}
           onClose={onCloseSideDrawer}

@@ -724,7 +724,7 @@ class Search extends React.Component {
     if(this.state.detailsView) {
       if(this.state.width)
         return `calc(100% - ${this.state.width - 15}px)`
-      return '70%'
+      return '60%'
     }
     return '100%'
   }
