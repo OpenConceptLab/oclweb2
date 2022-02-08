@@ -10,7 +10,6 @@ import PermissionDenied from '../common/PermissionDenied';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
-import '../common/Split.scss';
 import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
@@ -18,7 +17,6 @@ const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
 class SourceHome extends React.Component {
   constructor(props) {
     super(props);
-    const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     this.state = {
       width: false,
       notFound: false,
@@ -31,7 +29,6 @@ class SourceHome extends React.Component {
       tab: this.getDefaultTabIndex(),
       selectedConfig: null,
       customConfigs: [],
-      splitView: queryParams.get('isSplit') === 'true',
       selected: null,
     }
   }
@@ -141,7 +138,7 @@ class SourceHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value, selected: null, splitView: false}, () => {
+    this.setState({tab: value, selected: null}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
       if(this.isVersionTabSelected())
@@ -231,8 +228,6 @@ class SourceHome extends React.Component {
 
   onResourceSelect = selected => this.setState({selected: selected})
 
-  toggleSplitView = () => this.setState({splitView: !this.state.splitView})
-
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
 
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
@@ -250,7 +245,7 @@ class SourceHome extends React.Component {
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, splitView, selected
+      notFound, accessDenied, permissionDenied, isLoadingVersions, selected
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -291,9 +286,7 @@ class SourceHome extends React.Component {
               showConfigSelection={this.customConfigFeatureApplicable()}
               isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
               isLoadingVersions={isLoadingVersions}
-              splitView={splitView}
               onSelect={this.onResourceSelect}
-              onSplitViewToggle={this.toggleSplitView}
             />
           </div>
         }

@@ -10,7 +10,7 @@ const Results = props => {
   const {
     resource, results, viewFields, onPageChange, onCreateSimilarClick, onCreateMappingClick,
     onLoadMore, isInfinite, noControls, onReferencesDelete, history, onSelect,
-    splitView, asReference
+    asReference
   } = props;
   const items = get(results, 'items', [])
   const count = get(items, 'length', 0)
@@ -73,7 +73,7 @@ const Results = props => {
   return (
     <div className='col-xs-12 no-side-padding'>
       {
-        !isEmpty(selectedItemObjects) && !noControls && !splitView && !asReference &&
+        !isEmpty(selectedItemObjects) && !noControls && !asReference &&
         <div className='col-xs-12' style={{padding: '10px', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '4px'}}>
           <SelectedResourceControls
             selectedItems={selectedItemObjects}

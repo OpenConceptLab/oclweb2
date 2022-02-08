@@ -3,13 +3,11 @@ import { Chip, MenuItem, Menu, ListItemIcon, Tooltip } from '@mui/material';
 import {
   TableChart as TableIcon,
   ViewStream as RowsIcon,
-  VerticalSplit as SplitIcon,
   ArrowDropDown as ArrowDropDownIcon
 } from '@mui/icons-material';
 import { find, map } from 'lodash';
-import { isAdminUser } from '../../common/utils';
 import {
-  TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID
+  TABLE_LAYOUT_ID, LIST_LAYOUT_ID
 } from '../../common/constants'
 
 const OPTIONS = [
@@ -17,13 +15,11 @@ const OPTIONS = [
   {id: LIST_LAYOUT_ID, name: 'Row View', icon: <RowsIcon fontSize='inherit' />},
 ]
 
-const SPLIT_VIEW_OPTION = {id: SPLIT_LAYOUT_ID, name: 'Split View', icon: <SplitIcon fontSize='inherit' />};
 
-const LayoutToggle = ({ layoutId, onClick, size, includeSplitView }) => {
+const LayoutToggle = ({ layoutId, onClick, size }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const selectedLayoutId = layoutId || 'table';
-  const options = (includeSplitView && isAdminUser()) ? [...OPTIONS, SPLIT_VIEW_OPTION] : OPTIONS
-  const selectedLayout = find(options, {id: selectedLayoutId})
+  const selectedLayout = find(OPTIONS, {id: selectedLayoutId})
   const toggleAnchor = event => setAnchorEl(anchorEl ? null : event.currentTarget)
   const onSelect = id => {
     onClick(id)
@@ -52,7 +48,7 @@ const LayoutToggle = ({ layoutId, onClick, size, includeSplitView }) => {
         onClose={toggleAnchor}
       >
         {
-          map(options, ({id, name, icon}) => (
+          map(OPTIONS, ({id, name, icon}) => (
             <MenuItem key={id} value={id} onClick={() => onSelect(id)}>
               <ListItemIcon style={{minWidth: 'auto', marginRight: '10px'}}>
                 {icon}

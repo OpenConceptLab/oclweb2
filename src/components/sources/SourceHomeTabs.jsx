@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@mui/material';
 import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
-import { GREEN, TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID } from '../../common/constants';
+import { GREEN, TABLE_LAYOUT_ID, LIST_LAYOUT_ID } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import ConceptContainerVersionList from '../common/ConceptContainerVersionList';
 import SourceHomeChildrenList from './SourceHomeChildrenList';
@@ -19,7 +19,7 @@ const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, onSplitViewToggle, splitView,
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect,
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -178,14 +178,11 @@ const SourceHomeTabs = props => {
             fixedFilters={{
               limit: selectedTabConfig.page_size,
               isList: selectedTabConfig.layout === LIST_LAYOUT_ID,
-              isSplit: selectedTabConfig.layout === SPLIT_LAYOUT_ID,
               isTable: !selectedTabConfig.layout || selectedTabConfig.layout === TABLE_LAYOUT_ID,
               sortParams: getSortParams()
             }}
             configQueryParams={selectedTabConfig.query_params}
             onSelect={onSelect}
-            onSplitViewToggle={onSplitViewToggle}
-            splitView={splitView}
           />
         }
       </div>

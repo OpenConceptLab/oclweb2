@@ -37,7 +37,7 @@ const DEFAULT_VISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.visibleAt
 const DEFAULT_INVISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const SourceHomeHeader = ({
-  source, isVersionedObject, versionedObjectURL, currentURL, config, splitView, versions
+  source, isVersionedObject, versionedObjectURL, currentURL, config, versions
 }) => {
   const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
@@ -83,11 +83,6 @@ const SourceHomeHeader = ({
     () => setOpenHeader(!get(config, 'config.header.shrink', false)),
     [get(config, 'config.header.shrink')]
   )
-
-  React.useEffect(() => {
-    if(splitView)
-      setOpenHeader(false)
-  }, [splitView])
 
   const deleteSource = () => {
     APIService.new().overrideURL(source.url).delete().then(response => {

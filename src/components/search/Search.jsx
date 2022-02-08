@@ -10,7 +10,7 @@ import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
 import { formatDate, copyURL, toRelativeURL } from '../../common/utils';
 import {
-  BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID
+  BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID
 } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
 import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
@@ -54,7 +54,6 @@ class Search extends React.Component {
       detailsView: false,
       isTable: has(props, 'fixedFilters.isTable') ? props.fixedFilters.isTable : true,
       isList: get(props, 'fixedFilters.isList', false),
-      isSplit: get(props, 'fixedFilters.isSplit', false),
       isInfinite: false,
       page: 1,
       updatedSince: false,
@@ -85,11 +84,9 @@ class Search extends React.Component {
   }
 
   getLayoutTypeName = () => {
-    const { isList, isSplit } = this.state;
+    const { isList } = this.state;
     if(isList)
       return LIST_LAYOUT_ID
-    if(isSplit)
-      return SPLIT_LAYOUT_ID
     return TABLE_LAYOUT_ID
   }
 
@@ -146,7 +143,6 @@ class Search extends React.Component {
       includeRetired: this.getLayoutAttrValue('includeRetired', 'bool'),
       isTable: this.getLayoutAttrValue('isTable', 'bool'),
       isList: this.getLayoutAttrValue('isList', 'bool'),
-      isSplit: this.getLayoutAttrValue('isSplit', 'bool'),
       isInfinite: this.getLayoutAttrValue('isInfinite', 'bool'),
       limit: this.getLayoutAttrValue('limit', 'int'),
       page: this.getLayoutAttrValue('page', 'int'),
@@ -159,11 +155,7 @@ class Search extends React.Component {
       userFilters: userFilters,
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
-    }, () => {
-      if(this.state.isSplit && !this.props.splitView && this.props.onSplitViewToggle)
-        this.props.onSplitViewToggle()
-      this.fetchNewResults(null, true, false)
-    })
+    }, () => this.fetchNewResults(null, true, false))
   }
 
   componentDidUpdate(prevProps) {
@@ -519,16 +511,10 @@ class Search extends React.Component {
     if(newLayoutId === LIST_LAYOUT_ID) {
       newState.isTable = false
       newState.isList = true
-      newState.isSplit = false
     }
-    else if(newLayoutId === SPLIT_LAYOUT_ID) {
-      newState.isTable = false
-      newState.isList = false
-      newState.isSplit = true
-    } else {
+    else {
       newState.isTable = true
       newState.isList = false
-      newState.isSplit = false
     }
 
     const newLayout = !newState.isTable
@@ -537,9 +523,6 @@ class Search extends React.Component {
 
     this.setState(newState, () => {
       window.location.hash = this.getCurrentLayoutURL()
-
-      if(includes([newLayoutId, existingLayoutId], SPLIT_LAYOUT_ID) && this.props.onSplitViewToggle)
-        this.props.onSplitViewToggle()
 
       setTimeout(() => this.setState({isURLUpdatedByActionChange: false}), 1000)
     })
@@ -564,7 +547,6 @@ class Search extends React.Component {
     url += `?q=${this.state.searchStr || ''}`
     url += `&isTable=${this.state.isTable}`
     url += `&isList=${this.state.isList}`
-    url += `&isSplit=${this.state.isSplit}`
     url += `&page=${this.state.page}`
     url += `&exactMatch=${this.state.exactMatch || 'off'}`
     if(!this.props.nested)
@@ -589,13 +571,12 @@ class Search extends React.Component {
 
   getFilterControls() {
     const updatedSinceText = this.getUpdatedSinceText();
-    const { nested, extraControls, fhir, extraControlFilters, parentResource, asReference } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters, asReference } = this.props;
     const {
       updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
       viewFilters, sortParams, userFilters
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
-    const isSourceChild = includes(['concepts', 'mappings'], resource);
     const sortDesc = get(sortParams, 'sortDesc')
     const sortAsc = get(sortParams, 'sortAsc')
     const sortOn = sortDesc || sortAsc;
@@ -646,7 +627,7 @@ class Search extends React.Component {
           {
             resource !== 'references' && !fhir && !asReference &&
             <span style={{paddingLeft: '4px'}}>
-              <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} includeSplitView={nested && isSourceChild && parentResource === 'source'} />
+              <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
             </span>
           }
           {
@@ -742,7 +723,6 @@ class Search extends React.Component {
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite,
-      isSplit
     } = this.state;
     const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-12 no-side-padding';
     const resourceResults = get(results, resource, {});
@@ -853,7 +833,6 @@ class Search extends React.Component {
                   noControls={noControls}
                   history={this.props.history}
                   onSelect={onSelect}
-                  splitView={isSplit}
                   asReference={asReference}
                 />
               }

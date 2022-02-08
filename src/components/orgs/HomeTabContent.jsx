@@ -1,6 +1,6 @@
 import React from 'react';
 import { get, map, includes, pickBy, isString, isObject, reject } from 'lodash';
-import { TABLE_LAYOUT_ID, LIST_LAYOUT_ID, SPLIT_LAYOUT_ID } from '../../common/constants';
+import { TABLE_LAYOUT_ID, LIST_LAYOUT_ID } from '../../common/constants';
 import CustomText from '../common/CustomText';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 import Overview from './Overview'
@@ -68,7 +68,6 @@ const HomeTabContent = ({
           fixedFilters={{
             limit: selectedTabConfig.page_size,
             isList: selectedTabConfig.layout === LIST_LAYOUT_ID,
-            isSplit: selectedTabConfig.layout === SPLIT_LAYOUT_ID,
             isTable: !selectedTabConfig.layout || selectedTabConfig.layout === TABLE_LAYOUT_ID,
             sortParams: getSortParams()
           }}
