@@ -306,7 +306,7 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     mapping={selected}
-                            location={{pathname: selected.version_url || selected.url}}
+                            location={{pathname: selected.url}}
                             match={{params: {mappingVersion: null}}}
                             onClose={() => this.setState({selected: null, width: false})}
                             header={false}
@@ -316,7 +316,7 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     concept={selected}
-                            location={{pathname: selected.version_url || selected.url}}
+                            location={{pathname: selected.url}}
                             match={{params: {conceptVersion: null}}}
                             onClose={() => this.setState({selected: null, width: false})}
                             openHierarchy={false}
