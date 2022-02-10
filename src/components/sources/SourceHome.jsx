@@ -30,6 +30,7 @@ class SourceHome extends React.Component {
       selectedConfig: null,
       customConfigs: [],
       selected: null,
+      hierarchy: false,
     }
   }
 
@@ -245,7 +246,7 @@ class SourceHome extends React.Component {
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, selected
+      notFound, accessDenied, permissionDenied, isLoadingVersions, selected, hierarchy
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -287,6 +288,8 @@ class SourceHome extends React.Component {
               isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
               isLoadingVersions={isLoadingVersions}
               onSelect={this.onResourceSelect}
+              hierarchy={hierarchy}
+              onHierarchyToggle={() => this.setState({hierarchy: !hierarchy})}
             />
           </div>
         }

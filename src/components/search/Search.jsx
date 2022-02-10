@@ -5,7 +5,7 @@ import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
   map, omit, isString, values, omitBy
 } from 'lodash';
-import { Share as ShareIcon } from '@mui/icons-material'
+import { Share as ShareIcon, AccountTreeOutlined as HierarchyIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
 import { formatDate, copyURL, toRelativeURL } from '../../common/utils';
@@ -18,6 +18,7 @@ import FilterButton from '../common/FilterButton';
 import FilterDrawer from '../common/FilterDrawer';
 import Results from './Results';
 import ResultsTable from './ResultsTable';
+import ConceptHierarchyResultsTable from './ConceptHierarchyResultsTable';
 import SortButton from './SortButton';
 import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
@@ -72,6 +73,7 @@ class Search extends React.Component {
       userFilters: {},
       isURLUpdatedByActionChange: false,
       facets: {},
+      hierarchy: false,
       results: {
         concepts: cloneDeep(resourceResultStruct),
         mappings: cloneDeep(resourceResultStruct),
@@ -356,7 +358,7 @@ class Search extends React.Component {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
         includeRetired, fhirParams, staticParams
       } = this.state;
-      const { configQueryParams, noQuery, noHeaders, fhir, hapi, paginationParams } = this.props;
+      const { configQueryParams, noQuery, noHeaders, fhir, hapi, paginationParams, onHierarchyToggle, hierarchy } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
@@ -365,6 +367,9 @@ class Search extends React.Component {
           verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
           ...this.getFacetQueryParam(),
         };
+        if(onHierarchyToggle && resource === 'concepts') {
+          queryParams['onlyParentLess'] = hierarchy
+        }
         if(updatedSince)
           queryParams['updatedSince'] = updatedSince
       }
@@ -714,12 +719,17 @@ class Search extends React.Component {
 
   onWidthChange = newWidth => this.setState({width: newWidth})
 
+  onHierarchyViewChange = () => this.setState({hierarchy: !this.props.hierarchy}, () => {
+    this.fetchNewResults()
+    this.props.onHierarchyToggle()
+  })
+
   render() {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
       onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi, onSelect,
-      asReference
+      asReference, onHierarchyToggle, hierarchy
     } = this.props;
     const {
       resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite,
@@ -731,6 +741,7 @@ class Search extends React.Component {
     const isUnderUserHome = nested && parentResource === 'user';
     const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
     const newWidth = this.getContainerWidth()
+    const showHierarchy = resource === 'concepts' && onHierarchyToggle && hierarchy
     return (
       <div className='col-xs-12' style={nested ? {padding: '0px', width: newWidth} : {paddingTop: '10px', width: newWidth}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
@@ -761,7 +772,13 @@ class Search extends React.Component {
           </div>
           {
             resource !== 'references' &&
-            <div className='col-sm-12 no-side-padding'>
+            <div className='col-sm-12 no-side-padding' style={{display: 'flex'}}>
+              {
+                onHierarchyToggle && resource === 'concepts' &&
+                <span style={{paddingRight: '4px'}}>
+                  <Chip icon={<HierarchyIcon fontSize='small' />} size='small' onClick={this.onHierarchyViewChange} label='Hierarchy' color={hierarchy ? 'primary' : 'secondary'} variant={hierarchy ? 'contained' : 'outlined'} />
+                </span>
+              }
               <SearchFilters nested={nested} controls={!noFilters && this.getFilterControls()} />
             </div>
           }
@@ -791,50 +808,61 @@ class Search extends React.Component {
             </div> :
             <div className='col-xs-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
               {
-                isTable ?
-                <ResultsTable
-                  resource={resource}
+                showHierarchy ?
+                <ConceptHierarchyResultsTable
                   results={resourceResults}
                   onPageChange={this.onPageChange}
-                  onSortChange={this.onSortChange}
-                  sortParams={sortParams}
-                  onPinCreate={onPinCreate}
-                  onPinDelete={onPinDelete}
-                  pins={pins}
-                  nested={nested}
-                  showPin={showPin}
-                  essentialColumns={essentialColumns}
-                  onReferencesDelete={onReferencesDelete}
-                  isVersionedObject={isVersionedObject}
                   onSelectChange={onSelectChange}
                   onCreateSimilarClick={onCreateSimilarClick}
                   onCreateMappingClick={onCreateMappingClick}
                   viewFields={viewFields}
-                  noControls={noControls}
-                  fhir={fhir}
-                  hapi={hapi}
-                  history={this.props.history}
                   onSelect={onSelect}
-                  asReference={asReference}
-                  onIndependentDetailsToggle={this.onDetailsToggle}
-                  onWidthChange={this.onWidthChange}
-                /> :
-                <Results
-                  resource={resource}
-                  results={resourceResults}
-                  onPageChange={this.onPageChange}
-                  onSelectChange={onSelectChange}
-                  viewFields={viewFields}
-                  onCreateSimilarClick={onCreateSimilarClick}
-                  onCreateMappingClick={onCreateMappingClick}
-                  onReferencesDelete={onReferencesDelete}
-                  isInfinite={isInfinite}
-                  onLoadMore={this.loadMore}
-                  noControls={noControls}
-                  history={this.props.history}
-                  onSelect={onSelect}
-                  asReference={asReference}
-                />
+                /> : (
+                  isTable ?
+                  <ResultsTable
+                    resource={resource}
+                    results={resourceResults}
+                    onPageChange={this.onPageChange}
+                    onSortChange={this.onSortChange}
+                    sortParams={sortParams}
+                    onPinCreate={onPinCreate}
+                    onPinDelete={onPinDelete}
+                    pins={pins}
+                    nested={nested}
+                    showPin={showPin}
+                    essentialColumns={essentialColumns}
+                    onReferencesDelete={onReferencesDelete}
+                    isVersionedObject={isVersionedObject}
+                    onSelectChange={onSelectChange}
+                    onCreateSimilarClick={onCreateSimilarClick}
+                    onCreateMappingClick={onCreateMappingClick}
+                    viewFields={viewFields}
+                    noControls={noControls}
+                    fhir={fhir}
+                    hapi={hapi}
+                    history={this.props.history}
+                    onSelect={onSelect}
+                    asReference={asReference}
+                    onIndependentDetailsToggle={this.onDetailsToggle}
+                    onWidthChange={this.onWidthChange}
+                  /> :
+                  <Results
+                    resource={resource}
+                    results={resourceResults}
+                    onPageChange={this.onPageChange}
+                    onSelectChange={onSelectChange}
+                    viewFields={viewFields}
+                    onCreateSimilarClick={onCreateSimilarClick}
+                    onCreateMappingClick={onCreateMappingClick}
+                    onReferencesDelete={onReferencesDelete}
+                    isInfinite={isInfinite}
+                    onLoadMore={this.loadMore}
+                    noControls={noControls}
+                    history={this.props.history}
+                    onSelect={onSelect}
+                    asReference={asReference}
+                  />
+                )
               }
             </div>
           }

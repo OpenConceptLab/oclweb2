@@ -19,7 +19,7 @@ const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect,
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, hierarchy, onHierarchyToggle
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -183,6 +183,8 @@ const SourceHomeTabs = props => {
             }}
             configQueryParams={selectedTabConfig.query_params}
             onSelect={onSelect}
+            hierarchy={hierarchy}
+            onHierarchyToggle={onHierarchyToggle}
           />
         }
       </div>
