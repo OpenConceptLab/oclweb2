@@ -57,6 +57,8 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
     event.stopPropagation()
     event.preventDefault()
     setSelected(() => {
+      fetchChildren()
+      setOpen(true)
       onSelectChange(item, true)
       return true
     })
