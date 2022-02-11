@@ -202,7 +202,7 @@ const ConceptHierarchyResultsTable = ({
                       <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
                         <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
                         <SelectedResourceControls
-                          selectedItems={getSelectedItems()}
+                          selectedItems={selectedList}
                           resource='concepts'
                           onCreateSimilarClick={onCreateSimilarClick}
                           onCreateMappingClick={onCreateMappingClick}
