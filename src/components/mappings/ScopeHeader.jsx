@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { IconButton } from '@mui/material';
+import { IconButton, Chip } from '@mui/material';
 import {
   CancelOutlined as CancelIcon,
 } from '@mui/icons-material';
@@ -88,6 +88,10 @@ const ScopeHeader = ({
             <span style={{marginLeft: '5px'}}>
               <b>{mapping.map_type}</b>
             </span>
+            {
+              mapping.retired &&
+              <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
+            }
             <span style={{marginLeft: '15px'}}>
               <HomeActionButton
                 instance={mapping}
