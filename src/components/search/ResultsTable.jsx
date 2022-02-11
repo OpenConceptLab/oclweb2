@@ -999,13 +999,13 @@ const ResultsTable = (
                            scoped
                            singleColumn
                            onClose={onCloseSideDrawer}
-                                   concept={details} location={{pathname: details.url}} match={{params: {conceptVersion: (!details.is_latest_version || window.location.hash.includes('/collections/')) ? details.version : null }}}
+                                   concept={details} location={{pathname: details.url}} match={{params: {conceptVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null }}}
                          /> :
                          <MappingHome
                            scoped
                            singleColumn
                            onClose={onCloseSideDrawer}
-                                   noRedirect mapping={details} location={{pathname: details.url}} match={{params: {mappingVersion: (!details.is_latest_version || window.location.hash.includes('/collections/')) ? details.version : null}}}
+                                   noRedirect mapping={details} location={{pathname: details.url}} match={{params: {mappingVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null}}}
                          />
           }
         />
