@@ -235,7 +235,7 @@ class CollectionHome extends React.Component {
     this.setState(newState)
   }
 
-  onResourceSelect = selected => this.setState({selected: selected})
+  onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
 
   getContainerWidth = () => {
     const { selected, width } = this.state;

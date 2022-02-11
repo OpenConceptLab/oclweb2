@@ -230,7 +230,7 @@ class SourceHome extends React.Component {
       APIService.new().overrideURL(this.currentPath).get().then(response => this.setState({selected: response.data}))
   }
 
-  onResourceSelect = selected => this.setState({selected: selected})
+  onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
 
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
 
