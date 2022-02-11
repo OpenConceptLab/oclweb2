@@ -21,7 +21,7 @@ import {
   isFunction, compact, flatten, last, isArray
 } from 'lodash';
 import {
-  BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
+  BLUE, WHITE, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
 } from '../../common/constants';
 import {
   formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
@@ -857,11 +857,11 @@ const ResultsTable = (
           <div className='col-sm-12 no-side-padding search-results'>
             <TableContainer style={{borderRadius: '4px'}}>
               <Table size='small'>
-                <TableHead style={theadStyles}>
+                <TableHead>
                   {
                     selectedList.length > 0 &&
-                    <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY}}>
-                      <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
+                    <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
+                      <TableCell colSpan={columnsCount} align='left'>
                         <span className='flex-vertical-center'>
                           <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
                           {
@@ -878,7 +878,7 @@ const ResultsTable = (
                       </TableCell>
                     </TableRow>
                   }
-                  <TableRow>
+                  <TableRow style={theadStyles}>
                     {
                       (isConceptContainer || isValueSet || isConceptMap) &&
                       <TableCell />

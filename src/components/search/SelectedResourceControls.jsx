@@ -46,6 +46,10 @@ const SelectedResourceControls = ({
     }
   }
 
+  const COLOR = 'secondary'
+  const VARIANT = 'contained'
+  const buttonProps = {variant: VARIANT, color: COLOR, size: 'small'}
+
   return (
     <span style={{display: 'inline-flex', width: 'max-content'}}>
       {
@@ -56,7 +60,7 @@ const SelectedResourceControls = ({
           resource={selectedItems}
           buttonFunc={
             attrs =>
-              <Button startIcon={<DownloadIcon fontSize='small' />} variant='contained' size='small' color='secondary' {...attrs}>
+              <Button startIcon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs}>
                 Download
               </Button>
           }
@@ -67,11 +71,9 @@ const SelectedResourceControls = ({
         shouldShowCreateSimilarOption &&
         <Button
           startIcon={<RepeatIcon fontSize='small' />}
-          variant='contained'
-          size='small'
-          color='secondary'
           onClick={() => onCreateSimilarClick(get(selectedItems, '0'))}
           style={{marginLeft: '10px'}}
+          {...buttonProps}
           >
           Create Similar
         </Button>
@@ -80,11 +82,9 @@ const SelectedResourceControls = ({
         shouldShowCreateMappingOption &&
         <Button
           startIcon={<LinkIcon fontSize='small' />}
-          variant='contained'
-          size='small'
-          color='secondary'
           onClick={() => onCreateMappingClick(selectedItems)}
           style={{marginLeft: '10px'}}
+          {...buttonProps}
           >
           Create Mapping
         </Button>
@@ -92,8 +92,7 @@ const SelectedResourceControls = ({
       {
         shouldShowAddToCollection &&
         <span style={{marginLeft: '10px'}}>
-          <AddToCollection
-            variant='contained' color='secondary' size='small' references={selectedItems}
+          <AddToCollection {...buttonProps} references={selectedItems}
           />
         </span>
       }
@@ -101,11 +100,9 @@ const SelectedResourceControls = ({
         shouldShowCompareOption &&
         <Button
           startIcon={<CompareArrowsIcon fontSize='small' />}
-          variant='contained'
-          size='small'
-          color='secondary'
           onClick={onCompareClick}
           style={{marginLeft: '10px'}}
+          {...buttonProps}
           >
           Compare
         </Button>
@@ -114,11 +111,9 @@ const SelectedResourceControls = ({
         shouldShowDeleteReferenceOption &&
         <Button
           startIcon={<DeleteIcon fontSize='small' />}
-          variant='contained'
-          size='small'
-          color='secondary'
           onClick={onReferenceDeleteClick}
           style={{marginLeft: '10px'}}
+          {...buttonProps}
           >
           Delete
         </Button>
