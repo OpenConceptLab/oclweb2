@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import makeStyles from '@mui/styles/makeStyles';
 import Drawer from "@mui/material/Drawer";
 import DragIcon from '@mui/icons-material/MoreVert';
+import { merge } from 'lodash';
 
 export const defaultWidth = 360;
 const minWidth = 50;
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChange, width}) => {
+const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChange, width, paperStyle}) => {
   const [open, setOpen] = React.useState(isOpen);
   const classes = useStyles();
   const [drawerWidth, setDrawerWidth] = React.useState(width || defaultWidth);
@@ -61,7 +62,7 @@ const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChang
       open={open}
       className={classes.drawer}
       variant={variant}
-      PaperProps={{ style: { width: drawerWidth } }}
+      PaperProps={{ style: merge({ width: drawerWidth }, (paperStyle || {})) }}
       onClose={onClose}
     >
       <div className={classes.toolbar} />

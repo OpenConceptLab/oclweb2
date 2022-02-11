@@ -989,6 +989,7 @@ const ResultsTable = (
         details &&
         <ResponsiveDrawer
           width='39.5%'
+          paperStyle={{background: '#fafbfc'}}
           variant='persistent'
           isOpen={Boolean(details)}
           onClose={onCloseSideDrawer}

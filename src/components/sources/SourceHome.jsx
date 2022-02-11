@@ -300,6 +300,7 @@ class SourceHome extends React.Component {
           selected &&
           <ResponsiveDrawer
             width="44.5%"
+            paperStyle={{background: '#fafbfc'}}
             variant='persistent'
             isOpen
             onClose={() => this.setState({selected: null, width: false})}
