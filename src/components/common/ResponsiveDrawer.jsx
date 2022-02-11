@@ -65,8 +65,8 @@ const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChang
       onClose={onClose}
     >
       <div className={classes.toolbar} />
-      <div onMouseDown={e => handleMouseDown(e)} className={classes.dragger + ' flex-vertical-center'}>
-        <DragIcon style={{marginLeft: '-8px', color: 'rgba(0, 0, 0, 0.3)'}} />
+      <div onMouseDown={e => handleMouseDown(e)} className={classes.dragger + ' flex-vertical-center vertical-dragger'}>
+        <DragIcon />
       </div>
       {
         formComponent
