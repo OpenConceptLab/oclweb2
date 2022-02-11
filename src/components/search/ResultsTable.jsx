@@ -366,10 +366,10 @@ const ExpandibleRow = props => {
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
-                                            ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
-                                               (isSelectable ? 1 : 0) + // select column
-                                                ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                              (tags ? 1 : 0); //tags column
+                                             ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
+                                                (isSelectable ? 1 : 0) + // select column
+                                                 ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                               (tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -752,7 +752,6 @@ const ResultsTable = (
   const theadTextColor = get(resourceDefinition, 'headTextColor', WHITE);
   const theadStyles = {
     backgroundColor: theadBgColor,
-    border: `1px solid ${theadBgColor}`,
   }
   const isConceptContainer = includes(['sources', 'collections'], resource);
   const isValueSet = resource === 'ValueSet'
@@ -861,19 +860,21 @@ const ResultsTable = (
                 <TableHead style={theadStyles}>
                   {
                     selectedList.length > 0 &&
-                    <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY, border: `1px solid ${DARKGRAY}`}}>
+                    <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: DARKGRAY}}>
                       <TableCell colSpan={columnsCount} align='left' style={{color: WHITE}}>
-                        <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
-                        {
-                          !asReference &&
-                          <SelectedResourceControls
-                            selectedItems={getSelectedItems()}
-                            resource={resource}
-                            onCreateSimilarClick={onCreateSimilarClick}
-                            onCreateMappingClick={onCreateMappingClick}
-                            onReferencesDelete={onReferencesDelete}
-                          />
-                        }
+                        <span className='flex-vertical-center'>
+                          <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
+                          {
+                            !asReference &&
+                            <SelectedResourceControls
+                              selectedItems={getSelectedItems()}
+                              resource={resource}
+                              onCreateSimilarClick={onCreateSimilarClick}
+                              onCreateMappingClick={onCreateMappingClick}
+                              onReferencesDelete={onReferencesDelete}
+                            />
+                          }
+                        </span>
                       </TableCell>
                     </TableRow>
                   }
