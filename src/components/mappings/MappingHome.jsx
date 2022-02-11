@@ -35,7 +35,9 @@ class MappingHome extends React.Component {
   }
 
   getMappingURLFromPath() {
-    const { location, match } = this.props;
+    const { location, match, scoped } = this.props;
+    if(scoped)
+      return location.pathname
     if(location.pathname.indexOf('/details') > -1)
       return location.pathname.split('/details')[0] + '/'
     if(location.pathname.indexOf('/history') > -1)

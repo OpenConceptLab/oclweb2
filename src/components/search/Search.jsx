@@ -715,7 +715,7 @@ class Search extends React.Component {
     return '100%'
   }
 
-  onDetailsToggle = state => this.setState({detailsView: state})
+  onDetailsToggle = state => this.setState({detailsView: state, width: state ? this.state.width : false})
 
   onWidthChange = newWidth => this.setState({width: newWidth})
 
@@ -745,14 +745,14 @@ class Search extends React.Component {
     return (
       <div className='col-xs-12' style={nested ? {padding: '0px', width: newWidth} : {paddingTop: '10px', width: newWidth}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-9 col-xs-7 no-side-padding' style={{textAlign: 'center'}}>
+          <div className='col-sm-8 col-xs-7 no-side-padding' style={{textAlign: 'center'}}>
             {
               fhir ?
               <SearchByAttributeInput {...this.props} onSearch={this.onFhirSearch} /> :
               <SearchInput {...this.props} onSearch={this.onSearch} />
             }
           </div>
-          <div className='col-xs-3 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
+          <div className='col-xs-4 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
             <span style={{margin: '0 20px', marginTop: '-4px'}}>
               <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} disabled={fhir && !hapi} />
             </span>

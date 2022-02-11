@@ -455,14 +455,17 @@ const ExpandibleRow = props => {
         event.persist()
         onCheckboxClick(event)
       } else {
-        if(isSourceChild && (item.uuid !== item.versioned_object_id.toString() || window.location.hash.includes('/collections/')))
-          url = item.version_url
+        if(isSourceChild) {
+          event.persist()
+          onContextMenu(event, item)
+        }
         else
           url = item.url
       }
     };
 
-    history.push(url)
+    if(url)
+      history.push(url)
   }
 
   const handleTabChange = (event, newValue) => setTab(newValue);
@@ -841,6 +844,11 @@ const ResultsTable = (
     onWidthChange(false)
     onDetailsToggle(null)
   }
+
+  React.useEffect(
+    () => {!details && onCloseSideDrawer()},
+    [details]
+  )
 
   return (
     <React.Fragment>

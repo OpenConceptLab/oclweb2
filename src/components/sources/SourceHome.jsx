@@ -11,6 +11,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
+import { paramsToURI, paramsToParentURI } from '../../common/utils';
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
 
@@ -31,6 +32,25 @@ class SourceHome extends React.Component {
       customConfigs: [],
       selected: null,
       hierarchy: false,
+    }
+  }
+
+  setPaths = () => {
+    const { params } = this.props.match
+    this.currentPath = paramsToURI(params)
+    this.versionedPath = paramsToURI(params, true)
+    this.isConceptSelected = Boolean(params.concept)
+    this.isMappingSelected = Boolean(params.mapping)
+    this.isChildSelected = this.isConceptSelected || this.isMappingSelected
+    if(this.isChildSelected) {
+      this.sourcePath = paramsToParentURI(params, true)
+      this.sourceVersionPath = paramsToParentURI(params)
+      this.isVersionedChild = Boolean(params.conceptVersion || params.mappingVersion)
+      this.fetchChildFromURL()
+    } else {
+      this.sourcePath = this.versionedPath
+      this.sourceVersionPath = this.currentPath
+      this.isHEAD = !params.version || params.version === 'HEAD'
     }
   }
 
@@ -63,44 +83,22 @@ class SourceHome extends React.Component {
   }
 
   componentDidMount() {
+    this.setPaths()
     this.refreshDataByURL()
   }
 
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
+      this.setPaths()
       this.refreshDataByURL()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
   }
 
-  getVersionedObjectURLFromPath() {
-    const { location } = this.props;
-
-    return location.pathname.split('/').slice(0, 5).join('/') + '/';
-  }
-
-  getURLFromPath() {
-    const { location, match } = this.props;
-    if(location.pathname.indexOf('/versions') > -1)
-      return location.pathname.split('/versions')[0] + '/'
-    if(location.pathname.indexOf('/mappings') > -1)
-      return location.pathname.split('/mappings')[0] + '/'
-    if(location.pathname.indexOf('/concepts') > -1)
-      return location.pathname.split('/concepts')[0] + '/'
-    if(location.pathname.indexOf('/about') > -1)
-      return location.pathname.split('/about')[0] + '/'
-    if(location.pathname.indexOf('/details') > -1)
-      return location.pathname.split('/details')[0] + '/'
-    if(match.params.version)
-      return location.pathname.split('/').slice(0, 6).join('/') + '/';
-
-    return this.getVersionedObjectURLFromPath();
-  }
-
   getVersions() {
     this.setState({isLoadingVersions: true}, () => {
       APIService.new()
-                .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
+                .overrideURL(this.sourcePath + 'versions/')
                 .get(null, null, {verbose: true})
                 .then(response => {
                   this.setState({versions: response.data, isLoadingVersions: false}, () => {
@@ -150,7 +148,7 @@ class SourceHome extends React.Component {
   refreshDataByURL() {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
-                .overrideURL(this.getURLFromPath())
+                .overrideURL(this.sourceVersionPath)
                 .get(null, null, {includeClientConfigs: true})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
@@ -184,7 +182,7 @@ class SourceHome extends React.Component {
 
   fetchSummary() {
     APIService.new()
-              .overrideURL(this.getURLFromPath())
+              .overrideURL(this.sourcePath)
               .appendToUrl('summary/')
               .get()
               .then(response => this.setState({
@@ -227,6 +225,11 @@ class SourceHome extends React.Component {
     this.setState(newState)
   }
 
+  fetchChildFromURL = () => {
+    if(this.isChildSelected)
+      APIService.new().overrideURL(this.currentPath).get().then(response => this.setState({selected: response.data}))
+  }
+
   onResourceSelect = selected => this.setState({selected: selected})
 
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
@@ -248,8 +251,6 @@ class SourceHome extends React.Component {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
       notFound, accessDenied, permissionDenied, isLoadingVersions, selected, hierarchy
     } = this.state;
-    const currentURL = this.getURLFromPath()
-    const versionedObjectURL = this.getVersionedObjectURLFromPath()
     const showAboutTab = this.shouldShowAboutTab();
     const hasError = notFound || accessDenied || permissionDenied;
     const isMappingSelected = Boolean(selected && get(selected, 'map_type'))
@@ -266,9 +267,11 @@ class SourceHome extends React.Component {
             <SourceHomeHeader
               source={source}
               isVersionedObject={this.isVersionedObject()}
-              versionedObjectURL={versionedObjectURL}
-              currentURL={currentURL}
+              versionedObjectURL={this.sourcePath}
+              currentURL={this.sourceVersionPath}
               config={selectedConfig}
+              shrink={isMappingSelected || isConceptSelected}
+              versions={versions}
             />
             <SourceHomeTabs
               tab={tab}
@@ -277,7 +280,7 @@ class SourceHome extends React.Component {
               versions={versions}
               location={this.props.location}
               match={this.props.match}
-              versionedObjectURL={versionedObjectURL}
+              versionedObjectURL={this.sourcePath}
               currentVersion={this.getCurrentVersion()}
               aboutTab={showAboutTab}
               onVersionUpdate={this.onVersionUpdate}
@@ -294,7 +297,7 @@ class SourceHome extends React.Component {
           </div>
         }
         {
-          (isMappingSelected || isConceptSelected) &&
+          selected &&
           <ResponsiveDrawer
             width="44.5%"
             variant='persistent'
@@ -309,8 +312,8 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     mapping={selected}
-                            location={{pathname: selected.url}}
-                            match={{params: {mappingVersion: null}}}
+                            location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
+                            match={{params: {mappingVersion: this.isHEAD ? null : selected.version}}}
                             onClose={() => this.setState({selected: null, width: false})}
                             header={false}
                             noRedirect
@@ -319,8 +322,8 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     concept={selected}
-                            location={{pathname: selected.url}}
-                            match={{params: {conceptVersion: null}}}
+                            location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
+                            match={{params: {conceptVersion: this.isHEAD ? null : selected.version}}}
                             onClose={() => this.setState({selected: null, width: false})}
                             openHierarchy={false}
                             header={false}

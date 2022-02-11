@@ -616,3 +616,43 @@ export const logoutUser = (alert = true, redirectToLogin) => {
     window.location.reload();
   }
 }
+
+export const paramsToParentURI = (params, versioned=false) => {
+  let uri = '';
+  if(params.org)
+    uri += `/orgs/${params.org}`;
+  else if (params.user)
+    uri += `/users/${params.user}`;
+  if(params.source)
+    uri += `/sources/${params.source}`;
+  else if(params.collection)
+    uri += `/collections/${params.collection}`;
+  if(params.version && !versioned)
+    uri += `/${params.version}`;
+
+  return uri + '/';
+}
+
+export const paramsToURI = (params, versioned=false) => {
+  let uri = '';
+  if(params.org)
+    uri += `/orgs/${params.org}`;
+  else if (params.user)
+    uri += `/users/${params.user}`;
+  if(params.source)
+    uri += `/sources/${params.source}`;
+  else if(params.collection)
+    uri += `/collections/${params.collection}`;
+  if(params.version && !versioned)
+    uri += `/${params.version}`;
+  if(params.concept)
+    uri += `/concepts/${params.concept}`;
+  else if(params.mapping)
+    uri += `/mappings/${params.mapping}`;
+  if(params.conceptVersion && !versioned)
+    uri += `/${params.conceptVersion}`;
+  if(params.mappingVersion && !versioned)
+    uri += `/${params.mappingVersion}`;
+
+  return uri + '/';
+}

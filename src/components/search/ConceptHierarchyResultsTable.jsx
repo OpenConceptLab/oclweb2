@@ -12,7 +12,7 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  BLUE, WHITE, DARKGRAY, COLOR_ROW_SELECTED
+  BLUE, WHITE, DARKGRAY
 } from '../../common/constants';
 import { ALL_COLUMNS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
@@ -35,7 +35,7 @@ const getValue = (item, column) => {
   return value
 }
 
-const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChange, selectedList }) => {
+const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChange, selectedList, level }) => {
   const [open, setOpen] = React.useState(false);
   const [children, setChidren] = React.useState([]);
   const [selected, setSelected] = React.useState(isSelected);
@@ -82,16 +82,19 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
     }
   }
 
+  const firstCellWidth = `${15 - level}%`
+  const expandCellWidth = `${40 + (level * 10)}px`
+
   return (
     <React.Fragment>
       <TableRow
         hover
         onClick={onRowClick}
-        style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}>
-        <TableCell style={{width: '30px', padding: '2px'}} align="center">
+        style={selected ? {backgroundColor: 'rgb(190, 209, 226)', cursor: 'pointer'} : {cursor: 'pointer'}}>
+        <TableCell style={{width: '30px', padding: '2px'}} align="left">
           <Checkbox size='small' style={{padding: '0px'}} checked={selected} onClick={onCheckboxClick} />
         </TableCell>
-        <TableCell style={{width: '30px', padding: '2px'}} align="center">
+        <TableCell style={{minWidth: expandCellWidth, padding: '2px'}} align="right">
           {
             item.has_children === false ? null :
             <IconButton size='small' onClick={onExpandClick}>
@@ -101,16 +104,16 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
         </TableCell>
         {
           map(columns, (column, i) => (
-            <TableCell key={column.id} align={column.align || 'left'} className={column.className} style={ i == 0 ? {width: '15%'} : {width: '20%'}}>
+            <TableCell key={column.id} align={column.align || 'left'} className={column.className} style={ i == 0 ? {width: firstCellWidth} : {width: '20%'}}>
               { getValue(item, column) }
             </TableCell>
           ))
         }
       </TableRow>
       <TableRow>
-        <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={columns.length + 2}>
+        <TableCell style={{padding: 0}} colSpan={columns.length + 2}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box style={{margin: '8px'}}>
+            <Box>
               <Table size="small">
                 <TableBody>
                   {
@@ -122,15 +125,16 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
                     </TableRow> :
                     (
                       children.map(child => (
-                      <Row
-                        key={child.uuid}
-                        item={child}
-                        selectedList={selectedList}
-                        isSelected={includes(selectedList, child.id)}
-                        onSelectChange={onSelectChange}
-                        containerOnSelectChange={containerOnSelectChange}
-                        columns={columns}
-                      />
+                        <Row
+                          key={child.uuid}
+                          item={child}
+                          selectedList={selectedList}
+                          isSelected={includes(selectedList, child.id)}
+                          onSelectChange={onSelectChange}
+                          containerOnSelectChange={containerOnSelectChange}
+                          columns={columns}
+                          level={level + 1}
+                        />
                       ))
                     )
                   }
@@ -229,6 +233,7 @@ const ConceptHierarchyResultsTable = ({
                         onSelectChange={updateSelected}
                         containerOnSelectChange={onSelectChange}
                         columns={columns}
+                        level={0}
                       />
                     ))
                   }
