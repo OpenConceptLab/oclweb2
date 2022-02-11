@@ -135,7 +135,7 @@ class AddToCollection extends React.Component {
         </Tooltip>
       )
     return (
-      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} {...rest}  color='secondary'>
+      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} color='secondary' {...rest}>
         Add to Collection
       </Button>
     )
