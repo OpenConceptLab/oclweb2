@@ -7,7 +7,7 @@ import {
 import RightIcon from '@mui/icons-material/KeyboardArrowRight';
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
-  map, get, includes, find, keys, isEmpty, filter, reject,
+  map, get, includes, find, keys, isEmpty, reject,
   last, isArray, uniqBy
 } from 'lodash';
 import APIService from '../../services/APIService';
@@ -181,7 +181,6 @@ const ConceptHierarchyResultsTable = ({
     return result
   }
 
-  const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
   let columns = reject(resourceDefinition.columns, c => c.essential === false)
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   const columnsCount = get(columns, 'length', 1) + 2;
