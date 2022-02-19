@@ -14,7 +14,7 @@
     "@mui/styles": "^5.4.2",
     "alertifyjs": "^1.13.1",
     "axios": "^0.21.4",
-    "core-js": "^3.21.0",
+    "core-js": "^3.21.1",
     "d3": "^7.3.0",
     "d3-v6-tip": "^1.0.9",
     "lodash": "^4.17.21",
@@ -45,7 +45,7 @@
     "eslint": "./node_modules/.bin/eslint ./src"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.4",
+    "@babel/core": "^7.17.5",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
     "@babel/polyfill": "^7.12.1",
@@ -72,7 +72,7 @@
     "react-is": "^16.13.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^5.69.0",
+    "webpack": "^5.69.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.3"
   }
