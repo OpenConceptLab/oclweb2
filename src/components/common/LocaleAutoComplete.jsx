@@ -28,7 +28,7 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
       .appendToUrl('concepts/')
       .get(null, null, {limit: 25, q: searchStr})
       .then(response => {
-        const _locales = orderBy(map(response.data, l => ({id: l.locale || l.display_locale, name: `${l.display_name} [${l.locale || l.display_locale}]`, uuid: l.uuid})), 'name');
+        const _locales = orderBy(map(response.data, l => ({id: l.id, name: `${l.display_name} [${l.id}]`, uuid: l.uuid})), 'name');
         setLocales(_locales)
         setFetched(true)
       })
@@ -59,7 +59,7 @@ const LocaleAutoComplete = ({ id, selected, multiple, minCharactersForSearch, re
       loading={loading}
       loadingText={loading ? 'Loading...' : `Type atleast ${minLength} characters to search`}
       noOptionsText={(isSearchable(input) && !loading) ? "No results" : 'Start typing...'}
-      getOptionLabel={option => {return option.name || ''}}
+      getOptionLabel={option => (option.name || '')}
       onInputChange={handleInputChange}
       onChange={(event, item) => onChange(id || 'localesAutoComplete', item)}
       renderInput={
