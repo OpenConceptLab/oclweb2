@@ -608,9 +608,6 @@ class Search extends React.Component {
               <span style={{paddingRight: '4px'}}>
                 <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
               </span>
-              <span style={{paddingRight: '4px', cursor: isDisabledFilters ? 'not-allowed' : 'pointer'}}>
-                <FilterButton count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More Filters' size={nested ? 'small' : 'medium'} />
-              </span>
               {
                 resource === 'concepts' && isTable && !asReference &&
                 <span style={{paddingRight: '4px'}}>
@@ -669,6 +666,12 @@ class Search extends React.Component {
                   size={nested ? 'small' : 'medium'}
                 />
               </Tooltip>
+            </span>
+          }
+          {
+            !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
+            <span style={{cursor: 'pointer', paddingLeft: '4px'}}>
+              <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More' size={nested ? 'small' : 'medium'} />
             </span>
           }
         </span>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import {
-  FilterAlt as FilterIcon
+  FilterAlt as FilterIcon,
+  FilterAltOff as FilterOffIcon
 } from '@mui/icons-material';
 
 const SearchFilters = ({ nested, controls }) => {
@@ -15,9 +16,9 @@ const SearchFilters = ({ nested, controls }) => {
             color='secondary'
             variant='outlined'
             size={nested ? 'small' : 'medium'}
-            label={show ? 'Hide Filters' : 'Show Filters'}
+            label='Filters'
             onClick={() => setShow(!show)}
-            icon={<FilterIcon fontSize={nested ? 'small' : 'medium'} />}
+            icon={show ? <FilterOffIcon fontSize={nested ? 'small' : 'medium'} /> : <FilterIcon fontSize={nested ? 'small' : 'medium'} />}
             style={{marginRight: '4px'}}
           />
           {
