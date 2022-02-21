@@ -122,6 +122,8 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
   }
 
   const getFormattedExpansions = (version, versionExpansions) => {
+    if(isEmpty(versionExpansions))
+      return []
     let _expansions = map(orderBy(versionExpansions, 'id', 'desc'), expansion => ({...expansion, "default": false}))
     if(version.autoexpand) {
       _expansions = [{...last(_expansions), auto: true}, ..._expansions.slice(0, -1)]
