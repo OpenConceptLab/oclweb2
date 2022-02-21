@@ -26,7 +26,6 @@ import SearchFilters from './SearchFilters';
 import SearchByAttributeInput from './SearchByAttributeInput';
 import ResourceTabs from './ResourceTabs';
 import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
-import LayoutToggle from '../common/LayoutToggle';
 import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
 import BestMatchSort from './BestMatchSort';
@@ -628,12 +627,6 @@ class Search extends React.Component {
                 </span>
               }
             </React.Fragment>
-          }
-          {
-            resource !== 'references' && !fhir && !asReference &&
-            <span style={{paddingLeft: '4px'}}>
-              <LayoutToggle layoutId={this.getLayoutTypeName()} size={nested ? 'small' : 'medium'} onClick={this.onLayoutChange} />
-            </span>
           }
           {
             !isTable &&
