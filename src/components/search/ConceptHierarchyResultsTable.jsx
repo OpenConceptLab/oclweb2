@@ -39,7 +39,7 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
   const [open, setOpen] = React.useState(false);
   const [children, setChidren] = React.useState([]);
   const [selected, setSelected] = React.useState(isSelected);
-  const [fetched, setFetched] = React.useState(false);
+  const [fetched, setFetched] = React.useState(!item.has_children);
 
   React.useEffect(() => setSelected(isSelected), [isSelected]);
 
