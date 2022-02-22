@@ -40,11 +40,12 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   const count = keys(attributes).length
 
   return (
-    <Accordion expanded={isNumber(count) && count > 0}>
+    <Accordion expanded style={{borderRadius: 'unset'}}>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
+        style={{cursor: 'inherit'}}
       >
         <span className='col-xs-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
           <TabCountLabel label='Attributes' style={headingStyles} count={count}/>

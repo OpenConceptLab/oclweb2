@@ -41,7 +41,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           detailStyles={ACCORDIAN_DETAILS_STYLES}
         />
       </div>
-      <div className={classes}>
+      <div className={classes} style={{paddingTop: '10px'}}>
         <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} childConcepts={childConcepts} parentConcepts={parentConcepts} isLoadingChildren={isLoadingChildren} isLoadingParents={isLoadingParents} source={source} />
         <ConceptCollections instance={concept} isLoadingCollections={isLoadingCollections} />
         <VersionList versions={versions} resource='concept' />

@@ -51,11 +51,12 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
   const groupedLocales = groupLocales(locales, source)
 
   return (
-    <Accordion expanded={isNumber(count) && count > 0}>
+    <Accordion expanded style={{borderRadius: 'unset'}}>
       <AccordionSummary
         className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
+        style={{cursor: 'inherit'}}
       >
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label={label} count={count} style={ACCORDIAN_HEADING_STYLES} />

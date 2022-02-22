@@ -87,14 +87,12 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
 
   const noAssociations = isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts);
 
-  let style = {minHeight: '40px', height: '100%'}
-  if(hierarchy)
-    style['padding'] = '0 8px'
+  let style = {minHeight: '40px', height: '100%', cursor: 'inherit'}
 
   return (
-    <Accordion expanded={isNumber(count) && count > 0}>
+    <Accordion expanded style={{borderRadius: 'unset'}}>
       <AccordionSummary
-        className='light-gray-bg less-margin-accordian-summary-content'
+        className='light-gray-bg less-paded-accordian-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
         style={style}

@@ -50,11 +50,12 @@ const SourceChildCollections = ({ instance, isLoadingCollections }) => {
 
   return (
     <React.Fragment>
-      <Accordion expanded={isNumber(count) && count > 0}>
+      <Accordion expanded style={{borderRadius: 'unset'}}>
         <AccordionSummary
           className='light-gray-bg less-paded-accordian-header'
           expandIcon={<span />}
           aria-controls="panel1a-content"
+          style={{cursor: 'inherit'}}
         >
           <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
             <TabCountLabel style={ACCORDIAN_HEADING_STYLES} label='Collection Membership' count={count} />
