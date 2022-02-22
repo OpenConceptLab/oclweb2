@@ -1,3 +1,4 @@
+import 'core-js/features/url-search-params';
 import React from 'react';
 import {
   Search as SearchIcon,

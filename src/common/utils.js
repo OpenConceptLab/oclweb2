@@ -1,4 +1,5 @@
 /*eslint no-process-env: 0*/
+import 'core-js/features/url-search-params';
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';

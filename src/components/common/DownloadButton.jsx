@@ -1,3 +1,4 @@
+import 'core-js/features/url-search-params';
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { MenuItem, Menu, Tooltip, Button } from '@mui/material';

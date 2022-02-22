@@ -1,3 +1,4 @@
+import 'core-js/features/url-search-params';
 import React from 'react';
 import { isEmpty, get, isObject, map, find } from 'lodash';
 import { CircularProgress } from '@mui/material';

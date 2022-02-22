@@ -1,3 +1,4 @@
+import 'core-js/features/url-search-params';
 import React from 'react';
 import { withRouter } from "react-router";
 import alertifyjs from 'alertifyjs';

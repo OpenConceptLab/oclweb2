@@ -1,3 +1,4 @@
+import 'core-js/features/url-search-params';
 import React from 'react';
 import ReactDiffViewer from 'react-diff-viewer';
 import { Link } from 'react-router-dom';
