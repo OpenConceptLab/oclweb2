@@ -457,6 +457,7 @@ const ExpandibleRow = props => {
       } else {
         if(isSourceChild) {
           event.persist()
+          onCheckboxClick(event)
           onContextMenu(event, item)
         }
         else
