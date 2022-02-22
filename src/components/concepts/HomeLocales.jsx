@@ -6,7 +6,7 @@ import {
 import {
   InfoOutlined as InfoIcon
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, groupBy, without, keys, compact, has, isNumber } from 'lodash';
+import { get, isEmpty, forEach, map, groupBy, without, keys, compact, has } from 'lodash';
 import TabCountLabel from '../common/TabCountLabel';
 import LocalizedTextRow from './LocalizedTextRow';
 

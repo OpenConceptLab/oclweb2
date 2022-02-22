@@ -7,7 +7,7 @@ import {
   InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, isNumber } from 'lodash';
+import { get, isEmpty, forEach, map } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';

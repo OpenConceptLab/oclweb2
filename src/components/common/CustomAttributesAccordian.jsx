@@ -3,7 +3,7 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Switch, Grid, Typography
 } from '@mui/material';
 import {
-  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy, isNumber
+  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
 } from 'lodash';
 import { BLUE } from '../../common/constants';
 import CustomAttributes from './CustomAttributes'
