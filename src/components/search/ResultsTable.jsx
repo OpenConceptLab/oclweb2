@@ -780,10 +780,12 @@ const ResultsTable = (
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
 
-    if(onSelectChange)
-      onSelectChange(map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
-    if(onSelect)
-      onSelect(find(results.items, {id: last(newList)}))
+    if(includes(['concepts', 'mappings'], resource)) {
+      if(onSelectChange)
+        onSelectChange(map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
+      if(onSelect)
+        onSelect(find(results.items, {id: last(newList)}))
+    }
   };
   const getOppositeOrder = order => order === 'asc' ? 'desc' : 'asc';
   const onSort = (event, columnId) => {
