@@ -45,11 +45,12 @@ const VersionList = ({ versions, resource }) => {
 
   return (
     <React.Fragment>
-      <Accordion expanded>
+      <Accordion expanded style={{borderRadius: 'unset'}}>
         <AccordionSummary
           className='light-gray-bg less-paded-accordian-header'
           expandIcon={<span />}
           aria-controls="panel1a-content"
+          style={{cursor: 'inherit'}}
         >
           <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
             <TabCountLabel style={ACCORDIAN_HEADING_STYLES} label={`${startCase(resource)} Version History`} count={!isEmpty(versions) && versions.length} />

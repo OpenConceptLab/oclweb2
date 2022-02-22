@@ -24,7 +24,7 @@ const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollecti
         />
         <MappingCollections instance={mapping} isLoadingCollections={isLoadingCollections} />
       </div>
-      <div className={classes}>
+      <div className={classes} style={{paddingTop: '10px'}}>
         <VersionList versions={versions} resource='mapping' />
       </div>
     </div>
