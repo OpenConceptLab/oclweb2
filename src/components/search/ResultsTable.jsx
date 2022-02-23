@@ -988,33 +988,35 @@ const ResultsTable = (
           </div> :
           <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
         }
-      </div>
-      {
-        details &&
-        <ResponsiveDrawer
-          width='39.5%'
-          paperStyle={{background: '#fafbfc'}}
-          variant='persistent'
-          isOpen={Boolean(details)}
-          onClose={onCloseSideDrawer}
-          onWidthChange={newWidth => onWidthChange(newWidth)}
-          formComponent={
-            details.concept_class ?
-                         <ConceptHome
-                           scoped
-                           singleColumn
-                           onClose={onCloseSideDrawer}
-                                   concept={details} location={{pathname: details.url}} match={{params: {conceptVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null }}}
-                         /> :
-                         <MappingHome
-                           scoped
-                           singleColumn
-                           onClose={onCloseSideDrawer}
-                                   noRedirect mapping={details} location={{pathname: details.url}} match={{params: {mappingVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null}}}
-                         />
-          }
-        />
-      }
+    </div>
+    {
+      details &&
+      <ResponsiveDrawer
+        width='39.5%'
+        paperStyle={{background: '#f1f1f1'}}
+        variant='persistent'
+        isOpen={Boolean(details)}
+        onClose={onCloseSideDrawer}
+        onWidthChange={newWidth => onWidthChange(newWidth)}
+        formComponent={
+          details.concept_class ?
+                       <ConceptHome
+                         global
+                         scoped
+                         singleColumn
+                         onClose={onCloseSideDrawer}
+                                 concept={details} location={{pathname: details.url}} match={{params: {conceptVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null }}}
+                       /> :
+                       <MappingHome
+                         global
+                         scoped
+                         singleColumn
+                         onClose={onCloseSideDrawer}
+                                 noRedirect mapping={details} location={{pathname: details.url}} match={{params: {mappingVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null}}}
+                       />
+        }
+      />
+    }
     </React.Fragment>
   )
 }

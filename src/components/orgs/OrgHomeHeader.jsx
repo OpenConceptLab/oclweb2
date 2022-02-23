@@ -162,6 +162,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
         <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={orgForm}
         onClose={() => setOrgForm(false)}
         formComponent={

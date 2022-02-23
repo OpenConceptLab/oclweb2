@@ -11,6 +11,7 @@ import { COLLECTION_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
+import Breadcrumbs from '../sources/Breadcrumbs';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
 
@@ -247,6 +248,19 @@ class CollectionHome extends React.Component {
     return '100%'
   }
 
+  getBreadcrumbParams = () => {
+    let params = {...this.props.match.params}
+    const { selected } = this.state
+    if(selected) {
+      if(selected.map_type)
+        params = {...params, mapping: selected.id, mappingVersion: selected.version}
+      else
+        params = {...params, concept: selected.id, conceptVersion: selected.version}
+    }
+
+    return params
+  }
+
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
@@ -267,58 +281,78 @@ class CollectionHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
-            <CollectionHomeHeader
-              collection={collection}
-              isVersionedObject={this.isVersionedObject()}
-              versionedObjectURL={versionedObjectURL}
-              currentURL={currentURL}
-              config={selectedConfig}
-              expansion={expansion}
-              tab={tab}
-              versions={versions}
-              expansions={expansions}
-              isLoadingExpansions={isLoadingExpansions}
-            />
-            <CollectionHomeTabs
-              tab={tab}
-              onTabChange={this.onTabChange}
-              collection={collection}
-              expansion={expansion}
-              versions={versions}
-              match={this.props.match}
-              location={this.props.location}
-              versionedObjectURL={versionedObjectURL}
-              currentVersion={this.getCurrentVersion()}
-              aboutTab={showAboutTab}
-              onVersionUpdate={this.onVersionUpdate}
-              customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
-              onConfigChange={this.onConfigChange}
-              selectedConfig={selectedConfig}
-              showConfigSelection={this.customConfigFeatureApplicable()}
-              isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
-              isLoadingVersions={isLoadingVersions}
-              isLoadingExpansions={isLoadingExpansions}
-              onSelect={this.onResourceSelect}
-            />
+          <div className='col-xs-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, marginLeft: '5px'}}>
+              <Breadcrumbs
+                params={this.getBreadcrumbParams()}
+                container={collection}
+                isVersionedObject={this.isVersionedObject()}
+                versionedObjectURL={versionedObjectURL}
+                currentURL={currentURL}
+                config={selectedConfig}
+                versions={versions}
+                selectedResource={selected}
+                onSplitViewClose={() => this.setState({selected: null, width: false})}
+                expansions={expansions}
+                isLoadingExpansions={isLoadingExpansions}
+                expansion={expansion}
+              />
+            </div>
+
+            <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
+              <CollectionHomeHeader
+                collection={collection}
+                isVersionedObject={this.isVersionedObject()}
+                versionedObjectURL={versionedObjectURL}
+                currentURL={currentURL}
+                config={selectedConfig}
+                expansion={expansion}
+                tab={tab}
+                versions={versions}
+                expansions={expansions}
+                isLoadingExpansions={isLoadingExpansions}
+              />
+              <CollectionHomeTabs
+                tab={tab}
+                onTabChange={this.onTabChange}
+                collection={collection}
+                expansion={expansion}
+                versions={versions}
+                match={this.props.match}
+                location={this.props.location}
+                versionedObjectURL={versionedObjectURL}
+                currentVersion={this.getCurrentVersion()}
+                aboutTab={showAboutTab}
+                onVersionUpdate={this.onVersionUpdate}
+                customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
+                onConfigChange={this.onConfigChange}
+                selectedConfig={selectedConfig}
+                showConfigSelection={this.customConfigFeatureApplicable()}
+                isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
+                isLoadingVersions={isLoadingVersions}
+                isLoadingExpansions={isLoadingExpansions}
+                onSelect={this.onResourceSelect}
+              />
+            </div>
           </div>
         }
         {
           (isMappingSelected || isConceptSelected) &&
           <ResponsiveDrawer
             width="44.5%"
+            paperStyle={{background: '#f1f1f1'}}
             variant='persistent'
             isOpen
             onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#fafbfc'}}>
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '64px'}}>
                 {
                   isMappingSelected ?
                   <MappingHome
                     singleColumn
-                    scoped
-                    mapping={selected}
+                    scoped='collection'
+                            mapping={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {mappingVersion: selected.verison}}}
                             onClose={() => this.setState({selected: null, width: false})}
@@ -327,8 +361,8 @@ class CollectionHome extends React.Component {
                   /> :
                   <ConceptHome
                     singleColumn
-                    scoped
-                    concept={selected}
+                    scoped='collection'
+                            concept={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {conceptVersion: selected.version}}}
                             onClose={() => this.setState({selected: null, width: false})}

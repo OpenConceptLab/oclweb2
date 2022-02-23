@@ -125,6 +125,7 @@ const HomeTabs = props => {
         </div>
       }
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
         formComponent={
@@ -132,6 +133,7 @@ const HomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
         formComponent={
@@ -139,6 +141,7 @@ const HomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={membersForm}
         onClose={() => setMembersForm(false)}
         formComponent={

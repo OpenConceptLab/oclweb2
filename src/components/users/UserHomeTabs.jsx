@@ -147,6 +147,7 @@ const UserHomeTabs = props => {
         }
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
         formComponent={
@@ -154,6 +155,7 @@ const UserHomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
         formComponent={
@@ -161,6 +163,7 @@ const UserHomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={orgForm}
         onClose={() => setOrgForm(false)}
         formComponent={

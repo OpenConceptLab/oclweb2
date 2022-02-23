@@ -333,7 +333,7 @@ class ConceptContainerForm extends React.Component {
     const selected_type = isSource ? selected_source_type : selected_collection_type;
     const isLoading = false && isEmpty(locales);
     const resourceTypeLabel = startCase(resourceType)
-    const header = edit ? `Edit ${resourceTypeLabel}: ${fields.id}` : `New ${resourceTypeLabel}`
+    const header = edit ? `Edit ${resourceTypeLabel}: ${this.props.resource.short_code}` : `New ${resourceTypeLabel}`
     const shouldShowOwner = this.isNewCollectionAnonymous()
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>

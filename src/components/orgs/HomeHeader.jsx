@@ -259,6 +259,7 @@ const HomeHeader = ({
           />
         </div>
         <CommonFormDrawer
+          style={{zIndex: 1202}}
           isOpen={orgForm}
           onClose={() => setOrgForm(false)}
           formComponent={

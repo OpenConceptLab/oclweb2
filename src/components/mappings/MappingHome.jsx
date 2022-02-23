@@ -126,7 +126,12 @@ class MappingHome extends React.Component {
           <div className='col-md-12 home-container no-side-padding'>
             {
               this.props.scoped ?
-              <ScopeHeader {...headerParams} onClose={this.props.onClose} /> :
+              <ScopeHeader
+                {...headerParams}
+                onClose={this.props.onClose}
+                global={this.props.global}
+                scoped={this.props.scoped}
+              /> :
               <MappingHomeHeader {...headerParams} />
             }
             <div className='col-md-12'>

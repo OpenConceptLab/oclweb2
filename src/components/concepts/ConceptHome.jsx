@@ -247,6 +247,8 @@ class ConceptHome extends React.Component {
             {
               this.props.scoped ?
               <ScopeHeader
+                scoped={this.props.scoped}
+                global={this.props.global}
                 onClose={this.props.onClose}
                 concept={concept}
                 mappings={mappings}
@@ -270,6 +272,7 @@ class ConceptHome extends React.Component {
             }
             <div className='col-xs-12'>
             <ConceptHomeDetails
+              scoped={this.props.scoped}
               singleColumn={this.props.singleColumn}
               source={source}
               concept={{...concept, mappings: mappings, collections: collections}}
@@ -287,7 +290,7 @@ class ConceptHome extends React.Component {
       </div>
     )
     return (
-      <div className='col-xs-12 home-container no-side-padding' style={this.props.scoped ? {background: '#fafbfc'} : {}}>
+      <div className='col-xs-12 home-container no-side-padding' style={this.props.scoped ? {background: '#f1f1f1'} : {}}>
         {
           openHierarchy ?
           <Split className='split' sizes={[25, 75]} minSize={50}>

@@ -376,6 +376,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
       {
         selectedVersion &&
         <CommonFormDrawer
+          style={{zIndex: 1202}}
           isOpen={versionForm}
           onClose={onEditCancel}
           formComponent={

@@ -13,10 +13,12 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 import HomeActionButton from '../common/SourceChildHomeActionButton';
+import { ResourceTextButton } from '../common/OwnerLabel';
+import { toParentURI, toOwnerURI } from '../../common/utils';
 
 const ScopeHeader = ({
   concept, isVersionedObject, versionedObjectURL, currentURL,
-  header, onClose, mappings
+  header, onClose, mappings, global, scoped
 }) => {
   const [conceptForm, setConceptForm] = React.useState(false);
   const onRetire = () => {
@@ -67,12 +69,20 @@ const ScopeHeader = ({
 
   return (
     <header className='home-header col-md-12'>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '5px', lineHeight: 'normal'}}>
+      <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
+        {
+          (global || scoped === 'collection') && concept &&
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginBottom: '5px'}}>
+            <ResourceTextButton href={`#${toOwnerURI(concept.url)}`} resource={concept.owner_type.toLowerCase()} id={concept.owner} />
+            <span className='separator-small' style={{padding: '0'}}>/</span>
+            <ResourceTextButton href={`#${toParentURI(concept.url)}`} resource='source' id={concept.source} color='green' />
+          </div>
+        }
         <span style={{marginLeft: '5px', display: 'block'}}>
           <ConceptIcon shrink={false} />
         </span>
-        <div className='col-md-10 no-right-padding'>
-          <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
+        <div className='col-xs-10 no-right-padding'>
+          <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>
             <span style={{color: BLUE}}>
               <b>{concept.id}</b>
             </span>
@@ -83,18 +93,21 @@ const ScopeHeader = ({
               concept.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
             }
-            <span style={{marginLeft: '15px'}}>
-              <HomeActionButton
-                instance={concept}
-                currentURL={currentURL}
-                isVersionedObject={isVersionedObject}
-                onEditClick={() => setConceptForm(true)}
-                onRetire={onRetire}
-                onUnretire={onUnretire}
-                mappings={mappings}
-                resource='concept'
-              />
-            </span>
+            {
+              global &&
+              <span style={{marginLeft: '15px'}}>
+                <HomeActionButton
+                  instance={concept}
+                  currentURL={currentURL}
+                  isVersionedObject={isVersionedObject}
+                  onEditClick={() => setConceptForm(true)}
+                  onRetire={onRetire}
+                  onUnretire={onUnretire}
+                  mappings={mappings}
+                  resource='concept'
+                />
+              </span>
+            }
           </div>
           <div className='col-md-12 no-side-padding' style={{marginLeft: '4px'}}>
             <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -138,13 +151,17 @@ const ScopeHeader = ({
             }
           </div>
         </div>
-        <span className='col-md-1 no-side-padding' style={{marginLeft: '5px', display: 'block', textAlign: 'right'}}>
-          <IconButton size='small' color='secondary' onClick={onClose}>
-            <CancelIcon fontSize='inherit' />
-          </IconButton>
-        </span>
+        {
+          global && onClose &&
+          <span className='col-md-1 no-side-padding' style={{marginLeft: '5px', display: 'block', textAlign: 'right'}}>
+            <IconButton size='small' color='secondary' onClick={onClose}>
+              <CancelIcon fontSize='inherit' />
+            </IconButton>
+          </span>
+        }
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={conceptForm}
         onClose={() => setConceptForm(false)}
         formComponent={

@@ -10,7 +10,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
-const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollections }) => {
+const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollections, scoped }) => {
   let classes = 'col-sm-12 padding-5';
   if(!singleColumn)
     classes += ' col-md-6'
@@ -22,11 +22,17 @@ const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollecti
           headingStyles={ACCORDIAN_HEADING_STYLES}
           detailStyles={ACCORDIAN_DETAILS_STYLES}
         />
-        <MappingCollections instance={mapping} isLoadingCollections={isLoadingCollections} />
+        {
+          scoped !== 'collection' &&
+          <MappingCollections instance={mapping} isLoadingCollections={isLoadingCollections} />
+        }
       </div>
-      <div className={classes} style={{paddingTop: '10px'}}>
-        <VersionList versions={versions} resource='mapping' />
-      </div>
+      {
+        scoped !== 'collection' &&
+        <div className={classes} style={{paddingTop: '10px'}}>
+          <VersionList versions={versions} resource='mapping' />
+        </div>
+      }
     </div>
   );
 }

@@ -202,6 +202,7 @@ const ConceptHomeHeader = ({
         <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={conceptForm}
         onClose={() => setConceptForm(false)}
         formComponent={

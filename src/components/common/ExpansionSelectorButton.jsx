@@ -4,11 +4,11 @@ import {
   ArrowDropDown as DownIcon,
   AspectRatio as ExpansionIcon
 } from '@mui/icons-material';
-import { get, isEmpty, find } from 'lodash';
+import { get, isEmpty, find, merge } from 'lodash';
 import { WHITE, RED, BLACK, DARKGRAY, GREEN } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
-const ExpansionSelectorButton = ({version, selected, expansions}) => {
+const ExpansionSelectorButton = ({version, selected, expansions, style, ...rest}) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const getDefaultSelectedExpansion = () => {
@@ -64,18 +64,14 @@ const ExpansionSelectorButton = ({version, selected, expansions}) => {
 
   return (
     <React.Fragment>
-      <ButtonGroup ref={anchorRef} {...getButtonGroupProps()}>
+      <ButtonGroup ref={anchorRef} {...getButtonGroupProps()} {...rest}>
         <Button
-          style={expansionButtonStyle}
+          style={merge(expansionButtonStyle, style || {})}
           startIcon={<ExpansionIcon fontSize='inherit' />}
-        >
-          {selectedExpansion.mnemonic}
-        </Button>
-        <Button
-          style={{...commonButtonStyle, padding: 0}}
           onClick={handleToggle}
         >
-          <DownIcon fontSize='inherit' />
+          {selectedExpansion.mnemonic}
+          <DownIcon style={{marginLeft: '2px'}} />
         </Button>
       </ButtonGroup>
       <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="150px">

@@ -3,6 +3,7 @@ import { CircularProgress } from '@mui/material';
 import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
+import Breadcrumbs from './Breadcrumbs';
 import SourceHomeTabs from './SourceHomeTabs';
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
@@ -246,6 +247,20 @@ class SourceHome extends React.Component {
     return '100%'
   }
 
+  getBreadcrumbParams = () => {
+    let params = {...this.props.match.params}
+    const { selected } = this.state
+    if(selected) {
+      const isVersionedObject = selected.uuid === selected.versioned_object_id.toString()
+      if(selected.map_type)
+        params = {...params, mapping: selected.id, mappingVersion: isVersionedObject ? null : selected.version}
+      else
+        params = {...params, concept: selected.id, conceptVersion: isVersionedObject ? null : selected.version}
+    }
+
+    return params
+  }
+
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
@@ -254,7 +269,6 @@ class SourceHome extends React.Component {
     const showAboutTab = this.shouldShowAboutTab();
     const hasError = notFound || accessDenied || permissionDenied;
     const isMappingSelected = Boolean(selected && get(selected, 'map_type'))
-    const isConceptSelected = Boolean(selected && !isMappingSelected)
     return (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -263,69 +277,83 @@ class SourceHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
-            <SourceHomeHeader
-              source={source}
-              isVersionedObject={this.isVersionedObject()}
-              versionedObjectURL={this.sourcePath}
-              currentURL={this.sourceVersionPath}
-              config={selectedConfig}
-              shrink={isMappingSelected || isConceptSelected}
-              versions={versions}
-            />
-            <SourceHomeTabs
-              tab={tab}
-              onTabChange={this.onTabChange}
-              source={source}
-              versions={versions}
-              location={this.props.location}
-              match={this.props.match}
-              versionedObjectURL={this.sourcePath}
-              currentVersion={this.getCurrentVersion()}
-              aboutTab={showAboutTab}
-              onVersionUpdate={this.onVersionUpdate}
-              customConfigs={[...customConfigs, SOURCE_DEFAULT_CONFIG]}
-              onConfigChange={this.onConfigChange}
-              selectedConfig={selectedConfig}
-              showConfigSelection={this.customConfigFeatureApplicable()}
-              isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
-              isLoadingVersions={isLoadingVersions}
-              onSelect={this.onResourceSelect}
-              hierarchy={hierarchy}
-              onHierarchyToggle={() => this.setState({hierarchy: !hierarchy})}
-            />
+          <div className='col-xs-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, marginLeft: '5px'}}>
+              <Breadcrumbs
+                params={this.getBreadcrumbParams()}
+                container={source}
+                isVersionedObject={this.isVersionedObject()}
+                versionedObjectURL={this.sourcePath}
+                currentURL={this.sourceVersionPath}
+                config={selectedConfig}
+                versions={versions}
+                selectedResource={selected}
+                onSplitViewClose={() => this.setState({selected: null, width: false})}
+              />
+            </div>
+            <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
+              <SourceHomeHeader
+                source={source}
+                isVersionedObject={this.isVersionedObject()}
+                versionedObjectURL={this.sourcePath}
+                currentURL={this.sourceVersionPath}
+                config={selectedConfig}
+                versions={versions}
+              />
+              <SourceHomeTabs
+                tab={tab}
+                onTabChange={this.onTabChange}
+                source={source}
+                versions={versions}
+                location={this.props.location}
+                match={this.props.match}
+                versionedObjectURL={this.sourcePath}
+                currentVersion={this.getCurrentVersion()}
+                aboutTab={showAboutTab}
+                onVersionUpdate={this.onVersionUpdate}
+                customConfigs={[...customConfigs, SOURCE_DEFAULT_CONFIG]}
+                onConfigChange={this.onConfigChange}
+                selectedConfig={selectedConfig}
+                showConfigSelection={this.customConfigFeatureApplicable()}
+                isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
+                isLoadingVersions={isLoadingVersions}
+                onSelect={this.onResourceSelect}
+                hierarchy={hierarchy}
+                onHierarchyToggle={() => this.setState({hierarchy: !hierarchy})}
+              />
+            </div>
           </div>
         }
         {
           selected &&
           <ResponsiveDrawer
             width="44.5%"
-            paperStyle={{background: '#fafbfc'}}
+            paperStyle={{background: '#f1f1f1'}}
             variant='persistent'
             isOpen
             onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#fafbfc'}}>
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '64px'}}>
                 {
                   isMappingSelected ?
                   <MappingHome
                     singleColumn
                     scoped
+                    onClose={() => this.setState({selected: null, width: false})}
                     mapping={selected}
                             location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
                             match={{params: {mappingVersion: this.isHEAD ? null : selected.version}}}
-                            onClose={() => this.setState({selected: null, width: false})}
                             header={false}
                             noRedirect
                   /> :
                   <ConceptHome
                     singleColumn
                     scoped
+                    onClose={() => this.setState({selected: null, width: false})}
                     concept={selected}
                             location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
                             match={{params: {conceptVersion: this.isHEAD ? null : selected.version}}}
-                            onClose={() => this.setState({selected: null, width: false})}
                             openHierarchy={false}
                             header={false}
                             noRedirect

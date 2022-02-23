@@ -2,17 +2,12 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   List as ListIcon,
-  FileCopy as CopyIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
 } from '@mui/icons-material';
-import { Tooltip, ButtonGroup, Button, Collapse } from '@mui/material';
+import { Collapse } from '@mui/material';
 import { isEmpty, map, filter, get } from 'lodash';
-import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
+import { nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { WHITE } from '../../common/constants';
 import APIService from '../../services/APIService';
-import OwnerButton from '../common/OwnerButton';
-import SourceButton from '../common/SourceButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
@@ -23,29 +18,22 @@ import HeaderAttribute from '../common/HeaderAttribute';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import SupportedLocales from '../common/SupportedLocales';
-import DownloadButton from '../common/DownloadButton';
 import SourceForm from './SourceForm';
-import ReleasedChip from '../common/ReleasedChip';
-import RetiredChip from '../common/RetiredChip';
-import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import { SOURCE_DEFAULT_CONFIG } from '../../common/defaultConfigs';
-import VersionSelectorButton from '../common/VersionSelectorButton';
 
 const DEFAULT_VISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.visibleAttributes
 const DEFAULT_INVISIBLE_ATTRIBUTES = SOURCE_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const SourceHomeHeader = ({
-  source, isVersionedObject, versionedObjectURL, currentURL, config, versions, shrink
+  source, isVersionedObject, versionedObjectURL, config, shrink
 }) => {
-  const downloadFileName = isVersionedObject ? `${source.type}-${source.short_code}` : `${source.type}-${source.short_code}-${source.id}`;
   const hasAccess = currentUserHasAccess();
   const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.header.shrink', false));
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(source.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
-  const onIconClick = () => copyURL(toFullAPIURL(currentURL))
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
               .post({base64: base64, name: name})
@@ -104,70 +92,16 @@ const SourceHomeHeader = ({
 
   return (
     <header className='home-header col-xs-12 no-side-padding' style={{backgroundColor: WHITE}}>
-      <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
+      <div className='col-xs-12 no-side-padding container'>
         <div className='no-side-padding col-xs-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
             onUpload={onLogoUpload}
             defaultIcon={<ListIcon className='default-svg' />}
-            shrink={!openHeader}
           />
         </div>
         <div className='col-xs-11'>
-          <div className='col-xs-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...source} href={versionedObjectURL} />
-            <span className='separator'>/</span>
-            <SourceButton label={source.short_code} href={`#${versionedObjectURL}`} />
-            <React.Fragment>
-              <span className='separator'>/</span>
-              <VersionSelectorButton selected={source} versions={versions} resource='source' />
-            </React.Fragment>
-            {
-              source.retired &&
-              <span style={{marginLeft: '10px'}}>
-                <RetiredChip size='small' />
-              </span>
-            }
-            {
-              source.released &&
-              <span style={{marginLeft: '10px'}}>
-                <ReleasedChip size='small' />
-              </span>
-            }
-            {
-              source.is_processing &&
-              <span style={{marginLeft: '10px'}}>
-                <ProcessingChip size='small' />
-              </span>
-            }
-            <span style={{marginLeft: '15px'}}>
-              <ButtonGroup variant='text' size='large'>
-                <Tooltip arrow title="Copy URL">
-                  <Button onClick={onIconClick} color='secondary'>
-                    <CopyIcon fontSize="inherit" />
-                  </Button>
-                </Tooltip>
-                {
-                  hasAccess && isVersionedObject &&
-                  <Tooltip arrow title='Edit Source'>
-                    <Button onClick={() => setSourceForm(true)} color='secondary'>
-                      <EditIcon fontSize='inherit' />
-                    </Button>
-                  </Tooltip>
-                }
-                {
-                  hasAccess && isVersionedObject &&
-                  <Tooltip arrow title='Delete Source'>
-                    <Button onClick={() => setDeleteDialog(true) } color='secondary'>
-                      <DeleteIcon fontSize='inherit' />
-                    </Button>
-                  </Tooltip>
-                }
-                <DownloadButton resource={source} filename={downloadFileName} includeCSV />
-              </ButtonGroup>
-            </span>
-          </div>
-          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name'>
+          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
             <span style={{marginRight: '10px'}}>
               {source.full_name}
             </span>
@@ -240,6 +174,7 @@ const SourceHomeHeader = ({
         <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
         formComponent={

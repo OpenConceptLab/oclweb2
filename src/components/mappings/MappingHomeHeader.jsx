@@ -210,6 +210,7 @@ const MappingHomeHeader = ({
         <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={mappingForm}
         onClose={() => setMappingForm(false)}
         formComponent={

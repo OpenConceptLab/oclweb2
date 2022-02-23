@@ -258,6 +258,7 @@ class AddToCollection extends React.Component {
           />
         }
         <CommonFormDrawer
+          style={{zIndex: 1202}}
           isOpen={collectionForm}
           onClose={this.toggleCollectionForm}
           formComponent={

@@ -6,14 +6,14 @@ import {
   NewReleases as ReleaseIcon,
   BrightnessAuto as AutoIcon
 } from '@mui/icons-material';
-import { startCase, isEmpty } from 'lodash';
+import { startCase, isEmpty, merge } from 'lodash';
 import { headFirst } from '../../common/utils';
 import { WHITE, RED, BLACK, GREEN, DARKGRAY } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
 const HEAD = 'HEAD';
 
-const VersionSelectorButton = ({selected, versions, resource}) => {
+const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) => {
   const [open, setOpen] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState(selected)
   const anchorRef = React.useRef(null);
@@ -60,18 +60,14 @@ const VersionSelectorButton = ({selected, versions, resource}) => {
 
   return (
     <React.Fragment>
-      <ButtonGroup ref={anchorRef} {...getButtonGroupProps()}>
+      <ButtonGroup ref={anchorRef} {...getButtonGroupProps()} {...rest}>
         <Button
-          style={versionButtonStyle}
+          style={merge(versionButtonStyle, style || {})}
           startIcon={<VersionIcon fontSize='inherit' />}
-        >
-          {selectedVersion.version}
-        </Button>
-        <Button
-          style={{...commonButtonStyle, padding: 0}}
           onClick={handleToggle}
         >
-          <DownIcon fontSize='inherit' />
+          {selectedVersion.version}
+          <DownIcon style={{marginLeft: '2px'}} />
         </Button>
       </ButtonGroup>
       <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="150px">

@@ -166,6 +166,7 @@ const CollectionHomeTabs = props => {
         }
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         size='large'
         isOpen={referenceForm}
         onClose={() => setReferenceForm(false)}
@@ -174,6 +175,7 @@ const CollectionHomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={versionForm}
         onClose={() => setVersionForm(false)}
         formComponent={
@@ -181,6 +183,7 @@ const CollectionHomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={expansionForm}
         onClose={() => setExpansionForm(false)}
         formComponent={

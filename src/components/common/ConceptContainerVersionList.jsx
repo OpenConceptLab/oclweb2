@@ -225,6 +225,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
         <ConceptContainerTip resource={resource} />
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={versionForm}
         onClose={onEditCancel}
         formComponent={

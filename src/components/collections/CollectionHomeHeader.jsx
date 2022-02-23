@@ -2,18 +2,12 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Loyalty as LoyaltyIcon,
-  FileCopy as CopyIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
 } from '@mui/icons-material';
-import { Tooltip, Button, ButtonGroup, Collapse } from '@mui/material';
-import { filter, map, get, isEmpty } from 'lodash';
-import { toFullAPIURL, copyURL, nonEmptyCount, currentUserHasAccess } from '../../common/utils';
+import { Collapse } from '@mui/material';
+import { filter, map, get } from 'lodash';
+import { nonEmptyCount, currentUserHasAccess } from '../../common/utils';
+import { WHITE } from '../../common/constants';
 import APIService from '../../services/APIService';
-import OwnerButton from '../common/OwnerButton';
-import CollectionButton from '../common/CollectionButton';
-import VersionSelectorButton from '../common/VersionSelectorButton';
-import ExpansionSelectorButton from '../common/ExpansionSelectorButton';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import LinkLabel from '../common/LinkLabel';
@@ -25,10 +19,6 @@ import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from './CollectionForm';
 import SupportedLocales from '../common/SupportedLocales';
-import DownloadButton from '../common/DownloadButton';
-import ReleasedChip from '../common/ReleasedChip';
-import RetiredChip from '../common/RetiredChip';
-import ProcessingChip from '../common/ProcessingChip';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import CollapsibleDivider from '../common/CollapsibleDivider';
 import { COLLECTION_DEFAULT_CONFIG } from '../../common/defaultConfigs';
@@ -37,10 +27,8 @@ const DEFAULT_VISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.visib
 const DEFAULT_INVISIBLE_ATTRIBUTES = COLLECTION_DEFAULT_CONFIG.config.header.invisibleAttributes
 
 const CollectionHomeHeader = ({
-  collection, isVersionedObject, versionedObjectURL, currentURL, config, expansion, tab, versions,
-  expansions, isLoadingExpansions
+  collection, isVersionedObject, versionedObjectURL, config, tab
 }) => {
-  const downloadFileName = isVersionedObject ? `${collection.type}-${collection.short_code}` : `${collection.type}-${collection.short_code}-${collection.id}`;
   const tabConfig = get(config, `config.tabs.${tab}`);
   const hasAccess = currentUserHasAccess();
   const isExpandedHeader = () => !get(config, 'config.header.shrink', false) && get(tabConfig, 'type') !== 'versions';
@@ -48,7 +36,6 @@ const CollectionHomeHeader = ({
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [logoURL, setLogoURL] = React.useState(collection.logo_url)
   const [collectionForm, setCollectionForm] = React.useState(false);
-  const onIconClick = () => copyURL(toFullAPIURL(get(expansion, 'url') || currentURL))
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
               .post({base64: base64, name: name})
@@ -103,8 +90,8 @@ const CollectionHomeHeader = ({
   }
 
   return (
-    <header className='home-header col-xs-12 no-side-padding'>
-      <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
+    <header className='home-header col-xs-12 no-side-padding' style={{backgroundColor: WHITE}}>
+      <div className='col-xs-12 no-side-padding container'>
         <div className='no-side-padding col-xs-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
@@ -114,75 +101,7 @@ const CollectionHomeHeader = ({
           />
         </div>
         <div className='col-xs-11' style={{marginBottom: '5px'}}>
-          <div className='col-xs-12 no-side-padding flex-vertical-center'>
-            <OwnerButton {...collection} href={versionedObjectURL} />
-            <span className='separator'>/</span>
-            <CollectionButton label={collection.short_code} href={`#${versionedObjectURL}`} />
-            <React.Fragment>
-              <span className='separator'>/</span>
-              <VersionSelectorButton
-                selected={collection}
-                versions={versions}
-                resource='collection'
-              />
-            </React.Fragment>
-            {
-              !isEmpty(expansions) && !isLoadingExpansions &&
-              <React.Fragment>
-                <span className='separator'>/</span>
-                <ExpansionSelectorButton
-                  selected={expansion}
-                  expansions={expansions}
-                  version={collection}
-                />
-              </React.Fragment>
-            }
-            {
-              collection.retired &&
-              <span style={{marginLeft: '10px'}}>
-                <RetiredChip size='small' />
-              </span>
-            }
-            {
-              collection.released &&
-              <span style={{marginLeft: '10px'}}>
-                <ReleasedChip size='small' />
-              </span>
-            }
-            {
-              collection.is_processing &&
-              <span style={{marginLeft: '10px'}}>
-                <ProcessingChip size='small' />
-              </span>
-            }
-            <span style={{marginLeft: '15px'}}>
-              <ButtonGroup variant='text' size='large'>
-                <Tooltip arrow title="Copy URL">
-                  <Button onClick={onIconClick} color='secondary'>
-                    <CopyIcon fontSize="inherit" />
-                  </Button>
-                </Tooltip>
-                {
-                  hasAccess && isVersionedObject &&
-                  <Tooltip arrow title='Edit Collection'>
-                    <Button onClick={() => setCollectionForm(true)} color='secondary'>
-                      <EditIcon fontSize='inherit' />
-                    </Button>
-                  </Tooltip>
-                }
-                {
-                  hasAccess && isVersionedObject &&
-                  <Tooltip arrow title='Delete Collection'>
-                    <Button onClick={() => setDeleteDialog(true) } color='secondary'>
-                      <DeleteIcon fontSize='inherit' />
-                    </Button>
-                  </Tooltip>
-                }
-                <DownloadButton resource={collection} filename={downloadFileName} includeCSV />
-              </ButtonGroup>
-            </span>
-          </div>
-          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name'>
+          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
             <span style={{marginRight: '10px'}}>
               {collection.full_name}
             </span>
@@ -255,6 +174,7 @@ const CollectionHomeHeader = ({
         <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
         formComponent={

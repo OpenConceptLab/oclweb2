@@ -183,6 +183,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
         </div>
       }
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={editForm}
         onClose={onEditClose}
         formComponent={

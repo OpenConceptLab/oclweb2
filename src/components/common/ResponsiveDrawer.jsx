@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     bottom: 0,
     zIndex: 100,
-    backgroundColor: "#fafbfc",
+    backgroundColor: "#f1f1f1",
     height: '1000px'
   }
 }));

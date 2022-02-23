@@ -155,7 +155,8 @@ const Header = props => {
           color: BLACK,
           borderLeft: 'none',
           borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-          boxShadow: 'none'
+          boxShadow: 'none',
+          zIndex: 1300
         }}
         className={classes.appBar}
       >

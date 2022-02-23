@@ -8,7 +8,6 @@ const ResourceLabel = props => {
   const { resource, existsInOCL, noSeparator } = props;
   const isSourceChild = includes(['concept', 'mapping'], resource);
 
-
   return (
     <div className='col-xs-12 no-side-padding flex-vertical-center' style={{flexWrap: 'wrap'}}>
       <span className='resource-label ellipsis-text' style={{maxWidth: '100%'}}>

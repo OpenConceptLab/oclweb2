@@ -189,6 +189,7 @@ const SourceHomeTabs = props => {
         }
       </div>
       <CommonFormDrawer
+        style={{zIndex: '1202'}}
         isOpen={conceptForm}
         onClose={closeConceptForm}
         formComponent={
@@ -196,6 +197,7 @@ const SourceHomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: '1202'}}
         isOpen={mappingForm}
         onClose={closeMappingForm}
         formComponent={
@@ -203,6 +205,7 @@ const SourceHomeTabs = props => {
         }
       />
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={versionForm}
         onClose={closeVersionForm}
         formComponent={

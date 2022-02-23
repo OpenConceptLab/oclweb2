@@ -15,13 +15,15 @@ import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
 import MappingForm from './MappingForm';
 import HomeActionButton from '../common/SourceChildHomeActionButton';
+import { ResourceTextButton } from '../common/OwnerLabel';
+import { toParentURI, toOwnerURI } from '../../common/utils';
 
 const LABEL_STYLES = {
   textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
 };
 
 const ScopeHeader = ({
-  mapping, isVersionedObject, versionedObjectURL, currentURL, header, onClose
+  mapping, isVersionedObject, versionedObjectURL, currentURL, header, onClose, global, scoped
 }) => {
   const [mappingForm, setMappingForm] = React.useState(false);
   const onRetire = () => {
@@ -77,6 +79,14 @@ const ScopeHeader = ({
   return (
     <header className='home-header col-md-12'>
       <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px', lineHeight: 'normal'}}>
+        {
+          (global || scoped === 'collection') && mapping &&
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginBottom: '5px'}}>
+            <ResourceTextButton href={`#${toOwnerURI(mapping.url)}`} resource={mapping.owner_type.toLowerCase()} id={mapping.owner} />
+            <span className='separator-small' style={{padding: '0'}}>/</span>
+            <ResourceTextButton href={`#${toParentURI(mapping.url)}`} resource='source' id={mapping.source} color='green' />
+          </div>
+        }
         <span style={{marginLeft: '5px', display: 'block'}}>
           <MappingIcon shrink={false} />
         </span>
@@ -92,18 +102,21 @@ const ScopeHeader = ({
               mapping.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
             }
-            <span style={{marginLeft: '15px'}}>
-              <HomeActionButton
-                instance={mapping}
-                currentURL={currentURL}
-                isVersionedObject={isVersionedObject}
-                onEditClick={() => setMappingForm(true)}
-                onRetire={onRetire}
-                onUnretire={onUnretire}
-                conceptCompareURL={conceptCompareURL}
-                resource='mapping'
-              />
-            </span>
+            {
+              global &&
+              <span style={{marginLeft: '15px'}}>
+                <HomeActionButton
+                  instance={mapping}
+                  currentURL={currentURL}
+                  isVersionedObject={isVersionedObject}
+                  onEditClick={() => setMappingForm(true)}
+                  onRetire={onRetire}
+                  onUnretire={onUnretire}
+                  conceptCompareURL={conceptCompareURL}
+                  resource='mapping'
+                />
+              </span>
+            }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
@@ -147,13 +160,17 @@ const ScopeHeader = ({
             </div>
           }
         </div>
-        <span className='col-md-1 no-side-padding' style={{marginLeft: '5px', display: 'block', textAlign: 'right'}}>
-          <IconButton size='small' color='secondary' onClick={onClose}>
-            <CancelIcon fontSize='inherit' />
-          </IconButton>
-        </span>
+        {
+          global && onClose &&
+          <span className='col-md-1 no-side-padding' style={{marginLeft: '5px', display: 'block', textAlign: 'right'}}>
+            <IconButton size='small' color='secondary' onClick={onClose}>
+              <CancelIcon fontSize='inherit' />
+            </IconButton>
+          </span>
+        }
       </div>
       <CommonFormDrawer
+        style={{zIndex: 1202}}
         isOpen={mappingForm}
         onClose={() => setMappingForm(false)}
         formComponent={

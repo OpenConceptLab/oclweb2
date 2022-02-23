@@ -13,7 +13,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
 }
 
-const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents, singleColumn, versions }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents, singleColumn, versions, scoped }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   let classes = 'col-sm-12 padding-5';
@@ -43,8 +43,13 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
       </div>
       <div className={classes} style={{paddingTop: '10px'}}>
         <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} childConcepts={childConcepts} parentConcepts={parentConcepts} isLoadingChildren={isLoadingChildren} isLoadingParents={isLoadingParents} source={source} />
-        <ConceptCollections instance={concept} isLoadingCollections={isLoadingCollections} />
-        <VersionList versions={versions} resource='concept' />
+        {
+          scoped !== 'collection' &&
+          <React.Fragment>
+            <ConceptCollections instance={concept} isLoadingCollections={isLoadingCollections} />
+            <VersionList versions={versions} resource='concept' />
+          </React.Fragment>
+        }
       </div>
     </div>
   );
