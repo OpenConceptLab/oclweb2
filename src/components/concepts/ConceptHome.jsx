@@ -93,15 +93,16 @@ class ConceptHome extends React.Component {
                     this.setState({isLoading: false}, () => {throw response})
                   else
                     this.setState({isLoading: false, concept: response.data}, () => {
-                      this.getVersions()
                       this.getMappings()
-                      this.getParents()
-                      this.getChildren()
-                      if(!this.props.scoped) {
-                        this.getHierarchy()
-                      }
-                      this.getCollectionVersions()
                       this.fetchParent()
+                      if(this.props.scoped !== 'collection') {
+                        this.getVersions()
+                        this.getCollectionVersions()
+                        this.getParents()
+                        this.getChildren()
+                      }
+                      if(!this.props.scoped)
+                        this.getHierarchy()
                     })
                 })
 
@@ -158,8 +159,11 @@ class ConceptHome extends React.Component {
 
   getMappings() {
     this.setState({isLoadingMappings: true}, () => {
+      let url = this.getConceptURLFromPath()
+      if(this.props.scoped === 'collection' && this.props.parentURL)
+        url = `${this.props.parentURL}concepts/${this.state.concept.id}/${this.state.concept.version}/`
       APIService.new()
-                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'mappings/?includeInverseMappings=true&limit=1000')
+                .overrideURL(encodeURI(url) + 'mappings/?includeInverseMappings=true&limit=1000')
                 .get()
                 .then(response => {
                   this.setState({mappings: response.data, isLoadingMappings: false})
@@ -271,19 +275,19 @@ class ConceptHome extends React.Component {
               />
             }
             <div className='col-xs-12'>
-            <ConceptHomeDetails
-              scoped={this.props.scoped}
-              singleColumn={this.props.singleColumn}
-              source={source}
-              concept={{...concept, mappings: mappings, collections: collections}}
-              parentConcepts={parentConcepts}
-              childConcepts={childConcepts}
-              isLoadingMappings={isLoadingMappings}
-              isLoadingCollections={isLoadingCollections}
-              isLoadingChildren={isLoadingChildren}
-              isLoadingParents={isLoadingParents}
-              versions={versions}
-            />
+              <ConceptHomeDetails
+                scoped={this.props.scoped}
+                singleColumn={this.props.singleColumn}
+                source={source}
+                concept={{...concept, mappings: mappings, collections: collections}}
+                parentConcepts={parentConcepts}
+                childConcepts={childConcepts}
+                isLoadingMappings={isLoadingMappings}
+                isLoadingCollections={isLoadingCollections}
+                isLoadingChildren={isLoadingChildren}
+                isLoadingParents={isLoadingParents}
+                versions={versions}
+              />
             </div>
           </React.Fragment>
         }

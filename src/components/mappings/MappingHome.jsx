@@ -69,8 +69,10 @@ class MappingHome extends React.Component {
                     this.setState({isLoading: false}, () => {throw response})
                   else
                     this.setState({isLoading: false, mapping: response.data}, () => {
-                      this.getVersions()
-                      this.getCollectionVersions()
+                      if(this.props.scoped !== 'collection') {
+                        this.getVersions()
+                        this.getCollectionVersions()
+                      }
                     })
                 })
 
