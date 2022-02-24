@@ -126,7 +126,7 @@ const VersionList = ({ versions, resource }) => {
                   </div>
                   {
                     version && (!isEmpty(version.source_versions) || !isEmpty(version.collection_versions)) &&
-                    <div className='col-md-12 no-side-padding' style={{textAlign: 'center', marginTop: '-15px'}}>
+                    <div className='col-md-11 no-side-padding' style={{textAlign: 'center', marginTop: '-15px'}}>
                       <SourceChildVersionAssociationWithContainer
                         associatedWith={{
                           source: version.source_versions,
