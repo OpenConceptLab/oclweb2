@@ -45,12 +45,12 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
           }
         </div>
       </div>
-      {
-        !isEmpty(members) &&
-        <div className='col-xs-3 no-side-padding'>
+      <div className='col-xs-3 no-side-padding'>
+        {
+          !isEmpty(members) &&
           <Members members={members} org={org} />
-        </div>
-      }
+        }
+      </div>
     </div>
   )
 }
