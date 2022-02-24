@@ -779,10 +779,13 @@ const ResultsTable = (
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
     if(includes(['concepts', 'mappings'], resource)) {
+      const lastSelected = find(results.items, {id: last(newList)})
       if(onSelectChange)
         onSelectChange(map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
       if(onSelect)
-        onSelect(find(results.items, {id: last(newList)}))
+        onSelect(lastSelected)
+      if(!onSelect && !onSelectChange)
+        onDetailsToggle(lastSelected)
     }
   };
   const getOppositeOrder = order => order === 'asc' ? 'desc' : 'asc';
