@@ -346,7 +346,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    showPin, columns, hapi, fhir, history, asReference
+    showPin, columns, hapi, fhir, history, asReference, lastSelected
   } = props;
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
   const [mappings, setMappings] = React.useState([]);
@@ -547,7 +547,7 @@ const ExpandibleRow = props => {
   const onCheckboxClick = event => {
     setSelected(prevSelected => {
       const newValue = !prevSelected;
-      props.onSelectChange(item.id, newValue)
+      props.onSelectChange(item.uuid, newValue)
       return newValue;
     })
     event.stopPropagation();
@@ -575,7 +575,7 @@ const ExpandibleRow = props => {
     <React.Fragment>
       <TableRow
         hover
-        style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
+        style={selected ? {backgroundColor: (item.uuid === lastSelected && isSourceChild) ? 'rgb(190, 209, 226)' : COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
         onClick={onRowClick}>
         {
           isConceptContainer &&
@@ -769,19 +769,19 @@ const ResultsTable = (
                        isSourceChild;
 
   const onAllSelect = event => {
-    const newList = event.target.checked ? map(results.items, 'id') : [];
+    const newList = event.target.checked ? map(results.items, 'uuid') : [];
     setSelectedList(newList)
 
     if(onSelectChange)
-      onSelectChange(isEmpty(newList) ? [] : map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
+      onSelectChange(isEmpty(newList) ? [] : map(filter(results.items, item => includes(newList, item.uuid)), 'version_url'))
   };
   const updateSelected = (id, selected) => {
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
     if(includes(['concepts', 'mappings'], resource)) {
-      const lastSelected = find(results.items, {id: last(newList)})
+      const lastSelected = find(results.items, {uuid: last(newList)})
       if(onSelectChange)
-        onSelectChange(map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
+        onSelectChange(map(filter(results.items, item => includes(newList, item.uuid)), 'version_url'))
       if(onSelect)
         onSelect(lastSelected)
       if(!onSelect && !onSelectChange)
@@ -815,7 +815,7 @@ const ResultsTable = (
     return result
   }
 
-  const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.id))
+  const getSelectedItems = () => filter(results.items, item => includes(selectedList, item.uuid))
   let columns = essentialColumns ?
                 reject(resourceDefinition.columns, c => c.essential === false) :
                 resourceDefinition.columns;
@@ -952,6 +952,7 @@ const ResultsTable = (
                         fhir={fhir}
                         history={history}
                         asReference={asReference}
+                        lastSelected={last(selectedList)}
                       />
                     ))
                   }
