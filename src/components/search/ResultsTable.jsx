@@ -346,7 +346,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    showPin, columns, hapi, fhir, history, asReference, onContextMenu
+    showPin, columns, hapi, fhir, history, asReference
   } = props;
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
   const [mappings, setMappings] = React.useState([]);
@@ -458,7 +458,6 @@ const ExpandibleRow = props => {
         if(isSourceChild) {
           event.persist()
           onCheckboxClick(event)
-          onContextMenu(event, item)
         }
         else
           url = item.url
@@ -577,7 +576,6 @@ const ExpandibleRow = props => {
       <TableRow
         hover
         style={selected ? {backgroundColor: COLOR_ROW_SELECTED, cursor: 'pointer'} : {cursor: 'pointer'}}
-        onContextMenu={event => onContextMenu(event, item)}
         onClick={onRowClick}>
         {
           isConceptContainer &&
@@ -780,7 +778,6 @@ const ResultsTable = (
   const updateSelected = (id, selected) => {
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
-
     if(includes(['concepts', 'mappings'], resource)) {
       if(onSelectChange)
         onSelectChange(map(filter(results.items, item => includes(newList, item.id)), 'version_url'))
@@ -823,18 +820,6 @@ const ResultsTable = (
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
   const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
-
-  const onContextMenu = (event, item) => {
-    if(item.concept_class || item.map_type) {
-      event.preventDefault()
-      if(onSelectChange || onSelect) {
-        event.persist()
-        updateSelected(item.id, true)
-      } else {
-        onDetailsToggle(item)
-      }
-    }
-  }
 
   const onDetailsToggle = item => {
     setDetails(item)
@@ -951,7 +936,6 @@ const ResultsTable = (
                         resource={resource}
                         resourceDefinition={resourceDefinition}
                         isSelected={includes(selectedList, item.id)}
-                        onContextMenu={onContextMenu}
                         onSelectChange={updateSelected}
                         containerOnSelectChange={onSelectChange}
                         isSelectable={isSelectable}
