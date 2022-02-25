@@ -136,7 +136,7 @@ class ResourceReferenceForm extends React.Component {
                 asReference
                 nested
                 essentialColumns
-                baseURL={version.url + 'concepts/'}
+                baseURL={version.version_url + 'concepts/'}
                 fixedFilters={{isTable: false, limit: 25}}
                 searchInputPlaceholder={`Search concepts...`}
                 noFilters
@@ -153,7 +153,7 @@ class ResourceReferenceForm extends React.Component {
                 asReference
                 nested
                 essentialColumns
-                baseURL={version.url + 'mappings/'}
+                baseURL={version.version_url + 'mappings/'}
                 fixedFilters={{isTable: false, limit: 25}}
                 searchInputPlaceholder={`Search mappings...`}
                 noFilters
