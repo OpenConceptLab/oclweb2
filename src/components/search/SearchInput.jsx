@@ -61,7 +61,11 @@ class SearchInput extends React.Component {
     return false
   }
 
-  performSearch = () => {
+  performSearch = event => {
+    if(event) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
     const { input, exactMatch } = this.state
     if(this.props.onSearch)
       this.props.onSearch(input, exactMatch)
