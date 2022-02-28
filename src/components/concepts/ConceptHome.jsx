@@ -81,7 +81,7 @@ class ConceptHome extends React.Component {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
       APIService.new()
                 .overrideURL(encodeURI(url || this.getConceptURLFromPath()))
-                .get(null, null, {includeHierarchyPath: true, includeParentConceptURLs: true})
+                .get(null, null, {includeHierarchyPath: Boolean(!this.props.scoped), includeParentConceptURLs: true})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
@@ -112,7 +112,7 @@ class ConceptHome extends React.Component {
   fetchParent() {
     const { concept } = this.state
 
-    if(concept)
+    if(get(concept, 'url'))
       APIService.new().overrideURL(toParentURI(concept.url)).get().then(response => this.setState({source: response.data}))
   }
 
