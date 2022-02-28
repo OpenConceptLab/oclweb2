@@ -1,24 +1,18 @@
 import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText,
-  FormControlLabel, Checkbox, Tooltip, CircularProgress
+  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio
 } from '@mui/material'
 import {
   Help as HelpIcon,
 } from '@mui/icons-material'
 
 const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding }) => {
-  const [cascadeMappings, setCascadeMappings] = React.useState(true)
-  const [cascadeToConcepts, setCascadeToConcepts] = React.useState(false);
-  const onCascadeMappingsChange = () => {
-    const newState = !cascadeMappings
-    setCascadeMappings(newState)
-    onCascadeChange({cascadeMappings: newState, cascadeToConcepts: cascadeToConcepts})
-  }
-  const onCascadeToConceptsChange = () => {
-    const newState = !cascadeToConcepts
-    setCascadeToConcepts(newState)
-    onCascadeChange({cascadeMappings: cascadeMappings, cascadeToConcepts: newState})
+  const [cascadeMethod, setCascadeMethod] = React.useState('none')
+  const onChange = event => {
+    const newValue = event.target.value
+    setCascadeMethod(newValue)
+    onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts'})
   }
 
   const getContent = () => (
@@ -32,44 +26,55 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
           <DialogContentText style={{color: 'black', marginBottom: '20px'}}>
             {`${references.length} selected reference(s) will be added to collection ${collectionName}`}
           </DialogContentText>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={cascadeMappings}
-                        onChange={onCascadeMappingsChange}
-                        name="cascadeMappings"
-                        size='small'
-                        style={{paddingRight: '4px'}}
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={cascadeMethod}
+              onChange={onChange}
+            >
+              <FormControlLabel
+                value="none"
+                control={<Radio />}
+                label={
+                  <span className='flex-vertical-center'>
+                    <span style={{marginRight: '5px', fontSize: '14px'}}>Do not cascade (default)</span>
+                    <Tooltip arrow title="Add reference(s) to the selected resource(s) ONLY">
+                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                    </Tooltip>
+                  </span>
+                }
               />
-            }
-            label={
-              <span className='flex-vertical-center'>
-                <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings</span>
-                <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
-                  <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                </Tooltip>
-              </span>
-            }
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={cascadeToConcepts}
-                        onChange={onCascadeToConceptsChange}
-                        name="cascadeToConcepts"
-                        size='small'
-                        style={{paddingRight: '4px'}}
+              <FormControlLabel
+                value="cascadeMappings"
+                control={<Radio />}
+                label={
+                  <span className='flex-vertical-center'>
+                    <span style={{marginRight: '5px', fontSize: '14px'}}>
+                      Cascade to associated mappings in the same source
+                    </span>
+                    <Tooltip arrow title="Add reference(s) to the selected resource(s) AND any of those concepts’ mappings (only if the mapping is in the same source as the concept)">
+                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                    </Tooltip>
+                  </span>
+                }
               />
-            }
-            label={
-              <span className='flex-vertical-center'>
-                <span style={{marginRight: '5px', fontSize: '14px'}}>Automatically add associated mappings to concepts</span>
-                <Tooltip arrow title="A concept's associated mappings are mappings that originate from the specified concept (the 'from concept') and that are stored in the same source">
-                  <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                </Tooltip>
-              </span>
-            }
-          />
+              <FormControlLabel
+                value="cascadeToConcepts"
+                control={<Radio />}
+                label={
+                  <span className='flex-vertical-center'>
+                    <span style={{marginRight: '5px', fontSize: '14px'}}>
+                      Cascade to associated mappings and target concepts in the same source
+                    </span>
+                    <Tooltip arrow title="Add reference(s) to the selected resource(s) AND any of those concepts’ mappings AND the target concepts of those mappings (only for resources in the same source as the selected resource)">
+                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                    </Tooltip>
+                  </span>
+                }
+              />
+            </RadioGroup>
+          </FormControl>
         </React.Fragment>
       }
     </DialogContent>

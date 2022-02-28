@@ -31,7 +31,7 @@ class AddToCollection extends React.Component {
       isAdding: false,
       allCollections: [],
       collections: [],
-      cascadeMappings: true,
+      cascadeMappings: false,
       cascadeToConcepts: false,
       result: false,
       collectionForm: false,
