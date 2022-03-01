@@ -186,7 +186,7 @@ const Breadcrumbs = ({
                       instance={selectedResource}
                       isVersionedObject={Boolean(!resourceVersion)}
                       currentURL={resourceVersion ? resourceVersionURL : resourceURL}
-                      onEditClick={() => params.source ? () => resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true) : null}
+                      onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
                       onRetire={() => params.source ? onRetire() : null}
                       onUnretire={() => params.source ? onUnretire() : null}
                     />
