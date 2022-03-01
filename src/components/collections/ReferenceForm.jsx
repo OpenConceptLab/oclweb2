@@ -28,6 +28,7 @@ class ReferenceForm extends React.Component {
     this.anchorRef = React.createRef()
     this.state = {
       searchExpression: null,
+      selectedExpressions: [],
       conceptsSearchExpression: null,
       mappingsSearchExpression: null,
       openOptions: false,
@@ -47,10 +48,11 @@ class ReferenceForm extends React.Component {
   }
 
 
-  resetExpressions = () => this.setState({fields: {...this.state.fields, expressions: [cloneDeep(EXPRESSION_MODEL)]}})
+  resetExpressions = () => this.setState({selectedExpressions: [], fields: {...this.state.fields, expressions: [cloneDeep(EXPRESSION_MODEL)]}})
 
   onSwitchChange = event => this.setState({
     byURL: event.target.checked,
+    selectedExpressions: [],
     fields: {...this.state.fields, expressions: [cloneDeep(EXPRESSION_MODEL)]}
   })
 
@@ -165,7 +167,7 @@ class ReferenceForm extends React.Component {
 
   onExpressionChange = expressions => {
     const refs = map(expressions, expression => ({...cloneDeep(EXPRESSION_MODEL), uri: expression}))
-    this.setState({fields: {...this.state.fields, expressions: refs}})
+    this.setState({selectedExpressions: expressions, fields: {...this.state.fields, expressions: refs}})
   }
 
   onResultClose = () => {
@@ -217,7 +219,7 @@ class ReferenceForm extends React.Component {
     else if(selectedOption.id === 'addBothExpression')
       this.onAddSearchExpressionClick(event, [this.state.conceptsSearchExpression, this.state.mappingsSearchExpression])
     else if(selectedOption.id === 'addSelected')
-      this.onSubmit(event)
+      this.onAddSearchExpressionClick(event, this.state.selectedExpressions)
   }
 
   render() {
