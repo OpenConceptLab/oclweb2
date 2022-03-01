@@ -342,6 +342,7 @@ class Search extends React.Component {
 
     let newState = {...this.state}
     newState.isLoading = !this.state.isInfinite
+    newState.detailsView = false
     newState = merge(newState, attrsToSet)
     if(resetItems)
       newState.page = 1

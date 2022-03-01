@@ -835,10 +835,7 @@ const ResultsTable = (
     onDetailsToggle(null)
   }
 
-  React.useEffect(
-    () => {!details && onCloseSideDrawer()},
-    [details]
-  )
+  React.useEffect(() => !details && onCloseSideDrawer(), [details])
 
   return (
     <React.Fragment>
