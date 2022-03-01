@@ -38,7 +38,7 @@ class ReferenceForm extends React.Component {
       result: null,
       byURL: false,
       byResource: false,
-      cascadeMappings: true,
+      cascadeMappings: false,
       cascadeToConcepts: false,
       fields: {
         expressions: [cloneDeep(EXPRESSION_MODEL)],
