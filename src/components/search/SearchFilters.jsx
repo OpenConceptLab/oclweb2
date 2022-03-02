@@ -1,8 +1,8 @@
 import React from 'react';
 import { Chip, Tabs, Box } from '@mui/material';
 import {
-  FilterAlt as FilterIcon,
-  FilterAltOff as FilterOffIcon
+  FilterAltOutlined as FilterIcon,
+  FilterAltOffOutlined as FilterOffIcon
 } from '@mui/icons-material';
 
 const SearchFilters = ({ nested, filterControls, layoutControls }) => {
