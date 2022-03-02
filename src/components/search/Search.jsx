@@ -27,9 +27,7 @@ import SearchFilters from './SearchFilters';
 import SearchByAttributeInput from './SearchByAttributeInput';
 import ResourceTabs from './ResourceTabs';
 import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
-import InfiniteScrollChip from '../common/InfiniteScrollChip';
 import { FACET_ORDER } from './ResultConstants';
-import BestMatchSort from './BestMatchSort';
 import NumericalIDSort from './NumericalIDSort';
 import NavigationButtonGroup from './NavigationButtonGroup';
 import GenericFilterChip from './GenericFilterChip';
@@ -579,14 +577,10 @@ class Search extends React.Component {
     const updatedSinceText = this.getUpdatedSinceText();
     const { nested, extraControls, fhir, extraControlFilters, asReference } = this.props;
     const {
-      updatedSince, appliedFacets, resource, includeRetired, isTable, isInfinite,
-      viewFilters, sortParams, userFilters
+      updatedSince, appliedFacets, resource, includeRetired,
+      viewFilters, userFilters
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
-    const sortDesc = get(sortParams, 'sortDesc')
-    const sortAsc = get(sortParams, 'sortAsc')
-    const sortOn = sortDesc || sortAsc;
-    const sortBy = sortDesc ? 'desc' : 'asc'
     return (
       <React.Fragment>
         <span style={{display: 'inline-flex', alignItems: 'center', overflow: 'auto'}}>
@@ -603,40 +597,19 @@ class Search extends React.Component {
             <React.Fragment>
               {
                 includes(['concepts', 'mappings'], resource) &&
-                <span style={{paddingRight: '4px'}}>
+                <span className='filter-chip'>
                   <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
                 </span>
               }
-              <span style={{paddingRight: '4px'}}>
+              <span className='filter-chip'>
                 <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
               </span>
-              {
-                resource === 'concepts' && isTable && !asReference &&
-                <span style={{paddingRight: '4px'}}>
-                  <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
-                </span>
-              }
-              {
-                isTable ?
-                <span>
-                  <BestMatchSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
-                </span> :
-                <span style={{paddingRight: '4px'}}>
-                  <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={sortOn} sortBy={sortBy} />
-                </span>
-              }
             </React.Fragment>
-          }
-          {
-            !isTable &&
-            <span style={{paddingLeft: '4px'}}>
-              <InfiniteScrollChip isInfinite={isInfinite} size={nested ? 'small' : 'medium'} onClick={this.onInfiniteToggle} />
-            </span>
           }
           {
             !isEmpty(viewFilters) &&
             map(viewFilters, (value, attr) => (
-              <span style={{paddingLeft: '4px'}} key={attr}>
+              <span className='filter-chip' key={attr}>
                 <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
               </span>
             ))
@@ -644,7 +617,7 @@ class Search extends React.Component {
           {
             extraControlFilters &&
             map(extraControlFilters, (definition, id) => (
-              <span style={{paddingLeft: '4px'}} key={id}>
+              <span className='filter-chip' key={id}>
                 <GenericFilterChip
                   id={id}
                   size={nested ? 'small' : 'medium'}
@@ -656,23 +629,8 @@ class Search extends React.Component {
             ))
           }
           {
-            resource !== 'references' && !fhir && !asReference &&
-            <span style={{paddingLeft: '4px'}}>
-              <Tooltip title='Copy Link to this results'>
-                <Chip
-                  onClick={this.onShareClick}
-                  icon={<ShareIcon fontSize='small' />}
-                  label='Share'
-                  color='secondary'
-                  variant='outlined'
-                  size={nested ? 'small' : 'medium'}
-                />
-              </Tooltip>
-            </span>
-          }
-          {
             !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
-            <span style={{cursor: 'pointer', paddingLeft: '4px'}}>
+            <span className='filter-chip'>
               <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More' size={nested ? 'small' : 'medium'} />
             </span>
           }
@@ -770,14 +728,53 @@ class Search extends React.Component {
           </div>
           {
             resource !== 'references' &&
-            <div className='col-sm-12 no-side-padding' style={{display: 'flex'}}>
-              {
-                onHierarchyToggle && resource === 'concepts' &&
-                <span style={{paddingRight: '4px'}}>
-                  <Chip icon={<HierarchyIcon fontSize='small' />} size='small' onClick={this.onHierarchyViewChange} label='Hierarchy' color={hierarchy ? 'primary' : 'secondary'} variant={hierarchy ? 'contained' : 'outlined'} />
-                </span>
-              }
-              <SearchFilters nested={nested} controls={!noFilters && this.getFilterControls()} />
+            <div className='col-xs-12 no-side-padding' style={{display: 'flex'}}>
+              <SearchFilters
+                nested={nested}
+                filterControls={!noFilters && this.getFilterControls()}
+                layoutControls={
+                  <React.Fragment>
+                {
+                  resource === 'concepts' && isTable && !asReference && !fhir &&
+                  <span className='filter-chip'>
+                    <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+                  </span>
+                }
+                {
+                  !isTable && !fhir &&
+                  <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={get(sortParams, 'sortDesc') || get(sortParams, 'sortAsc')} sortBy={get(sortParams, 'sortDesc') ? 'desc' : 'asc'} />
+                }
+                {
+                  onHierarchyToggle && resource === 'concepts' && nested &&
+                  <span className='filter-chip'>
+                    <Chip
+                      icon={<HierarchyIcon fontSize='small' />}
+                      size='small'
+                      onClick={this.onHierarchyViewChange}
+                      label='Hierarchy'
+                      color={hierarchy ? 'primary' : 'secondary'}
+                      variant={hierarchy ? 'contained' : 'outlined'}
+                    />
+                  </span>
+                }
+                {
+                  !fhir && !asReference &&
+                  <span className='filter-chip'>
+                    <Tooltip title='Copy Link to this results'>
+                      <Chip
+                        onClick={this.onShareClick}
+                        icon={<ShareIcon fontSize='small' />}
+                        label='Share'
+                        color='secondary'
+                        variant='outlined'
+                        size={nested ? 'small' : 'medium'}
+                      />
+                    </Tooltip>
+                  </span>
+                }
+                  </React.Fragment>
+                }
+              />
             </div>
           }
           {

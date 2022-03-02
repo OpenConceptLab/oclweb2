@@ -166,6 +166,9 @@ td.pagination-center {
     display: inline-flex;
     align-items: center;
 }
+.flex-justify-content-space-between {
+    justify-content: space-between;
+}
 .flex-vertical-start {
     display: inline-flex;
     align-items: flex-start;
@@ -1084,4 +1087,8 @@ div.custom-attributes-accordion-content {
             color: rgba(0, 0, 0, 0.7);
         }
     }
+}
+.filter-chip {
+    cursor: pointer;
+    padding: 0 2px;
 }
