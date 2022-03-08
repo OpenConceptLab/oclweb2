@@ -850,8 +850,8 @@ const ResultsTable = (
                     selectedList.length > 0 &&
                     <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
                       <TableCell colSpan={columnsCount} align='left'>
-                        <span className='flex-vertical-center'>
-                          <span style={{margin: '0px 50px 0 15px'}}>{selectedList.length} Selected</span>
+                        <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
+                          <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedList.length} Selected</span>
                           {
                             !asReference &&
                             <SelectedResourceControls

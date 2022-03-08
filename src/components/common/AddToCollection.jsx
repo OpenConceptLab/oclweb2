@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle,
-  TextField, InputAdornment
+  TextField, InputAdornment, Chip
 } from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon,
@@ -135,9 +135,7 @@ class AddToCollection extends React.Component {
         </Tooltip>
       )
     return (
-      <Button ref={this.anchorRef} onClick={this.toggleOpen} startIcon={<LoyaltyIcon />} endIcon={<ArrowDropDownIcon />} color='secondary' {...rest}>
-        Add to Collection
-      </Button>
+      <Chip ref={this.anchorRef} onClick={this.toggleOpen} icon={<LoyaltyIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label='Add to Collection' />
     )
   }
 

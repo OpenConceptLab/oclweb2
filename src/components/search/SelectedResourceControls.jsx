@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Chip } from '@mui/material';
 import {
   CompareArrows as CompareArrowsIcon,
   GetApp as DownloadIcon,
@@ -47,7 +47,7 @@ const SelectedResourceControls = ({
   }
 
   const COLOR = 'secondary'
-  const VARIANT = 'contained'
+  const VARIANT = 'filled'
   const buttonProps = {variant: VARIANT, color: COLOR, size: 'small'}
 
   return (
@@ -60,63 +60,56 @@ const SelectedResourceControls = ({
           resource={selectedItems}
           buttonFunc={
             attrs =>
-              <Button startIcon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs}>
-                Download
-              </Button>
+              <Chip icon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs} label='Download' />
           }
           queryParams={{verbose: true, includeInverseMappings: true, includeSummary: true }}
         />
       }
       {
         shouldShowCreateSimilarOption &&
-        <Button
-          startIcon={<RepeatIcon fontSize='small' />}
+        <Chip
+          icon={<RepeatIcon fontSize='small' />}
           onClick={() => onCreateSimilarClick(get(selectedItems, '0'))}
           style={{marginLeft: '10px'}}
           {...buttonProps}
-          >
-          Create Similar
-        </Button>
+          label='Create Similar'
+        />
       }
       {
         shouldShowCreateMappingOption &&
-        <Button
-          startIcon={<LinkIcon fontSize='small' />}
+        <Chip
+          icon={<LinkIcon fontSize='small' />}
           onClick={() => onCreateMappingClick(selectedItems)}
           style={{marginLeft: '10px'}}
           {...buttonProps}
-          >
-          Create Mapping
-        </Button>
+          label='Create Mapping'
+        />
       }
       {
         shouldShowAddToCollection &&
         <span style={{marginLeft: '10px'}}>
-          <AddToCollection {...buttonProps} references={selectedItems}
-          />
+          <AddToCollection {...buttonProps} references={selectedItems} />
         </span>
       }
       {
         shouldShowCompareOption &&
-        <Button
-          startIcon={<CompareArrowsIcon fontSize='small' />}
+        <Chip
+          icon={<CompareArrowsIcon fontSize='small' />}
           onClick={onCompareClick}
           style={{marginLeft: '10px'}}
           {...buttonProps}
-          >
-          Compare
-        </Button>
+          label='Compare'
+        />
       }
       {
         shouldShowDeleteReferenceOption &&
-        <Button
-          startIcon={<DeleteIcon fontSize='small' />}
+        <Chip
+          icon={<DeleteIcon fontSize='small' />}
           onClick={onReferenceDeleteClick}
           style={{marginLeft: '10px'}}
           {...buttonProps}
-          >
-          Delete
-        </Button>
+          label='Delete'
+        />
       }
       { extraControls }
     </span>
