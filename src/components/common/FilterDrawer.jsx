@@ -9,12 +9,12 @@ import {
 } from '@mui/icons-material';
 import {
   set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has, includes,
-  isObject
+  isObject, merge
 } from 'lodash';
 
 const FilterDrawer = props => {
   const [input, setInput] = React.useState('');
-  const { kwargs, open, filters, onClose, onApply, facetOrder, resource } = props;
+  const { kwargs, open, filters, onClose, onApply, facetOrder, resource, appliedFacets } = props;
   let blacklisted = ['is_active', 'is_latest_version'];
   const isSourceChild = includes(['concepts', 'mappings'], resource)
   const hasValidKwargs = !isEmpty(kwargs) && isObject(kwargs);
@@ -59,15 +59,24 @@ const FilterDrawer = props => {
     return result
   }
 
+  const getAppliedFilters = () => merge(existingFilters, omit(appliedFacets || {}, 'includeRetired'))
+
   const [searchStr, setSearchStr] = React.useState(null);
   const [searchedFilters, setSearchedFilters] = React.useState({});
-  const [appliedFilters, setFilters] = React.useState(existingFilters);
+  const [appliedFilters, setFilters] = React.useState(getAppliedFilters());
+
+  React.useEffect(
+    () => setFilters(getAppliedFilters), [appliedFacets]
+  )
 
   const onApplyClick = () => {
     const filters = cloneDeep(appliedFilters)
     if(filters.collection_membership) {
       filters['collection'] = filters.collection_membership
       delete filters.collection_membership
+    }
+    if(filters.retired && filters.retired.true && filters.retired.false) {
+      filters.includeRetired = {'true': true}
     }
     onApply(filters)
     onClose()

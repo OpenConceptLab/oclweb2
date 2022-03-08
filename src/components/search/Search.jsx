@@ -14,7 +14,6 @@ import {
   BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID
 } from '../../common/constants';
 import ChipDatePicker from '../common/ChipDatePicker';
-import IncludeRetiredFilterChip from '../common/IncludeRetiredFilterChip';
 import FilterButton from '../common/FilterButton';
 import FilterDrawer from '../common/FilterDrawer';
 import Results from './Results';
@@ -67,7 +66,6 @@ class Search extends React.Component {
       viewFilters: {},
       fhirParams: {},
       staticParams: {},
-      includeRetired: false,
       userFilters: {},
       isURLUpdatedByActionChange: false,
       facets: {},
@@ -138,9 +136,20 @@ class Search extends React.Component {
       })
     }
 
+    let appliedFacets = {}
+    const facetQuery = queryParams.get('facets') || false;
+    if(facetQuery)
+      appliedFacets = JSON.parse(facetQuery)
+
+    const includeRetired = this.getLayoutAttrValue('includeRetired', 'bool')
+    if(includeRetired) {
+      set(appliedFacets, 'retired.true', includeRetired)
+      set(appliedFacets, 'retired.false', includeRetired)
+      set(appliedFacets, 'includeRetired.true', includeRetired)
+    }
+
     this.setState({
       updatedSince: this.getLayoutAttrValue('updatedSince'),
-      includeRetired: this.getLayoutAttrValue('includeRetired', 'bool'),
       isTable: this.getLayoutAttrValue('isTable', 'bool'),
       isList: this.getLayoutAttrValue('isList', 'bool'),
       isInfinite: this.getLayoutAttrValue('isInfinite', 'bool'),
@@ -155,6 +164,7 @@ class Search extends React.Component {
       userFilters: userFilters,
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
+      appliedFacets: appliedFacets
     }, () => this.fetchNewResults(null, true, false))
   }
 
@@ -294,8 +304,8 @@ class Search extends React.Component {
     this.fetchNewResults
   )
 
-  getFacetQueryParam() {
-    const { appliedFacets, viewFilters } = this.state;
+  _getFacetQueryParam() {
+    const { appliedFacets } = this.state;
     const queryParam = {}
     forEach(
       appliedFacets, (value, field) => {
@@ -303,7 +313,11 @@ class Search extends React.Component {
       }
     )
 
-    return {...queryParam, ...viewFilters}
+    return queryParam
+ }
+
+  getFacetQueryParam() {
+    return {...this._getFacetQueryParam(), ...this.state.viewFilters}
   }
 
   prepareBaseURL = () => {
@@ -355,14 +369,13 @@ class Search extends React.Component {
     this.setState(newState, () => {
       const {
         resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
-        includeRetired, fhirParams, staticParams
+        fhirParams, staticParams
       } = this.state;
       const { configQueryParams, noQuery, noHeaders, fhir, hapi, paginationParams, onHierarchyToggle, hierarchy } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
           q: searchStr || '', page: page, exact_match: exactMatch, limit: limit,
-          includeRetired: includeRetired,
           verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
           ...this.getFacetQueryParam(),
         };
@@ -420,8 +433,6 @@ class Search extends React.Component {
         queryParams.delete('q')
       if(queryParams.get('exact_match') === 'off')
         queryParams.delete('exact_match')
-      if(queryParams.get('includeRetired') === 'false')
-        queryParams.delete('includeRetired')
 
       return urlParts[0] + '?' + queryParams.toString()
     }
@@ -503,8 +514,6 @@ class Search extends React.Component {
     return 'All Time'
   }
 
-  onClickIncludeRetired = () => this.fetchNewResults({includeRetired: !this.state.includeRetired}, true, true, true, false)
-
   onLayoutChange = newLayoutId => {
     const existingLayoutId = this.getLayoutTypeName()
     if(newLayoutId === existingLayoutId)
@@ -561,14 +570,17 @@ class Search extends React.Component {
       url += `&sortParams=${JSON.stringify(this.state.sortParams)}`
     if(this.state.isInfinite)
       url += `&isInfinite=true`
-    if(this.state.includeRetired)
-      url += `&includeRetired=true`
     if(this.state.updatedSince)
       url += `&updatedSince=${this.state.updatedSince}`
     if(window.location.hash.includes('configs=true'))
       url += `&configs=true`
     if(window.location.hash.includes('new=true'))
       url += `&new=true`
+
+    const appliedFacets = this.state.appliedFacets
+    if(!isEmpty(appliedFacets)){
+      url += `&facets=${JSON.stringify(omit(appliedFacets, 'includeRetired'))}`
+    }
 
     return window.location.hash.split('?')[0] + '?' + url.split('?')[1];
   }
@@ -577,7 +589,7 @@ class Search extends React.Component {
     const updatedSinceText = this.getUpdatedSinceText();
     const { nested, extraControls, fhir, extraControlFilters, asReference } = this.props;
     const {
-      updatedSince, appliedFacets, resource, includeRetired,
+      updatedSince, appliedFacets, resource,
       viewFilters, userFilters
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
@@ -595,12 +607,6 @@ class Search extends React.Component {
           {
             resource !== 'references' && !fhir &&
             <React.Fragment>
-              {
-                includes(['concepts', 'mappings'], resource) &&
-                <span className='filter-chip'>
-                  <IncludeRetiredFilterChip applied={includeRetired} onClick={this.onClickIncludeRetired} size={nested ? 'small' : 'medium'} />
-                </span>
-              }
               <span className='filter-chip'>
                 <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
               </span>
@@ -631,7 +637,7 @@ class Search extends React.Component {
           {
             !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
             <span className='filter-chip'>
-              <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='More' size={nested ? 'small' : 'medium'} />
+              <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='Filters' size={nested ? 'small' : 'medium'} />
             </span>
           }
         </span>
@@ -648,7 +654,7 @@ class Search extends React.Component {
   onCloseFacetsDrawer = () => this.setState({openFacetsDrawer: false})
 
   onApplyFacets = filters => this.setState(
-    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true, false, false)
+    {appliedFacets: filters}, () => this.fetchNewResults(null, false, true, true, false)
   )
 
   onApplyUserFilters = (id, value) => {
@@ -688,7 +694,7 @@ class Search extends React.Component {
       asReference, onHierarchyToggle, hierarchy
     } = this.props;
     const {
-      resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite,
+      resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite, appliedFacets
     } = this.state;
     const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-12 no-side-padding';
     const resourceResults = get(results, resource, {});
@@ -730,7 +736,6 @@ class Search extends React.Component {
             resource !== 'references' &&
             <div className='col-xs-12 no-side-padding' style={{display: 'flex'}}>
               <SearchFilters
-                nested={nested}
                 filterControls={!noFilters && this.getFilterControls()}
                 layoutControls={
                   <React.Fragment>
@@ -870,6 +875,7 @@ class Search extends React.Component {
           onApply={this.onApplyFacets}
           kwargs={get(this.props, 'match.params')}
           resource={resource}
+          appliedFacets={appliedFacets}
         />
       </div>
     );

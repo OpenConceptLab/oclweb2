@@ -1,12 +1,7 @@
 import React from 'react';
-import { Chip, Tabs, Box } from '@mui/material';
-import {
-  FilterAltOutlined as FilterIcon,
-  FilterAltOffOutlined as FilterOffIcon
-} from '@mui/icons-material';
+import { Tabs, Box } from '@mui/material';
 
-const SearchFilters = ({ nested, filterControls, layoutControls }) => {
-  const [show, setShow] = React.useState(false)
+const SearchFilters = ({ filterControls, layoutControls }) => {
   return (
     <React.Fragment>
       <div className='col-xs-12 no-side-padding'>
@@ -26,20 +21,7 @@ const SearchFilters = ({ nested, filterControls, layoutControls }) => {
             {
               filterControls &&
               <span className="search-filter-controls">
-                <span className='filter-chip'>
-                  <Chip
-                    color='secondary'
-                    variant='outlined'
-                    size={nested ? 'small' : 'medium'}
-                    label='Filters'
-                    onClick={() => setShow(!show)}
-                    icon={show ? <FilterOffIcon fontSize={nested ? 'small' : 'medium'} /> : <FilterIcon fontSize={nested ? 'small' : 'medium'} />}
-                  />
-                </span>
-                {
-                  show &&
-                  <React.Fragment>{ filterControls }</React.Fragment>
-                }
+                <React.Fragment>{ filterControls }</React.Fragment>
               </span>
             }
             {
