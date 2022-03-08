@@ -671,8 +671,8 @@ class Search extends React.Component {
   getContainerWidth = () => {
     if(this.state.detailsView) {
       if(this.state.width)
-        return `calc(100% - ${this.state.width - 15}px)`
-      return '60%'
+        return `calc(100% - ${this.state.width}px)`
+      return '59%'
     }
     return '100%'
   }
