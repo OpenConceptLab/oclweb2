@@ -9,7 +9,7 @@ import {
 } from '@mui/icons-material';
 import {
   set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has, includes,
-  isObject, merge
+  isObject, merge, isArray
 } from 'lodash';
 
 const FilterDrawer = props => {
@@ -99,7 +99,11 @@ const FilterDrawer = props => {
     }
   }
 
-  const handleInputChange = event => setInput(event.target.value || '')
+  const handleInputChange = event => {
+    event.persist()
+    setInput(event.target.value || '')
+    setSearchStr(event.target.value || null)
+  }
 
   const onSearch = event => {
     event.preventDefault()
@@ -123,8 +127,15 @@ const FilterDrawer = props => {
     forEach(uiFilters, (value, key) => {
       if(key.search(searchCr) > -1)
         result[key] = value
-      else if (map(value, '0').some(v => v.search(searchCr) > -1))
-        result[key] = value
+      else {
+        let values = isArray(value) ? value : [value]
+        forEach(values, _value => {
+          if(_value[0].search(searchCr) > -1) {
+            result[key] = result[key] || []
+            result[key].push(_value)
+          }
+        })
+      }
     })
 
     return result
@@ -135,11 +146,6 @@ const FilterDrawer = props => {
   const onSearchClear = () => {
     setInput('')
     setSearchStr(null)
-  }
-
-  const handleKeyPress = event => {
-    if (event.key === 'Enter')
-      onSearch(event)
   }
 
   const formattedName = (field, name) => {
@@ -167,7 +173,6 @@ const FilterDrawer = props => {
               inputProps={{ 'aria-label': 'search ocl' }}
               value={input}
               onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
               size="small"
               fullWidth
             />
