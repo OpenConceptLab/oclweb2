@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@mui/material';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach, isNumber } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import Breadcrumbs from './Breadcrumbs';
@@ -33,6 +33,7 @@ class SourceHome extends React.Component {
       customConfigs: [],
       selected: null,
       hierarchy: false,
+      filtersOpen: false,
     }
   }
 
@@ -238,13 +239,17 @@ class SourceHome extends React.Component {
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
 
   getContainerWidth = () => {
-    const { selected, width } = this.state;
+    const { selected, width, filtersOpen } = this.state;
+    let totalWidth = 100
     if(selected) {
       if(width)
-        return `calc(100% - ${width - 15}px)`
-      return '55%'
+        totalWidth = `calc(${totalWidth}% - ${width - 10}px)`
+      else
+        totalWidth -= filtersOpen ? 46 : 40
     }
-    return '100%'
+    if(isNumber(totalWidth))
+      totalWidth = `${totalWidth}%`
+    return totalWidth
   }
 
   getBreadcrumbParams = () => {
@@ -261,10 +266,12 @@ class SourceHome extends React.Component {
     return params
   }
 
+  onFilterDrawerToggle = () => this.setState({filtersOpen: !this.state.filtersOpen})
+
   render() {
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, selected, hierarchy
+      notFound, accessDenied, permissionDenied, isLoadingVersions, selected, hierarchy, filtersOpen
     } = this.state;
     const showAboutTab = this.shouldShowAboutTab();
     const hasError = notFound || accessDenied || permissionDenied;
@@ -277,7 +284,7 @@ class SourceHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 no-side-padding'>
+          <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
             <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, marginLeft: '5px'}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
@@ -320,6 +327,7 @@ class SourceHome extends React.Component {
                 onSelect={this.onResourceSelect}
                 hierarchy={hierarchy}
                 onHierarchyToggle={source.hierarchy_root_url ? () => this.setState({hierarchy: !hierarchy}) : false}
+                onFilterDrawerToggle={this.onFilterDrawerToggle}
               />
             </div>
           </div>
@@ -327,7 +335,7 @@ class SourceHome extends React.Component {
         {
           selected &&
           <ResponsiveDrawer
-            width="44.5%"
+            width="39.5%"
             paperStyle={{background: '#f1f1f1'}}
             variant='persistent'
             isOpen

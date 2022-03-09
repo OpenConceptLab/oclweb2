@@ -19,7 +19,8 @@ const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, hierarchy, onHierarchyToggle
+    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, hierarchy, onHierarchyToggle,
+    onFilterDrawerToggle
   } = props;
   const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
   const selectedTabConfig = tabConfigs[tab];
@@ -134,7 +135,7 @@ const SourceHomeTabs = props => {
           <NewResourceButton resources={['concept', 'mapping', 'version']} onClick={onNewClick} />
         </div>
       }
-      <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
+      <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%', padding: '10px 0'}}>
         {
           isInvalidTabConfig &&
           <div>Invalid Tab Configuration</div>
@@ -185,6 +186,7 @@ const SourceHomeTabs = props => {
             onSelect={onSelect}
             hierarchy={hierarchy}
             onHierarchyToggle={onHierarchyToggle}
+            onFilterDrawerToggle={onFilterDrawerToggle}
           />
         }
       </div>

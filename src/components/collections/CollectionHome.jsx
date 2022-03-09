@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@mui/material';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, isNumber } from 'lodash';
 import APIService from '../../services/APIService';
 import CollectionHomeHeader from './CollectionHomeHeader';
 import CollectionHomeTabs from './CollectionHomeTabs';
@@ -35,6 +35,7 @@ class CollectionHome extends React.Component {
       selectedConfig: null,
       customConfigs: [],
       selected: null,
+      filtersOpen: false,
     }
   }
 
@@ -239,13 +240,17 @@ class CollectionHome extends React.Component {
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
 
   getContainerWidth = () => {
-    const { selected, width } = this.state;
+    const { selected, width, filtersOpen } = this.state;
+    let totalWidth = 100
     if(selected) {
       if(width)
-        return `calc(100% - ${width - 15}px)`
-      return '55%'
+        totalWidth = `calc(${totalWidth}% - ${width - 10}px)`
+      else
+        totalWidth -= filtersOpen ? 46 : 40
     }
-    return '100%'
+    if(isNumber(totalWidth))
+      totalWidth = `${totalWidth}%`
+    return totalWidth
   }
 
   getBreadcrumbParams = () => {
@@ -261,11 +266,13 @@ class CollectionHome extends React.Component {
     return params
   }
 
+  onFilterDrawerToggle = () => this.setState({filtersOpen: !this.state.filtersOpen})
+
   render() {
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
       notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions, selected,
-      isLoadingExpansions,
+      isLoadingExpansions, filtersOpen
     } = this.state;
     const currentURL = this.getURLFromPath()
     const versionedObjectURL = this.getVersionedObjectURLFromPath()
@@ -281,7 +288,7 @@ class CollectionHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 no-side-padding'>
+          <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
             <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, marginLeft: '5px'}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
@@ -332,6 +339,7 @@ class CollectionHome extends React.Component {
                 isLoadingVersions={isLoadingVersions}
                 isLoadingExpansions={isLoadingExpansions}
                 onSelect={this.onResourceSelect}
+                onFilterDrawerToggle={this.onFilterDrawerToggle}
               />
             </div>
           </div>
@@ -339,7 +347,7 @@ class CollectionHome extends React.Component {
         {
           (isMappingSelected || isConceptSelected) &&
           <ResponsiveDrawer
-            width="44.5%"
+            width="39.5%"
             paperStyle={{background: '#f1f1f1'}}
             variant='persistent'
             isOpen

@@ -5,7 +5,8 @@ import {
 } from '@mui/material';
 import {
   Clear as ClearIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  CancelOutlined as CancelIcon,
 } from '@mui/icons-material';
 import {
   set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has, includes,
@@ -163,8 +164,14 @@ const FilterDrawer = props => {
   }
 
   return (
-    <Drawer style={{zIndex: 1202}} anchor='left' open={open} onClose={onClose} classes={{paper: 'custom-drawer'}}>
-      <div className='col-md-12 no-side-padding' style={{width: '350px', height: 'calc(100% - 60px)', overflow: 'auto'}}>
+    <Drawer variant="persistent" style={{zIndex: 1202}} anchor='left' open={open} onClose={onClose} classes={{paper: 'custom-drawer width-15'}}>
+      <div id="filters-drawer" className='col-md-12 no-side-padding' style={{height: 'calc(100% - 60px)', overflow: 'auto'}}>
+        <span style={{margin: '10px 10px 0 10px', display: 'block'}}>
+          <h3 style={{margin: '0', width: '60%', display: 'inline-block'}}>Filters</h3>
+          <IconButton size='small' color='secondary' onClick={onClose} style={{float: 'right'}}>
+            <CancelIcon fontSize='inherit' />
+          </IconButton>
+        </span>
         <div className="col-md-12" style={{padding: '0 5px', margin: '5px 0', marginBottom: '0px'}}>
           <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px', height: '40px'}}>
             <InputBase
@@ -240,15 +247,12 @@ const FilterDrawer = props => {
           }
         </List>
       </div>
-      <div className='col-md-12 no-side-padding bottom-fixed-center' style={{height: '60px', width: '350px'}}>
-        <Button onClick={onApplyClick} variant='contained' color='primary' style={{margin: 'auto 5px'}}>
-          Apply
-        </Button>
-        <Button onClick={onClear} variant='contained' color='secondary' style={{margin: 'auto 5px'}}>
+      <div className='col-md-12 no-side-padding bottom-fixed-center flex-vertical-center' style={{height: '60px', width: '15%', borderRight: '1px solid lightgray', justifyContent: 'center'}}>
+        <Button size="small" onClick={onClear} variant='outlined' color='secondary' style={{margin: 'auto 5px'}}>
           Clear
         </Button>
-        <Button onClick={onClose} variant='contained' style={{margin: 'auto 5px'}}>
-          Close
+        <Button size="small" onClick={onApplyClick} variant='contained' color='primary' style={{margin: 'auto 5px'}}>
+          Apply
         </Button>
       </div>
     </Drawer>

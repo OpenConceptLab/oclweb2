@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit, isString, values, omitBy
+  map, omit, isString, values, omitBy, isNumber
 } from 'lodash';
 import { Share as ShareIcon, AccountTreeOutlined as HierarchyIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
@@ -637,7 +637,7 @@ class Search extends React.Component {
           {
             !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
             <span className='filter-chip'>
-              <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='Filters' size={nested ? 'small' : 'medium'} />
+              <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='Filters' size={nested ? 'small' : 'medium'} isOpen={this.state.openFacetsDrawer}/>
             </span>
           }
         </span>
@@ -649,9 +649,10 @@ class Search extends React.Component {
                          this.setState({limit: limit, fhirParams: {...this.state.fhirParams, _count: limit, _getpagesoffset: 0}}, () => this.fetchNewResults(null, false, false)) :
                          this.fetchNewResults({limit: limit}, false, true, true, false)
 
-  toggleFacetsDrawer = () => this.setState({openFacetsDrawer: !this.state.openFacetsDrawer})
-
-  onCloseFacetsDrawer = () => this.setState({openFacetsDrawer: false})
+  toggleFacetsDrawer = () => this.setState({openFacetsDrawer: !this.state.openFacetsDrawer}, () => {
+    if(this.props.onFilterDrawerToggle)
+      this.props.onFilterDrawerToggle()
+  })
 
   onApplyFacets = filters => this.setState(
     {appliedFacets: filters}, () => this.fetchNewResults(null, false, true, true, false)
@@ -668,13 +669,24 @@ class Search extends React.Component {
     this.setState({userFilters: newFilters}, () => this.fetchNewResults(null, false, true, true))
   }
 
-  getContainerWidth = () => {
+  getContainerLayoutProps = () => {
+    const layout = {width: 100}
+    if(this.state.openFacetsDrawer && !this.props.nested) {
+      layout.width -= 12
+      layout.marginLeft = '12%'
+      layout.paddingLeft = '5px'
+    }
     if(this.state.detailsView) {
       if(this.state.width)
-        return `calc(100% - ${this.state.width}px)`
-      return '59%'
+        layout.width = `calc(${layout.width}% - ${this.state.width - 10}px)`
+      else
+        layout.width -= 40
     }
-    return '100%'
+
+    if(isNumber(layout.width))
+      layout.width = `${layout.width}%`
+
+    return layout
   }
 
   onDetailsToggle = state => this.setState({detailsView: state, width: state ? this.state.width : false})
@@ -702,10 +714,10 @@ class Search extends React.Component {
     const hasNext = this.hasNext()
     const isUnderUserHome = nested && parentResource === 'user';
     const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
-    const newWidth = this.getContainerWidth()
+    const layoutProps = this.getContainerLayoutProps()
     const showHierarchy = resource === 'concepts' && onHierarchyToggle && hierarchy
     return (
-      <div className='col-xs-12' style={nested ? {padding: '0px', width: newWidth} : {paddingTop: '10px', width: newWidth}}>
+      <div className='col-xs-12' style={nested ? {padding: '0px', ...layoutProps} : {paddingTop: '10px', ...layoutProps}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
           <div className='col-sm-8 col-xs-7 no-side-padding' style={{textAlign: 'center'}}>
             {
@@ -869,7 +881,7 @@ class Search extends React.Component {
         </div>
         <FilterDrawer
           open={openFacetsDrawer}
-          onClose={this.onCloseFacetsDrawer}
+          onClose={this.toggleFacetsDrawer}
           filters={get(results[resource], 'facets.fields', {})}
           facetOrder={get(FACET_ORDER, resource)}
           onApply={this.onApplyFacets}
