@@ -289,7 +289,7 @@ class CollectionHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201}}>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', background: '#fff', marginLeft: '5px'}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
                 container={collection}
@@ -306,7 +306,7 @@ class CollectionHome extends React.Component {
               />
             </div>
 
-            <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
+            <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
               <CollectionHomeHeader
                 collection={collection}
                 isVersionedObject={this.isVersionedObject()}

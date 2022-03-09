@@ -285,7 +285,7 @@ class SourceHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201}}>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', background: '#fff', marginLeft: '5px'}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
                 container={source}
@@ -298,7 +298,7 @@ class SourceHome extends React.Component {
                 onSplitViewClose={() => this.setState({selected: null, width: false})}
               />
             </div>
-            <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth()}}>
+            <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
               <SourceHomeHeader
                 source={source}
                 isVersionedObject={this.isVersionedObject()}
