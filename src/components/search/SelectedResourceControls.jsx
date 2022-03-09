@@ -49,6 +49,7 @@ const SelectedResourceControls = ({
   const COLOR = 'secondary'
   const VARIANT = 'filled'
   const buttonProps = {variant: VARIANT, color: COLOR, size: 'small'}
+  const MARGIN = '4px'
 
   return (
     <span style={{display: 'inline-flex', width: 'max-content'}}>
@@ -70,7 +71,7 @@ const SelectedResourceControls = ({
         <Chip
           icon={<RepeatIcon fontSize='small' />}
           onClick={() => onCreateSimilarClick(get(selectedItems, '0'))}
-          style={{marginLeft: '10px'}}
+          style={{marginLeft: MARGIN}}
           {...buttonProps}
           label='Create Similar'
         />
@@ -80,14 +81,14 @@ const SelectedResourceControls = ({
         <Chip
           icon={<LinkIcon fontSize='small' />}
           onClick={() => onCreateMappingClick(selectedItems)}
-          style={{marginLeft: '10px'}}
+          style={{marginLeft: MARGIN}}
           {...buttonProps}
           label='Create Mapping'
         />
       }
       {
         shouldShowAddToCollection &&
-        <span style={{marginLeft: '10px'}}>
+        <span style={{marginLeft: MARGIN}}>
           <AddToCollection {...buttonProps} references={selectedItems} />
         </span>
       }
@@ -96,7 +97,7 @@ const SelectedResourceControls = ({
         <Chip
           icon={<CompareArrowsIcon fontSize='small' />}
           onClick={onCompareClick}
-          style={{marginLeft: '10px'}}
+          style={{marginLeft: MARGIN}}
           {...buttonProps}
           label='Compare'
         />
@@ -106,7 +107,7 @@ const SelectedResourceControls = ({
         <Chip
           icon={<DeleteIcon fontSize='small' />}
           onClick={onReferenceDeleteClick}
-          style={{marginLeft: '10px'}}
+          style={{marginLeft: MARGIN}}
           {...buttonProps}
           label='Delete'
         />
