@@ -4,7 +4,7 @@ import Drawer from "@mui/material/Drawer";
 import DragIcon from '@mui/icons-material/MoreVert';
 import { merge } from 'lodash';
 
-export const defaultWidth = 360;
+const defaultWidth = 360;
 const minWidth = 50;
 const maxWidth = 1000;
 
