@@ -153,7 +153,7 @@ const FilterDrawer = props => {
     if(includes(['locale', 'version'], field))
       return name
     if(includes(['owner', 'source', 'collection', 'collection_membership'], field))
-      return name.toUpperCase()
+      return name.replaceAll('_', '-').toUpperCase()
     if(name) {
       name = name.trim()
       if(name === 'n/a')
@@ -219,7 +219,7 @@ const FilterDrawer = props => {
                   map(facets, facet => {
                     const isChecked = get(appliedFilters, `${field}.${facet[0]}`, false);
                     return (
-                      <ListItem className="flex-vertical-start" style={{padding: '0px 16px 0px 6px'}} key={facet[0]}>
+                      <ListItem className="flex-vertical-start" style={{padding: '0px 4px 0px 4px'}} key={facet[0]}>
                         <ListItemIcon style={{minWidth: 'auto'}}>
                           <Checkbox checked={isChecked} size='small' onChange={event => onCheckboxChange(event, field, facet)} style={{padding: '0px 9px'}} />
                         </ListItemIcon>
@@ -227,10 +227,10 @@ const FilterDrawer = props => {
                           primary={
                             <span className='col-md-12 no-side-padding flex-vertical-center'>
                               <span
-              onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '14px'}}>
+              onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '12px'}}>
                                 {formattedName(field, facet[0])}
                               </span>
-                              <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '14px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100'}}>
+                              <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '12px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100'}}>
                                 {facet[1].toLocaleString()}
                               </span>
                             </span>
