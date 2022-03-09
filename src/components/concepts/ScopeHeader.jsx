@@ -78,8 +78,8 @@ const ScopeHeader = ({
             <ResourceTextButton href={`#${toParentURI(concept.url)}`} resource='source' id={concept.source} color='green' />
           </div>
         }
-        <span style={{marginLeft: '5px', display: 'block'}}>
-          <ConceptIcon shrink={false} />
+        <span style={{marginLeft: '15px', display: 'block'}}>
+          <ConceptIcon shrink={false} style={{marginTop: '-10px'}} />
         </span>
         <div className='col-xs-10 no-right-padding'>
           <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>

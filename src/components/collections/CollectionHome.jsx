@@ -289,7 +289,7 @@ class CollectionHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, marginLeft: '5px'}}>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
                 container={collection}
@@ -354,7 +354,7 @@ class CollectionHome extends React.Component {
             onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '64px'}}>
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
                 {
                   isMappingSelected ?
                   <MappingHome

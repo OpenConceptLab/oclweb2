@@ -78,7 +78,7 @@ const ScopeHeader = ({
 
   return (
     <header className='home-header col-md-12'>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px', lineHeight: 'normal'}}>
+      <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         {
           (global || scoped === 'collection') && mapping &&
           <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginBottom: '5px'}}>
@@ -87,8 +87,8 @@ const ScopeHeader = ({
             <ResourceTextButton href={`#${toParentURI(mapping.url)}`} resource='source' id={mapping.source} color='green' />
           </div>
         }
-        <span style={{marginLeft: '5px', display: 'block'}}>
-          <MappingIcon shrink={false} />
+        <span style={{marginLeft: '15px', display: 'block'}}>
+          <MappingIcon shrink={false} style={{marginTop: '-20px'}} />
         </span>
         <div className='col-md-10 no-right-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>

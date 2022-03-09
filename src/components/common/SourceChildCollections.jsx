@@ -45,6 +45,8 @@ const SourceChildCollections = ({ instance, isLoadingCollections }) => {
       setExpand([...expand, collectionURL])
   }
 
+  const resourceType = instance.map_type ? 'mapping' : 'concept'
+
   const ReleasedIndicator = (<Tooltip title='Released'><ReleaseIcon fontSize='small' color='primary' /></Tooltip>);
   const RetiredIndicator = (<Tooltip title='Retired'><RetireIcon fontSize='small' className='retired-red' /></Tooltip>);
 
@@ -60,7 +62,7 @@ const SourceChildCollections = ({ instance, isLoadingCollections }) => {
           <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
             <TabCountLabel style={ACCORDIAN_HEADING_STYLES} label='Collection Membership' count={count} />
             <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-              <Tooltip title='The Collection Membership section only lists collections under the same owner.'>
+              <Tooltip title={`The Collection Membership section only lists collections under the same owner for which this specific ${resourceType} version is a member. Collection membership for other versions of this same ${resourceType} are not included here.`}>
                 <InfoIcon fontSize='small' color='action' />
               </Tooltip>
             </span>
