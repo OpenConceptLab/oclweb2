@@ -121,7 +121,7 @@ const Breadcrumbs = ({
         <div className='col-xs-12'>
           <div className='col-xs-12 no-side-padding flex-vertical-center'>
             <span className='flex-vertical-center' style={{width: '100%'}}>
-              <span className='container-breadcurmbs flex-vertical-center' style={{padding: '10px', background: WHITE, border: `1px solid ${WHITE}`}}>
+              <span className='container-breadcurmbs flex-vertical-center' style={{padding: '10px', background: WHITE}}>
                 <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
                 <span className='separator'>/</span>
                 {
