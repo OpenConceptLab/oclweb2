@@ -1095,3 +1095,25 @@ div.custom-attributes-accordion-content {
     cursor: pointer;
     padding: 0 2px;
 }
+
+
+.button-controlled {
+    max-width: 200px;
+    justify-content: flex-start;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px 8px;
+}
+
+.selected-control-chip {
+    font-weight: normal;
+    svg:first-of-type {
+        margin-left: 8px !important;
+    }
+    svg:last-child {
+        margin-right: 8px !important;
+    }
+    span:first-of-type {
+        padding-right: 12px !important;
+    }
+}

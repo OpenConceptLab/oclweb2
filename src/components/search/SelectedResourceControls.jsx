@@ -61,7 +61,7 @@ const SelectedResourceControls = ({
           resource={selectedItems}
           buttonFunc={
             attrs =>
-              <Chip icon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs} label='Download' />
+              <Chip icon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs} className='selected-control-chip' label='Download' />
           }
           queryParams={{verbose: true, includeInverseMappings: true, includeSummary: true }}
         />
@@ -72,6 +72,7 @@ const SelectedResourceControls = ({
           icon={<RepeatIcon fontSize='small' />}
           onClick={() => onCreateSimilarClick(get(selectedItems, '0'))}
           style={{marginLeft: MARGIN}}
+          className='selected-control-chip'
           {...buttonProps}
           label='Create Similar'
         />
@@ -82,6 +83,7 @@ const SelectedResourceControls = ({
           icon={<LinkIcon fontSize='small' />}
           onClick={() => onCreateMappingClick(selectedItems)}
           style={{marginLeft: MARGIN}}
+          className='selected-control-chip'
           {...buttonProps}
           label='Create Mapping'
         />
@@ -98,6 +100,7 @@ const SelectedResourceControls = ({
           icon={<CompareArrowsIcon fontSize='small' />}
           onClick={onCompareClick}
           style={{marginLeft: MARGIN}}
+          className='selected-control-chip'
           {...buttonProps}
           label='Compare'
         />
@@ -108,6 +111,7 @@ const SelectedResourceControls = ({
           icon={<DeleteIcon fontSize='small' />}
           onClick={onReferenceDeleteClick}
           style={{marginLeft: MARGIN}}
+          className='selected-control-chip'
           {...buttonProps}
           label='Delete'
         />

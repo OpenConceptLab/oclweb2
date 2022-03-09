@@ -39,7 +39,7 @@ const CollectionButton = ({label, onClick, href, childURI, onEditClick, onDelete
   return (
     <React.Fragment>
       <ButtonGroup variant='contained' style={{background: GREEN, color: WHITE, boxShadow: 'none', textTransform: 'none'}} {...rest}>
-        <Button startIcon={<LoyaltyIcon />} onClick={onClick} href={uri} style={merge(commonButtonStyle, style || {})}>
+        <Button className='button-controlled' startIcon={<LoyaltyIcon />} onClick={onClick} href={uri} style={merge(commonButtonStyle, style || {})}>
           {label}
         </Button>
         <Button onClick={toggleMenu} style={merge(dropDownButtonStyle, style || {})}>

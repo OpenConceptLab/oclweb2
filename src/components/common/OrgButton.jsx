@@ -11,6 +11,7 @@ const OrgButton = ({label, onClick, href, ...rest}) => {
       onClick={onClick}
       href={href}
       style={{background: ORANGE, color: WHITE, boxShadow: 'none', textTransform: 'none'}}
+      className='button-controlled'
       {...rest}
     >
       {label}

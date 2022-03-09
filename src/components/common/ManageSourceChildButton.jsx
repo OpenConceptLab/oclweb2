@@ -41,7 +41,7 @@ const ManageSourceChildButton = ({
   return (
     <React.Fragment>
       <Button variant='text' size='small' onClick={toggleMenu} color='default' style={{textTransform: 'none'}}>
-        {`Manage ${resourceLabel}`}
+        Manage
         <DownIcon style={{marginLeft: '4px'}} />
       </Button>
       <Menu

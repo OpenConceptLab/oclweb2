@@ -135,7 +135,7 @@ class AddToCollection extends React.Component {
         </Tooltip>
       )
     return (
-      <Chip ref={this.anchorRef} onClick={this.toggleOpen} icon={<LoyaltyIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label='Add to Collection' />
+      <Chip className='selected-control-chip' ref={this.anchorRef} onClick={this.toggleOpen} icon={<LoyaltyIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label='Add to Collection' />
     )
   }
 
