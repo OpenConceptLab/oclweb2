@@ -672,15 +672,15 @@ class Search extends React.Component {
   getContainerLayoutProps = () => {
     const layout = {width: 100}
     if(this.state.openFacetsDrawer && !this.props.nested) {
-      layout.width -= 12
-      layout.marginLeft = '12%'
+      layout.width -= 13
+      layout.marginLeft = '13%'
       layout.paddingLeft = '5px'
     }
     if(this.state.detailsView) {
       if(this.state.width)
-        layout.width = `calc(${layout.width}% - ${this.state.width - 10}px)`
+        layout.width = `calc(${layout.width}% - ${this.state.width - 5}px)`
       else
-        layout.width -= 40
+        layout.width -= 40.5
     }
 
     if(isNumber(layout.width))
