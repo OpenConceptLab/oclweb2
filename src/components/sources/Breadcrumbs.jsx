@@ -167,7 +167,7 @@ const Breadcrumbs = ({
               </span>
               {
                 resource && selectedResource &&
-                <span className='resource-breadcurmbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', border: '1px solid #f1f1f1', flex: 1}}>
+                <span className='resource-breadcurmbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', border: '2px solid #f1f1f1', flex: 1}}>
                   {
                     params.concept ?
                     <ConceptButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} /> :
