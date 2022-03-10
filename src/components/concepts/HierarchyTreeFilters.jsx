@@ -20,7 +20,7 @@ const LEVEL_OPTIONS = [
   {id: '*', name: 'All'},
 ]
 
-const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
+const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size}) => {
   const [mapTypes, setMapTypes] = React.useState(filters.mapTypes || '')
   const [excludeMapTypes, setExcludeMapTypes] = React.useState(filters.excludeMapTypes || '')
   const [levelAnchorEl, setLevelAnchorEl] = React.useState(null);
@@ -36,6 +36,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
     toggleMapTypeAnchor()
     onMapTypesFilterChange({...filters, mapTypes: mapTypes, excludeMapTypes: excludeMapTypes})
   }
+  const _size = size || 'small'
 
   return (
     <span className="flex-vertical-center" style={{flexWrap: 'wrap'}}>
@@ -44,7 +45,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
           color="primary"
           variant="outlined"
           label={cascadeLevelText}
-          size="small"
+          size={_size}
           clickable
           onClick={toggleLevelAnchor}
           onDelete={toggleLevelAnchor}
@@ -56,7 +57,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
           color={filters.cascadeHierarchy ? "primary" : "default"}
           variant="outlined"
           label="Hierarchy"
-          size="small"
+          size={_size}
           style={filters.cascadeHierarchy ? {marginLeft: '2px'} : { marginLeft: '2px', color: 'rgba(0, 0, 0, 0.5)' }}
           icon={filters.cascadeHierarchy ? <CancelIcon fontSize="inherit" /> : null}
           clickable
@@ -68,7 +69,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
           color={filters.cascadeMappings ? "primary" : "default"}
           variant="outlined"
           label="Mappings"
-          size="small"
+          size={_size}
           style={filters.cascadeMappings ? {marginLeft: '2px'} : { color: 'rgba(0, 0, 0, 0.5)', marginLeft: '2px' }}
           icon={filters.cascadeMappings ? <CancelIcon fontSize="inherit" /> : null}
           clickable
@@ -82,7 +83,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
             color={(filters.mapTypes || filters.excludeMapTypes) ? "primary" : "default"}
             variant="outlined"
             label="MapTypes"
-            size="small"
+            size={_size}
             clickable
             deleteIcon={<FilterIcon />}
             icon={<MappingIcon />}
@@ -97,7 +98,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange}) => {
           color="primary"
           variant="outlined"
           label={filters.reverse ? 'Forward' : 'Backward'}
-          size="small"
+          size={_size}
           style={{marginLeft: '2px'}}
           clickable
           onClick={() => onChange('reverse', !filters.reverse) }

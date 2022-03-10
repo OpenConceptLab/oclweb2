@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
-  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton
+  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton, Dialog, DialogContent, DialogTitle,
+  DialogActions, Button
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
@@ -90,58 +91,43 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
   let style = {minHeight: '40px', height: '100%', cursor: 'inherit'}
 
   return (
-    <Accordion expanded style={{borderRadius: 'unset'}}>
-      <AccordionSummary
-        className='light-gray-bg less-paded-accordian-header'
-        expandIcon={<span />}
-        aria-controls="panel1a-content"
-        style={style}
-      >
-        <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
-          <TabCountLabel label='Associations' count={hierarchy ? null : count} style={ACCORDIAN_HEADING_STYLES} />
-          {
-            !noAssociations && hierarchy &&
-            <HierarchyTreeFilters
-              filters={cascadeFilters}
-              onChange={onCascadeFilterChange}
-              onMapTypesFilterChange={onMapTypesFilterChange}
-            />
-          }
-          <span className='flex-vertical-center'>
-            {
-              !noAssociations &&
-              <span>
-                <Tooltip title={hierarchy ? 'Table Format' : 'Visualize (Beta)'}>
-                  <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
-                    <HierarchyIcon fontSize='inherit' />
-                  </IconButton>
-                </Tooltip>
-              </span>
-            }
-            {
-              !hierarchy &&
+    <React.Fragment>
+      <Accordion expanded style={{borderRadius: 'unset'}}>
+        <AccordionSummary
+          className='light-gray-bg less-paded-accordian-header'
+          expandIcon={<span />}
+          aria-controls="panel1a-content"
+          style={style}
+        >
+          <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
+            <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
+            <span className='flex-vertical-center'>
+              {
+                !noAssociations &&
+                <span>
+                  <Tooltip title='Visualize (Beta)'>
+                    <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
+                      <HierarchyIcon fontSize='inherit' />
+                    </IconButton>
+                  </Tooltip>
+                </span>
+              }
               <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
                 <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>
                   <InfoIcon fontSize='small' color='action' />
                 </Tooltip>
               </span>
-            }
+            </span>
           </span>
-        </span>
-      </AccordionSummary>
-      <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
-        {
-          isLoadingMappings ?
-          <div style={{textAlign: 'center', padding: '10px'}}>
-            <CircularProgress />
-          </div> : (
-            noAssociations ?
-            None() :
-            (
-              hierarchy ?
-              <div className='col-xs-12' style={{padding: '10px'}}>
-                <ConceptHierarchyTree concept={concept} fontSize='20' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} />
-              </div>:
+        </AccordionSummary>
+        <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
+          {
+            isLoadingMappings ?
+            <div style={{textAlign: 'center', padding: '10px'}}>
+              <CircularProgress />
+            </div> : (
+              noAssociations ?
+              None() :
               <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
                 <TableHead>
                   <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
@@ -223,10 +209,34 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
                 </TableBody>
               </Table>
             )
-          )
-        }
-      </AccordionDetails>
-    </Accordion>
+          }
+        </AccordionDetails>
+      </Accordion>
+      {
+        !noAssociations && hierarchy &&
+        <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} maxWidth="md">
+          <DialogTitle>
+            <span>Associations</span>
+            <span style={{marginLeft: '20px'}}>
+              <HierarchyTreeFilters
+                filters={cascadeFilters}
+                onChange={onCascadeFilterChange}
+                onMapTypesFilterChange={onMapTypesFilterChange}
+                size='medium'
+              />
+            </span>
+          </DialogTitle>
+          <DialogContent>
+            <div className='col-xs-12' style={{padding: '10px'}}>
+              <ConceptHierarchyTree concept={concept} fontSize='16' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} />
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onHierarchyViewToggle}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      }
+    </React.Fragment>
   )
 }
 
