@@ -15,6 +15,7 @@ class OverviewSettings extends React.Component {
       controls: true,
       signatures: true,
       height: 140,
+      pins: true,
       background: {
         image: '',
         imageOverlay: false,
@@ -155,6 +156,10 @@ class OverviewSettings extends React.Component {
             <div className='col-xs-6 no-side-padding flex-vertical-center'>
               { this.getCheckboxControl('signatures') }
               { this.getInfo('Select this to show createdAt/updatedAt and createdBy/updatedBy in the banner') }
+            </div>
+            <div className='col-xs-6 no-side-padding flex-vertical-center'>
+              { this.getCheckboxControl('pins', 'Show Pins') }
+              { this.getInfo('Select this to show pins in the overview page') }
             </div>
           </fieldset>
           <fieldset style={{border: `1px solid rgba(0, 0, 0, 0.3)`, width: '100%', borderRadius: '4px', marginTop: '10px'}}>
