@@ -49,7 +49,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
           clickable
           onClick={toggleLevelAnchor}
           onDelete={toggleLevelAnchor}
-          deleteIcon={<DownIcon fontSize="inherit" />}
+          deleteIcon={<DownIcon />}
         />
       </Tooltip>
       <Tooltip title={filters.cascadeHierarchy ? 'Remove Hierarchy' : 'Cascade Hierarchy'} arrow placement='top'>
@@ -59,7 +59,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
           label="Hierarchy"
           size={_size}
           style={filters.cascadeHierarchy ? {marginLeft: '2px'} : { marginLeft: '2px', color: 'rgba(0, 0, 0, 0.5)' }}
-          icon={filters.cascadeHierarchy ? <CancelIcon fontSize="inherit" /> : null}
+          icon={filters.cascadeHierarchy ? <CancelIcon /> : null}
           clickable
           onClick={() => onChange('cascadeHierarchy', !filters.cascadeHierarchy) }
         />
@@ -71,7 +71,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
           label="Mappings"
           size={_size}
           style={filters.cascadeMappings ? {marginLeft: '2px'} : { color: 'rgba(0, 0, 0, 0.5)', marginLeft: '2px' }}
-          icon={filters.cascadeMappings ? <CancelIcon fontSize="inherit" /> : null}
+          icon={filters.cascadeMappings ? <CancelIcon /> : null}
           clickable
           onClick={() => onChange('cascadeMappings', !filters.cascadeMappings) }
         />
