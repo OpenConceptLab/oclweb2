@@ -20,7 +20,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '600px', overflow: 'auto', width: '100%', padding: '0'
+  width: '100%', padding: '0'
 }
 
 const None = () => {
