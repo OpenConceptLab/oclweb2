@@ -68,21 +68,29 @@ class ConceptHierarchyTree extends React.Component {
     })
   })
 
+  getSourceName = url => {
+    if(!url)
+      return ''
+    const urlParts = url.split('/')
+    const ownerName = urlParts[2]
+    const sourceName = urlParts[4]
+    return `${ownerName} / ${sourceName}`
+  }
+
   formatChildren = (children) => {
     if(!children || isEmpty(children))
       return children
 
     let result = []
     children.forEach(child => {
-      if(!child.data.map_type)
+      if(!child.data.map_type) {
         child.data.map_type = this.getMapType(child)
+        child.data.target_source = this.getSourceName(child.data.url)
+      }
       if(!child.data.target_concept_url)
         result.push(child)
       if(child.data.target_concept_url && !find(children, c => c.data.url === child.data.target_concept_url && c.data.type === 'Concept')) {
-        const urlParts = child.data.target_concept_url.split('/')
-        const ownerName = urlParts[2]
-        const sourceName = urlParts[4]
-        child.data.target_source = `${ownerName} / ${sourceName}`
+        child.data.target_source = this.getSourceName(child.data.target_concept_url)
         result.push(child)
       }
     })
