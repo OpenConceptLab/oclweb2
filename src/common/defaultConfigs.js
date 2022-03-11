@@ -152,13 +152,13 @@ export const SOURCE_DEFAULT_CONFIG = {
           value: "custom_validation_schema",
           type: "text",
         },
-      ],
-      invisibleAttributes: [
         {
           label: "Canonical Url",
           value: "canonical_url",
           type: "url",
         },
+      ],
+      invisibleAttributes: [
         {
           label: "Publisher",
           value: "publisher",
@@ -288,13 +288,13 @@ export const COLLECTION_DEFAULT_CONFIG = {
           label: "Supported Locales",
           value: "supported_locales",
         },
-      ],
-      invisibleAttributes: [
         {
           label: "Canonical Url",
           value: "canonical_url",
           type: "url",
         },
+      ],
+      invisibleAttributes: [
         {
           label: "Publisher",
           value: "publisher",
