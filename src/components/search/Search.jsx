@@ -595,20 +595,18 @@ class Search extends React.Component {
       <React.Fragment>
         <span style={{display: 'inline-flex', alignItems: 'center', overflow: 'auto'}}>
           {
-            extraControls &&
-            <span style={{paddingRight: '4px'}}>
-              {
-                extraControls
-              }
+            !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
+            <span className='filter-chip'>
+              <FilterButton
+                minWidth='inherit'
+                count={size(appliedFacets)}
+                onClick={this.toggleFacetsDrawer}
+                disabled={isDisabledFilters}
+                label='Filters'
+                size={nested ? 'small' : 'medium'}
+                isOpen={this.state.openFacetsDrawer}
+              />
             </span>
-          }
-          {
-            !isEmpty(viewFilters) &&
-            map(viewFilters, (value, attr) => (
-              <span className='filter-chip' key={attr}>
-                <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
-              </span>
-            ))
           }
           {
             extraControlFilters &&
@@ -625,18 +623,20 @@ class Search extends React.Component {
             ))
           }
           {
-            !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
-            <span className='filter-chip'>
-              <FilterButton
-                minWidth='inherit'
-                count={size(appliedFacets)}
-                onClick={this.toggleFacetsDrawer}
-                disabled={isDisabledFilters}
-                label='Filters'
-                size={nested ? 'small' : 'medium'}
-                isOpen={this.state.openFacetsDrawer}
-              />
+            extraControls &&
+            <span style={{paddingRight: '4px'}}>
+              {
+                extraControls
+              }
             </span>
+          }
+          {
+            !isEmpty(viewFilters) &&
+            map(viewFilters, (value, attr) => (
+              <span className='filter-chip' key={attr}>
+                <Chip label={`${attr}=${value}`} color='primary' variant='outlined' size='small' />
+              </span>
+            ))
           }
         </span>
       </React.Fragment>
