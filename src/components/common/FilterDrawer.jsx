@@ -12,6 +12,7 @@ import {
   set, get, map, startCase, omitBy, omit, isEmpty, cloneDeep, forEach, filter, has, includes,
   isObject, merge, isArray
 } from 'lodash';
+import ChipDatePicker from '../common/ChipDatePicker';
 
 const FilterDrawer = props => {
   const [input, setInput] = React.useState('');
@@ -245,6 +246,14 @@ const FilterDrawer = props => {
               </div>
             ))
           }
+          <div>
+            <Typography style={{padding: '0 10px 0', fontWeight: 'bold', fontSize: '14px', marginBottom: '2px'}}>
+              Updated Since
+            </Typography>
+            <span style={{marginLeft: '10px'}}>
+              <ChipDatePicker onChange={props.onUpdateSinceChange} label={props.updatedSinceText} date={props.updatedSince} size='small' />
+            </span>
+          </div>
         </List>
       </div>
       <div className='col-md-12 no-side-padding bottom-fixed-center flex-vertical-center' style={{height: '60px', width: '15%', borderRight: '1px solid lightgray', justifyContent: 'center'}}>

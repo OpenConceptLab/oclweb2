@@ -13,7 +13,6 @@ import { formatDate, copyURL, toRelativeURL } from '../../common/utils';
 import {
   BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID
 } from '../../common/constants';
-import ChipDatePicker from '../common/ChipDatePicker';
 import FilterButton from '../common/FilterButton';
 import FilterDrawer from '../common/FilterDrawer';
 import Results from './Results';
@@ -586,10 +585,9 @@ class Search extends React.Component {
   }
 
   getFilterControls() {
-    const updatedSinceText = this.getUpdatedSinceText();
     const { nested, extraControls, fhir, extraControlFilters, asReference } = this.props;
     const {
-      updatedSince, appliedFacets, resource,
+      appliedFacets, resource,
       viewFilters, userFilters
     } = this.state;
     const isDisabledFilters = includes(['organizations', 'users'], resource);
@@ -603,14 +601,6 @@ class Search extends React.Component {
                 extraControls
               }
             </span>
-          }
-          {
-            resource !== 'references' && !fhir &&
-            <React.Fragment>
-              <span className='filter-chip'>
-                <ChipDatePicker onChange={this.onDateChange} label={updatedSinceText} date={updatedSince} size={nested ? 'small' : 'medium'} />
-              </span>
-            </React.Fragment>
           }
           {
             !isEmpty(viewFilters) &&
@@ -637,7 +627,15 @@ class Search extends React.Component {
           {
             !isDisabledFilters && !asReference && !fhir && resource !== 'references' &&
             <span className='filter-chip'>
-              <FilterButton minWidth='inherit' count={size(appliedFacets)} onClick={this.toggleFacetsDrawer} disabled={isDisabledFilters} label='Filters' size={nested ? 'small' : 'medium'} isOpen={this.state.openFacetsDrawer}/>
+              <FilterButton
+                minWidth='inherit'
+                count={size(appliedFacets)}
+                onClick={this.toggleFacetsDrawer}
+                disabled={isDisabledFilters}
+                label='Filters'
+                size={nested ? 'small' : 'medium'}
+                isOpen={this.state.openFacetsDrawer}
+              />
             </span>
           }
         </span>
@@ -886,6 +884,9 @@ class Search extends React.Component {
           kwargs={get(this.props, 'match.params')}
           resource={resource}
           appliedFacets={appliedFacets}
+          updatedSinceText={this.getUpdatedSinceText()}
+          updatedSince={this.state.updatedSince}
+          onUpdateSinceChange={this.onDateChange}
         />
       </div>
     );
