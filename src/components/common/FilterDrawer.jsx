@@ -166,16 +166,16 @@ const FilterDrawer = props => {
   return (
     <Drawer variant="persistent" style={{zIndex: 1202}} anchor='left' open={open} onClose={onClose} classes={{paper: 'custom-drawer width-15'}}>
       <div id="filters-drawer" className='col-md-12 no-side-padding' style={{height: 'calc(100% - 60px)', overflow: 'auto'}}>
-        <span style={{margin: '10px 10px 0 10px', display: 'block'}}>
+        <span style={{margin: '10px 4px 0 10px', display: 'block'}}>
           <h3 style={{margin: '0', width: '60%', display: 'inline-block'}}>Filters</h3>
           <IconButton size='small' color='secondary' onClick={onClose} style={{float: 'right'}}>
             <CancelIcon fontSize='inherit' />
           </IconButton>
         </span>
-        <div className="col-md-12" style={{padding: '0 5px', margin: '5px 0', marginBottom: '0px'}}>
-          <div className='col-sm-12 no-side-padding' style={{padding: '5px', display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px', height: '40px'}}>
+        <div className="col-md-12" style={{padding: '0 10px', margin: '5px 0', marginBottom: '0px'}}>
+          <div className='col-sm-12 no-side-padding' style={{display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px', height: '40px'}}>
             <InputBase
-              style={{flex: 1, marginLeft: '10px'}}
+              style={{flex: 1, marginLeft: '10px', marginTop: '5px'}}
               placeholder="Search Filters"
               inputProps={{ 'aria-label': 'search ocl' }}
               value={input}
@@ -212,16 +212,16 @@ const FilterDrawer = props => {
           {
             map(getFilters(), (facets, field) => (
               <div key={field}>
-                <Typography style={{padding: '0 10px 0', fontWeight: 'bold'}}>
+                <Typography style={{padding: '0 10px 0', fontWeight: 'bold', fontSize: '14px'}}>
                   {startCase(field)}
                 </Typography>
                 {
                   map(facets, facet => {
                     const isChecked = get(appliedFilters, `${field}.${facet[0]}`, false);
                     return (
-                      <ListItem className="flex-vertical-start" style={{padding: '0px 4px 0px 4px'}} key={facet[0]}>
+                      <ListItem className="flex-vertical-start" style={{padding: '0px 10px 0px 4px'}} key={facet[0]}>
                         <ListItemIcon style={{minWidth: 'auto'}}>
-                          <Checkbox checked={isChecked} size='small' onChange={event => onCheckboxChange(event, field, facet)} style={{padding: '0px 9px'}} />
+                          <Checkbox checked={isChecked} size='small' onChange={event => onCheckboxChange(event, field, facet)} style={{padding: '1px 5px 0px 5px'}} sx={{ '& .MuiSvgIcon-root': { fontSize: 15 }}} />
                         </ListItemIcon>
                         <ListItemText
                           primary={
