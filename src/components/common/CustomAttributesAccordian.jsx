@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Switch, Grid, Typography
+  Accordion, AccordionSummary, AccordionDetails, Switch, Grid, Typography, Chip
 } from '@mui/material';
 import {
-  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy
+  map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy,
+  get, has
 } from 'lodash';
 import { BLUE } from '../../common/constants';
 import CustomAttributes from './CustomAttributes'
@@ -15,6 +16,7 @@ const None = () => {
 
 const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) => {
   const [raw, setRaw] = React.useState(false)
+  const [expanded, setExpanded] = React.useState({});
   const hasAttributes = !isEmpty(attributes)
   const onRawClick = event => {
     event.stopPropagation()
@@ -38,6 +40,14 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   }
 
   const count = keys(attributes).length
+
+  const isContentHidden = el => el && el.scrollHeight > el.offsetHeight
+
+  const toggleExpanded = elId => setExpanded(prevExpanded => {
+    const newExpanded = {...prevExpanded}
+    newExpanded[elId] = !get(newExpanded, elId)
+    return newExpanded
+  })
 
   return (
     <Accordion expanded style={{borderRadius: 'unset'}}>
@@ -69,7 +79,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
           }
         </span>
       </AccordionSummary>
-      <AccordionDetails style={detailStyles}>
+      <AccordionDetails style={{...detailStyles, maxHeight: 'auto'}}>
         {
           hasAttributes ?
           (
@@ -80,17 +90,21 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
             /> :
             <div className='col-xs-12 no-side-padding'>
               {
-                map(getAttributeKeys(), name => {
+                map(getAttributeKeys(), (name, i) => {
                   const value = attributes[name]
                   const isBool = isBoolean(value)
                   const needNesting = !isBool && shouldBeNested(value)
                   const isArr = isArray(value)
+                  const elId = name.replaceAll(' ', '-').toLowerCase() + '-' + i
+                  const isExpanded = get(expanded, elId)
+                  const isHidden = (has(expanded, elId) && !isExpanded) || isContentHidden(document.getElementById(elId))
+                  const classes = isExpanded ? '' : 'truncate-lines-4';
                   return (
-                    <div className='col-xs-12 no-side-padding custom-attributes-accordion-content' key={name}>
+                    <div className={`col-xs-12 no-side-padding custom-attributes-accordion-content`} key={name}>
                       <div className='col-xs-3 no-right-padding' style={{color: '#777'}}>
                         <b>{startCase(name)}</b>
                       </div>
-                      <div className='col-xs-9 no-left-padding flex-vertical-center' style={{maxWidth: '100%'}}>
+                      <div id={elId} className={`col-xs-9 no-left-padding flex-vertical-center ${classes}`} style={{maxWidth: '100%'}}>
                         {
                           isBool && value.toString()
                         }
@@ -115,6 +129,15 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                           value
                         }
                       </div>
+                      {
+                        isHidden &&
+                        <React.Fragment>
+                          <div className='col-xs-3 no-right-padding'/>
+                          <div className='col-xs-9 no-left-padding'>
+                            <Chip variant='outlined' color='primary' size='small' label={isExpanded ? 'less' : 'more'} onClick={() => toggleExpanded(elId)} style={{border: 'none', marginLeft: '-8px'}} />
+                          </div>
+                        </React.Fragment>
+                      }
                     </div>
                   )
 
