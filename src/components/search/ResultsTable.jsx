@@ -633,7 +633,7 @@ const ExpandibleRow = props => {
         }
         {
           !isSelectable &&
-          <TableCell align='left' style={{width: '120px', padding: '2px'}}>
+          <TableCell align='right' style={{width: '120px', padding: '2px', paddingRight: '10px'}}>
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
               <CircularProgress style={{width: '20px', height: '20px'}} /> :
