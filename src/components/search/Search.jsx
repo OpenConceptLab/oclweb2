@@ -719,15 +719,13 @@ class Search extends React.Component {
     return (
       <div className='col-xs-12' style={nested ? {padding: '0px', ...layoutProps} : {paddingTop: '10px', ...layoutProps}}>
         <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-sm-8 col-xs-7 no-side-padding' style={{textAlign: 'center'}}>
+          <div className='col-xs-12 flex-vertical-center' style={{paddingLeft: 0, paddingRight: '3px'}}>
             {
               fhir ?
               <SearchByAttributeInput {...this.props} onSearch={this.onFhirSearch} /> :
               <SearchInput {...this.props} onSearch={this.onSearch} />
             }
-          </div>
-          <div className='col-xs-4 no-side-padding flex-vertical-center' style={{marginTop: '8px'}}>
-            <span style={{margin: '0 20px', marginTop: '-4px'}}>
+            <span style={{margin: '0 15px'}}>
               <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} disabled={fhir && !hapi} />
             </span>
             <span>
