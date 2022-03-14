@@ -217,7 +217,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
         !noAssociations && hierarchy &&
         <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} maxWidth="md">
           <DialogTitle>
-            <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px'}} />
+            <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
             <div className='col-xs-12 no-side-padding'>
             <span>Associations</span>
             <span style={{marginLeft: '20px'}}>
