@@ -44,6 +44,7 @@ class SourceHome extends React.Component {
     this.isConceptSelected = Boolean(params.concept)
     this.isMappingSelected = Boolean(params.mapping)
     this.isChildSelected = this.isConceptSelected || this.isMappingSelected
+    this.isHEAD = !params.version || params.version === 'HEAD'
     if(this.isChildSelected) {
       this.sourcePath = paramsToParentURI(params, true)
       this.sourceVersionPath = paramsToParentURI(params)
@@ -52,7 +53,6 @@ class SourceHome extends React.Component {
     } else {
       this.sourcePath = this.versionedPath
       this.sourceVersionPath = this.currentPath
-      this.isHEAD = !params.version || params.version === 'HEAD'
     }
   }
 

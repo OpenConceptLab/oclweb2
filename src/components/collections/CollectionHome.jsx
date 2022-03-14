@@ -360,7 +360,7 @@ class CollectionHome extends React.Component {
                   <MappingHome
                     singleColumn
                     scoped='collection'
-                            parentURL={collection.url || collection.version_url}
+                            parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                             mapping={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {mappingVersion: selected.verison}}}
@@ -371,7 +371,7 @@ class CollectionHome extends React.Component {
                   <ConceptHome
                     singleColumn
                     scoped='collection'
-                            parentURL={collection.url || collection.version_url}
+                            parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                             concept={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {conceptVersion: selected.version}}}

@@ -15,8 +15,7 @@ import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
 import MappingForm from './MappingForm';
 import HomeActionButton from '../common/SourceChildHomeActionButton';
-import { ResourceTextButton } from '../common/OwnerLabel';
-import { toParentURI, toOwnerURI } from '../../common/utils';
+import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
 
 const LABEL_STYLES = {
   textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
@@ -81,11 +80,7 @@ const ScopeHeader = ({
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         {
           (global || scoped === 'collection') && mapping &&
-          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginBottom: '5px'}}>
-            <ResourceTextButton href={`#${toOwnerURI(mapping.url)}`} resource={mapping.owner_type.toLowerCase()} id={mapping.owner} />
-            <span className='separator-small' style={{padding: '0'}}>/</span>
-            <ResourceTextButton href={`#${toParentURI(mapping.url)}`} resource='source' id={mapping.source} color='green' />
-          </div>
+          <ResourceTextBreadcrumbs style={{marginBottom: '5px'}} resource={mapping} />
         }
         <span style={{marginLeft: '15px', display: 'block'}}>
           <MappingIcon shrink={false} style={{marginTop: '-20px'}} />

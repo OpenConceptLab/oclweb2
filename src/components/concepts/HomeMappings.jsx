@@ -16,6 +16,7 @@ import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
 import ConceptHierarchyTree from './ConceptHierarchyTree';
 import HierarchyTreeFilters from './HierarchyTreeFilters';
+import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -216,6 +217,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
         !noAssociations && hierarchy &&
         <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} maxWidth="md">
           <DialogTitle>
+            <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px'}} />
+            <div className='col-xs-12 no-side-padding'>
             <span>Associations</span>
             <span style={{marginLeft: '20px'}}>
               <HierarchyTreeFilters
@@ -225,6 +228,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
                 size='medium'
               />
             </span>
+            </div>
           </DialogTitle>
           <DialogContent>
             <div className='col-xs-12' style={{padding: '10px'}}>

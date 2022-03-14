@@ -13,8 +13,7 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 import HomeActionButton from '../common/SourceChildHomeActionButton';
-import { ResourceTextButton } from '../common/OwnerLabel';
-import { toParentURI, toOwnerURI } from '../../common/utils';
+import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
 
 const ScopeHeader = ({
   concept, isVersionedObject, versionedObjectURL, currentURL,
@@ -72,11 +71,7 @@ const ScopeHeader = ({
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         {
           (global || scoped === 'collection') && concept &&
-          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginBottom: '5px'}}>
-            <ResourceTextButton href={`#${toOwnerURI(concept.url)}`} resource={concept.owner_type.toLowerCase()} id={concept.owner} />
-            <span className='separator-small' style={{padding: '0'}}>/</span>
-            <ResourceTextButton href={`#${toParentURI(concept.url)}`} resource='source' id={concept.source} color='green' />
-          </div>
+          <ResourceTextBreadcrumbs style={{marginBottom: '5px'}} resource={concept} />
         }
         <span style={{marginLeft: '15px', display: 'block'}}>
           <ConceptIcon shrink={false} style={{marginTop: '-10px'}} />
