@@ -9,6 +9,7 @@ import {
 import { BLUE } from '../../common/constants';
 import CustomAttributes from './CustomAttributes'
 import TabCountLabel from './TabCountLabel'
+import CustomMarkdown from './CustomMarkdown'
 
 const None = () => {
   return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
@@ -126,7 +127,9 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                         }
                         {
                           !isBool && !needNesting && !isArr && !isObject(value) &&
-                          value
+                         <span style={{marginTop: '-14px', display: 'block'}}>
+                           <CustomMarkdown markdown={value} />
+                         </span>
                         }
                       </div>
                       {
