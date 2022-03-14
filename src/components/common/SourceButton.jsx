@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonGroup, Menu, MenuList, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Button, ButtonGroup, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import { merge } from 'lodash';
 import {
   List as ListIcon,
@@ -38,14 +38,16 @@ const SourceButton = ({label, onClick, href, childURI, onEditClick, onDeleteClic
   }
   return (
     <React.Fragment>
-      <ButtonGroup variant='contained' style={{background: GREEN, color: WHITE, boxShadow: 'none', textTransform: 'none'}} {...rest}>
-        <Button className='button-controlled' startIcon={<ListIcon />} onClick={onClick} href={uri} style={merge(commonButtonStyle, style || {})}>
-          {label}
-        </Button>
-        <Button onClick={toggleMenu} style={merge(dropDownButtonStyle, style || {})}>
-          <DownIcon />
-        </Button>
-      </ButtonGroup>
+      <Tooltip title={label} arrow>
+        <ButtonGroup variant='contained' style={{background: GREEN, color: WHITE, boxShadow: 'none', textTransform: 'none'}} {...rest}>
+          <Button className='button-controlled' startIcon={<ListIcon />} onClick={onClick} href={uri} style={merge(commonButtonStyle, style || {})}>
+            {label}
+          </Button>
+          <Button onClick={toggleMenu} style={merge(dropDownButtonStyle, style || {})}>
+            <DownIcon />
+          </Button>
+        </ButtonGroup>
+      </Tooltip>
       <Menu
         id="versions-menu"
         anchorEl={anchorEl}
