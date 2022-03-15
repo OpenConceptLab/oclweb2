@@ -101,11 +101,11 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                   const isHidden = (has(expanded, elId) && !isExpanded) || isContentHidden(document.getElementById(elId))
                   const classes = isExpanded ? '' : 'truncate-lines-4';
                   return (
-                    <div className={`col-xs-12 no-side-padding custom-attributes-accordion-content`} key={name}>
+                    <div className="col-xs-12 no-side-padding custom-attributes-accordion-content" key={name}>
                       <div className='col-xs-3 no-right-padding' style={{color: '#777'}}>
                         <b>{startCase(name)}</b>
                       </div>
-                      <div id={elId} className={`col-xs-9 no-left-padding flex-vertical-center ${classes}`} style={{maxWidth: '100%'}}>
+                      <div className="col-xs-9 no-left-padding flex-vertical-center" style={{maxWidth: '100%'}}>
                         {
                           isBool && value.toString()
                         }
@@ -127,9 +127,9 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                         }
                         {
                           !isBool && !needNesting && !isArr && !isObject(value) &&
-                         <span style={{marginTop: '-14px', display: 'block'}}>
-                           <CustomMarkdown markdown={value} />
-                         </span>
+                          <span style={{marginTop: '-14px', display: 'block'}}>
+                            <CustomMarkdown markdown={value} classes={classes} id={elId}  />
+                          </span>
                         }
                       </div>
                       {
