@@ -634,7 +634,7 @@ export const paramsToParentURI = (params, versioned=false) => {
   return uri + '/';
 }
 
-export const paramsToURI = (params, versioned=false) => {
+export const paramsToURI = (params, versioned=false, expansion=false) => {
   let uri = '';
   if(params.org)
     uri += `/orgs/${params.org}`;
@@ -646,6 +646,8 @@ export const paramsToURI = (params, versioned=false) => {
     uri += `/collections/${params.collection}`;
   if(params.version && !versioned)
     uri += `/${params.version}`;
+  if(params.expansion && !expansion)
+    uri += `/expansions/${params.expansion}`;
   if(params.concept)
     uri += `/concepts/${params.concept}`;
   else if(params.mapping)

@@ -12,6 +12,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import Breadcrumbs from '../sources/Breadcrumbs';
+import { paramsToURI, paramsToParentURI } from '../../common/utils';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
 
@@ -36,6 +37,21 @@ class CollectionHome extends React.Component {
       customConfigs: [],
       selected: null,
       filtersOpen: false,
+    }
+  }
+
+  setPaths = () => {
+    const { params } = this.props.match
+    this.collectionPath = paramsToParentURI(params, true)
+    this.collectionVersionPath = params.version ? this.collectionPath + params.version + '/' : this.collectionPath + 'HEAD/'
+    this.currentPath = paramsToURI(params)
+    this.isConceptSelected = Boolean(params.concept)
+    this.isMappingSelected = Boolean(params.mapping)
+    this.isChildSelected = this.isConceptSelected || this.isMappingSelected
+    this.isHEAD = !params.version || params.version === 'HEAD'
+    if(this.isChildSelected) {
+      this.isVersionedChild = Boolean(params.conceptVersion || params.mappingVersion)
+      this.fetchChildFromURL()
     }
   }
 
@@ -70,11 +86,13 @@ class CollectionHome extends React.Component {
   }
 
   componentDidMount() {
+    this.setPaths()
     this.refreshDataByURL()
   }
 
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
+      this.setPaths()
       this.refreshDataByURL()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
@@ -109,8 +127,9 @@ class CollectionHome extends React.Component {
   }
 
   getResourceURLs() {
-    const { match, location } = this.props
-    const collectionURL = location.pathname.split('/').slice(0, 5).join('/') + '/'
+    const { match } = this.props
+    const collectionURL = this.collectionPath
+
     let urls = {collection: collectionURL, version: null, expansion: null}
     if(match.params.version && !includes(['references', 'versions', 'expansions', 'concepts', 'mappings', 'about', 'details'], match.params.version)) {
       urls.version = collectionURL + match.params.version + '/'
@@ -125,7 +144,7 @@ class CollectionHome extends React.Component {
   getVersions() {
     this.setState({isLoadingVersions: true}, () => {
       APIService.new()
-                .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
+                .overrideURL(this.collectionPath + 'versions/')
                 .get(null, null, {verbose: true, includeSummary: true})
                 .then(response => {
                   this.setState({versions: response.data, isLoadingVersions: false})
@@ -135,9 +154,7 @@ class CollectionHome extends React.Component {
 
   getExpansions() {
     this.setState({isLoadingExpansions: true}, () => {
-      const URL = this.getVersionedObjectURLFromPath()
-      const version = this.getCurrentVersion()
-      APIService.new().overrideURL(URL).appendToUrl(version || 'HEAD').appendToUrl('/expansions/').get().then(response => {
+      APIService.new().overrideURL(this.collectionVersionPath).appendToUrl('expansions/').get().then(response => {
         this.setState({expansions: response.data, isLoadingExpansions: false})
       })
 
@@ -235,6 +252,11 @@ class CollectionHome extends React.Component {
 
     newState.versions.splice(index, 1, updatedVersion)
     this.setState(newState)
+  }
+
+  fetchChildFromURL = () => {
+    if(this.isChildSelected)
+      APIService.new().overrideURL(this.currentPath).get().then(response => this.setState({selected: response.data}))
   }
 
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
