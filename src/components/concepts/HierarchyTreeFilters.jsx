@@ -54,7 +54,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
       </Tooltip>
       <Tooltip title={filters.cascadeHierarchy ? 'Remove Hierarchy' : 'Cascade Hierarchy'} arrow placement='top'>
         <Chip
-          color={filters.cascadeHierarchy ? "primary" : "default"}
+          color={filters.cascadeHierarchy ? "primary" : "secondary"}
           variant="outlined"
           label="Hierarchy"
           size={_size}
@@ -66,7 +66,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
       </Tooltip>
       <Tooltip title={filters.cascadeMappings ? 'Remove Mappings' : 'Cascade Mappings'} arrow placement='top'>
         <Chip
-          color={filters.cascadeMappings ? "primary" : "default"}
+          color={filters.cascadeMappings ? "primary" : "secondary"}
           variant="outlined"
           label="Mappings"
           size={_size}
@@ -80,7 +80,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
         filters.cascadeMappings &&
         <Tooltip title="Include/Exclude MapTypes" arrow placement='top'>
           <Chip
-            color={(filters.mapTypes || filters.excludeMapTypes) ? "primary" : "default"}
+            color={(filters.mapTypes || filters.excludeMapTypes) ? "primary" : "secondary"}
             variant="outlined"
             label="MapTypes"
             size={_size}
