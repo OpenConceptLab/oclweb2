@@ -30,7 +30,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   }
   const getNestedValueDom = (value, index) => {
     return isObject(value) ?
-           <pre style={{fontSize: '12px', margin: 0}}>{JSON.stringify(value, undefined, 2)}</pre> :
+           <pre style={{fontSize: '12px', margin: 0}} key={index}>{JSON.stringify(value, undefined, 2)}</pre> :
            <code key={index}>{JSON.stringify(value)}</code>
   }
 
