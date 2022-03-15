@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
   Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton, Dialog, DialogContent, DialogTitle,
-  DialogActions, Button
+  DialogActions, Button, Slide
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
@@ -50,6 +50,10 @@ const DEFAULT_CASCADE_FILTERS = {
   cascadeMappings: true,
   reverse: false,
 }
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents }) => {
   const [hierarchy, setHierarchy] = React.useState(false);
@@ -215,7 +219,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
       </Accordion>
       {
         !noAssociations && hierarchy &&
-        <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} maxWidth="md">
+        <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition} maxWidth='md'>
           <DialogTitle>
             <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
             <div className='col-xs-12 no-side-padding'>
@@ -232,7 +236,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
           </DialogTitle>
           <DialogContent>
             <div className='col-xs-12' style={{padding: '10px'}}>
-              <ConceptHierarchyTree concept={concept} fontSize='16' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} />
+              <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} />
             </div>
           </DialogContent>
           <DialogActions>
