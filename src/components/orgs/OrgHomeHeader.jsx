@@ -93,7 +93,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
               </span>
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name'>
+          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
             <span style={{marginRight: '10px'}}>
               {org.name}
             </span>
@@ -110,7 +110,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
               </div>
             }
             {map(getVisibleAttributes(), (attr) => {
-                return <HeaderAttribute key={attr.label} label={attr.label} value={org[attr.value]} type={attr.type} gridClass="col-md-12" />
+               return <HeaderAttribute key={attr.label} label={attr.label} value={org[attr.value]} type={attr.type} gridClass="col-md-12" />
             })}
             <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
