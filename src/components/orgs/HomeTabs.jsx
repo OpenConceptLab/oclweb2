@@ -41,7 +41,9 @@ const HomeTabs = props => {
 
   const getTABHref = tabConfig => {
     let href = '';
-    if(tabConfig.type === 'about')
+    if(tabConfig.id)
+      href = `#${org.url}${tabConfig.id}`
+    else if(tabConfig.type === 'about')
       href = `#${org.url}about`
     else if(tabConfig.type === 'versions')
       href = `#${org.url}versions`
@@ -49,9 +51,11 @@ const HomeTabs = props => {
       href = `#${org.url}members`
     else if(tabConfig.href)
       href = `#${org.url}${tabConfig.href}`
-    else {
+    else if (isOCLDefaultConfigSelected) {
       const urlAttr = tabConfig.type + '_url'
       href = `#${org[urlAttr]}`
+    } else {
+      href = `#${org.url}${tab}`
     }
     let queryString = location.hash.split('?')[1] || ''
     if(queryString)
@@ -78,19 +82,6 @@ const HomeTabs = props => {
                 <span style={{marginLeft: '4px'}}>{config.label}</span>
               </span>
             );
-            if(isOCLDefaultConfigSelected)
-              return (
-                <Tab
-                  style={color ? {color: color}: {}}
-                  index={index}
-                  key={key}
-                  id={key}
-                  label={label}
-                  component="a"
-                  href={getTABHref(config)}
-                  className='capitalize'
-                />
-              )
             return (
               <Tab
                 style={color ? {color: color}: {}}
@@ -98,6 +89,8 @@ const HomeTabs = props => {
                 key={key}
                 id={key}
                 label={label}
+                component="a"
+                href={getTABHref(config)}
                 className='capitalize'
               />
             )

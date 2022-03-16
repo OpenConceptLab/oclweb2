@@ -1,7 +1,10 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { CircularProgress } from '@mui/material';
-import { reject, get, values, find, findIndex, isObject, isEqual, merge, isEmpty, cloneDeep } from 'lodash';
+import {
+  reject, get, values, find, findIndex, isObject, merge, isEmpty, cloneDeep,
+  isNaN
+} from 'lodash';
 import APIService from '../../services/APIService';
 import { isCurrentUserMemberOf, isAdminUser } from '../../common/utils';
 import HomeHeader from './HomeHeader';
@@ -14,6 +17,7 @@ import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 class OrgHome extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       notFound: false,
       accessDenied: false,
@@ -21,7 +25,7 @@ class OrgHome extends React.Component {
       isLoading: true,
       org: {},
       pins: [],
-      tab: this.getDefaultTabIndex(),
+      tab: 0,
       selectedConfig: null,
       customConfigs: [],
       members: [],
@@ -34,6 +38,7 @@ class OrgHome extends React.Component {
 
   getDefaultTabIndex() {
     const { location } = this.props;
+    const { selectedConfig } = this.state;
     if(location.pathname.indexOf('/about') > -1)
       return 0;
     if(location.pathname.indexOf('/overview') > -1)
@@ -44,6 +49,18 @@ class OrgHome extends React.Component {
       return 2;
     if(location.pathname.indexOf('/sources') > -1)
       return 1;
+
+    const customIndex = location.pathname.split('?')[0].replace('orgs', '').replace(this.props.match.params.org, '').replaceAll('/', '')
+    if(customIndex) {
+      const iCustomIndex = parseInt(customIndex)
+      if(isNaN(iCustomIndex)) {
+        if(selectedConfig && !this.isOCLDefaultConfigSelected()) {
+          return findIndex(selectedConfig.config.tabs, {id: customIndex})
+        } else return 0
+      }
+      else
+        return iCustomIndex
+    }
 
     return 0;
   }
@@ -57,7 +74,7 @@ class OrgHome extends React.Component {
   }
 
   setTab() {
-    this.setState({tab: this.getDefaultTabIndexFromConfig()});
+    this.onTabChange(null, this.getDefaultTabIndex())
   }
 
   getOrgId() {
@@ -85,7 +102,7 @@ class OrgHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname) {
+    if(this.props.match.params.org !== prevProps.match.params.org) {
       this.refreshDataByURL()
       this.getPins()
     }
@@ -130,7 +147,7 @@ class OrgHome extends React.Component {
               this.setState({
                 isLoading: false,
                 org: org,
-                selectedConfig: cloneDeep(defaultCustomConfig || ORG_DEFAULT_CONFIG),
+                selectedConfig: cloneDeep(defaultCustomConfig || {...ORG_DEFAULT_CONFIG, id: '__ocl_default__'}),
                 customConfigs: customConfigs,
               }, () => {
                 this.getMembersSummary()
@@ -187,7 +204,8 @@ class OrgHome extends React.Component {
                                             .put({order: newOrder})
                                             .then(() => {})
 
-  isOCLDefaultConfigSelected = () => isEqual(this.state.selectedConfig, ORG_DEFAULT_CONFIG)
+  isOCLDefaultConfigSelected = () => get(this.state.selectedConfig, 'id') === '__ocl_default__'
+
 
   render() {
     const {
@@ -208,7 +226,7 @@ class OrgHome extends React.Component {
           !isLoading && !hasError &&
           <div className='col-md-12 home-container no-side-padding'>
             {
-              tab !== null &&
+              tab !== null && selectedConfig &&
               <React.Fragment>
                 <HomeHeader
                   org={org}
