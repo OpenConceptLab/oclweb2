@@ -157,7 +157,7 @@ const ScopeHeader = ({
         </div>
         {
           onClose &&
-          <span className='col-md-1 no-side-padding' style={{marginLeft: '5px', display: 'block', textAlign: 'right'}}>
+          <span className='col-md-1 no-side-padding' style={{display: 'block', textAlign: 'right'}}>
             <IconButton size='small' color='secondary' onClick={onClose}>
               <CancelIcon fontSize='inherit' />
             </IconButton>
