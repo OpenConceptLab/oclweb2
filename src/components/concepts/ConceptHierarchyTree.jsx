@@ -64,10 +64,18 @@ class ConceptHierarchyTree extends React.Component {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
     data.target_source = this.getSourceName(data.url)
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
-      if(this.state.hasEntries)
+      if(this.state.hasEntries) {
         this.renderTree()
+        setTimeout(this.positionTree, 200)
+      }
     })
   })
+
+  positionTree = () => {
+    const svg = document.getElementById('hierarchy-tree')
+    const box = svg.getBBox()
+    svg.viewBox.baseVal.width = box.width - box.x + 100
+  }
 
   getSourceName = url => {
     if(!url)
@@ -142,6 +150,7 @@ class ConceptHierarchyTree extends React.Component {
     const svg = d3Selection
       .select('body')
       .append("svg")
+      .attr("id", 'hierarchy-tree')
       .attr("viewBox", [-margin.left, -margin.top, width, dx])
       .style("font", "10px sans-serif")
       .style("user-select", "none");
