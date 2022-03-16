@@ -219,7 +219,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
       </Accordion>
       {
         !noAssociations && hierarchy &&
-        <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition} maxWidth='xl'>
+        <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition} maxWidth='lg'>
           <DialogTitle>
             <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
             <div className='col-xs-12 no-side-padding'>
