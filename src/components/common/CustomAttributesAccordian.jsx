@@ -111,7 +111,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                         }
                         {
                           needNesting &&
-                          <div>
+                          <div id={elId} className={classes}>
                             {
                               map(value, (val, index) => getNestedValueDom(val, index))
                             }
@@ -119,11 +119,15 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                         }
                         {
                           isArr && !needNesting &&
-                          <pre style={{margin: '0'}}>{JSON.stringify(value)}</pre>
+                          <div id={elId} className={classes}>
+                            <pre style={{margin: '0'}}>{JSON.stringify(value)}</pre>
+                          </div>
                         }
                         {
                           !isBool && !needNesting && !isArr && isObject(value) &&
-                          getNestedValueDom(value)
+                          <div id={elId} className={classes}>
+                            {getNestedValueDom(value)}
+                          </div>
                         }
                         {
                           !isBool && !needNesting && !isArr && !isObject(value) &&
