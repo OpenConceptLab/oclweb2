@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
-import { getRandomColor } from '../../common/utils';
+import { getRandomColor, getWidthOfText } from '../../common/utils';
 import './d3Tree.scss';
 
 const HIERARCHY_CHILD_REL = '-haschild-'
@@ -62,6 +62,7 @@ class ConceptHierarchyTree extends React.Component {
 
   makeInitialTree = () => this.getChildren(this.props.concept, tree => {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
+    data.target_source = this.getSourceName(data.url)
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
       if(this.state.hasEntries)
         this.renderTree()
@@ -114,11 +115,12 @@ class ConceptHierarchyTree extends React.Component {
     const fontSize = this.props.fontSize || '16';
     const dx = this.props.dx || 60;
     const data = this.state.tree
-    const margin = { top: 10, right: 120, bottom: 10, left: 300 };
+    const margin = { top: 40, right: 120, bottom: 10, left: 300 };
     const root = d3Hierarchy(data);
     const dy = width / 6;
     const tree = d3Tree().nodeSize([dx, dy]);
-    const diagonal = d3LinkHorizontal().x(d => d.y).y(d => d.x);
+    const linkMultiplier = 1.3
+    const diagonal = d3LinkHorizontal().x(d => d.y * linkMultiplier).y(d => d.x);
 
     root.x0 = dy / 2;
     root.y0 = 0;
@@ -137,7 +139,8 @@ class ConceptHierarchyTree extends React.Component {
 
     tree(root);
 
-    const svg = d3Selection.select('body')
+    const svg = d3Selection
+      .select('body')
       .append("svg")
       .attr("viewBox", [-margin.left, -margin.top, width, dx])
       .style("font", "10px sans-serif")
@@ -173,10 +176,11 @@ class ConceptHierarchyTree extends React.Component {
         if (node.x > right.x) right = node;
       });
       const height = right.x - left.x + margin.top + margin.bottom;
+      const marginLeft = getWidthOfText(root.data.display_name, 'sans-serif', `${fontSize}px`) || margin.left
       const transition = svg
         .transition()
         .duration(duration)
-        .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+        .attr("viewBox", [-marginLeft, left.x - margin.top, width, height + 50])
         .tween(
           "resize",
           window.ResizeObserver ? null : () => () => svg.dispatch("toggle")
@@ -197,7 +201,6 @@ class ConceptHierarchyTree extends React.Component {
           const sourceHeader = d.data.target_source ? `<div><span class='gray'>Source: </span><span><b>${d.data.target_source}</b></span></div> ` : '';
           let terminalHeader = '';
           if(!d.data.target_concept_code && isEmpty(d.data.children)) {
-
             if(d.data.uuid === d.parent.data.uuid)
               terminalHeader = '<div class="gray-italics-small">(Same As Parent)</div> ';
             else if(d.data.terminal === false)
@@ -227,7 +230,7 @@ class ConceptHierarchyTree extends React.Component {
       const nodeEnter = node
         .enter()
         .append("g")
-        .attr("transform", () => `translate(${source.y0},${source.x0})`)
+        .attr("transform", () => `translate(${source.y0 * linkMultiplier},${source.x0})`)
         .attr("fill-opacity", 0)
         .attr("stroke-opacity", 0)
         .on('mouseover', tip.show)
@@ -250,37 +253,50 @@ class ConceptHierarchyTree extends React.Component {
         .append("text")
         .attr("dy", "0.31em")
         .attr('font-size', `${fontSize}px`)
-        .attr('fill', d => that.existsInOCL(d) ? (d._children ? BLUE : '#000') : 'rgba(0, 0, 0, 0.5)')
-        .attr('font-weight', d => d._children ? BLUE : '#000')
         .attr('font-style', d => that.existsInOCL(d) ? 'inherit': 'italic')
         .attr("x", d => (d._children ? -6 : 6))
         .attr("text-anchor", d => (d._children ? "end" : "start"))
+
+      nodeEnter
+        .select('text')
+        .append('tspan')
+        .attr('font-size', `${fontSize-1}px`)
+        .attr('fill', 'gray')
         .text(d => {
-          let name;
-          if(d.data.target_concept_code)
-            name = d.data.target_concept_code
-          else {
-            name = d.data.name
-            if(isEmpty(d.data.children) && d.data.uuid !== d.parent.data.uuid) {
-              if(d.data.terminal === false)
-                name += '⁺'
-              else if (d.data.terminal === null)
-                name += '^'
-            }
+        let name;
+        if(d.data.target_concept_code)
+          name = d.data.target_concept_code
+        else {
+          name = d.data.name
+          if(isEmpty(d.data.children) && d.data.uuid !== d.parent.data.uuid) {
+            if(d.data.terminal === false)
+              name += '⁺'
+            else if (d.data.terminal === null)
+              name += '^'
           }
+        }
+          return name + '  '
+        })
+      nodeEnter
+        .select('text')
+        .append('tspan')
+        .attr('class', 'tspan-to-wrap')
+        .attr('font-size', `${fontSize}px`)
+        .attr('fill', d => that.existsInOCL(d) ? (d._children ? BLUE : '#000') : 'rgba(0, 0, 0, 0.5)')
+        .attr('x', d => d._children ? -6 : 6)
+        .attr('dy', `1.2em`)
+        .text(d => {
+          let name = d.data.display_name || d.data.target_concept_code;
+          if(name.length > 20)
+            name = name.substring(0, 17) + '...'
           return name
         })
-        .clone(true)
-        .lower()
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-width", 3)
-        .attr("stroke", "white");
 
       // Transition nodes to their new position.
       node
         .merge(nodeEnter)
         .transition(transition)
-        .attr("transform", d => `translate(${d.y},${d.x})`)
+        .attr("transform", d => `translate(${d.y * linkMultiplier},${d.x})`)
         .attr("fill-opacity", 1)
         .attr("stroke-opacity", 1);
 
@@ -309,10 +325,12 @@ class ConceptHierarchyTree extends React.Component {
                .attr("stroke", d => (!d.target.data.map_type || d.target.data.map_type) === HIERARCHY_CHILD_REL ? '#000' : that.generateColor(d.target.data));
 
       linkEnter.append("text")
-               .attr("transform", d => `translate(${(d.source.y + d.target.y)/2}, ${(d.source.x + d.target.x)/2})`)
+               .attr("transform", d => `translate(${((d.source.y * linkMultiplier) + (d.target.y * linkMultiplier))/2}, ${(d.source.x + d.target.x)/2})`)
                .attr("text-anchor", "middle")
+               .attr("stroke-width", "0.02em")
                .attr("fill", "black")
                .attr("font-size", "12px")
+               .attr("dy", "-0.75em")
                .text(d => {
                  let mapType = d.target.data.map_type
                  if(mapType === HIERARCHY_CHILD_REL)

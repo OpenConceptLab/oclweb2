@@ -659,3 +659,14 @@ export const paramsToURI = (params, versioned=false, expansion=false) => {
 
   return uri + '/';
 }
+
+export const getWidthOfText = (txt, fontname, fontsize) => {
+  if(getWidthOfText.c === undefined){
+    getWidthOfText.c=document.createElement('canvas');
+    getWidthOfText.ctx=getWidthOfText.c.getContext('2d');
+  }
+  var fontspec = fontsize + ' ' + fontname;
+  if(getWidthOfText.ctx.font !== fontspec)
+    getWidthOfText.ctx.font = fontspec;
+  return getWidthOfText.ctx.measureText(txt).width + 60;
+}
