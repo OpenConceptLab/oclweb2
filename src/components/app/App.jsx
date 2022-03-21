@@ -40,8 +40,6 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
   />
 )
 
-const HOTJAR_ID = window.HOTJAR_ID || process.env.HOTJAR_ID
-
 const App = props => {
   // For recent history
   setUpRecentHistory(props.history);
@@ -50,6 +48,12 @@ const App = props => {
     /*eslint no-undef: 0*/
     ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
     ReactGA.pageview(window.location.pathname + window.location.hash);
+  }
+  const setupHotJar = () => {
+    /*eslint no-undef: 0*/
+    const HID = window.HOTJAR_ID || process.env.HOTJAR_ID
+    if(HID)
+      hotjar.initialize(HID, 6);
   }
 
   const addLogoutListenerForAllTabs = () => window.addEventListener(
@@ -66,8 +70,7 @@ const App = props => {
   React.useEffect(() => {
     addLogoutListenerForAllTabs()
     setupGA()
-    if(HOTJAR_ID)
-      hotjar.initialize(HOTJAR_ID, 6);
+    setupHotJar()
   })
 
   const isFHIR = isFHIRServer();
