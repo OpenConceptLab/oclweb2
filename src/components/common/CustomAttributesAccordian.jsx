@@ -102,10 +102,10 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                   const classes = isExpanded ? '' : 'truncate-lines-4';
                   return (
                     <div className="col-xs-12 no-side-padding custom-attributes-accordion-content" key={name}>
-                      <div className='col-xs-3 no-right-padding' style={{color: '#777'}}>
+                      <div className='col-xs-3' style={{color: '#777', overflow: 'hidden', paddingRight: '5px'}}>
                         <b>{startCase(name)}</b>
                       </div>
-                      <div className="col-xs-9 no-left-padding flex-vertical-center" style={{maxWidth: '100%'}}>
+                      <div className="col-xs-9 flex-vertical-center" style={{maxWidth: '100%', paddingLeft: '10px'}}>
                         {
                           isBool && value.toString()
                         }
