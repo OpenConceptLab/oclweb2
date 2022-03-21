@@ -29,6 +29,7 @@ import Footer from './Footer';
 import RootView from './RootView';
 import DocumentTitle from "./DocumentTitle"
 import './App.scss';
+import { hotjar } from 'react-hotjar';
 
 const SITE_TITLE = getSiteTitle()
 
@@ -38,6 +39,8 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
     render={props => isLoggedIn() ? <Component {...props} /> : <AccessDenied />}
   />
 )
+
+const HOTJAR_ID = window.HOTJAR_ID || process.env.HOTJAR_ID
 
 const App = props => {
   // For recent history
@@ -63,6 +66,8 @@ const App = props => {
   React.useEffect(() => {
     addLogoutListenerForAllTabs()
     setupGA()
+    if(HOTJAR_ID)
+      hotjar.initialize(HOTJAR_ID, 6);
   })
 
   const isFHIR = isFHIRServer();

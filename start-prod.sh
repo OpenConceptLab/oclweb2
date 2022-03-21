@@ -23,6 +23,9 @@ fi
 if [[ ! -z "${ERRBIT_KEY}" ]]; then
     echo "var ERRBIT_KEY = \"${ERRBIT_KEY}\";" >> ${ENV_FILE}
 fi
+if [[ ! -z "${HOTJAR_ID}" ]]; then
+    echo "var HOTJAR_ID = \"${HOTJAR_ID}\";" >> ${ENV_FILE}
+fi
 
 echo "Adjusting nginx configuration"
 envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf

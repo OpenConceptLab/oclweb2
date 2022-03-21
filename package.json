@@ -8,10 +8,10 @@
     "@airbrake/browser": "^2.1.7",
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.4.4",
-    "@mui/lab": "^5.0.0-alpha.71",
-    "@mui/material": "^5.4.4",
-    "@mui/styles": "^5.4.4",
+    "@mui/icons-material": "^5.5.1",
+    "@mui/lab": "^5.0.0-alpha.73",
+    "@mui/material": "^5.5.1",
+    "@mui/styles": "^5.5.1",
     "alertifyjs": "^1.13.1",
     "axios": "^0.21.4",
     "core-js": "^3.21.1",
@@ -27,6 +27,7 @@
     "react-dropzone": "^11.7.1",
     "react-ga": "^3.3.0",
     "react-google-recaptcha": "^2.1.0",
+    "react-hotjar": "^5.0.0",
     "react-image-crop": "^8.6.12",
     "react-infinite-scroll-component": "^5.1.0",
     "react-json-editor-ajrm": "^2.5.13",
@@ -40,8 +41,8 @@
     "stacktrace-js": "^2.0.2"
   },
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --mode ${NODE_ENV} --hot",
-    "build": "./node_modules/webpack/bin/webpack.js --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --mode ${NODE_ENV}",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.HOTJAR_ID=${HOTJAR_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --mode ${NODE_ENV} --hot",
+    "build": "./node_modules/webpack/bin/webpack.js --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.HOTJAR_ID=${HOTJAR_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --mode ${NODE_ENV}",
     "eslint": "./node_modules/.bin/eslint ./src"
   },
   "devDependencies": {
@@ -72,7 +73,7 @@
     "react-is": "^16.13.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^5.69.1",
+    "webpack": "^5.70.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.3"
   }

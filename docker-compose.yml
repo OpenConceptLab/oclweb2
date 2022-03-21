@@ -18,3 +18,4 @@ services:
       - GA_ACCOUNT_ID=${GA_ACCOUNT_ID-UA-000000-01}
       - ERRBIT_URL
       - ERRBIT_KEY
+      - HOTJAR_ID
