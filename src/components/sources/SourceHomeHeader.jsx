@@ -101,8 +101,8 @@ const SourceHomeHeader = ({
           />
         </div>
         <div className='col-xs-11'>
-          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
-            <span style={{marginRight: '10px'}}>
+          <div className='col-xs-12 no-side-padding home-resource-full-name' style={{paddingTop: '0px', display: 'block'}}>
+            <span style={{marginRight: '5px'}}>
               {source.full_name}
             </span>
             <AccessChip publicAccess={source.public_access} />

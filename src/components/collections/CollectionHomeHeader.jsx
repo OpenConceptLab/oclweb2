@@ -101,8 +101,8 @@ const CollectionHomeHeader = ({
           />
         </div>
         <div className='col-xs-11' style={{marginBottom: '5px'}}>
-          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
-            <span style={{marginRight: '10px'}}>
+          <div className='col-xs-12 no-side-padding home-resource-full-name' style={{paddingTop: '0px', display: 'block'}}>
+            <span style={{marginRight: '5px'}}>
               {collection.full_name}
             </span>
             <AccessChip publicAccess={collection.public_access} />
