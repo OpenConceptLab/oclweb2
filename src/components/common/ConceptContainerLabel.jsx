@@ -6,9 +6,10 @@ import {
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   AccountTreeRounded as TreeIcon,
+  ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
 
-const SEPARATOR = '/'
+const SEPARATOR = (<SeparatorIcon />)
 const ConceptContainerLabel = props => {
   const ownerType = (props.ownerType || props.owner_type || '').toLowerCase()
 

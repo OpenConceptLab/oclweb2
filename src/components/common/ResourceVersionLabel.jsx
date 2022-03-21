@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   AccountTreeRounded as TreeIcon,
-  AspectRatio as ExpansionIcon
+  AspectRatio as ExpansionIcon,
+  ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import ReleasedChip from './ReleasedChip';
@@ -10,7 +11,7 @@ import ProcessingChip from './ProcessingChip';
 import ExpansionChip from './ExpansionChip';
 import { GREEN } from '../../common/constants';
 
-const SEPARATOR = '/'
+const SEPARATOR = (<SeparatorIcon />)
 const ResourceVersionLabel = props => {
   const gridClass = props.gridClass || 'col-sm-12'
   return (
@@ -20,9 +21,9 @@ const ResourceVersionLabel = props => {
           <TreeIcon fontSize='small' style={{width: '14px'}} />
         </span>
         <span>{props.owner}</span>
-        <span>{SEPARATOR}</span>
+        <span className='separator-small'>{SEPARATOR}</span>
         <span>{props.short_code}</span>
-        <span>{SEPARATOR}</span>
+        <span className='separator-small'>{SEPARATOR}</span>
         <span className='resource-name'>[{props.version}]</span>
       </span>
       {

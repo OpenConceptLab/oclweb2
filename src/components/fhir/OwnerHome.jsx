@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Person as UserIcon,
   Home as OrgIcon,
+  ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
 import { getAppliedServerConfig } from '../../common/utils';
 import FhirTabs from './FhirTabs';
@@ -55,7 +56,7 @@ class OwnerHome extends React.Component {
             <div className='col-md-12'>
               <div className='col-md-12 no-side-padding flex-vertical-center'>
                 <OwnerButton owner={org.id} uri='#/' />
-                <span className='separator'>/</span>
+                <span className='separator'><SeparatorIcon /></span>
                 <OwnerButton {...owner} uri={window.location.hash} />
               </div>
             </div>

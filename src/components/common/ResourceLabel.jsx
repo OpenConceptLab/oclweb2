@@ -1,9 +1,12 @@
 import React from 'react';
 import { includes } from 'lodash';
+import {
+  ChevronRight as SeparatorIcon,
+} from '@mui/icons-material';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 
-const SEPARATOR = '/'
+const SEPARATOR = (<SeparatorIcon />)
 const ResourceLabel = props => {
   const { resource, existsInOCL, noSeparator } = props;
   const isSourceChild = includes(['concept', 'mapping'], resource);
@@ -18,7 +21,7 @@ const ResourceLabel = props => {
         }
         {
           props.owner && props.parent &&
-          <span>{SEPARATOR}</span>
+          <span className='separator'>{SEPARATOR}</span>
         }
         {
           props.parent &&
@@ -30,7 +33,7 @@ const ResourceLabel = props => {
         }
         {
           !noSeparator &&
-          <span>{SEPARATOR}</span>
+          <span className='separator'>{SEPARATOR}</span>
         }
         <span className='resource-name ellipsis-text-3' style={{maxWidth: '100%'}}>{props.id || props.name}</span>
       </span>

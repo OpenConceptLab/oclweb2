@@ -2,6 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   CancelOutlined as CancelIcon,
+  ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { isEmpty, get, startCase } from 'lodash';
@@ -123,7 +124,7 @@ const Breadcrumbs = ({
             <span className='flex-vertical-center' style={{width: '100%'}}>
               <span className='container-breadcurmbs flex-vertical-center' style={{padding: '10px 10px 10px 0', background: WHITE, marginLeft: '-5px'}}>
                 <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
-                <span className='separator'>/</span>
+                <span className='separator'><SeparatorIcon /></span>
                 {
                   params.source ?
                   <SourceButton
@@ -145,7 +146,7 @@ const Breadcrumbs = ({
                     {...parentProps}
                   />
                 }
-                <span className='separator'>/</span>
+                <span className='separator'><SeparatorIcon /></span>
                 <VersionSelectorButton
                   selected={container}
                   versions={versions}
@@ -155,7 +156,7 @@ const Breadcrumbs = ({
                 {
                   params.collection && !isEmpty(expansions) && !isLoadingExpansions &&
                   <React.Fragment>
-                    <span className='separator'>/</span>
+                    <span className='separator'><SeparatorIcon /></span>
                     <ExpansionSelectorButton
                       selected={expansion}
                       expansions={expansions}
@@ -176,7 +177,7 @@ const Breadcrumbs = ({
                   {
                     resourceVersion &&
                     <React.Fragment>
-                      <span className='separator'>/</span>
+                      <span className='separator'><SeparatorIcon /></span>
                       <ResourceVersionButton label={resourceVersion} href={params.source ? resourceVersionURL : undefined} />
                     </React.Fragment>
                   }

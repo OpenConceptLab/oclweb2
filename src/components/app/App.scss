@@ -246,12 +246,25 @@ td.pagination-center {
     padding-bottom: 3px;
 }
 span.separator {
-    font-size: 18pt;
-    padding: 0 10px
+    color: #7e7e7e;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    svg {
+        width: 20px;
+        height: 20px;
+    }
 }
 span.separator-small {
+    color: #7e7e7e;
     font-size: 14pt;
-    padding: 0 5px
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    svg {
+        width: 16px;
+        height: 16px;
+    }
 }
 .container {
     padding-right: 15px;

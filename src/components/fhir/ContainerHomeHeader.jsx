@@ -4,7 +4,8 @@ import {
   FileCopy as CopyIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
-  Link as LinkIcon
+  Link as LinkIcon,
+  ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
 import { isEmpty, keys, map, startCase, get } from 'lodash';
 import { nonEmptyCount, copyURL, toFullAPIURL } from '../../common/utils';
@@ -77,12 +78,12 @@ const ContainerHomeHeader = ({source, url, parentURL, resource, serverURL, isHAP
         <div className='col-md-11'>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner='FHIR' uri={`#${parentURL}`} />
-            <span className='separator'>/</span>
+            <span className='separator'><SeparatorIcon /></span>
             {
               !isHAPI &&
               <React.Fragment>
                 <OwnerButton owner={source.owner} uri={`#/fhir${source.ownerURL}${resource}`} />
-                <span className='separator'>/</span>
+                <span className='separator'><SeparatorIcon /></span>
               </React.Fragment>
             }
             { getResourceButton() }

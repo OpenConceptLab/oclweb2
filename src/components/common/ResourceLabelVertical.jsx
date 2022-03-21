@@ -1,9 +1,12 @@
 import React from 'react';
 import { includes } from 'lodash';
+import {
+  ChevronRight as SeparatorIcon,
+} from '@mui/icons-material';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 
-const SEPARATOR = '/'
+const SEPARATOR = (<SeparatorIcon />)
 const ResourceLabelVertical = props => {
   const { resource, existsInOCL } = props;
   const isSourceChild = includes(['concept', 'mapping'], resource);
@@ -16,12 +19,6 @@ const ResourceLabelVertical = props => {
     borderRadius: '2px',
     overflowX: 'auto',
   }
-  const separatorStyles = {
-    padding: '0 4px',
-    fontSize: '18px',
-    fontWeight: 'lighter',
-  }
-
   const nameTextStyles = {
     color: 'white',
     padding: '0 5px',
@@ -38,21 +35,21 @@ const ResourceLabelVertical = props => {
         <div className='col-md-12 flex-vertical-center' style={parentTextStyles}>
           {
             props.owner &&
-            <span className=''>{props.owner}</span>
+            <span>{props.owner}</span>
           }
           {
             props.owner && props.parent &&
-            <span style={separatorStyles}>{SEPARATOR}</span>
+            <span className='separator-small'>{SEPARATOR}</span>
           }
           {
             props.parent &&
-            <span className=''>{props.parent}</span>
+            <span>{props.parent}</span>
           }
           {
             (!props.owner && !props.parent && props.parentURL) &&
             <span className=''>{props.parentURL}</span>
           }
-          <span style={separatorStyles}>{SEPARATOR}</span>
+          <span className='separator-small'>{SEPARATOR}</span>
           <span style={{maxWidth: '100%', fontWeight: 'bold'}}>{props.id || props.name}</span>
         </div>
         <div style={nameTextStyles} className={'col-md-12 ' + resource + '-bg'}>
