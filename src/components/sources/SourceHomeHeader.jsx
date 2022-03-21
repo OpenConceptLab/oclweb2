@@ -93,7 +93,7 @@ const SourceHomeHeader = ({
   return (
     <header className='home-header col-xs-12 no-side-padding' style={{backgroundColor: WHITE}}>
       <div className='col-xs-12 no-side-padding container'>
-        <div className='no-side-padding col-xs-1 home-icon'>
+        <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}}>
           <HeaderLogo
             logoURL={logoURL}
             onUpload={onLogoUpload}
