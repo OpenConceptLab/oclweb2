@@ -226,7 +226,6 @@ const App = props => {
             />
 
             { /* Collection Home */ }
-
             <Route
               exact
               path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
@@ -279,12 +278,22 @@ const App = props => {
             />
             <Route
               exact
+              path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/references"
+              component={CollectionHome}
+            />
+            <Route
+              exact
               path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings"
               component={CollectionHome}
             />
             <Route
               exact
               path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts"
+              component={CollectionHome}
+            />
+            <Route
+              exact
+              path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/references"
               component={CollectionHome}
             />
             <Route
@@ -408,6 +417,26 @@ const App = props => {
               component={CollectionHome}
             />
             <Route
+              exact
+              path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/references"
+              component={CollectionHome}
+            />
+            <Route
+              exact
+              path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings"
+              component={CollectionHome}
+            />
+            <Route
+              exact
+              path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts"
+              component={CollectionHome}
+            />
+            <Route
+              exact
+              path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/references"
+              component={CollectionHome}
+            />
+            <Route
               path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)"
               component={CollectionHome}
             />
@@ -425,7 +454,6 @@ const App = props => {
             />
 
             {/* Comparison */}
-
             <Route
               exact
               path="/concepts/compare"
