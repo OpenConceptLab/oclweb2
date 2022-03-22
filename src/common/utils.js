@@ -670,3 +670,19 @@ export const getWidthOfText = (txt, fontname, fontsize) => {
     getWidthOfText.ctx.font = fontspec;
   return getWidthOfText.ctx.measureText(txt).width + 60;
 }
+
+export const getParamsFromObject = item => {
+  let params = {};
+  if(item.owner_type === 'Organization')
+    params.org = item.owner;
+  else if(item.owner_type === 'User')
+    params.user = item.owner;
+  if(item.source)
+    params.source = item.source;
+  if(item.map_type)
+    params.mapping = item.id;
+  else if (item.concept_class)
+    params.concept = item.id;
+
+  return params;
+}
