@@ -12,7 +12,6 @@ import ExternalIdLabel from '../common/ExternalIdLabel';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
-import HomeActionButton from '../common/SourceChildHomeActionButton';
 import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
 
 const ScopeHeader = ({
@@ -67,7 +66,7 @@ const ScopeHeader = ({
   }
 
   return (
-    <header className='home-header col-md-12'>
+    <header className='home-header col-md-12' style={{paddingTop: 0, paddingBottom: 0}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         {
           (global || scoped === 'collection') && concept &&
@@ -87,21 +86,6 @@ const ScopeHeader = ({
             {
               concept.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
-            }
-            {
-              global &&
-              <span style={{marginLeft: '15px'}}>
-                <HomeActionButton
-                  instance={concept}
-                  currentURL={currentURL}
-                  isVersionedObject={isVersionedObject}
-                  onEditClick={() => setConceptForm(true)}
-                  onRetire={onRetire}
-                  onUnretire={onUnretire}
-                  mappings={mappings}
-                  resource='concept'
-                />
-              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding' style={{marginLeft: '4px'}}>

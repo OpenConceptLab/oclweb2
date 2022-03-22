@@ -14,7 +14,6 @@ import FromConceptLabel from './FromConceptLabel';
 import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
 import MappingForm from './MappingForm';
-import HomeActionButton from '../common/SourceChildHomeActionButton';
 import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
 
 const LABEL_STYLES = {
@@ -76,7 +75,7 @@ const ScopeHeader = ({
                             null;
 
   return (
-    <header className='home-header col-md-12'>
+    <header className='home-header col-md-12' style={{paddingTop: 0, paddingBottom: 0}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         {
           (global || scoped === 'collection') && mapping &&
@@ -96,21 +95,6 @@ const ScopeHeader = ({
             {
               mapping.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
-            }
-            {
-              global &&
-              <span style={{marginLeft: '15px'}}>
-                <HomeActionButton
-                  instance={mapping}
-                  currentURL={currentURL}
-                  isVersionedObject={isVersionedObject}
-                  onEditClick={() => setMappingForm(true)}
-                  onRetire={onRetire}
-                  onUnretire={onUnretire}
-                  conceptCompareURL={conceptCompareURL}
-                  resource='mapping'
-                />
-              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
