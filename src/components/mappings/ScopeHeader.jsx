@@ -1,8 +1,11 @@
 import React from 'react';
 import { IconButton, Chip } from '@mui/material';
+import alertifyjs from 'alertifyjs';
+import { get } from 'lodash';
 import {
   CancelOutlined as CancelIcon,
 } from '@mui/icons-material';
+import APIService from '../../services/APIService';
 import { DARKGRAY, BLUE } from '../../common/constants';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
@@ -12,15 +15,66 @@ import ToConceptLabel from './ToConceptLabel';
 import MappingIcon from './MappingIcon';
 import MappingForm from './MappingForm';
 import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
+import HomeActionButton from '../common/SourceChildHomeActionButton';
 
 const LABEL_STYLES = {
   textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
 };
 
 const ScopeHeader = ({
-  mapping, versionedObjectURL, header, onClose, global, scoped
+  mapping, isVersionedObject, versionedObjectURL, currentURL, header, onClose, global, scoped, showActions
 }) => {
   const [mappingForm, setMappingForm] = React.useState(false);
+  const onRetire = () => {
+    const prompt = alertifyjs.prompt()
+    prompt.setContent('<form id="retireForm"> <p>Retire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+    prompt.set('onok', () => {
+      document.getElementById('retireForm').reportValidity();
+      const comment = document.getElementById('comment').value
+      if(!comment)
+        return false
+      retire(comment)
+    })
+    prompt.set('title', 'Retire Mapping')
+    prompt.show()
+  }
+  const onUnretire = () => {
+    const prompt = alertifyjs
+      .prompt()
+    prompt.setContent('<form id="retireForm"> <p>Unretire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+      .set('onok', () => {
+        document.getElementById('retireForm').reportValidity();
+        const comment = document.getElementById('comment').value
+        if(!comment)
+          return false
+        unretire(comment)
+      })
+      .set('title', 'Unretire Mapping')
+      .show()
+  }
+
+  const retire = comment => {
+    APIService.new().overrideURL(versionedObjectURL).delete({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Mapping Retired', 1, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  const unretire = comment => {
+    APIService.new().overrideURL(versionedObjectURL).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Mapping UnRetired', 1, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  const conceptCompareURL = (mapping.from_concept_url && mapping.to_concept_url) ?
+                            `/#/concepts/compare?lhs=${mapping.from_concept_url}&rhs=${mapping.to_concept_url}` :
+                            null;
+
   return (
     <header className='home-header col-md-12' style={{paddingTop: 0, paddingBottom: 0}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
@@ -42,6 +96,21 @@ const ScopeHeader = ({
             {
               mapping.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
+            }
+            {
+              showActions &&
+              <span style={{marginLeft: '15px'}}>
+                <HomeActionButton
+                  instance={mapping}
+                  currentURL={currentURL}
+                  isVersionedObject={isVersionedObject}
+                  onEditClick={() => setMappingForm(true)}
+                  onRetire={onRetire}
+                  onUnretire={onUnretire}
+                  conceptCompareURL={conceptCompareURL}
+                  resource='mapping'
+                />
+              </span>
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>

@@ -133,6 +133,7 @@ class MappingHome extends React.Component {
                 onClose={this.props.onClose}
                 global={this.props.global}
                 scoped={this.props.scoped}
+                showActions={this.props.showActions}
               /> :
               <MappingHomeHeader {...headerParams} />
             }

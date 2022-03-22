@@ -937,6 +937,8 @@ class Search extends React.Component {
                     global
                     scoped
                     singleColumn
+                    showActions={isInsideConfiguredOrg}
+                    onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                     concept={selectedItem}
                             location={{pathname: selectedItem.url}}
                             match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null }}}
@@ -946,6 +948,8 @@ class Search extends React.Component {
                     scoped
                     singleColumn
                     noRedirect
+                    showActions={isInsideConfiguredOrg}
+                    onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                     mapping={selectedItem}
                             location={{pathname: selectedItem.url}}
                             match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null}}}

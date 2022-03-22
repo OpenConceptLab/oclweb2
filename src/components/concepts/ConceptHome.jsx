@@ -251,12 +251,16 @@ class ConceptHome extends React.Component {
             {
               this.props.scoped ?
               <ScopeHeader
+                isVersionedObject={isVersionedObject}
                 scoped={this.props.scoped}
                 global={this.props.global}
                 onClose={this.props.onClose}
                 concept={concept}
+                mappings={mappings}
                 versionedObjectURL={this.getVersionedObjectURLFromPath()}
                 header={has(this.props, 'header') ? this.props.header : true}
+                showActions={this.props.showActions}
+                currentURL={currentURL}
               /> :
               <ConceptHomeHeader
                 concept={concept}
