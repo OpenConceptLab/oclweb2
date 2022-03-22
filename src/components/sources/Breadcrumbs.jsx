@@ -3,6 +3,7 @@ import alertifyjs from 'alertifyjs';
 import {
   CancelOutlined as CancelIcon,
   ChevronRight as SeparatorIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { isEmpty, get, startCase } from 'lodash';
@@ -43,7 +44,7 @@ const Breadcrumbs = ({
   const resource = params.concept || params.mapping
   const resourceType = params.concept ? 'concept' : (params.mapping ? 'mapping' : null)
   const resourceVersion = params.conceptVersion || params.mappingVersion
-  const ownerURL = `#/${ownerType}s/${owner}/`;
+  const ownerURL = (params.org || params.user) ? `#/${ownerType}s/${owner}/` : null;
   const parentURL = `${ownerURL}${parentType}s/${parent}/`;
   const parentVersionURL = parentVersion === 'HEAD' ? parentURL : `${parentURL}${parentVersion}/`;
   const resourceURL = `${parentVersionURL}${resourceType}s/${resource}/`
@@ -54,7 +55,7 @@ const Breadcrumbs = ({
   const expansionProps = (resource && selectedResource) ? {...unselectedParentProps, className: ''} : {}
   const resourceProps = resourceVersion ? {variant: 'outlined', style: {borderColor: BLUE, color: BLUE, background: WHITE, border: '1px solid'}} : {}
 
-  const downloadFileName = isVersionedObject ? `${container.type}-${container.short_code}` : `${container.type}-${container.short_code}-${container.id}`;
+  const downloadFileName = container ? (isVersionedObject ? `${container.type}-${container.short_code}` : `${container.type}-${container.short_code}-${container.id}`) : '';
   const hasAccess = currentUserHasAccess();
   const deleteContainer = () => {
     APIService.new().overrideURL(container.url).delete().then(response => {
@@ -119,126 +120,171 @@ const Breadcrumbs = ({
   return (
     <header className='col-xs-12 no-side-padding'>
       <div className='col-xs-12 no-side-padding container'>
-        <div className='col-xs-12'>
+        <div className='col-xs-12 no-side-padding'>
           <div className='col-xs-12 no-side-padding flex-vertical-center'>
             <span className='flex-vertical-center' style={{width: '100%'}}>
-              <span className='container-breadcurmbs flex-vertical-center' style={{padding: '10px 10px 10px 0', background: WHITE, marginLeft: '-5px'}}>
-                <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
-                <span className='separator'><SeparatorIcon /></span>
+              {
+                params.search &&
+                <span className='search-breadcurmbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '120px'}}>
+                  <span className='flex-vertical-center' style={{fontWeight: 'bold'}}>
+                    <SearchIcon style={{marginRight: '5px'}} fontSize='small' />
+                    {params.search}
+                  </span>
+
+                </span>
+              }
+              <span className='container-breadcurmbs flex-vertical-center' style={{paddingLeft: '15px', background: params.search ? '#f1f1f1' : WHITE, width: ownerURL ? 'auto': '100%', minHeight: '60px', paddingRight: params.search ? '0' : '15px'}}>
                 {
-                  params.source ?
-                  <SourceButton
-                    source={container}
-                    label={parent}
-                    href={parentURL}
-                    onEditClick={() => params.source ? setSourceForm(true) : setCollectionForm(true)}
-                    onDeleteClick={() => setDeleteDialog(true) }
-                    downloadFileName={downloadFileName}
-                    {...parentProps}
-                  /> :
-                  <CollectionButton
-                    collection={container}
-                    label={parent}
-                    href={parentURL}
-                    onEditClick={() => setCollectionForm(true)}
-                    onDeleteClick={() => setDeleteDialog(true) }
-                    downloadFileName={downloadFileName}
-                    {...parentProps}
-                  />
+                  ownerURL &&
+                  <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
                 }
-                <span className='separator'><SeparatorIcon /></span>
-                <VersionSelectorButton
-                  selected={container}
-                  versions={versions}
-                  resource={parentType}
-                  {...parentVersionProps}
-                />
                 {
-                  params.collection && !isEmpty(expansions) && !isLoadingExpansions &&
+                  parentURL &&
                   <React.Fragment>
-                    <span className='separator'><SeparatorIcon /></span>
-                    <ExpansionSelectorButton
-                      selected={expansion}
-                      expansions={expansions}
-                      version={container}
-                      {...expansionProps}
-                    />
+                    {
+                      parent &&
+                      <span className='separator'><SeparatorIcon /></span>
+                    }
+                    {
+                      params.source &&
+                      <SourceButton
+                        noActions={!container}
+                        source={container}
+                        label={parent}
+                        href={parentURL}
+                        onEditClick={() => params.source ? setSourceForm(true) : setCollectionForm(true)}
+                        onDeleteClick={() => setDeleteDialog(true) }
+                        downloadFileName={downloadFileName}
+                        {...parentProps}
+                      />
+                    }
+                    {
+                      params.collection &&
+                      <CollectionButton
+                        noActions={!container}
+                        collection={container}
+                        label={parent}
+                        href={parentURL}
+                        onEditClick={() => setCollectionForm(true)}
+                        onDeleteClick={() => setDeleteDialog(true) }
+                        downloadFileName={downloadFileName}
+                        {...parentProps}
+                      />
+                    }
+                    {
+                      container &&
+                      <React.Fragment>
+                        <span className='separator'><SeparatorIcon /></span>
+                        <VersionSelectorButton
+                          selected={container}
+                          versions={versions}
+                          resource={parentType}
+                          {...parentVersionProps}
+                        />
+                      </React.Fragment>
+                    }
+                    {
+                      params.collection && !isEmpty(expansions) && !isLoadingExpansions &&
+                      <React.Fragment>
+                        <span className='separator'><SeparatorIcon /></span>
+                        <ExpansionSelectorButton
+                          selected={expansion}
+                          expansions={expansions}
+                          version={container}
+                          {...expansionProps}
+                        />
+                      </React.Fragment>
+                    }
                   </React.Fragment>
                 }
               </span>
               {
                 resource && selectedResource &&
-                <span className='resource-breadcurmbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', border: '2px solid #f1f1f1', flex: 1}}>
-                  {
-                    params.concept ?
-                    <ConceptButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} /> :
-                    <MappingButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} />
-                  }
-                  {
-                    resourceVersion &&
-                    <React.Fragment>
+                <span className='resource-breadcurmbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', paddingLeft: params.search ? 0 : '10px', border: '3px solid #f1f1f1', flex: 1, justifyContent: 'space-between'}}>
+                  <span className='flex-vertical-center'>
+                    {
+                      params.search &&
                       <span className='separator'><SeparatorIcon /></span>
-                      <ResourceVersionButton label={resourceVersion} href={params.source ? resourceVersionURL : undefined} />
-                    </React.Fragment>
-                  }
-                  <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-                    <ManageSourceChildButton
-                      resource={resourceType}
-                      instance={selectedResource}
-                      isVersionedObject={Boolean(!resourceVersion)}
-                      currentURL={resourceVersion ? resourceVersionURL : resourceURL}
-                      onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
-                      onRetire={() => params.source ? onRetire() : null}
-                      onUnretire={() => params.source ? onUnretire() : null}
-                    />
+                    }
+                    {
+                      params.concept ?
+                      <ConceptButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} /> :
+                      <MappingButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} />
+                    }
+                    {
+                      resourceVersion &&
+                      <React.Fragment>
+                        <span className='separator'><SeparatorIcon /></span>
+                        <ResourceVersionButton label={resourceVersion} href={params.source ? resourceVersionURL : undefined} />
+                      </React.Fragment>
+                    }
+                    <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
+                      <ManageSourceChildButton
+                        resource={resourceType}
+                        instance={selectedResource}
+                        isVersionedObject={Boolean(!resourceVersion)}
+                        currentURL={resourceVersion ? resourceVersionURL : resourceURL}
+                        onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
+                        onRetire={() => params.source ? onRetire() : null}
+                        onUnretire={() => params.source ? onUnretire() : null}
+                      />
+                    </span>
                   </span>
-
+                  <span className='flex-vertical-center' style={{background: '#f1f1f1', border: '1px solid #f1f1f1', marginRight: '60px'}}>
+                    <IconButton size='small' color='secondary' onClick={onSplitViewClose}>
+                      <CancelIcon fontSize='inherit' />
+                    </IconButton>
+                  </span>
                 </span>
               }
             </span>
-            {
-              resource && selectedResource &&
-              <span style={{background: '#f1f1f1', border: '1px solid #f1f1f1', marginRight: '5px'}}>
-                <IconButton size='small' color='secondary' onClick={onSplitViewClose}>
-                  <CancelIcon fontSize='inherit' />
-                </IconButton>
-              </span>
-            }
           </div>
         </div>
       </div>
-      <CommonFormDrawer
-        style={{zIndex: '1202'}}
-        isOpen={sourceForm}
-        onClose={() => setSourceForm(false)}
-        formComponent={
-          <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
-        }
-      />
-      <CommonFormDrawer
-        style={{zIndex: '1202'}}
-        isOpen={collectionForm}
-        onClose={() => setCollectionForm(false)}
-        formComponent={
-          <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
-        }
-      />
-      <CommonFormDrawer
-        style={{zIndex: 1202}}
-        isOpen={conceptForm}
-        onClose={() => setConceptForm(false)}
-        formComponent={
-          <ConceptForm edit reloadOnSuccess onCancel={() => setConceptForm(false)} concept={selectedResource} parentURL={resourceURL.replace('#', '')} />
-        }
-      />
-      <CommonFormDrawer
-        style={{zIndex: 1202}}
-        isOpen={mappingForm}
-        onClose={() => setMappingForm(false)}
-        formComponent={
-          <MappingForm edit reloadOnSuccess onCancel={() => setMappingForm(false)} mapping={selectedResource} parentURL={resourceURL.replace('#', '')} />
-        }
-      />
+      {
+        container && sourceForm &&
+        <CommonFormDrawer
+          style={{zIndex: '1202'}}
+          isOpen={sourceForm}
+          onClose={() => setSourceForm(false)}
+          formComponent={
+            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
+          }
+        />
+      }
+      {
+        container && collectionForm &&
+        <CommonFormDrawer
+          style={{zIndex: '1202'}}
+          isOpen={collectionForm}
+          onClose={() => setCollectionForm(false)}
+          formComponent={
+            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
+          }
+        />
+      }
+      {
+        conceptForm && selectedResource &&
+        <CommonFormDrawer
+          style={{zIndex: 1202}}
+          isOpen={conceptForm}
+          onClose={() => setConceptForm(false)}
+          formComponent={
+            <ConceptForm edit reloadOnSuccess onCancel={() => setConceptForm(false)} concept={selectedResource} parentURL={resourceURL.replace('#', '')} />
+          }
+        />
+      }
+      {
+        mappingForm && selectedResource &&
+        <CommonFormDrawer
+          style={{zIndex: 1202}}
+          isOpen={mappingForm}
+          onClose={() => setMappingForm(false)}
+          formComponent={
+            <MappingForm edit reloadOnSuccess onCancel={() => setMappingForm(false)} mapping={selectedResource} parentURL={resourceURL.replace('#', '')} />
+          }
+        />
+      }
       {
         hasAccess && !isEmpty(container) &&
         <ConceptContainerDelete open={deleteDialog} resource={{...container, id: container.short_code}} onClose={() => setDeleteDialog(false)} onDelete={deleteContainer} />

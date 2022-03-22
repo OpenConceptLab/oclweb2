@@ -283,6 +283,7 @@ class ReferenceForm extends React.Component {
                 byGlobal &&
                 <Search
                   {...this.props}
+                  noFilters
                   nested
                   asReference
                   resource='concepts'

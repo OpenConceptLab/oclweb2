@@ -15,7 +15,7 @@ import {
   Warning as WarningIcon,
   PriorityHigh as PriorityIcon,
 } from '@mui/icons-material'
-import { Pagination } from '@mui/material';
+import { TablePagination } from '@mui/material';
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
   isFunction, compact, flatten, last, isArray
@@ -31,9 +31,6 @@ import ReleasedChip from '../common/ReleasedChip';
 import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
-import ResponsiveDrawer from '../common/ResponsiveDrawer';
-import ConceptHome from '../concepts/ConceptHome';
-import MappingHome from '../mappings/MappingHome';
 import MappingOptions from '../mappings/MappingOptions';
 import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
@@ -366,10 +363,10 @@ const ExpandibleRow = props => {
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 
   const columnsCount = get(columns, 'length', 1) +
-                                             ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
-                                                (isSelectable ? 1 : 0) + // select column
-                                                 ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
-                                               (tags ? 1 : 0); //tags column
+                                               ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0) + //public column
+                                                  (isSelectable ? 1 : 0) + // select column
+                                                   ((resourceDefinition.expandible || showPin) ? 1 : 0) + // expand icon column
+                                                 (tags ? 1 : 0); //tags column
 
   React.useEffect(() => setPin(includes(map(pins, 'resource_uri'), item.url)), [pins]);
   React.useEffect(() => setSelected(isSelected), [isSelected]);
@@ -742,7 +739,7 @@ const ResultsTable = (
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
-    onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange
+    onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange, onLimitChange
   }
 ) => {
   const [details, setDetails] = React.useState(null);
@@ -843,165 +840,146 @@ const ResultsTable = (
         {
           canRender ?
           <div className='col-sm-12 no-side-padding search-results'>
-            <TableContainer style={{borderRadius: '4px'}}>
-              <Table size='small'>
-                <TableHead>
-                  {
-                    selectedList.length > 0 &&
-                    <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
-                      <TableCell colSpan={columnsCount} align='left'>
-                        <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
-                          <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedList.length} Selected</span>
-                          {
-                            !asReference &&
-                            <SelectedResourceControls
-                              selectedItems={getSelectedItems()}
-                              resource={resource}
-                              onCreateSimilarClick={onCreateSimilarClick}
-                              onCreateMappingClick={onCreateMappingClick}
-                              onReferencesDelete={onReferencesDelete}
-                            />
-                          }
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  }
-                  <TableRow style={theadStyles}>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+              <TableContainer style={{borderRadius: '4px'}} sx={{maxHeight: nested ? '60vh' : '75vh'}}>
+                <Table stickyHeader size='small'>
+                  <TableHead>
                     {
-                      (isConceptContainer || isValueSet || isConceptMap) &&
-                      <TableCell />
-                    }
-                    {
-                      isSelectable &&
-                      <TableCell style={{maxWidth: '30px', padding: '2px'}} align="center">
-                        <Checkbox size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
-                      </TableCell>
-                    }
-                    {
-                      map(columns, column => {
-                        const isSortable = column.sortable !== false;
-                        return isSortable ? (
-                          <TableCell
-                            key={column.id}
-                            sortDirection={orderBy === column.id ? order : false}
-                            align={column.align || 'left'}
-                            style={{color: theadTextColor}}>
+                      selectedList.length > 0 &&
+                      <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
+                        <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
+                          <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
+                            <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedList.length} Selected</span>
                             {
-                              column.tooltip ?
-                              <Tooltip arrow placement='top' title={column.tooltip}>
+                              !asReference &&
+                              <SelectedResourceControls
+                                selectedItems={getSelectedItems()}
+                                resource={resource}
+                                onCreateSimilarClick={onCreateSimilarClick}
+                                onCreateMappingClick={onCreateMappingClick}
+                                onReferencesDelete={onReferencesDelete}
+                              />
+                            }
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    }
+                    <TableRow style={theadStyles}>
+                      {
+                        (isConceptContainer || isValueSet || isConceptMap) &&
+                        <TableCell style={theadStyles} />
+                      }
+                      {
+                        isSelectable &&
+                        <TableCell style={{maxWidth: '30px', padding: '2px', ...theadStyles}} align="center">
+                          <Checkbox size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
+                        </TableCell>
+                      }
+                      {
+                        map(columns, column => {
+                          const isSortable = column.sortable !== false;
+                          return isSortable ? (
+                            <TableCell
+                              key={column.id}
+                              sortDirection={orderBy === column.id ? order : false}
+                              align={column.align || 'left'}
+                              style={{color: theadTextColor, ...theadStyles}}>
+                              {
+                                column.tooltip ?
+                                <Tooltip arrow placement='top' title={column.tooltip}>
+                                  <TableSortLabel
+                                    className='table-sort-label-white'
+                                    active={orderBy === column.id}
+                                    direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
+                                    onClick={(event) => onSort(event, column.id)}
+                                    style={{color: theadTextColor}}
+                                  >
+                                    { column.label }
+                                  </TableSortLabel>
+                                </Tooltip> :
                                 <TableSortLabel
                                   className='table-sort-label-white'
                                   active={orderBy === column.id}
                                   direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
                                   onClick={(event) => onSort(event, column.id)}
                                   style={{color: theadTextColor}}
-                                >
+                                  >
                                   { column.label }
                                 </TableSortLabel>
-                              </Tooltip> :
-                              <TableSortLabel
-                                className='table-sort-label-white'
-                                active={orderBy === column.id}
-                                direction={orderBy === column.id ? order : (column.sortBy || 'desc')}
-                                onClick={(event) => onSort(event, column.id)}
-                                style={{color: theadTextColor}}
-                                >
-                                { column.label }
-                              </TableSortLabel>
-                            }
-                          </TableCell>
-                        ) : (
-                          <TableCell key={column.id} align='left' style={{color: theadTextColor}}>
-                            {column.label}
-                          </TableCell>
-                        )
-                      })
-                    }
+                              }
+                            </TableCell>
+                          ) : (
+                            <TableCell key={column.id} align='left' style={{color: theadTextColor, ...theadStyles}}>
+                              {column.label}
+                            </TableCell>
+                          )
+                        })
+                      }
+                      {
+                        !isSelectable &&
+                        <TableCell style={theadStyles} />
+                      }
+                      {
+                        (resourceDefinition.expandible || shouldShowPin) &&
+                        <TableCell style={theadStyles} />
+                      }
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
                     {
-                      !isSelectable &&
-                      <TableCell />
+                      map(results.items, (item, index) => (
+                        <ExpandibleRow
+                          key={item.uuid || item.id || index}
+                          item={item}
+                          resource={resource}
+                          resourceDefinition={resourceDefinition}
+                          isSelected={includes(selectedList, item.uuid)}
+                          onSelectChange={updateSelected}
+                          containerOnSelectChange={onSelectChange}
+                          isSelectable={isSelectable}
+                          onPinCreate={onPinCreate}
+                          onPinDelete={onPinDelete}
+                          pins={pins}
+                          nested={nested}
+                          showPin={shouldShowPin}
+                          columns={columns}
+                          hapi={hapi}
+                          fhir={fhir}
+                          history={history}
+                          asReference={asReference}
+                          lastSelected={last(selectedList)}
+                        />
+                      ))
                     }
-                    {
-                      (resourceDefinition.expandible || shouldShowPin) &&
-                      <TableCell />
-                    }
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    map(results.items, (item, index) => (
-                      <ExpandibleRow
-                        key={item.uuid || item.id || index}
-                        item={item}
-                        resource={resource}
-                        resourceDefinition={resourceDefinition}
-                        isSelected={includes(selectedList, item.uuid)}
-                        onSelectChange={updateSelected}
-                        containerOnSelectChange={onSelectChange}
-                        isSelectable={isSelectable}
-                        onPinCreate={onPinCreate}
-                        onPinDelete={onPinDelete}
-                        pins={pins}
-                        nested={nested}
-                        showPin={shouldShowPin}
-                        columns={columns}
-                        hapi={hapi}
-                        fhir={fhir}
-                        history={history}
-                        asReference={asReference}
-                        lastSelected={last(selectedList)}
-                      />
-                    ))
-                  }
-                  <TableRow colSpan={columnsCount}>
-                    <TableCell colSpan={columnsCount} align='center' className='pagination-center'>
-                      <Pagination
-                        onChange={(event, page) => onPageChange(page)}
-                        count={results.pages}
-                        variant="outlined"
-                        shape="rounded"
-                        color="primary"
-                        showFirstButton
-                        showLastButton
-                        page={results.pageNumber}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                className='dense-table-pagination'
+                component="div"
+                rowsPerPageOptions={fhir && !hapi ? [] : [10, 25, 50, 100]}
+                rowsPerPage={results.pageCount}
+                page={results.pageNumber - 1}
+                count={results.total}
+                onPageChange={(event, page) => onPageChange(page + 1)}
+                onRowsPerPageChange={event => onLimitChange(event.target.value)}
+                variant="outlined"
+                shape="rounded"
+                color="primary"
+                labelRowsPerPage="Results per page:"
+                showFirstButton
+                showLastButton
+                sx={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}
+                labelDisplayedRows={({from, to, count}) => {
+                    const total = count === -1 ? `more than ${to}` : count
+                    return `${from}–${to} of ${(total || 0).toLocaleString()}`
+                }}
+              />
+            </Paper>
           </div> :
           <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
         }
-    </div>
-    {
-      details &&
-      <ResponsiveDrawer
-        width='39.5%'
-        paperStyle={{background: '#f1f1f1'}}
-        variant='persistent'
-        isOpen={Boolean(details)}
-        onClose={onCloseSideDrawer}
-        onWidthChange={newWidth => onWidthChange(newWidth)}
-        formComponent={
-          details.concept_class ?
-                       <ConceptHome
-                         global
-                         scoped
-                         singleColumn
-                         onClose={onCloseSideDrawer}
-                                 concept={details} location={{pathname: details.url}} match={{params: {conceptVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null }}}
-                       /> :
-                       <MappingHome
-                         global
-                         scoped
-                         singleColumn
-                         onClose={onCloseSideDrawer}
-                                 noRedirect mapping={details} location={{pathname: details.url}} match={{params: {mappingVersion: (details.uuid !== details.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? details.version : null}}}
-                       />
-        }
-      />
-    }
+      </div>
     </React.Fragment>
   )
 }

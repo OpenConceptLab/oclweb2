@@ -311,7 +311,7 @@ class CollectionHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', background: '#fff', marginLeft: '5px'}}>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', marginLeft: '5px', width: filtersOpen ? '88%' : '100%'}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
                 container={collection}
@@ -376,7 +376,7 @@ class CollectionHome extends React.Component {
             onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '65px'}}>
                 {
                   isMappingSelected ?
                   <MappingHome
@@ -386,7 +386,6 @@ class CollectionHome extends React.Component {
                             mapping={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {mappingVersion: selected.verison}}}
-                            onClose={() => this.setState({selected: null, width: false})}
                             header={false}
                             noRedirect
                   /> :
@@ -397,7 +396,6 @@ class CollectionHome extends React.Component {
                             concept={selected}
                             location={{pathname: selected.version_url || selected.url}}
                             match={{params: {conceptVersion: selected.version}}}
-                            onClose={() => this.setState({selected: null, width: false})}
                             openHierarchy={false}
                             header={false}
                             noRedirect

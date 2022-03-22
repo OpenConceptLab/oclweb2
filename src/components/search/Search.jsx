@@ -9,7 +9,7 @@ import {
 import { Share as ShareIcon, AccountTreeOutlined as HierarchyIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
-import { formatDate, copyURL, toRelativeURL } from '../../common/utils';
+import { formatDate, copyURL, toRelativeURL, getParamsFromObject } from '../../common/utils';
 import {
   BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID
 } from '../../common/constants';
@@ -19,7 +19,6 @@ import Results from './Results';
 import ResultsTable from './ResultsTable';
 import ConceptHierarchyResultsTable from './ConceptHierarchyResultsTable';
 import SortButton from './SortButton';
-import PageResultsLabel from './PageResultsLabel';
 import SearchInput from './SearchInput';
 import SearchFilters from './SearchFilters';
 import SearchByAttributeInput from './SearchByAttributeInput';
@@ -27,8 +26,11 @@ import ResourceTabs from './ResourceTabs';
 import { fetchSearchResults, fetchCounts, fetchFacets } from './utils';
 import { FACET_ORDER } from './ResultConstants';
 import NumericalIDSort from './NumericalIDSort';
-import NavigationButtonGroup from './NavigationButtonGroup';
 import GenericFilterChip from './GenericFilterChip';
+import Breadcrumbs from '../sources/Breadcrumbs';
+import ResponsiveDrawer from '../common/ResponsiveDrawer';
+import ConceptHome from '../concepts/ConceptHome';
+import MappingHome from '../mappings/MappingHome';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -48,7 +50,7 @@ class Search extends React.Component {
     super(props);
     this.state = {
       width: false,
-      detailsView: false,
+      selectedItem: false,
       isTable: has(props, 'fixedFilters.isTable') ? props.fixedFilters.isTable : true,
       isList: get(props, 'fixedFilters.isList', false),
       isInfinite: false,
@@ -313,7 +315,7 @@ class Search extends React.Component {
     )
 
     return queryParam
- }
+  }
 
   getFacetQueryParam() {
     return {...this._getFacetQueryParam(), ...this.state.viewFilters}
@@ -353,7 +355,7 @@ class Search extends React.Component {
 
     let newState = {...this.state}
     newState.isLoading = !this.state.isInfinite
-    newState.detailsView = false
+    newState.selectedItem = false
     newState = merge(newState, attrsToSet)
     if(resetItems)
       newState.page = 1
@@ -668,17 +670,17 @@ class Search extends React.Component {
   }
 
   getContainerLayoutProps = () => {
-    const layout = {width: 100}
+    const layout = {width: 100, paddingRight: this.props.nested ? 0 : '10px', paddingLeft: this.props.nested ? 0: '10px', marginTop: this.props.nested ? 0 : '60px'}
     if(this.state.openFacetsDrawer && !this.props.nested) {
-      layout.width -= 13
-      layout.marginLeft = '13%'
+      layout.width -= 12
+      layout.marginLeft = '12%'
       layout.paddingLeft = '5px'
     }
-    if(this.state.detailsView) {
+    if(this.state.selectedItem) {
       if(this.state.width)
         layout.width = `calc(${layout.width}% - ${this.state.width - 5}px)`
       else
-        layout.width -= 40.5
+        layout.width -= 39.7
     }
 
     if(isNumber(layout.width))
@@ -687,7 +689,19 @@ class Search extends React.Component {
     return layout
   }
 
-  onDetailsToggle = state => this.setState({detailsView: state, width: state ? this.state.width : false})
+  getMainContainerProps = () => {
+    const layout = {zIndex: 1201, position: 'fixed'}
+    if(this.state.openFacetsDrawer && !this.props.nested) {
+      layout.width = '88.5%'
+      layout.marginLeft = '12%'
+      layout.padding = '0px 10px 0px 5px'
+    } else
+    layout.paddingRight = '0'
+
+    return layout
+  }
+
+  onDetailsToggle = item => this.setState({selectedItem: item, width: item ? this.state.width : false})
 
   onWidthChange = newWidth => this.setState({width: newWidth})
 
@@ -696,184 +710,201 @@ class Search extends React.Component {
     this.props.onHierarchyToggle()
   })
 
+  getBreadcrumbParams = () => {
+    const { searchStr, selectedItem } = this.state
+    let params = {search: searchStr ? `"${searchStr}"` : 'All Results'}
+    if(selectedItem)
+      params = {...params, ...getParamsFromObject(selectedItem)}
+    return params
+  }
+
+  onCloseDetails = () => {
+    this.setState({selectedItem: null, width: false})
+  }
+
   render() {
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
-      isVersionedObject, parentResource, newResourceComponent, noFilters, noNav, onSelectChange,
+      isVersionedObject, parentResource, newResourceComponent, noFilters, onSelectChange,
       onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi, onSelect,
       asReference, onHierarchyToggle, hierarchy
     } = this.props;
     const {
-      resource, results, isLoading, limit, sortParams, openFacetsDrawer, isTable, isInfinite, appliedFacets
+      resource, results, isLoading, sortParams, openFacetsDrawer, isTable, isInfinite, appliedFacets,
+      selectedItem
     } = this.state;
-    const searchResultsContainerClass = nested ? 'col-sm-12 no-side-padding' : 'col-sm-12 no-side-padding';
+    const isInsideConfiguredOrg = isEqual(keys(this.props.match.params), ['org'])
     const resourceResults = get(results, resource, {});
-    const hasPrev = this.hasPrev()
-    const hasNext = this.hasNext()
     const isUnderUserHome = nested && parentResource === 'user';
     const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
     const layoutProps = this.getContainerLayoutProps()
     const showHierarchy = resource === 'concepts' && onHierarchyToggle && hierarchy
     return (
-      <div className='col-xs-12' style={nested ? {padding: '0px', ...layoutProps} : {paddingTop: '10px', ...layoutProps}}>
-        <div className={searchResultsContainerClass} style={!nested ? {marginTop: '5px'} : {}}>
-          <div className='col-xs-12 flex-vertical-center' style={{paddingLeft: 0, paddingRight: '3px'}}>
+      <React.Fragment>
+        <div className='col-xs-12' style={{...this.getMainContainerProps()}}>
+          {
+            !nested && !fhir &&
+            <Breadcrumbs
+              params={this.getBreadcrumbParams()}
+              isVersionedObject
+              selectedResource={selectedItem}
+              onSplitViewClose={this.onCloseDetails}
+            />
+          }
+        </div>
+        <div className='col-xs-12' style={layoutProps}>
+          <div className='col-xs-12 no-side-padding'>
             {
-              fhir ?
-              <SearchByAttributeInput {...this.props} onSearch={this.onFhirSearch} /> :
-              <SearchInput {...this.props} onSearch={this.onSearch} />
-            }
-            <span style={{margin: '0 15px'}}>
-              <PageResultsLabel isInfinite={isInfinite} resource={resource} results={results[resource]} limit={limit} onChange={this.onLimitChange} disabled={fhir && !hapi} />
-            </span>
-            <span>
-              {
-                !noNav && (
-                  shouldShowNewResourceComponent ?
-                  newResourceComponent :
-                  <NavigationButtonGroup
-                    onClick={this.onPageNavButtonClick}
-                    prev={hasPrev}
-                    next={hasNext}
-                  />
-                )
-              }
-            </span>
-          </div>
-          {
-            resource !== 'references' &&
-            <div className='col-xs-12 no-side-padding' style={{display: 'flex'}}>
-              <SearchFilters
-                filterControls={!noFilters && this.getFilterControls()}
-                layoutControls={
-                  <React.Fragment>
+              nested &&
+              <div className='col-xs-12 flex-vertical-center' style={{paddingLeft: 0, paddingRight: '3px'}}>
                 {
-                  resource === 'concepts' && isTable && !asReference && !fhir &&
-                  <span className='filter-chip'>
-                    <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
-                  </span>
+                  fhir ?
+                  <SearchByAttributeInput {...this.props} onSearch={this.onFhirSearch} /> :
+                  <SearchInput {...this.props} onSearch={this.onSearch} />
                 }
                 {
-                  !isTable && !fhir &&
-                  <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={get(sortParams, 'sortDesc') || get(sortParams, 'sortAsc')} sortBy={get(sortParams, 'sortDesc') ? 'desc' : 'asc'} />
+                  shouldShowNewResourceComponent &&
+                  <span style={{marginLeft: '15px'}}>{ newResourceComponent }</span>
                 }
-                {
-                  onHierarchyToggle && resource === 'concepts' && nested &&
-                  <span className='filter-chip'>
-                    <Chip
-                      icon={<HierarchyIcon fontSize='small' />}
-                      size='small'
-                      onClick={this.onHierarchyViewChange}
-                      label='Hierarchy'
-                      color={hierarchy ? 'primary' : 'secondary'}
-                      variant={hierarchy ? 'contained' : 'outlined'}
-                    />
-                  </span>
-                }
-                {
-                  !fhir && !asReference &&
-                  <span className='filter-chip'>
-                    <Tooltip title='Copy Link to this results'>
-                      <Chip
-                        onClick={this.onShareClick}
-                        icon={<ShareIcon fontSize='small' />}
-                        label='Share'
-                        color='secondary'
-                        variant='outlined'
-                        size={nested ? 'small' : 'medium'}
-                      />
-                    </Tooltip>
-                  </span>
-                }
-                  </React.Fragment>
-                }
-              />
-            </div>
-          }
-          {
-            nested && asReference && this.searchURL &&
-            <div className='col-sm-12 no-side-padding'>
-              <div style={{width: '100%', display: 'inline-flex', marginTop: '4px', fontSize: '12px', fontWeight: 'bold'}}>
-                <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{backgroundColor: GREEN, color: WHITE, padding: '4px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px', border: `1px solid ${GREEN}`, textAlign: 'center', cursor: 'pointer'}}>
-                  Copy Expression
-                </span>
-                <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{color: GREEN, padding: '4px', borderTopRightRadius: '16px', borderBottomRightRadius: '16px', border: `1px solid ${GREEN}`, maxWidth: 'calc(100% - 105px)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', cursor: 'pointer'}}>
-                  {toRelativeURL(this.searchURL)}
-                </span>
               </div>
-            </div>
-          }
-          {
-            !nested &&
-            <div className='col-xs-12' style={{marginTop: '5px', padding: '0px'}}>
-              <ResourceTabs active={resource} results={results} onClick={this.onResourceChange} />
-            </div>
-          }
-          {
-            isLoading ?
-            <div className='col-xs-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center', width: '100%'}}>
-              <CircularProgress style={{color: BLUE}}/>
-            </div> :
-            <div className='col-xs-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
-              {
-                showHierarchy ?
-                <ConceptHierarchyResultsTable
-                  results={resourceResults}
-                  onPageChange={this.onPageChange}
-                  onSelectChange={onSelectChange}
-                  onCreateSimilarClick={onCreateSimilarClick}
-                  onCreateMappingClick={onCreateMappingClick}
-                  viewFields={viewFields}
-                  onSelect={onSelect}
-                /> : (
-                  isTable ?
-                  <ResultsTable
-                    resource={resource}
+            }
+            {
+              resource !== 'references' && !noFilters &&
+              <div className='col-xs-12 no-side-padding' style={{display: 'flex'}}>
+                <SearchFilters
+                  nested={nested}
+                  filterControls={this.getFilterControls()}
+                  layoutControls={
+                    <React.Fragment>
+                      {
+                        resource === 'concepts' && isTable && !asReference && !fhir &&
+                        <span className='filter-chip'>
+                          <NumericalIDSort selected={sortParams} onSelect={this.onSortChange} size={nested ? 'small' : 'medium'} />
+                        </span>
+                      }
+                      {
+                        !isTable && !fhir &&
+                        <SortButton onChange={this.onSortChange} size={nested ? 'small' : 'medium'} resource={resource} sortOn={get(sortParams, 'sortDesc') || get(sortParams, 'sortAsc')} sortBy={get(sortParams, 'sortDesc') ? 'desc' : 'asc'} />
+                      }
+                      {
+                        onHierarchyToggle && resource === 'concepts' && nested &&
+                        <span className='filter-chip'>
+                          <Chip
+                            icon={<HierarchyIcon fontSize='small' />}
+                                 size='small'
+                      onClick={this.onHierarchyViewChange}
+                                 label='Hierarchy'
+                                 color={hierarchy ? 'primary' : 'secondary'}
+                                 variant={hierarchy ? 'contained' : 'outlined'}
+                          />
+                        </span>
+                      }
+                      {
+                        !fhir && !asReference &&
+                        <span className='filter-chip'>
+                          <Tooltip title='Copy Link to this results'>
+                            <Chip
+                        onClick={this.onShareClick}
+                                icon={<ShareIcon fontSize='small' />}
+                                label='Share'
+                                color='secondary'
+                                variant='outlined'
+                                size={nested ? 'small' : 'medium'}
+                            />
+                          </Tooltip>
+                        </span>
+                      }
+                    </React.Fragment>
+                  }
+                />
+              </div>
+            }
+            {
+              nested && asReference && this.searchURL &&
+              <div className='col-sm-12 no-side-padding'>
+                <div style={{width: '100%', display: 'inline-flex', marginTop: '4px', fontSize: '12px', fontWeight: 'bold'}}>
+                  <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{backgroundColor: GREEN, color: WHITE, padding: '4px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px', border: `1px solid ${GREEN}`, textAlign: 'center', cursor: 'pointer'}}>
+                    Copy Expression
+                  </span>
+                  <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{color: GREEN, padding: '4px', borderTopRightRadius: '16px', borderBottomRightRadius: '16px', border: `1px solid ${GREEN}`, maxWidth: 'calc(100% - 105px)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', cursor: 'pointer'}}>
+                    {toRelativeURL(this.searchURL)}
+                  </span>
+                </div>
+              </div>
+            }
+            {
+              !nested &&
+              <div className='col-xs-12' style={{marginTop: '5px', padding: '0px'}}>
+                <ResourceTabs active={resource} results={results} onClick={this.onResourceChange} />
+              </div>
+            }
+            {
+              isLoading ?
+              <div className='col-xs-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center', width: '100%'}}>
+                <CircularProgress style={{color: BLUE}}/>
+              </div> :
+              <div className='col-xs-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
+                {
+                  showHierarchy ?
+                  <ConceptHierarchyResultsTable
                     results={resourceResults}
                     onPageChange={this.onPageChange}
-                    onSortChange={this.onSortChange}
-                    sortParams={sortParams}
-                    onPinCreate={onPinCreate}
-                    onPinDelete={onPinDelete}
-                    pins={pins}
-                    nested={nested}
-                    showPin={showPin}
-                    essentialColumns={essentialColumns}
-                    onReferencesDelete={onReferencesDelete}
-                    isVersionedObject={isVersionedObject}
                     onSelectChange={onSelectChange}
                     onCreateSimilarClick={onCreateSimilarClick}
                     onCreateMappingClick={onCreateMappingClick}
                     viewFields={viewFields}
-                    noControls={noControls}
-                    fhir={fhir}
-                    hapi={hapi}
-                    history={this.props.history}
                     onSelect={onSelect}
-                    asReference={asReference}
-                    onIndependentDetailsToggle={this.onDetailsToggle}
-                    onWidthChange={this.onWidthChange}
-                  /> :
-                  <Results
-                    resource={resource}
-                    results={resourceResults}
-                    onPageChange={this.onPageChange}
-                    onSelectChange={onSelectChange}
-                    viewFields={viewFields}
-                    onCreateSimilarClick={onCreateSimilarClick}
-                    onCreateMappingClick={onCreateMappingClick}
-                    onReferencesDelete={onReferencesDelete}
-                    isInfinite={isInfinite}
-                    onLoadMore={this.loadMore}
-                    noControls={noControls}
-                    history={this.props.history}
-                    onSelect={onSelect}
-                    asReference={asReference}
-                  />
-                )
-              }
-            </div>
-          }
+                  /> : (
+                    isTable ?
+                    <ResultsTable
+                      resource={resource}
+                      results={resourceResults}
+                      onPageChange={this.onPageChange}
+                      onLimitChange={this.onLimitChange}
+                      onSortChange={this.onSortChange}
+                      sortParams={sortParams}
+                      onPinCreate={onPinCreate}
+                      onPinDelete={onPinDelete}
+                      pins={pins}
+                      nested={nested}
+                      showPin={showPin}
+                      essentialColumns={essentialColumns}
+                      onReferencesDelete={onReferencesDelete}
+                      isVersionedObject={isVersionedObject}
+                      onSelectChange={onSelectChange}
+                      onCreateSimilarClick={onCreateSimilarClick}
+                      onCreateMappingClick={onCreateMappingClick}
+                      viewFields={viewFields}
+                      noControls={noControls}
+                      fhir={fhir}
+                      hapi={hapi}
+                      history={this.props.history}
+                      onSelect={onSelect}
+                      asReference={asReference}
+                      onIndependentDetailsToggle={this.onDetailsToggle}
+                      onWidthChange={this.onWidthChange}
+                    /> :
+                    <Results
+                      resource={resource}
+                      results={resourceResults}
+                      onPageChange={this.onPageChange}
+                      onSelectChange={onSelectChange}
+                      viewFields={viewFields}
+                      onCreateSimilarClick={onCreateSimilarClick}
+                      onCreateMappingClick={onCreateMappingClick}
+                      onReferencesDelete={onReferencesDelete}
+                      isInfinite={isInfinite}
+                      onLoadMore={this.loadMore}
+                      noControls={noControls}
+                      history={this.props.history}
+                      onSelect={onSelect}
+                      asReference={asReference}
+                    />
+                  )
+                }
+              </div>
+            }
+          </div>
         </div>
         <FilterDrawer
           open={openFacetsDrawer}
@@ -888,7 +919,43 @@ class Search extends React.Component {
           updatedSince={this.state.updatedSince}
           onUpdateSinceChange={this.onDateChange}
         />
-      </div>
+        {
+          selectedItem &&
+          <ResponsiveDrawer
+            width='38.5%'
+            paperStyle={{background: '#f1f1f1', marginTop: isInsideConfiguredOrg ? '65px' : '124px'}}
+            variant='persistent'
+            isOpen
+            noToolbar
+            onClose={this.onCloseDetails}
+            onWidthChange={newWidth => this.onWidthChange(newWidth)}
+            formComponent={
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1'}}>
+                {
+                  selectedItem.concept_class ?
+                  <ConceptHome
+                    global
+                    scoped
+                    singleColumn
+                    concept={selectedItem}
+                            location={{pathname: selectedItem.url}}
+                            match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null }}}
+                  /> :
+                  <MappingHome
+                    global
+                    scoped
+                    singleColumn
+                    noRedirect
+                    mapping={selectedItem}
+                            location={{pathname: selectedItem.url}}
+                            match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null}}}
+                  />
+                }
+              </div>
+            }
+          />
+        }
+      </React.Fragment>
     );
   }
 }

@@ -12,11 +12,12 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import { map, isEmpty, get } from 'lodash';
 import {
-  isAtGlobalSearch, isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv,
+  isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv,
   getSiteTitle
 } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
+import SearchByAttributeInput from '../search/SearchByAttributeInput';
 import UserOptions from '../users/UserOptions';
 import Favorites from './Favorites';
 import RecentHistory from './RecentHistory';
@@ -129,6 +130,11 @@ const Header = props => {
   const isFHIRServer = get(serverConfig, 'type') === 'fhir';
   const env = getEnv()
   const isProduction = env === 'production';
+  const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
+  const hideOpenMRSApp = get(siteConfiguration, 'hideOpenMRSApp', false)
+  const hideTermBrowserApp = get(siteConfiguration, 'hideTermBrowserApp', false)
+  const hideImportApp = get(siteConfiguration, 'hideImportApp', false)
+  const hideAppsMenu = hideOpenMRSApp && hideImportApp && hideTermBrowserApp;
 
   const getLogo = () => {
     let logo = getSiteTitle()
@@ -139,12 +145,6 @@ const Header = props => {
     return logo
   }
 
-  const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
-
-  const hideOpenMRSApp = get(siteConfiguration, 'hideOpenMRSApp', false)
-  const hideTermBrowserApp = get(siteConfiguration, 'hideTermBrowserApp', false)
-  const hideImportApp = get(siteConfiguration, 'hideImportApp', false)
-  const hideAppsMenu = hideOpenMRSApp && hideImportApp && hideTermBrowserApp;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -180,7 +180,8 @@ const Header = props => {
           </Typography>
           <div className="col-sm-8 col-xs-6">
             {
-              !isAtGlobalSearch() &&
+              props.fhir ?
+              <SearchByAttributeInput {...props} /> :
               <SearchInput {...props} />
             }
           </div>

@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChange, width, paperStyle}) => {
+const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChange, width, paperStyle, noToolbar}) => {
   const [open, setOpen] = React.useState(isOpen);
   const classes = useStyles();
   const [drawerWidth, setDrawerWidth] = React.useState(width || defaultWidth);
@@ -64,7 +64,10 @@ const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChang
       PaperProps={{ style: merge({ width: drawerWidth }, (paperStyle || {})) }}
       onClose={onClose}
     >
-      <div className={classes.toolbar} />
+      {
+        !noToolbar &&
+        <div className={classes.toolbar} />
+      }
       <div onMouseDown={e => handleMouseDown(e)} className={classes.dragger + ' flex-vertical-center vertical-dragger'}>
         <DragIcon />
       </div>

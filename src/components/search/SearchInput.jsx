@@ -85,12 +85,14 @@ class SearchInput extends React.Component {
   }
 
   moveToSearchPage = () => {
-    if(!isAtGlobalSearch()) {
+    if(!this.props.nested) {
       const { input, exactMatch } = this.state
       let _input = input || '';
       const exactMatchStr = exactMatch === 'on' ? '&exactMatch=on' : '';
-      const URL = `/search/?q=${_input}${exactMatchStr}`;
-      window.location.hash = URL;
+      if(!_input)
+        setTimeout(() => window.location.hash = '/search/', 500)
+      else
+        window.location.hash = `/search/?q=${_input}${exactMatchStr}`;
     }
   }
 

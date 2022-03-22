@@ -1118,6 +1118,9 @@ div.custom-attributes-accordion-content {
     overflow: hidden;
     white-space: nowrap;
     padding: 5px 8px;
+    span:first-of-type {
+        margin-right: 2px;
+    }
 }
 
 .selected-control-chip {
@@ -1139,4 +1142,18 @@ div.custom-attributes-accordion-content {
     -webkit-box-orient: vertical;
     overflow: hidden;
     max-height: 100px;
+}
+.dense-table-pagination {
+    max-height: 30px;
+    overflow: hidden;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    svg {
+        font-size: 16px;
+    }
+    p {
+        font-size: 12px
+    }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Box } from '@mui/material';
 
-const SearchFilters = ({ filterControls, layoutControls }) => {
+const SearchFilters = ({ filterControls, layoutControls, nested }) => {
   return (
     <React.Fragment>
       <div className='col-xs-12 no-side-padding'>
@@ -9,7 +9,7 @@ const SearchFilters = ({ filterControls, layoutControls }) => {
           <Tabs
             value={0}
             variant="scrollable"
-            style={{display: 'flex', alignItems: 'center', margin: '-5px 0', justifyContent: 'space-between'}}
+            style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 'auto', paddingTop: nested ? 0 : '5px'}}
             TabIndicatorProps={{style: {display: 'none', background: 'transparent'}}}
             TabScrollButtonProps={{
               classes: {

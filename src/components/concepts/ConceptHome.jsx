@@ -255,12 +255,7 @@ class ConceptHome extends React.Component {
                 global={this.props.global}
                 onClose={this.props.onClose}
                 concept={concept}
-                mappings={mappings}
-                isVersionedObject={isVersionedObject}
                 versionedObjectURL={this.getVersionedObjectURLFromPath()}
-                currentURL={currentURL}
-                hierarchy={openHierarchy}
-                onHierarchyClick={this.toggleHierarchy}
                 header={has(this.props, 'header') ? this.props.header : true}
               /> :
               <ConceptHomeHeader

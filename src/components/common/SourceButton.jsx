@@ -13,7 +13,7 @@ import { GREEN, WHITE } from '../../common/constants';
 import { toParentURI, currentUserHasAccess, copyURL, toFullAPIURL } from '../../common/utils';
 import DownloadButton from './DownloadButton';
 
-const SourceButton = ({label, onClick, href, childURI, onEditClick, onDeleteClick, source, downloadFileName, style, ...rest}) => {
+const SourceButton = ({label, onClick, href, childURI, onEditClick, onDeleteClick, source, downloadFileName, style, noActions, ...rest}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   let uri = href;
   if(childURI) uri = '#'  + toParentURI(childURI);
@@ -38,71 +38,77 @@ const SourceButton = ({label, onClick, href, childURI, onEditClick, onDeleteClic
   }
   return (
     <React.Fragment>
-      <Tooltip title={label} arrow>
+      <Tooltip title={label || ''} arrow>
         <ButtonGroup variant='contained' style={{background: GREEN, color: WHITE, boxShadow: 'none', textTransform: 'none'}} {...rest}>
           <Button className='button-controlled' startIcon={<ListIcon />} onClick={onClick} href={uri} style={merge(commonButtonStyle, style || {})}>
             {label}
           </Button>
-          <Button onClick={toggleMenu} style={merge(dropDownButtonStyle, style || {})}>
-            <DownIcon />
-          </Button>
+          {
+            !noActions &&
+            <Button onClick={toggleMenu} style={merge(dropDownButtonStyle, style || {})}>
+              <DownIcon />
+            </Button>
+          }
         </ButtonGroup>
       </Tooltip>
-      <Menu
-        id="versions-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={toggleMenu}
-      >
-        <MenuList dense>
-          <MenuItem onClick={event => onActionClick(event, onCopyClick)}>
-            <ListItemIcon style={{minWidth: '28px'}}>
-              <CopyIcon fontSize="inherit" />
-            </ListItemIcon>
-            <ListItemText>
-              Copy URL
-            </ListItemText>
-          </MenuItem>
-          {
-            hasAccess && onEditClick &&
-            <MenuItem onClick={event => onActionClick(event, onEditClick)}>
+      {
+        Boolean(anchorEl) &&
+        <Menu
+          id="versions-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={toggleMenu}
+          >
+          <MenuList dense>
+            <MenuItem onClick={event => onActionClick(event, onCopyClick)}>
               <ListItemIcon style={{minWidth: '28px'}}>
-                <EditIcon fontSize="inherit" />
+                <CopyIcon fontSize="inherit" />
               </ListItemIcon>
               <ListItemText>
-                Edit Source
+                Copy URL
               </ListItemText>
             </MenuItem>
-          }
-          {
-            hasAccess && onDeleteClick &&
-            <MenuItem onClick={event => onActionClick(event, onDeleteClick)}>
-              <ListItemIcon style={{minWidth: '28px'}}>
-                <DeleteIcon fontSize='inherit' />
-              </ListItemIcon>
-              <ListItemText>
-                Delete Source
-              </ListItemText>
-            </MenuItem>
-          }
-          <DownloadButton
-            resource={source}
-            filename={downloadFileName}
-            buttonFunc={params => (
-              <MenuItem {...params}>
+            {
+              hasAccess && onEditClick &&
+              <MenuItem onClick={event => onActionClick(event, onEditClick)}>
                 <ListItemIcon style={{minWidth: '28px'}}>
-                  <DownloadIcon fontSize="inherit" />
+                  <EditIcon fontSize="inherit" />
                 </ListItemIcon>
                 <ListItemText>
-                  Download
+                  Edit Source
                 </ListItemText>
               </MenuItem>
-            )}
-          />
+            }
+            {
+              hasAccess && onDeleteClick &&
+              <MenuItem onClick={event => onActionClick(event, onDeleteClick)}>
+                <ListItemIcon style={{minWidth: '28px'}}>
+                  <DeleteIcon fontSize='inherit' />
+                </ListItemIcon>
+                <ListItemText>
+                  Delete Source
+                </ListItemText>
+              </MenuItem>
+            }
+            <DownloadButton
+              resource={source}
+              filename={downloadFileName}
+              buttonFunc={params => (
+                <MenuItem {...params}>
+                  <ListItemIcon style={{minWidth: '28px'}}>
+                    <DownloadIcon fontSize="inherit" />
+                  </ListItemIcon>
+                  <ListItemText>
+                    Download
+                  </ListItemText>
+                </MenuItem>
+              )}
+            />
 
-        </MenuList>
-      </Menu>
+          </MenuList>
+        </Menu>
+      }
     </React.Fragment>
   )
 }

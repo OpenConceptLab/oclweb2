@@ -285,7 +285,7 @@ class SourceHome extends React.Component {
         {
           !isLoading && !hasError &&
           <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', background: '#fff', marginLeft: '5px'}}>
+            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', marginLeft: '5px', width: filtersOpen ? '88%' : '100%'}}>
               <Breadcrumbs
                 params={this.getBreadcrumbParams()}
                 container={source}
@@ -342,13 +342,12 @@ class SourceHome extends React.Component {
             onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '65px'}}>
                 {
                   isMappingSelected ?
                   <MappingHome
                     singleColumn
                     scoped
-                    onClose={() => this.setState({selected: null, width: false})}
                     mapping={selected}
                             location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
                             match={{params: {mappingVersion: this.isHEAD ? null : selected.version}}}
@@ -358,7 +357,6 @@ class SourceHome extends React.Component {
                   <ConceptHome
                     singleColumn
                     scoped
-                    onClose={() => this.setState({selected: null, width: false})}
                     concept={selected}
                             location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
                             match={{params: {conceptVersion: this.isHEAD ? null : selected.version}}}
