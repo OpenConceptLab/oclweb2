@@ -835,7 +835,7 @@ class Search extends React.Component {
             {
               !nested &&
               <div className='col-xs-12' style={{marginTop: '5px', padding: '0px'}}>
-                <ResourceTabs active={resource} results={results} onClick={this.onResourceChange} />
+                <ResourceTabs isSplitView={Boolean(selectedItem)} active={resource} results={results} onClick={this.onResourceChange} />
               </div>
             }
             {

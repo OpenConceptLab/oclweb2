@@ -48,7 +48,6 @@ const ResourceTabs = props => {
 
   const getTabStyles = (index, color) => {
     const styles = {...TAB_STYLES}
-
     if(value === index)
       return {color: color, ...styles}
 
@@ -95,10 +94,17 @@ const ResourceTabs = props => {
           onChange={handleChange}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth"
+          variant={props.isSplitView ? "scrollable" : "fullWidth"}
+          scrollButtons={props.isSplitView}
+          allowScrollButtonsMobile={props.isSplitView}
           style={{height: HEIGHT}}
           classes={{
             indicator: indicatorColorClass()
+          }}
+          TabScrollButtonProps={{
+            classes: {
+              disabled: 'hidden'
+            }
           }}
         >
           <Tab className='material-tab' label={getLabelComponent('concepts', BLUE)} icon={<LocalOfferIcon fontSize='small' style={getIconStyles(0, BLUE)} />} style={getTabStyles(0, BLUE)} />
