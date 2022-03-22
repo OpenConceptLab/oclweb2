@@ -268,7 +268,7 @@ class CollectionHome extends React.Component {
       if(width)
         totalWidth = `calc(${totalWidth}% - ${width - 10}px)`
       else
-        totalWidth -= filtersOpen ? 46 : 40
+        totalWidth -= filtersOpen ? 46 : 39.5
     }
     if(isNumber(totalWidth))
       totalWidth = `${totalWidth}%`
