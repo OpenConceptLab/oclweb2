@@ -376,7 +376,7 @@ class CollectionHome extends React.Component {
             onClose={() => this.setState({selected: null, width: false})}
             onWidthChange={newWidth => this.setState({width: newWidth})}
             formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '65px'}}>
+              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
                 {
                   isMappingSelected ?
                   <MappingHome

@@ -66,7 +66,7 @@ const ScopeHeader = ({
     })
   }
   return (
-    <header className='home-header col-md-12' style={{paddingTop: 0, paddingBottom: 0}}>
+    <header className='resource-header home-header col-md-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         {
           (global || scoped === 'collection') && concept &&

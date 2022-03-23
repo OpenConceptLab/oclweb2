@@ -924,7 +924,7 @@ class Search extends React.Component {
           selectedItem &&
           <ResponsiveDrawer
             width='38.5%'
-            paperStyle={{background: '#f1f1f1', marginTop: isInsideConfiguredOrg ? '65px' : '124px'}}
+            paperStyle={{background: '#f1f1f1', marginTop: isInsideConfiguredOrg ? '60px' : '120px'}}
             variant='persistent'
             isOpen
             noToolbar

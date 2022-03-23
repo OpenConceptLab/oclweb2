@@ -229,6 +229,8 @@ class ConceptHome extends React.Component {
     })
   }
 
+  getContentMarginTop = () => `${get(document.querySelector('header.resource-header.home-header'), 'offsetHeight') || 100}px`;
+
   render() {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading,
@@ -273,7 +275,7 @@ class ConceptHome extends React.Component {
                 header={has(this.props, 'header') ? this.props.header : true}
               />
             }
-            <div className='col-xs-12'>
+            <div className='col-xs-12' style={{position: 'relative', marginTop: this.getContentMarginTop()}}>
               <ConceptHomeDetails
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}

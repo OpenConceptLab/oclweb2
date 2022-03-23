@@ -103,6 +103,8 @@ class MappingHome extends React.Component {
     return !this.props.match.params.mappingVersion;
   }
 
+  getContentMarginTop = () => `${get(document.querySelector('header.resource-header.home-header'), 'offsetHeight') || 100}px`;
+
   render() {
     const {
       mapping, versions, isLoading, notFound, accessDenied, permissionDenied, collections, isLoadingCollections
@@ -125,7 +127,7 @@ class MappingHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-md-12 home-container no-side-padding'>
+          <div className='col-xs-12 home-container no-side-padding'>
             {
               this.props.scoped ?
               <ScopeHeader
@@ -137,7 +139,7 @@ class MappingHome extends React.Component {
               /> :
               <MappingHomeHeader {...headerParams} />
             }
-            <div className='col-md-12'>
+            <div className='col-xs-12' style={{position: 'relative', marginTop: this.getContentMarginTop()}}>
               <MappingHomeDetails
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}
