@@ -739,7 +739,8 @@ const ResultsTable = (
     resource, results, onPageChange, onSortChange, sortParams,
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
-    onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange, onLimitChange
+    onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange, onLimitChange,
+    isInsideConfiguredOrg
   }
 ) => {
   const [details, setDetails] = React.useState(null);
@@ -841,7 +842,7 @@ const ResultsTable = (
           canRender ?
           <div className='col-sm-12 no-side-padding search-results'>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-              <TableContainer style={{borderRadius: '4px'}} sx={{maxHeight: nested ? '60vh' : '75vh'}}>
+              <TableContainer style={{borderRadius: '4px'}} sx={{maxHeight: nested && !isInsideConfiguredOrg ? '65vh': '75vh'}}>
                 <Table stickyHeader size='small'>
                   <TableHead>
                     {

@@ -883,6 +883,7 @@ class Search extends React.Component {
                       asReference={asReference}
                       onIndependentDetailsToggle={this.onDetailsToggle}
                       onWidthChange={this.onWidthChange}
+                      isInsideConfiguredOrg={isInsideConfiguredOrg}
                     /> :
                     <Results
                       resource={resource}
@@ -938,10 +939,10 @@ class Search extends React.Component {
                     scoped
                     singleColumn
                     showActions={isInsideConfiguredOrg}
-                    onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
-                    concept={selectedItem}
-                            location={{pathname: selectedItem.url}}
-                            match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null }}}
+                                onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
+                                concept={selectedItem}
+                                location={{pathname: selectedItem.url}}
+                                match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null }}}
                   /> :
                   <MappingHome
                     global
@@ -949,10 +950,10 @@ class Search extends React.Component {
                     singleColumn
                     noRedirect
                     showActions={isInsideConfiguredOrg}
-                    onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
-                    mapping={selectedItem}
-                            location={{pathname: selectedItem.url}}
-                            match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null}}}
+                                onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
+                                mapping={selectedItem}
+                                location={{pathname: selectedItem.url}}
+                                match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/')) ? selectedItem.version : null}}}
                   />
                 }
               </div>
