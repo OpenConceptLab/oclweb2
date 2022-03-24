@@ -9,7 +9,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
   const about = org.text === '<p><br></p>' ? '' : org.text;
   const showPins = has(org, 'overview.pins') ? org.overview.pins : true
   return (
-    <div className='col-md-12 no-side-padding'>
+    <div className='col-xs-12 no-side-padding'>
       <div className='col-xs-9 no-side-padding'>
         {
           showPins &&
@@ -45,7 +45,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
             <p style={{marginLeft: '5px', marginTop: '10px'}}>
               {`${org.id} doesn't have any about text yet.`}
             </p> :
-            <div className='col-md-12 no-side-padding' style={{marginLeft: '5px'}} dangerouslySetInnerHTML={{__html: org.text.replaceAll('href="/', 'href="/#/')}} />
+            <div className='col-xs-12 no-side-padding' style={{marginLeft: '5px'}} dangerouslySetInnerHTML={{__html: org.text.replaceAll('href="/', 'href="/#/')}} />
           }
         </div>
       </div>

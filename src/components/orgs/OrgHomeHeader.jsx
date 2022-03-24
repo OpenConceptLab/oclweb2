@@ -58,9 +58,9 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
   }
 
   return (
-    <header className='home-header col-md-12' style={{marginBottom: '0px'}}>
-      <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
-        <div className='no-side-padding col-md-1 home-icon'>
+    <header className='home-header col-xs-12' style={{marginBottom: '0px'}}>
+      <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
+        <div className='no-side-padding col-xs-1 home-icon'>
           <HeaderLogo
             logoURL={logoURL}
             onUpload={onLogoUpload}
@@ -68,8 +68,8 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
             shrink={!openHeader}
           />
         </div>
-        <div className='col-md-11'>
-          <div className='col-md-12 no-side-padding flex-vertical-center'>
+        <div className='col-xs-11'>
+          <div className='col-xs-12 no-side-padding flex-vertical-center'>
             <OwnerButton owner={org.id} ownerType='Organization' href={url} />
             {
               !fhir &&
@@ -93,7 +93,7 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
               </span>
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name' style={{paddingTop: '0px'}}>
             <span style={{marginRight: '10px'}}>
               {org.name}
             </span>
@@ -102,18 +102,18 @@ const OrgHomeHeader = ({ org, url, fhir, extraComponents, config }) => {
               <AccessChip publicAccess={org.public_access} />
             }
           </div>
-          <Collapse in={openHeader} className='col-md-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+          <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
               org.description &&
-              <div className='col-md-12 no-side-padding flex-vertical-center resource-description'>
+              <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
                 {org.description}
               </div>
             }
             {map(getVisibleAttributes(), (attr) => {
-               return <HeaderAttribute key={attr.label} label={attr.label} value={org[attr.value]} type={attr.type} gridClass="col-md-12" />
+               return <HeaderAttribute key={attr.label} label={attr.label} value={org[attr.value]} type={attr.type} gridClass="col-xs-12" />
             })}
-            <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-md-12" />
-            <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+            <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} />} gridClass="col-xs-12" />
+            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {
                 org.location &&
                 <span style={{marginRight: '10px'}}>

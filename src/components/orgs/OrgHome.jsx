@@ -224,7 +224,7 @@ class OrgHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-md-12 home-container no-side-padding'>
+          <div className='col-xs-12 home-container no-side-padding'>
             {
               tab !== null && selectedConfig &&
               <React.Fragment>

@@ -69,8 +69,21 @@ const HomeTabs = props => {
   if(tab === 0 && hasAccess)
     settingsOptions = [...settingsOptions, 'editOverviewSettings']
   return (
-    <div className='col-md-12 no-right-padding' style={{width: width, paddingLeft: '10px'}}>
-      <Tabs className='col-md-11 no-side-padding' value={tab} onChange={onTabChange} TabIndicatorProps={{style: {background: selectedTabColor}}} indicatorColor='primary'>
+    <div className='col-xs-12 no-right-padding' style={{width: width, paddingLeft: '10px'}}>
+      <Tabs
+        className='col-xs-11 no-side-padding'
+        value={tab}
+        onChange={onTabChange}
+        TabIndicatorProps={{style: {background: selectedTabColor}}}
+        TabScrollButtonProps={{
+          style: tabColor ? {color: tabColor}: {},
+          classes: {
+            disabled: 'hidden'
+          }
+        }}
+        indicatorColor='primary'
+        variant="scrollable"
+        allowScrollButtonsMobile>
         {
           map(tabConfigs, (config, index) => {
             const key = config.label + index
@@ -99,7 +112,7 @@ const HomeTabs = props => {
       </Tabs>
       {
         hasAccess &&
-        <div className='col-md-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
+        <div className='col-xs-1 no-right-padding flex-vertical-center' style={{justifyContent: 'flex-end'}}>
           {
             showConfigSelection &&
             <span style={{marginRight: '10px'}}>

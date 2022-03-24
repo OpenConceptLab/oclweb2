@@ -39,7 +39,7 @@ const HomeTabContent = ({
       }
       {
         !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
-        <div className='col-md-12'>
+        <div className='col-xs-12'>
           {
             map(selectedTabConfig.fields, field => {
               const value = field.value || get(org, field.id);

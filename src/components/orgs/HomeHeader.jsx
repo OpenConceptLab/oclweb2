@@ -112,12 +112,12 @@ const HomeHeader = ({
 
   const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && hasBackgroundImage);
   return (
-    <header className='home-header col-md-12' style={merge({marginBottom: tab === 0 ? 0 : '5px', padding: 0}, getBackgroundStyles())}>
-      <div className='col-md-12 no-side-padding' style={shouldShowOverlay ? {paddingBottom: '2px', backgroundColor: 'rgba(0,0,0,0.6)'} : {}}>
-        <div className='col-md-12 no-side-padding container' style={{paddingTop: '10px'}}>
+    <header className='home-header col-xs-12' style={merge({marginBottom: tab === 0 ? 0 : '5px', padding: 0}, getBackgroundStyles())}>
+      <div className='col-xs-12 no-side-padding' style={shouldShowOverlay ? {paddingBottom: '2px', backgroundColor: 'rgba(0,0,0,0.6)'} : {}}>
+        <div className='col-xs-12 no-side-padding container' style={{paddingTop: '10px'}}>
           {
             showLogo &&
-            <div className='no-side-padding col-md-1 home-icon'>
+            <div className='no-side-padding col-xs-1 home-icon'>
               <HeaderLogo
                 logoURL={logoURL}
                 onUpload={onLogoUpload}
@@ -126,10 +126,10 @@ const HomeHeader = ({
               />
             </div>
           }
-          <div className='col-md-11' style={isExpandedHeader ? {minHeight: get(config, 'config.header.height') || '140px'} : {}}>
+          <div className='col-xs-11' style={isExpandedHeader ? {minHeight: get(config, 'config.header.height') || '140px'} : {}}>
             {
               (showControls || !isExpandedHeader) &&
-              <div className='col-md-12 no-side-padding flex-vertical-center'>
+              <div className='col-xs-12 no-side-padding flex-vertical-center'>
                 <OwnerButton owner={org.id} ownerType='Organization' href={url} />
                 {
                   !fhir &&
@@ -156,7 +156,7 @@ const HomeHeader = ({
             }
             {
               isExpandedHeader &&
-              <div className='col-md-12 no-side-padding flex-vertical-center home-resource-full-name large'>
+              <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name large'>
                 <span style={merge({marginRight: '10px'}, getTitleStyles())}>
                   {
                     customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
@@ -170,9 +170,9 @@ const HomeHeader = ({
             }
             {
               (customDescription && isExpandedHeader) ?
-              <div className='col-md-12 no-side-padding header-custom-html resource-description large' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
+              <div className='col-xs-12 no-side-padding header-custom-html resource-description large' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
                 org.description && isExpandedHeader &&
-                <div className='col-md-12 no-side-padding flex-vertical-center resource-description large' style={getDescriptionStyles()}>
+                <div className='col-xs-12 no-side-padding flex-vertical-center resource-description large' style={getDescriptionStyles()}>
                   {org.description}
                 </div>
               )
@@ -188,17 +188,17 @@ const HomeHeader = ({
                                        label={attr.label}
                                        value={org[attr.value]}
                                        type={attr.type}
-                                       gridClass="col-md-12"
+                                       gridClass="col-xs-12"
                                        color={customDescriptionColor}
                     />
                   )
                 }
-                <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} color={customDescriptionColor} />} gridClass="col-md-12" color={customDescriptionColor} />
+                <HeaderAttribute label="Custom Attributes" value={!isEmpty(org.extras) && <CustomAttributesPopup attributes={org.extras} color={customDescriptionColor} />} gridClass="col-xs-12" color={customDescriptionColor} />
               </React.Fragment>
             }
             {
               showSignatures && isExpandedHeader &&
-              <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+              <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
                 {
                   org.location &&
                   <span style={{marginRight: '10px'}}>
