@@ -71,7 +71,7 @@ const HomeTabs = props => {
   return (
     <div className='col-xs-12 no-right-padding' style={{width: width, paddingLeft: '10px'}}>
       <Tabs
-        className='col-xs-11 no-side-padding'
+        className={hasAccess ? 'col-xs-11 no-side-padding' : 'col-xs-12 no-side-padding'}
         value={tab}
         onChange={onTabChange}
         TabIndicatorProps={{style: {background: selectedTabColor}}}
