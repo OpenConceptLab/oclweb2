@@ -76,15 +76,25 @@ const ScopeHeader = ({
                             null;
 
   return (
-    <header className='resource-header home-header col-md-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1}}>
+    <header className='resource-header home-header col-xs-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1, paddingLeft: '5px'}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
-        {
-          (global || scoped === 'collection') && mapping &&
-          <ResourceTextBreadcrumbs style={{marginBottom: '5px'}} resource={mapping} />
-        }
-        <span style={{marginLeft: '15px', display: 'block'}}>
-          <MappingIcon shrink={false} style={{marginTop: '-20px'}} />
-        </span>
+        <div className="col-xs-12 no-side-padding">
+          {
+            (global || scoped === 'collection') && mapping &&
+            <div className="col-xs-11 no-side-padding">
+              <ResourceTextBreadcrumbs style={{marginBottom: '5px', marginLeft: '5px'}} resource={mapping} />
+            </div>
+          }
+          {
+            onClose &&
+            <span className='col-xs-1 no-side-padding' style={{display: 'block', textAlign: 'right', position: 'fixed', right: '10px', marginTop: '2px'}}>
+              <IconButton size='small' color='secondary' onClick={onClose}>
+                <CancelIcon fontSize='inherit' />
+              </IconButton>
+            </span>
+          }
+        </div>
+        <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
         <div className='col-md-10 no-right-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
             <span style={{color: BLUE}}>
@@ -155,14 +165,6 @@ const ScopeHeader = ({
             </div>
           }
         </div>
-        {
-          onClose &&
-          <span className='col-md-1 no-side-padding' style={{display: 'block', textAlign: 'right'}}>
-            <IconButton size='small' color='secondary' onClick={onClose}>
-              <CancelIcon fontSize='inherit' />
-            </IconButton>
-          </span>
-        }
       </div>
       <CommonFormDrawer
         style={{zIndex: 1202}}

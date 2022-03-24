@@ -695,8 +695,10 @@ class Search extends React.Component {
       layout.width = '88.5%'
       layout.marginLeft = '12%'
       layout.padding = '0px 10px 0px 5px'
-    } else
-    layout.paddingRight = '0'
+    } else {
+      layout.paddingRight = '0'
+      layout.paddingLeft = '0'
+    }
 
     return layout
   }

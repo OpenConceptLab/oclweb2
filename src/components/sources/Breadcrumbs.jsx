@@ -125,8 +125,8 @@ const Breadcrumbs = ({
             <span className='flex-vertical-center' style={{width: '100%'}}>
               {
                 params.search &&
-                <span className='search-breadcurmbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '120px'}}>
-                  <span className='flex-vertical-center' style={{fontWeight: 'bold'}}>
+                <span className='search-breadcurmbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '125px'}}>
+                  <span className='flex-vertical-center' style={{fontWeight: 'bold', paddingLeft: '8px'}}>
                     <SearchIcon style={{marginRight: '5px'}} fontSize='small' />
                     {params.search}
                   </span>
@@ -236,6 +236,10 @@ const Breadcrumbs = ({
                     </IconButton>
                   </span>
                 </span>
+              }
+              {
+                !params.search && ownerURL && !selectedResource &&
+                <span className='resource-breadcurmbs flex-vertical-center' style={{background: WHITE, padding: '10px', border: `3px solid ${WHITE}`, flex: 1, minHeight: '60px'}} />
               }
             </span>
           </div>
