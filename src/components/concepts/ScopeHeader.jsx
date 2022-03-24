@@ -1,12 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
-import { IconButton, Chip } from '@mui/material';
+import { IconButton, Chip, Tooltip } from '@mui/material';
 import {
   CancelOutlined as CancelIcon,
 } from '@mui/icons-material';
 import { get } from 'lodash';
 import APIService from '../../services/APIService';
-import { BLUE } from '../../common/constants';
+import { BLUE, BLACK } from '../../common/constants';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -65,6 +66,8 @@ const ScopeHeader = ({
         alertifyjs.error('Something bad happened!')
     })
   }
+
+  const resourceURL = concept.versioned_object_id.toString() === concept.uuid ? concept.url : concept.version_url
   return (
     <header className='resource-header home-header col-xs-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1, paddingLeft: '5px'}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
@@ -87,12 +90,18 @@ const ScopeHeader = ({
         <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '-2px'}} />
         <div className='col-xs-10 no-right-padding'>
           <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>
-            <span style={{color: BLUE}}>
-              <b>{concept.id}</b>
-            </span>
-            <span style={{marginLeft: '5px'}}>
-              <b>{concept.display_name}</b>
-            </span>
+            <Tooltip title="Navigate to this Concept under its Source" arrow placement="left">
+              <Link to={resourceURL} className="no-anchor-styles">
+                <React.Fragment>
+                  <span style={{color: BLUE}}>
+                    <b>{concept.id}</b>
+                  </span>
+                  <span style={{marginLeft: '5px', color: BLACK}}>
+                    <b>{concept.display_name}</b>
+                  </span>
+                </React.Fragment>
+              </Link>
+            </Tooltip>
             {
               concept.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />

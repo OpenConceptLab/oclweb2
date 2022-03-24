@@ -1,12 +1,13 @@
 import React from 'react';
-import { IconButton, Chip } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { IconButton, Chip, Tooltip } from '@mui/material';
 import alertifyjs from 'alertifyjs';
 import { get } from 'lodash';
 import {
   CancelOutlined as CancelIcon,
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
-import { DARKGRAY, BLUE } from '../../common/constants';
+import { DARKGRAY, BLUE, BLACK } from '../../common/constants';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -18,7 +19,7 @@ import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
 import HomeActionButton from '../common/SourceChildHomeActionButton';
 
 const LABEL_STYLES = {
-  textAlign: 'center', marginTop: '4px', fontSize: '12px', color: DARKGRAY
+  marginTop: '4px', fontSize: '12px', color: DARKGRAY, marginRight: '10px', width: '25px'
 };
 
 const ScopeHeader = ({
@@ -75,6 +76,8 @@ const ScopeHeader = ({
                             `/#/concepts/compare?lhs=${mapping.from_concept_url}&rhs=${mapping.to_concept_url}` :
                             null;
 
+  const resourceURL = mapping.versioned_object_id.toString() === mapping.uuid ? mapping.url : mapping.version_url
+
   return (
     <header className='resource-header home-header col-xs-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1, paddingLeft: '5px'}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
@@ -97,12 +100,18 @@ const ScopeHeader = ({
         <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '-2px'}} />
         <div className='col-md-10 no-right-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
-            <span style={{color: BLUE}}>
-              <b>{mapping.id}</b>
-            </span>
-            <span style={{marginLeft: '5px'}}>
-              <b>{mapping.map_type}</b>
-            </span>
+            <Tooltip title="Navigate to this Mapping under its Source" arrow placement="left">
+              <Link to={resourceURL} className="no-anchor-styles">
+                <React.Fragment>
+                  <span style={{color: BLUE}}>
+                    <b>{mapping.id}</b>
+                  </span>
+                  <span style={{marginLeft: '5px', color: BLACK}}>
+                    <b>{mapping.map_type}</b>
+                  </span>
+                </React.Fragment>
+              </Link>
+            </Tooltip>
             {
               mapping.retired &&
               <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
@@ -124,20 +133,20 @@ const ScopeHeader = ({
             }
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-            <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
+            <span style={LABEL_STYLES}>
               From:
-            </div>
-            <div className='col-sm-11 no-side-padding'>
+            </span>
+            <span>
               <FromConceptLabel {...mapping} />
-            </div>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
-            <div className='col-sm-1 no-side-padding' style={LABEL_STYLES}>
+            <span style={LABEL_STYLES}>
               To:
-            </div>
-            <div className='col-sm-11 no-side-padding'>
+            </span>
+            <span>
               <ToConceptLabel {...mapping} />
-            </div>
+            </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
             <span>
