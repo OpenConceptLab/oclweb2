@@ -245,7 +245,7 @@ class SourceHome extends React.Component {
       if(width)
         totalWidth = `calc(${totalWidth}% - ${width - 10}px)`
       else
-        totalWidth -= filtersOpen ? 46 : 39.5
+        totalWidth -= filtersOpen ? 46 : 40.5
     }
     if(isNumber(totalWidth))
       totalWidth = `${totalWidth}%`
