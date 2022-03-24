@@ -5,7 +5,7 @@ import {
 
 const PopperGrow = ({open, anchorRef, handleClose, children, minWidth}) => {
   return (
-    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex: 5}}>
+    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition style={{zIndex: 5}}>
       {({ TransitionProps, placement }) => (
         <Grow
           {...TransitionProps}

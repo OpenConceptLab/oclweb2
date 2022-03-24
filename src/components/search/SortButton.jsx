@@ -147,7 +147,7 @@ class SortButton extends React.Component {
             onDelete={this.toggleOpen}
           />
         </Tooltip>
-        <Popper open={open} anchorEl={this.anchorRef.current} transition disablePortal style={{zIndex: 1000}}>
+        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1000}}>
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}

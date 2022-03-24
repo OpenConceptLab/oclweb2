@@ -154,7 +154,7 @@ class AddToCollection extends React.Component {
     return (
       <React.Fragment>
         {button}
-        <Popper open={open} anchorEl={this.anchorRef.current} transition disablePortal style={{zIndex: 1000}}>
+        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1000}}>
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
