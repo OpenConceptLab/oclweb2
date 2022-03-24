@@ -84,7 +84,7 @@ const ScopeHeader = ({
             </span>
           }
         </div>
-        <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
+        <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '-2px'}} />
         <div className='col-xs-10 no-right-padding'>
           <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>
             <span style={{color: BLUE}}>

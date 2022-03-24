@@ -94,7 +94,7 @@ const ScopeHeader = ({
             </span>
           }
         </div>
-        <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
+        <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '-2px'}} />
         <div className='col-md-10 no-right-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
             <span style={{color: BLUE}}>
