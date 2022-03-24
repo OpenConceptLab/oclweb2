@@ -156,7 +156,7 @@ const HomeHeader = ({
             }
             {
               isExpandedHeader &&
-              <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name large'>
+              <div className='col-xs-12 no-side-padding flex-vertical-center home-resource-full-name large' style={{paddingTop: (showControls || !isExpandedHeader) ? '10px' : '0'}}>
                 <span style={merge({marginRight: '10px'}, getTitleStyles())}>
                   {
                     customTitle ? (<h3 style={{margin: 0}}>{customTitle}</h3>) : org.name
