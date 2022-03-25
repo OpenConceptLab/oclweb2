@@ -740,7 +740,7 @@ const ResultsTable = (
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
     onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange, onLimitChange,
-    isInsideConfiguredOrg
+    isInsideConfiguredOrg, isLoading
   }
 ) => {
   const [details, setDetails] = React.useState(null);
@@ -754,7 +754,7 @@ const ResultsTable = (
   const isValueSet = resource === 'ValueSet'
   const isConceptMap = resource === 'ConceptMap'
   const shouldShowPin = showPin && resourceDefinition.pinnable;
-  const canRender = results.total && resourceDefinition;
+  const canRender = (results.total && resourceDefinition) || isLoading;
   const defaultOrderBy = get(find(resourceDefinition.columns, {sortOn: get(values(sortParams), '0', 'last_update')}), 'id', 'UpdateOn');
   const defaultOrder = get(keys(sortParams), '0') === 'sortAsc' ? 'asc' : 'desc';
   const [selectedList, setSelectedList] = React.useState([]);
@@ -928,29 +928,35 @@ const ResultsTable = (
                   </TableHead>
                   <TableBody>
                     {
+                      isLoading ?
+                      <TableRow colSpan={selectionRowColumnsCount}>
+                        <TableCell colSpan={columnsCount} align='center'>
+                          <CircularProgress color="primary" disableShrink />
+                        </TableCell>
+                      </TableRow> : (
                       map(results.items, (item, index) => (
-                        <ExpandibleRow
-                          key={item.uuid || item.id || index}
-                          item={item}
-                          resource={resource}
-                          resourceDefinition={resourceDefinition}
-                          isSelected={includes(selectedList, item.uuid)}
-                          onSelectChange={updateSelected}
-                          containerOnSelectChange={onSelectChange}
-                          isSelectable={isSelectable}
-                          onPinCreate={onPinCreate}
-                          onPinDelete={onPinDelete}
-                          pins={pins}
-                          nested={nested}
-                          showPin={shouldShowPin}
-                          columns={columns}
-                          hapi={hapi}
-                          fhir={fhir}
-                          history={history}
-                          asReference={asReference}
-                          lastSelected={last(selectedList)}
-                        />
-                      ))
+                      <ExpandibleRow
+                        key={item.uuid || item.id || index}
+                        item={item}
+                        resource={resource}
+                        resourceDefinition={resourceDefinition}
+                        isSelected={includes(selectedList, item.uuid)}
+                        onSelectChange={updateSelected}
+                        containerOnSelectChange={onSelectChange}
+                        isSelectable={isSelectable}
+                        onPinCreate={onPinCreate}
+                        onPinDelete={onPinDelete}
+                        pins={pins}
+                        nested={nested}
+                        showPin={shouldShowPin}
+                        columns={columns}
+                        hapi={hapi}
+                        fhir={fhir}
+                        history={history}
+                        asReference={asReference}
+                        lastSelected={last(selectedList)}
+                      />
+                      )))
                     }
                   </TableBody>
                 </Table>

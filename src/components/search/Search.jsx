@@ -841,9 +841,9 @@ class Search extends React.Component {
               </div>
             }
             {
-              isLoading ?
+              isLoading && (showHierarchy || !isTable) ?
               <div className='col-xs-12 no-side-padding' style={{marginTop: '100px', textAlign: 'center', width: '100%'}}>
-                <CircularProgress style={{color: BLUE}}/>
+                <CircularProgress style={{color: BLUE}} disableShrink />
               </div> :
               <div className='col-xs-12 no-side-padding' style={{marginTop: '5px', width: '100%'}}>
                 {
@@ -859,6 +859,7 @@ class Search extends React.Component {
                   /> : (
                     isTable ?
                     <ResultsTable
+                      isLoading={isLoading}
                       resource={resource}
                       results={resourceResults}
                       onPageChange={this.onPageChange}
