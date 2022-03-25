@@ -64,12 +64,11 @@ const HomeTabs = props => {
     return href + queryString
   }
 
-  const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
   let settingsOptions = ['source', 'collection', 'editMembership']
   if(tab === 0 && hasAccess)
     settingsOptions = [...settingsOptions, 'editOverviewSettings']
   return (
-    <div className='col-xs-12 no-right-padding' style={{width: width, paddingLeft: '10px'}}>
+    <div className='col-xs-12 no-right-padding' style={{paddingLeft: '10px'}}>
       <Tabs
         className={hasAccess ? 'col-xs-11 no-side-padding' : 'col-xs-12 no-side-padding'}
         value={tab}
