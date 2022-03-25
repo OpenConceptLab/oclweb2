@@ -26,7 +26,6 @@ const HomeTabs = props => {
   const [collectionForm, setCollectionForm] = React.useState(false);
   const [membersForm, setMembersForm] = React.useState(false);
   const [overviewSettings, setOverviewSettings] = React.useState(false);
-  const [configFormWidth, setConfigFormWidth] = React.useState(false);
   const hasAccess = currentUserHasAccess()
   const onNewClick = resource => {
     if(resource === 'source')
@@ -121,7 +120,6 @@ const HomeTabs = props => {
                 onChange={onConfigChange}
                 color={ORANGE}
                 resourceURL={url}
-                onWidthChange={setConfigFormWidth}
                 resource='orgs'
               />
             </span>
@@ -157,7 +155,6 @@ const HomeTabs = props => {
         variant='persistent'
         isOpen={overviewSettings}
         onClose={() => setOverviewSettings(false)}
-        onWidthChange={setConfigFormWidth}
         width={450}
         formComponent={
           <OverviewSettings
