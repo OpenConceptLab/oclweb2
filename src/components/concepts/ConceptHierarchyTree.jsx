@@ -300,7 +300,7 @@ class ConceptHierarchyTree extends React.Component {
         .attr('x', d => d._children ? -6 : 6)
         .attr('dy', `1.2em`)
         .text(d => {
-          let name = d.data.display_name || d.data.target_concept_code;
+          let name = d.data.display_name || '';
           if(name.length > 20)
             name = name.substring(0, 17) + '...'
           return name
