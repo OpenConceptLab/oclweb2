@@ -9,7 +9,7 @@ const SearchFilters = ({ filterControls, layoutControls, nested }) => {
           <Tabs
             value={0}
             variant="scrollable"
-            style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 'auto', paddingTop: nested ? 0 : '5px'}}
+            style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 'auto', paddingTop: nested ? '5px' : '10px', paddingBottom: '5px'}}
             TabIndicatorProps={{style: {display: 'none', background: 'transparent'}}}
             TabScrollButtonProps={{
               classes: {
