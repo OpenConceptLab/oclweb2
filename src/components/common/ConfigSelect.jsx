@@ -35,7 +35,8 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthC
     event.preventDefault();
 
     setDrawer(!drawer)
-    onWidthChange(drawer ? 0 : 360)
+    if(onWidthChange)
+      onWidthChange(drawer ? 0 : 360)
   }
 
   const getLabel = () => {
@@ -45,7 +46,8 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthC
 
   const onCancel = () => {
     setDrawer(false)
-    onWidthChange(0)
+    if(onWidthChange)
+      onWidthChange(0)
   }
 
   return (
