@@ -62,7 +62,7 @@ class ConceptHierarchyTree extends React.Component {
 
   makeInitialTree = () => this.getChildren(this.props.concept, tree => {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
-    data.target_source = this.getSourceName(data.url)
+    data.target_source = this.getSourceName(data)
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
       if(this.state.hasEntries) {
         this.renderTree()
@@ -77,10 +77,15 @@ class ConceptHierarchyTree extends React.Component {
     svg.viewBox.baseVal.width = box.width - box.x + 100
   }
 
-  getSourceName = url => {
-    if(!url)
+  getSourceName = (data, urlKey) => {
+    if(data.target_source_name && data.target_source_owner)
+      return `${data.target_source_owner} / ${data.target_source_name}`
+
+    const key = urlKey || 'url'
+
+    if(!get(data, key))
       return ''
-    const urlParts = url.split('/')
+    const urlParts = data[key].split('/')
     const ownerName = urlParts[2]
     const sourceName = urlParts[4]
     return `${ownerName} / ${sourceName}`
@@ -94,12 +99,12 @@ class ConceptHierarchyTree extends React.Component {
     children.forEach(child => {
       if(!child.data.map_type) {
         child.data.map_type = this.getMapType(child)
-        child.data.target_source = this.getSourceName(child.data.url)
+        child.data.target_source = this.getSourceName(child.data)
       }
       if(!child.data.target_concept_url)
         result.push(child)
       if(child.data.target_concept_url && !find(children, c => c.data.url === child.data.target_concept_url && c.data.type === 'Concept')) {
-        child.data.target_source = this.getSourceName(child.data.target_concept_url)
+        child.data.target_source = this.getSourceName(child.data, 'target_concept_url')
         result.push(child)
       }
     })
