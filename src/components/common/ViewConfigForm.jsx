@@ -14,6 +14,7 @@ import {
   Save as SaveIcon,
   Cancel as CancelIcon,
   MoreVert as MenuIcon,
+  CancelOutlined as CloseIcon,
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { ORANGE, WHITE } from '../../common/constants';
@@ -236,7 +237,17 @@ class ViewConfigForm extends React.Component {
     return (
       <div className='col-md-12' style={{marginBottom: '30px', textAlign: 'left'}}>
         <div className='col-md-12 no-side-padding'>
-          <h2>Manage Configurations</h2>
+          <h2>
+            Manage Configurations
+            {
+              this.props.onClose &&
+              <span style={{float: 'right'}}>
+                <IconButton size='small' color='secondary' onClick={this.props.onClose}>
+                  <CloseIcon fontSize='inherit' />
+                </IconButton>
+              </span>
+            }
+          </h2>
         </div>
         <div className='col-md-12 no-side-padding flex-vertical-center'>
           <div className='col-md-11 no-side-padding' style={{}}>

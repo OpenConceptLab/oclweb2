@@ -87,6 +87,7 @@ const ConfigSelect = ({configs, selected, onChange, color, resourceURL, onWidthC
           formComponent={
             <ViewConfigForm
               reloadOnSuccess
+              onClose={() => setDrawer(false)}
               previewFields={get(preview, 'fields')}
                             selected={get(preview, 'selected') || selected}
                             configs={configs}
