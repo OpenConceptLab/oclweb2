@@ -76,7 +76,7 @@ const ScopeHeader = ({
                             `/#/concepts/compare?lhs=${mapping.from_concept_url}&rhs=${mapping.to_concept_url}` :
                             null;
 
-  const resourceURL = mapping.versioned_object_id.toString() === mapping.uuid ? mapping.url : mapping.version_url
+  const resourceURL = (mapping.versioned_object_id.toString() === mapping.uuid || mapping.is_latest_version) ? mapping.url : mapping.version_url
 
   return (
     <header className='resource-header home-header col-xs-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1, paddingLeft: '5px'}}>

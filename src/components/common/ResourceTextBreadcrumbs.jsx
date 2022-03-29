@@ -18,7 +18,7 @@ const ResourceTextBreadcrumbs = ({ resource, style, includeSelf }) => {
           <span className='separator-small' style={{padding: '0'}}><SeparatorIcon /></span>
           <ResourceTextButton href={`#${resource.url}`} resource='concept' id={resource.id} color={BLUE} />
           {
-            resource.uuid !== resource.versioned_object_id.toString() &&
+            (resource.uuid !== resource.versioned_object_id.toString() || resource.is_latest_version) &&
             <React.Fragment>
               <span className='separator-small' style={{padding: '0'}}><SeparatorIcon /></span>
               <ResourceTextButton href={`#${resource.version_url}`} resource='version' id={resource.version} color={BLUE} />

@@ -256,7 +256,7 @@ class SourceHome extends React.Component {
     let params = {...this.props.match.params}
     const { selected } = this.state
     if(selected) {
-      const isVersionedObject = selected.uuid === selected.versioned_object_id.toString()
+      const isVersionedObject = selected.uuid === selected.versioned_object_id.toString() || selected.is_latest_version
       if(selected.map_type)
         params = {...params, mapping: selected.id, mappingVersion: isVersionedObject ? null : selected.version}
       else
