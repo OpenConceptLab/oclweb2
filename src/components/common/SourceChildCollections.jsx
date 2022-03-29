@@ -16,7 +16,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'auto', width: '100%', padding: '0'
+  width: '100%', padding: '0', overflowX: 'auto'
 }
 
 const None = () => (<div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>);

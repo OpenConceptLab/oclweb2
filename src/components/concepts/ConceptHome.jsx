@@ -241,6 +241,7 @@ class ConceptHome extends React.Component {
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
     const hasError = notFound || accessDenied || permissionDenied;
+    const detailsMargin = this.getContentMarginTop()
     const conceptDetails = (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -275,7 +276,7 @@ class ConceptHome extends React.Component {
                 header={has(this.props, 'header') ? this.props.header : true}
               />
             }
-            <div className='col-xs-12' style={{position: 'relative', marginTop: this.getContentMarginTop()}}>
+            <div className='col-xs-12' style={{position: 'relative', marginTop: detailsMargin, marginBottom: detailsMargin}}>
               <ConceptHomeDetails
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}

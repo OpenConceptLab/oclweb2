@@ -10,7 +10,7 @@ const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
 }
 const ACCORDIAN_DETAILS_STYLES = {
-  maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%', padding: '0'
+  overflowX: 'auto', width: '100%', padding: '0'
 }
 
 const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents, singleColumn, versions, scoped }) => {
