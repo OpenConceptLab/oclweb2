@@ -100,7 +100,7 @@ const Breadcrumbs = ({
   }
 
   const retire = comment => {
-    APIService.new().overrideURL(resourceURL).delete({comment: comment}).then(response => {
+    APIService.new().overrideURL(resourceURL.replace('#', '')).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${startCase(resource)} Retired`, 1, () => window.location.reload())
       else
@@ -109,7 +109,7 @@ const Breadcrumbs = ({
   }
 
   const unretire = comment => {
-    APIService.new().overrideURL(resourceURL).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+    APIService.new().overrideURL(resourceURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${startCase(resource)} Unretired`, 1, () => window.location.reload())
       else
