@@ -24,7 +24,7 @@ class NewImport extends React.Component {
     super(props);
     this.defaultState = {
       queue: '',
-      parallel: false,
+      parallel: true,
       hierarchy: false,
       workers: 2,
       file: null,
