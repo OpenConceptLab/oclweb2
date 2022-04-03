@@ -87,7 +87,7 @@ const ScopeHeader = ({
             </span>
           }
         </div>
-        <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '-2px'}} />
+        <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
         <div className='col-xs-10 no-right-padding'>
           <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>
             <Tooltip title="Navigate to this Concept under its Source" arrow placement="left">

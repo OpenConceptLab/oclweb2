@@ -133,7 +133,7 @@ const Breadcrumbs = ({
 
                 </span>
               }
-              <span className='container-breadcurmbs flex-vertical-center' style={{paddingLeft: '15px', background: params.search ? '#f1f1f1' : WHITE, width: ownerURL ? 'auto': '100%', minHeight: '60px', paddingRight: params.search ? '0' : '15px'}}>
+              <span className='container-breadcurmbs flex-vertical-center' style={{paddingLeft: params.search ? '15px' : '10px', background: params.search ? '#f1f1f1' : WHITE, width: ownerURL ? 'auto': '100%', minHeight: '60px', paddingRight: params.search ? '0' : '15px'}}>
                 {
                   ownerURL &&
                   <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />

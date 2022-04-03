@@ -36,17 +36,17 @@ const SourceHomeHeader = ({
   const [sourceForm, setSourceForm] = React.useState(false);
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
-              .post({base64: base64, name: name})
-              .then(response => {
-                if(get(response, 'status') === 200)
-                  setLogoURL(get(response, 'data.logo_url', logoURL))
-              })
+      .post({base64: base64, name: name})
+      .then(response => {
+        if(get(response, 'status') === 200)
+          setLogoURL(get(response, 'data.logo_url', logoURL))
+      })
   }
   const getDefaultHiddenAttributes = () => {
     return filter(DEFAULT_VISIBLE_ATTRIBUTES, (attr) => {
       return !map(get(config, 'config.header.visibleAttributes'),(attr) => attr.value).includes(attr.value)
     }
-    )
+                 )
   }
   const getVisibleAttributes = ()=>{
     if (get(config, 'config.header.visibleAttributes') === 'object'){
@@ -93,26 +93,31 @@ const SourceHomeHeader = ({
   return (
     <header className='home-header col-xs-12 no-side-padding' style={{backgroundColor: WHITE}}>
       <div className='col-xs-12 no-side-padding container'>
-        <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}}>
-          <HeaderLogo
-            logoURL={logoURL}
-            onUpload={onLogoUpload}
-            defaultIcon={<ListIcon className='default-svg' />}
-          />
-        </div>
-        <div className='col-xs-11'>
-          <div className='col-xs-12 no-side-padding home-resource-full-name' style={{paddingTop: '0px', display: 'block'}}>
-            <span style={{marginRight: '5px'}}>
-              {source.full_name}
-            </span>
-            <AccessChip publicAccess={source.public_access} />
+        <div className='col-xs-12 no-side-padding' style={openHeader ? {} : {display: 'flex', alignItems: 'center'}}>
+          <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}}>
+            <HeaderLogo
+              logoURL={logoURL}
+              onUpload={onLogoUpload}
+              defaultIcon={<ListIcon className='default-svg' />}
+            />
           </div>
+          <div className='col-xs-11'>
+            <div className='col-xs-12 no-side-padding home-resource-full-name' style={{paddingTop: '0px', display: 'block'}}>
+              <span style={{marginRight: '5px'}}>
+                {source.full_name}
+              </span>
+              <AccessChip publicAccess={source.public_access} />
+            </div>
+          </div>
+        </div>
+        <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}} />
+        <div className='col-xs-11' style={openHeader ? {marginTop: '-30px'} : {}}>
           <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
               source.description &&
-              <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
-                {source.description}
-              </div>
+                <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
+                  {source.description}
+                </div>
             }
             {
               map(getVisibleAttributes(), (attr, index) => {
@@ -124,12 +129,12 @@ const SourceHomeHeader = ({
             <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-xs-12" />
             {
               hasManyHiddenAttributes ?
-              <div className='col-xs-12 no-side-padding'>
-                <CollapsibleAttributes
-                  object={source}
-                  hiddenAttributes={getHiddenAttributes()}
-                />
-              </div> :
+                <div className='col-xs-12 no-side-padding'>
+                  <CollapsibleAttributes
+                    object={source}
+                    hiddenAttributes={getHiddenAttributes()}
+                  />
+                </div> :
               <React.Fragment>
                 {
                   map(getHiddenAttributes(), (attr, index) => (
@@ -141,9 +146,9 @@ const SourceHomeHeader = ({
             <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {
                 source.website &&
-                <span style={{marginRight: '10px'}}>
-                  <LinkLabel link={source.website} iconSize='medium' noContainerClass />
-                </span>
+                  <span style={{marginRight: '10px'}}>
+                    <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+                  </span>
               }
               <span>
                 <LastUpdatedOnLabel
@@ -164,9 +169,9 @@ const SourceHomeHeader = ({
               </span>
               {
                 source.external_id &&
-                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                  <ExternalIdLabel externalId={source.external_id} iconSize='medium' />
-                </span>
+                  <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                    <ExternalIdLabel externalId={source.external_id} iconSize='medium' />
+                  </span>
               }
             </div>
           </Collapse>
@@ -179,12 +184,12 @@ const SourceHomeHeader = ({
         onClose={() => setSourceForm(false)}
         formComponent={
           isVersionedObject &&
-                       <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={source} parentURL={versionedObjectURL} />
+            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={source} parentURL={versionedObjectURL} />
         }
       />
       {
         isVersionedObject && hasAccess && !isEmpty(source) &&
-        <ConceptContainerDelete open={deleteDialog} resource={source} onClose={() => setDeleteDialog(false)} onDelete={() => deleteSource() } />
+          <ConceptContainerDelete open={deleteDialog} resource={source} onClose={() => setDeleteDialog(false)} onDelete={() => deleteSource() } />
       }
     </header>
   )

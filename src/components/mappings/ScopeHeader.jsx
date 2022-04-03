@@ -97,7 +97,7 @@ const ScopeHeader = ({
             </span>
           }
         </div>
-        <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '-2px'}} />
+        <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
         <div className='col-md-10 no-right-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
             <Tooltip title="Navigate to this Mapping under its Source" arrow placement="left">

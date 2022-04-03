@@ -38,17 +38,17 @@ const CollectionHomeHeader = ({
   const [collectionForm, setCollectionForm] = React.useState(false);
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
-              .post({base64: base64, name: name})
-              .then(response => {
-                if(get(response, 'status') === 200)
-                  setLogoURL(get(response, 'data.logo_url', logoURL))
-              })
+      .post({base64: base64, name: name})
+      .then(response => {
+        if(get(response, 'status') === 200)
+          setLogoURL(get(response, 'data.logo_url', logoURL))
+      })
   }
   const getDefaultHiddenAttributes = () => {
     return filter(DEFAULT_VISIBLE_ATTRIBUTES, (attr) => {
       return !map(get(config, 'config.header.visibleAttributes'),(attr) => attr.value).includes(attr.value)
     }
-    )
+                 )
   }
   const getHiddenAttributes = () => {
     if (get(config, 'config.header.invisibleAttributes') === 'object'){
@@ -92,27 +92,32 @@ const CollectionHomeHeader = ({
   return (
     <header className='home-header col-xs-12 no-side-padding' style={{backgroundColor: WHITE}}>
       <div className='col-xs-12 no-side-padding container'>
-        <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}}>
-          <HeaderLogo
-            logoURL={logoURL}
-            onUpload={onLogoUpload}
-            defaultIcon={<LoyaltyIcon className='default-svg' />}
-            shrink={!openHeader}
-          />
-        </div>
-        <div className='col-xs-11' style={{marginBottom: '5px'}}>
-          <div className='col-xs-12 no-side-padding home-resource-full-name' style={{paddingTop: '0px', display: 'block'}}>
-            <span style={{marginRight: '5px'}}>
-              {collection.full_name}
-            </span>
-            <AccessChip publicAccess={collection.public_access} />
+        <div className='col-xs-12 no-side-padding' style={openHeader ? {} : {display: 'flex', alignItems: 'center'}}>
+          <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}}>
+            <HeaderLogo
+              logoURL={logoURL}
+              onUpload={onLogoUpload}
+              defaultIcon={<LoyaltyIcon className='default-svg' />}
+              shrink={!openHeader}
+            />
           </div>
+          <div className='col-xs-11' style={{marginBottom: '5px'}}>
+            <div className='col-xs-12 no-side-padding home-resource-full-name' style={{paddingTop: '0px', display: 'block'}}>
+              <span style={{marginRight: '5px'}}>
+                {collection.full_name}
+              </span>
+              <AccessChip publicAccess={collection.public_access} />
+            </div>
+          </div>
+        </div>
+        <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}} />
+        <div className='col-xs-11' style={openHeader ? {marginTop: '-30px'} : {}}>
           <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
               collection.description &&
-              <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
-                {collection.description}
-              </div>
+                <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
+                  {collection.description}
+                </div>
             }
             {
               map(getVisibleAttributes(), (attr, index) => {
@@ -124,12 +129,12 @@ const CollectionHomeHeader = ({
             <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-xs-12" />
             {
               hasManyHiddenAttributes ?
-              <div className='col-xs-12 no-side-padding'>
-                <CollapsibleAttributes
-                  hiddenAttributes={getHiddenAttributes()}
-                  object={collection}
-                />
-              </div> :
+                <div className='col-xs-12 no-side-padding'>
+                  <CollapsibleAttributes
+                    hiddenAttributes={getHiddenAttributes()}
+                    object={collection}
+                  />
+                </div> :
               <React.Fragment>
                 {
                   map(getHiddenAttributes(), (attr, index) => (
@@ -141,9 +146,9 @@ const CollectionHomeHeader = ({
             <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
               {
                 collection.website &&
-                <span>
-                  <LinkLabel link={collection.website} iconSize='medium' noContainerClass />
-                </span>
+                  <span>
+                    <LinkLabel link={collection.website} iconSize='medium' noContainerClass />
+                  </span>
               }
               <span>
                 <LastUpdatedOnLabel
@@ -164,9 +169,9 @@ const CollectionHomeHeader = ({
               </span>
               {
                 collection.external_id &&
-                <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                  <ExternalIdLabel externalId={collection.external_id} iconSize='medium' />
-                </span>
+                  <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                    <ExternalIdLabel externalId={collection.external_id} iconSize='medium' />
+                  </span>
               }
             </div>
           </Collapse>
@@ -179,12 +184,12 @@ const CollectionHomeHeader = ({
         onClose={() => setCollectionForm(false)}
         formComponent={
           isVersionedObject &&
-                       <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={collection} parentURL={versionedObjectURL} />
+            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={collection} parentURL={versionedObjectURL} />
         }
       />
       {
         isVersionedObject && hasAccess && collection &&
-        <ConceptContainerDelete open={deleteDialog} resource={collection} onClose={() => setDeleteDialog(false)} onDelete={() => deleteCollection() } />
+          <ConceptContainerDelete open={deleteDialog} resource={collection} onClose={() => setDeleteDialog(false)} onDelete={() => deleteCollection() } />
       }
     </header>
   )
