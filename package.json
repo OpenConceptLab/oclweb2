@@ -15,7 +15,7 @@
     "alertifyjs": "^1.13.1",
     "axios": "^0.21.4",
     "core-js": "^3.21.1",
-    "d3": "^7.4.0",
+    "d3": "^7.4.1",
     "d3-v6-tip": "^1.0.9",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -73,7 +73,7 @@
     "react-is": "^16.13.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^5.70.0",
+    "webpack": "^5.71.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.3"
   }
