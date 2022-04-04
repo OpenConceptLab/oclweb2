@@ -14,6 +14,7 @@ import {
 import { ERROR_RED, CONCEPT_CODE_REGEX } from '../../common/constants';
 import LocaleForm from './LocaleForm';
 import ExtrasForm from '../common/ExtrasForm';
+import OwnerParentSelection from '../common/OwnerParentSelection';
 
 const NAME_MODEL = {locale: '', name_type: '', name: '', external_id: '', locale_preferred: false}
 const DESC_MODEL = {locale: '', description_type: '', description: '', external_id: '', locale_preferred: false}
@@ -23,6 +24,7 @@ class ConceptForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      parent: null,
       fields: {
         id: '',
         concept_class: '',
@@ -54,6 +56,8 @@ class ConceptForm extends React.Component {
       this.fetchConceptToEdit()
     if(this.props.copyFrom)
       this.fetchConceptToCreate()
+    if(!this.props.edit)
+      this.setState({parent: this.props.source})
   }
 
   fetchConceptToCreate() {
@@ -182,8 +186,9 @@ class ConceptForm extends React.Component {
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-
-    const { parentURL, edit } = this.props
+    const { parent } = this.state;
+    const { edit } = this.props
+    const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     const fields = cloneDeep(this.state.fields);
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
@@ -238,6 +243,23 @@ class ConceptForm extends React.Component {
     })
   }
 
+  onParentChange = newParent => this.setState({parent: newParent})
+
+  getOwner = () => {
+    const { concept, source, edit } = this.props;
+    if(edit) {
+      return {type: concept.owner_type.toLowerCase(), id: concept.owner, name: concept.owner}
+    }
+    return {type: source.owner_type.toLowerCase(), id: source.owner, name: source.owner}
+  }
+
+  getParent = () => {
+    const { edit, concept } = this.props;
+    if(edit)
+      return {id: concept.source, name: concept.source}
+    return this.state.parent
+  }
+
   render() {
     const {
       fieldErrors, fields, datatypes, nameTypes, conceptClasses,
@@ -279,6 +301,14 @@ class ConceptForm extends React.Component {
                   />
                 </div>
               }
+              <OwnerParentSelection
+                selectedOwner={this.getOwner()}
+                selectedParent={this.getParent()}
+                requiredParent
+                requiredOwner
+                onChange={this.onParentChange}
+                disabled={edit}
+              />
               <div style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
                   freeSolo={get(source, 'custom_validation_schema') !== "OpenMRS"}

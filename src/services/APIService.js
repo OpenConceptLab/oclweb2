@@ -11,7 +11,7 @@ const RESOURCES = [
   { name: 'sources', relations: ['concepts', 'mappings'] },
   { name: 'collections', relations: ['concepts', 'mappings'] },
   { name: 'users', relations: ['login', 'signup', 'verify', 'password', 'pins', 'collections', 'sources', 'orgs'] },
-  { name: 'user', relations: [] },
+  { name: 'user', relations: ['orgs'] },
   { name: 'feedback', relations: [] },
   { name: 'version', relations: [] },
   { name: 'new', relations: [] },

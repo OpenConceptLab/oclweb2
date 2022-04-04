@@ -203,7 +203,7 @@ const SourceHomeTabs = props => {
         isOpen={mappingForm}
         onClose={closeMappingForm}
         formComponent={
-          <MappingForm copyFrom={selectedChild} onCancel={closeMappingForm} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} selectedConcepts={selectedConcepts} />
+          <MappingForm source={source} copyFrom={selectedChild} onCancel={closeMappingForm} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} selectedConcepts={selectedConcepts} />
         }
       />
       <CommonFormDrawer

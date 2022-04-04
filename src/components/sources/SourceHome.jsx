@@ -352,6 +352,7 @@ class SourceHome extends React.Component {
                     location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
                     match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version}}}
                     header={false}
+                    source={source}
                     noRedirect
                   /> :
                   <ConceptHome

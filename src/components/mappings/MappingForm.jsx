@@ -13,6 +13,7 @@ import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, fetchMapTypes, toParentURI } from '../../common/utils';
 import { CONCEPT_CODE_REGEX } from '../../common/constants';
 import ExtrasForm from '../common/ExtrasForm';
+import OwnerParentSelection from '../common/OwnerParentSelection';
 
 const EXTRAS_MODEL = {key: '', value: ''}
 class MappingForm extends React.Component {
@@ -22,6 +23,7 @@ class MappingForm extends React.Component {
       fieldErrors: {},
       mapTypes: [],
       selected_map_type: null,
+      parent: null,
       fields: {
         id: '',
         map_type: '',
@@ -48,6 +50,8 @@ class MappingForm extends React.Component {
       this.setFieldsForEdit()
     if(this.props.selectedConcepts)
       this.setFieldsFromSelectedConcepts()
+    if(!this.props.edit)
+      this.setState({parent: this.props.source})
   }
 
   setFieldsForEdit() {
@@ -154,7 +158,9 @@ class MappingForm extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { parentURL, edit } = this.props
+    const { parent } = this.state;
+    const { edit } = this.props
+    const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     let fields = cloneDeep(this.state.fields);
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
@@ -217,6 +223,23 @@ class MappingForm extends React.Component {
     this.setState(newState)
   }
 
+  onParentChange = newParent => this.setState({parent: newParent})
+
+  getOwner = () => {
+    const { mapping, source, edit } = this.props;
+    if(edit) {
+      return {type: mapping.owner_type.toLowerCase(), id: mapping.owner, name: mapping.owner}
+    }
+    return {type: source.owner_type.toLowerCase(), id: source.owner, name: source.owner}
+  }
+
+  getParent = () => {
+    const { edit, mapping } = this.props;
+    if(edit)
+      return {id: mapping.source, name: mapping.source}
+    return this.state.parent
+  }
+
   render() {
     const { fields, fieldErrors, selected_map_type, mapTypes } = this.state;
     const { onCancel, edit } = this.props;
@@ -236,7 +259,7 @@ class MappingForm extends React.Component {
             <form>
               {
                 !edit &&
-                <div className='col-md-12 no-side-padding'>
+                <div style={{width: '100%'}}>
                   <TextField
                     error={Boolean(fieldErrors.id)}
                     id="fields.id"
@@ -252,6 +275,14 @@ class MappingForm extends React.Component {
                   />
                 </div>
               }
+              <OwnerParentSelection
+                selectedOwner={this.getOwner()}
+                selectedParent={this.getParent()}
+                requiredParent
+                requiredOwner
+                onChange={this.onParentChange}
+                disabled={edit}
+              />
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
                   openOnFocus
