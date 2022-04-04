@@ -349,20 +349,20 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     mapping={selected}
-                            location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
-                            match={{params: {mappingVersion: this.isHEAD ? null : selected.version}}}
-                            header={false}
-                            noRedirect
+                    location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
+                    match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version}}}
+                    header={false}
+                    noRedirect
                   /> :
                   <ConceptHome
                     singleColumn
                     scoped
                     concept={selected}
-                            location={{pathname: this.isHEAD ? selected.url : selected.version_url}}
-                            match={{params: {conceptVersion: this.isHEAD ? null : selected.version}}}
-                            openHierarchy={false}
-                            header={false}
-                            noRedirect
+                    location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
+                    match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version}}}
+                    openHierarchy={false}
+                    header={false}
+                    noRedirect
                   />
                 }
               </div>
