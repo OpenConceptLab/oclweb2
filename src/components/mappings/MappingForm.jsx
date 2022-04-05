@@ -10,7 +10,7 @@ import {
   set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, getCurrentURL, fetchMapTypes, toParentURI } from '../../common/utils';
+import { arrayToObject, fetchMapTypes, toParentURI } from '../../common/utils';
 import { CONCEPT_CODE_REGEX } from '../../common/constants';
 import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
@@ -117,19 +117,23 @@ class MappingForm extends React.Component {
   }
 
   getIdHelperText() {
-    const id = this.state.fields.id || "[generated-mapping-id]"
+    const { parent, fields } = this.state
+    const { edit } = this.props
+    const id = fields.id || "[generated-mapping-id]"
+    const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     return (
       <span>
         <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
-        <span>
-          <span>Your new mapping will live at: <br />
-            {
-              `${getCurrentURL()}/mappings/`
-            }
-          </span>
-          <span><b>{id}</b>/</span>
-        </span>
+        {
+          parentURL &&
+            <span>
+              <span>Your new mapping will live at: <br />
+                { `${window.location.origin}/#${parentURL}mappings/` }
+              </span>
+              <span><b>{id}</b>/</span>
+            </span>
+        }
       </span>
     )
   }

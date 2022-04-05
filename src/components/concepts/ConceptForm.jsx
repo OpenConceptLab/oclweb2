@@ -8,7 +8,7 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  arrayToObject, getCurrentURL, fetchDatatypes, fetchNameTypes,
+  arrayToObject, fetchDatatypes, fetchNameTypes,
   fetchDescriptionTypes, fetchConceptClasses,
 } from '../../common/utils';
 import { ERROR_RED, CONCEPT_CODE_REGEX } from '../../common/constants';
@@ -90,16 +90,22 @@ class ConceptForm extends React.Component {
   }
 
   getIdHelperText() {
+    const { parent, fields } = this.state
+    const { edit } = this.props
     const defaultId = "[concept-id]"
-    const id = this.state.fields.id
+    const id = fields.id
+    const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     return (
       <span>
-        <span>Your new concept will live at: <br />
-          {
-            `${getCurrentURL()}/concepts/`
-          }
-        </span>
-        <span><b>{id ? encodeURIComponent(id) : defaultId}</b>/</span>
+      {
+        parentURL &&
+          <span>
+            <span>Your new concept will live at: <br />
+              { `${window.location.origin}/#${parentURL}concepts/` }
+            </span>
+            <span><b>{id ? encodeURIComponent(id) : defaultId}</b>/</span>
+          </span>
+      }
       </span>
     )
   }
