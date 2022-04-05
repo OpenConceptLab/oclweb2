@@ -5,20 +5,23 @@ import {
 } from '@mui/material';
 import { Person as PersonIcon, Home as HomeIcon } from '@mui/icons-material';
 import { get, map, uniqBy, startCase, compact } from 'lodash';
-import { ORANGE } from '../../common/constants';
 import APIService from '../../services/APIService';
+import { ORANGE } from '../../common/constants';
+import { getCurrentUser } from '../../common/utils'
 
 const OwnerParentSelection = ({
   selectedOwner, selectedParent, requiredParent, requiredOwner, onChange, disabled
 }) => {
+  const currentUser = getCurrentUser()
   const [owner, setOwner] = React.useState(selectedOwner || null)
   const [parent, setParent] = React.useState(selectedParent || null)
   const [owners, setOwners] = React.useState(compact([selectedOwner]))
   const [parents, setParents] = React.useState(compact([selectedParent]))
 
-  const fetchOrgs = () => APIService.user().orgs().get(null, null, {limit: 1000}).then(response => setOwners(uniqBy([...owners, ...map(response.data, org => ({...org, type: 'organization'}))], 'id')))
+  const fetchOrgs = () => APIService.user().orgs().get(null, null, {limit: 1000}).then(response => setOwners(uniqBy([...owners, {id: currentUser.username, name: currentUser.username, url: currentUser.url, type: 'user'}, ...map(response.data, org => ({...org, type: 'organization'}))], 'id')))
 
   const onOwnerChange = newOwner => {
+    onParentChange(null)
     setOwner(newOwner)
     fetchParents(newOwner)
   }
