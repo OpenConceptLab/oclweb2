@@ -222,37 +222,37 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = callback => {
-  APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/').get(null, null, {limit: 1000}).then(response => {
+  APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/').get(null, null, {limit: 1000, q: ''}).then(response => {
     callback(orderBy(map(reject(response.data, {locale: null}), l => ({id: l.locale, name: `${l.display_name} [${l.locale}]`})), 'name'));});
 }
 
 export const fetchConceptClasses = callback => {
   APIService.orgs('OCL').sources('Classes').appendToUrl('concepts/')
-    .get(null, null, {limit: 1000, brief: true})
+    .get(null, null, {limit: 1000, brief: true, q: ''})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchMapTypes = callback => {
   APIService.orgs('OCL').sources('MapTypes').appendToUrl('concepts/')
-    .get(null, null, {limit: 1000, brief: true})
+    .get(null, null, {limit: 1000, brief: true, q: ''})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDatatypes = callback => {
   APIService.orgs('OCL').sources('Datatypes').appendToUrl('concepts/')
-    .get(null, null, {limit: 1000, brief: true})
+    .get(null, null, {limit: 1000, brief: true, q: ''})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchNameTypes = callback => {
   APIService.orgs('OCL').sources('NameTypes').appendToUrl('concepts/')
-    .get(null, null, {limit: 1000, brief: true})
+    .get(null, null, {limit: 1000, brief: true, q: ''})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
 export const fetchDescriptionTypes = callback => {
   APIService.orgs('OCL').sources('DescriptionTypes').appendToUrl('concepts/')
-    .get(null, null, {limit: 1000, brief: true})
+    .get(null, null, {limit: 1000, brief: true, q: ''})
     .then(response => handleLookupValuesResponse(response.data, callback));
 }
 
