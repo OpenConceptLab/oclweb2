@@ -261,24 +261,6 @@ class MappingForm extends React.Component {
           </div>:
           <div className='col-md-12 no-side-padding'>
             <form>
-              {
-                !edit &&
-                <div style={{width: '100%'}}>
-                  <TextField
-                    error={Boolean(fieldErrors.id)}
-                    id="fields.id"
-                    label="Mapping ID"
-                    placeholder="e.g. A15.0"
-                    helperText={this.getIdHelperText()}
-                    variant="outlined"
-                    fullWidth
-                    onChange={this.onTextFieldChange}
-                    value={fields.id}
-                    disabled={edit}
-                    inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
-                  />
-                </div>
-              }
               <OwnerParentSelection
                 selectedOwner={this.getOwner()}
                 selectedParent={this.getParent()}
@@ -287,6 +269,24 @@ class MappingForm extends React.Component {
                 onChange={this.onParentChange}
                 disabled={edit}
               />
+              {
+                !edit &&
+                  <div style={{marginTop: '15px', width: '100%'}}>
+                    <TextField
+                      error={Boolean(fieldErrors.id)}
+                      id="fields.id"
+                      label="Mapping ID"
+                      placeholder="e.g. A15.0"
+                      helperText={this.getIdHelperText()}
+                      variant="outlined"
+                      fullWidth
+                      onChange={this.onTextFieldChange}
+                      value={fields.id}
+                      disabled={edit}
+                      inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
+                    />
+                  </div>
+              }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
                   openOnFocus

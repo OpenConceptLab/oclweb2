@@ -287,26 +287,6 @@ class ConceptForm extends React.Component {
           </div>:
           <div className='col-md-12 no-side-padding'>
             <form>
-              {
-                !edit &&
-                <div style={{width: '100%'}}>
-                  <TextField
-                    error={Boolean(fieldErrors.id)}
-                    id="fields.id"
-                    label="Concept ID"
-                    placeholder="e.g. A15.0"
-                    helperText={this.getIdHelperText()}
-                    variant="outlined"
-                    fullWidth
-                    required
-                    onChange={this.onTextFieldChange}
-                    onBlur={this.onIdFieldBlur}
-                    value={fields.id}
-                    disabled={edit}
-                    inputProps={{ pattern: CONCEPT_CODE_REGEX }}
-                  />
-                </div>
-              }
               <OwnerParentSelection
                 selectedOwner={this.getOwner()}
                 selectedParent={this.getParent()}
@@ -315,6 +295,26 @@ class ConceptForm extends React.Component {
                 onChange={this.onParentChange}
                 disabled={edit}
               />
+              {
+                !edit &&
+                  <div style={{marginTop: '15px', width: '100%'}}>
+                    <TextField
+                      error={Boolean(fieldErrors.id)}
+                      id="fields.id"
+                      label="Concept ID"
+                      placeholder="e.g. A15.0"
+                      helperText={this.getIdHelperText()}
+                      variant="outlined"
+                      fullWidth
+                      required
+                      onChange={this.onTextFieldChange}
+                      onBlur={this.onIdFieldBlur}
+                      value={fields.id}
+                      disabled={edit}
+                      inputProps={{ pattern: CONCEPT_CODE_REGEX }}
+                    />
+                  </div>
+              }
               <div style={{marginTop: '15px', width: '100%'}}>
                 <Autocomplete
                   freeSolo={get(source, 'custom_validation_schema') !== "OpenMRS"}

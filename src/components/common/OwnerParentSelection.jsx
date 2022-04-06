@@ -49,7 +49,7 @@ const OwnerParentSelection = ({
 
   return (
     <React.Fragment>
-      <div style={{marginTop: '15px', width: '100%'}}>
+      <div style={{width: '100%'}}>
         <Autocomplete
           disableClearable
           openOnFocus
@@ -104,7 +104,7 @@ const OwnerParentSelection = ({
             params => <TextField
                         {...params}
                         required={requiredParent}
-                        label='Parent'
+                        label='Source'
                         variant="outlined"
                         fullWidth
                       />
