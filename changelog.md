@@ -1,3 +1,12 @@
+##### 2.1.2 - Thu Apr 7 09:24:21 2022 +0000
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Breadcrumbs | renaming Manage to Actions
+- [OpenConceptLab/ocl_issues#1247](https://github.com/OpenConceptLab/ocl_issues/issues/1247) | updates on concept/mapping form owner/source selection
+- Concept/Mapping forms loading list of lookups using search
+- [OpenConceptLab/ocl_issues#1269](https://github.com/OpenConceptLab/ocl_issues/issues/1269) | TermBrowser can only queue parallel import
+- [OpenConceptLab/ocl_issues#1247](https://github.com/OpenConceptLab/ocl_issues/issues/1247) | updating id helper text on owner change
+- [OpenConceptLab/ocl_issues#1247](https://github.com/OpenConceptLab/ocl_issues/issues/1247) | added current user in owner list
+- [OpenConceptLab/ocl_issues#1247](https://github.com/OpenConceptLab/ocl_issues/issues/1247) | Concept/Mapping forms | added owner/parent fields
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Source -> Concept/Mapping details | fixing version nav
 ##### 2.1.0 - Mon Apr 4 08:56:50 2022 +0530
 - Upgraded to 2.1.0
 - Breadcrumbs and headers margins
