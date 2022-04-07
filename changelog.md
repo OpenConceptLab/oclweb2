@@ -1,3 +1,274 @@
+##### 2.1.0 - Mon Apr 4 08:56:50 2022 +0530
+- Upgraded to 2.1.0
+- Breadcrumbs and headers margins
+- Imports | making parallel by default
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Concept/Mapping details | removed vertical scrolls within sections | added horizontal scrolls for smaller screens
+- [OpenConceptLab/ocl_issues#1266](https://github.com/OpenConceptLab/ocl_issues/issues/1266) | fixing retire/unretire resources
+- Correcting resource views
+- updated version | ci skip
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Search results inline loader
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | unused code
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Fixing config select
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Org tabs | not shifting width for config form
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Config form to have a close Icon
+- Cascade | not showing repeated id
+- Cascade | showing mapping target owner/source in toolip
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing filters padding
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing popper | not disabling portals
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view | updating width
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view | concept/mapping | id/name click to take to the home
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view | aligning icon
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | org home tabs width fix
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | org header top padding fix
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing breadcrumbs scroll
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | org header/tabs to resize based on resolution
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing resource header on top in split view
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | correcting search results height
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | source/collection split view | correcting margin
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | global search tabs | scrollable when shrink
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | configured org with concepts tab should have actions
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | breadcrumbs in global search
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | utils | method to get params from object
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Concept/Mapping | Keeping consistent header
+- [OpenConceptLab/ocl_issues#1207](https://github.com/OpenConceptLab/ocl_issues/issues/1207) | correcting hotjar setup
+- [OpenConceptLab/ocl_issues#1207](https://github.com/OpenConceptLab/ocl_issues/issues/1207) | added hotjar initialization
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | correcting search input grid class
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | using chevron icon for breadcrumb path
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | source/collection header | making access chip inline
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | source/collection header logo to not overflow
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | custom attributes | fixing spacing
+- Fixing references routes
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | concept/mapping | formating close icon
+- Hierarchy | correcting width
+- Hierarchy visual | scaling svg to fit in window
+- Hierarchy visual | added name with id and other feedbacks
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | custom attributes | expand shrink applied to all type of attributes
+- Concept Hierarchy Filters | using secondary as unapplied state
+- Concept Hierarchy | Added slide transition
+- Removing console warnings
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Org | custom tabs to have absolute url either by id or by number
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | custom attributes | markdown | expand collapse
+- fixing org header top padding
+- [OpenConceptLab/ocl_issues#1241](https://github.com/OpenConceptLab/ocl_issues/issues/1241) | collection home should render child if specified in URL
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view | close option always available
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view dragger position corrected
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | custom attributes | string type are defaulted to markdown
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | styling breadcrumbs on associations
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | showing breadcrumbs on association visualization dialog
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Resource buttons | added tooltip
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Source/Collection | showing canonical url is default visible attribute in header
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | summary alignment center
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Custom attributes | max lines 4 with expand option
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Moved static view filters from configurations to last
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Moved updated since filters in filter drawer
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Aligning search input
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Filter Drawer | aligning content
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Hierarchy visualization | added owner/parent in tooltip
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Hierarchy visualization Filters | keeping icons consistent
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Hierarchy visualization moved to a dialog
+- [OpenConceptLab/ocl_issues#1228](https://github.com/OpenConceptLab/ocl_issues/issues/1228) | org overview settings | show hide pins option
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | aligning breadcrumbs
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Concept associations | no vertical scroll
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Resource breadcrumb border
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Source/Collection Home | styling breadcrumbs to have fixed button widths | styling selected controls
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Source/Collection Home | fixing breadcrumbs content to scroll under
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | reducing selection control spacing
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Concept/Mapping headers | aligning them with container headers | updated tooltip
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Filters | styling for bigger content:
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | multi split view | correcting margins
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Filter drawer is a peristent drawer | handling multi split view
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | breadcrumbs | no need for border
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing typo
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Filters Button style
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Filter drawer search works on type and does deep search
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | styling row actions
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Search Filters | fixing scaling for custom tabs
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Search Filters | moving includeRetired in filter drawer | added facet criteria in URL
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | updated filter icon
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | scrollable filters | separated layout filters
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | global search split view should close immediately on search click
+- [OpenConceptLab/ocl_issues#1214](https://github.com/OpenConceptLab/ocl_issues/issues/1214) | not cascading by default
+- [OpenConceptLab/ocl_issues#1214](https://github.com/OpenConceptLab/ocl_issues/issues/1214) | fixing search vs select expression add
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing concept/mapping edit
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | not include hierarchy path for split view
+- [OpenConceptLab/ocl_issues#1214](https://github.com/OpenConceptLab/ocl_issues/issues/1214) | Add to collection dialog label/tooltip changes
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Filter drawer z-index fix
+- Reference form | adding resources via version select
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing reference add search behaviour
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing select all
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | concept | showing mappings from collection context
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | using uuid rather than id for selected list | highlighting last selected
+- Org overiew text to always have 75% width
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | global search split view
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | removed right click | fixing selected count
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | showing hierarchy option only if root is defined on source
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Version List | correcting width
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Source/Collection/GlobalSearch | added new breadcrumbs | styles to navigate the path with controls
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | removed unused imports
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | styling mapping sections
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | styling concept sections
+- Pins | can hide/collapse | default show
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Global Search | clicking the row should select the item
+- Errbit | URLSearchParams pollyfill | support for IE
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing reference select
+- Waiting for expansion summary to be generated
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | styling filters
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | removed layout toggle
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | not calling children api when they are none
+- [OpenConceptLab/ocl_issues#1211](https://github.com/OpenConceptLab/ocl_issues/issues/1211) | correcting locale auto complete options
+- CIEL background image fix
+- Add files via upload
+- Delete CIEL background for OCL.png
+- Adding background for CIEL organizations
+- Styling selection controls
+- Making button generic
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | aligning selected result controls
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing width reset
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | applying background on full drawer
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | added retired indicator
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | global search concept/mapping actions
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view | dragger | fixing height
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | unused method
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view | dragger hover highlight
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | hiearachy view | selection options
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | hiearachy and split view for source concepts
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | Hierarchy view | on default row click expand and select
+- [OpenConceptLab/ocl_issues#1209](https://github.com/OpenConceptLab/ocl_issues/issues/1209) | Source concepts hierarchy view
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Split view | concept to get parent/children for associations
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Fixing split view resource url
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | removed explicit split view layout option
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing header
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | SplitView initial width for global search
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | SplitView styles for global search
+- Accordian label count to show 0 as well
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view open | keeping margins consistent
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | collection button | not transforming text
+- [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Collection | split view for concepts/mappings
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | overview settings form | header changes
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | overview settings from shrunk headers
+- Splitview | removed expand row | adjusting width
+- Split view | not loading concept hierarchy
+- Fixing concept/mapping navigation url for details
+- [OpenConceptLab/ocl_issues#1198](https://github.com/OpenConceptLab/ocl_issues/issues/1198) | terminal indicator/tooltip only for concept
+- [OpenConceptLab/ocl_issues#1200](https://github.com/OpenConceptLab/ocl_issues/issues/1200) | Add to collection for a new collection can change owner
+- [OpenConceptLab/ocl_issues#1191](https://github.com/OpenConceptLab/ocl_issues/issues/1191) | Collection References by resource search | options to add concepts/mappings/both expressions
+- [OpenConceptLab/ocl_issues#1199](https://github.com/OpenConceptLab/ocl_issues/issues/1199) | new collection url helper text fix
+- Fixing concept home locales
+- [OpenConceptLab/ocl_issues#1191](https://github.com/OpenConceptLab/ocl_issues/issues/1191) | collection add reference | dynamic reference fix
+- [OpenConceptLab/ocl_issues#1191](https://github.com/OpenConceptLab/ocl_issues/issues/1191) | Collection References Listing | no filters options
+- [OpenConceptLab/ocl_issues#1191](https://github.com/OpenConceptLab/ocl_issues/issues/1191) | Collection References | Add expression option with add selected and copy expression
+- Search Filters | more responsive and clubbed into one
+- concept/mapping | always open split view when selected
+- Concept Home | trust the path provided when nested split view
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | svg viewbox style
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | concept hierarchy tree can indicate if a concept is not terminal
+- [OpenConceptLab/ocl_issues#1192](https://github.com/OpenConceptLab/ocl_issues/issues/1192) | fixing org icon ratio
+- [OpenConceptLab/ocl_issues#1191](https://github.com/OpenConceptLab/ocl_issues/issues/1191) | Reference | Add expression option from search results
+- Facets | Owners (org/user), Source and Collections are uppercased
+- [OpenConceptLab/ocl_issues#997](https://github.com/OpenConceptLab/ocl_issues/issues/997) | Reference by expression fix for search of count
+- [OpenConceptLab/ocl_issues#997](https://github.com/OpenConceptLab/ocl_issues/issues/997) | Reference | fixing resource search
+- Collection/Source header | less padding
+- [OpenConceptLab/ocl_issues#1128](https://github.com/OpenConceptLab/ocl_issues/issues/1128) | source/collection async delete handling
+- [OpenConceptLab/ocl_issues#1128](https://github.com/OpenConceptLab/ocl_issues/issues/1128) | source/collection async delete handling
+- Making Concept more responsive
+- Fixing split view selection
+- Making Source more responsive
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | hierarchy to show external parent in tooltip
+- Version selector button | no versions found message
+- Split view | action icon font size
+- Split view | styling header cancel icon
+- [OpenConceptLab/ocl_issues#1187](https://github.com/OpenConceptLab/ocl_issues/issues/1187) | correcting error message
+- [OpenConceptLab/ocl_issues#1187](https://github.com/OpenConceptLab/ocl_issues/issues/1187) | Add Reference from collection form
+- Concept Comparison | moved concept_class from header to diff
+- [OpenConceptLab/ocl_issues#1187](https://github.com/OpenConceptLab/ocl_issues/issues/1187) | can Add references by search as well
+- Collection version list | space between references and expansions count
+- Mapping Split View | added collection-membership panel
+- User status icons for unverified and deactivated
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | wrapping filters
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | added beta text
+- Source/Concept Version List to have exapnded source/collection associations
+- updated package
+- Concept/Mapping | removed old unused tabs view
+- Source | handle split view with new scoped header
+- Mapping | removed tabs from home | added scoped header
+- Concept | removed tabs from home | added scoped header
+- ResponsiveDrawer styles
+- Concept | locales/associations icon update
+- Concept/Mapping Version List | added tip inside tooltip
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | concept cascade visualization | added source for outside source mapping-target-concept
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | cascade visualization tooltip z-index
+- Custom Attributes | removed extra spacings
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | showing nodes from mappings for concepts from other sources
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | handling when children are empty
+- Resolving d3 package import issue
+- Errbit | Collection Home concepts URL fix
+- [OpenConceptLab/ocl_issues#1181](https://github.com/OpenConceptLab/ocl_issues/issues/1181) | errbit | using stacktrace-js to expand on minified backtrace for errors
+- [OpenConceptLab/ocl_issues#1181](https://github.com/OpenConceptLab/ocl_issues/issues/1181) | webpack | added sourcemap devtools in production mode
+- [OpenConceptLab/ocl_issues#1181](https://github.com/OpenConceptLab/ocl_issues/issues/1181) | Adding stacktrace-js
+- [OpenConceptLab/ocl_issues#1184](https://github.com/OpenConceptLab/ocl_issues/issues/1184) | maintaining width same as height for logo image in non-overview tabs
+- Revert "OpenConceptLab/ocl_issues#1184 | maintaining width same as height for logo image in non-overview tabs"
+- [OpenConceptLab/ocl_issues#1184](https://github.com/OpenConceptLab/ocl_issues/issues/1184) | maintaining width same as height for logo image in non-overview tabs
+- [OpenConceptLab/ocl_issues#1184](https://github.com/OpenConceptLab/ocl_issues/issues/1184) | increasing edit logo opacity
+- [OpenConceptLab/ocl_issues#1183](https://github.com/OpenConceptLab/ocl_issues/issues/1183) | concept  reverse
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | sorting by map types
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | alignment of pins and about
+- [OpenConceptLab/ocl_issues#1156](https://github.com/OpenConceptLab/ocl_issues/issues/1156) | members summary | added icon colors
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | filters for visualization
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | styling links and map types
+- [OpenConceptLab/ocl_issues#1179](https://github.com/OpenConceptLab/ocl_issues/issues/1179) | source/collection | active concepts/mappings show unset indicator
+- [OpenConceptLab/ocl_issues#1174](https://github.com/OpenConceptLab/ocl_issues/issues/1174) | Footer | API Version to redirect to Swagger
+- [OpenConceptLab/ocl_issues#1167](https://github.com/OpenConceptLab/ocl_issues/issues/1167) | extracted logout method
+- [OpenConceptLab/ocl_issues#1167](https://github.com/OpenConceptLab/ocl_issues/issues/1167) | not auto logging in user on email confirmation
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | added map types in links
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | fixing recursion
+- fixing left menu styles for bigger resolution
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | fixing tooltip
+- Fixing org overview alignments
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | added fixed color pool
+- [OpenConceptLab/ocl_issues#1171](https://github.com/OpenConceptLab/ocl_issues/issues/1171) | updated footer year
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | visualization to show colors based on map_type and map_types itself
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | getting concept's parent
+- [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | showing hierarchy visualization if there any associations
+- [OpenConceptLab/ocl_issues#1133](https://github.com/OpenConceptLab/ocl_issues/issues/1133) | overview | alignment fix
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | collection expansions permission
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | source/collection | removed versions filter from search
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | fixing about tab nav
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | fixing about tab nav
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | fixing references tab
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | fixing expansion navigation
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | removed expansion chip
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | Expansions feedbacks
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | Version drop down | HEAD is gray and italic
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | Expansions drop down | default icon
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | Expansions drop down | header
+- [OpenConceptLab/ocl_issues#1144](https://github.com/OpenConceptLab/ocl_issues/issues/1144) | version dropdown to have released/autoexpand icons
+- Recent History with expansions
+- Collection breadcrumbs | fixing dropdowns when quick selections happen
+- Collection Version Edit Form | expansion selection field
+- Source/Collection | on route change should fetch new versions
+- Source Home | Breadcrumbs to have version selector
+- Collections | Version & Expansions UI | Breadcrumbs to have version and expansion selectors
+- Collections | Version & Expansions UI | no expansions options and shrunk header
+- Collections | Version & Expansions UI
+- Fixing eslint errors
+- Fixing mui5 theme
+- Updated server id
+- Mui upgrade
+- [OpenConceptLab/ocl_issues#979](https://github.com/OpenConceptLab/ocl_issues/issues/979) | expansions | quick way to mark version default expansion | auto expnasion delete option
+- [OpenConceptLab/ocl_issues#979](https://github.com/OpenConceptLab/ocl_issues/issues/979) | Expansion and Versions UI unified view
+- Fixing expansion creation form for HEAD
+- Fixing collection tab href
+- Added server configs for dev server
+- utils | extracting env from current url
+- [OpenConceptLab/ocl_issues#923](https://github.com/OpenConceptLab/ocl_issues/issues/923) | errbit client setup
+- [OpenConceptLab/ocl_issues#979](https://github.com/OpenConceptLab/ocl_issues/issues/979) | expansion list concepts/mappings view
+- [OpenConceptLab/ocl_issues#979](https://github.com/OpenConceptLab/ocl_issues/issues/979) | Expansions List/Create/Delete UI
+- [OpenConceptLab/ocl_issues#818](https://github.com/OpenConceptLab/ocl_issues/issues/818) | dummy commit to trigger the build
+- fixing login title issue
+- updated webpack config
+- [OpenConceptLab/ocl_issues#818](https://github.com/OpenConceptLab/ocl_issues/issues/818) | collection version form | can set/edit expansion_url
+- [OpenConceptLab/ocl_issues#818](https://github.com/OpenConceptLab/ocl_issues/issues/818) | collection home | auto expand indicator
+- [OpenConceptLab/ocl_issues#818](https://github.com/OpenConceptLab/ocl_issues/issues/818) | new collection form added auto expand attribute
 ##### 2.0.65 - Wed Dec 29 07:08:55 2021 +0000
 - [OpenConceptLab/ocl_issues#1170](https://github.com/OpenConceptLab/ocl_issues/issues/1170) | ConceptForm | concept class auto populates list | concept class can be any free text except when its under OpenMRS validation schema
 - [OpenConceptLab/ocl_issues#1169](https://github.com/OpenConceptLab/ocl_issues/issues/1169) | added tooltip
