@@ -11,7 +11,7 @@ import {
   arrayToObject, fetchDatatypes, fetchNameTypes,
   fetchDescriptionTypes, fetchConceptClasses,
 } from '../../common/utils';
-import { ERROR_RED, CONCEPT_CODE_REGEX } from '../../common/constants';
+import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
 import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
@@ -311,7 +311,6 @@ class ConceptForm extends React.Component {
                       onBlur={this.onIdFieldBlur}
                       value={fields.id}
                       disabled={edit}
-                      inputProps={{ pattern: CONCEPT_CODE_REGEX }}
                     />
                   </div>
               }

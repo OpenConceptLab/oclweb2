@@ -40,7 +40,6 @@ export const AUTH_GROUPS = [
   {id: OCL_FHIR_SERVERS_GROUP, name: 'OCL FHIR Servers'},
   {id: HAPI_FHIR_SERVERS_GROUP, name: 'HAPI FHIR Servers'}
 ];
-export const CONCEPT_CODE_REGEX = "[^\s]+(\s[^\s]+)*";
 export const ROUTE_ID_PATTERN = "[a-zA-Z0-9\-\.\_\@]+";
 export const TABLE_LAYOUT_ID = 'table';
 export const LIST_LAYOUT_ID = 'list';
