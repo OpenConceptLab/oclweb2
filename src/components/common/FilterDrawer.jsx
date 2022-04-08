@@ -186,16 +186,16 @@ const FilterDrawer = props => {
             />
             {
               input &&
-              <Tooltip arrow title='Clear'>
-                <IconButton
-                  type="submit"
-                  style={{padding: '10px'}}
-                  aria-label="clear"
-                  onClick={onSearchClear}
-                  size="large">
-                  <ClearIcon />
-                </IconButton>
-              </Tooltip>
+                <Tooltip arrow title='Clear'>
+                  <IconButton
+                    type="submit"
+                    style={{padding: '10px'}}
+                    aria-label="clear"
+                    onClick={onSearchClear}
+                    size="large">
+                    <ClearIcon />
+                  </IconButton>
+                </Tooltip>
             }
             <Tooltip arrow title='Search'>
               <IconButton
@@ -228,10 +228,10 @@ const FilterDrawer = props => {
                           primary={
                             <span className='col-md-12 no-side-padding flex-vertical-center'>
                               <span
-              onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '12px'}}>
+                                onClick={() => onCheckboxChange({target: {checked: !isChecked}}, field, facet)} className='col-md-9 no-left-padding' style={{textAlign: 'left', cursor: 'pointer', fontSize: '12px', paddingRight: '10px'}}>
                                 {formattedName(field, facet[0])}
                               </span>
-                              <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '12px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100'}}>
+                              <span className='col-md-3 no-right-padding' style={{textAlign: 'right', fontSize: '12px', color: 'rgb(0, 0, 0, 0.8)', fontWeight: '100', paddingLeft: '0px'}}>
                                 {facet[1].toLocaleString()}
                               </span>
                             </span>
@@ -265,7 +265,7 @@ const FilterDrawer = props => {
         </Button>
       </div>
     </Drawer>
-  );
+);
 }
 
 export default FilterDrawer;
