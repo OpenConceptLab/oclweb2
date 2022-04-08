@@ -834,6 +834,9 @@ const ResultsTable = (
   }
 
   React.useEffect(() => !details && onCloseSideDrawer(), [details])
+  React.useEffect(() => setSelectedList(map(getSelectedItems(), 'uuid')) , [results])
+
+  const selectedItems = getSelectedItems()
 
   return (
     <React.Fragment>
@@ -846,15 +849,15 @@ const ResultsTable = (
                 <Table stickyHeader size='small'>
                   <TableHead>
                     {
-                      selectedList.length > 0 &&
+                      selectedItems.length > 0 &&
                       <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
                         <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
                           <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
-                            <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedList.length} Selected</span>
+                            <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedItems.length} Selected</span>
                             {
                               !asReference &&
                               <SelectedResourceControls
-                                selectedItems={getSelectedItems()}
+                                selectedItems={selectedItems}
                                 resource={resource}
                                 onCreateSimilarClick={onCreateSimilarClick}
                                 onCreateMappingClick={onCreateMappingClick}
