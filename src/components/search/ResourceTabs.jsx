@@ -22,20 +22,15 @@ const RESOURCES = {
 }
 
 const ResourceTabs = props => {
-  const activeResource = props.active;
-  const getActiveIndex = () => {
-    return RESOURCES[props.active];
-  }
+  const getActiveIndex = () => RESOURCES[props.active];
   const [value, setValue] = React.useState(getActiveIndex());
   if(getActiveIndex() !== value)
     setValue(getActiveIndex())
 
-  const handleChange = (event, newValue) => {
-    setValue(() => {
-      props.onClick(get(invert(RESOURCES), newValue))
-      return newValue
-    });
-  };
+  const handleChange = (event, newValue) => setValue(() => {
+    props.onClick(get(invert(RESOURCES), newValue))
+    return newValue
+  });
 
   const getIconStyles = (index, color) => {
     const styles = {...ICON_STYLES}
@@ -64,27 +59,25 @@ const ResourceTabs = props => {
   }
 
   const getLabelComponent = (resource, color) => {
-    const isLoading = props.results[activeResource].isLoadingCount
+    const isLoading = props.results[resource].isLoadingCount
     const index = RESOURCES[resource] || 0;
     return (
       <span>
         <span>{startCase(resource)}</span>
         {
           isLoading ?
-          inProgress(index, color) :
-          <span className="resource-count-bubble" style={index === value ? {backgroundColor: color, color: WHITE} : {}}>
-            {get(props.results, `${resource}.total`, 0).toLocaleString()}
-          </span>
+            inProgress(index, color) :
+            <span className="resource-count-bubble" style={index === value ? {backgroundColor: color, color: WHITE} : {}}>
+              {get(props.results, `${resource}.total`, 0).toLocaleString()}
+            </span>
         }
       </span>
     );
   }
 
-  const inProgress = (index, color) => {
-    return <CircularProgress
-             style={{marginLeft: '10px', width: '14px', height: '14px', color: index === value ? color : DARKGRAY}}
-    />
-  }
+  const inProgress = (index, color) => (
+    <CircularProgress style={{marginLeft: '10px', width: '14px', height: '14px', color: index === value ? color : DARKGRAY}} />
+  );
 
   return (
     <div style={{width: '100%'}}>
