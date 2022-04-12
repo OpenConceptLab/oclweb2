@@ -45,3 +45,5 @@ export const TABLE_LAYOUT_ID = 'table';
 export const LIST_LAYOUT_ID = 'list';
 export const SPLIT_LAYOUT_ID = 'split';
 export const OPENMRS_URL = 'https://openmrs.openconceptlab.org';
+export const DEFAULT_FHIR_SERVER_FOR_LOCAL_ID = 6;
+export const FHIR_OPERATIONS = ['$validate-code', '$lookup'];

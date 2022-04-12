@@ -86,7 +86,7 @@ class APIService {
     return {
       url: this.URL,
       method,
-      headers: this.getHeaders(token, headers),
+      headers: headers === false ? {} : this.getHeaders(token, headers),
       params: this.getQueryParams(query),
       data,
     };

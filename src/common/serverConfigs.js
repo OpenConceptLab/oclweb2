@@ -3,7 +3,11 @@ export const SERVER_CONFIGS = [
     id: 1,
     name: 'OCL Local',
     type: 'ocl',
-    url: 'http://127.0.0.1:8000'
+    url: 'http://127.0.0.1:8000',
+    local: true,
+    operations: [
+      '$cascade',
+    ]
   },
   // {
   //   id: 13,
@@ -24,25 +28,39 @@ export const SERVER_CONFIGS = [
     id: 2,
     name: 'OCL QA',
     type: 'ocl',
-    url: 'https://api.qa.openconceptlab.org'
+    url: 'https://api.qa.openconceptlab.org',
+    fhirServerId: 6,
+    operations: [
+      '$cascade',
+    ]
   },
   {
     id: 10,
     name: 'OCL Dev',
     type: 'ocl',
-    url: 'https://api.dev.openconceptlab.org'
+    url: 'https://api.dev.openconceptlab.org',
+    operations: [
+      '$cascade',
+    ]
   },
   {
     id: 3,
     name: 'OCL Demo',
     type: 'ocl',
-    url: 'https://api.demo.openconceptlab.org'
+    url: 'https://api.demo.openconceptlab.org',
+    operations: [
+      '$cascade',
+    ]
   },
   {
     id: 4,
     name: 'OCL Staging',
     type: 'ocl',
-    url: 'https://api.staging.openconceptlab.org'
+    url: 'https://api.staging.openconceptlab.org',
+    fhirServerId: 7,
+    operations: [
+      '$cascade',
+    ]
   },
   {
     id: 11,
@@ -57,20 +75,20 @@ export const SERVER_CONFIGS = [
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
       }
-    }
+    },
+    operations: [
+      '$cascade',
+    ]
   },
   {
     id: 5,
     name: 'OCL Production',
     type: 'ocl',
-    url: 'https://api.openconceptlab.org'
+    url: 'https://api.openconceptlab.org',
+    operations: [
+      '$cascade',
+    ]
   },
-  // {
-  //   id: 5,
-  //   name: 'OCL Bad Server',
-  //   type: 'ocl',
-  //   url: 'https://api.foo.openconceptlab.org'
-  // },
   {
     id: 6,
     name: 'FHIR QA',
@@ -92,8 +110,12 @@ export const SERVER_CONFIGS = [
         logoURL: '/fhir.svg',
         noLeftMenu: true,
         footerText: 'FHIR Server Powered by Open Concept Lab'
-      }
-    }
+      },
+    },
+    operations: [
+      '$lookup',
+      '$validate-code',
+    ]
   },
   {
     id: 7,
@@ -110,7 +132,11 @@ export const SERVER_CONFIGS = [
         name: "Fast Healthcare Interoperability Resources",
         logo_url: '/fhir.svg'
       }
-    }
+    },
+    operations: [
+      '$lookup',
+      '$validate-code',
+    ]
   },
   {
     id: 8,
@@ -126,7 +152,11 @@ export const SERVER_CONFIGS = [
         name: "Fast Healthcare Interoperability Resources",
         logo_url: '/fhir.svg'
       }
-    }
+    },
+    operations: [
+      '$lookup',
+      '$validate-code',
+    ]
   },
   {
     id: 9,
@@ -142,7 +172,11 @@ export const SERVER_CONFIGS = [
         name: "The United States President's Emergency Plan for AIDS Relief",
         logo_url: '/fhir.svg'
       }
-    }
+    },
+    operations: [
+      '$lookup',
+      '$validate-code',
+    ]
   },
   {
     id: 12,
@@ -172,6 +206,10 @@ export const SERVER_CONFIGS = [
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
       }
-    }
+    },
+    operations: [
+      '$lookup',
+      '$validate-code',
+    ]
   },
 ]

@@ -2,12 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { Route, HashRouter, Switch } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider, createTheme, alpha } from '@mui/material/styles';
 import { grey } from "@mui/material/colors";
 import StylesProvider from '@mui/styles/StylesProvider';
 import alertifyjs from 'alertifyjs';
 import App from './components/app/App';
+import LayoutContext from './components/app/LayoutContext';
 import './index.scss';
 import { BLUE, WHITE, BLACK } from './common/constants';
 
@@ -96,10 +97,7 @@ ReactDOM.render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={v5Theme}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <Switch>
-              <Route exact path="/" component={App} />
-              <App />
-            </Switch>
+            <LayoutContext subPages ={(<App />)} />
           </LocalizationProvider>
         </ThemeProvider>
       </StyledEngineProvider>

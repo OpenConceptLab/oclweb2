@@ -10,7 +10,7 @@ import {
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
-  OPENMRS_URL,
+  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID,
 } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
@@ -417,6 +417,19 @@ export const isServerSwitched = () => {
 export const getDefaultServerConfig = () => {
   const APIURL = window.API_URL || process.env.API_URL;
   return find(SERVER_CONFIGS, {url: APIURL});
+}
+
+export const getLocalFHIRServerConfig = () => find(SERVER_CONFIGS, {type: 'fhir', local: true});
+export const getDefaultFHIRServerConfig = () => find(SERVER_CONFIGS, {id: DEFAULT_FHIR_SERVER_FOR_LOCAL_ID});
+
+export const getFHIRServerConfigFromCurrentContext = () => {
+  const server = getAppliedServerConfig();
+  if(server.type === 'fhir')
+    return server;
+  if(server.fhirServerId)
+    return find(SERVER_CONFIGS, {type: 'fhir', id: server.fhirServerId});
+  if(server.local)
+    return getLocalFHIRServerConfig() || getDefaultFHIRServerConfig();
 }
 
 export const canSwitchServer = () => {

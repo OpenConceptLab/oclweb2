@@ -23,10 +23,19 @@ $white: #fff;
     &.menu-open {
         width: calc(100% - 250px) !important;
         margin-left: 250px !important;
+        &.with-operations {
+            width: calc(100% - 600px - 60px) !important;
+        }
     }
     &.no-menu {
         width: 100%;
         margin-left: 0px;
+        &.with-operations {
+            width: calc(100% - 350px) !important;
+        }
+    }
+    &.with-operations {
+        width: calc(100% - 350px) !important;
     }
 }
 .search-input input {

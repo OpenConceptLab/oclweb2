@@ -31,6 +31,7 @@ import Breadcrumbs from '../sources/Breadcrumbs';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
+import { OperationsContext } from '../app/LayoutContext';
 
 const resourceResultStruct = {
   isLoading: false,
@@ -46,6 +47,7 @@ const resourceResultStruct = {
 }
 const DEFAULT_SORT_PARAMS = {sortDesc: '_score'}
 class Search extends React.Component {
+  static contextType = OperationsContext
   constructor(props) {
     super(props);
     this.state = {
@@ -670,6 +672,7 @@ class Search extends React.Component {
   }
 
   getContainerLayoutProps = () => {
+    const { openOperations, menuOpen } = this.context
     const layout = {width: 100, paddingRight: this.props.nested ? 0 : '10px', paddingLeft: this.props.nested ? 0: '10px', marginTop: this.props.nested ? 0 : '60px'}
     if(this.state.openFacetsDrawer && !this.props.nested) {
       layout.width -= 12
@@ -677,8 +680,10 @@ class Search extends React.Component {
       layout.paddingLeft = '5px'
     }
     if(this.state.selectedItem) {
-      if(this.state.width)
-        layout.width = `calc(${layout.width}% - ${this.state.width - 5}px)`
+      if(this.state.width) {
+        let peripheralWidth = openOperations ? (menuOpen ? 250 : 60) : 0
+        layout.width = `calc(${layout.width}% - ${this.state.width - 5}px - ${peripheralWidth}px)`
+      }
       else
         layout.width -= 39.7
     }
@@ -703,7 +708,10 @@ class Search extends React.Component {
     return layout
   }
 
-  onDetailsToggle = item => this.setState({selectedItem: item, width: item ? this.state.width : false})
+  onDetailsToggle = item => this.setState({selectedItem: item, width: item ? this.state.width : false}, () => {
+    const { setOperationItem } = this.context
+    setOperationItem(item)
+  })
 
   onWidthChange = newWidth => this.setState({width: newWidth})
 
@@ -725,6 +733,7 @@ class Search extends React.Component {
   }
 
   render() {
+    const { openOperations } = this.context;
     const {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, onSelectChange,
@@ -926,8 +935,8 @@ class Search extends React.Component {
         {
           selectedItem &&
           <ResponsiveDrawer
-            width='38.5%'
-            paperStyle={{background: '#f1f1f1', marginTop: isInsideConfiguredOrg ? '60px' : '120px'}}
+            width={openOperations ? '28.5%' : '38.5%'}
+            paperStyle={{background: '#f1f1f1', marginTop: isInsideConfiguredOrg ? '60px' : '120px', right: openOperations ? '350px' : 0}}
             variant='persistent'
             isOpen
             noToolbar

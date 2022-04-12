@@ -54,6 +54,7 @@ const ResponsiveDrawer = ({formComponent, variant, isOpen, onClose, onWidthChang
   }, []);
 
   React.useEffect(() => setOpen(isOpen), [isOpen])
+  React.useEffect(() => setDrawerWidth(width || defaultWidth), [width])
 
   return (
     <Drawer

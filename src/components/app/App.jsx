@@ -25,11 +25,14 @@ import ContainerHome from '../fhir/ContainerHome';
 import OwnerHome from '../fhir/OwnerHome';
 import ConceptMapHome from '../fhir/ConceptMapHome';
 import Header from './Header';
+import OperationsDrawer from '../common/OperationsDrawer';
 import Footer from './Footer';
 import RootView from './RootView';
 import DocumentTitle from "./DocumentTitle"
 import './App.scss';
 import { hotjar } from 'react-hotjar';
+import { OperationsContext } from './LayoutContext';
+
 
 const SITE_TITLE = getSiteTitle()
 
@@ -43,7 +46,7 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 const App = props => {
   // For recent history
   setUpRecentHistory(props.history);
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const { openOperations, menuOpen, setMenuOpen } = React.useContext(OperationsContext);
   const setupGA = () => {
     /*eslint no-undef: 0*/
     ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
@@ -71,7 +74,7 @@ const App = props => {
     addLogoutListenerForAllTabs()
     setupGA()
     setupHotJar()
-  })
+  }, [])
 
   const isFHIR = isFHIRServer();
   const setSiteTitle = () => document.getElementsByTagName('title')[0].text = SITE_TITLE;
@@ -79,11 +82,16 @@ const App = props => {
   const siteConfiguration = get(serverConfig, 'info.site')
   const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
   const getClasses = () => {
+    let _classes = 'content'
     if(hideLeftNav)
-      return 'content no-menu'
-    if(menuOpen)
-      return 'content menu-open'
-    return 'content'
+      _classes += ' no-menu'
+    else if(menuOpen)
+      _classes += ' menu-open'
+
+    if(openOperations)
+      _classes += ' with-operations'
+
+    return _classes
   }
 
   setSiteTitle()
@@ -93,6 +101,10 @@ const App = props => {
       <DocumentTitle/>
       <Header {...props} onOpen={setMenuOpen} />
       <ErrorBoundary>
+        {
+          openOperations &&
+            <OperationsDrawer />
+        }
         <main className={getClasses()}>
           <Switch>
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />

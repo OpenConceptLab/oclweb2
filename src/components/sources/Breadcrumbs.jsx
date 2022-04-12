@@ -25,11 +25,13 @@ import VersionSelectorButton from '../common/VersionSelectorButton';
 import ManageSourceChildButton from '../common/ManageSourceChildButton';
 import ConceptForm from '../concepts/ConceptForm';
 import MappingForm from '../mappings/MappingForm';
+import { OperationsContext } from '../app/LayoutContext';
 
 const Breadcrumbs = ({
   params, selectedResource, container, isVersionedObject, versionedObjectURL, versions, onSplitViewClose,
   isLoadingExpansions, expansions, expansion
 }) => {
+  const { openOperations, menuOpen } = React.useContext(OperationsContext);
   const [conceptForm, setConceptForm] = React.useState(false);
   const [mappingForm, setMappingForm] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
@@ -117,12 +119,23 @@ const Breadcrumbs = ({
     })
   }
 
+  const getWidth = () => {
+    if(!menuOpen && !openOperations)
+      return '100%'
+    let width = 0;
+    if(menuOpen)
+      width += 190
+    if(openOperations)
+      width += 350
+    return `calc(100% - ${width}px)`
+  }
+
   return (
     <header className='col-xs-12 no-side-padding'>
       <div className='col-xs-12 no-side-padding container'>
         <div className='col-xs-12 no-side-padding'>
           <div className='col-xs-12 no-side-padding flex-vertical-center'>
-            <span className='flex-vertical-center' style={{width: '100%'}}>
+            <span className='flex-vertical-center' style={{width: getWidth()}}>
               {
                 params.search &&
                 <span className='search-breadcurmbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '125px'}}>

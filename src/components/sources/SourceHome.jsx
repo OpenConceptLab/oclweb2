@@ -13,10 +13,12 @@ import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 import { paramsToURI, paramsToParentURI } from '../../common/utils';
+import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
 
 class SourceHome extends React.Component {
+  static contextType = OperationsContext
   constructor(props) {
     super(props);
     this.state = {
@@ -232,21 +234,27 @@ class SourceHome extends React.Component {
       APIService.new().overrideURL(this.currentPath).get().then(response => this.setState({selected: response.data}))
   }
 
-  onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
+  onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false}, () => {
+    const { setOperationItem } = this.context
+    setOperationItem(selected)
+  })
 
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
 
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
 
   getContainerWidth = () => {
+    const { openOperations } = this.context
     const { selected, width, filtersOpen } = this.state;
     let totalWidth = 100
+    let operationsWidth = openOperations ? 60 : 0;
     if(selected) {
       if(width)
-        totalWidth = `calc(${totalWidth}% - ${width - 10}px)`
+        totalWidth = `calc(${totalWidth}% - ${width - 10}px - ${operationsWidth}px)`
       else
         totalWidth -= filtersOpen ? 46 : 40.5
     }
+
     if(isNumber(totalWidth))
       totalWidth = `${totalWidth}%`
     return totalWidth
@@ -269,6 +277,7 @@ class SourceHome extends React.Component {
   onFilterDrawerToggle = () => this.setState({filtersOpen: !this.state.filtersOpen})
 
   render() {
+    const { openOperations } = this.context;
     const {
       source, versions, isLoading, tab, selectedConfig, customConfigs,
       notFound, accessDenied, permissionDenied, isLoadingVersions, selected, hierarchy, filtersOpen
@@ -335,8 +344,8 @@ class SourceHome extends React.Component {
         {
           selected &&
           <ResponsiveDrawer
-            width="39.5%"
-            paperStyle={{background: '#f1f1f1'}}
+            width={openOperations ? "29.5%" : "39.5%"}
+            paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
             variant='persistent'
             isOpen
             onClose={() => this.setState({selected: null, width: false})}
