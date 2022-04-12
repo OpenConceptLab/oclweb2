@@ -87,6 +87,8 @@ class AddToCollection extends React.Component {
       else if(cascadeMappings)
         queryParams = {cascade: 'sourceMappings'}
 
+      this._collectionName = this.getCollectionName()
+
       APIService.new().overrideURL(selectedCollection.url)
                 .appendToUrl('references/')
                 .put({data: {expressions: expressions}}, null, null, queryParams)
@@ -139,13 +141,15 @@ class AddToCollection extends React.Component {
     )
   }
 
+  getCollectionName = () => this.state.selectedCollection ? `${this.state.selectedCollection.owner}/${this.state.selectedCollection.short_code}` : ''
+
   render() {
     const {
       open, allCollections, collections, selectedCollection, isAdding, isLoading, searchedValue, collectionForm, result
     } = this.state;
     const { references } = this.props
     const openDialog = Boolean(selectedCollection)
-    const collectionName = openDialog ? `${selectedCollection.owner}/${selectedCollection.short_code}`: '';
+    const collectionName = openDialog ? this.getCollectionName() : '';
     const _collections = [...collections, cloneDeep(NEW_COLLECTION)]
     const noOverallCollections = !isLoading && allCollections.length === 0;
     const noSearchResults = !isLoading && searchedValue && collections.length === 0;
@@ -249,7 +253,7 @@ class AddToCollection extends React.Component {
         {
           result &&
           <AddReferencesResult
-            title={`Add Reference(s) Result`}
+            title={`Add Reference(s) to ${this._collectionName} result`}
             open={Boolean(result)}
             onClose={() => this.setState({result: false})}
             result={result}
