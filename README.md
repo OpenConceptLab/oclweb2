@@ -23,6 +23,11 @@ should be turned off by setting the increaseMaintenanceRelease variable to false
 
 A deployment release will be automatically created and pushed to the staging environment.
 
+
+#### Major/minor version increase
+
+In order to increase major/minor version you need to set the new version in [package.json](package.json). Alongside you need to login to our CI and update the next release version on a deployment plan [here](https://ci.openmrs.org/deploy/config/configureDeploymentProjectVersioning.action?id=205619202) with the same value.
+
 ### Deployment
 
 In order to deploy please trigger the deployment [here](https://ci.openmrs.org/deploy/viewDeploymentProjectEnvironments.action?id=205619202).
