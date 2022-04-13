@@ -253,7 +253,7 @@ class AddToCollection extends React.Component {
         {
           result &&
           <AddReferencesResult
-            title={`Add Reference(s) to ${this._collectionName} result`}
+            title={`Results: Add Reference(s) to ${this._collectionName}`}
             open={Boolean(result)}
             onClose={() => this.setState({result: false})}
             result={result}
