@@ -9,9 +9,9 @@ import {
   CancelOutlined as CloseIcon,
   OpenInNew as NewTabIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq } from 'lodash';
+import { get, map, includes, uniq, filter, find } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
-import { getFHIRServerConfigFromCurrentContext, getAppliedServerConfig } from '../../common/utils';
+import { getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser } from '../../common/utils';
 import { FHIR_OPERATIONS, GREEN, ERROR_RED, BLACK } from '../../common/constants';
 import APIService from '../../services/APIService';
 
@@ -114,6 +114,7 @@ const OperationsDrawer = () => {
   const [response, setResponse] = React.useState(null);
   const [url, setURL] = React.useState(null);
   const [isFetching, setIsFetching] = React.useState(false);
+  const [selectedFHIRServerId, setSelectedFHIRServerId] = React.useState(get(fhirServer, 'id', ''))
   const onOperationChange = event => setOperation(event.target.value)
   const onExecute = event => {
     setIsFetching(true)
@@ -122,10 +123,11 @@ const OperationsDrawer = () => {
     const isFHIROperation = includes(FHIR_OPERATIONS, operation)
     if(isFHIROperation) {
       const canonicalURL = get(parent, 'canonical_url') || get(item, 'canonical_url')
-      if(canonicalURL && fhirServer) {
+      const selectedFHIRServer = getSelectedFHIRServer()
+      if(canonicalURL && selectedFHIRServer) {
         const service = APIService.new()
         const canonicalURLAttr = operation === '$lookup' ? 'system' : 'url'
-        service.URL = `${fhirServer.url}${fhirServer.info.baseURI}CodeSystem/${operation}?code=${code}&${canonicalURLAttr}=${canonicalURL}`
+        service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}CodeSystem/${operation}?code=${code}&${canonicalURLAttr}=${canonicalURL}`
         if(version)
           service.URL += `&version=${version}`
         service.get(null, false, null, true).then(_response => {
@@ -138,7 +140,7 @@ const OperationsDrawer = () => {
           setIsFetching(false)
         })
       } else {
-        if(!fhirServer)
+        if(!selectedFHIRServer)
           alertifyjs.error('No FHIR Server found associated to this OCL server.')
         else
           alertifyjs.error('No canonical_url found.')
@@ -164,6 +166,12 @@ const OperationsDrawer = () => {
   const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${get(response, 'status', 'null')})`;
   const isError = get(response, 'status') !== 200 && !isFetching
 
+  const fhirServers = filter(getServerConfigsForCurrentUser(), {type: 'fhir'})
+
+  const onFHIRServerChange = event => setSelectedFHIRServerId(event.target.value)
+
+  const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
+
   return (
     <React.Fragment>
       <Drawer
@@ -183,6 +191,22 @@ const OperationsDrawer = () => {
             </IconButton>
           </div>
           <div className='col-xs-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding'>
+              <FormControl fullWidth>
+                <InputLabel>FHIR Server</InputLabel>
+                <Select
+                  value={selectedFHIRServerId}
+                  label="FHIR Server"
+                  onChange={onFHIRServerChange}
+                >
+                  {
+                    map(fhirServers, server => {
+                      return <MenuItem value={server.id} key={server.id}>{`${server.name} (${server.url})`}</MenuItem>
+                    })
+                  }
+                </Select>
+              </FormControl>
+            </div>
             <div className='col-xs-12 no-side-padding'>
               <h4 style={{marginBottom: '15px'}}>
                 CodeSystem
