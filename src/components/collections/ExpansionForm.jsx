@@ -7,23 +7,64 @@ import {
   set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString
 } from 'lodash';
 import APIService from '../../services/APIService';
-
-const PARAMETER_TOOLTIPS = {
-  filter: "",
-  date: "",
-  count: 0,
-  offset: 0,
-  includeDesignations: true,
-  activeOnly: 'Select this to include unretired concepts/mappings only',
-  includeDefinition: false,
-  excludeNested: false,
-  excludeNotForUI: true,
-  excludePostCoordinated: true,
-  "exclude - system": "",
-  "system - version": "",
-  "check - system - version": "",
-  "force - system - version": "",
-  DEFAULT: 'This parameter is not yet supported.'
+const DEFAULT_TOOLTIP = 'This parameter is not yet supported.'
+const PARAMETERS = {
+  filter: {
+    supported: true,
+    tooltip: "Add search criteria"
+  },
+  activeOnly: {
+    supported: true,
+    tooltip: 'Select this to include unretired concepts/mappings only'
+  },
+  date: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  count: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  offset: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  includeDesignations: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  includeDefinition: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  excludeNested: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  excludeNotForUI: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  excludePostCoordinated: {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  "exclude - system": {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  "system - version": {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  "check - system - version": {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
+  "force - system - version": {
+    supported: false,
+    tooltip: DEFAULT_TOOLTIP
+  },
 }
 
 class ExpansionForm extends React.Component {
@@ -189,10 +230,7 @@ class ExpansionForm extends React.Component {
               </div>
               {
                 map(pickBy(fields.parameters, isBoolean), (value, attr) => {
-                  const isActiveOnly = attr === 'activeOnly'
-                  const tooltip = isActiveOnly ?
-                                  PARAMETER_TOOLTIPS[attr] :
-                                  PARAMETER_TOOLTIPS.DEFAULT;
+                  const parameter = PARAMETERS[attr]
                   return (
                     <div className='col-md-4' key={attr}>
                       <FormControlLabel
@@ -203,13 +241,13 @@ class ExpansionForm extends React.Component {
                               {startCase(attr)}
                             </span>
                             <span style={{marginRight: '5px'}} className='flex-vertical-center'>
-                              <Tooltip title={tooltip}>
-                                <InfoIcon color={isActiveOnly ? 'primary' : 'disabled'} fontSize='small' />
+                              <Tooltip title={parameter.tooltip}>
+                                <InfoIcon color={parameter.supported ? 'primary' : 'disabled'} fontSize='small' />
                               </Tooltip>
                             </span>
                           </span>
                         }
-                        disabled={!isActiveOnly}
+                        disabled={!parameter.supported}
                       />
                     </div>
                   )
@@ -217,6 +255,7 @@ class ExpansionForm extends React.Component {
               }
               {
                 map(pickBy(fields.parameters, isNumber), (value, attr) => {
+                  const parameter = PARAMETERS[attr]
                   return (
                     <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
                       <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
@@ -229,12 +268,12 @@ class ExpansionForm extends React.Component {
                           onChange={this.onTextFieldChange}
                           value={fields.parameters[attr]}
                           type='number'
-                          disabled
+                          disabled={!parameter.supported}
                         />
                       </div>
                       <div className='col-md-1 no-side-padding flex-vertical-center'>
-                        <Tooltip title={PARAMETER_TOOLTIPS.DEFAULT}>
-                          <InfoIcon color='disabled' fontSize='small' />
+                        <Tooltip title={parameter.tooltip}>
+                          <InfoIcon color={parameter.supported ? 'primary' : 'disabled'} fontSize='small' />
                         </Tooltip>
                       </div>
                     </div>
@@ -243,6 +282,7 @@ class ExpansionForm extends React.Component {
               }
               {
                 map(pickBy(fields.parameters, isString), (value, attr) => {
+                  const parameter = PARAMETERS[attr]
                   return (
                     <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
                       <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
@@ -254,12 +294,12 @@ class ExpansionForm extends React.Component {
                           fullWidth
                           onChange={this.onTextFieldChange}
                           value={fields.parameters[attr]}
-                          disabled
+                          disabled={!parameter.supported}
                         />
                       </div>
                       <div className='col-md-1 no-side-padding flex-vertical-center'>
-                        <Tooltip title={PARAMETER_TOOLTIPS.DEFAULT}>
-                          <InfoIcon color='disabled' fontSize='small' />
+                        <Tooltip title={parameter.tooltip}>
+                          <InfoIcon color={parameter.supported ? 'primary' : 'disabled'} fontSize='small' />
                         </Tooltip>
                       </div>
                     </div>
