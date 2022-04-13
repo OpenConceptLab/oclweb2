@@ -1,8 +1,8 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Divider, Tooltip, Button,
-  IconButton, CircularProgress, Card, CardContent
+  Divider, Tooltip, Button, IconButton, CircularProgress, Card, CardContent,
+  Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import {
   map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject, forEach
@@ -14,6 +14,7 @@ import {
   AspectRatio as ExpansionIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
   CheckCircle as DefaultIcon, BrightnessAuto as AutoIcon,
+  MenuOpen as ViewParametersIcon
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
@@ -58,6 +59,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
   const [selectedVersion, setSelectedVersion] = React.useState();
   const [expansions, setExpansions] = React.useState({})
   const [loadingExpansions, setLoadingExpansions] = React.useState({})
+  const [openExpansionDialog, setOpenExpansionDialog] = React.useState(false);
   const onEditClick = version => {
     setSelectedVersion(version)
     setVersionForm(true)
@@ -168,11 +170,11 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                     <span><b>{version.version}</b></span>
                     {
                       version.autoexpand &&
-                      <span style={{paddingTop: '5px'}}>
-                        <Tooltip arrow title='Auto Expanded' placement='right'>
-                          <ExpansionIcon style={{color: GREEN, marginLeft: '15px', width: '16px'}} />
-                        </Tooltip>
-                      </span>
+                        <span style={{paddingTop: '5px'}}>
+                          <Tooltip arrow title='Auto Expanded' placement='right'>
+                            <ExpansionIcon style={{color: GREEN, marginLeft: '15px', width: '16px'}} />
+                          </Tooltip>
+                        </span>
                     }
                   </div>
                   <span style={{display: 'inline-block'}}>
@@ -195,48 +197,48 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                   <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
                     {
                       canEdit && !isHEAD &&
-                      <React.Fragment>
-                        <Tooltip arrow title='Edit Version'>
-                          <IconButton onClick={() => onEditClick(version)} size="small">
-                            <EditIcon fontSize='inherit' />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip arrow title={version.released ? 'UnRelease Version' : 'Release Version'}>
-                          <IconButton
-                            color={version.released ? 'primary' : 'default' }
-                            onClick={() => onReleaseClick(version)}
-                            size="small">
-                            <ReleaseIcon fontSize='inherit' />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip arrow title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
-                          <IconButton
-                            className={version.retired ? 'retired-red' : ''}
-                            color={version.retired ? 'primary' : 'default' }
-                            onClick={() => onRetireClick(version)}
-                            size="small">
-                            <RetireIcon fontSize='inherit' />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip arrow title='Delete Version'>
-                          <IconButton
-                            disabled={version.retired}
-                            onClick={() => onDeleteClick(version)}
-                            size="small">
-                            <DeleteIcon fontSize='inherit' />
-                          </IconButton>
-                        </Tooltip>
-                      </React.Fragment>
+                        <React.Fragment>
+                          <Tooltip arrow title='Edit Version'>
+                            <IconButton onClick={() => onEditClick(version)} size="small">
+                              <EditIcon fontSize='inherit' />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip arrow title={version.released ? 'UnRelease Version' : 'Release Version'}>
+                            <IconButton
+                              color={version.released ? 'primary' : 'default' }
+                              onClick={() => onReleaseClick(version)}
+                              size="small">
+                              <ReleaseIcon fontSize='inherit' />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip arrow title={version.retired ? 'UnRetire Version' : 'Retire Version'}>
+                            <IconButton
+                              className={version.retired ? 'retired-red' : ''}
+                              color={version.retired ? 'primary' : 'default' }
+                              onClick={() => onRetireClick(version)}
+                              size="small">
+                              <RetireIcon fontSize='inherit' />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip arrow title='Delete Version'>
+                            <IconButton
+                              disabled={version.retired}
+                              onClick={() => onDeleteClick(version)}
+                              size="small">
+                              <DeleteIcon fontSize='inherit' />
+                            </IconButton>
+                          </Tooltip>
+                        </React.Fragment>
                     }
                     {
                       version &&
-                      <ConceptContainerExport
-                        isHEAD={isHEAD}
-                        title={`Export Version ${version.id}`}
-                        version={version}
-                        resource='collection'
-                        size='small'
-                      />
+                        <ConceptContainerExport
+                          isHEAD={isHEAD}
+                          title={`Export Version ${version.id}`}
+                          version={version}
+                          resource='collection'
+                          size='small'
+                        />
                     }
                     <Tooltip arrow title='Explore Version'>
                       <IconButton href={`#${version.concepts_url}`} color='primary' size="small">
@@ -253,24 +255,24 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                 <div className='col-md-9' style={{padding: '2px 5px'}}>
                   {
                     isLoadingExpansions ?
-                    <div className='col-md-12' style={{textAlign: 'center', marginTop: '20px'}}>
-                      <CircularProgress />
-                    </div> :
+                      <div className='col-md-12' style={{textAlign: 'center', marginTop: '20px'}}>
+                        <CircularProgress />
+                      </div> :
                     (
                       isEmpty(versionExpansions) && loadingExpansions[version.uuid] === false ?
-                      <div className='flex-column-center' style={{height: '100%'}}>
-                        {
-                          canEdit ?
-                          <Button
-                            onClick={() => onCreateExpansionClick(version)}
-                            variant="text"
-                            size='small'
-                            style={{textTransform: 'inherit'}}>
-                            Create First Expansion for this version
-                          </Button> :
-                          <p>No expansions yet</p>
-                        }
-                      </div> :
+                        <div className='flex-column-center' style={{height: '100%'}}>
+                          {
+                            canEdit ?
+                              <Button
+                                onClick={() => onCreateExpansionClick(version)}
+                                variant="text"
+                                size='small'
+                                style={{textTransform: 'inherit'}}>
+                                Create First Expansion for this version
+                              </Button> :
+                            <p>No expansions yet</p>
+                          }
+                        </div> :
                       map(versionExpansions, expansion => {
                         const isDefault = expansion.default
                         const isAuto = expansion.auto
@@ -290,19 +292,19 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                                   <span><b>{expansion.mnemonic}</b></span>
                                   {
                                     isDefault &&
-                                    <span style={{paddingTop: '5px'}}>
-                                      <Tooltip arrow title='Default Expansion' placement='right'>
-                                        <DefaultIcon style={{color: GREEN, marginLeft: '10px', width: '16px'}} />
-                                      </Tooltip>
-                                    </span>
+                                      <span style={{paddingTop: '5px'}}>
+                                        <Tooltip arrow title='Default Expansion' placement='right'>
+                                          <DefaultIcon style={{color: GREEN, marginLeft: '10px', width: '16px'}} />
+                                        </Tooltip>
+                                      </span>
                                   }
                                   {
                                     isAuto &&
-                                    <span style={{paddingTop: '5px'}}>
-                                      <Tooltip arrow title='Auto Generated Expansion' placement='right'>
-                                        <AutoIcon style={{marginLeft: '10px', width: '16px'}} />
-                                      </Tooltip>
-                                    </span>
+                                      <span style={{paddingTop: '5px'}}>
+                                        <Tooltip arrow title='Auto Generated Expansion' placement='right'>
+                                          <AutoIcon style={{marginLeft: '10px', width: '16px'}} />
+                                        </Tooltip>
+                                      </span>
                                   }
                                 </div>
                                 <span>
@@ -339,16 +341,16 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                                 </Tooltip>
                                 {
                                   canEdit &&
-                                  <Tooltip arrow title='Delete Expansion'>
-                                    <span>
-                                      <IconButton
-                                        disabled={expansion.retired || isDefault}
-                                        onClick={() => onDeleteExpansionClick(expansion)}
-                                        size="medium">
-                                        <DeleteIcon fontSize='inherit' />
-                                      </IconButton>
-                                    </span>
-                                  </Tooltip>
+                                    <Tooltip arrow title='Delete Expansion'>
+                                      <span>
+                                        <IconButton
+                                          disabled={expansion.retired || isDefault}
+                                          onClick={() => onDeleteExpansionClick(expansion)}
+                                          size="medium">
+                                          <DeleteIcon fontSize='inherit' />
+                                        </IconButton>
+                                      </span>
+                                    </Tooltip>
                                 }
                                 <Tooltip arrow title='Explore Expansion'>
                                   <IconButton href={`#${expansion.url}`} color='primary' size="medium">
@@ -358,6 +360,11 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                                 <Tooltip arrow title='Copy URL'>
                                   <IconButton onClick={() => onCopyClick(expansion.url)} size="medium">
                                     <CopyIcon fontSize='inherit' />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip arrow title='View Expanson Parameters'>
+                                  <IconButton onClick={() => setOpenExpansionDialog(expansion)} size="medium">
+                                    <ViewParametersIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
                               </div>
@@ -375,14 +382,30 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
       }
       {
         selectedVersion &&
-        <CommonFormDrawer
-          style={{zIndex: 1202}}
-          isOpen={versionForm}
-          onClose={onEditCancel}
-          formComponent={
-            <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} resource={resource} expansions={get(expansions, selectedVersion.uuid, [])} reloadOnSuccess />
-          }
-        />
+          <CommonFormDrawer
+            style={{zIndex: 1202}}
+            isOpen={versionForm}
+            onClose={onEditCancel}
+            formComponent={
+              <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} resource={resource} expansions={get(expansions, selectedVersion.uuid, [])} reloadOnSuccess />
+            }
+          />
+      }
+      {
+        openExpansionDialog &&
+          <Dialog open onClose={() => setOpenExpansionDialog(false)}>
+            <DialogTitle>
+              {`Expansion: ${openExpansionDialog.mnemonic}`}
+            </DialogTitle>
+            <DialogContent>
+              <pre>{JSON.stringify(openExpansionDialog.parameters, undefined, 2)}</pre>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenExpansionDialog(false)} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
       }
     </div>
   );
