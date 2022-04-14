@@ -126,6 +126,7 @@ const ManageSourceChildButton = ({
                 </ListItemText>
               </MenuItem>
             )}
+            tooltipPlacement='right'
           />
           {
             instance.concept_class && isAdmin &&

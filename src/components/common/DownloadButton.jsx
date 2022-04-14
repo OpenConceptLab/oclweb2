@@ -7,7 +7,7 @@ import { isArray, map, toUpper, includes, forEach, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import { downloadObject, arrayToCSV, downloadFromURL, toFullAPIURL } from '../../common/utils';
 
-const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip, iconStyle}) => {
+const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, queryParams, tooltip, iconStyle, tooltipPlacement}) => {
   const fileName = filename || 'download';
   const [fetchedResources, setFetchedResources] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -64,7 +64,7 @@ const DownloadButton = ({formats, includeCSV, resource, filename, buttonFunc, qu
 
   return (
     <React.Fragment>
-      <Tooltip arrow title={tooltipTitle}>
+      <Tooltip arrow title={tooltipTitle} placement={tooltipPlacement}>
         {
           buttonFunc ? buttonFunc({onClick: event => setAnchorEl(event.currentTarget)}) :
           <Button onClick={event => setAnchorEl(event.currentTarget)} style={{minWidth: 'unset', padding: '8px 11px', fontSize: '0.9375rem'}} color='secondary'>

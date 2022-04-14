@@ -242,10 +242,13 @@ const OperationsDrawer = () => {
                 </FormControl>
               </div>
             </div>
+            <div className='col-xs-12 no-side-padding' style={{textAlign: 'right', margin: '15px 0'}}>
+              <Button onClick={onExecute} variant='contained' disabled={!operation}>Execute</Button>
+            </div>
             {
               (response || isFetching) &&
                 <div className='col-xs-12 no-side-padding'>
-                  <h4 style={{marginBottom: '0px', color: isError ? ERROR_RED : (isFetching ? BLACK : GREEN)}}>
+                  <h4 style={{margin: 0, color: isError ? ERROR_RED : (isFetching ? BLACK : GREEN)}}>
                     <i>{responseLabel}</i>
                     {
                       !isFetching &&
@@ -261,13 +264,11 @@ const OperationsDrawer = () => {
                       displayDataTypes={false}
                       displayObjectSize={false}
                       src={get(response, 'data') || get(response, 'error')}
+                      style={{overflow: 'auto'}}
                     />
                   </div>
                 </div>
             }
-            <div className='col-xs-12 no-side-padding' style={{textAlign: 'right', margin: '15px 0'}}>
-              <Button onClick={onExecute} variant='contained' disabled={!operation}>Execute</Button>
-            </div>
           </div>
         </div>
       </Drawer>
