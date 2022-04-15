@@ -113,7 +113,7 @@ const SelectedResourceControls = ({
           style={{marginLeft: MARGIN}}
           className='selected-control-chip'
           {...buttonProps}
-          label='Delete'
+          label='Remove Reference'
         />
       }
       { extraControls }
