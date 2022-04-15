@@ -2,6 +2,7 @@ import React from 'react';
 import MappingCollections from '../common/SourceChildCollections';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 import VersionList from '../common/VersionList';
+import ResourceReferences from '../common/ResourceReferences';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -24,11 +25,17 @@ const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollecti
         />
         {
           scoped !== 'collection' &&
-          <MappingCollections instance={mapping} isLoadingCollections={isLoadingCollections} />
+            <MappingCollections instance={mapping} isLoadingCollections={isLoadingCollections} />
         }
       </div>
       {
-        scoped !== 'collection' &&
+        scoped === 'collection' ?
+          <ResourceReferences
+            resource='mapping'
+            references={mapping.references}
+            headingStyles={ACCORDIAN_HEADING_STYLES}
+            detailStyles={ACCORDIAN_DETAILS_STYLES}
+          /> :
         <div className={classes} style={{paddingTop: '10px'}}>
           <VersionList versions={versions} resource='mapping' />
         </div>

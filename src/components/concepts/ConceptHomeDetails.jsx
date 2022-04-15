@@ -3,6 +3,7 @@ import { get } from 'lodash';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from '../common/SourceChildCollections';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
+import ResourceReferences from '../common/ResourceReferences';
 import HomeLocales from './HomeLocales';
 import VersionList from '../common/VersionList';
 
@@ -44,7 +45,13 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
       <div className={classes} style={{paddingTop: '10px'}}>
         <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} childConcepts={childConcepts} parentConcepts={parentConcepts} isLoadingChildren={isLoadingChildren} isLoadingParents={isLoadingParents} source={source} />
         {
-          scoped !== 'collection' &&
+          scoped === 'collection' ?
+            <ResourceReferences
+              resource='concept'
+              references={concept.references}
+              headingStyles={ACCORDIAN_HEADING_STYLES}
+              detailStyles={ACCORDIAN_DETAILS_STYLES}
+            /> :
           <React.Fragment>
             <ConceptCollections instance={concept} isLoadingCollections={isLoadingCollections} />
             <VersionList versions={versions} resource='concept' />
