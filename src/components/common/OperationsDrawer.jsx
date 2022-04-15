@@ -2,7 +2,8 @@ import React from 'react';
 import ReactJson from 'react-json-view'
 import alertifyjs from 'alertifyjs';
 import {
-  Toolbar, Button, Drawer, IconButton, TextField, FormControl, InputLabel, Select, MenuItem
+  Toolbar, Button, Drawer, IconButton, TextField, FormControl, InputLabel, Select, MenuItem,
+  ButtonGroup
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {
@@ -82,7 +83,7 @@ const OperationsDrawer = () => {
   const currentServer = getAppliedServerConfig()
   const fhirServer = getFHIRServerConfigFromCurrentContext()
   const operations = uniq([...get(fhirServer, 'operations', []), ...get(currentServer, 'operations', [])])
-  const [parent, setParent] = React.useState(null)
+  const [byURL, setByURL] = React.useState(false)
 
   React.useEffect(
     () => {
@@ -101,13 +102,16 @@ const OperationsDrawer = () => {
   const getParent = _item => {
     _item ||= item
     if(shouldGetParent(_item)) {
-      APIService.new().overrideURL(`${_item.owner_url}sources/${_item.source}/`).get().then(res => setParent(res.data))
+      APIService.new().overrideURL(`${_item.owner_url}sources/${_item.source}/`).get().then(res => {
+        setCanonicalURL(get(res.data, 'canonical_url') || '')
+      })
     }
   }
   const getItemCodeSystem = (_item) => get(_item || item, 'source') || ''
   const getItemCode = (_item) => get(_item || item, 'id') || ''
   const [item, setItem] = React.useState(operationItem)
   const [codeSystem, setCodeSystem] = React.useState(getItemCodeSystem)
+  const [canonicalURL, setCanonicalURL] = React.useState(get(operationItem, 'canonical_url') || '')
   const [code, setCode] = React.useState(getItemCode)
   const [version, setVersion] = React.useState('HEAD')
   const [operation, setOperation] = React.useState('');
@@ -122,7 +126,6 @@ const OperationsDrawer = () => {
     event.stopPropagation()
     const isFHIROperation = includes(FHIR_OPERATIONS, operation)
     if(isFHIROperation) {
-      const canonicalURL = get(parent, 'canonical_url') || get(item, 'canonical_url')
       const selectedFHIRServer = getSelectedFHIRServer()
       if(canonicalURL && selectedFHIRServer) {
         const service = APIService.new()
@@ -159,18 +162,17 @@ const OperationsDrawer = () => {
     }
   }
 
-  const onOpenInNewTab = () => {
-    window.open(url)
-  }
-
+  const onOpenInNewTab = () => window.open(url)
   const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${get(response, 'status', 'null')})`;
   const isError = get(response, 'status') !== 200 && !isFetching
-
   const fhirServers = filter(getServerConfigsForCurrentUser(), {type: 'fhir'})
-
   const onFHIRServerChange = event => setSelectedFHIRServerId(event.target.value)
-
   const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
+  const toggleByURL = _byURL => {
+    if(_byURL && operation === '$cascade')
+      setOperation('')
+    setByURL(_byURL)
+  }
 
   return (
     <React.Fragment>
@@ -191,6 +193,16 @@ const OperationsDrawer = () => {
             </IconButton>
           </div>
           <div className='col-xs-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding' style={{textAlign: 'center', marginBottom: '20px'}}>
+              <ButtonGroup size='small'>
+                <Button variant={byURL ? 'outlined' : 'contained'} onClick={() => toggleByURL(false)}>
+                  Find Source
+                </Button>
+                <Button variant={byURL ? 'contained' : 'outlined'} onClick={() => toggleByURL(true)}>
+                  Enter URL
+                  </Button>
+                </ButtonGroup>
+            </div>
             <div className='col-xs-12 no-side-padding'>
               <FormControl fullWidth>
                 <InputLabel>FHIR Server</InputLabel>
@@ -207,17 +219,28 @@ const OperationsDrawer = () => {
                 </Select>
               </FormControl>
             </div>
-            <div className='col-xs-12 no-side-padding'>
-              <h4 style={{marginBottom: '15px'}}>
-                CodeSystem
-              </h4>
-              <div className='col-xs-8 no-left-padding'>
-                <TextField fullWidth value={codeSystem} label='CodeSystem' />
+            {
+              byURL ?
+                <div className='col-xs-12 no-side-padding'>
+                  <h4 style={{marginBottom: '15px'}}>
+                    Canonical URL
+                  </h4>
+                  <div className='col-xs-12 no-left-padding'>
+                    <TextField fullWidth value={canonicalURL} label='CanonicalURL' onChange={event => setCanonicalURL(event.target.value)} />
+                  </div>
+                </div> :
+              <div className='col-xs-12 no-side-padding'>
+                <h4 style={{marginBottom: '15px'}}>
+                  CodeSystem
+                </h4>
+                <div className='col-xs-8 no-left-padding'>
+                  <TextField fullWidth value={codeSystem} label='CodeSystem' />
+                </div>
+                <div className='col-xs-4 no-side-padding'>
+                  <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} />
+                </div>
               </div>
-              <div className='col-xs-4 no-side-padding'>
-                <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} />
-              </div>
-            </div>
+            }
             <div className='col-xs-12 no-side-padding'>
               <h4 style={{marginTop: '30px', marginBottom: '15px'}}>
                 Resource & Operation
@@ -235,7 +258,7 @@ const OperationsDrawer = () => {
                   >
                     {
                       map(operations, _operation => {
-                        return <MenuItem value={_operation} key={_operation}>{_operation}</MenuItem>
+                        return <MenuItem value={_operation} key={_operation} disabled={byURL && _operation === '$cascade'}>{_operation}</MenuItem>
                       })
                     }
                   </Select>
