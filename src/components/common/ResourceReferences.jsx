@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, Typography, List, ListItem, Tooltip
+  Accordion, AccordionSummary, AccordionDetails, List, ListItem, Tooltip
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
