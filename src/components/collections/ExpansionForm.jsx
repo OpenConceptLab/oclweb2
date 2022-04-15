@@ -49,19 +49,19 @@ const PARAMETERS = {
     supported: false,
     tooltip: DEFAULT_TOOLTIP
   },
-  "exclude - system": {
+  "exclude-system": {
+    supported: true,
+    tooltip: 'Code system, or a particular version of a code system to be excluded from the value set expansion. The format is the same as a canonical URL: [system]|[version] - e.g. http://loinc.org|2.56'
+  },
+  "system-version": {
+    supported: true,
+    tooltip: 'Specifies a version to use for a system, if the value set does not specify which one to use. The format is the same as a canonical URL: [system]|[version] - e.g. http://loinc.org|2.56'
+  },
+  "check-system-version": {
     supported: false,
     tooltip: DEFAULT_TOOLTIP
   },
-  "system - version": {
-    supported: false,
-    tooltip: DEFAULT_TOOLTIP
-  },
-  "check - system - version": {
-    supported: false,
-    tooltip: DEFAULT_TOOLTIP
-  },
-  "force - system - version": {
+  "force-system-version": {
     supported: false,
     tooltip: DEFAULT_TOOLTIP
   },
@@ -78,7 +78,9 @@ class ExpansionForm extends React.Component {
         canonical_url: '',
         parameters: {
           filter: "",
-          date: "",
+          "exclude-system": "",
+          "system-version": "",
+  date: "",
           count: 0,
           offset: 0,
           activeOnly: false,
@@ -87,10 +89,8 @@ class ExpansionForm extends React.Component {
           excludeNested: false,
           excludeNotForUI: true,
           excludePostCoordinated: true,
-          "exclude - system": "",
-          "system - version": "",
-          "check - system - version": "",
-          "force - system - version": ""
+          "check-system-version": "",
+          "force-system-version": ""
         },
       },
       fieldErrors: {},
@@ -254,6 +254,32 @@ class ExpansionForm extends React.Component {
                 })
               }
               {
+                map(pickBy(fields.parameters, isString), (value, attr) => {
+                  const parameter = PARAMETERS[attr]
+                  return (
+                    <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
+                      <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
+                        <TextField
+                          size='small'
+                          id={`fields.parameters.${attr}`}
+                          label={startCase(attr)}
+                          variant="outlined"
+                          fullWidth
+                          onChange={this.onTextFieldChange}
+                          value={fields.parameters[attr]}
+                          disabled={!parameter.supported}
+                        />
+                      </div>
+                      <div className='col-md-1 no-side-padding flex-vertical-center'>
+                        <Tooltip title={parameter.tooltip}>
+                          <InfoIcon color={parameter.supported ? 'primary' : 'disabled'} fontSize='small' />
+                        </Tooltip>
+                      </div>
+                    </div>
+                  )
+                })
+              }
+              {
                 map(pickBy(fields.parameters, isNumber), (value, attr) => {
                   const parameter = PARAMETERS[attr]
                   return (
@@ -268,32 +294,6 @@ class ExpansionForm extends React.Component {
                           onChange={this.onTextFieldChange}
                           value={fields.parameters[attr]}
                           type='number'
-                          disabled={!parameter.supported}
-                        />
-                      </div>
-                      <div className='col-md-1 no-side-padding flex-vertical-center'>
-                        <Tooltip title={parameter.tooltip}>
-                          <InfoIcon color={parameter.supported ? 'primary' : 'disabled'} fontSize='small' />
-                        </Tooltip>
-                      </div>
-                    </div>
-                  )
-                })
-              }
-              {
-                map(pickBy(fields.parameters, isString), (value, attr) => {
-                  const parameter = PARAMETERS[attr]
-                  return (
-                    <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
-                      <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
-                        <TextField
-                          size='small'
-                          id={`fields.parameters.${attr}`}
-                          label={startCase(attr)}
-                          variant="outlined"
-                          fullWidth
-                          onChange={this.onTextFieldChange}
-                          value={fields.parameters[attr]}
                           disabled={!parameter.supported}
                         />
                       </div>
