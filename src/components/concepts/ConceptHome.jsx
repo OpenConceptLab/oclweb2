@@ -54,7 +54,9 @@ class ConceptHome extends React.Component {
   }
 
   getConceptURLFromPath() {
-    const { location, match, scoped } = this.props;
+    const { location, match, scoped, parentURL, concept } = this.props;
+    if(scoped === 'collection')
+      return `${parentURL}concepts/${concept.id}/${concept.version}/`
     if(scoped)
       return location.pathname
 
@@ -105,7 +107,6 @@ class ConceptHome extends React.Component {
                         this.getHierarchy()
                     })
                 })
-
     })
   }
 

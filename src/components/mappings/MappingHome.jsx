@@ -35,7 +35,9 @@ class MappingHome extends React.Component {
   }
 
   getMappingURLFromPath() {
-    const { location, match, scoped } = this.props;
+    const { location, match, scoped, parentURL, mapping } = this.props;
+    if(scoped === 'collection')
+      return `${parentURL}mappings/${mapping.id}/${mapping.version}/`
     if(scoped)
       return location.pathname
     if(location.pathname.indexOf('/details') > -1)

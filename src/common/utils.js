@@ -112,9 +112,9 @@ export const copyToClipboard = (copyText, message) => {
     alertifyjs.success(message);
 }
 
-export const toParentURI = uri => uri.split('/').splice(0, 5).join('/');
+export const toParentURI = uri => uri.split('/').splice(0, 5).join('/') + '/';
 
-export const toOwnerURI = uri => uri.split('/').splice(0, 3).join('/');
+export const toOwnerURI = uri => uri.split('/').splice(0, 3).join('/') + '/';
 
 export const headFirst = versions => compact([find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})]);
 
