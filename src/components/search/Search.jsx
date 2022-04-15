@@ -128,6 +128,23 @@ class Search extends React.Component {
     return result
   }
 
+  formatResourceType = resource => {
+    if(resource === 'user')
+      return 'users'
+    if(includes(['org', 'orgs', 'organization'], resource))
+      return 'organizations'
+    if(includes(['concept'], resource))
+      return 'concepts'
+    if(includes(['mapping'], resource))
+      return 'mappings'
+    if(includes(['source'], resource))
+      return 'sources'
+    if(includes(['collection'], resource))
+      return 'collections'
+
+    return resource || 'concepts'
+  }
+
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     let userFilters = this.props.userFilters || {};
@@ -159,7 +176,7 @@ class Search extends React.Component {
       limit: this.getLayoutAttrValue('limit', 'int'),
       page: this.getLayoutAttrValue('page', 'int'),
       sortParams: this.getLayoutAttrValue('sortParams', 'obj') || DEFAULT_SORT_PARAMS,
-      resource: queryParams.get('type') || this.props.resource || 'concepts',
+      resource: this.formatResourceType(queryParams.get('type') || this.props.resource || 'concepts'),
       isLoading: true,
       searchStr: queryParams.get('q') || '',
       exactMatch: queryParams.get('exactMatch') || 'off',
