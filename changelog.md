@@ -1,3 +1,23 @@
+##### 2.1.8 - Sat Apr 16 05:39:30 2022 +0000
+- [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | removed option to remove collection's concept/mapping
+- [OpenConceptLab/ocl_issues#1279](https://github.com/OpenConceptLab/ocl_issues/issues/1279) | renaming delete to remove reference
+- [OpenConceptLab/ocl_issues#1280](https://github.com/OpenConceptLab/ocl_issues/issues/1280) | removed unused import
+- [OpenConceptLab/ocl_issues#1280](https://github.com/OpenConceptLab/ocl_issues/issues/1280) | showing references in collection's mapping/concept details
+- [OpenConceptLab/ocl_issues#1280](https://github.com/OpenConceptLab/ocl_issues/issues/1280) | concept/mapping get from collection scope
+- Errbit | Search | attempting to rescue from bad URL
+- [OpenConceptLab/ocl_issues#1265](https://github.com/OpenConceptLab/ocl_issues/issues/1265) | expansion parameter to include/exclude system version enabled
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | can enter canonical
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | feedbacks | styles changes
+- [OpenConceptLab/ocl_issues#1265](https://github.com/OpenConceptLab/ocl_issues/issues/1265) | Expansions | can view parameters in a dialog
+- [OpenConceptLab/ocl_issues#1265](https://github.com/OpenConceptLab/ocl_issues/issues/1265) | Expansions | enable filter parameter
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | FHIR Server switch option
+- [OpenConceptLab/ocl_issues#1271](https://github.com/OpenConceptLab/ocl_issues/issues/1271) | updated dialog title
+- Search results tabs | showing counts of tabs that are loaded
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | WIP
+- [OpenConceptLab/ocl_issues#1271](https://github.com/OpenConceptLab/ocl_issues/issues/1271) | Add to collection success message states which collection it was added to
+- Facets drawer | fixing paddings
+- Fixing search results selection
+- [OpenConceptLab/ocl_issues#1273](https://github.com/OpenConceptLab/ocl_issues/issues/1273) | concept/mapping forms | removed concept code regex
 ##### 2.1.2 - Thu Apr 7 09:24:21 2022 +0000
 - [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Breadcrumbs | renaming Manage to Actions
 - [OpenConceptLab/ocl_issues#1247](https://github.com/OpenConceptLab/ocl_issues/issues/1247) | updates on concept/mapping form owner/source selection
