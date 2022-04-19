@@ -740,7 +740,7 @@ const ResultsTable = (
     onPinCreate, onPinDelete, pins, nested, showPin, essentialColumns, onReferencesDelete,
     isVersionedObject, onCreateSimilarClick, onCreateMappingClick, viewFields, hapi, fhir, history,
     onSelect, asReference, onSelectChange, onIndependentDetailsToggle, onWidthChange, onLimitChange,
-    isInsideConfiguredOrg, isLoading
+    isInsideConfiguredOrg, isLoading, limit
   }
 ) => {
   const [details, setDetails] = React.useState(null);
@@ -968,7 +968,7 @@ const ResultsTable = (
                 className='dense-table-pagination'
                 component="div"
                 rowsPerPageOptions={fhir && !hapi ? [] : [10, 25, 50, 100]}
-                rowsPerPage={results.pageCount}
+                rowsPerPage={limit}
                 page={results.pageNumber - 1}
                 count={results.total}
                 onPageChange={(event, page) => onPageChange(page + 1)}

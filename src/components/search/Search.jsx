@@ -759,7 +759,7 @@ class Search extends React.Component {
     } = this.props;
     const {
       resource, results, isLoading, sortParams, openFacetsDrawer, isTable, isInfinite, appliedFacets,
-      selectedItem
+      selectedItem, limit
     } = this.state;
     const isInsideConfiguredOrg = isEqual(keys(this.props.match.params), ['org'])
     const resourceResults = get(results, resource, {});
@@ -913,6 +913,7 @@ class Search extends React.Component {
                       onIndependentDetailsToggle={this.onDetailsToggle}
                       onWidthChange={this.onWidthChange}
                       isInsideConfiguredOrg={isInsideConfiguredOrg}
+                      limit={limit}
                     /> :
                     <Results
                       resource={resource}
