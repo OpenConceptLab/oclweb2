@@ -105,7 +105,7 @@ class MappingHome extends React.Component {
     return !this.props.match.params.mappingVersion;
   }
 
-  getContentMarginTop = () => `${get(document.querySelector('header.resource-header.home-header'), 'offsetHeight') || 100}px`;
+  getContentMarginTop = () => `${get(document.querySelector('header.resource-header.home-header'), 'offsetHeight') || 95}px`;
 
   render() {
     const {
