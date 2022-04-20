@@ -1,5 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
+import moment from 'moment';
 import { TextField, Button, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map } from 'lodash';
 import APIService from '../../services/APIService';
@@ -15,6 +16,7 @@ class ConceptContainerVersionForm extends React.Component {
         released: false,
         autoexpand: true,
         expansion_url: '',
+        revision_date: '',
       },
       fieldErrors: {},
     }
@@ -30,6 +32,8 @@ class ConceptContainerVersionForm extends React.Component {
     const attrs = ['id', 'description', 'external_id', 'released', 'expansion_url', 'autoexpand']
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(version, attr, '') || ''))
+    if(version.revision_date)
+      newState.fields.revision_date = moment(version.revision_date).format('YYYY-MM-DDTHH:mm')
     this.setState(newState);
   }
 
@@ -54,8 +58,6 @@ class ConceptContainerVersionForm extends React.Component {
     event.stopPropagation();
     const { parentURL, edit, resource } = this.props
     let fields = cloneDeep(this.state.fields);
-
-
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
@@ -65,6 +67,8 @@ class ConceptContainerVersionForm extends React.Component {
 
       if(isBoolean(this.state.fields.released))
         fields.released = this.state.fields.released
+      if(fields.revision_date)
+        fields.revision_date = moment(fields.revision_date).utc().format('YYYY-MM-DD HH:mm:ss')
 
       if(resource === 'collection') {
         fields.autoexpand = isBoolean(this.state.fields.autoexpand) ? this.state.fields.autoexpand : false
@@ -174,6 +178,19 @@ class ConceptContainerVersionForm extends React.Component {
                 fullWidth
                 onChange={this.onTextFieldChange}
                 value={fields.external_id}
+              />
+            </div>
+            <div className='col-md-12 no-side-padding' style={{width: '100%', marginTop: '15px'}}>
+              <TextField
+                error={Boolean(fieldErrors.revision_date)}
+                id="fields.revision_date"
+                label="Revision Date"
+                variant="outlined"
+                fullWidth
+                onChange={this.onTextFieldChange}
+                value={fields.revision_date || ''}
+                type='datetime-local'
+                InputLabelProps={{ shrink: true }}
               />
             </div>
             {

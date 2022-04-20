@@ -50,7 +50,7 @@ class ConceptContainerForm extends React.Component {
         purpose: '',
         copyright: '',
         content_type: '',
-        revision_date: '', //date
+        revision_date: '', //datetime
         identifier: '', //json
         contact: '', //json
         jurisdiction: '', //json
@@ -654,7 +654,7 @@ class ConceptContainerForm extends React.Component {
                   fullWidth
                   onChange={this.onTextFieldChange}
                   value={fields.revision_date}
-                  type='date'
+                  type='datetime-local'
                   InputLabelProps={{ shrink: true }}
                 />
               </div>
