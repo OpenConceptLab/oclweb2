@@ -9,10 +9,13 @@ import makeStyles from '@mui/styles/makeStyles';
 import {
   CancelOutlined as CloseIcon,
   OpenInNew as NewTabIcon,
+  FileCopy as CopyIcon,
 } from '@mui/icons-material';
 import { get, map, includes, uniq, filter, find } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
-import { getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser } from '../../common/utils';
+import {
+  getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL
+} from '../../common/utils';
 import { FHIR_OPERATIONS, GREEN, ERROR_RED, BLACK } from '../../common/constants';
 import APIService from '../../services/APIService';
 
@@ -163,6 +166,7 @@ const OperationsDrawer = () => {
   }
 
   const onOpenInNewTab = () => window.open(url)
+  const onCopyURLClick = () => copyURL(url)
   const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${get(response, 'status', 'null')})`;
   const isError = get(response, 'status') !== 200 && !isFetching
   const fhirServers = filter(getServerConfigsForCurrentUser(), {type: 'fhir'})
@@ -275,9 +279,14 @@ const OperationsDrawer = () => {
                     <i>{responseLabel}</i>
                     {
                       !isFetching &&
+                        <React.Fragment>
                         <IconButton color='primary' onClick={onOpenInNewTab} size='small'>
                           <NewTabIcon fontSize='small' />
                         </IconButton>
+                          <IconButton onClick={onCopyURLClick} size='small'>
+                            <CopyIcon fontSize='inherit' />
+                          </IconButton>
+                        </React.Fragment>
                     }
                   </h4>
                   <div className='col-xs-12 no-side-padding'>
