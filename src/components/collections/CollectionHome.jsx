@@ -13,11 +13,12 @@ import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import Breadcrumbs from '../sources/Breadcrumbs';
 import { paramsToURI, paramsToParentURI } from '../../common/utils';
+import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
 
-
 class CollectionHome extends React.Component {
+  static contextType = OperationsContext
   constructor(props) {
     super(props);
     this.state = {
@@ -262,11 +263,13 @@ class CollectionHome extends React.Component {
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
 
   getContainerWidth = () => {
+    const { openOperations } = this.context
     const { selected, width, filtersOpen } = this.state;
     let totalWidth = 100
+    let operationsWidth = openOperations ? 60 : 0;
     if(selected) {
       if(width)
-        totalWidth = `calc(${totalWidth}% - ${width - 10}px)`
+        totalWidth = `calc(${totalWidth}% - ${width - 10}px - ${operationsWidth}px)`
       else
         totalWidth -= filtersOpen ? 46 : 40.5
     }
@@ -291,6 +294,7 @@ class CollectionHome extends React.Component {
   onFilterDrawerToggle = () => this.setState({filtersOpen: !this.state.filtersOpen})
 
   render() {
+    const { openOperations } = this.context;
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
       notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions, selected,
@@ -369,8 +373,8 @@ class CollectionHome extends React.Component {
         {
           (isMappingSelected || isConceptSelected) &&
           <ResponsiveDrawer
-            width="39.5%"
-            paperStyle={{background: '#f1f1f1'}}
+            width={openOperations ? "29.5%" : "39.5%"}
+            paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
             variant='persistent'
             isOpen
             onClose={() => this.setState({selected: null, width: false})}
