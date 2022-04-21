@@ -19,7 +19,7 @@ const PARAMETERS = {
   },
   date: {
     supported: true,
-    tooltip: 'The date (and optionally time) when a was created or revised. This uses revision_date value of repository versions to filter. The format is YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DD hh:mm:ss',
+    tooltip: 'The date (and optionally time) when a repo version was created or revised. This uses revision_date value of repo versions to filter. The format is YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DD hh:mm:ss',
     regex: /([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?/mg,
     format: 'YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DD hh:mm:ss'
   },
