@@ -4,7 +4,7 @@ import { Info as InfoIcon } from '@mui/icons-material';
 import { TextField, Button, FormControlLabel, Checkbox, Tooltip } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import {
-  set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString
+  set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString, uniq
 } from 'lodash';
 import APIService from '../../services/APIService';
 const DEFAULT_TOOLTIP = 'This parameter is not yet supported.'
@@ -18,8 +18,10 @@ const PARAMETERS = {
     tooltip: 'Select this to include unretired concepts/mappings only'
   },
   date: {
-    supported: false,
-    tooltip: DEFAULT_TOOLTIP
+    supported: true,
+    tooltip: 'The date (and optionally time) when a was created or revised. This uses revision_date value of repository versions to filter. The format is YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DD hh:mm:ss',
+    regex: /([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?/mg,
+    format: 'YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DD hh:mm:ss'
   },
   count: {
     supported: false,
@@ -80,7 +82,7 @@ class ExpansionForm extends React.Component {
           filter: "",
           "exclude-system": "",
           "system-version": "",
-  date: "",
+          date: "",
           count: 0,
           offset: 0,
           activeOnly: false,
@@ -94,6 +96,7 @@ class ExpansionForm extends React.Component {
         },
       },
       fieldErrors: {},
+      helperTexts: {},
     }
   }
 
@@ -102,6 +105,55 @@ class ExpansionForm extends React.Component {
   onCheckboxChange = event => this.setFieldValue(event.target.name, event.target.checked)
 
   onAutoCompleteChange = (id, item) => this.setFieldValue(id, item)
+
+  onRegexTextFieldChange = (event, parameter) => {
+    if(!parameter) {
+      event.persist()
+      this.onTextFieldChange(event)
+      return
+    }
+
+    const { value, id } = event.target
+    if(id) {
+      const fieldId = id.replace('fields.parameters.', '')
+      const re = new RegExp(parameter.regex)
+      const matches = value.match(re)
+      const newState = {...this.state}
+      newState.fields.parameters[fieldId] = value
+      if(matches) {
+        newState.fieldErrors[fieldId] = undefined
+        const newValue = uniq(matches).join(',')
+        if(newValue !== value)
+          newState.helperTexts[fieldId] = `Cleaned values: ${newValue}`
+        else
+          newState.helperTexts[fieldId] = undefined
+      } else if (value) {
+        newState.helperTexts[fieldId] = undefined
+        newState.fieldErrors[fieldId] = `Format: ${parameter.format}`
+      } else {
+        newState.helperTexts[fieldId] = undefined
+        newState.fieldErrors[fieldId] = undefined
+      }
+      this.setState(newState)
+    }
+  }
+
+  onRegexTextFieldBlur = (event, parameter) => {
+    const { value, id } = event.target
+    const fieldId = id.replace('fields.parameters.', '')
+    const helperText = get(this.state.helperTexts, fieldId)
+    const error = get(this.state.fieldErrors, fieldId)
+    if(helperText && !error) {
+      const re = new RegExp(parameter.regex)
+      const matches = value.match(re)
+      if(matches) {
+        const newState = {...this.state}
+        newState.helperTexts[fieldId] = undefined
+        newState.fields.parameters[fieldId] = uniq(matches).join(',')
+        this.setState(newState)
+      }
+    }
+  }
 
   setFieldValue(id, value) {
     const newState = {...this.state}
@@ -160,7 +212,7 @@ class ExpansionForm extends React.Component {
     }
   }
   render() {
-    const { fields, fieldErrors, selectedVersion, versions } = this.state;
+    const { fields, fieldErrors, selectedVersion, versions, helperTexts } = this.state;
     const { onCancel } = this.props;
     const idLabel = fields.id ? fields.id : 'expansion-id';
     const versionLabel = `${selectedVersion.short_code} / ${selectedVersion.version} / [${idLabel}]`;
@@ -256,18 +308,33 @@ class ExpansionForm extends React.Component {
               {
                 map(pickBy(fields.parameters, isString), (value, attr) => {
                   const parameter = PARAMETERS[attr]
+                  const helperText = get(helperTexts, attr)
+                  const errorText = get(fieldErrors, attr)
+                  let color = 'primary'
+                  if(helperText)
+                    color = 'warning'
+                  if (errorText)
+                    color = 'error'
                   return (
                     <div className='col-md-4 flex-vertical-center' style={{marginTop: '15px'}} key={attr}>
                       <div className='col-md-11 no-side-padding' style={{marginRight: '5px'}}>
                         <TextField
+                          color={color}
                           size='small'
                           id={`fields.parameters.${attr}`}
                           label={startCase(attr)}
                           variant="outlined"
                           fullWidth
-                          onChange={this.onTextFieldChange}
+                          onChange={
+                            event => parameter.regex ?
+                              this.onRegexTextFieldChange(event, parameter) :
+                              this.onTextFieldChange(event)
+                          }
                           value={fields.parameters[attr]}
                           disabled={!parameter.supported}
+                          helperText={helperText || errorText}
+                          error={Boolean(helperText || errorText)}
+                          onBlur={event => this.onRegexTextFieldBlur(event, parameter)}
                         />
                       </div>
                       <div className='col-md-1 no-side-padding flex-vertical-center'>
