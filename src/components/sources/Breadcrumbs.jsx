@@ -51,11 +51,11 @@ const Breadcrumbs = ({
   const parentVersionURL = parentVersion === 'HEAD' ? parentURL : `${parentURL}${parentVersion}/`;
   const resourceURL = `${parentVersionURL}${resourceType}s/${resource}/`
   const resourceVersionURL = `${resourceURL}${resourceVersion}/`
-  const unselectedParentProps = {variant: 'outlined', style: {borderColor: GREEN, color: GREEN, boxShadow: 'none', textTransform: 'none', border: '1px solid', background: WHITE}}
+  const unselectedParentProps = {variant: 'outlined', style: {borderColor: GREEN, color: GREEN, boxShadow: 'none', textTransform: 'none', border: '1px solid', background: params.search ? '#f1f1f1' : WHITE}}
   const parentProps = (parentVersion === 'HEAD' && !resource) ? {} : unselectedParentProps;
   const parentVersionProps = (expansion || (resource && selectedResource)) ? {...unselectedParentProps, className: ''} : {}
   const expansionProps = (resource && selectedResource) ? {...unselectedParentProps, className: ''} : {}
-  const resourceProps = resourceVersion ? {variant: 'outlined', style: {borderColor: BLUE, color: BLUE, background: WHITE, border: '1px solid'}} : {}
+  const resourceProps = resourceVersion ? {variant: 'outlined', style: {borderColor: BLUE, color: BLUE, background: '#f1f1f1', border: '1px solid'}} : {}
 
   const downloadFileName = container ? (isVersionedObject ? `${container.type}-${container.short_code}` : `${container.type}-${container.short_code}-${container.id}`) : '';
   const hasAccess = currentUserHasAccess();
