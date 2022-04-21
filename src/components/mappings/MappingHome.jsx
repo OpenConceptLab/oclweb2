@@ -59,7 +59,7 @@ class MappingHome extends React.Component {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
                 .overrideURL(this.getMappingURLFromPath())
-                .get()
+                .get(null, null, {includeReferences: this.props.scoped === 'collection'})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, mapping: {}, notFound: true, accessDenied: false, permissionDenied: false})

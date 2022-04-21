@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, List, ListItem, Tooltip
+  Accordion, AccordionSummary, AccordionDetails, List, ListItem, Tooltip, Chip
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
@@ -34,10 +34,9 @@ const ResourceReferences = ({headingStyles, detailStyles, references, resource})
         <List>
           {
             map(references, reference => (
-              <ListItem key={reference}>
-                <a href={toFullAPIURL(reference)} target='_blank' rel="noopener noreferrer">
-                  {reference}
-                  </a>
+              <ListItem key={reference.id}>
+                {reference.expression}
+                <Chip style={{marginLeft: '5px'}} variant='outlined' color='primary' size='small' label='view' onClick={() => window.open(toFullAPIURL(reference.uri))} />
               </ListItem>
             ))
           }
