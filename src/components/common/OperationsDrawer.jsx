@@ -91,6 +91,7 @@ const OperationsDrawer = () => {
   React.useEffect(
     () => {
       setItem(operationItem)
+      setVersion(get(operationItem, 'parentVersion') || 'HEAD')
       setCodeSystem(getItemCodeSystem(operationItem))
       setCode(getItemCode(operationItem))
       getParent(operationItem)

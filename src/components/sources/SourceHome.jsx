@@ -236,7 +236,7 @@ class SourceHome extends React.Component {
 
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false}, () => {
     const { setOperationItem } = this.context
-    setOperationItem(selected)
+    setOperationItem({...selected, parentVersion: this.props.match.params.version})
   })
 
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
