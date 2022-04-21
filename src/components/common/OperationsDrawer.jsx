@@ -134,7 +134,7 @@ const OperationsDrawer = () => {
         const service = APIService.new()
         const canonicalURLAttr = operation === '$lookup' ? 'system' : 'url'
         service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}CodeSystem/${operation}?code=${code}&${canonicalURLAttr}=${canonicalURL}`
-        if(version)
+        if(version && version.toLowerCase() !== 'head')
           service.URL += `&version=${version}`
         service.get(null, false, null, true).then(_response => {
           if(get(_response, 'response.status') === 404) {
