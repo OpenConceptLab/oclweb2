@@ -192,7 +192,7 @@ const OperationsDrawer = () => {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <div style={{justifyContent: 'space-between', display: 'flex', alignItems: 'center'}}>
-            <h3>Operations</h3>
+            <h3>Operations (Beta)</h3>
             <IconButton size='small' color='secondary' onClick={() => setOpenOperations(false)} style={{float: 'right'}}>
               <CloseIcon fontSize='inherit' />
             </IconButton>
@@ -210,10 +210,10 @@ const OperationsDrawer = () => {
             </div>
             <div className='col-xs-12 no-side-padding'>
               <FormControl fullWidth>
-                <InputLabel>FHIR Server</InputLabel>
+                <InputLabel>Server Base URL</InputLabel>
                 <Select
                   value={selectedFHIRServerId}
-                  label="FHIR Server"
+                  label="Server Base URL"
                   onChange={onFHIRServerChange}
                 >
                   {
