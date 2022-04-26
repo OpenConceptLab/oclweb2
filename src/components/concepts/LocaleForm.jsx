@@ -31,6 +31,12 @@ const LocaleForm = ({
     setSelectedLocale(item)
     onAutoCompleteChange(`${idPrefix}.locale`, item)
   }
+
+  React.useEffect(() => {
+    if(get(locale, 'locale') && !selectedLocale)
+      setSelectedLocale({id: locale.locale, name: locale.locale})
+  }, [locale])
+
   return (
     <div className='col-md-12' style={{border: `1px solid ${borderColor}`, borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
       <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
