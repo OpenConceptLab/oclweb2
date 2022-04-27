@@ -144,12 +144,11 @@ class CollectionHome extends React.Component {
 
   getVersions() {
     this.setState({isLoadingVersions: true}, () => {
-      APIService.new()
-                .overrideURL(this.collectionPath + 'versions/')
-                .get(null, null, {verbose: true, includeSummary: true})
-                .then(response => {
-                  this.setState({versions: response.data, isLoadingVersions: false})
-                })
+      APIService
+        .new()
+        .overrideURL(this.collectionPath + 'versions/')
+        .get(null, null, {verbose: true, includeSummary: true, limit: 1000})
+        .then(response => this.setState({versions: response.data, isLoadingVersions: false}))
     })
   }
 

@@ -101,15 +101,16 @@ class SourceHome extends React.Component {
 
   getVersions() {
     this.setState({isLoadingVersions: true}, () => {
-      APIService.new()
-                .overrideURL(this.sourcePath + 'versions/')
-                .get(null, null, {verbose: true})
-                .then(response => {
-                  this.setState({versions: response.data, isLoadingVersions: false}, () => {
-                    if(this.isVersionTabSelected())
-                      this.fetchVersionsSummary()
-                  })
-                })
+      APIService
+        .new()
+        .overrideURL(this.sourcePath + 'versions/')
+        .get(null, null, {verbose: true, limit: 1000})
+        .then(response => {
+          this.setState({versions: response.data, isLoadingVersions: false}, () => {
+            if(this.isVersionTabSelected())
+              this.fetchVersionsSummary()
+          })
+        })
     })
   }
 
