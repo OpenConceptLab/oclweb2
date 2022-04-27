@@ -66,7 +66,10 @@ class CollectionHome extends React.Component {
   }
 
   setTab() {
-    this.setState({tab: this.getDefaultTabIndexFromConfig()});
+    let tab = this.getDefaultTabIndex()
+    if(tab === 0)
+      tab = this.getDefaultTabIndexFromConfig()
+    this.setState({tab: tab});
   }
 
   getDefaultTabIndex() {
@@ -215,6 +218,7 @@ class CollectionHome extends React.Component {
                                                                     const expansionURL = this.URLs.expansion || collection.expansion_url
                                                                     if(expansionURL)
                                                                       this.fetchExpansion(expansionURL)
+                                                                    this.setTab()
                                                                     this.getVersions()
                                                                     this.getExpansions()
                                                                   })

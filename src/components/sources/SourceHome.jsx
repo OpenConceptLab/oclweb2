@@ -68,7 +68,10 @@ class SourceHome extends React.Component {
   }
 
   setTab() {
-    this.setState({tab: this.getDefaultTabIndexFromConfig()});
+    let tab = this.getDefaultTabIndex()
+    if(tab === 0)
+      tab = this.getDefaultTabIndexFromConfig()
+    this.setState({tab: tab});
   }
 
   getDefaultTabIndex() {
@@ -174,9 +177,7 @@ class SourceHome extends React.Component {
                       selectedConfig: defaultCustomConfig || SOURCE_DEFAULT_CONFIG,
                       customConfigs: customConfigs,
                     }, () => {
-                      const tab = this.getDefaultTabIndex()
-                      if(tab === 0)
-                        this.setTab()
+                      this.setTab()
                       this.getVersions()
                     })
                   }
