@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { includes, compact, isEmpty, get, merge } from 'lodash';
+import { includes, compact, isEmpty, get, merge, forEach } from 'lodash';
 import Search from '../search/Search';
 import APIService from '../../services/APIService';
 
@@ -35,15 +35,20 @@ class CollectionHomeChildrenList extends React.Component {
 
   onReferencesDelete = expressions => {
     const references = compact(expressions)
-    const url = this.props.versionedObjectURL + 'references/'
-    if(!isEmpty(references))
-      APIService.new().overrideURL(url).appendToUrl('?cascade=sourcemappings').delete({references: references}).then(response => {
-        if(get(response, 'status') === 204)
-          alertifyjs.success('Successfully deleted references', 1, () => window.location.reload())
-        else
-          alertifyjs.error('Something bad happened!')
+    if(!isEmpty(references)) {
+      let deleted = 0
+      let failed = []
+      forEach(references, reference => {
+        APIService.new().overrideURL(reference).delete().then(response => {
+          if(get(response, 'status') === 204)
+            deleted += 1
+          else
+            failed.push(reference)
+          if(deleted === references.length)
+            alertifyjs.success(`Successfully delete ${deleted} references`, 1, () => window.location.reload())
+        })
       })
-
+    }
   }
 
   render() {

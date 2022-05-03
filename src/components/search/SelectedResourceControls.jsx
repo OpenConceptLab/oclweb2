@@ -32,7 +32,7 @@ const SelectedResourceControls = ({
     event.stopPropagation()
     event.preventDefault()
     onReferencesDelete(
-      isSourceChild ? map(selectedItems, 'version_url') : map(selectedItems, 'expression')
+      isSourceChild ? map(selectedItems, 'version_url') : map(selectedItems, 'uri')
     )
   }
 
