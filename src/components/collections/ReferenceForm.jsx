@@ -3,11 +3,10 @@ import alertifyjs from 'alertifyjs';
 import { Button, ButtonGroup, List, ListItem, ListItemButton } from '@mui/material';
 import { ArrowDropDown as DownIcon } from '@mui/icons-material';
 import {
-  set, get, isEmpty, isNumber, isNaN, cloneDeep, pullAt, find, map, compact
+  set, get, isEmpty, cloneDeep, pullAt, find, map, compact
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { SOURCE_CHILD_URI_REGEX } from '../../common/constants';
-import { isConcept, toRelativeURL } from '../../common/utils';
+import { toRelativeURL } from '../../common/utils';
 import URLReferenceForm from './URLReferenceForm';
 import ResourceReferenceForm from './ResourceReferenceForm';
 import AddReferencesResult from '../common/AddReferencesResult';
@@ -24,7 +23,6 @@ const ADD_SELECTED_OPTION = {id: 'addSelected', label: 'Add Selected'}
 class ReferenceForm extends React.Component {
   constructor(props) {
     super(props);
-    this.expressionRegex = new RegExp(SOURCE_CHILD_URI_REGEX);
     this.anchorRef = React.createRef()
     this.state = {
       searchExpression: null,
@@ -60,13 +58,6 @@ class ReferenceForm extends React.Component {
 
   onExpressionURIChange = event => this.setFieldValue(event.target.id + '.uri', event.target.value)
 
-  isValidExpression = expression => this.expressionRegex.test(expression)
-
-  onExpressionBlur = (event, index) => {
-    if(event.target.value && this.isValidExpression(event.target.value))
-      this.getResourcesFromExpression(index)
-  }
-
   onExpressionAdd = () => this.setState({
     fields: {
       ...this.state.fields,
@@ -88,22 +79,6 @@ class ReferenceForm extends React.Component {
     if(fieldName && !isEmpty(value) && get(newState.fieldErrors, fieldName) && fieldName !== 'expressions')
       newState.fieldErrors[fieldName] = null
     this.setState(newState)
-  }
-
-  getResourcesFromExpression(index) {
-    const expression = get(this.state.fields.expressions, index)
-    if(expression.uri) {
-      const service = isConcept(expression.uri) ? APIService.concepts() : APIService.mappings()
-      service.head(null, null, {uri: expression.uri}).then(response => {
-        if(get(response, 'status') === 200) {
-          const found = parseInt(get(response, 'headers.num_found'))
-          expression.count = (!isNaN(found) && isNumber(found)) ? found : undefined
-          const newState = {...this.state};
-          newState.fields.expressions.splice(index, 1, expression)
-          this.setState(newState)
-        }
-      })
-    }
   }
 
   anyInvalidExpression() {
@@ -297,7 +272,6 @@ class ReferenceForm extends React.Component {
                   expressions={fields.expressions}
                   onAdd={this.onExpressionAdd}
                   onChange={this.onExpressionURIChange}
-                  onBlur={this.onExpressionBlur}
                   onDelete={this.onExpressionDelete}
                 />
               }
