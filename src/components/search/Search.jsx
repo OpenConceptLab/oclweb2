@@ -449,12 +449,19 @@ class Search extends React.Component {
       queryParams.delete('sortDesc')
       queryParams.delete('sortAsc')
       queryParams.delete('verbose')
+      if(this.props.asReference) {
+        queryParams.delete('limit')
+        queryParams.delete('page')
+      }
       if(!queryParams.get('q'))
         queryParams.delete('q')
       if(queryParams.get('exact_match') === 'off')
         queryParams.delete('exact_match')
 
-      return urlParts[0] + '?' + queryParams.toString()
+      const _string = queryParams.toString()
+      if(_string)
+        return urlParts[0] + '?' + _string
+      return urlParts[0]
     }
     return url
   }
