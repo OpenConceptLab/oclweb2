@@ -1,3 +1,20 @@
+##### 2.1.10 - Thu Apr 28 03:55:58 2022 +0000
+- Fixing Source/Collection about tab navigation
+- Collection/Source | loading all versions
+- [OpenConceptLab/ocl_issues#1277](https://github.com/OpenConceptLab/ocl_issues/issues/1277) | Using cached lookup API for all lookups
+- [OpenConceptLab/ocl_issues#1282](https://github.com/OpenConceptLab/ocl_issues/issues/1282) | Operations Panel | labels updated
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | fixing FHIR operations
+- Breadcrumbs | fixing background colors of unselected entities
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | set source version
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | not using HEAD for FHIR operations
+- [OpenConceptLab/ocl_issues#1265](https://github.com/OpenConceptLab/ocl_issues/issues/1265) | Expansion Parameter date | updated tooltip
+- [OpenConceptLab/ocl_issues#1265](https://github.com/OpenConceptLab/ocl_issues/issues/1265) | Expansion Parameter date and its validations
+- [OpenConceptLab/ocl_issues#1265](https://github.com/OpenConceptLab/ocl_issues/issues/1265) | Source/Collection Version | can set/edit revision_date
+- [OpenConceptLab/ocl_issues#1280](https://github.com/OpenConceptLab/ocl_issues/issues/1280) | collection concept/mapping details | showing reference expressions
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | styling in collection context
+- [OpenConceptLab/ocl_issues#1222](https://github.com/OpenConceptLab/ocl_issues/issues/1222) | Operations Panel | added copy url option
+- Fixing Search results per page value
+- Fixing Mapping split view top margin
 ##### 2.1.8 - Sat Apr 16 05:39:30 2022 +0000
 - [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | removed option to remove collection's concept/mapping
 - [OpenConceptLab/ocl_issues#1279](https://github.com/OpenConceptLab/ocl_issues/issues/1279) | renaming delete to remove reference
