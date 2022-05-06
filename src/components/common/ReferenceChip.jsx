@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Chip } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon
 } from '@mui/icons-material';
+import { toFullAPIURL } from '../../common/utils';
 
 const ReferenceChip = props => {
   const isResolved = Boolean(props.last_resolved_at)
@@ -15,18 +15,12 @@ const ReferenceChip = props => {
   else if(type && type.toLowerCase() === 'concepts')
     icon = <LocalOfferIcon fontSize='small' color='primary' />;
 
-  const chip = <Chip className={isResolved ? 'clickable' : ''} icon={icon} label={expression} variant='outlined' color={isResolved ? 'primary' : 'secondary'} style={{border: 'none'}} />
+  const chip = <Chip className='clickable' icon={icon} label={expression} variant='outlined' color='primary' style={{border: 'none'}} />
 
   return (
-  <React.Fragment>
-    {
-      isResolved ?
-      <Link to={expression}>
+      <a href={toFullAPIURL(props.uri)} target='_blank' rel='noopener noreferrer'>
         {chip}
-      </Link> :
-      chip
-    }
-  </React.Fragment>
+      </a>
   )
 }
 
