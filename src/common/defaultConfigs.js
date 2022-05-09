@@ -153,7 +153,7 @@ export const SOURCE_DEFAULT_CONFIG = {
           type: "text",
         },
         {
-          label: "Canonical Url",
+          label: "Canonical URL",
           value: "canonical_url",
           type: "url",
         },
@@ -289,7 +289,7 @@ export const COLLECTION_DEFAULT_CONFIG = {
           value: "supported_locales",
         },
         {
-          label: "Canonical Url",
+          label: "Canonical URL",
           value: "canonical_url",
           type: "url",
         },
