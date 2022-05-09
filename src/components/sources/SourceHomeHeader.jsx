@@ -4,7 +4,7 @@ import {
   List as ListIcon,
 } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
-import { isEmpty, map, filter, get } from 'lodash';
+import { isEmpty, map, filter, get, reject } from 'lodash';
 import { nonEmptyCount, currentUserHasAccess } from '../../common/utils';
 import { WHITE } from '../../common/constants';
 import APIService from '../../services/APIService';
@@ -48,7 +48,7 @@ const SourceHomeHeader = ({
     }
                  )
   }
-  const getVisibleAttributes = ()=>{
+  const getVisibleAttributes = () => {
     if (get(config, 'config.header.visibleAttributes') === 'object'){
       return get(config, 'config.header.visibleAttributes')
     }
@@ -58,11 +58,16 @@ const SourceHomeHeader = ({
     else return []
   }
   const getHiddenAttributes = () => {
+    const visibleAttributes = getVisibleAttributes()
+    let attributes = []
     if (get(config, 'config.header.invisibleAttributes') === 'object')
-      return {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
+      attributes  = {...get(config, 'config.header.invisibleAttributes'), ...getDefaultHiddenAttributes()}
     else if (get(config, 'config.header.invisibleAttributes'))
-      return { DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() }
-    else return []
+      attributes = { ...DEFAULT_INVISIBLE_ATTRIBUTES, ...getDefaultHiddenAttributes() }
+
+    const visibleAttributeKeys = visibleAttributes.map(attr => attr.value)
+
+    return reject(attributes, attr => visibleAttributeKeys.includes(attr.value))
   }
   const hasManyHiddenAttributes = nonEmptyCount(source, map(getHiddenAttributes(),(attr) => attr.value)) >= 4;
 
@@ -111,7 +116,7 @@ const SourceHomeHeader = ({
           </div>
         </div>
         <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}} />
-        <div className='col-xs-11' style={openHeader ? {marginTop: '-30px'} : {}}>
+        <div className='col-xs-11' style={openHeader ? {marginTop: '-15px'} : {}}>
           <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
             {
               source.description &&
