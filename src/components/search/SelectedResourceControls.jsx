@@ -26,14 +26,12 @@ const SelectedResourceControls = ({
   const shouldShowCreateSimilarOption = isSourceChild && hasAccess && selectedItems.length == 1 && onCreateSimilarClick;
   const shouldShowAddToCollection = isSourceChild && isAuthenticated && hasSelectedItems;
   const shouldShowCreateMappingOption = isConceptResource && hasAccess && hasSelectedItems && selectedItems.length <= 2 && onCreateMappingClick;
-  const shouldShowDeleteReferenceOption = isReferenceResource && onReferencesDelete && hasAccess && hasSelectedItems;
+  const shouldShowDeleteReferenceOption = (isReferenceResource || isSourceChild) && onReferencesDelete && hasAccess && hasSelectedItems;
 
   const onReferenceDeleteClick = event => {
     event.stopPropagation()
     event.preventDefault()
-    onReferencesDelete(
-      isSourceChild ? map(selectedItems, 'version_url') : map(selectedItems, 'uri')
-    )
+    onReferencesDelete(selectedItems)
   }
 
   const onCompareClick = event => {

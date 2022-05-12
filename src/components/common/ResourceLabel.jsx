@@ -8,7 +8,7 @@ import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 
 const SEPARATOR = (<SeparatorIcon />)
 const ResourceLabel = props => {
-  const { resource, existsInOCL, noSeparator } = props;
+  const { resource, existsInOCL, noSeparator, noExistsIcon } = props;
   const isSourceChild = includes(['concept', 'mapping'], resource);
 
   return (
@@ -41,7 +41,7 @@ const ResourceLabel = props => {
         <span className='ellipsis-text'>{props.name}</span>
       </span>
       {
-        isSourceChild && (
+        !noExistsIcon && isSourceChild && (
           existsInOCL ?
           <ExistsInOCLIcon containerStyles={{marginLeft: '5px'}} /> :
           <DoesnotExistsInOCLIcon containerStyles={{marginLeft: '5px'}} />

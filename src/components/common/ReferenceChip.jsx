@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip, Tooltip } from '@mui/material';
+import { Chip } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon,
 } from '@mui/icons-material';
