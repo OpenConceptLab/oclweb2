@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
-import { getRandomColor, getWidthOfText } from '../../common/utils';
+import { getRandomColor, getWidthOfText, dropVersion } from '../../common/utils';
 import './d3Tree.scss';
 
 const HIERARCHY_CHILD_REL = '-haschild-'
@@ -53,12 +53,19 @@ class ConceptHierarchyTree extends React.Component {
       this.setState({isLoading: true}, this.makeInitialTree)
   }
 
-  getChildren = (concept, callback) => APIService
+  getChildren = (concept, callback) => {
+    const { source, sourceVersion } = this.props;
+    let URL = source.url
+    if(sourceVersion)
+      URL += sourceVersion + '/'
+    URL += 'concepts/' + concept.id + '/'
+    APIService
     .new()
-    .overrideURL(concept.url)
+    .overrideURL(URL)
     .appendToUrl('$cascade/')
     .get(null, null, merge({view: 'hierarchy'}, (this.props.filters || {})))
-    .then(response => callback(response.data.entry));
+      .then(response => callback(response.data.entry));
+  }
 
   makeInitialTree = () => this.getChildren(this.props.concept, tree => {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
@@ -103,7 +110,7 @@ class ConceptHierarchyTree extends React.Component {
       }
       if(!child.data.target_concept_url)
         result.push(child)
-      if(child.data.target_concept_url && !find(children, c => c.data.url === child.data.target_concept_url && c.data.type === 'Concept')) {
+      if(child.data.target_concept_url && !find(children, c => dropVersion(c.data.url) === dropVersion(child.data.target_concept_url) && c.data.type === 'Concept')) {
         child.data.target_source = this.getSourceName(child.data, 'target_concept_url')
         result.push(child)
       }
@@ -117,7 +124,7 @@ class ConceptHierarchyTree extends React.Component {
     if(node.data.map_type)
       return node.data.map_type
     const siblings = get(node, 'parent.allChildren', [])
-    const mappingForConcept = find(siblings, sibling => sibling.data.target_concept_url === node.data.url)
+    const mappingForConcept = find(siblings, sibling => dropVersion(sibling.data.target_concept_url) === dropVersion(node.data.url))
     return mappingForConcept ? mappingForConcept.data.map_type : HIERARCHY_CHILD_REL;
   }
 

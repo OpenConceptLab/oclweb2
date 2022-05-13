@@ -700,3 +700,22 @@ export const getParamsFromObject = item => {
 
   return params;
 }
+
+export const dropVersion = uri => {
+  if(!uri)
+    return uri
+
+  const parts = uri.split('/')
+
+  if (parts.length <= 4)
+    return uri
+
+  const resource = parts.at(-4)
+  const name = parts.at(-3)
+  const version = parts.at(-2)
+  if (['concepts', 'mappings', 'sources', 'collections'].includes(resource) && name && version)
+    return parts.splice(0, parts.indexOf(parts.at(-2))).join('/') + '/'
+
+  return uri
+
+}

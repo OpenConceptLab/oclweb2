@@ -361,7 +361,7 @@ class SourceHome extends React.Component {
                     scoped
                     mapping={selected}
                     location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
-                    match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version}}}
+                    match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
                     header={false}
                     source={source}
                     noRedirect
@@ -371,7 +371,7 @@ class SourceHome extends React.Component {
                     scoped
                     concept={selected}
                     location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
-                    match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version}}}
+                    match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
                     openHierarchy={false}
                     header={false}
                     noRedirect
