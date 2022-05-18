@@ -122,7 +122,7 @@ class CollectionHomeChildrenList extends React.Component {
     this.setState(newState)
   }
 
-  onClose = () => this.setState({describeDelete: false})
+  onClose = () => this.setState({describeDelete: false, actions: {}})
 
   shouldMakeExclusion = resource => {
     if(resource.references.length > 1)
