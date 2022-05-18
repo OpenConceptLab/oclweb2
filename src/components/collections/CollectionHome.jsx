@@ -263,7 +263,12 @@ class CollectionHome extends React.Component {
       APIService.new().overrideURL(this.currentPath).get().then(response => this.setState({selected: response.data}))
   }
 
-  onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false})
+  onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false}, () => {
+    const { setOperationItem, setParentResource, setParentItem } = this.context
+    setOperationItem({...selected, parentVersion: this.props.match.params.version})
+    setParentItem(this.state.collection)
+    setParentResource('collection')
+  })
 
   getContainerWidth = () => {
     const { openOperations } = this.context

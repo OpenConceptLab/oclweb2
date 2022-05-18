@@ -5,9 +5,11 @@ export const SERVER_CONFIGS = [
     type: 'ocl',
     url: 'http://127.0.0.1:8000',
     local: true,
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   // {
   //   id: 13,
@@ -30,27 +32,33 @@ export const SERVER_CONFIGS = [
     type: 'ocl',
     url: 'https://api.qa.openconceptlab.org',
     fhirServerId: 6,
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   {
     id: 10,
     name: 'OCL Dev',
     type: 'ocl',
     url: 'https://api.dev.openconceptlab.org',
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   {
     id: 3,
     name: 'OCL Demo',
     type: 'ocl',
     url: 'https://api.demo.openconceptlab.org',
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   {
     id: 4,
@@ -58,9 +66,11 @@ export const SERVER_CONFIGS = [
     type: 'ocl',
     url: 'https://api.staging.openconceptlab.org',
     fhirServerId: 7,
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   {
     id: 11,
@@ -76,18 +86,22 @@ export const SERVER_CONFIGS = [
         footerText: 'Powered by Open Concept Lab'
       }
     },
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   {
     id: 5,
     name: 'OCL Production',
     type: 'ocl',
     url: 'https://api.openconceptlab.org',
-    operations: [
-      '$cascade',
-    ]
+    operations: {
+      source: [
+        '$cascade',
+      ],
+    }
   },
   {
     id: 6,
@@ -112,10 +126,16 @@ export const SERVER_CONFIGS = [
         footerText: 'FHIR Server Powered by Open Concept Lab'
       },
     },
-    operations: [
-      '$lookup',
-      '$validate-code',
-    ]
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$lookup',
+        '$validate-code',
+      ]
+    }
   },
   {
     id: 7,
@@ -133,10 +153,16 @@ export const SERVER_CONFIGS = [
         logo_url: '/fhir.svg'
       }
     },
-    operations: [
-      '$lookup',
-      '$validate-code',
-    ]
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$lookup',
+        '$validate-code',
+      ]
+    }
   },
   {
     id: 8,
@@ -153,10 +179,16 @@ export const SERVER_CONFIGS = [
         logo_url: '/fhir.svg'
       }
     },
-    operations: [
-      '$lookup',
-      '$validate-code',
-    ]
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$lookup',
+        '$validate-code',
+      ]
+    }
   },
   {
     id: 9,
@@ -173,10 +205,16 @@ export const SERVER_CONFIGS = [
         logo_url: '/fhir.svg'
       }
     },
-    operations: [
-      '$lookup',
-      '$validate-code',
-    ]
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$lookup',
+        '$validate-code',
+      ]
+    }
   },
   {
     id: 12,
@@ -207,9 +245,15 @@ export const SERVER_CONFIGS = [
         footerText: 'Powered by Open Concept Lab'
       }
     },
-    operations: [
-      '$lookup',
-      '$validate-code',
-    ]
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$lookup',
+        '$validate-code',
+      ]
+    }
   },
 ]

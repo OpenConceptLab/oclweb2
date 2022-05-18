@@ -11,7 +11,7 @@ import {
   OpenInNew as NewTabIcon,
   FileCopy as CopyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, filter, find } from 'lodash';
+import { get, map, includes, uniq, filter, find, startCase } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL
@@ -82,21 +82,33 @@ const useStyles = makeStyles(theme => ({
 
 const OperationsDrawer = () => {
   const classes = useStyles();
-  const { setOpenOperations, operationItem } = React.useContext(OperationsContext);
+  const { setOpenOperations, operationItem, parentResource, parentItem } = React.useContext(OperationsContext);
   const currentServer = getAppliedServerConfig()
   const fhirServer = getFHIRServerConfigFromCurrentContext()
-  const operations = uniq([...get(fhirServer, 'operations', []), ...get(currentServer, 'operations', [])])
+  let containerResource = parentResource || 'source'
+  const fhirResource = parentResource === 'source' ? 'codeSystem' : 'valueSet'
+  const fhirResourceDisplay = startCase(fhirResource).replace(' ', '')
+  const operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
   const [byURL, setByURL] = React.useState(false)
 
   React.useEffect(
     () => {
       setItem(operationItem)
       setVersion(get(operationItem, 'parentVersion') || 'HEAD')
-      setCodeSystem(getItemCodeSystem(operationItem))
+      setParentId(getParentId(operationItem))
       setCode(getItemCode(operationItem))
-      getParent(operationItem)
+      if(!parentItem)
+        getParent(operationItem)
     },
     [operationItem]
+  )
+
+  React.useEffect(
+    () => {
+      if(parentItem)
+        setCanonicalURL(parentItem.canonical_url)
+    },
+    [parentItem]
   )
 
   const shouldGetParent = _item => {
@@ -111,10 +123,14 @@ const OperationsDrawer = () => {
       })
     }
   }
-  const getItemCodeSystem = (_item) => get(_item || item, 'source') || ''
-  const getItemCode = (_item) => get(_item || item, 'id') || ''
+  const getParentId = _item => {
+    if(parentItem)
+      return parentItem.id
+    return get(_item || item, 'source') || ''
+  }
+  const getItemCode = _item => get(_item || item, 'id') || ''
   const [item, setItem] = React.useState(operationItem)
-  const [codeSystem, setCodeSystem] = React.useState(getItemCodeSystem)
+  const [parentId, setParentId] = React.useState(getParentId)
   const [canonicalURL, setCanonicalURL] = React.useState(get(operationItem, 'canonical_url') || '')
   const [code, setCode] = React.useState(getItemCode)
   const [version, setVersion] = React.useState('HEAD')
@@ -134,11 +150,11 @@ const OperationsDrawer = () => {
       if(canonicalURL && selectedFHIRServer) {
         const service = APIService.new()
         const canonicalURLAttr = operation === '$lookup' ? 'system' : 'url'
-        service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}CodeSystem/${operation}?code=${code}&${canonicalURLAttr}=${canonicalURL}`
+        service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}${fhirResourceDisplay}/${operation}?code=${code}&${canonicalURLAttr}=${canonicalURL}`
         if(version && version.toLowerCase() !== 'head' && !byURL)
           service.URL += `&version=${version}`
         service.get(null, false, null, true).then(_response => {
-          if(get(_response, 'response.status') === 404) {
+          if(get(_response, 'response.status') >= 400) {
             setResponse(_response.response)
           } else {
             setResponse(_response)
@@ -201,7 +217,7 @@ const OperationsDrawer = () => {
             <div className='col-xs-12 no-side-padding' style={{textAlign: 'center', marginBottom: '20px'}}>
               <ButtonGroup size='small'>
                 <Button variant={byURL ? 'outlined' : 'contained'} onClick={() => toggleByURL(false)}>
-                  Find Source
+                  Find Resource
                 </Button>
                 <Button variant={byURL ? 'contained' : 'outlined'} onClick={() => toggleByURL(true)}>
                   Enter URL
@@ -236,10 +252,10 @@ const OperationsDrawer = () => {
                 </div> :
               <div className='col-xs-12 no-side-padding'>
                 <h4 style={{marginBottom: '15px'}}>
-                  CodeSystem
+                  {fhirResourceDisplay}
                 </h4>
                 <div className='col-xs-8 no-left-padding'>
-                  <TextField fullWidth value={codeSystem} label='CodeSystem' />
+                  <TextField fullWidth value={parentId} label={fhirResourceDisplay} />
                 </div>
                 <div className='col-xs-4 no-side-padding'>
                   <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} />

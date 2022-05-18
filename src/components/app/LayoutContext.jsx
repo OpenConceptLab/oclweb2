@@ -7,6 +7,8 @@ const LayoutContext = ({ subPages }) => {
   const [openOperations, setOpenOperations] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [operationItem, setOperationItem] = React.useState(null);
+  const [parentResource, setParentResource] = React.useState(null);
+  const [parentItem, setParentItem] = React.useState(null);
   return (
     <OperationsProvider
       value={{
@@ -15,7 +17,11 @@ const LayoutContext = ({ subPages }) => {
         menuOpen: menuOpen,
         setMenuOpen: setMenuOpen,
         operationItem: operationItem,
-        setOperationItem: setOperationItem
+        setOperationItem: setOperationItem,
+        parentResource: parentResource,
+        setParentResource: setParentResource,
+        parentItem: parentItem,
+        setParentItem: setParentItem
       }}>
       {subPages}
     </OperationsProvider>

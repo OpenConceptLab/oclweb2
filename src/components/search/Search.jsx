@@ -733,8 +733,9 @@ class Search extends React.Component {
   }
 
   onDetailsToggle = item => this.setState({selectedItem: item, width: item ? this.state.width : false}, () => {
-    const { setOperationItem } = this.context
+    const { setOperationItem, setParentResource } = this.context
     setOperationItem(item)
+    setParentResource('source')
   })
 
   onWidthChange = newWidth => this.setState({width: newWidth})
