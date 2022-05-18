@@ -7,7 +7,7 @@ import {
   Dialog, DialogContent, DialogTitle, Divider, CircularProgress,
   List, ListItem, FormControl, RadioGroup, FormControlLabel, Radio, Tooltip, Button
 } from '@mui/material';
-import { LocalOffer as LocalOfferIcon, Info as InfoIcon } from '@mui/icons-material'
+import { LocalOffer as LocalOfferIcon, Info as InfoIcon, AutoAwesome as BetaIcon } from '@mui/icons-material'
 import { toFullAPIURL } from '../../common/utils';
 import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
@@ -167,8 +167,11 @@ class CollectionHomeChildrenList extends React.Component {
             <Dialog open onClose={this.onClose} maxWidth='md' fullWidth>
               <DialogTitle>
                 <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <span>
-                  {`Delete ${selectedResources.length} Resources`}
+                  <span className='flex-vertical-center'>
+                    <Tooltip arrow title='Beta' placement='top'>
+                      <BetaIcon style={{marginRight: '5px'}}/>
+                    </Tooltip>
+                    Remove Resources by Reference
                   </span>
                   <span>
                     <Button onClick={this.onExecute} variant='contained' color='error' disabled={!haveAllActions}>
