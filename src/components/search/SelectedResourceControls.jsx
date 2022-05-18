@@ -6,6 +6,7 @@ import {
   Repeat as RepeatIcon,
   Link as LinkIcon,
   Delete as DeleteIcon,
+  AutoAwesome as BetaIcon,
 } from '@mui/icons-material';
 import { map, includes, get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn } from '../../common/utils'
@@ -48,6 +49,8 @@ const SelectedResourceControls = ({
   const VARIANT = 'filled'
   const buttonProps = {variant: VARIANT, color: COLOR, size: 'small'}
   const MARGIN = '4px'
+
+  const getRemoveRefIcon = () => isSourceChild ? <BetaIcon fontSize='small' /> : <DeleteIcon fontSize='small' />;
 
   return (
     <span style={{display: 'inline-flex', width: 'max-content'}}>
@@ -106,7 +109,7 @@ const SelectedResourceControls = ({
       {
         shouldShowDeleteReferenceOption &&
         <Chip
-          icon={<DeleteIcon fontSize='small' />}
+          icon={getRemoveRefIcon()}
           onClick={onReferenceDeleteClick}
           style={{marginLeft: MARGIN}}
           className='selected-control-chip'
