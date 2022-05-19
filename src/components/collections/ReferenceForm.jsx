@@ -65,6 +65,13 @@ class ReferenceForm extends React.Component {
     }
   })
 
+  onExpressionsUpdate = expressions => this.setState({
+    fields: {
+      ...this.state.fields,
+      expressions: expressions
+    }
+  })
+
   onExpressionDelete = index => {
     const newState = {...this.state}
     pullAt(newState.fields.expressions, index)
@@ -92,14 +99,22 @@ class ReferenceForm extends React.Component {
 
     const fields = cloneDeep(this.state.fields);
     const expressions = compact(map(fields.expressions, 'uri'))
-    if(isEmpty(expressions)) {
-      if(this.state.byURL)
-        alertifyjs.error('Please add at least one expression')
-      else if(this.state.byResource)
-        alertifyjs.error('Please select at least one concept or mapping')
-      else
-        alertifyjs.error('Please select at least one concept')
-      return
+    if(this.state.byURL) {
+      const isValid = document.getElementsByTagName('form')[0].reportValidity();
+      if(!isValid) {
+        alertifyjs.error('Please fill required fields')
+        return
+      }
+    } else {
+      if(isEmpty(expressions)) {
+        if(this.state.byURL)
+          alertifyjs.error('Please add at least one expression')
+        else if(this.state.byResource)
+          alertifyjs.error('Please select at least one concept or mapping')
+        else
+          alertifyjs.error('Please select at least one concept')
+        return
+      }
     }
 
     if(!this.anyInvalidExpression()){
@@ -107,17 +122,27 @@ class ReferenceForm extends React.Component {
     }
   }
 
+  getExpressionsToSubmit = () => {
+    const expressions = this.state.fields.expressions
+    if(expressions[0].uri)
+      return {expressions: compact(map(expressions, 'uri'))}
+
+    return expressions
+  }
+
   submitReferences = () => {
     this.setState({isSubmitting: true}, () => {
-      const { cascadeMappings, cascadeToConcepts, fields } = this.state
+      const { cascadeMappings, cascadeToConcepts } = this.state
       const { parentURL } = this.props
       let queryParams = {}
       if(cascadeToConcepts)
         queryParams = {cascade: 'sourceToConcepts'}
       else if(cascadeMappings)
         queryParams = {cascade: 'sourceMappings'}
+
+
       APIService.new().overrideURL(parentURL).appendToUrl('references/').put(
-        {data: {expressions: compact(map(fields.expressions, 'uri'))}}, null, null, queryParams
+        {data: this.getExpressionsToSubmit()}, null, null, queryParams
       ).then(response => this.setState(
         {cascadeDialog: false, isSubmitting: false}, () => this.handleSubmitResponse(response))
       )
@@ -270,9 +295,7 @@ class ReferenceForm extends React.Component {
                 byURL &&
                 <URLReferenceForm
                   expressions={fields.expressions}
-                  onAdd={this.onExpressionAdd}
-                  onChange={this.onExpressionURIChange}
-                  onDelete={this.onExpressionDelete}
+                  onChange={this.onExpressionsUpdate}
                 />
               }
               {
