@@ -287,7 +287,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       size='small'
                     />
                   </div>
-                  <div className='col-xs-9 no-left-padding' style={{marginTop: '10px'}}>
+                  <div className='col-xs-9 no-left-padding' style={{marginTop: '15px'}}>
                     <TextField
                       id={`system-${expressionObj.id}`}
                       label="System"
@@ -300,7 +300,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       size='small'
                     />
                   </div>
-                  <div className='col-xs-3 no-side-padding' style={{marginTop: '10px'}}>
+                  <div className='col-xs-3 no-side-padding' style={{marginTop: '15px'}}>
                     <TextField
                       id={`version-${expressionObj.id}`}
                       label="Version"
@@ -310,10 +310,10 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       onChange={event => onChange(setVersion, 'version', event.target.value, '')}
                       value={version}
                       size='small'
-                      disabled={!system}
+                      disabled={!Boolean(system)}
                     />
                   </div>
-                  <div className='col-xs-9 no-left-padding' style={{marginTop: '10px'}}>
+                  <div className='col-xs-9 no-left-padding' style={{marginTop: '15px'}}>
                     <TextField
                       id={`code-${expressionObj.id}`}
                       label="Code"
@@ -325,7 +325,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       size='small'
                     />
                   </div>
-                  <div className='col-xs-3 no-side-padding' style={{marginTop: '10px'}}>
+                  <div className='col-xs-3 no-side-padding' style={{marginTop: '15px'}}>
                     <TextField
                       id={`resourceVersion-${expressionObj.id}`}
                       label="Resource Version"
@@ -335,10 +335,10 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       onChange={event => onChange(setResourceVersion, 'resourceVersion', event.target.value, '')}
                       value={resourceVersion}
                       size='small'
-                      disabled={!code}
+                      disabled={!Boolean(code)}
                     />
                   </div>
-                  <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
+                  <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
                     <div className='col-xs-3 no-left-padding'>
                       <FormControl fullWidth>
                         <InputLabel id={`referenceType-${expressionObj.id}`}>ReferenceType</InputLabel>
@@ -372,7 +372,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       />
                     </div>
                   </div>
-                  <div className='col-xs-12' style={{marginTop: '10px'}}>
+                  <div className='col-xs-12' style={{marginTop: '15px'}}>
                     <label>
                       <span><b>Filter</b></span>
                       <IconButton disabled={Boolean(code)} size='small' onClick={onAddFilter} color='primary'>
@@ -381,13 +381,13 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                     </label>
                     {
                       map(filter, _filter => (
-                        <div className='col-xs-12' style={{marginTop: '10px'}} key={_filter.id}>
-                          <FilterForm isRequired={!code} filter={_filter} onUpdate={onFilterUpdate} onRemove={onRemoveFilter} />
+                        <div className='col-xs-12' style={{marginTop: '15px'}} key={_filter.id}>
+                          <FilterForm isRequired={!Boolean(code)} filter={_filter} onUpdate={onFilterUpdate} onRemove={onRemoveFilter} />
                         </div>
                       ))
                     }
                   </div>
-                  <div className='col-xs-12' style={{marginTop: '10px'}}>
+                  <div className='col-xs-12' style={{marginTop: '15px'}}>
                     <label>
                       <span><b>Valueset</b></span>
                       <IconButton size='small' onClick={onAddValueset} color='primary'>
@@ -396,7 +396,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                     </label>
                     {
                       map(valueset, _valueset => (
-                        <div className='col-xs-12' style={{marginTop: '10px'}} key={_valueset.id}>
+                        <div className='col-xs-12' style={{marginTop: '15px'}} key={_valueset.id}>
                           <ValuesetForm valueset={_valueset} onUpdate={onValuesetUpdate} onRemove={onRemoveValueset} />
                         </div>
                       ))
