@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit, isString, values, omitBy, isNumber
+  map, omit, isString, values, omitBy, isNumber, filter
 } from 'lodash';
 import { Share as ShareIcon, AccountTreeOutlined as HierarchyIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
@@ -255,6 +255,11 @@ class Search extends React.Component {
     const next = get(response, 'headers.next')
     const previous = get(response, 'headers.previous')
     let items = get(response, 'data', [])
+    if(resource === 'references') {
+      const includedReferences = filter(items, {include: true})
+      const excludedReferences = filter(items, {include: false})
+      items = [...includedReferences, ...excludedReferences]
+    }
     if(this.state.isInfinite && !resetItems)
       items = [...this.state.results[resource].items, ...items]
     return {
