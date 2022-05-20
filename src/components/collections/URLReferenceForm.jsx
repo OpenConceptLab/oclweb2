@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   TextField, IconButton, Button, Tooltip, Autocomplete, Select, MenuItem,
-  FormControl, InputLabel, FormControlLabel, Checkbox
+  FormControl, InputLabel, ButtonGroup
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -134,7 +134,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
   const [resourceVersion, setResourceVersion] = React.useState('')
   const [valueset, setValueset] = React.useState([])
   const [filter, setFilter] = React.useState([])
-  const [include, setInclude] = React.useState('')
+  const [include, setInclude] = React.useState(true)
   const [referenceType, setReferenceType] = React.useState('concepts')
   const [expand, setExpand] = React.useState(false)
 
@@ -310,7 +310,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       onChange={event => onChange(setVersion, 'version', event.target.value, '')}
                       value={version}
                       size='small'
-                      disabled={!Boolean(system)}
+                      disabled={!system}
                     />
                   </div>
                   <div className='col-xs-9 no-left-padding' style={{marginTop: '15px'}}>
@@ -335,10 +335,10 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       onChange={event => onChange(setResourceVersion, 'resourceVersion', event.target.value, '')}
                       value={resourceVersion}
                       size='small'
-                      disabled={!Boolean(code)}
+                      disabled={!code}
                     />
                   </div>
-                  <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+                  <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px'}}>
                     <div className='col-xs-3 no-left-padding'>
                       <FormControl fullWidth>
                         <InputLabel id={`referenceType-${expressionObj.id}`}>ReferenceType</InputLabel>
@@ -360,16 +360,20 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                       </FormControl>
                     </div>
                     <div className='col-xs-3 no-left-padding'>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            size='small'
-                            defaultChecked
-                            onChange={
-                              event => onChange(setInclude, 'include', event.target.checked, event.target.checked)} />
-                        }
-                        label="Include"
-                      />
+                      <ButtonGroup size='small' color='default'>
+                        <Button
+                          color='success'
+                          variant={include ? 'contained' : 'outlined'}
+                          onClick={() => onChange(setInclude, 'include', true, true)}>
+                          Include
+                        </Button>
+                        <Button
+                          color='error'
+                          variant={include ? 'outlined' : 'contained'}
+                          onClick={() => onChange(setInclude, 'include', false, false)}>
+                          Exclude
+                        </Button>
+                      </ButtonGroup>
                     </div>
                   </div>
                   <div className='col-xs-12' style={{marginTop: '15px'}}>
@@ -382,7 +386,7 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                     {
                       map(filter, _filter => (
                         <div className='col-xs-12' style={{marginTop: '15px'}} key={_filter.id}>
-                          <FilterForm isRequired={!Boolean(code)} filter={_filter} onUpdate={onFilterUpdate} onRemove={onRemoveFilter} />
+                          <FilterForm isRequired={!code} filter={_filter} onUpdate={onFilterUpdate} onRemove={onRemoveFilter} />
                         </div>
                       ))
                     }
