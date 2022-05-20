@@ -115,7 +115,7 @@ const CollectionHomeTabs = props => {
               />
             </span>
           }
-          <NewResourceButton resources={isVersionedObject ? ['references', 'version', 'expansion'] : ['expansion']} onClick={onNewClick} />
+          <NewResourceButton resources={isVersionedObject ? ['references', 'version', 'expansion'] : ['expansion', 'version']} onClick={onNewClick} />
         </div>
       }
       <div className='sub-tab-container' style={{display: 'flex', height: 'auto', width: '100%'}}>
