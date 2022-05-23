@@ -194,7 +194,7 @@ class ConceptForm extends React.Component {
     event.stopPropagation();
     const { parent } = this.state;
     const { edit } = this.props
-    const parentURL = edit ? this.props.parentURL : get(parent, 'url');
+    const parentURL = edit ? this.props.concept.url : get(parent, 'url');
     const fields = cloneDeep(this.state.fields);
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
