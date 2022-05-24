@@ -56,7 +56,7 @@ class ConceptHome extends React.Component {
   getConceptURLFromPath() {
     const { location, match, scoped, parentURL, concept } = this.props;
     if(scoped === 'collection')
-      return `${parentURL}concepts/${concept.id}/${concept.version}/`
+      return `${parentURL}concepts/${encodeURIComponent(concept.id)}/${concept.version}/`
     if(scoped)
       return location.pathname
 
@@ -162,7 +162,7 @@ class ConceptHome extends React.Component {
     this.setState({isLoadingMappings: true}, () => {
       let url = this.getConceptURLFromPath()
       if(this.props.scoped === 'collection' && this.props.parentURL)
-        url = `${this.props.parentURL}concepts/${this.state.concept.id}/${this.state.concept.version}/`
+        url = `${this.props.parentURL}concepts/${encodeURIComponent(this.state.concept.id)}/${this.state.concept.version}/`
       APIService.new()
                 .overrideURL(encodeURI(url) + 'mappings/?includeInverseMappings=true&limit=1000')
                 .get()
