@@ -11,21 +11,6 @@ export const SERVER_CONFIGS = [
       ],
     }
   },
-  // {
-  //   id: 13,
-  //   name: 'My WHO',
-  //   type: 'ocl',
-  //   url: 'http://localhost:8000',
-  //   info: {
-  //     site: {
-  //       title: 'WHO',
-  //       hideOpenMRSApp: true,
-  //       logoText: 'WHO',
-  //       noLeftMenu: true,
-  //       footerText: 'Powered by Open Concept Lab'
-  //     }
-  //   }
-  // },
   {
     id: 2,
     name: 'OCL QA',
@@ -244,6 +229,40 @@ export const SERVER_CONFIGS = [
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
       }
+    },
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$lookup',
+        '$validate-code',
+      ]
+    }
+  },
+  {
+    id: 13,
+    name: 'FHIR QA (beta)',
+    type: 'fhir',
+    url: 'https://api.qa.openconceptlab.org',
+    hapi: false,
+    info: {
+      pageSize: 10,
+      baseURI: '/fhir/',
+      type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
+      org: {
+        id: 'FHIR',
+        name: "Fast Healthcare Interoperability Resources",
+        logo_url: '/fhir.svg'
+      },
+      site: {
+        title: 'FHIR',
+        hideOpenMRSApp: true,
+        logoURL: '/fhir.svg',
+        noLeftMenu: true,
+        footerText: 'FHIR Server Powered by Open Concept Lab'
+      },
     },
     operations: {
       codeSystem: [
