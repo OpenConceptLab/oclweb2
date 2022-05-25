@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import {
   set, get, map, cloneDeep, pullAt, isEmpty, startCase, pickBy, isObject, isArray,
-  find, intersectionBy
+  find, intersectionBy, includes
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, getCurrentUserUsername, getCurrentUser } from '../../common/utils';
@@ -66,6 +66,10 @@ class ConceptContainerForm extends React.Component {
         immutable: null, //only collection
         locked_date: '', // only collection - datetime
         autoexpand_head: true,
+        autoid_concept_mnemonic: null,
+        autoid_mapping_mnemonic: 'sequential',
+        autoid_concept_external_id: null,
+        autoid_mapping_external_id: null,
       },
       selected_supported_locales: [],
       selected_default_locale: null,
@@ -151,6 +155,9 @@ class ConceptContainerForm extends React.Component {
     newState.selected_default_locale = {id: resource.default_locale, name: resource.default_locale}
     newState.selected_supported_locales = map(resource.supported_locales, l => ({id: l, name: l}))
     newState.fields.extras = isEmpty(resource.extras) ? newState.fields.extras : map(resource.extras, (v, k) => ({key: k, value: v}))
+    if(this.isSource()) {
+      ['autoid_concept_mnemonic', 'autoid_mapping_mnemonic', 'autoid_concept_external_id', 'autoid_mapping_external_id'].forEach(attr => newState.fields[attr] = resource[attr])
+    }
     this.setState(newState, this.setSupportedLocales);
   }
 
@@ -257,6 +264,10 @@ class ConceptContainerForm extends React.Component {
       delete fields.case_sensitive;
       delete fields.compositional;
       delete fields.version_needed;
+      delete fields.autoid_concept_mnemonic;
+      delete fields.autoid_mapping_mnemonic;
+      delete fields.autoid_concept_external_id;
+      delete fields.autoid_mapping_external_id;
     }
 
     fields.extras = arrayToObject(fields.extras)
@@ -327,7 +338,7 @@ class ConceptContainerForm extends React.Component {
     } = this.state;
     const {
       onCancel, edit, types, resourceType, placeholders,
-      extraFields, extraBooleanFields, extraDateTimeFields, extraURIFields, extraSelectFields
+      extraFields, extraBooleanFields, extraDateTimeFields, extraURIFields, extraSelectFields, autoidFields
     } = this.props;
     const isSource = this.isSource()
     const selected_type = isSource ? selected_source_type : selected_collection_type;
@@ -590,6 +601,7 @@ class ConceptContainerForm extends React.Component {
                         value={fields[attr.id]}
                         onChange={event => this.setFieldValue(`fields.${attr.id}`, event.target.value)}
                         label={startCase(attr.id)}
+                        disabled={edit && includes(autoidFields || [], attr.id)}
                       >
                         {
                           map(["None", ...attr.options], option => (

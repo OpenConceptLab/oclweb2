@@ -4,7 +4,8 @@ import { SOURCE_TYPES } from '../../common/constants';
 import ConceptContainerForm from '../common/ConceptContainerForm';
 
 const HIERARCHY_MEANING = ['grouped-by', 'is-a', 'part-of', 'classified-with']
-
+const AUTO_ID_OPTIONS = ['uuid', 'sequential']
+const AUTO_ID_FIELDS = ['autoid_concept_mnemonic', 'autoid_mapping_mnemonic', 'autoid_concept_external_id', 'autoid_mapping_external_id']
 const CONFIGS = {
   resourceType: 'source',
   defaultIdText: 'SourceCode',
@@ -20,12 +21,18 @@ const CONFIGS = {
   },
   extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction', 'collection_reference', 'meta'],
   extraBooleanFields: ['experimental', 'case_sensitive', 'compositional', 'version_needed'],
-  extraSelectFields: [{id: 'hierarchy_meaning', options: HIERARCHY_MEANING}],
+  extraSelectFields: [
+    {id: 'hierarchy_meaning', options: HIERARCHY_MEANING},
+    {id: 'autoid_concept_mnemonic', options: AUTO_ID_OPTIONS},
+    {id: 'autoid_mapping_mnemonic', options: AUTO_ID_OPTIONS},
+    {id: 'autoid_concept_external_id', options: AUTO_ID_OPTIONS},
+    {id: 'autoid_mapping_external_id', options: AUTO_ID_OPTIONS},
+  ],
   extraURIFields: ['hierarchy_root_url'],
 }
 
 const SourceForm = props => (
-  <ConceptContainerForm {...props} {...CONFIGS} resource={props.source} />
+  <ConceptContainerForm {...props} {...CONFIGS} resource={props.source} autoidFields={AUTO_ID_FIELDS} />
 );
 
 export default SourceForm;
