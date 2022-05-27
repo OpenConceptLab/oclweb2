@@ -133,7 +133,8 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
     if(version.expansion_url) {
       const defaultExpansion = find(_expansions, {url: version.expansion_url})
       const otherExpansions = reject(_expansions, {url: version.expansion_url})
-      _expansions = [{...defaultExpansion, "default": true}, ...otherExpansions]
+      if(defaultExpansion)
+        _expansions = [{...defaultExpansion, "default": true}, ...otherExpansions]
     }
     return _expansions
   }
