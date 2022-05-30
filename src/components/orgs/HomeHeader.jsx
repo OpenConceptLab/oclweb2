@@ -1,12 +1,14 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import {
   Home as HomeIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
+  Delete as DeleteIcon
 } from '@mui/icons-material';
 import { Tooltip, ButtonGroup, Button } from '@mui/material';
 import { isEmpty, get, has, merge, isBoolean, map, includes } from 'lodash';
-import { toFullAPIURL, copyURL, currentUserHasAccess } from '../../common/utils';
+import { toFullAPIURL, copyURL, currentUserHasAccess, getCurrentUser, isAdminUser } from '../../common/utils';
 import { HEADER_GRAY } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -34,6 +36,7 @@ const HomeHeader = ({
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
   const hasAccess = currentUserHasAccess();
+  const currentUser = getCurrentUser()
   const onIconClick = () => copyURL(toFullAPIURL(url));
 
   React.useEffect(
@@ -111,6 +114,19 @@ const HomeHeader = ({
   }
 
   const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && hasBackgroundImage);
+  const canDelete = org.id !== 'OCL' && (isAdminUser() || (get(org, 'created_by') === get(currentUser, 'username')))
+  const onDelete = () => {
+    alertifyjs.confirm(`Delete Organization: ${org.id}`, 'This action is irreversible, are you sure you want to delete organization?', () => {
+      APIService.orgs(org.id).delete().then(response => {
+        if(response.status === 202)
+          alertifyjs.success('Organization delete is queued, this may take few minutes.')
+        else if(response.status === 204)
+          alertifyjs.success('Organization is deleted', 3, () => window.location.reload())
+        else
+          alertifyjs.error('Something bad might have happened!')
+      })
+    }, () => {})
+  }
   return (
     <header className='home-header col-xs-12' style={merge({marginBottom: tab === 0 ? 0 : '5px', padding: 0}, getBackgroundStyles())}>
       <div className='col-xs-12 no-side-padding' style={shouldShowOverlay ? {paddingBottom: '2px', backgroundColor: 'rgba(0,0,0,0.6)'} : {}}>
@@ -149,6 +165,14 @@ const HomeHeader = ({
                         </Tooltip>
                       }
                       <DownloadButton resource={org} filename={downloadFileName} includeCSV iconStyle={customTitleColor ? {color: customTitleColor} : {}} />
+                      {
+                        canDelete &&
+                          <Tooltip arrow title='Delete Organization'>
+                            <Button onClick={onDelete} color='secondary'>
+                              <DeleteIcon fontSize='inherit' style={customTitleColor ? {color: customTitleColor} : {}} />
+                            </Button>
+                          </Tooltip>
+                      }
                     </ButtonGroup>
                   </span>
                 }
