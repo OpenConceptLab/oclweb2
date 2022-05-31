@@ -306,7 +306,7 @@ class ConceptForm extends React.Component {
                       helperText={this.getIdHelperText()}
                       variant="outlined"
                       fullWidth
-                      required
+                      required={!Boolean(source.autoid_concept_mnemonic)}
                       onChange={this.onTextFieldChange}
                       onBlur={this.onIdFieldBlur}
                       value={fields.id}
