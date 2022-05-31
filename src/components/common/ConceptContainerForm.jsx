@@ -66,10 +66,10 @@ class ConceptContainerForm extends React.Component {
         immutable: null, //only collection
         locked_date: '', // only collection - datetime
         autoexpand_head: true,
-        autoid_concept_mnemonic: null,
+        autoid_concept_mnemonic: '',
         autoid_mapping_mnemonic: 'sequential',
-        autoid_concept_external_id: null,
-        autoid_mapping_external_id: null,
+        autoid_concept_external_id: '',
+        autoid_mapping_external_id: '',
       },
       selected_supported_locales: [],
       selected_default_locale: null,
