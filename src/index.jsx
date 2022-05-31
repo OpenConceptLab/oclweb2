@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Fade from '@mui/material/Fade';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { HashRouter } from 'react-router-dom';
@@ -43,6 +44,14 @@ const v5Theme = createTheme(theme, {
     }
   },
   components: {
+    MuiTooltip: {
+      defaultProps: {
+        arrow: true,
+        leaveDelay: 300,
+        TransitionComponent: Fade,
+        TransitionProps: { timeout: 300 }
+      }
+    },
     MuiButton: {
       variants: [
         {
