@@ -54,11 +54,19 @@ class ConceptHierarchyTree extends React.Component {
   }
 
   getChildren = (concept, callback) => {
-    const { source, sourceVersion } = this.props;
-    let URL = source.url
-    if(sourceVersion)
-      URL += sourceVersion + '/'
+    const { source, sourceVersion, parent } = this.props;
+    let URL;
+    if(parent) {
+      URL = parent.url
+      URL += parent.version + '/'
+    } else {
+      URL = source.url
+      if(sourceVersion)
+        URL += sourceVersion + '/'
+    }
+
     URL += 'concepts/' + encodeURIComponent(encodeURIComponent(concept.id)) + '/'
+
     APIService
     .new()
     .overrideURL(URL)

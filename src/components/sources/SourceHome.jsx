@@ -372,6 +372,7 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     concept={selected}
+                    parent={source}
                     location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
                     match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
                     openHierarchy={false}

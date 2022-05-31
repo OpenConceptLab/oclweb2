@@ -55,7 +55,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents, sourceVersion }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents, sourceVersion, parent }) => {
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
   const conceptMappings = get(concept, 'mappings') || [];
@@ -236,7 +236,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
           </DialogTitle>
           <DialogContent>
             <div className='col-xs-12' style={{padding: '10px'}}>
-              <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} sourceVersion={sourceVersion} source={source} />
+              <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} sourceVersion={sourceVersion} source={source} parent={parent} />
             </div>
           </DialogContent>
           <DialogActions>

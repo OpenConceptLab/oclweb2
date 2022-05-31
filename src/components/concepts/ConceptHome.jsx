@@ -291,6 +291,7 @@ class ConceptHome extends React.Component {
                 isLoadingParents={isLoadingParents}
                 versions={versions}
                 sourceVersion={get(this.props.match, 'params.version')}
+                parent={this.props.parent}
               />
             </div>
           </React.Fragment>
