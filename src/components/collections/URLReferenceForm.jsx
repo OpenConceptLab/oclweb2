@@ -7,9 +7,10 @@ import {
   Add as AddIcon,
   UnfoldMore as ExpandIcon,
   UnfoldLess as CollapseIcon,
-  Clear as RemoveIcon
+  Clear as RemoveIcon,
+  DifferenceOutlined as DuplicateIcon
 } from '@mui/icons-material';
-import { map, cloneDeep, merge, last, get, find, compact, omit, forEach } from 'lodash';
+import { map, cloneDeep, merge, last, get, find, compact, omit, forEach, has } from 'lodash';
 
 const OPERATORS = ['=', 'in']
 const REFERENCE_TYPES = ['concepts', 'mappings']
@@ -125,18 +126,18 @@ const FilterForm = ({ filter, onUpdate, onRemove, isRequired }) => {
   )
 }
 
-const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
-  const [expression, setExpression] = React.useState('')
-  const [namespace, setNamespace] = React.useState('')
-  const [system, setSystem] = React.useState('')
-  const [version, setVersion] = React.useState('')
-  const [code, setCode] = React.useState('')
-  const [resourceVersion, setResourceVersion] = React.useState('')
-  const [valueset, setValueset] = React.useState([])
-  const [filter, setFilter] = React.useState([])
-  const [include, setInclude] = React.useState(true)
-  const [referenceType, setReferenceType] = React.useState('concepts')
-  const [expand, setExpand] = React.useState(false)
+const ExpressionForm = ({ expressionObj, onUpdate, onRemove, onDuplicate }) => {
+  const [expression, setExpression] = React.useState(expressionObj.expression || '')
+  const [namespace, setNamespace] = React.useState(expressionObj.namespace || '')
+  const [system, setSystem] = React.useState(expressionObj.system || '')
+  const [version, setVersion] = React.useState(expressionObj.version || '')
+  const [code, setCode] = React.useState(expressionObj.code || '')
+  const [resourceVersion, setResourceVersion] = React.useState(expressionObj.resourceVersion || '')
+  const [valueset, setValueset] = React.useState(expressionObj.valueset || [])
+  const [filter, setFilter] = React.useState(expressionObj.filter || [])
+  const [include, setInclude] = React.useState(has(expressionObj, 'include') ? expressionObj.include : true)
+  const [referenceType, setReferenceType] = React.useState(expressionObj.referenceType || 'concepts')
+  const [expand, setExpand] = React.useState(Boolean(expressionObj.system))
 
   const toExpression = extras => (
     merge(
@@ -247,7 +248,6 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                 <Tooltip arrow title='Remove'>
                   <IconButton
                     size='small'
-                    label='remove'
                     color='error'
                     variant='outlined'
                     onClick={() => onRemove(expressionObj.id)}>
@@ -255,6 +255,15 @@ const ExpressionForm = ({ expressionObj, onUpdate, onRemove }) => {
                   </IconButton>
                 </Tooltip>
             }
+            <Tooltip arrow title='Duplicate'>
+              <IconButton
+                size='small'
+                color='secondary'
+                variant='outlined'
+                onClick={() => onDuplicate(expressionObj)}>
+                <DuplicateIcon size='small' />
+              </IconButton>
+            </Tooltip>
           </legend>
           <div className='col-xs-12 no-side-padding' style={{margin: '10px 0'}}>
             {
@@ -436,9 +445,8 @@ const URLReferenceForm = ({ onChange }) => {
     onChange(formatExpressions(_expressions))
   }
 
-  const onAdd = () => {
-    setExpressions([...expressions, {id: last(expressions).id + 1}])
-  }
+  const onAdd = () => setExpressions([...expressions, {id: last(expressions).id + 1}])
+  const onDuplicate = expression => setExpressions([...expressions, {...expression, id: last(expressions).id + 1}])
 
   const formatExpressions = _expressions => {
     const formatted = []
@@ -476,6 +484,7 @@ const URLReferenceForm = ({ onChange }) => {
                 expressionObj={expression}
                 onUpdate={onUpdate}
                 onRemove={expressions.length > 1 ? onRemove : false}
+                onDuplicate={onDuplicate}
               />
             </div>
           );
