@@ -19,7 +19,10 @@ const CONFIGS = {
     external_id: "e.g. UUID from external system",
     canonical_url: "e.g. http://who.int/ICPC-2",
   },
-  extraFields: ['publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact', 'jurisdiction', 'collection_reference', 'meta'],
+  extraFields: [
+    'publisher', 'purpose', 'copyright', 'content_type', 'identifier', 'contact',
+    'jurisdiction', 'collection_reference', 'meta',
+  ],
   extraBooleanFields: ['experimental', 'case_sensitive', 'compositional', 'version_needed'],
   extraSelectFields: [
     {id: 'hierarchy_meaning', options: HIERARCHY_MEANING},
@@ -27,6 +30,10 @@ const CONFIGS = {
     {id: 'autoid_mapping_mnemonic', options: AUTO_ID_OPTIONS},
     {id: 'autoid_concept_external_id', options: AUTO_ID_OPTIONS},
     {id: 'autoid_mapping_external_id', options: AUTO_ID_OPTIONS},
+  ],
+  extraNumberFields: [
+    'autoid_concept_mnemonic_start_from', 'autoid_concept_external_id_start_from',
+    'autoid_mapping_mnemonic_start_from', 'autoid_mapping_external_id_start_from',
   ],
   extraURIFields: ['hierarchy_root_url'],
 }

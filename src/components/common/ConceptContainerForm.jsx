@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import {
   set, get, map, cloneDeep, pullAt, isEmpty, startCase, pickBy, isObject, isArray,
-  find, intersectionBy, includes
+  find, intersectionBy, includes, reject, filter
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, getCurrentUserUsername, getCurrentUser } from '../../common/utils';
@@ -70,6 +70,10 @@ class ConceptContainerForm extends React.Component {
         autoid_mapping_mnemonic: 'sequential',
         autoid_concept_external_id: '',
         autoid_mapping_external_id: '',
+        autoid_concept_mnemonic_start_from: undefined,
+        autoid_mapping_mnemonic_start_from: undefined,
+        autoid_concept_external_id_start_from: undefined,
+        autoid_mapping_external_id_start_from: undefined,
       },
       selected_supported_locales: [],
       selected_default_locale: null,
@@ -156,7 +160,12 @@ class ConceptContainerForm extends React.Component {
     newState.selected_supported_locales = map(resource.supported_locales, l => ({id: l, name: l}))
     newState.fields.extras = isEmpty(resource.extras) ? newState.fields.extras : map(resource.extras, (v, k) => ({key: k, value: v}))
     if(this.isSource()) {
-      ['autoid_concept_mnemonic', 'autoid_mapping_mnemonic', 'autoid_concept_external_id', 'autoid_mapping_external_id'].forEach(attr => newState.fields[attr] = resource[attr])
+      [
+        'autoid_concept_mnemonic', 'autoid_mapping_mnemonic',
+        'autoid_concept_external_id', 'autoid_mapping_external_id',
+        'autoid_concept_mnemonic_start_from', 'autoid_concept_external_id_start_from',
+        'autoid_mapping_mnemonic_start_from', 'autoid_mapping_external_id_start_from',
+      ].forEach(attr => newState.fields[attr] = resource[attr])
     }
     this.setState(newState, this.setSupportedLocales);
   }
@@ -255,6 +264,13 @@ class ConceptContainerForm extends React.Component {
       delete fields.immutable;
       delete fields.locked_date;
       delete fields.autoexpand_head;
+      [
+        'autoid_concept_mnemonic', 'autoid_concept_external_id',
+        'autoid_mapping_mnemonic', 'autoid_mapping_external_id',
+      ].forEach(field => {
+        if(fields[field] !== 'sequential')
+          delete fields[`${field}_start_from`]
+      })
     } else {
       delete fields.content_type;
       delete fields.source_type;
@@ -268,6 +284,10 @@ class ConceptContainerForm extends React.Component {
       delete fields.autoid_mapping_mnemonic;
       delete fields.autoid_concept_external_id;
       delete fields.autoid_mapping_external_id;
+      delete fields.autoid_concept_mnemonic_start_from;
+      delete fields.autoid_mapping_mnemonic_start_from;
+      delete fields.autoid_concept_external_id_start_from;
+      delete fields.autoid_mapping_external_id_start_from;
     }
 
     fields.extras = arrayToObject(fields.extras)
@@ -592,7 +612,7 @@ class ConceptContainerForm extends React.Component {
                 ))
               }
               {
-                map(extraSelectFields, attr => (
+                map(reject(extraSelectFields, field => includes(autoidFields, field.id)), attr => (
                   <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr.id}>
                     <FormControl variant="outlined" fullWidth>
                       <InputLabel id="demo-simple-select-outlined-label">{startCase(attr.id)}</InputLabel>
@@ -601,7 +621,6 @@ class ConceptContainerForm extends React.Component {
                         value={fields[attr.id]}
                         onChange={event => this.setFieldValue(`fields.${attr.id}`, event.target.value)}
                         label={startCase(attr.id)}
-                        disabled={edit && includes(autoidFields || [], attr.id)}
                       >
                         {
                           map(["None", ...attr.options], option => (
@@ -612,6 +631,48 @@ class ConceptContainerForm extends React.Component {
                         }
                       </Select>
                     </FormControl>
+                  </div>
+                ))
+              }
+              {
+                isSource && map(filter(extraSelectFields, field => includes(autoidFields, field.id)), attr => (
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr.id}>
+                    <div className='col-md-6 no-left-padding'>
+                      <FormControl variant="outlined" fullWidth>
+                        <InputLabel id="demo-simple-select-outlined-label">{startCase(attr.id)}</InputLabel>
+                        <Select
+                          id={`fields.${attr.id}`}
+                          value={fields[attr.id]}
+                          onChange={event => this.setFieldValue(`fields.${attr.id}`, event.target.value)}
+                          label={startCase(attr.id)}
+                          disabled={edit}
+                        >
+                          {
+                            map(["None", ...attr.options], option => (
+                              <MenuItem value={option === 'None' ? '' : option} key={option}>
+                                {option === 'None' ? <em>None</em> : option}
+                              </MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </div>
+                    {
+                      fields[attr.id] === 'sequential' &&
+                        <div className='col-md-6 no-side-padding'>
+                          <TextField
+                            required
+                            id={`fields.${attr.id}_start_from`}
+                            label='Start From'
+                            variant="outlined"
+                            fullWidth
+                            onChange={this.onTextFieldChange}
+                            value={fields[`${attr.id}_start_from`]}
+                            type='number'
+                            inputProps={{min: 0}}
+                          />
+                        </div>
+                    }
                   </div>
                 ))
               }
