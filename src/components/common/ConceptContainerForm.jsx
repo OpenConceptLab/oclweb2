@@ -359,13 +359,15 @@ class ConceptContainerForm extends React.Component {
     const fieldValue = this.state.fields[field]
     const isConcept = field.includes('concept')
     const isExternalId = field.includes('external_id')
+    const resourceLabel = isConcept ? 'Concept' : 'Mapping'
+    const fieldLabel = isExternalId ? 'external_id' : 'ID'
 
     if(fieldValue === 'sequential')
-      return `This will make next ${isConcept ? "concept's" : "mapping's"} ${isExternalId ? 'external_id' : 'id'} to be ${value}`
+      return `This will make ${resourceLabel} ${fieldLabel} to be optional and auto-assigned sequentially. The next ${resourceLabel} ${fieldLabel} will be ${value}`
     if(fieldValue === 'uuid')
-      return `This will make ${isConcept ? "concept's" : "mapping's"} ${isExternalId ? 'external_id' : 'id'} to be in the UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.`
+      return `This will make ${resourceLabel} ${fieldLabel} to be optional and auto-assigned in the UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.`
 
-    return `This will make ${isConcept ? "concept's" : "mapping's"} ${isExternalId ? 'external_id' : 'id'} to be dependent on user input`
+    return `This will make ${resourceLabel} ${fieldLabel} to be required and dependent on user input`
   }
 
   render() {
