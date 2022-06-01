@@ -117,11 +117,23 @@ class MappingForm extends React.Component {
 
   getIdHelperText() {
     const { parent, fields } = this.state
-    const { edit } = this.props
+    const { edit, source } = this.props
     const id = fields.id || "[generated-mapping-id]"
     const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     return (
       <span>
+        {
+          source.autoid_mapping_mnemonic === 'sequential' &&
+            <React.Fragment>
+              <span>This is optional since the parent repostiory is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
+            </React.Fragment>
+        }
+        {
+          source.autoid_mapping_mnemonic === 'uuid' &&
+            <React.Fragment>
+              <span>This is optional since the parent repostiory is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
+            </React.Fragment>
+        }
         <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
         <br />
         {
@@ -132,6 +144,27 @@ class MappingForm extends React.Component {
               </span>
               <span><b>{id}</b>/</span>
             </span>
+        }
+      </span>
+    )
+  }
+
+  getExternalIdHelperText() {
+    const { source } = this.props
+    if(!source)
+      return ''
+    return (
+      <span>
+        {
+          source.autoid_mapping_external_id === 'sequence' &&
+            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
+        }
+        {
+          source.autoid_mapping_external_id === 'uuid' &&
+            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
+        }
+        {
+          !source.autoid_concept_external_id && ''
         }
       </span>
     )
@@ -318,6 +351,7 @@ class MappingForm extends React.Component {
                   fullWidth
                   onChange={this.onTextFieldChange}
                   value={fields.external_id}
+                  helperText={edit ? undefined : this.getExternalIdHelperText()}
                 />
               </div>
               {
