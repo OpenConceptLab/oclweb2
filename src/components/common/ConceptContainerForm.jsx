@@ -1,7 +1,10 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Add as AddIcon , Person as PersonIcon, Home as HomeIcon } from '@mui/icons-material';
+import {
+  Add as AddIcon , Person as PersonIcon, Home as HomeIcon,
+  BubbleChart as TipIcon
+} from '@mui/icons-material';
 import {
   TextField, IconButton, Button, CircularProgress, Select, MenuItem, FormControl, InputLabel,
   FormControlLabel, Checkbox, FormHelperText
@@ -12,10 +15,11 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { arrayToObject, getCurrentURL, getCurrentUserUsername, getCurrentUser } from '../../common/utils';
-import { ORANGE } from '../../common/constants';
+import { ORANGE, BLUE } from '../../common/constants';
 import ExtrasForm from './ExtrasForm';
 import RTEditor from './RTEditor';
 import LocaleAutoComplete from './LocaleAutoComplete';
+import {HtmlToolTipNormalRaw as HtmlToolTipRaw} from './HtmlToolTipRaw';
 const JSON_MODEL = {key: '', value: ''}
 
 
@@ -70,10 +74,10 @@ class ConceptContainerForm extends React.Component {
         autoid_mapping_mnemonic: 'sequential',
         autoid_concept_external_id: '',
         autoid_mapping_external_id: '',
-        autoid_concept_mnemonic_start_from: undefined,
-        autoid_mapping_mnemonic_start_from: undefined,
-        autoid_concept_external_id_start_from: undefined,
-        autoid_mapping_external_id_start_from: undefined,
+        autoid_concept_mnemonic_start_from: 1,
+        autoid_mapping_mnemonic_start_from: 1,
+        autoid_concept_external_id_start_from: 1,
+        autoid_mapping_external_id_start_from: 1,
       },
       selected_supported_locales: [],
       selected_default_locale: null,
@@ -349,6 +353,19 @@ class ConceptContainerForm extends React.Component {
     if(value !== '__')
       newState.fields.extras[index].value = value
     this.setState(newState)
+  }
+
+  getAutoIdHelperText = (field, value) => {
+    const fieldValue = this.state.fields[field]
+    const isConcept = field.includes('concept')
+    const isExternalId = field.includes('external_id')
+
+    if(fieldValue === 'sequential')
+      return `This will make next ${isConcept ? "concept's" : "mapping's"} ${isExternalId ? 'external_id' : 'id'} to be ${value}`
+    if(fieldValue === 'uuid')
+      return `This will make ${isConcept ? "concept's" : "mapping's"} ${isExternalId ? 'external_id' : 'id'} to be in the UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.`
+
+    return `This will make ${isConcept ? "concept's" : "mapping's"} ${isExternalId ? 'external_id' : 'id'} to be dependent on user input`
   }
 
   render() {
@@ -637,7 +654,19 @@ class ConceptContainerForm extends React.Component {
               {
                 isSource && map(filter(extraSelectFields, field => includes(autoidFields, field.id)), attr => (
                   <div className='col-md-12 no-side-padding' style={{marginTop: '15px'}} key={attr.id}>
-                    <div className='col-md-6 no-left-padding'>
+                    <HtmlToolTipRaw
+                      open={edit ? fields[attr.id] === 'sequential' : true}
+                      title={
+                        <span style={{color: BLUE, display: 'flex', alignItems: 'center'}}>
+                          <TipIcon color='primary' fontSize='small' style={{marginRight: '5px'}}/>
+                          {
+                            this.getAutoIdHelperText(attr.id, fields[`${attr.id}_start_from`])
+                          }
+                        </span>
+                      }
+                      placement='left'>
+                    <div className='col-md-9 no-side-padding'>
+                      <div className='col-md-8 no-left-padding'>
                       <FormControl variant="outlined" fullWidth>
                         <InputLabel id="demo-simple-select-outlined-label">{startCase(attr.id)}</InputLabel>
                         <Select
@@ -659,7 +688,7 @@ class ConceptContainerForm extends React.Component {
                     </div>
                     {
                       fields[attr.id] === 'sequential' &&
-                        <div className='col-md-6 no-side-padding'>
+                        <div className='col-md-4 no-side-padding'>
                           <TextField
                             required
                             id={`fields.${attr.id}_start_from`}
@@ -673,6 +702,8 @@ class ConceptContainerForm extends React.Component {
                           />
                         </div>
                     }
+                    </div>
+                    </HtmlToolTipRaw>
                   </div>
                 ))
               }
