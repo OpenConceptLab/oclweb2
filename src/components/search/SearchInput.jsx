@@ -89,10 +89,16 @@ class SearchInput extends React.Component {
       const { input, exactMatch } = this.state
       let _input = input || '';
       const exactMatchStr = exactMatch === 'on' ? '&exactMatch=on' : '';
+      const queryParams = new URLSearchParams(window.location.hash.split('?')[1])
+      const resourceType = queryParams.get('type')
       if(!_input)
         setTimeout(() => window.location.hash = '/search/', 500)
-      else
-        window.location.hash = `/search/?q=${_input}${exactMatchStr}`;
+      else {
+        let URL =`/search/?q=${_input}${exactMatchStr}`;
+        if(resourceType)
+          URL += `&type=${resourceType}`
+        window.location.hash = URL
+      }
     }
   }
 
