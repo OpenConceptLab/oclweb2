@@ -132,7 +132,7 @@ const HomeTabs = props => {
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
         formComponent={
-          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={url} />
+          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==1} parentURL={url} />
         }
       />
       <CommonFormDrawer
@@ -140,7 +140,7 @@ const HomeTabs = props => {
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
         formComponent={
-          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={url} />
+          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==2} parentURL={url} />
         }
       />
       <CommonFormDrawer
@@ -148,7 +148,7 @@ const HomeTabs = props => {
         isOpen={membersForm}
         onClose={() => setMembersForm(false)}
         formComponent={
-          <MembersForm onCancel={() => setMembersForm(false)} reloadOnSuccess={tab==2} parentURL={url} />
+          <MembersForm onCancel={() => setMembersForm(false)} reloadOnSuccess={tab==3} parentURL={url} />
         }
       />
       <ResponsiveDrawer
