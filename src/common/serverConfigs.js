@@ -117,7 +117,6 @@ export const SERVER_CONFIGS = [
         '$validate-code',
       ],
       valueSet: [
-        '$lookup',
         '$validate-code',
       ]
     }
@@ -144,7 +143,6 @@ export const SERVER_CONFIGS = [
         '$validate-code',
       ],
       valueSet: [
-        '$lookup',
         '$validate-code',
       ]
     }
@@ -170,7 +168,6 @@ export const SERVER_CONFIGS = [
         '$validate-code',
       ],
       valueSet: [
-        '$lookup',
         '$validate-code',
       ]
     }
@@ -196,7 +193,6 @@ export const SERVER_CONFIGS = [
         '$validate-code',
       ],
       valueSet: [
-        '$lookup',
         '$validate-code',
       ]
     }
@@ -236,7 +232,6 @@ export const SERVER_CONFIGS = [
         '$validate-code',
       ],
       valueSet: [
-        '$lookup',
         '$validate-code',
       ]
     }
