@@ -8,7 +8,6 @@ import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
 import HierarchyTraversalList from './HierarchyTraversalList';
-import ConceptHomeHeader from './ConceptHomeHeader';
 import ScopeHeader from './ScopeHeader'
 import ConceptHomeDetails from './ConceptHomeDetails';
 import '../common/Split.scss';
@@ -252,31 +251,18 @@ class ConceptHome extends React.Component {
         {
           !isLoading && !hasError &&
           <React.Fragment>
-            {
-              this.props.scoped ?
-              <ScopeHeader
-                isVersionedObject={isVersionedObject}
-                scoped={this.props.scoped}
-                global={this.props.global}
-                onClose={this.props.onClose}
-                concept={concept}
-                mappings={mappings}
-                versionedObjectURL={this.getVersionedObjectURLFromPath()}
-                header={has(this.props, 'header') ? this.props.header : true}
-                showActions={this.props.showActions}
-                currentURL={currentURL}
-              /> :
-              <ConceptHomeHeader
-                concept={concept}
-                mappings={mappings}
-                isVersionedObject={isVersionedObject}
-                versionedObjectURL={this.getVersionedObjectURLFromPath()}
-                currentURL={currentURL}
-                hierarchy={openHierarchy}
-                onHierarchyClick={this.toggleHierarchy}
-                header={has(this.props, 'header') ? this.props.header : true}
-              />
-            }
+            <ScopeHeader
+              isVersionedObject={isVersionedObject}
+              scoped={this.props.scoped}
+              global={this.props.global}
+              onClose={this.props.onClose}
+              concept={concept}
+              mappings={mappings}
+              versionedObjectURL={this.getVersionedObjectURLFromPath()}
+              header={has(this.props, 'header') ? this.props.header : true}
+              showActions={this.props.showActions}
+              currentURL={currentURL}
+            />
             <div className='col-xs-12' style={{position: 'relative', marginTop: detailsMargin, marginBottom: detailsMargin}}>
               <ConceptHomeDetails
                 scoped={this.props.scoped}
