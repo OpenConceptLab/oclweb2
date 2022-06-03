@@ -10,7 +10,7 @@ import {
   set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, fetchMapTypes, toParentURI } from '../../common/utils';
+import { arrayToObject, fetchMapTypes } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
 
@@ -83,15 +83,11 @@ class MappingForm extends React.Component {
 
     if(fromConcept) {
       newState.fields.from_concept_url = fromConcept.url
-      newState.fields.from_concept_code = fromConcept.id ? decodeURIComponent(fromConcept.id) : fromConcept.id
       newState.fields.from_concept_name = fromConcept.display_name
-      newState.fields.from_source_url = toParentURI(fromConcept.url) + '/'
     }
     if(toConcept) {
       newState.fields.to_concept_url = toConcept.url
-      newState.fields.to_concept_code = toConcept.id ? decodeURIComponent(toConcept.id) : toConcept.id
       newState.fields.to_concept_name = toConcept.display_name
-      newState.fields.to_source_url = toParentURI(toConcept.url) + '/'
     }
     this.setState(newState)
   }
