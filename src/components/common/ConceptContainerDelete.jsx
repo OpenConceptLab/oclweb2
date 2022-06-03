@@ -1,12 +1,13 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import { last } from 'lodash';
 import { RED } from '../../common/constants';
 
-const ConceptContainerDelete = ({open, resource, onClose, onDelete}) => {
+const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedResources}) => {
   const resourceEntity = resource.type
   const resourceType = resourceEntity.toLowerCase()
-  const resourceId = resource.short_code
+  const resourceId = resource.short_code || resource.id
   const [input, setInput] = React.useState('');
   const canDelete = input === resourceId
   const opacity = canDelete ? 1 : 0.5;
@@ -14,11 +15,13 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete}) => {
     onClose();
     onDelete();
   }
+  const associations = (associatedResources || ['versions', 'concepts', 'mappings'])
+  let associationsLabel = associations.slice(0, -1).join(', ') + ' and ' + last(associations)
   return (
     <React.Fragment>
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>
-          {`Delete ${resourceEntity} : ${resourceId}`}
+          {`Delete ${resourceEntity}: ${resourceId}`}
         </DialogTitle>
         <DialogContent>
           <MuiAlert variant="filled" severity="warning" style={{marginBottom: '10px'}}>
@@ -31,7 +34,7 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete}) => {
           <p>
             This action <b>cannot</b> be undone!
             {
-              ` This will delete the entire ${resourceType} and all of its associated versions, concepts and mappings.`
+              ` This will delete the entire ${resourceType} and all of its associated ${associationsLabel}.`
             }
           </p>
           <p>

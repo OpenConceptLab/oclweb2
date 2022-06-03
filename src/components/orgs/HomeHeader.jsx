@@ -25,6 +25,7 @@ import DownloadButton from '../common/DownloadButton';
 import OrgForm from './OrgForm';
 import HomeTabs from './HomeTabs';
 import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
+import ConceptContainerDelete from '../common/ConceptContainerDelete';
 
 const DEFAULT_VISIBLE_ATTRIBUTES = ORG_DEFAULT_CONFIG.config.header.attributes
 
@@ -35,6 +36,7 @@ const HomeHeader = ({
   const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.shrinkHeader', false));
   const [logoURL, setLogoURL] = React.useState(org.logo_url)
   const [orgForm, setOrgForm] = React.useState(false);
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
   const hasAccess = currentUserHasAccess();
   const currentUser = getCurrentUser()
   const onIconClick = () => copyURL(toFullAPIURL(url));
@@ -116,16 +118,14 @@ const HomeHeader = ({
   const shouldShowOverlay = Boolean(isExpandedHeader && get(config, 'config.header.background.imageOverlay') && hasBackgroundImage);
   const canDelete = org.id !== 'OCL' && (isAdminUser() || (get(org, 'created_by') === get(currentUser, 'username')))
   const onDelete = () => {
-    alertifyjs.confirm(`Delete Organization: ${org.id}`, 'This action is irreversible, are you sure you want to delete organization?', () => {
-      APIService.orgs(org.id).delete().then(response => {
-        if(response.status === 202)
-          alertifyjs.success('Organization delete is queued, this may take few minutes.')
-        else if(response.status === 204)
-          alertifyjs.success('Organization is deleted', 3, () => window.location.reload())
-        else
-          alertifyjs.error('Something bad might have happened!')
-      })
-    }, () => {})
+    APIService.orgs(org.id).delete().then(response => {
+      if(response.status === 202)
+        alertifyjs.success('Organization delete is queued, this may take few minutes.', () => window.location.reload())
+      else if(response.status === 204)
+        alertifyjs.success('Organization is deleted', 3, () => window.location.reload())
+      else
+        alertifyjs.error('Something bad might have happened!')
+    })
   }
   return (
     <header className='home-header col-xs-12' style={merge({marginBottom: tab === 0 ? 0 : '5px', padding: 0}, getBackgroundStyles())}>
@@ -168,7 +168,7 @@ const HomeHeader = ({
                       {
                         canDelete &&
                           <Tooltip arrow title='Delete Organization'>
-                            <Button onClick={onDelete} color='secondary'>
+                            <Button onClick={() => setDeleteDialog(true)} color='secondary'>
                               <DeleteIcon fontSize='inherit' style={customTitleColor ? {color: customTitleColor} : {}} />
                             </Button>
                           </Tooltip>
@@ -291,6 +291,17 @@ const HomeHeader = ({
           }
         />
       </div>
+      {
+        canDelete && deleteDialog &&
+          <ConceptContainerDelete
+            open={deleteDialog}
+            resource={org}
+            onClose={() => setDeleteDialog(false)}
+            onDelete={onDelete}
+            associatedResources={['sources', 'collections', 'its content']}
+          />
+      }
+
     </header>
   )
 }
