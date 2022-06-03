@@ -259,29 +259,6 @@ class CollectionHomeChildrenList extends React.Component {
                                 defaultValue={recommendedOption}
                               >
                                 <FormControlLabel
-                                  style={{marginLeft: '0px', padding: '5px', background: shouldExclude ? 'rgba(51, 115, 170, 0.15)' : 'none', borderRadius: '5px'}}
-                                  value="exclude"
-                                  control={
-                                    <Radio
-                                      style={{padding: '2px 5px 2px 2px'}}
-                                      sx={{
-                                        '& .MuiSvgIcon-root': {
-                                          fontSize:'0.9rem',
-                                        },
-                                      }}
-                                    />
-                                  }
-                                  label={
-                                    <span className='flex-vertical-center' style={{fontSize: '0.9rem'}}>
-                                      <span>{excludeLabel}</span>
-                                      { shouldExclude && <span style={{marginLeft: '5px'}}><i>{recommended}</i></span> }
-                                      <Tooltip arrow placement='right' title="Excluding a concept/mapping will ensure that it will not appear in the collection. This can be undone by deleting the exclusion reference(s) in the References tab.">
-                                        <InfoIcon color='default' fontSize='small' style={{marginLeft: '5px'}} />
-                                      </Tooltip>
-                                    </span>
-                                  }
-                                />
-                                <FormControlLabel
                                   style={{marginLeft: '0px', padding: '5px', background: shouldExclude ? 'none' : 'rgba(51, 115, 170, 0.15)', borderRadius: '5px'}}
                                   value="delete"
                                   control={
@@ -304,6 +281,30 @@ class CollectionHomeChildrenList extends React.Component {
                                     </span>
                                   }
                                 />
+                                <FormControlLabel
+                                  style={{marginLeft: '0px', padding: '5px', background: shouldExclude ? 'rgba(51, 115, 170, 0.15)' : 'none', borderRadius: '5px'}}
+                                  value="exclude"
+                                  control={
+                                    <Radio
+                                      style={{padding: '2px 5px 2px 2px'}}
+                                      sx={{
+                                        '& .MuiSvgIcon-root': {
+                                          fontSize:'0.9rem',
+                                        },
+                                      }}
+                                    />
+                                  }
+                                  label={
+                                    <span className='flex-vertical-center' style={{fontSize: '0.9rem'}}>
+                                      <span>{excludeLabel}</span>
+                                      { shouldExclude && <span style={{marginLeft: '5px'}}><i>{recommended}</i></span> }
+                                      <Tooltip arrow placement='right' title="Excluding a concept/mapping will ensure that it will not appear in the collection. This can be undone by deleting the exclusion reference(s) in the References tab.">
+                                        <InfoIcon color='default' fontSize='small' style={{marginLeft: '5px'}} />
+                                      </Tooltip>
+                                    </span>
+                                  }
+                                />
+                                <div style={{marginLeft: '40px', fontSize: '12px'}}>Exclusion Expression: <b>{resource.url}</b></div>
                               </RadioGroup>
                             </FormControl>
                           </div>
