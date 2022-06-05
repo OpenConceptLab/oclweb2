@@ -8,9 +8,9 @@ import {
   InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map } from 'lodash';
+import { get, isEmpty, forEach, map, find } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
-import { generateRandomString } from '../../common/utils'
+import { generateRandomString, dropVersion } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
 import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
@@ -29,17 +29,21 @@ const None = () => {
   return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
 }
 
-const groupMappings = (concept, mappings) => {
-  const orderedMappings = {}
-  forEach(mappings, mapping => {
-    orderedMappings[mapping.map_type] = orderedMappings[mapping.map_type] || {order: null, direct: [], indirect: [], unknown: []}
-    const isDirect = mapping.from_concept_url === concept.url;
-    if(isDirect)
-      orderedMappings[mapping.map_type].direct.push(mapping)
+const groupMappings = (orderedMappings, concept, mappings, forward) => {
+  forEach(mappings, resource => {
+    if(!(find(mappings, mapping => dropVersion(mapping.target_concept_url) === dropVersion(resource.url)))) {
+      let mapType = resource.map_type
+      const isMapping = Boolean(mapType)
+      if(!mapType)
+        mapType = forward ? 'children' : 'parent'
+      orderedMappings[mapType] = orderedMappings[mapType] || {order: null, direct: [], indirect: [], unknown: [], hierarchy: [], reverseHierarchy: []}
+      let _resource = isMapping ? {...resource, target_concept_name: get(find(mappings, m => dropVersion(m.url) === dropVersion(resource.target_concept_url)), 'display_name')} : {...resource, target_concept_name: resource.display_name}
+    if(isMapping)
+      forward ? orderedMappings[mapType].direct.push(_resource) : orderedMappings[mapType].indirect.push(_resource)
     else
-      orderedMappings[mapping.map_type].indirect.push(mapping)
+      forward ? orderedMappings[mapType].hierarchy.push(_resource) : orderedMappings[mapType].reverseHierarchy.push(_resource)
+    }
   })
-  return orderedMappings;
 }
 
 const DEFAULT_CASCADE_FILTERS = {
@@ -55,13 +59,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, parentConcepts, isLoadingChildren, isLoadingParents, sourceVersion, parent }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent }) => {
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
   const conceptMappings = get(concept, 'mappings') || [];
-  const count = isLoadingMappings ? null : conceptMappings.length + get(childConcepts, 'length', 0) + get(parentConcepts, 'length', 0);
+  const reverseMappings = get(concept, 'reverseMappings') || [];
+  const count = isLoadingMappings ? null : conceptMappings.length;
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
-  const orderedMappings = groupMappings(concept, conceptMappings)
+  const orderedMappings = {}
+  groupMappings(orderedMappings, concept, conceptMappings, true)
+  groupMappings(orderedMappings, concept, reverseMappings, false)
   const hierarchyMeaning = get(source, 'hierarchy_meaning')
   const hierarchyMapType = isChild => {
     return (
@@ -91,7 +98,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
     setHierarchy(!hierarchy)
   }
 
-  const noAssociations = isEmpty(conceptMappings) && isEmpty(childConcepts) && isEmpty(parentConcepts);
+  const noAssociations = isEmpty(conceptMappings) && isEmpty(reverseMappings)
 
   let style = {minHeight: '40px', height: '100%', cursor: 'inherit'}
 
@@ -180,36 +187,20 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
                     })
                   }
                   {
-                    isLoadingChildren ?
-                    <TableRow>
-                      <TableCell colSpan={5} align='center'>
-                        <CircularProgress />
-                      </TableCell>
-                    </TableRow> :
-                    (
-                      !isEmpty(childConcepts) &&
+                    !isEmpty(get(orderedMappings, `children.hierarchy`)) &&
                       <ConceptHierarchyRow
                         source={source}
-                        concepts={childConcepts}
-                        mapType={hierarchyMapType(true)}
+                        concepts={get(orderedMappings, `children.hierarchy`)}
+                        mapType={hierarchyMapType(false)}
                       />
-                    )
                   }
                   {
-                    isLoadingParents ?
-                    <TableRow>
-                      <TableCell colSpan={5} align='center'>
-                        <CircularProgress />
-                      </TableCell>
-                    </TableRow> :
-                    (
-                      !isEmpty(parentConcepts) &&
+                    !isEmpty(get(orderedMappings, `parent.reverseHierarchy`)) &&
                       <ConceptHierarchyRow
                         source={source}
-                        concepts={parentConcepts}
-                        mapType={hierarchyMapType()}
+                        concepts={get(orderedMappings, `parent.reverseHierarchy`)}
+                        mapType={hierarchyMapType(true)}
                       />
-                    )
                   }
                 </TableBody>
               </Table>
@@ -236,7 +227,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, childConcepts, paren
           </DialogTitle>
           <DialogContent>
             <div className='col-xs-12' style={{padding: '10px'}}>
-              <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} sourceVersion={sourceVersion} source={source} parent={parent} />
+              <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} sourceVersion={sourceVersion} source={source} parent={parent} reverse={get(cascadeFilters, 'reverse', false)} />
             </div>
           </DialogContent>
           <DialogActions>

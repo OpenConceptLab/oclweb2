@@ -398,7 +398,7 @@ class CollectionHome extends React.Component {
                             parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                             mapping={selected}
                             location={{pathname: selected.version_url || selected.url}}
-                            match={{params: {mappingVersion: selected.verison}}}
+                    match={{params: {mappingVersion: selected.verison, version: this.props.match.params.version}}}
                             header={false}
                             noRedirect
                   /> :
@@ -409,7 +409,7 @@ class CollectionHome extends React.Component {
                             parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                             concept={selected}
                             location={{pathname: selected.version_url || selected.url}}
-                            match={{params: {conceptVersion: selected.version}}}
+                    match={{params: {conceptVersion: selected.version, version: this.props.match.params.version}}}
                             openHierarchy={false}
                             header={false}
                             noRedirect

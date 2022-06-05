@@ -11,9 +11,9 @@ import { getSiteTitle } from '../../common/utils';
 const SITE_TITLE = getSiteTitle()
 
 const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
-  const conceptCodeAttr = isIndirect ? 'from_concept_code' : 'to_concept_code';
-  const conceptCodeName = isIndirect ? 'from_concept_name' : 'to_concept_name';
-  const sourceAttr = isIndirect ? 'from_source_name' : 'to_source_name';
+  const conceptCodeAttr = 'target_concept_code'
+  const conceptCodeName = 'target_concept_name'
+  const sourceAttr = 'target_source_name';
 
   const onDefaultClick = (event, targetURL) => {
     event.stopPropagation()
@@ -55,7 +55,7 @@ const ConceptHomeMappingsTableRows = ({ mapType, mappings, isIndirect }) => {
       }
       {
         map(mappings, mapping => {
-          const targetURL = isIndirect ? get(mapping, 'from_concept_url') : get(mapping, 'to_concept_url');
+          const targetURL = get(mapping, 'target_concept_url')
           let title;
           if(targetURL)
             title = isIndirect ? `Source concept is defined in ${SITE_TITLE}` : `Target concept is defined in ${SITE_TITLE}`
