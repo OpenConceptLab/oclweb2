@@ -837,6 +837,8 @@ const ResultsTable = (
   React.useEffect(() => setSelectedList(map(getSelectedItems(), 'uuid')) , [results])
 
   const selectedItems = getSelectedItems()
+  const isAllSelected = selectedItems.length === results.items.length
+  const isSomeSelected = selectedItems.length > 0 && !isAllSelected
 
   return (
     <React.Fragment>
@@ -876,7 +878,7 @@ const ResultsTable = (
                       {
                         isSelectable &&
                         <TableCell style={{maxWidth: '30px', padding: '2px', ...theadStyles}} align="center">
-                          <Checkbox size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
+                          <Checkbox checked={isAllSelected} indeterminate={isSomeSelected} size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
                         </TableCell>
                       }
                       {
