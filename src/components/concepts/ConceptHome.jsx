@@ -26,15 +26,11 @@ class ConceptHome extends React.Component {
       isLoading: true,
       isLoadingMappings: false,
       isLoadingCollections: false,
-      isLoadingParents: false,
-      isLoadingChildren: false,
-      parentConcepts: null,
       concept: {},
       versions: [],
       mappings: [],
+      reverseMappings: [],
       collections: [],
-      parents: [],
-      childConcepts: [],
       source: {},
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
     }
@@ -53,9 +49,18 @@ class ConceptHome extends React.Component {
   }
 
   getConceptURLFromPath() {
-    const { location, match, scoped, parentURL, concept } = this.props;
+    const { location, match, scoped, parentURL, concept, parent } = this.props;
     if(scoped === 'collection')
       return `${parentURL}concepts/${encodeURIComponent(concept.id)}/${concept.version}/`
+    if(parent.source_type) {
+      const version = get(match, 'params.version')
+      let URL = parent.url
+      if(version && version !== 'HEAD')
+        URL += version + '/'
+      URL += `concepts/${encodeURIComponent(concept.id)}/`
+      return URL
+    }
+
     if(scoped)
       return location.pathname
 
@@ -82,7 +87,7 @@ class ConceptHome extends React.Component {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
       APIService.new()
                 .overrideURL(encodeURI(url || this.getConceptURLFromPath()))
-        .get(null, null, {includeHierarchyPath: Boolean(!this.props.scoped), includeParentConceptURLs: true, includeReferences: this.props.scoped === 'collection'})
+        .get(null, null, {includeReferences: this.props.scoped === 'collection'})
                 .then(response => {
                   if(get(response, 'detail') === "Not found.")
                     this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
@@ -99,8 +104,6 @@ class ConceptHome extends React.Component {
                       if(this.props.scoped !== 'collection') {
                         this.getVersions()
                         this.getCollectionVersions()
-                        this.getParents()
-                        this.getChildren()
                       }
                       if(!this.props.scoped)
                         this.getHierarchy()
@@ -161,34 +164,21 @@ class ConceptHome extends React.Component {
     this.setState({isLoadingMappings: true}, () => {
       let url = this.getConceptURLFromPath()
       if(this.props.scoped === 'collection' && this.props.parentURL)
-        url = `${this.props.parentURL}concepts/${encodeURIComponent(this.state.concept.id)}/${this.state.concept.version}/`
+        url = `${this.props.parentURL}concepts/${encodeURIComponent(this.state.concept.id)}/`
       APIService.new()
-                .overrideURL(encodeURI(url) + 'mappings/?includeInverseMappings=true&limit=1000')
-                .get()
+        .overrideURL(encodeURI(url))
+        .appendToUrl('$cascade/')
+        .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy'})
                 .then(response => {
-                  this.setState({mappings: response.data, isLoadingMappings: false})
-                })
-    })
-  }
-
-  getParents() {
-    this.setState({isLoadingParents: true}, () => {
-      APIService.new()
-                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'parents/?limit=100')
-                .get()
-                .then(response => {
-                  this.setState({parentConcepts: response.data, isLoadingParents: false})
-                })
-    })
-  }
-
-  getChildren() {
-    this.setState({isLoadingChildren: true}, () => {
-      APIService.new()
-                .overrideURL(encodeURI(this.getConceptURLFromPath()) + 'children/?limit=100')
-                .get()
-                .then(response => {
-                  this.setState({childConcepts: response.data, isLoadingChildren: false})
+                  this.setState({mappings: get(response.data, 'entry.entries', []), isLoadingMappings: true}, () => {
+                    APIService.new()
+                      .overrideURL(encodeURI(url))
+                      .appendToUrl('$cascade/')
+                      .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true})
+                      .then(response => {
+                        this.setState({reverseMappings: get(response.data, 'entry.entries', []), isLoadingMappings: false})
+                      })
+                  })
                 })
     })
   }
@@ -235,8 +225,7 @@ class ConceptHome extends React.Component {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading,
       notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
-      isLoadingHierarchy, collections, isLoadingCollections, source, isLoadingChildren, isLoadingParents,
-      childConcepts, parentConcepts
+      isLoadingHierarchy, collections, isLoadingCollections, source, reverseMappings
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -268,13 +257,9 @@ class ConceptHome extends React.Component {
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}
                 source={source}
-                concept={{...concept, mappings: mappings, collections: collections}}
-                parentConcepts={parentConcepts}
-                childConcepts={childConcepts}
+                concept={{...concept, mappings: mappings, collections: collections, reverseMappings: reverseMappings}}
                 isLoadingMappings={isLoadingMappings}
                 isLoadingCollections={isLoadingCollections}
-                isLoadingChildren={isLoadingChildren}
-                isLoadingParents={isLoadingParents}
                 versions={versions}
                 sourceVersion={get(this.props.match, 'params.version')}
                 parent={this.props.parent}
