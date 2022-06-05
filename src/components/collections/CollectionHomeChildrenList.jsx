@@ -48,12 +48,6 @@ class CollectionHomeChildrenList extends React.Component {
     return `${versionedObjectURL}/${resource}/`
   }
 
-  getResourceURLToExclude = resource => {
-    if(resource.is_latest_version || resource.versioned_object_id.toString() === resource.uuid)
-      return resource.url
-    return resource.version_url
-  }
-
   onExecute = () => {
     const { actions, selectedResources, selectedResourceReferences } = this.state;
 
@@ -65,8 +59,8 @@ class CollectionHomeChildrenList extends React.Component {
     const excludeReferenceResourceIds = compact(map(actions, (action, uuid) => action === 'exclude' ? uuid : null))
     const excludeResources = filter(selectedResources, resource => includes(excludeReferenceResourceIds, resource.uuid))
     const data = {
-      concepts: compact(map(excludeResources, resource => resource.type === 'Concept' ? this.getResourceURLToExclude(resource) : null)),
-      mappings: compact(map(excludeResources, resource => resource.type === 'Mapping' ? this.getResourceURLToExclude(resource) : null)),
+      concepts: compact(map(excludeResources, resource => resource.type === 'Concept' ? resource.url : null)),
+      mappings: compact(map(excludeResources, resource => resource.type === 'Mapping' ? resource.url : null)),
       exclude: true
     }
 
