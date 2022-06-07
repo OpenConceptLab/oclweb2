@@ -837,7 +837,7 @@ const ResultsTable = (
   React.useEffect(() => setSelectedList(map(getSelectedItems(), 'uuid')) , [results])
 
   const selectedItems = getSelectedItems()
-  const isAllSelected = selectedItems.length === results.items.length
+  const isAllSelected = selectedItems.length === get(results, 'items.length', 0)
   const isSomeSelected = selectedItems.length > 0 && !isAllSelected
 
   return (
