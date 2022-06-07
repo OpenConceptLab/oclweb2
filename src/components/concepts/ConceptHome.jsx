@@ -52,7 +52,7 @@ class ConceptHome extends React.Component {
     const { location, match, scoped, parentURL, concept, parent } = this.props;
     if(scoped === 'collection')
       return `${parentURL}concepts/${encodeURIComponent(concept.id)}/${concept.version}/`
-    if(parent.source_type) {
+    if(parent && parent.source_type) {
       const version = get(match, 'params.version')
       let URL = parent.url
       if(version && version !== 'HEAD')
