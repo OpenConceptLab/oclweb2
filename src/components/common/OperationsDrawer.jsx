@@ -11,7 +11,7 @@ import {
   OpenInNew as NewTabIcon,
   FileCopy as CopyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, filter, find, startCase } from 'lodash';
+import { get, map, includes, uniq, filter, find, startCase, isString } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL
@@ -106,7 +106,7 @@ const OperationsDrawer = () => {
   React.useEffect(
     () => {
       if(parentItem)
-        setCanonicalURL(parentItem.canonical_url)
+        setCanonicalURL(parentItem.canonical_url || '')
     },
     [parentItem]
   )
@@ -195,6 +195,14 @@ const OperationsDrawer = () => {
     setByURL(_byURL)
   }
 
+  const getResponse = () => {
+    let data = get(response, 'data') || get(response, 'error')
+    if(isString(data)) {
+      return {response: data}
+    }
+    return response
+  }
+
   return (
     <React.Fragment>
       <Drawer
@@ -247,7 +255,7 @@ const OperationsDrawer = () => {
                     Canonical URL
                   </h4>
                   <div className='col-xs-12 no-left-padding'>
-                    <TextField fullWidth value={canonicalURL} label='CanonicalURL' onChange={event => setCanonicalURL(event.target.value)} />
+                    <TextField fullWidth value={canonicalURL} label='CanonicalURL' onChange={event => setCanonicalURL(event.target.value || '')} />
                   </div>
                 </div> :
               <div className='col-xs-12 no-side-padding'>
@@ -312,7 +320,7 @@ const OperationsDrawer = () => {
                       name={false}
                       displayDataTypes={false}
                       displayObjectSize={false}
-                      src={get(response, 'data') || get(response, 'error')}
+                      src={getResponse()}
                       style={{overflow: 'auto'}}
                     />
                   </div>
