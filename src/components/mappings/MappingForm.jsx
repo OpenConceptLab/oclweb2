@@ -15,10 +15,14 @@ import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
 
 const EXTRAS_MODEL = {key: '', value: ''}
+const ANCHOR_UNDERLINE_STYLES = {textDecoration: 'underline', cursor: 'pointer'}
+
 class MappingForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      manualMnemonic: false,
+      manualExternalId: false,
       fieldErrors: {},
       mapTypes: [],
       selected_map_type: null,
@@ -119,6 +123,12 @@ class MappingForm extends React.Component {
     return (
       <span>
         {
+          source.autoid_mapping_mnemonic &&
+            <React.Fragment>
+              <a onClick={this.toggleManualMnemonic} style={ANCHOR_UNDERLINE_STYLES}>Auto-assign</a><br/>
+            </React.Fragment>
+        }
+        {
           source.autoid_mapping_mnemonic === 'sequential' &&
             <React.Fragment>
               <span>This is optional since the parent repostiory is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
@@ -152,6 +162,12 @@ class MappingForm extends React.Component {
     return (
       <span>
         {
+          source.autoid_mapping_external_id &&
+            <React.Fragment>
+              <a onClick={this.toggleManualExternalId} style={ANCHOR_UNDERLINE_STYLES}>Auto-assign</a><br/>
+            </React.Fragment>
+        }
+        {
           source.autoid_mapping_external_id === 'sequence' &&
             <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
         }
@@ -160,7 +176,7 @@ class MappingForm extends React.Component {
             <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
         }
         {
-          !source.autoid_concept_external_id && ''
+          !source.autoid_mapping_external_id && ''
         }
       </span>
     )
@@ -272,9 +288,27 @@ class MappingForm extends React.Component {
     return this.state.parent
   }
 
+  toggleManualMnemonic = () => {
+    const newManualMnemonic = !this.state.manualMnemonic
+    const newState = {...this.state}
+    if(!newManualMnemonic)
+      newState.fields.id = ''
+    newState.manualMnemonic = newManualMnemonic
+    this.setState(newState)
+  }
+
+  toggleManualExternalId = () => {
+    const newManualExternalId = !this.state.manualExternalId
+    const newState = {...this.state}
+    if(!newManualExternalId)
+      newState.fields.external_id = ''
+    newState.manualExternalId = newManualExternalId
+    this.setState(newState)
+  }
+
   render() {
-    const { fields, fieldErrors, selected_map_type, mapTypes } = this.state;
-    const { onCancel, edit } = this.props;
+    const { fields, fieldErrors, selected_map_type, mapTypes, manualMnemonic, manualExternalId } = this.state;
+    const { onCancel, edit, source } = this.props;
     const isLoading = isEmpty(mapTypes);
     const header = edit ? `Edit Mapping: ${fields.id}` : 'New Mapping'
     return (
@@ -284,9 +318,9 @@ class MappingForm extends React.Component {
         </div>
         {
           isLoading ?
-          <div style={{width: '100%', textAlign: 'center', marginTop: '100px'}}>
-            <CircularProgress />
-          </div>:
+            <div style={{width: '100%', textAlign: 'center', marginTop: '100px'}}>
+              <CircularProgress />
+            </div>:
           <div className='col-md-12 no-side-padding'>
             <form>
               <OwnerParentSelection
@@ -300,19 +334,25 @@ class MappingForm extends React.Component {
               {
                 !edit &&
                   <div style={{marginTop: '15px', width: '100%'}}>
-                    <TextField
-                      error={Boolean(fieldErrors.id)}
-                      id="fields.id"
-                      label="Mapping ID"
-                      placeholder="e.g. A15.0"
-                      helperText={this.getIdHelperText()}
-                      variant="outlined"
-                      fullWidth
-                      onChange={this.onTextFieldChange}
-                      value={fields.id}
-                      disabled={edit}
-                      inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
-                    />
+                    {
+                      get(source, 'autoid_mapping_mnemonic') && !manualMnemonic ?
+                        <span style={{fontWeight: '500', borderLeft: '3px solid lightgray', padding: '10px 5px'}}>
+                          Mapping ID will be auto-assigned (<a style={ANCHOR_UNDERLINE_STYLES} onClick={this.toggleManualMnemonic}>click here</a> to override with manual entry)
+                        </span> :
+                      <TextField
+                        error={Boolean(fieldErrors.id)}
+                        id="fields.id"
+                        label="Mapping ID"
+                        placeholder="e.g. A15.0"
+                        helperText={this.getIdHelperText()}
+                        variant="outlined"
+                        fullWidth
+                        onChange={this.onTextFieldChange}
+                        value={fields.id}
+                        disabled={edit}
+                        inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
+                      />
+                    }
                   </div>
               }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
@@ -329,40 +369,46 @@ class MappingForm extends React.Component {
                     params => <TextField
                                 {...params}
                                 error={Boolean(fieldErrors.map_type)}
-                                      required
-                                      label="Map Type"
-                                      variant="outlined"
-                                      fullWidth
-                    />
+                                required
+                                label="Map Type"
+                                variant="outlined"
+                                fullWidth
+                              />
                   }
                   onChange={(event, item) => this.onAutoCompleteChange('fields.map_type', item)}
                 />
               </div>
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
-                <TextField
-                  id="fields.external_id"
-                  label="External ID"
-                  placeholder="e.g. UUID from external system"
-                  variant="outlined"
-                  fullWidth
-                  onChange={this.onTextFieldChange}
-                  value={fields.external_id}
-                  helperText={edit ? undefined : this.getExternalIdHelperText()}
-                />
-              </div>
-              {
-                edit &&
-                <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                {
+                  get(source, 'autoid_mapping_external_id') && !manualExternalId && !edit ?
+                    <span style={{fontWeight: '500', borderLeft: '3px solid lightgray', padding: '10px 5px'}}>
+                      Mapping External ID will be auto-assigned (<a style={ANCHOR_UNDERLINE_STYLES} onClick={this.toggleManualExternalId}>click here</a> to override with manual entry)
+                    </span> :
                   <TextField
-                    id="fields.comment"
-                    label="Update Comment"
+                    id="fields.external_id"
+                    label="External ID"
+                    placeholder="e.g. UUID from external system"
                     variant="outlined"
                     fullWidth
                     onChange={this.onTextFieldChange}
-                    value={fields.comment}
-                    required
+                    value={fields.external_id}
+                    helperText={edit ? undefined : this.getExternalIdHelperText()}
                   />
-                </div>
+                }
+              </div>
+              {
+                edit &&
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                    <TextField
+                      id="fields.comment"
+                      label="Update Comment"
+                      variant="outlined"
+                      fullWidth
+                      onChange={this.onTextFieldChange}
+                      value={fields.comment}
+                      required
+                    />
+                  </div>
               }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <h3 className='divider'>
@@ -533,8 +579,8 @@ class MappingForm extends React.Component {
           </div>
         }
       </div>
-    );
-  }
+  );
+}
 }
 
 export default MappingForm;

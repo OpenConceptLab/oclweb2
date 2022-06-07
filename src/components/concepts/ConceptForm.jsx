@@ -19,11 +19,14 @@ import OwnerParentSelection from '../common/OwnerParentSelection';
 const NAME_MODEL = {locale: '', name_type: '', name: '', external_id: '', locale_preferred: false}
 const DESC_MODEL = {locale: '', description_type: '', description: '', external_id: '', locale_preferred: false}
 const EXTRAS_MODEL = {key: '', value: ''}
+const ANCHOR_UNDERLINE_STYLES = {textDecoration: 'underline', cursor: 'pointer'}
 
 class ConceptForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      manualMnemonic: false,
+      manualExternalId: false,
       parent: null,
       fields: {
         id: '',
@@ -97,27 +100,33 @@ class ConceptForm extends React.Component {
     const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     return (
       <span>
-      {
-        parentURL &&
-          <span>
-            {
-              source.autoid_concept_mnemonic === 'sequential' &&
-                <React.Fragment>
-                  <span>This is optional since the parent repostiory is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
+        {
+          parentURL &&
+            <span>
+              {
+                source.autoid_concept_mnemonic &&
+                  <React.Fragment>
+                    <a onClick={this.toggleManualMnemonic} style={ANCHOR_UNDERLINE_STYLES}>Auto-assign</a><br/>
                   </React.Fragment>
-            }
-            {
-              source.autoid_concept_mnemonic === 'uuid' &&
-                <React.Fragment>
-                  <span>This is optional since the parent repostiory is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
-                </React.Fragment>
-            }
-            <span>Your new concept will live at: <br />
-              { `${window.location.origin}/#${parentURL}concepts/` }
+              }
+              {
+                source.autoid_concept_mnemonic === 'sequential' &&
+                  <React.Fragment>
+                    <span>This is optional since the parent repostiory is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
+                  </React.Fragment>
+              }
+              {
+                source.autoid_concept_mnemonic === 'uuid' &&
+                  <React.Fragment>
+                    <span>This is optional since the parent repostiory is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
+                  </React.Fragment>
+              }
+              <span>Your new concept will live at: <br />
+                { `${window.location.origin}/#${parentURL}concepts/` }
+              </span>
+              <span><b>{id ? encodeURIComponent(id) : defaultId}</b>/</span>
             </span>
-            <span><b>{id ? encodeURIComponent(id) : defaultId}</b>/</span>
-          </span>
-      }
+        }
       </span>
     )
   }
@@ -128,14 +137,20 @@ class ConceptForm extends React.Component {
       return ''
     return (
       <span>
-      {
-        source.autoid_concept_external_id === 'sequence' &&
-          <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
-      }
-      {
-        source.autoid_concept_external_id === 'uuid' &&
-          <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
-      }
+        {
+          source.autoid_concept_external_id &&
+            <React.Fragment>
+              <a onClick={this.toggleManualExternalId} style={ANCHOR_UNDERLINE_STYLES}>Auto-assign</a><br/>
+            </React.Fragment>
+        }
+        {
+          source.autoid_concept_external_id === 'sequence' &&
+            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
+        }
+        {
+          source.autoid_concept_external_id === 'uuid' &&
+            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
+        }
         {
           !source.autoid_concept_external_id && ''
         }
@@ -277,8 +292,8 @@ class ConceptForm extends React.Component {
   cleanLocales(locales) {
     return filter(locales, locale => {
       return locale.locale &&
-             (get(locale, 'name_type') || get(locale, 'description_type')) &&
-             (get(locale, 'name') || get(locale, 'description'))
+        (get(locale, 'name_type') || get(locale, 'description_type')) &&
+        (get(locale, 'name') || get(locale, 'description'))
     })
   }
 
@@ -299,10 +314,28 @@ class ConceptForm extends React.Component {
     return this.state.parent
   }
 
+  toggleManualMnemonic = () => {
+    const newManualMnemonic = !this.state.manualMnemonic
+    const newState = {...this.state}
+    if(!newManualMnemonic)
+      newState.fields.id = ''
+    newState.manualMnemonic = newManualMnemonic
+    this.setState(newState)
+  }
+
+  toggleManualExternalId = () => {
+    const newManualExternalId = !this.state.manualExternalId
+    const newState = {...this.state}
+    if(!newManualExternalId)
+      newState.fields.external_id = ''
+    newState.manualExternalId = newManualExternalId
+    this.setState(newState)
+  }
+
   render() {
     const {
       fieldErrors, fields, datatypes, nameTypes, conceptClasses,
-      descriptionTypes, selected_concept_class, selected_datatype
+      descriptionTypes, selected_concept_class, selected_datatype, manualMnemonic, manualExternalId
     } = this.state;
     const isLoading = isEmpty(descriptionTypes) || isEmpty(datatypes) || isEmpty(nameTypes);
     const { onCancel, edit, source } = this.props;
@@ -315,9 +348,9 @@ class ConceptForm extends React.Component {
         </div>
         {
           isLoading ?
-          <div style={{width: '100%', textAlign: 'center', marginTop: '100px'}}>
-            <CircularProgress />
-          </div>:
+            <div style={{width: '100%', textAlign: 'center', marginTop: '100px'}}>
+              <CircularProgress />
+            </div>:
           <div className='col-md-12 no-side-padding'>
             <form>
               <OwnerParentSelection
@@ -331,20 +364,26 @@ class ConceptForm extends React.Component {
               {
                 !edit &&
                   <div style={{marginTop: '15px', width: '100%'}}>
-                    <TextField
-                      error={Boolean(fieldErrors.id)}
-                      id="fields.id"
-                      label="Concept ID"
-                      placeholder="e.g. A15.0"
-                      helperText={this.getIdHelperText()}
-                      variant="outlined"
-                      fullWidth
-                      required={!source.autoid_concept_mnemonic}
-                      onChange={this.onTextFieldChange}
-                      onBlur={this.onIdFieldBlur}
-                      value={fields.id}
-                      disabled={edit}
-                    />
+                    {
+                      get(source, 'autoid_concept_mnemonic') && !manualMnemonic ?
+                        <span style={{fontWeight: '500', borderLeft: '3px solid lightgray', padding: '10px 5px'}}>
+                          Concept ID will be auto-assigned (<a style={ANCHOR_UNDERLINE_STYLES} onClick={this.toggleManualMnemonic}>click here</a> to override with manual entry)
+                        </span> :
+                      <TextField
+                        error={Boolean(fieldErrors.id)}
+                        id="fields.id"
+                        label="Concept ID"
+                        placeholder="e.g. A15.0"
+                        helperText={this.getIdHelperText()}
+                        variant="outlined"
+                        fullWidth
+                        required={!source.autoid_concept_mnemonic}
+                        onChange={this.onTextFieldChange}
+                        onBlur={this.onIdFieldBlur}
+                        value={fields.id}
+                        disabled={edit}
+                      />
+                    }
                   </div>
               }
               <div style={{marginTop: '15px', width: '100%'}}>
@@ -361,17 +400,17 @@ class ConceptForm extends React.Component {
                     params => <TextField
                                 {...params}
                                 error={Boolean(fieldErrors.concept_class)}
-                                      required
-                                      label="Concept Class"
-                                      variant="outlined"
-                                      fullWidth />
+                                required
+                                label="Concept Class"
+                                variant="outlined"
+                                fullWidth />
                   }
                   onChange={(event, item) => {
-                      this.onAutoCompleteChange('fields.concept_class', item)}
-                  }
+                    this.onAutoCompleteChange('fields.concept_class', item)}
+                           }
                   onInputChange={(event, value) => {
-                      this.setFieldValue('fields.concept_class', value)}
-                  }
+                    this.setFieldValue('fields.concept_class', value)}
+                                }
                 />
               </div>
               <div style={{marginTop: '15px', width: '100%'}}>
@@ -388,39 +427,45 @@ class ConceptForm extends React.Component {
                     params => <TextField
                                 {...params}
                                 error={Boolean(fieldErrors.datatype)}
-                                      required
-                                      label="Datatype"
-                                      variant="outlined"
-                                      fullWidth />
+                                required
+                                label="Datatype"
+                                variant="outlined"
+                                fullWidth />
                   }
                   onChange={(event, item) => this.onAutoCompleteChange('fields.datatype', item)}
                 />
               </div>
               <div style={{marginTop: '15px', width: '100%'}}>
-                <TextField
-                  id="fields.external_id"
-                  label="External ID"
-                  placeholder="e.g. UUID from external system"
-                  variant="outlined"
-                  fullWidth
-                  onChange={this.onTextFieldChange}
-                  value={fields.external_id}
-                  helperText={edit ? undefined : this.getExternalIdHelperText()}
-                />
-              </div>
-              {
-                edit &&
-                <div style={{marginTop: '15px', width: '100%'}}>
+                {
+                  get(source, 'autoid_concept_external_id') && !manualExternalId && !edit ?
+                    <span style={{fontWeight: '500', borderLeft: '3px solid lightgray', padding: '10px 5px'}}>
+                      Concept External ID will be auto-assigned (<a style={ANCHOR_UNDERLINE_STYLES} onClick={this.toggleManualExternalId}>click here</a> to override with manual entry)
+                    </span> :
                   <TextField
-                    id="fields.comment"
-                    label="Update Comment"
+                    id="fields.external_id"
+                    label="External ID"
+                    placeholder="e.g. UUID from external system"
                     variant="outlined"
                     fullWidth
                     onChange={this.onTextFieldChange}
-                    value={fields.comment}
-                    required
+                    value={fields.external_id}
+                    helperText={edit ? undefined : this.getExternalIdHelperText()}
                   />
-                </div>
+                }
+              </div>
+              {
+                edit &&
+                  <div style={{marginTop: '15px', width: '100%'}}>
+                    <TextField
+                      id="fields.comment"
+                      label="Update Comment"
+                      variant="outlined"
+                      fullWidth
+                      onChange={this.onTextFieldChange}
+                      value={fields.comment}
+                      required
+                    />
+                  </div>
               }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <div className='col-md-8'>
