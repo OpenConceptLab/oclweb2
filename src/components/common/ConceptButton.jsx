@@ -2,12 +2,13 @@ import React from 'react';
 import { Button, Tooltip } from '@mui/material';
 import { LocalOffer as LocalOfferIcon } from '@mui/icons-material';
 import { merge } from 'lodash';
-import { BLUE, WHITE, RED, BLACK } from '../../common/constants';
+import { BLUE, WHITE, RED, BLACK, UUID_LENGTH } from '../../common/constants';
 
 const ConceptButton = ({label, onClick, retired, href, style, ...rest}) => {
   const _style = retired ?
-                 {background: 'lightgray', color: RED, boxShadow: 'none', textDecoration: 'line-through', textDecorationColor: BLACK, textTransform: 'none'} :
-                 {background: BLUE, color: WHITE, boxShadow: 'none', textTransform: 'none'};
+        {background: 'lightgray', color: RED, boxShadow: 'none', textDecoration: 'line-through', textDecorationColor: BLACK, textTransform: 'none'} :
+        {background: BLUE, color: WHITE, boxShadow: 'none', textTransform: 'none'};
+  const truncLabel = label && label.length === UUID_LENGTH ? `${label.split('-')[0]}...` : label
   return (
     <Tooltip title={label} arrow>
       <Button
@@ -19,7 +20,7 @@ const ConceptButton = ({label, onClick, retired, href, style, ...rest}) => {
         className='button-controlled'
         {...rest}
       >
-        {label}
+        {truncLabel}
       </Button>
     </Tooltip>
   )
