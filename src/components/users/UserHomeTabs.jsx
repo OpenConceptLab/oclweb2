@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import { Tabs, Tab, AppBar, CircularProgress, Button } from '@mui/material';
 import {
   List as ListIcon,
@@ -42,14 +41,6 @@ const UserHomeTabs = props => {
       setSourceForm(true)
     if(resource === 'collection')
       setCollectionForm(true)
-  }
-  const onCancelForm = (entity, callback) => {
-    alertifyjs.confirm(
-      'Are you sure you want to close?',
-      `You will loose your data if you do not save the ${entity} first`,
-      () => {},
-      callback
-    ).set('closable', false).set('labels', {ok: 'Go Back', cancel: 'Close without saving'})
   }
   const getNewResourceButton = resource => {
     return (
@@ -158,7 +149,7 @@ const UserHomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={sourceForm}
-        onClose={() => onCancelForm('Source', () => setSourceForm(false))}
+        onClose={() => setSourceForm(false)}
         formComponent={
           <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={user.url} />
         }
@@ -166,7 +157,7 @@ const UserHomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={collectionForm}
-        onClose={() => onCancelForm('Collection', () => setCollectionForm(false))}
+        onClose={() => setCollectionForm(false)}
         formComponent={
           <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={user.url} />
         }
@@ -174,7 +165,7 @@ const UserHomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={orgForm}
-        onClose={() => onCancelForm('Organization', () => setOrgForm(false))}
+        onClose={() => setOrgForm(false)}
         formComponent={
           <OrgForm onCancel={() => setOrgForm(false)} reloadOnSuccess={tab==2} successURI={user.organizations_url} />
         }

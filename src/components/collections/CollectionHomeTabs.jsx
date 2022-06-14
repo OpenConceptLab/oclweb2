@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import { get, reject, includes, map, pickBy, isString, isObject, isEmpty } from 'lodash';
 import { Tabs, Tab } from '@mui/material';
 import { GREEN } from '../../common/constants';
@@ -40,14 +39,6 @@ const CollectionHomeTabs = props => {
       setReferenceForm(true)
     if(resource === 'expansion')
       setExpansionForm(true)
-  }
-  const onCancelForm = (entity, callback) => {
-    alertifyjs.confirm(
-      'Are you sure you want to close?',
-      `You will loose your data if you do not save the ${entity} first`,
-      () => {},
-      callback
-    ).set('closable', false).set('labels', {ok: 'Go Back', cancel: 'Close without saving'})
   }
 
   const onCreateExpansionClick = version => {
@@ -180,7 +171,7 @@ const CollectionHomeTabs = props => {
         style={{zIndex: 1202}}
         size='large'
         isOpen={referenceForm}
-        onClose={() => onCancelForm('References', () => setReferenceForm(false))}
+        onClose={() => setReferenceForm(false)}
         formComponent={
           <ReferenceForm onCancel={() => setReferenceForm(false)} reloadOnSuccess={tab < 3} parentURL={versionedObjectURL} collection={collection} />
         }
@@ -188,7 +179,7 @@ const CollectionHomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={versionForm}
-        onClose={() => onCancelForm('Collection Version', () => setVersionForm(false))}
+        onClose={() => setVersionForm(false)}
         formComponent={
           <CollectionVersionForm onCancel={() => setVersionForm(false)} reloadOnSuccess={tab==3} parentURL={versionedObjectURL} version={collection} resource="collection" />
         }
@@ -196,7 +187,7 @@ const CollectionHomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={expansionForm}
-        onClose={() => onCancelForm('Expansion', () => setExpansionForm(false))}
+        onClose={() => setExpansionForm(false)}
         formComponent={
           <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==3} version={selectedVersion || collection} versions={versions} />
         }

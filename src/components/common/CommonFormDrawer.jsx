@@ -4,12 +4,11 @@ import { Drawer } from '@mui/material';
 const CommonFormDrawer = ({ isOpen, onClose, formComponent, size, ...rest }) => {
   const className = 'custom-drawer ' + (size || 'medium')
   const [open, setOpen] = React.useState(isOpen);
-  const onDrawerClose = () => {
+  const onDrawerClose = () => setOpen(() => {
     if(onClose)
       onClose();
-    else
-      setOpen(false)
-  }
+    return false;
+  })
 
   React.useEffect(() => setOpen(isOpen), [isOpen])
 

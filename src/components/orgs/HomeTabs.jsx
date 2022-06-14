@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import { Tabs, Tab } from '@mui/material';
 import { map, reject, get } from 'lodash';
 import { ORANGE, BLUE } from '../../common/constants';
@@ -37,15 +36,6 @@ const HomeTabs = props => {
       setMembersForm(true)
     if(resource === 'editOverviewSettings')
       setOverviewSettings(true)
-  }
-
-  const onCancelForm = (entity, callback) => {
-    alertifyjs.confirm(
-      'Are you sure you want to close?',
-      `You will loose your data if you do not save the ${entity} first`,
-      () => {},
-      callback
-    ).set('closable', false).set('labels', {ok: 'Go Back', cancel: 'Close without saving'})
   }
 
   const getTABHref = tabConfig => {
@@ -140,7 +130,7 @@ const HomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={sourceForm}
-        onClose={() => onCancelForm('Source', () => setSourceForm(false))}
+        onClose={() => setSourceForm(false)}
         formComponent={
           <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==1} parentURL={url} />
         }
@@ -148,7 +138,7 @@ const HomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={collectionForm}
-        onClose={() => onCancelForm('Collection', () => setCollectionForm(false))}
+        onClose={() => setCollectionForm(false)}
         formComponent={
           <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==2} parentURL={url} />
         }
@@ -156,7 +146,7 @@ const HomeTabs = props => {
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={membersForm}
-        onClose={() => onCancelForm('Members', () => setMembersForm(false))}
+        onClose={() => setMembersForm(false)}
         formComponent={
           <MembersForm onCancel={() => setMembersForm(false)} reloadOnSuccess={tab==3} parentURL={url} />
         }

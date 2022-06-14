@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import { Tabs, Tab } from '@mui/material';
 import { get, reject, includes, map, pickBy, isString, isObject } from 'lodash';
 import { GREEN, TABLE_LAYOUT_ID, LIST_LAYOUT_ID } from '../../common/constants';
@@ -43,15 +42,6 @@ const SourceHomeTabs = props => {
       setVersionForm(true)
   }
 
-  const onCancelForm = (entity, callback) => {
-    alertifyjs.confirm(
-      'Are you sure you want to close?',
-      `You will loose your data if you do not save the ${entity} first`,
-      () => {},
-      callback
-    ).set('closable', false).set('labels', {ok: 'Go Back', cancel: 'Close without saving'})
-  }
-
   const onCreateSimilarClick = instance => {
     setSelectedChild(instance)
     if(instance) {
@@ -67,15 +57,13 @@ const SourceHomeTabs = props => {
     setMappingForm(true)
   }
 
-  const closeDrawer = (entity, callback) => {
-    onCancelForm(entity, () => {
-      setSelectedChild(null)
-      callback();
-    })
+  const closeDrawer = callback => {
+    setSelectedChild(null)
+    callback();
   }
-  const closeMappingForm = () => closeDrawer('Mapping', () => setMappingForm(false))
-  const closeConceptForm = () => closeDrawer('Concept', () => setConceptForm(false))
-  const closeVersionForm = () => closeDrawer('Source Version', () => setVersionForm(false))
+  const closeMappingForm = () => closeDrawer(() => setMappingForm(false))
+  const closeConceptForm = () => closeDrawer(() => setConceptForm(false))
+  const closeVersionForm = () => closeDrawer(() => setVersionForm(false))
   const currentResourceURL = isVersionedObject ? source.url : source.version_url
   const getTABHref = tabConfig => {
     let href = '';
