@@ -277,7 +277,7 @@ class ExpansionForm extends React.Component {
             <div className='col-md-12 no-side-padding'>
               <div className='col-md-12 no-side-padding'>
                 <h4 style={{marginTop: '20px', marginBottom: '5px', paddingLeft: '5px'}}>
-                  Parameters
+                  Parameters (Beta)
                 </h4>
               </div>
               {
