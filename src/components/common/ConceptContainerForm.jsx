@@ -361,13 +361,15 @@ class ConceptContainerForm extends React.Component {
     const isExternalId = field.includes('external_id')
     const resourceLabel = isConcept ? 'Concept' : 'Mapping'
     const fieldLabel = isExternalId ? 'external_id' : 'ID'
+    const staticLabel = isExternalId ? "OpenMRS recommends using 'uuid' here." : "OpenMRS recommends using 'sequential' here."
+    let text = `This will make ${resourceLabel} ${fieldLabel} to be required and dependent on user input.`
 
     if(fieldValue === 'sequential')
-      return `This will make ${resourceLabel} ${fieldLabel} to be optional and auto-assigned sequentially. The next ${resourceLabel} ${fieldLabel} will be ${value}`
-    if(fieldValue === 'uuid')
-      return `This will make ${resourceLabel} ${fieldLabel} to be optional and auto-assigned in the UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.`
+      text = `This will make ${resourceLabel} ${fieldLabel} to be optional and auto-assigned sequentially. The next ${resourceLabel} ${fieldLabel} will be ${value}.`
+    else if(fieldValue === 'uuid')
+      text = `This will make ${resourceLabel} ${fieldLabel} to be optional and auto-assigned in the UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.`
 
-    return `This will make ${resourceLabel} ${fieldLabel} to be required and dependent on user input`
+    return text + ' ' + staticLabel
   }
 
   render() {
