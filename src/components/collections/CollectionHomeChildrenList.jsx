@@ -32,38 +32,40 @@ class CollectionHomeChildrenList extends React.Component {
     const { versionedObjectURL, resource, expansion, expansions } = this.props;
     const expansionURL = get(expansion, 'url')
     let url = versionedObjectURL
+
     if(resource === 'references') {
       if(selectedVersion)
         return url + selectedVersion + '/' + resource + '/'
       return url + resource + '/'
     }
+
     if(expansionURL)
       return `${expansionURL}${resource}/`
+
     if(isEmpty(expansions)) {
       if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
         url += `${selectedVersion}/`
       url += `${resource}/`
       return url
     }
+
     return `${versionedObjectURL}/${resource}/`
   }
 
   onExecute = () => {
     const { actions, selectedResources, selectedResourceReferences } = this.state;
-
     const deleteReferenceResourceIds = compact(map(actions, (action, uuid) => action === 'delete' ? uuid : null))
     const deleteReferenceURIs = uniq(flatten(map(filter(selectedResources, resource => includes(deleteReferenceResourceIds, resource.uuid)), 'references')))
     const referenceIds = map(deleteReferenceURIs, uri => selectedResourceReferences[uri].id)
-    this.deleteReferences(referenceIds, false)
-
     const excludeReferenceResourceIds = compact(map(actions, (action, uuid) => action === 'exclude' ? uuid : null))
     const excludeResources = filter(selectedResources, resource => includes(excludeReferenceResourceIds, resource.uuid))
-    const data = {
-      concepts: compact(map(excludeResources, resource => resource.type === 'Concept' ? resource.url : null)),
-      mappings: compact(map(excludeResources, resource => resource.type === 'Mapping' ? resource.url : null)),
-      exclude: true
-    }
+    const getURLs = entity = compact(map(excludeResources, resource => resource.type === entity ? resource.url : null))
 
+    this.deleteReferences(referenceIds, false)
+    this.excludeReferences({concepts: getURLs('Concept'), mappings: getURLs('Mapping'), exclude: true})
+  }
+
+  excludeReferences = data => {
     APIService
       .new()
       .overrideURL(this.props.versionedObjectURL)
