@@ -26,8 +26,8 @@ const CONFIGS = {
   extraBooleanFields: ['experimental', 'case_sensitive', 'compositional', 'version_needed'],
   extraSelectFields: [
     {id: 'hierarchy_meaning', options: HIERARCHY_MEANING},
-    {id: 'autoid_concept_mnemonic', options: AUTO_ID_OPTIONS},
-    {id: 'autoid_mapping_mnemonic', options: AUTO_ID_OPTIONS},
+    {id: 'autoid_concept_mnemonic', options: AUTO_ID_OPTIONS, label: 'Auto Concept ID'},
+    {id: 'autoid_mapping_mnemonic', options: AUTO_ID_OPTIONS, label: 'Auto Mapping ID'},
     {id: 'autoid_concept_external_id', options: AUTO_ID_OPTIONS},
     {id: 'autoid_mapping_external_id', options: AUTO_ID_OPTIONS},
   ],

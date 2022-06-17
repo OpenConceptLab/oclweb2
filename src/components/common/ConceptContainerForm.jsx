@@ -672,12 +672,12 @@ class ConceptContainerForm extends React.Component {
                     <div className='col-md-9 no-side-padding'>
                       <div className='col-md-8 no-left-padding'>
                       <FormControl variant="outlined" fullWidth>
-                        <InputLabel id="demo-simple-select-outlined-label">{startCase(attr.id)}</InputLabel>
+                        <InputLabel id="demo-simple-select-outlined-label">{attr.label || startCase(attr.id)}</InputLabel>
                         <Select
                           id={`fields.${attr.id}`}
                           value={fields[attr.id]}
                           onChange={event => this.setFieldValue(`fields.${attr.id}`, event.target.value)}
-                          label={startCase(attr.id)}
+                          label={attr.label || startCase(attr.id)}
                           disabled={edit}
                         >
                           {
