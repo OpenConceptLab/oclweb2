@@ -125,7 +125,7 @@ class CollectionHomeChildrenList extends React.Component {
   onClose = () => this.setState({describeDelete: false, actions: {}})
 
   shouldMakeExclusion = resource => {
-    if(resource.references.length > 1)
+    if((get(resource.references, 'length') || 0) > 1)
       return true
     let total = 0;
     forEach(resource.references, referenceURI => {
@@ -203,7 +203,7 @@ class CollectionHomeChildrenList extends React.Component {
                             />
                           </div>
                           <div className="col-xs-12" style={{paddingTop: '5px'}}>
-                            {`This is a result of ${resource.references.length} reference(s):`}
+                            {`This is a result of ${get(resource.references, 'length') || 0} reference(s):`}
                             </div>
                           <List dense style={{padding: '0 20px', display: 'inline-block'}}>
                             {
