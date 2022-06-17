@@ -185,11 +185,6 @@ export const SOURCE_DEFAULT_CONFIG = {
           type: "date",
         },
         {
-          label: "Revision Date",
-          value: "revision_date",
-          type: "date",
-        },
-        {
           label: "Identifier",
           value: "identifier",
           type: "json",
