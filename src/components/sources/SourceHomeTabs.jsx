@@ -22,7 +22,7 @@ const SourceHomeTabs = props => {
     onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, hierarchy, onHierarchyToggle,
     onFilterDrawerToggle
   } = props;
-  const tabConfigs = aboutTab ? selectedConfig.config.tabs : reject(selectedConfig.config.tabs, {type: 'about'});
+  const tabConfigs = (aboutTab ? get(selectedConfig, 'config.tabs') : reject((get(selectedConfig, 'config.tabs') || {}), {type: 'about'})) || {};
   const selectedTabConfig = tabConfigs[tab];
   const isVersionedObject = !currentVersion || currentVersion === 'HEAD';
   const hasAccess = currentUserHasAccess()
