@@ -820,7 +820,7 @@ const ResultsTable = (
 
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
-  const selectionRowColumnsCount = selectedList.length > 0 ? columnsCount - 2 : columnsCount;
+  const selectionRowColumnsCount = get(selectedList, 'length', 0) > 0 ? columnsCount - 2 : columnsCount;
 
   const onDetailsToggle = item => {
     setDetails(item)
@@ -837,8 +837,10 @@ const ResultsTable = (
   React.useEffect(() => setSelectedList(map(getSelectedItems(), 'uuid')) , [results])
 
   const selectedItems = getSelectedItems()
-  const isAllSelected = selectedItems.length === get(results, 'items.length', 0)
-  const isSomeSelected = selectedItems.length > 0 && !isAllSelected
+  const selectedCount = get(selectedItems, 'length', 0)
+  const hasItems = Boolean(selectedCount)
+  const isAllSelected = hasItems && selectedCount === get(results, 'items.length', 0)
+  const isSomeSelected = hasItems && selectedCount > 0 && !isAllSelected
 
   return (
     <React.Fragment>
@@ -851,11 +853,11 @@ const ResultsTable = (
                 <Table stickyHeader size='small'>
                   <TableHead>
                     {
-                      selectedItems.length > 0 &&
+                      selectedCount > 0 &&
                       <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
                         <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
                           <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
-                            <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedItems.length} Selected</span>
+                            <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedCount} Selected</span>
                             {
                               !asReference &&
                               <SelectedResourceControls
