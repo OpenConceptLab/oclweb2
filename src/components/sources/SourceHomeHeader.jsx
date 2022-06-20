@@ -113,73 +113,70 @@ const SourceHomeHeader = ({
               </span>
               <AccessChip publicAccess={source.public_access} />
             </div>
-          </div>
-        </div>
-        <div className='col-xs-1 home-icon' style={{textAlign: 'left', paddingRight: '0px'}} />
-        <div className='col-xs-11' style={openHeader ? {marginTop: '-15px'} : {}}>
-          <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
-            {
-              source.description &&
-                <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
-                  {source.description}
-                </div>
-            }
-            {
-              map(getVisibleAttributes(), (attr, index) => {
-                if (attr.value === "supported_locales" || attr.value === "default_locale")
-                  return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-xs-12" type="component" />;
-                return <HeaderAttribute key={attr.label + index} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-xs-12"/>;
-              })
-            }
-            <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-xs-12" />
-            {
-              hasManyHiddenAttributes ?
-                <div className='col-xs-12 no-side-padding'>
-                  <CollapsibleAttributes
-                    object={source}
-                    hiddenAttributes={getHiddenAttributes()}
-                  />
-                </div> :
-              <React.Fragment>
+            <Collapse in={openHeader} className='col-xs-12 no-side-padding' style={{padding: '0px', display: `${openHeader ? 'block' : 'none'}`}}>
+              {
+                source.description &&
+                  <div className='col-xs-12 no-side-padding flex-vertical-center resource-description'>
+                    {source.description}
+                  </div>
+              }
+              {
+                map(getVisibleAttributes(), (attr, index) => {
+                  if (attr.value === "supported_locales" || attr.value === "default_locale")
+                    return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-xs-12" type="component" />;
+                  return <HeaderAttribute key={attr.label + index} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-xs-12"/>;
+                })
+              }
+              <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-xs-12" />
+              {
+                hasManyHiddenAttributes ?
+                  <div className='col-xs-12 no-side-padding'>
+                    <CollapsibleAttributes
+                      object={source}
+                      hiddenAttributes={getHiddenAttributes()}
+                    />
+                  </div> :
+                <React.Fragment>
+                  {
+                    map(getHiddenAttributes(), (attr, index) => (
+                      <HeaderAttribute key={attr.label + index} label={attr.label} value={get(source, attr.value)} gridClass="col-xs-12" type={attr.type} />
+                    ))
+                  }
+                </React.Fragment>
+              }
+              <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
                 {
-                  map(getHiddenAttributes(), (attr, index) => (
-                    <HeaderAttribute key={attr.label + index} label={attr.label} value={get(source, attr.value)} gridClass="col-xs-12" type={attr.type} />
-                  ))
+                  source.website &&
+                    <span style={{marginRight: '10px'}}>
+                      <LinkLabel link={source.website} iconSize='medium' noContainerClass />
+                    </span>
                 }
-              </React.Fragment>
-            }
-            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-              {
-                source.website &&
-                  <span style={{marginRight: '10px'}}>
-                    <LinkLabel link={source.website} iconSize='medium' noContainerClass />
-                  </span>
-              }
-              <span>
-                <LastUpdatedOnLabel
-                  date={source.updated_on}
-                  by={source.updated_by}
-                  iconSize='medium'
-                  noContainerClass
-                />
-              </span>
-              <span style={{marginLeft: '10px'}}>
-                <LastUpdatedOnLabel
-                  label='Created'
-                  date={source.created_on}
-                  by={source.created_by}
-                  iconSize='medium'
-                  noContainerClass
-                />
-              </span>
-              {
-                source.external_id &&
-                  <span style={{marginLeft: '10px', marginTop: '-8px'}}>
-                    <ExternalIdLabel externalId={source.external_id} iconSize='medium' />
-                  </span>
-              }
-            </div>
-          </Collapse>
+                <span>
+                  <LastUpdatedOnLabel
+                    date={source.updated_on}
+                    by={source.updated_by}
+                    iconSize='medium'
+                    noContainerClass
+                  />
+                </span>
+                <span style={{marginLeft: '10px'}}>
+                  <LastUpdatedOnLabel
+                    label='Created'
+                    date={source.created_on}
+                    by={source.created_by}
+                    iconSize='medium'
+                    noContainerClass
+                  />
+                </span>
+                {
+                  source.external_id &&
+                    <span style={{marginLeft: '10px', marginTop: '-8px'}}>
+                      <ExternalIdLabel externalId={source.external_id} iconSize='medium' />
+                    </span>
+                }
+              </div>
+            </Collapse>
+          </div>
         </div>
         <CollapsibleDivider open={openHeader} onClick={() => setOpenHeader(!openHeader)} light />
       </div>
