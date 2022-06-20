@@ -59,7 +59,7 @@ class CollectionHomeChildrenList extends React.Component {
     const referenceIds = map(deleteReferenceURIs, uri => selectedResourceReferences[uri].id)
     const excludeReferenceResourceIds = compact(map(actions, (action, uuid) => action === 'exclude' ? uuid : null))
     const excludeResources = filter(selectedResources, resource => includes(excludeReferenceResourceIds, resource.uuid))
-    const getURLs = entity = compact(map(excludeResources, resource => resource.type === entity ? resource.url : null))
+    const getURLs = entity => compact(map(excludeResources, resource => resource.type === entity ? resource.url : null))
 
     this.deleteReferences(referenceIds, false)
     this.excludeReferences({concepts: getURLs('Concept'), mappings: getURLs('Mapping'), exclude: true})
