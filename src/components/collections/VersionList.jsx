@@ -14,7 +14,8 @@ import {
   AspectRatio as ExpansionIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
   CheckCircle as DefaultIcon, BrightnessAuto as AutoIcon,
-  MenuOpen as ViewParametersIcon
+  MenuOpen as ViewParametersIcon,
+  Info as InfoIcon
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
@@ -401,16 +402,23 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
             </DialogTitle>
             <DialogContent>
               <div>
-                <h3>
-                Parameters
+                  <h3 className='flex-vertical-center'>
+                  Parameters
+                  <Tooltip arrow title='The set of expansion request parameters that were used to control how this expansion was evaluated. Each expansion may use a different set of parameters.'>
+                    <InfoIcon color='primary' style={{marginLeft: '10px'}} fontSize='small' />
+                    </Tooltip>
                 </h3>
-                <pre>{JSON.stringify(openExpansionDialog.parameters, undefined, 2)}</pre>
-                </div>
+                <pre style={{marginTop: 0}}>{JSON.stringify(openExpansionDialog.parameters, undefined, 2)}</pre>
+              </div>
+              <Divider />
               <div>
-                <h3>
+                <h3 className='flex-vertical-center'>
                   Resolved Repo Versions
+                  <Tooltip arrow title='The set of repository versions that were used in the evaluation of this expansion.'>
+                    <InfoIcon color='primary' style={{marginLeft: '10px'}} fontSize='small' />
+                  </Tooltip>
                 </h3>
-                <div className='col-xs-11 no-side-padding' style={{textAlign: 'center', marginTop: '-15px'}}>
+                <div className='col-xs-11 no-side-padding'>
                   <SourceChildVersionAssociationWithContainer
                     associatedWith={{
                       source: map(openExpansionDialog.resolved_source_versions, 'url'),
