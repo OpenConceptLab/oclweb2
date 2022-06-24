@@ -53,7 +53,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
               detailStyles={ACCORDIAN_DETAILS_STYLES}
             /> :
           <React.Fragment>
-            <ConceptCollections instance={concept} isLoadingCollections={isLoadingCollections} />
+            <ConceptCollections collectionVersions={get(concept, 'collections') || []} isLoadingCollections={isLoadingCollections} resourceType='concept' />
             <VersionList versions={versions} resource='concept' />
           </React.Fragment>
         }

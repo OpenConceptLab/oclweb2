@@ -23,6 +23,7 @@ import ConceptContainerVersionForm from '../common/ConceptContainerVersionForm';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptContainerExport from '../common/ConceptContainerExport';
 import { GREEN } from '../../common/constants';
+import SourceChildVersionAssociationWithContainer from '../common/SourceChildVersionAssociationWithContainer';
 
 const onCopyClick = url => copyURL(toFullAPIURL(url));
 const handleResponse = (response, resource, action, successCallback) => {
@@ -399,7 +400,25 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
               {`Expansion: ${openExpansionDialog.mnemonic}`}
             </DialogTitle>
             <DialogContent>
-              <pre>{JSON.stringify(openExpansionDialog.parameters, undefined, 2)}</pre>
+              <div>
+                <h3>
+                Parameters
+                </h3>
+                <pre>{JSON.stringify(openExpansionDialog.parameters, undefined, 2)}</pre>
+                </div>
+              <div>
+                <h3>
+                  Resolved Repo Versions
+                </h3>
+                <div className='col-xs-11 no-side-padding' style={{textAlign: 'center', marginTop: '-15px'}}>
+                  <SourceChildVersionAssociationWithContainer
+                    associatedWith={{
+                      source: map(openExpansionDialog.resolved_source_versions, 'url'),
+                      collection: map(openExpansionDialog.resolved_collection_versions, 'url')
+                    }}
+                  />
+                </div>
+              </div>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpenExpansionDialog(false)} color="primary">

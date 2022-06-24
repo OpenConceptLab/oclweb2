@@ -21,27 +21,30 @@ const SourceChildVersionAssociationWithContainer = ({ associatedWith, resource, 
     <React.Fragment>
       {
         isPresent &&
-        <div className='col-md-12 no-right-padding' style={style || {}}>
-          <div style={{textAlign: 'left'}} className='gray-italics-small'>
-            {`This ${resource} version is referenced in the following ${count} source and collection versions:`}
-          </div>
-          {
-            map(associatedWith.source, uri => (
-              <div className='col-md-12 no-right-padding' key={uri}>
-                <ConceptContainerLabel resource='source' {...getResourceDetails(uri)} />
-              </div>
-            ))
-          }
-          {
-            map(associatedWith.collection, uri => {
-              return (
-                <div className='col-md-12 no-right-padding' key={uri}>
-                  <ConceptContainerLabel resource='collection' {...getResourceDetails(uri)} />
+          <div className='col-md-12 no-right-padding' style={style || {}}>
+            {
+              resource &&
+                <div style={{textAlign: 'left'}} className='gray-italics-small'>
+                  {`This ${resource} version is referenced in the following ${count} source and collection versions:`}
                 </div>
-              )
-            })
-          }
-        </div>
+            }
+            {
+              map(associatedWith.source, uri => (
+                <div className='col-md-12 no-right-padding' key={uri}>
+                  <ConceptContainerLabel resource='source' {...getResourceDetails(uri)} />
+                </div>
+              ))
+            }
+            {
+              map(associatedWith.collection, uri => {
+                return (
+                  <div className='col-md-12 no-right-padding' key={uri}>
+                    <ConceptContainerLabel resource='collection' {...getResourceDetails(uri)} />
+                  </div>
+                )
+              })
+            }
+          </div>
       }
     </React.Fragment>
   )

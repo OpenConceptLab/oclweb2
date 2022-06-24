@@ -7,7 +7,7 @@ import {
   Loyalty as LoyaltyIcon, InfoOutlined as InfoIcon,
   NewReleases as ReleaseIcon, Block as RetireIcon
 } from '@mui/icons-material'
-import { map, get, isEmpty, find, groupBy, orderBy, without, includes } from 'lodash';
+import { map, isEmpty, find, groupBy, orderBy, without, includes } from 'lodash';
 import ResourceLabel from '../common/ResourceLabel';
 import { DARKGRAY } from '../../common/constants';
 import TabCountLabel from '../common/TabCountLabel';
@@ -22,8 +22,7 @@ const ACCORDIAN_DETAILS_STYLES = {
 const None = () => (<div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>);
 
 
-const SourceChildCollections = ({ instance, isLoadingCollections }) => {
-  const collectionVersions = get(instance, 'collections') || []
+const SourceChildCollections = ({ collectionVersions, isLoadingCollections, resourceType }) => {
   const count = isLoadingCollections ? null : collectionVersions.length
   const getProminentCollectionVersion = versions => {
     const orderedVersions = orderBy(versions, 'created_at', ['desc'])
@@ -44,8 +43,6 @@ const SourceChildCollections = ({ instance, isLoadingCollections }) => {
     else
       setExpand([...expand, collectionURL])
   }
-
-  const resourceType = instance.map_type ? 'mapping' : 'concept'
 
   const ReleasedIndicator = (<Tooltip title='Released'><ReleaseIcon fontSize='small' color='primary' /></Tooltip>);
   const RetiredIndicator = (<Tooltip title='Retired'><RetireIcon fontSize='small' className='retired-red' /></Tooltip>);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { get } from 'lodash';
 import MappingCollections from '../common/SourceChildCollections';
 import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
 import VersionList from '../common/VersionList';
@@ -25,7 +26,11 @@ const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollecti
         />
         {
           scoped !== 'collection' &&
-            <MappingCollections instance={mapping} isLoadingCollections={isLoadingCollections} />
+            <MappingCollections
+              collectionVersions={get(mapping, 'collections') || []}
+              isLoadingCollections={isLoadingCollections}
+              resourceType='mapping'
+            />
         }
       </div>
       {
