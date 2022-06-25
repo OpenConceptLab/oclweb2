@@ -234,7 +234,7 @@ class ReferenceForm extends React.Component {
     return (
       <div className='col-xs-12' style={{marginBottom: '30px'}}>
         <div className='col-xs-12 no-side-padding'>
-          <h2 style={{margin: '10px 0'}}>{header}</h2>
+          <h2>{header}</h2>
         </div>
         <div className='col-xs-12 no-side-padding'>
           <div className='col-xs-7 no-left-padding'>

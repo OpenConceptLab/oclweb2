@@ -1,6 +1,6 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Close as CloseIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { CancelOutlined as CloseIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
 import {
   FormControlLabel, Checkbox, IconButton, Tooltip, TextField, InputAdornment, Button
 } from '@mui/material';
@@ -118,7 +118,7 @@ class OverviewSettings extends React.Component {
         <div className='col-md-12 no-side-padding flex-vertical-center' style={{justifyContent: 'space-between'}}>
           <h2>Manage Overview</h2>
           <span>
-            <IconButton onClick={onCancel}>
+            <IconButton onClick={onCancel} color='secondary'>
               <CloseIcon fontSize='inherit' />
             </IconButton>
           </span>
