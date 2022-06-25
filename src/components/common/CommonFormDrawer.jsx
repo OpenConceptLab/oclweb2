@@ -14,7 +14,7 @@ const CommonFormDrawer = ({ isOpen, onClose, formComponent, size, ...rest }) => 
   React.useEffect(() => setOpen(isOpen), [isOpen])
 
   return (
-    <Drawer anchor='right' open={open} onClose={onDrawerClose} classes={{paper: className}} hideBackdrop {...rest}>
+    <Drawer anchor='right' open={open} onClose={onDrawerClose} classes={{paper: className}} hideBackdrop ModalProps={{disableEscapeKeyDown: true}} {...rest}>
       <span style={{position: 'absolute', right: '10px', top: '10px', zIndex: 1}}>
         <IconButton onClick={onDrawerClose} color='secondary'>
           <CancelIcon />
