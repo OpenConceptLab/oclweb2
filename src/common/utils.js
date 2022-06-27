@@ -719,3 +719,14 @@ export const dropVersion = uri => {
   return uri
 
 }
+
+// Internet Explorer 6-11
+export const isIE = () => /*@cc_on!@*/false || !!document.documentMode;
+
+// Chrome 1 - 71
+export const isChrome = () => !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
+// Opera 8.0+
+export const isOpera = () => (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+export const isDeprecatedBrowser = () => isIE() || isOpera();

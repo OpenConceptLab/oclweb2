@@ -3,7 +3,10 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import { get } from 'lodash';
-import { isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle } from '../../common/utils';
+import {
+  isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
+  isDeprecatedBrowser
+} from '../../common/utils';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
 import CollectionHome from '../collections/CollectionHome';
@@ -32,6 +35,7 @@ import DocumentTitle from "./DocumentTitle"
 import './App.scss';
 import { hotjar } from 'react-hotjar';
 import { OperationsContext } from './LayoutContext';
+import DeprecatedBrowser from './DeprecatedBrowser';
 
 
 const SITE_TITLE = getSiteTitle()
@@ -96,8 +100,14 @@ const App = props => {
 
   setSiteTitle()
 
+  const [deprecatedBrowser, setDeprecatedBrowser] = React.useState(true)
+
   return (
     <div>
+      {
+        isDeprecatedBrowser() && deprecatedBrowser &&
+          <DeprecatedBrowser open onClose={() => setDeprecatedBrowser(false)} />
+      }
       <DocumentTitle/>
       <Header {...props} onOpen={setMenuOpen} />
       <ErrorBoundary>
