@@ -339,7 +339,7 @@ class SourceHome extends React.Component {
                 isLoadingVersions={isLoadingVersions}
                 onSelect={this.onResourceSelect}
                 hierarchy={hierarchy}
-                onHierarchyToggle={source.hierarchy_root_url ? () => this.setState({hierarchy: !hierarchy}) : false}
+                onHierarchyToggle={get(source, 'hierarchy_root_url') ? () => this.setState({hierarchy: !hierarchy}) : false}
                 onFilterDrawerToggle={this.onFilterDrawerToggle}
               />
             </div>
