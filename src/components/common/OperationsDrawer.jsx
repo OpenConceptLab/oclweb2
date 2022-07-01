@@ -86,7 +86,8 @@ const OperationsDrawer = () => {
   const currentServer = getAppliedServerConfig()
   const fhirServer = getFHIRServerConfigFromCurrentContext()
   let containerResource = parentResource || 'source'
-  const fhirResource = parentResource === 'source' ? 'codeSystem' : 'valueSet'
+  const isSource = parentResource === 'source'
+  const fhirResource = isSource ? 'codeSystem' : 'valueSet'
   const fhirResourceDisplay = startCase(fhirResource).replace(' ', '')
   const operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
   const [byURL, setByURL] = React.useState(false)
@@ -181,7 +182,7 @@ const OperationsDrawer = () => {
         setURL(null)
       }
     } else {
-      APIService.new().overrideURL(item.url).appendToUrl(`${operation}/`).get().then(
+      APIService.new().overrideURL(parentItem.version_url || parentItem.url).appendToUrl(`concepts/${code}/${operation}/`).get().then(
         _response => {
           setURL(_response.config.url)
           setResponse(_response)

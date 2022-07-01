@@ -9,6 +9,9 @@ export const SERVER_CONFIGS = [
       source: [
         '$cascade',
       ],
+      collection: [
+        '$cascade',
+      ],
     }
   },
   {
@@ -19,6 +22,9 @@ export const SERVER_CONFIGS = [
     fhirServerId: 6,
     operations: {
       source: [
+        '$cascade',
+      ],
+      collection: [
         '$cascade',
       ],
     }
@@ -32,6 +38,9 @@ export const SERVER_CONFIGS = [
       source: [
         '$cascade',
       ],
+      collection: [
+        '$cascade',
+      ],
     }
   },
   {
@@ -41,6 +50,9 @@ export const SERVER_CONFIGS = [
     url: 'https://api.demo.openconceptlab.org',
     operations: {
       source: [
+        '$cascade',
+      ],
+      collection: [
         '$cascade',
       ],
     }
@@ -53,6 +65,9 @@ export const SERVER_CONFIGS = [
     fhirServerId: 7,
     operations: {
       source: [
+        '$cascade',
+      ],
+      collection: [
         '$cascade',
       ],
     }
@@ -75,6 +90,9 @@ export const SERVER_CONFIGS = [
       source: [
         '$cascade',
       ],
+      collection: [
+        '$cascade',
+      ],
     }
   },
   {
@@ -84,6 +102,9 @@ export const SERVER_CONFIGS = [
     url: 'https://api.openconceptlab.org',
     operations: {
       source: [
+        '$cascade',
+      ],
+      collection: [
         '$cascade',
       ],
     }
