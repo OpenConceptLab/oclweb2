@@ -11,7 +11,7 @@ import {
   OpenInNew as NewTabIcon,
   FileCopy as CopyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, filter, find, startCase, isString } from 'lodash';
+import { get, map, includes, uniq, filter, find, startCase, isString, isObject } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL
@@ -142,6 +142,7 @@ const OperationsDrawer = () => {
   const onOperationChange = event => setOperation(event.target.value)
   const onExecute = event => {
     setIsFetching(true)
+    setResponse(null)
     event.preventDefault()
     event.stopPropagation()
     const isFHIROperation = includes(FHIR_OPERATIONS, operation)
@@ -155,7 +156,7 @@ const OperationsDrawer = () => {
           service.URL += `&version=${version}`
         service.get(null, false, null, true).then(_response => {
           if(get(_response, 'response.status') >= 400) {
-            setResponse(_response.response)
+            setResponse(get(_response, 'response'))
           } else {
             setResponse(_response)
           }
@@ -197,9 +198,10 @@ const OperationsDrawer = () => {
 
   const getResponse = () => {
     let data = get(response, 'data') || get(response, 'error')
-    if(isString(data)) {
+    if(isString(data))
       return {response: data}
-    }
+    if(isObject(data))
+      return data
     return response
   }
 
@@ -320,7 +322,7 @@ const OperationsDrawer = () => {
                       name={false}
                       displayDataTypes={false}
                       displayObjectSize={false}
-                      src={getResponse()}
+                      src={getResponse() || {}}
                       style={{overflow: 'auto'}}
                     />
                   </div>
