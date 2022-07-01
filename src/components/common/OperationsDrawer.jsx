@@ -132,6 +132,8 @@ const OperationsDrawer = () => {
   const [item, setItem] = React.useState(operationItem)
   const [parentId, setParentId] = React.useState(getParentId)
   const [canonicalURL, setCanonicalURL] = React.useState(get(operationItem, 'canonical_url') || '')
+  const [systemURL, setSystemURL] = React.useState('')
+  const [systemVersion, setSystemVersion] = React.useState('')
   const [code, setCode] = React.useState(getItemCode)
   const [version, setVersion] = React.useState('HEAD')
   const [operation, setOperation] = React.useState('');
@@ -151,9 +153,15 @@ const OperationsDrawer = () => {
       if(canonicalURL && selectedFHIRServer) {
         const service = APIService.new()
         const canonicalURLAttr = operation === '$lookup' ? 'system' : 'url'
-        service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}${fhirResourceDisplay}/${operation}?code=${code}&${canonicalURLAttr}=${canonicalURL}`
+        service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}${fhirResourceDisplay}/${operation}/?code=${code}&${canonicalURLAttr}=${canonicalURL}`
         if(version && version.toLowerCase() !== 'head' && !byURL)
           service.URL += `&version=${version}`
+        if(operation === '$validate-code') {
+          if(systemURL)
+            service.URL += `&system=${systemURL}`
+          if(systemVersion)
+            service.URL += `&systemVersion=${systemVersion}`
+        }
         service.get(null, false, null, true).then(_response => {
           if(get(_response, 'response.status') >= 400) {
             setResponse(get(_response, 'response'))
@@ -253,22 +261,45 @@ const OperationsDrawer = () => {
             {
               byURL ?
                 <div className='col-xs-12 no-side-padding'>
+                  <div className='col-xs-12 no-side-padding'>
                   <h4 style={{marginBottom: '15px'}}>
                     Canonical URL
                   </h4>
                   <div className='col-xs-12 no-left-padding'>
-                    <TextField fullWidth value={canonicalURL} label='CanonicalURL' onChange={event => setCanonicalURL(event.target.value || '')} />
+                    <TextField fullWidth value={canonicalURL} label='CanonicalURL' onChange={event => setCanonicalURL(event.target.value || '')} size='small' />
                   </div>
+                  </div>
+                  {
+                    operation === '$validate-code' &&
+                      <React.Fragment>
+                      <div className='col-xs-12 no-side-padding'>
+                        <h4 style={{marginBottom: '15px'}}>
+                          System URL
+                        </h4>
+                        <div className='col-xs-12 no-left-padding'>
+                          <TextField fullWidth value={systemURL} label='SystemURL' onChange={event => setSystemURL(event.target.value || '')} size='small' />
+                        </div>
+                      </div>
+                        <div className='col-xs-12 no-side-padding'>
+                          <h4 style={{marginBottom: '15px'}}>
+                            System Version
+                          </h4>
+                          <div className='col-xs-12 no-left-padding'>
+                            <TextField fullWidth value={systemVersion} label='SystemVersion' onChange={event => setSystemVersion(event.target.value || '')} size='small' />
+                          </div>
+                        </div>
+                        </React.Fragment>
+                  }
                 </div> :
               <div className='col-xs-12 no-side-padding'>
                 <h4 style={{marginBottom: '15px'}}>
                   {fhirResourceDisplay}
                 </h4>
                 <div className='col-xs-8 no-left-padding'>
-                  <TextField fullWidth value={parentId} label={fhirResourceDisplay} />
+                  <TextField fullWidth value={parentId} label={fhirResourceDisplay} size='small' />
                 </div>
                 <div className='col-xs-4 no-side-padding'>
-                  <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} />
+                  <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} size='small' />
                 </div>
               </div>
             }
@@ -277,7 +308,7 @@ const OperationsDrawer = () => {
                 Resource & Operation
               </h4>
               <div className='col-xs-6 no-left-padding'>
-                <TextField value={code} label='Code' fullWidth onChange={event => setCode(event.target.value)} />
+                <TextField value={code} label='Code' fullWidth onChange={event => setCode(event.target.value)} size='small' />
               </div>
               <div className='col-xs-6 no-side-padding'>
                 <FormControl fullWidth>
@@ -286,10 +317,11 @@ const OperationsDrawer = () => {
                     value={operation}
                     label="Operation"
                     onChange={onOperationChange}
+                    size='small'
                   >
                     {
                       map(operations, _operation => {
-                        return <MenuItem value={_operation} key={_operation} disabled={byURL && _operation === '$cascade'}>{_operation}</MenuItem>
+                        return <MenuItem size='small' value={_operation} key={_operation} disabled={byURL && _operation === '$cascade'}>{_operation}</MenuItem>
                       })
                     }
                   </Select>
