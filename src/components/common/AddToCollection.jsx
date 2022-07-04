@@ -10,13 +10,14 @@ import {
   Loyalty as LoyaltyIcon,
   Search as SearchIcon,
 } from '@mui/icons-material'
-import { map, isEmpty, get, filter, cloneDeep } from 'lodash';
+import { map, isEmpty, get, filter, cloneDeep, compact } from 'lodash';
 import APIService from '../../services/APIService';
 import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from '../collections/CollectionForm';
 import AddReferencesResult from './AddReferencesResult';
 import ReferenceCascadeDialog from './ReferenceCascadeDialog';
+import MappingReferenceAddOptionsDialog from './MappingReferenceAddOptionsDialog';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -35,6 +36,9 @@ class AddToCollection extends React.Component {
       cascadeToConcepts: false,
       result: false,
       collectionForm: false,
+      addMappings: true,
+      addToConcepts: false,
+      addFromConcepts: false,
     }
     this.anchorRef = React.createRef(null);
   }
@@ -77,15 +81,26 @@ class AddToCollection extends React.Component {
   }
 
   handleAdd = () => {
-    const { selectedCollection, cascadeMappings, cascadeToConcepts } = this.state
+    const { selectedCollection, cascadeMappings, cascadeToConcepts, addMappings, addToConcepts, addFromConcepts } = this.state
     const { references } = this.props
     this.setState({isAdding: true}, () => {
-      const expressions = map(references, 'url')
+      const isMapping = Boolean(get(references, '0.map_type'))
+      let expressions = [];
       let queryParams = {}
-      if(cascadeToConcepts)
-        queryParams = {cascade: 'sourceToConcepts'}
-      else if(cascadeMappings)
-        queryParams = {cascade: 'sourceMappings'}
+      if(isMapping) {
+        if(addMappings)
+          expressions = map(references, 'url')
+        if(addToConcepts)
+          expressions = compact([...expressions, ...map(references, 'to_concept_url')])
+        if(addFromConcepts)
+          expressions = compact([...expressions, ...map(references, 'from_concept_url')])
+      } else {
+        expressions = map(references, 'url')
+        if(cascadeToConcepts)
+          queryParams = {cascade: 'sourceToConcepts'}
+        else if(cascadeMappings)
+          queryParams = {cascade: 'sourceMappings'}
+      }
 
       this._collectionName = this.getCollectionName()
 
@@ -154,6 +169,7 @@ class AddToCollection extends React.Component {
     const noOverallCollections = !isLoading && allCollections.length === 0;
     const noSearchResults = !isLoading && searchedValue && collections.length === 0;
     const button = this.getButton();
+    const isMappingReferences = Boolean(get(references, '0.map_type'))
 
     return (
       <React.Fragment>
@@ -236,8 +252,12 @@ class AddToCollection extends React.Component {
           </DialogTitle>
           {
             isAdding ?
-            <DialogContent style={{textAlign: 'center', margin: '50px'}}><CircularProgress /></DialogContent> :
-            <ReferenceCascadeDialog references={references} onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings})} collectionName={collectionName} />
+              <DialogContent style={{textAlign: 'center', margin: '50px'}}><CircularProgress /></DialogContent> :
+            (
+              isMappingReferences ?
+                <MappingReferenceAddOptionsDialog references={references} onChange={states => this.setState({addMappings: states.addMappings, addToConcepts: states.addToConcepts, addFromConcepts: states.addFromConcepts})} collectionName={collectionName} /> :
+              <ReferenceCascadeDialog references={references} onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings})} collectionName={collectionName} />
+            )
           }
           <DialogActions>
             <React.Fragment>
