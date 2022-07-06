@@ -10,7 +10,7 @@ import {
   Loyalty as LoyaltyIcon,
   Search as SearchIcon,
 } from '@mui/icons-material'
-import { map, isEmpty, get, filter, cloneDeep, compact } from 'lodash';
+import { map, isEmpty, get, filter, cloneDeep, compact, uniq } from 'lodash';
 import APIService from '../../services/APIService';
 import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -94,6 +94,7 @@ class AddToCollection extends React.Component {
           expressions = compact([...expressions, ...map(references, 'to_concept_url')])
         if(addFromConcepts)
           expressions = compact([...expressions, ...map(references, 'from_concept_url')])
+        expressions = uniq(expressions)
       } else {
         expressions = map(references, 'url')
         if(cascadeToConcepts)
