@@ -4,6 +4,7 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
   Divider
 } from '@mui/material'
+import { FmdBad as NoneIcon } from '@mui/icons-material'
 import { filter, map, get, isEmpty } from 'lodash';
 
 const ReferencesResult = ({references, severity, title, messageKey}) => (
@@ -55,6 +56,13 @@ const AddReferencesResult = ({ result, open, onClose, title }) => {
               title={`${notAdded.length} Reference(s) listed below could not be added.`}
               messageKey='message.0'
             />
+          }
+          {
+            isEmpty(added) && isEmpty(notAdded) &&
+              <div className='flex-vertical-center'>
+                <NoneIcon color='warning' style={{marginRight: '5px'}} />
+                <span>0 references added</span>
+            </div>
           }
         </div>
       </DialogContent>
