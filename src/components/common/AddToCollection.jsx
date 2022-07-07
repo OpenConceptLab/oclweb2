@@ -83,44 +83,46 @@ class AddToCollection extends React.Component {
   handleAdd = () => {
     const { selectedCollection, cascadeMappings, cascadeToConcepts, addMappings, addToConcepts, addFromConcepts } = this.state
     const { references } = this.props
-    this.setState({isAdding: true}, () => {
-      const isMapping = Boolean(get(references, '0.map_type'))
-      let expressions = [];
-      let queryParams = {}
-      if(isMapping) {
-        if(addMappings)
-          expressions = map(references, 'url')
-        if(addToConcepts)
-          expressions = compact([...expressions, ...map(references, 'to_concept_url')])
-        if(addFromConcepts)
-          expressions = compact([...expressions, ...map(references, 'from_concept_url')])
-        expressions = uniq(expressions)
-      } else {
+    const isMapping = Boolean(get(references, '0.map_type'))
+    let expressions = [];
+    let queryParams = {}
+    if(isMapping) {
+      if(addMappings)
         expressions = map(references, 'url')
-        if(cascadeToConcepts)
-          queryParams = {cascade: 'sourceToConcepts'}
-        else if(cascadeMappings)
-          queryParams = {cascade: 'sourceMappings'}
-      }
-
-      this._collectionName = this.getCollectionName()
-
-      APIService.new().overrideURL(selectedCollection.url)
-                .appendToUrl('references/')
-                .put({data: {expressions: expressions}}, null, null, queryParams)
-                .then(response => {
-                  this.setState({isAdding: false}, () => {
-                    if(response.status === 200) {
-                      this.setState({result: response.data})
-                      alertifyjs.success('Successfully added reference(s)')
-                      this.handleDialogClose()
-                    } else {
-                      alertifyjs.error('Something bad happened')
-                      this.handleDialogClose()
-                    }
-                  })
-                })
-    })
+      if(addToConcepts)
+        expressions = compact([...expressions, ...map(references, 'to_concept_url')])
+      if(addFromConcepts)
+        expressions = compact([...expressions, ...map(references, 'from_concept_url')])
+      expressions = uniq(expressions)
+    } else {
+      expressions = map(references, 'url')
+      if(cascadeToConcepts)
+        queryParams = {cascade: 'sourceToConcepts'}
+      else if(cascadeMappings)
+        queryParams = {cascade: 'sourceMappings'}
+    }
+    if(isEmpty(expressions)) {
+      alertifyjs.error('No expressions to add')
+    } else {
+      this.setState({isAdding: true}, () => {
+        this._collectionName = this.getCollectionName()
+        APIService.new().overrideURL(selectedCollection.url)
+          .appendToUrl('references/')
+          .put({data: {expressions: expressions}}, null, null, queryParams)
+          .then(response => {
+            this.setState({isAdding: false}, () => {
+              if(response.status === 200) {
+                this.setState({result: response.data})
+                alertifyjs.success('Successfully added reference(s)')
+                this.handleDialogClose()
+              } else {
+                alertifyjs.error('Something bad happened')
+                this.handleDialogClose()
+              }
+            })
+          })
+      })
+    }
   }
 
   afterNewCollectionAdd = newCollection => this.setState({
