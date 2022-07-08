@@ -421,8 +421,8 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                 <div className='col-xs-11 no-side-padding'>
                   <SourceChildVersionAssociationWithContainer
                     associatedWith={{
-                      source: map(openExpansionDialog.resolved_source_versions, 'url'),
-                      collection: map(openExpansionDialog.resolved_collection_versions, 'url')
+                      source: map(openExpansionDialog.resolved_source_versions, 'version_url'),
+                      collection: map(openExpansionDialog.resolved_collection_versions, 'version_url')
                     }}
                   />
                 </div>
