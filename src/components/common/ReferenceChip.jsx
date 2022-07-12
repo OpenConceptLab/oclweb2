@@ -6,6 +6,7 @@ import {
 import { toFullAPIURL } from '../../common/utils';
 
 const ReferenceChip = props => {
+  const isReference = !props.notReference
   const isResolved = Boolean(props.last_resolved_at)
   const type = props.reference_type;
   const expression = isResolved ? props.expression : `${props.expression} (unresolved)`;
@@ -29,9 +30,11 @@ const ReferenceChip = props => {
         {chip}
       </a>
       {
-        props.include ?
-          <Chip size='small' variant='outlined' color='success' label='include' /> :
-          <Chip size='small' variant='outlined' color='error' label='exclude' />
+        isReference && (
+          props.include ?
+            <Chip size='small' variant='outlined' color='success' label='include' /> :
+            <Chip size='small' variant='outlined' color='error' label='exclude' />
+        )
       }
     </span>
   )

@@ -404,7 +404,7 @@ class Search extends React.Component {
       if(!noQuery) {
         queryParams = {
           q: searchStr || '', page: page, exact_match: exactMatch, limit: limit,
-          verbose: includes(['sources', 'collections', 'organizations', 'users'], resource),
+          verbose: includes(['sources', 'collections', 'organizations', 'users', 'references'], resource),
           ...this.getFacetQueryParam(),
         };
         if(onHierarchyToggle && resource === 'concepts') {

@@ -40,7 +40,7 @@ const RESOURCE_DEFINITIONS = {
   references: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.references.slice(0, 1),
+    columns: ALL_COLUMNS.references.slice(0, 3),
   },
   concepts: {
     headBgColor: BLUE,
@@ -917,7 +917,7 @@ const ResultsTable = (
                               }
                             </TableCell>
                           ) : (
-                            <TableCell key={column.id} align='left' style={{color: theadTextColor, ...theadStyles}}>
+                            <TableCell key={column.id} align={column.align || 'left'} style={{color: theadTextColor, ...theadStyles}}>
                               {column.label}
                             </TableCell>
                           )
