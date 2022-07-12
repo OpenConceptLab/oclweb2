@@ -191,7 +191,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                       <ConceptHierarchyRow
                         source={source}
                         concepts={get(orderedMappings, `children.hierarchy`)}
-                        mapType={hierarchyMapType(false)}
+                        mapType={hierarchyMapType(true)}
                       />
                   }
                   {
@@ -199,7 +199,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                       <ConceptHierarchyRow
                         source={source}
                         concepts={get(orderedMappings, `parent.reverseHierarchy`)}
-                        mapType={hierarchyMapType(true)}
+                        mapType={hierarchyMapType(false)}
                       />
                   }
                 </TableBody>

@@ -225,7 +225,7 @@ class ConceptHierarchyTree extends React.Component {
           let mapType = that.props.concept.id == d.data.id && !d.parent ? null : d.data.map_type
           const rel = that.props.reverse ? 'Parent' : 'Child'
           if(mapType === HIERARCHY_CHILD_REL)
-            mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : 'Has ${rel}'
+            mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : `Has ${rel}`
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
           const sourceHeader = d.data.target_source ? `<div><span class='gray'>Source: </span><span><b>${d.data.target_source}</b></span></div> ` : '';
@@ -365,7 +365,7 @@ class ConceptHierarchyTree extends React.Component {
           let rel = that.props.reverse ? 'Parent' : 'Child'
                  let mapType = d.target.data.map_type
                  if(mapType === HIERARCHY_CHILD_REL)
-                   mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : 'Has ${rel}'
+                   mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : `Has ${rel}`
                  return mapType;
                });
       link.merge(linkEnter).transition(transition).attr("d", diagonal);
