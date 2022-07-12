@@ -79,7 +79,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
           <div>
             <span>{`(${hierarchyMeaning})`}</span>
             {
-              isChild &&
+              !isChild &&
               <sup>-1</sup>
             }
           </div>
