@@ -91,8 +91,8 @@ export const ALL_COLUMNS = {
   ],
   references: [
     {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
-    {id: 'concepts', label: 'Concepts', value: 'concepts', sortable: false, align: 'center', renderer: reference => <ReferenceChip uri={reference.uri + 'concepts/'} reference_type='concepts' last_resolved_at expression={reference.concepts} notReference />},
-    {id: 'mappings', label: 'Mappings', value: 'mappings', sortable: false, align: 'center', renderer: reference => <ReferenceChip uri={reference.uri + 'mappings/'} reference_type='mappings' last_resolved_at expression={reference.mappings} notReference />}
+    {id: 'concepts', label: 'Concepts', value: 'concepts', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'concepts/'} reference_type='concepts' last_resolved_at expression={reference.concepts} notReference /> : '-'},
+    {id: 'mappings', label: 'Mappings', value: 'mappings', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'mappings/'} reference_type='mappings' last_resolved_at expression={reference.mappings} notReference /> : '-'}
   ],
   CodeSystem: [
     {id: '_id', label: 'ID', value: 'resource.id', sortOn: '_id', sortBy: 'asc'},
