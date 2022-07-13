@@ -80,7 +80,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
             {startCase(name)}
           </h2>
           <div className='user-home-username flex-vertical-center'>
-            {user.username}
+            <span style={{marginRight: '5px'}}>{user.username}</span>
             {
               isAdmin &&
                 <React.Fragment>
