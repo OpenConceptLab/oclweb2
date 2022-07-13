@@ -12,13 +12,14 @@ import {
   AdminPanelSettings as AdminIcon,
   PersonOff as UserDisabledIcon,
   PrivacyTip as UnverifiedIcon,
+  VerifiedUser as VerifiedIcon,
+  SafetyCheck as VerificationPendingIcon,
 } from '@mui/icons-material';
 import { includes, startCase, get, merge } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername
+  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser
 } from '../../common/utils';
-import { ORANGE, ERROR_RED, GREEN } from '../../common/constants';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
@@ -42,29 +43,30 @@ const UserHomeDetails = ({ user, isLoading }) => {
   const onLogoUpload = (base64, name) => {
     setUploading(true)
     APIService.new().overrideURL(user.url).appendToUrl('logo/')
-              .post({base64: base64, name: name})
-              .then(response => {
-                if(get(response, 'status') === 200){
-                  const url = get(response, 'data.logo_url', logoURL)
-                  setLogoURL(url)
-                  localStorage.setItem(
-                    'user',
-                    JSON.stringify(merge(JSON.parse(localStorage.user), {logo_url: url}))
-                  )
-                }
-                setUploading(false)
-              })
+      .post({base64: base64, name: name})
+      .then(response => {
+        if(get(response, 'status') === 200){
+          const url = get(response, 'data.logo_url', logoURL)
+          setLogoURL(url)
+          localStorage.setItem(
+            'user',
+            JSON.stringify(merge(JSON.parse(localStorage.user), {logo_url: url}))
+          )
+        }
+        setUploading(false)
+      })
   }
 
   const currentUserUsername = getCurrentUserUsername()
   const token = currentUserToken();
   const isSameAsCurrentUser = user.username === currentUserUsername;
+  const isAdmin = isAdminUser()
 
   return (
     <div className="col-md-12 no-side-padding">
       {
         (isLoading || uploading) ?
-        <CircularProgress color='primary' style={{marginTop: '50px', marginLeft: '50px'}} /> :
+          <CircularProgress color='primary' style={{marginTop: '50px', marginLeft: '50px'}} /> :
         <div className="col-md-12 no-side-padding">
           <div className='home-icon' style={{display: 'flex'}}>
             <HeaderLogo
@@ -80,28 +82,45 @@ const UserHomeDetails = ({ user, isLoading }) => {
           <div className='user-home-username flex-vertical-center'>
             {user.username}
             {
-              user.is_superuser &&
-              <Tooltip title='OCL Super Admin'>
-                <AdminIcon style={{color: GREEN}} />
-              </Tooltip>
-            }
-            {
-              user.is_staff && !user.is_superuser &&
-              <Tooltip title='OCL Admin'>
-                <AdminIcon style={{color: GREEN}} />
-              </Tooltip>
-            }
-            {
-              user.status === 'deactivated' &&
-              <Tooltip title='Deactivated'>
-                <UserDisabledIcon style={{color: ERROR_RED, width: '20px'}} />
-              </Tooltip>
-            }
-            {
-              user.status === 'unverified' &&
-              <Tooltip title='Unverified'>
-                <UnverifiedIcon style={{color: ORANGE, width: '20px'}} />
-              </Tooltip>
+              isAdmin &&
+                <React.Fragment>
+                  {
+                    user.is_superuser &&
+                      <Tooltip title='OCL Super Admin'>
+                        <AdminIcon color='success' />
+                      </Tooltip>
+                  }
+                  {
+                    user.is_staff && !user.is_superuser &&
+                      <Tooltip title='OCL Admin'>
+                        <AdminIcon color='success' />
+                      </Tooltip>
+                  }
+                  {
+                    user.status === 'deactivated' && !user.is_staff && !user.is_superuser &&
+                      <Tooltip title='Deactivated'>
+                        <UserDisabledIcon color='error' style={{width: '20px'}} />
+                      </Tooltip>
+                  }
+                  {
+                    user.status === 'unverified' && !user.is_staff && !user.is_superuser &&
+                      <Tooltip title='Unverified'>
+                        <UnverifiedIcon color='warning' style={{width: '20px'}} />
+                      </Tooltip>
+                  }
+                  {
+                    user.status === 'verified' && !user.is_staff && !user.is_superuser &&
+                      <Tooltip title='Verified'>
+                        <VerifiedIcon color='success' style={{width: '20px'}} />
+                      </Tooltip>
+                  }
+                  {
+                    user.status === 'verification_pending' && !user.is_staff && !user.is_superuser &&
+                      <Tooltip title='Verification Pending'>
+                        <VerificationPendingIcon color='warning' style={{width: '20px'}} />
+                      </Tooltip>
+                  }
+                </React.Fragment>
             }
           </div>
           <div>
@@ -119,36 +138,36 @@ const UserHomeDetails = ({ user, isLoading }) => {
           <Divider style={{width: '100%', margin: '5px 0'}} />
           {
             user.company &&
-            <div style={{marginTop: '5px'}}>
-              <Tooltip title='Company' arrow placement='right'>
-                <span className='flex-vertical-center' placement='right'>
-                  <span style={{marginRight: '5px'}}><CompanyIcon fontSize='small' style={{marginTop: '4px'}} /></span>
-                  <span>{user.company}</span>
-                </span>
-              </Tooltip>
-            </div>
+              <div style={{marginTop: '5px'}}>
+                <Tooltip title='Company' arrow placement='right'>
+                  <span className='flex-vertical-center' placement='right'>
+                    <span style={{marginRight: '5px'}}><CompanyIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                    <span>{user.company}</span>
+                  </span>
+                </Tooltip>
+              </div>
           }
           {
             user.location &&
-            <div>
-              <Tooltip title='Location' arrow placement='right'>
-                <span className='flex-vertical-center'>
-                  <span style={{marginRight: '5px'}}><LocationIcon fontSize='small' style={{marginTop: '4px'}} /></span>
-                  <span>{user.location}</span>
-                </span>
-              </Tooltip>
-            </div>
+              <div>
+                <Tooltip title='Location' arrow placement='right'>
+                  <span className='flex-vertical-center'>
+                    <span style={{marginRight: '5px'}}><LocationIcon fontSize='small' style={{marginTop: '4px'}} /></span>
+                    <span>{user.location}</span>
+                  </span>
+                </Tooltip>
+              </div>
           }
           {
             user.website &&
-            <div>
-              <Tooltip title='Website' arrow placement='right'>
-                <span className='flex-vertical-center'>
-                  <span style={{marginRight: '5px'}}><WebsiteIcon fontSize='small' style={{marginTop: '4px', transform: 'rotate(-30deg)'}} /></span>
-                  <span>{formatWebsiteLink(user.website)}</span>
-                </span>
-              </Tooltip>
-            </div>
+              <div>
+                <Tooltip title='Website' arrow placement='right'>
+                  <span className='flex-vertical-center'>
+                    <span style={{marginRight: '5px'}}><WebsiteIcon fontSize='small' style={{marginTop: '4px', transform: 'rotate(-30deg)'}} /></span>
+                    <span>{formatWebsiteLink(user.website)}</span>
+                  </span>
+                </Tooltip>
+              </div>
           }
           <div>
             <Tooltip title='Email' arrow placement='right'>
@@ -168,17 +187,17 @@ const UserHomeDetails = ({ user, isLoading }) => {
           </div>
           {
             token && isSameAsCurrentUser &&
-            <React.Fragment>
-              <Divider style={{width: '100%', margin: '5px 0'}} />
-              <p>
-                <strong>API Token</strong>
-                <Tooltip arrow title="Click to copy Token" placement='right'>
-                  <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
-                    <CopyIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </p>
-            </React.Fragment>
+              <React.Fragment>
+                <Divider style={{width: '100%', margin: '5px 0'}} />
+                <p>
+                  <strong>API Token</strong>
+                  <Tooltip arrow title="Click to copy Token" placement='right'>
+                    <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
+                      <CopyIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </p>
+              </React.Fragment>
           }
         </div>
       }
@@ -189,9 +208,9 @@ const UserHomeDetails = ({ user, isLoading }) => {
         formComponent={
           <UserForm
             loggedIn={user.username === getCurrentUserUsername()}
-                     edit
-                     reloadOnSuccess
-                     onCancel={onEditClose} user={user}
+            edit
+            reloadOnSuccess
+            onCancel={onEditClose} user={user}
           />
         }
       />

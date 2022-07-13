@@ -5,9 +5,11 @@ import {
   List as SourceIcon, Loyalty as CollectionIcon, Home as OrgIcon,
   AdminPanelSettings as AdminIcon, PersonOff as UserDisabledIcon,
   PrivacyTip as UnverifiedIcon,
+  VerifiedUser as VerifiedIcon,
+  SafetyCheck as VerificationPendingIcon,
 } from '@mui/icons-material';
 import { map, chunk, isEmpty } from 'lodash';
-import { GREEN, ORANGE, ERROR_RED } from '../../common/constants'
+import { GREEN, ORANGE } from '../../common/constants'
 import { getUserInitials } from '../../common/utils';
 import HtmlToolTipRaw from '../common/HtmlToolTipRaw';
 
@@ -32,11 +34,15 @@ const IdentityBadge = ({member, size}) => {
   const isAdmin = member.is_superuser || member.is_staff;
   let icon = null;
   if(isAdmin)
-    icon = <AdminIcon style={{color: GREEN}} />;
-  if (member.status === 'deactivated')
-    icon = <UserDisabledIcon style={{color: ERROR_RED, width: '20px'}} />;
-  if (member.status === 'unverified')
-    icon = <UnverifiedIcon style={{color: ORANGE, width: '20px'}} />;
+    icon = <AdminIcon color='success' />;
+  else if (member.status === 'deactivated')
+    icon = <UserDisabledIcon color='error' style={{width: '20px'}} />;
+  else if (member.status === 'unverified')
+    icon = <UnverifiedIcon color='warning' style={{width: '20px'}} />;
+  else if (member.status === 'verified')
+    icon = <VerifiedIcon color='success' style={{width: '20px'}} />;
+  else if (member.status === 'verification_pending')
+    icon = <VerificationPendingIcon color='warning' style={{width: '20px'}} />;
 
   return (
     <React.Fragment>
