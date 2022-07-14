@@ -56,7 +56,7 @@ const UserHomeTabs = props => {
   }
 
   return (
-    <div className='col-md-12'>
+    <div className='col-xs-12 no-right-padding'>
       <AppBar position="static" color="default" style={{backgroundColor: WHITE, boxShadow: 'none'}}>
         <Tabs
           value={tab}

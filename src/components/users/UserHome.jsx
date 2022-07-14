@@ -150,11 +150,11 @@ class UserHome extends React.Component {
           <div className="col-xs-12">
             {
               user &&
-              <div className="col-xs-2 no-right-padding" style={{width: '20%'}}>
+              <div className="col-xs-2 no-side-padding" style={{width: '15%'}}>
                 <UserHomeDetails user={user} />
               </div>
             }
-            <div className='col-xs-10 no-side-padding' style={{width: '80%'}}>
+            <div className='col-xs-10 no-side-padding' style={{width: '85%'}}>
               <Pins
                 pins={pins}
                 onDelete={this.deletePin}

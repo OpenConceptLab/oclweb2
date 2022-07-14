@@ -63,11 +63,11 @@ const UserHomeDetails = ({ user, isLoading }) => {
   const isAdmin = isAdminUser()
 
   return (
-    <div className="col-md-12 no-side-padding">
+    <div className="col-xs-12 no-side-padding">
       {
         (isLoading || uploading) ?
           <CircularProgress color='primary' style={{marginTop: '50px', marginLeft: '50px'}} /> :
-        <div className="col-md-12 no-side-padding">
+        <div className="col-xs-12 no-side-padding">
           <div className='home-icon' style={{display: 'flex'}}>
             <HeaderLogo
               isCircle
