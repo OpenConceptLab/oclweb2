@@ -41,7 +41,7 @@ class EmailVerification extends React.Component {
   onSubmit() {
     const { username, token } = this.state
     APIService.users(username).verify(token).get().then(response => {
-      if(get(response, 'status') === 200 && get(response, 'data.token')) {
+      if(get(response, 'status') === 200) {
         window.location.hash = '#/accounts/login'
         alertifyjs.success('Successfully Verified Email.')
       } else if(get(response, 'detail'))

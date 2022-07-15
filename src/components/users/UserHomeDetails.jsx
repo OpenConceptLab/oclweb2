@@ -15,14 +15,15 @@ import {
   VerifiedUser as VerifiedIcon,
   SafetyCheck as VerificationPendingIcon,
 } from '@mui/icons-material';
-import { includes, startCase, get, merge } from 'lodash';
+import { includes, startCase, get, merge, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser
+  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser, isSuperuser
 } from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
+import UserManagement from './UserManagement';
 
 const UserHomeDetails = ({ user, isLoading }) => {
   const [logoURL, setLogoURL] = React.useState(user.logo_url)
@@ -197,6 +198,13 @@ const UserHomeDetails = ({ user, isLoading }) => {
                     </IconButton>
                   </Tooltip>
                 </p>
+              </React.Fragment>
+          }
+          {
+            isSuperuser && !isSameAsCurrentUser && !isEmpty(user) &&
+              <React.Fragment>
+                <Divider style={{width: '100%', margin: '5px 0'}} />
+                <UserManagement user={user} />
               </React.Fragment>
           }
         </div>

@@ -27,7 +27,11 @@ class ForgotPasswordForm extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchUser()
+    if(this.props.forceReset) {
+      this.setState({user: this.props.user, validToken: true, isLoading: false})
+    } else {
+      this.fetchUser()
+    }
   }
 
 
@@ -66,17 +70,23 @@ class ForgotPasswordForm extends React.Component {
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
-    if(isFormValid && isConfirmPasswordSameAsPassword && new_password && token && validPassword)
-      this.setState({serverError: null}, () => {
-        APIService.users().password().appendToUrl('reset/')
-                  .put({token: token, new_password: new_password})
-                  .then(response => {
-                    if(get(response, 'status') === 200)
-                      this.setState({success: true})
-                    else if (get(response, 'errors'))
-                      this.setState({serverError: values(response.errors)})
-                  })
-      })
+    if(isFormValid && isConfirmPasswordSameAsPassword && new_password && token && validPassword) {
+      const responseHandler = response => {
+        if(get(response, 'status') === 200)
+          this.setState({success: true})
+        else if (get(response, 'errors'))
+          this.setState({serverError: values(response.errors)})
+      }
+      if(this.props.onSubmit) {
+        this.props.onSubmit(new_password, responseHandler)
+      } else {
+        this.setState({serverError: null}, () => {
+          APIService.users().password().appendToUrl('reset/')
+            .put({token: token, new_password: new_password})
+            .then(responseHandler)
+        })
+      }
+    }
   }
 
   getNotFoundDOM() {
@@ -127,7 +137,6 @@ class ForgotPasswordForm extends React.Component {
               {
                 (success || notFound || !validToken) ?
                 this.getDOM() :
-
                 <React.Fragment>
                   <h1>Change Password</h1>
                   {
