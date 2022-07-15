@@ -19,7 +19,6 @@ const UserManagement = ({ user }) => {
   const activateLabel = isDeactivated ? 'Activate' : 'Deactivate'
   const adminToggleLabel = isAdmin ? 'Remove Admin Privileges' : 'Make Admin'
   const userLabel = `<i>${user.name}(${user.username})</i>`
-  const originalStatus = user.status
   const onMarkVerified = () => {
     alertifyjs.prompt(
       `Mark Verified ${userLabel}`,

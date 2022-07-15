@@ -61,6 +61,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
   const currentUserUsername = getCurrentUserUsername()
   const token = currentUserToken();
   const isSameAsCurrentUser = user.username === currentUserUsername;
+  const isSelectedUserSuperuser = user.is_superuser
   const isAdmin = isAdminUser()
 
   return (
@@ -201,7 +202,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
               </React.Fragment>
           }
           {
-            isSuperuser && !isSameAsCurrentUser && !isEmpty(user) &&
+            isSuperuser() && !isSameAsCurrentUser && !isEmpty(user) && !isSelectedUserSuperuser &&
               <React.Fragment>
                 <Divider style={{width: '100%', margin: '5px 0'}} />
                 <UserManagement user={user} />
