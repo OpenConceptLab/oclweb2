@@ -134,8 +134,11 @@ const UserManagement = ({ user }) => {
 
   return (
     <div className='col-xs-12 no-side-padding'>
+      <fieldset style={{border: `1px solid rgba(255, 129, 130, 0.4)`, width: '100%', borderRadius: '4px'}}>
+        <legend style={{color: 'rgba(255, 129, 130)', fontStyle: 'italic'}}>&nbsp; Admin Only &nbsp;</legend>
+
       <FormControl component='fieldset' variant='standard'>
-        <h4 style={{margin: '10px 0'}}>User Management</h4>
+        <h4 style={{margin: '4px 0'}}>User Management</h4>
         <FormGroup>
           <FormControlLabel
             control={
@@ -171,7 +174,7 @@ const UserManagement = ({ user }) => {
       </FormControl>
       <Tooltip arrow title="Reset this user's password." placement='right'>
         <span>
-          <Button color='warning' variant='outlined' size='small' style={{textTransform: 'none', marginRight: '10px'}} onClick={() => setIsResetingPassword(true)} disabled={isDeactivated || !isVerified}>
+          <Button color='error' variant={isResetingPassword ? 'contained' : 'outlined'} size='small' style={{textTransform: 'none', marginRight: '10px'}} onClick={() => setIsResetingPassword(true)} disabled={isDeactivated || !isVerified}>
             Reset Password
           </Button>
         </span>
@@ -185,6 +188,7 @@ const UserManagement = ({ user }) => {
               </div>
           </Dialog>
       }
+        </fieldset>
     </div>
   )
 }
