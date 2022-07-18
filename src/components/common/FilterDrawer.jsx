@@ -80,14 +80,13 @@ const FilterDrawer = props => {
     if(filters.retired && filters.retired.true && filters.retired.false) {
       filters.includeRetired = {'true': true}
     }
-    onApply(filters)
+    onApply(filters, props.updatedSince)
     onClose()
   }
 
   const onClear = () => {
     setFilters({})
-    onApply({})
-    props.onUpdateSinceChange(false)
+    onApply({}, false)
     onClose()
   }
 
