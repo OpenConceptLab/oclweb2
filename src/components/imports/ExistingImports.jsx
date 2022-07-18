@@ -110,7 +110,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
     <React.Fragment>
       <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
         <Alert className='flex-vertical-center' severity="warning" style={{padding: '5px 10px', width: '100%'}} icon={<InfoIcon fontSize='small' />}>
-          <span style={{marginLeft: '-3px'}}>
+          <span>
             Results will expire after <strong>72 hours</strong> from the task&apos;s start time
           </span>
         </Alert>
