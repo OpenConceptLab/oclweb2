@@ -84,6 +84,7 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
 
   const firstCellWidth = `${15 - level}%`
   const expandCellWidth = `${40 + (level * 10)}px`
+  console.log(item)
 
   return (
     <React.Fragment>

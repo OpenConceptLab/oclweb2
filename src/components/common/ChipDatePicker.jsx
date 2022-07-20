@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker, PickersDay } from "@mui/lab";
+import { DatePicker, PickersDay } from "@mui/x-date-pickers";
 import { Tooltip, Badge, TextField } from '@mui/material';
 import { isEmpty, get } from 'lodash';
 

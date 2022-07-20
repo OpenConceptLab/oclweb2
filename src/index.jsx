@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Fade from '@mui/material/Fade';
-import AdapterMoment from '@mui/lab/AdapterMoment';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { HashRouter } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider, createTheme, alpha } from '@mui/material/styles';
 import { grey } from "@mui/material/colors";
