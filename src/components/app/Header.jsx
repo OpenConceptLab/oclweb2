@@ -84,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const Header = props => {
   const communityAnchorRef = React.useRef(null);
   const toolsAnchorRef = React.useRef(null);
@@ -173,8 +172,9 @@ const Header = props => {
               <MenuIcon />
             </IconButton>
           }
-          <Typography variant="h6" className="brand col-sm-1" style={{padding: '0 5px'}}>
+          <Typography variant="h6" className="brand col-sm-2" style={{padding: '0 5px'}}>
             <a className="no-anchor-styles" href={isProduction ? SITE_URL : '/'} rel="noopener noreferrer">
+              <img alt="Brand" src='/coa.svg' className="h-9" style={{height: '50px', marginRight: '10px'}}/>
               {getLogo()}
             </a>
           </Typography>
