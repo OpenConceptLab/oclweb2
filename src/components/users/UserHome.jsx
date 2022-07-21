@@ -1,5 +1,5 @@
 import React from 'react';
-import { reject, get, isObject } from 'lodash';
+import { reject, get, isObject, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import {
   defaultCreatePin, defaultDeletePin, getCurrentUserUsername, isAdminUser,
@@ -146,31 +146,29 @@ class UserHome extends React.Component {
         { accessDenied && <AccessDenied /> }
         { permissionDenied && <PermissionDenied /> }
         {
-          !hasError &&
-          <div className="col-xs-12">
-            {
-              user &&
+          !hasError && !isEmpty(user) &&
+            <div className="col-xs-12">
               <div className="col-xs-2 no-side-padding" style={{width: '15%'}}>
                 <UserHomeDetails user={user} />
               </div>
-            }
-            <div className='col-xs-10 no-side-padding' style={{width: '85%'}}>
-              <Pins
-                pins={pins}
-                onDelete={this.deletePin}
-                canDelete={canActOnPins}
-                onOrderUpdate={this.updatePinOrder}
-              />
-              <UserHomeTabs
-                {...this.state}
-                {...this.props}
-                onTabChange={this.onTabChange}
-                onPinCreate={this.createPin}
-                onPinDelete={this.deletePin}
-                showPin={canActOnPins}
-              />
+              <div className='col-xs-10 no-side-padding' style={{width: '85%'}}>
+                <Pins
+                  pins={pins}
+                  onDelete={this.deletePin}
+                  canDelete={canActOnPins}
+                  onOrderUpdate={this.updatePinOrder}
+                />
+
+                <UserHomeTabs
+                  {...this.state}
+                  {...this.props}
+                  onTabChange={this.onTabChange}
+                  onPinCreate={this.createPin}
+                  onPinDelete={this.deletePin}
+                  showPin={canActOnPins}
+                />
+              </div>
             </div>
-          </div>
         }
       </React.Fragment>
     )
