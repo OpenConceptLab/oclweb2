@@ -42,7 +42,7 @@ class MappingForm extends React.Component {
         to_source_url: '',
         to_source_version: '',
         comment: '',
-        extras: [cloneDeep(EXTRAS_MODEL)],
+        extras: [],
       }
     }
   }
