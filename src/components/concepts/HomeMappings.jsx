@@ -66,9 +66,6 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
   const reverseMappings = get(concept, 'reverseMappings') || [];
   const count = isLoadingMappings ? null : conceptMappings.length;
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
-  const orderedMappings = {}
-  groupMappings(orderedMappings, concept, conceptMappings, true)
-  groupMappings(orderedMappings, concept, reverseMappings, false)
   const hierarchyMeaning = get(source, 'hierarchy_meaning')
   const hierarchyMapType = isChild => {
     return (
@@ -87,20 +84,22 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
       </span>
     )
   }
-
   const onCascadeFilterChange = (attr, value) => setCascadeFilters({...cascadeFilters, [attr]: value})
-
   const onMapTypesFilterChange = newFilters => setCascadeFilters(newFilters)
-
   const onHierarchyViewToggle = event => {
     event.preventDefault()
     event.stopPropagation()
     setHierarchy(!hierarchy)
   }
-
   const noAssociations = isEmpty(conceptMappings) && isEmpty(reverseMappings)
+  const getMappings = () => {
+    let _mappings = {}
+    groupMappings(_mappings, concept, conceptMappings, true)
+    groupMappings(_mappings, concept, reverseMappings, false)
+    return _mappings
+  }
 
-  let style = {minHeight: '40px', height: '100%', cursor: 'inherit'}
+  const orderedMappings = getMappings()
 
   return (
     <React.Fragment>
@@ -109,7 +108,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
           className='light-gray-bg less-paded-accordian-header'
           expandIcon={<span />}
           aria-controls="panel1a-content"
-          style={style}
+          style={{minHeight: '40px', height: '100%', cursor: 'inherit'}}
         >
           <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
             <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
@@ -152,6 +151,22 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                 </TableHead>
                 <TableBody>
                   {
+                    !isEmpty(get(orderedMappings, `children.hierarchy`)) &&
+                      <ConceptHierarchyRow
+                        source={source}
+                        concepts={get(orderedMappings, `children.hierarchy`)}
+                        mapType={hierarchyMapType(true)}
+                      />
+                  }
+                  {
+                    !isEmpty(get(orderedMappings, `parent.reverseHierarchy`)) &&
+                      <ConceptHierarchyRow
+                        source={source}
+                        concepts={get(orderedMappings, `parent.reverseHierarchy`)}
+                        mapType={hierarchyMapType(false)}
+                      />
+                  }
+                  {
                     map(orderedMappings, (oMappings, mapType) => {
                       const key = generateRandomString()
                       const hasDirectMappings = !isEmpty(oMappings.direct)
@@ -159,7 +174,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                         <React.Fragment key={key}>
                           {
                             hasDirectMappings &&
-                            <ConceptHomeMappingsTableRows
+                              <ConceptHomeMappingsTableRows
+                                concept={concept}
                               mappings={oMappings.direct}
                               mapType={mapType}
                             />
@@ -177,6 +193,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                           {
                             hasInDirectMappings &&
                             <ConceptHomeMappingsTableRows
+                              concept={concept}
                               mappings={oMappings.indirect}
                               mapType={mapType}
                               isIndirect
@@ -185,22 +202,6 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                         </React.Fragment>
                       )
                     })
-                  }
-                  {
-                    !isEmpty(get(orderedMappings, `children.hierarchy`)) &&
-                      <ConceptHierarchyRow
-                        source={source}
-                        concepts={get(orderedMappings, `children.hierarchy`)}
-                        mapType={hierarchyMapType(true)}
-                      />
-                  }
-                  {
-                    !isEmpty(get(orderedMappings, `parent.reverseHierarchy`)) &&
-                      <ConceptHierarchyRow
-                        source={source}
-                        concepts={get(orderedMappings, `parent.reverseHierarchy`)}
-                        mapType={hierarchyMapType(false)}
-                      />
                   }
                 </TableBody>
               </Table>

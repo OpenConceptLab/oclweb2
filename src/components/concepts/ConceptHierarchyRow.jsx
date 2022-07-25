@@ -2,7 +2,7 @@ import React from 'react';
 import {
   TableRow, TableCell, Chip
 } from '@mui/material';
-import { map, get } from 'lodash';
+import { map, get, orderBy } from 'lodash';
 
 const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
   const onDefaultClick = (event, concept) => {
@@ -12,6 +12,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
   }
 
   const count = get(concepts, 'length') || 0
+  const getOrderedConcepts = () => orderBy(concepts, 'name')
 
   return (
     <React.Fragment>
@@ -30,7 +31,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
         </TableRow>
       }
       {
-        map(concepts, (concept, index) => {
+        map(getOrderedConcepts(), (concept, index) => {
           return (
             <TableRow
               hover key={get(concept, 'uuid') || index} onClick={event => onDefaultClick(event, concept)} style={{cursor: 'pointer'}} className='underline-text'>
