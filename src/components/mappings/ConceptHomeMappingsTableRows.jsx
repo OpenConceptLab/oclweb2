@@ -36,7 +36,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
     const sameParentMappings = []
     const differentParentMappings = []
     forEach(mappings, mapping => {
-      if(toParentURI(mapping.target_concept_url) === parentURL)
+      if(mapping.target_concept_url && toParentURI(mapping.target_concept_url) === parentURL)
         sameParentMappings.push(mapping)
       else
         differentParentMappings.push(mapping)
