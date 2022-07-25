@@ -226,7 +226,7 @@ class OrgHome extends React.Component {
           !isLoading && !hasError &&
           <div className='col-xs-12 home-container no-side-padding'>
             {
-              tab !== null && selectedConfig &&
+              tab !== null && !isEmpty(selectedConfig) &&
               <React.Fragment>
                 <HomeHeader
                   org={org}
