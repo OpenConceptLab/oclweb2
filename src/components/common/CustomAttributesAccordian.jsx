@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import {
   map, isEmpty, isBoolean, isArray, isObject, find, startCase, keys, orderBy,
-  get, has
+  get, has, isNumber
 } from 'lodash';
 import { BLUE } from '../../common/constants';
 import CustomAttributes from './CustomAttributes'
@@ -131,7 +131,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
                         }
                         {
                           !isBool && !needNesting && !isArr && !isObject(value) &&
-                          <span style={{marginTop: '-14px', display: 'block'}}>
+                            <span style={isNumber(value) ? {} : {marginTop: '-14px', display: 'block'}}>
                             <CustomMarkdown markdown={value} classes={classes} id={elId}  />
                           </span>
                         }
