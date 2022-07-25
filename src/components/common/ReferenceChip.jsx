@@ -3,7 +3,7 @@ import { Chip } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon,
 } from '@mui/icons-material';
-import { toFullAPIURL } from '../../common/utils';
+import { toFullAPIURL, copyURL } from '../../common/utils';
 
 const ReferenceChip = props => {
   const isReference = !props.notReference
@@ -35,6 +35,11 @@ const ReferenceChip = props => {
             <Chip size='small' variant='outlined' color='success' label='include' /> :
             <Chip size='small' variant='outlined' color='error' label='exclude' />
         )
+      }
+      {
+        isReference &&
+          <Chip size='small' color='primary' variant='outlined' label='copy expression' onClick={() => copyURL(toFullAPIURL(props.expression))} style={{marginLeft: '5px'}} />
+
       }
     </span>
   )

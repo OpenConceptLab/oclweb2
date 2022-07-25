@@ -7,6 +7,7 @@ import {
   Person as PersonIcon,
   Home as HomeIcon,
   Loyalty as LoyaltyIcon,
+  AspectRatio as ExpansionIcon
 } from '@mui/icons-material'
 import { get, find, isEmpty, flatten, compact } from 'lodash';
 import {
@@ -199,7 +200,24 @@ const COLLECTION_TAG = {
 }
 export const TAGS = {
   sources: [...CONCEPT_CONTAINER_TAGS],
-  collections: [...CONCEPT_CONTAINER_TAGS],
+  collections: [
+    ...CONCEPT_CONTAINER_TAGS,
+    {
+      id: 'activeReferences',
+      value: 'summary.active_references',
+      label: 'References',
+      icon: <i className="icon-link" style={{ fontSize: "small", ...TAG_ICON_STYLES }} />,
+      hrefAttr: (item) => item.version_url || item.url + 'references/',
+      style: {marginTop: '8px', marginBottom: '5px'}
+    },
+    {
+      id: 'expansions',
+      value: 'summary.expansions',
+      label: 'References',
+      icon: <ExpansionIcon fontSize='small' style={{...TAG_ICON_STYLES, marginRight: '3px'}} />,
+      hrefAttr: 'versions_url'
+    },
+  ],
   organizations: [
     {
       id: 'members',

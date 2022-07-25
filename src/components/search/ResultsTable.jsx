@@ -136,7 +136,7 @@ const getTag = (tag, item, hapi) => {
   const value = isFunction(tag.getValue) ? tag.getValue(item, hapi) : formatCount(get(item, tag.value, null));
   const icon = isFunction(tag.getIcon) ? tag.getIcon(item) : tag.icon;
   const getTagDom = () => (
-    <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px'}}>
+    <div style={{fontSize: '14px', lineHeight: '0px', marginBottom: '2px', ...(tag.style || {})}}>
       <div className='flex-vertical-center'>
         <span>{icon}</span>
         {
@@ -152,7 +152,7 @@ const getTag = (tag, item, hapi) => {
       {
         tag.noTooltip ?
         getTagDom() :
-        <Tooltip arrow title={tag.label} key={tag.id}>
+          <Tooltip title={tag.label} key={tag.id}>
           {
             getTagDom()
           }
