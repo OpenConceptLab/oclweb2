@@ -88,7 +88,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
                       <DoesnotExistsInOCLIcon title={title} />
                     }
                   </span>
-                  <span>
+                  <span className={mapping.retired ? 'retired' : ''}>
                     { mapping[conceptCodeAttr] }
                   </span>
                 </span>

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
   Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton, Dialog, DialogContent, DialogTitle,
-  DialogActions, Button, Slide
+  DialogActions, Button, Slide, Chip
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
@@ -59,9 +59,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle }) => {
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
+  const [includeRetired, setIncludeRetired] = React.useState(false)
   const conceptMappings = get(concept, 'mappings') || [];
   const reverseMappings = get(concept, 'reverseMappings') || [];
   const count = isLoadingMappings ? null : conceptMappings.length;
@@ -91,6 +92,12 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     event.stopPropagation()
     setHierarchy(!hierarchy)
   }
+  const onRetiredToggle = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIncludeRetired(!includeRetired)
+    onIncludeRetiredToggle(!includeRetired)
+  }
   const noAssociations = isEmpty(conceptMappings) && isEmpty(reverseMappings)
   const getMappings = () => {
     let _mappings = {}
@@ -115,13 +122,20 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
             <span className='flex-vertical-center'>
               {
                 !noAssociations &&
-                <span>
-                  <Tooltip title='Visualize (Beta)'>
-                    <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
-                      <HierarchyIcon fontSize='inherit' />
-                    </IconButton>
+                  <React.Fragment>
+                    <span style={{marginRight: '10px'}}>
+                  <Tooltip title={includeRetired ? 'Exclude Retired' : 'Include Retired'} placement='top'>
+                    <Chip variant={includeRetired ? 'contained' : 'outlined'} style={{textTransform: 'none'}} onClick={onRetiredToggle} size='small' color='primary' label={includeRetired ? 'Exclude Retired' : 'Include Retired'} />
                   </Tooltip>
                 </span>
+                    <span>
+                      <Tooltip title='Visualize (Beta)'>
+                        <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
+                          <HierarchyIcon fontSize='inherit' />
+                        </IconButton>
+                      </Tooltip>
+                    </span>
+                    </React.Fragment>
               }
               <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
                 <Tooltip title='The Associations section lists hierarchy and mapping associations from the same source.'>

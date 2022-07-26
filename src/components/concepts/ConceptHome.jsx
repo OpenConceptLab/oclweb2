@@ -33,6 +33,7 @@ class ConceptHome extends React.Component {
       collections: [],
       source: {},
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
+      includeRetiredAssociations: false,
     }
   }
 
@@ -168,13 +169,13 @@ class ConceptHome extends React.Component {
       APIService.new()
         .overrideURL(encodeURI(url))
         .appendToUrl('$cascade/')
-        .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy'})
+        .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', includeRetired: this.state.includeRetiredAssociations})
                 .then(response => {
                   this.setState({mappings: get(response.data, 'entry.entries', []), isLoadingMappings: true}, () => {
                     APIService.new()
                       .overrideURL(encodeURI(url))
                       .appendToUrl('$cascade/')
-                      .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true})
+                      .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true, includeRetired: this.state.includeRetiredAssociations})
                       .then(response => {
                         this.setState({reverseMappings: get(response.data, 'entry.entries', []), isLoadingMappings: false})
                       })
@@ -182,6 +183,8 @@ class ConceptHome extends React.Component {
                 })
     })
   }
+
+  onIncludeRetiredAssociationsToggle = includeRetired => this.setState({includeRetiredAssociations: includeRetired}, this.getMappings)
 
   getCollectionVersions() {
     this.setState({isLoadingCollections: true}, () => {
@@ -263,6 +266,7 @@ class ConceptHome extends React.Component {
                 versions={versions}
                 sourceVersion={get(this.props.match, 'params.version')}
                 parent={this.props.parent}
+                onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
               />
             </div>
           </React.Fragment>

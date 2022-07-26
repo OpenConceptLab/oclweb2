@@ -93,6 +93,17 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
           />
         </Tooltip>
       }
+      <Tooltip title={filters.includeRetired ? 'Exclude Retired' : 'Include Retired'} arrow placement='top'>
+        <Chip
+          color="primary"
+          variant="outlined"
+          label={filters.includeRetired ? 'Exclude Retired' : 'Include Retired'}
+          size={_size}
+          style={{marginLeft: '2px'}}
+          clickable
+          onClick={() => onChange('includeRetired', !filters.includeRetried) }
+        />
+      </Tooltip>
       <Tooltip title={filters.reverse ? 'Cascade Forward/Down' : 'Cascade Backward/Up'} arrow placement='top'>
         <Chip
           color="primary"
