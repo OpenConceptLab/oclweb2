@@ -101,7 +101,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
           size={_size}
           style={{marginLeft: '2px'}}
           clickable
-          onClick={() => onChange('includeRetired', !filters.includeRetried) }
+          onClick={() => onChange('includeRetired', !filters.includeRetired) }
         />
       </Tooltip>
       <Tooltip title={filters.reverse ? 'Cascade Forward/Down' : 'Cascade Backward/Up'} arrow placement='top'>
