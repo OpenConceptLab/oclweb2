@@ -228,7 +228,8 @@ class ConceptHierarchyTree extends React.Component {
             mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : `Has ${rel}`
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
-          const sourceHeader = d.data.target_source ? `<div><span class='gray'>Source: </span><span><b>${d.data.target_source}</b></span></div> ` : '';
+          const targetSource = d.data.target_source || that.getSourceName(d.data)
+          const sourceHeader = targetSource ? `<div><span class='gray'>Source: </span><span><b>${targetSource}</b></span></div> ` : '';
           let terminalHeader = '';
           if(!d.data.target_concept_code && isEmpty(d.data.children)) {
             if(d.data.uuid === d.parent.data.uuid)
