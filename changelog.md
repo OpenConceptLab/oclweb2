@@ -1,3 +1,119 @@
+##### 2.1.31 - Tue Jul 26 05:04:42 2022 +0000
+- [OpenConceptLab/ocl_issues#1339](https://github.com/OpenConceptLab/ocl_issues/issues/1339) | concept associations/visualization | include/exclude retired with indicators
+- Collection Summary/Pin to show references and expansions count as well
+##### 2.1.30 - Mon Jul 25 09:22:33 2022 +0000
+- Fixing custom attributes format
+- [OpenConceptLab/ocl_issues#1260](https://github.com/OpenConceptLab/ocl_issues/issues/1260) | fixing attribute check
+- Concept/Mapping create form | descriptions/extras collapsed by default
+- [OpenConceptLab/ocl_issues#1260](https://github.com/OpenConceptLab/ocl_issues/issues/1260) | associations sorting
+- Org Home | Fixing errbit | waiting for config to load
+##### 2.1.29 - Fri Jul 22 02:26:02 2022 +0000
+- Errbit | fixing user home | wait until user loads
+##### 2.1.28 - Thu Jul 21 03:23:59 2022 +0000
+- MUI Upgrade | fixing packages import
+- Added mui/x-date-pickers
+- Correcting facets clear
+- Correcting margin
+##### 2.1.26 - Mon Jul 18 03:17:20 2022 +0000
+- [OpenConceptLab/ocl_issues#1335](https://github.com/OpenConceptLab/ocl_issues/issues/1335) | User Management styles
+- [OpenConceptLab/ocl_issues#1335](https://github.com/OpenConceptLab/ocl_issues/issues/1335) | User Management not enabled for other superuser
+- [OpenConceptLab/ocl_issues#1335](https://github.com/OpenConceptLab/ocl_issues/issues/1335) | User Management by super admin
+- [OpenConceptLab/ocl_issues#1335](https://github.com/OpenConceptLab/ocl_issues/issues/1335) | formatting spaces
+##### 2.1.25 - Wed Jul 13 05:30:22 2022 +0000
+- [OpenConceptLab/ocl_issues#1334](https://github.com/OpenConceptLab/ocl_issues/issues/1334) | User Profile | active status for admin
+- References | showing concepts/mappings summary
+##### 2.1.24 - Tue Jul 12 07:36:43 2022 +0000
+- Concept hiearchy | fixing typo
+- Fixing hierarchy visual/table
+##### 2.1.23 - Fri Jul 8 05:36:13 2022 +0000
+- [OpenConceptLab/ocl_issues#1326](https://github.com/OpenConceptLab/ocl_issues/issues/1326) | Expansion Repo Versions | correcting version display
+- [OpenConceptLab/ocl_issues#1331](https://github.com/OpenConceptLab/ocl_issues/issues/1331) | no referenes added indicator
+##### 2.1.22 - Thu Jul 7 07:02:17 2022 +0000
+- [OpenConceptLab/ocl_issues#1331](https://github.com/OpenConceptLab/ocl_issues/issues/1331) | no referenes added indicator
+##### 2.1.21 - Wed Jul 6 06:01:59 2022 +0000
+- [OpenConceptLab/ocl_issues#1331](https://github.com/OpenConceptLab/ocl_issues/issues/1331) | uniq expressions
+- [OpenConceptLab/ocl_issues#1331](https://github.com/OpenConceptLab/ocl_issues/issues/1331) | Mappings add to collection | options to add from/to concepts as well
+##### 2.1.20 - Fri Jul 1 08:35:17 2022 +0000
+- Operations Panel | cascade operation for collections
+- Operations Panel | added system/version for valueset operations
+- Operations Panel | resetting response correctly
+##### 2.1.19 - Fri Jul 1 03:27:42 2022 +0000
+- Errbit | fixing  Source hierarchy root url check
+##### 2.1.18 - Mon Jun 27 09:30:06 2022 +0000
+- [OpenConceptLab/ocl_issues#1328](https://github.com/OpenConceptLab/ocl_issues/issues/1328) | IE not supported warning
+- Search | updated since component fixes
+- Form Drawers | disable escape keydown close
+- Form Drawers | no backdrop | close button on top
+##### 2.1.17 - Fri Jun 24 07:36:19 2022 +0000
+- [OpenConceptLab/ocl_issues#1326](https://github.com/OpenConceptLab/ocl_issues/issues/1326) | Expansion Repo Versions
+##### 2.1.16 - Fri Jun 24 04:24:16 2022 +0000
+- [OpenConceptLab/ocl_issues#1307](https://github.com/OpenConceptLab/ocl_issues/issues/1307) | expansions to show resolved repo versions
+##### 2.1.15 - Mon Jun 20 11:43:27 2022 +0000
+- Source/Collection | Header | limiting vertical space
+- Errbit | fixing source/collection tab configs
+- [OpenConceptLab/ocl_issues#1325](https://github.com/OpenConceptLab/ocl_issues/issues/1325) | Mapping target concept name
+- Fixing delayed search response error
+- Errbit | fixing old content for references
+- Removed duplicate declaration of revision date
+- [OpenConceptLab/ocl_issues#1324](https://github.com/OpenConceptLab/ocl_issues/issues/1324) | auto-id | correcting field labels
+- [OpenConceptLab/ocl_issues#1324](https://github.com/OpenConceptLab/ocl_issues/issues/1324) | auto-id | added recommendation text
+##### 2.1.12 - Wed Jun 15 03:27:22 2022 +0000
+- ExpansionForm | added beta after Parameters
+- Using default alertifyjs theme
+##### 2.1.11 - Fri Jun 10 03:22:00 2022 +0000
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | Concept/Mapping buttons to show truncated mnemonic
+- Operations Drawer | fixing error presentation
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | Concept/Mapping | mnemonic/external_id click to assign manually
+- Fixing org configured view | concept split
+- Fixing references tab
+- [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | exclude reference to be always of versioned object
+- [OpenConceptLab/ocl_issues#1295](https://github.com/OpenConceptLab/ocl_issues/issues/1295) | Concept associations table is build from forward/backward cascades
+- [OpenConceptLab/ocl_issues#1295](https://github.com/OpenConceptLab/ocl_issues/issues/1295) | cascade visualization | correcting child parent indicator
+- [OpenConceptLab/ocl_issues#1295](https://github.com/OpenConceptLab/ocl_issues/issues/1295) | using cascade to get associations | removed parents/children/mappings calls
+- Remove lookup operation from FHIR server valuset operations (except from FHIR QA beta)
+- ConceptHome | removed old header
+- [OpenConceptLab/ocl_issues#1306](https://github.com/OpenConceptLab/ocl_issues/issues/1306) | delete org prompt box
+- [OpenConceptLab/ocl_issues#1314](https://github.com/OpenConceptLab/ocl_issues/issues/1314) | Fixing Org Tabs switch
+- [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | Exclude expression
+- [OpenConceptLab/ocl_issues#1315](https://github.com/OpenConceptLab/ocl_issues/issues/1315) | Fixing Mapping form attrs
+- [OpenConceptLab/ocl_issues#1311](https://github.com/OpenConceptLab/ocl_issues/issues/1311) | Search to remain on the tab
+- [OpenConceptLab/ocl_issues#1313](https://github.com/OpenConceptLab/ocl_issues/issues/1313) | Fixing Org post create collection/source
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | Concept/Mapping ID/ExternalID helper text
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | better helper text
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | added helper text on Source Form
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | source autoid | can set seq to a number
+- Tooltip customization | always arrow and leave delay and fade transition:
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | source auto id attributes in collapsed header
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | Concept id optional for autoid set sources
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | fixing autoid field initial value
+- Duplicate expression option in ReferenceForm
+- [OpenConceptLab/ocl_issues#1295](https://github.com/OpenConceptLab/ocl_issues/issues/1295) | concept cascade forward/backward flat/hierarchy for collection version
+- [OpenConceptLab/ocl_issues#1306](https://github.com/OpenConceptLab/ocl_issues/issues/1306) | delete org for creator and admin
+- [OpenConceptLab/ocl_issues#1231](https://github.com/OpenConceptLab/ocl_issues/issues/1231) | fixing collection version list expansion_url
+- [OpenConceptLab/ocl_issues#1231](https://github.com/OpenConceptLab/ocl_issues/issues/1231) | fixing routes
+- [OpenConceptLab/ocl_issues#1210](https://github.com/OpenConceptLab/ocl_issues/issues/1210) | Source Create | can add autoid concept/mapping mnemonic/external_id values
+- Fixing concept get for special characters
+- [OpenConceptLab/ocl_issues#1294](https://github.com/OpenConceptLab/ocl_issues/issues/1294) | new fhir server configuration
+- Errbit | fixing concept edit for special characters
+- [OpenConceptLab/ocl_issues#1289](https://github.com/OpenConceptLab/ocl_issues/issues/1289) | reference | include/exclude explicit toggle buttons
+- [OpenConceptLab/ocl_issues#1300](https://github.com/OpenConceptLab/ocl_issues/issues/1300) | references listing | excludes after includes
+- [OpenConceptLab/ocl_issues#1302](https://github.com/OpenConceptLab/ocl_issues/issues/1302) | collection version creation option even when non-HEAD version is selected
+- [OpenConceptLab/ocl_issues#1299](https://github.com/OpenConceptLab/ocl_issues/issues/1299) | encoding concept id for cascade
+- [OpenConceptLab/ocl_issues#1289](https://github.com/OpenConceptLab/ocl_issues/issues/1289) | formatting and margins
+- [OpenConceptLab/ocl_issues#1289](https://github.com/OpenConceptLab/ocl_issues/issues/1289) | Reference via expression or expanded structure
+- [OpenConceptLab/ocl_issues#1294](https://github.com/OpenConceptLab/ocl_issues/issues/1294) | Operation Panel | Valueset operations
+- [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | remove ref button | added beta icon
+- [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | updated dialog title | Added beta icon
+- [OpenConceptLab/ocl_issues#1278](https://github.com/OpenConceptLab/ocl_issues/issues/1278) | reference delete to exclude resource or resource-version based on resource result
+- [OpenConceptLab/ocl_issues#1292](https://github.com/OpenConceptLab/ocl_issues/issues/1292) | fixing remove reference execute logic
+- [OpenConceptLab/ocl_issues#1224](https://github.com/OpenConceptLab/ocl_issues/issues/1224) | Concept Association Visualization to use repo version
+- [OpenConceptLab/ocl_issues#1292](https://github.com/OpenConceptLab/ocl_issues/issues/1292) | reference resources bulk delete/exclusion
+- [OpenConceptLab/ocl_issues#1292](https://github.com/OpenConceptLab/ocl_issues/issues/1292) | exclude/include reference indicator
+- [OpenConceptLab/ocl_issues#1275](https://github.com/OpenConceptLab/ocl_issues/issues/1275) | fixing Source Header
+- [OpenConceptLab/ocl_issues#1275](https://github.com/OpenConceptLab/ocl_issues/issues/1275) | reference on click to take to API of reference details
+- [OpenConceptLab/ocl_issues#1275](https://github.com/OpenConceptLab/ocl_issues/issues/1275) | Reference Form by expression refactoring
+- [OpenConceptLab/ocl_issues#1275](https://github.com/OpenConceptLab/ocl_issues/issues/1275) | add reference expression removes limit and page
+- [OpenConceptLab/ocl_issues#1275](https://github.com/OpenConceptLab/ocl_issues/issues/1275) | Collection Reference Delete API
 ##### 2.1.10 - Thu Apr 28 03:55:58 2022 +0000
 - Fixing Source/Collection about tab navigation
 - Collection/Source | loading all versions
