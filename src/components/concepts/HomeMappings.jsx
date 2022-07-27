@@ -8,7 +8,7 @@ import {
   InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, find } from 'lodash';
+import { get, isEmpty, forEach, map, find, compact, flatten, values } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString, dropVersion } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
@@ -65,7 +65,6 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
   const [includeRetired, setIncludeRetired] = React.useState(false)
   const conceptMappings = get(concept, 'mappings') || [];
   const reverseMappings = get(concept, 'reverseMappings') || [];
-  const count = isLoadingMappings ? null : conceptMappings.length;
   const tbHeadCellStyles = {padding: '8px', color: WHITE}
   const hierarchyMeaning = get(source, 'hierarchy_meaning')
   const hierarchyMapType = isChild => {
@@ -107,6 +106,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
   }
 
   const orderedMappings = getMappings()
+  const getCount = () => flatten(compact(flatten(map(values(orderedMappings), mapping => values(mapping))))).length
 
   return (
     <React.Fragment>
@@ -118,7 +118,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
           style={{minHeight: '40px', height: '100%', cursor: 'inherit'}}
         >
           <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
-            <TabCountLabel label='Associations' count={count} style={ACCORDIAN_HEADING_STYLES} />
+            <TabCountLabel label='Associations' count={getCount()} style={ACCORDIAN_HEADING_STYLES} />
             <span className='flex-vertical-center'>
               {
                 !noAssociations &&
