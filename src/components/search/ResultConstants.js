@@ -213,7 +213,7 @@ export const TAGS = {
     {
       id: 'expansions',
       value: 'summary.expansions',
-      label: 'References',
+      label: 'Expansions',
       icon: <ExpansionIcon fontSize='small' style={{...TAG_ICON_STYLES, marginRight: '3px'}} />,
       hrefAttr: 'versions_url'
     },
