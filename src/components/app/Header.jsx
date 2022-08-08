@@ -208,7 +208,7 @@ const Header = props => {
               (
                 !isFHIRServer &&
                 <span style={{marginLeft: '20px'}}>
-                  <Button className='primary-btn' href="/#/accounts/login" color='primary' variant='contained'>
+                  <Button className='primary-btn' href="http://localhost:8080/realms/ocl/protocol/openid-connect/auth?client_id=ocllocal&response_type=code&state=fj8o3n7bdy1op5&redirect_uri=http://localhost:4000" color='primary' variant='contained'>
                     Sign In
                   </Button>
                 </span>
