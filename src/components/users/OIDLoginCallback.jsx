@@ -1,6 +1,6 @@
+/*eslint no-process-env: 0*/
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { CircularProgress } from '@mui/material';
 import { get } from 'lodash';
 import {
   refreshCurrentUserCache
@@ -17,7 +17,9 @@ class OIDLoginCallback extends React.Component {
     const queryParams = new URLSearchParams(this.props.location.search)
     const code = queryParams.get('code')
     if(code) {
-      APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: 'http://localhost:4000'}).then(res => {
+      /*eslint no-undef: 0*/
+      const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+      APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL}).then(res => {
         if(res.data?.access_token) {
           localStorage.removeItem('server_configs')
           localStorage.setItem('token', res.data.access_token)

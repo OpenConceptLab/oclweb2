@@ -620,7 +620,7 @@ export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title
 export const getRandomColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`;
 
 export const logoutUser = (alert = true, redirectToLogin) => {
-  APIService.users().appendToUrl('oidc/logout/').post({}).then(() => {
+  const callback = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('visits');
@@ -633,7 +633,13 @@ export const logoutUser = (alert = true, redirectToLogin) => {
       window.location.hash = '#/';
       window.location.reload();
     }
-  })
+  }
+  const realm = window.OIDC_REALM || process.env.OIDC_REALM
+  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  if(realm && oidClientID)
+    APIService.users().appendToUrl('oidc/logout/').post({}).then(callback)
+  else
+    callback()
 }
 
 export const paramsToParentURI = (params, versioned=false) => {
@@ -734,3 +740,13 @@ export const isChrome = () => !!window.chrome && (!!window.chrome.webstore || !!
 export const isOpera = () => (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 
 export const isDeprecatedBrowser = () => isIE() || isOpera();
+
+export const getLoginURL = () => {
+  const openIDServerURL = window.OIDC_SERVER_URL || process.env.OIDC_SERVER_URL
+  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const realm = window.OIDC_REALM || process.env.OIDC_REALM
+  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  if(openIDServerURL && redirectURL && realm && oidClientID)
+    return `${openIDServerURL}/realms/${realm}/protocol/openid-connect/auth?client_id=${oidClientID}&response_type=code&state=fj8o3n7bdy1op5&redirect_uri=${redirectURL}`
+  return '/#/accounts/login'
+}

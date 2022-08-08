@@ -117,10 +117,7 @@ const App = props => {
         }
         <main className={getClasses()}>
           <Switch>
-            {
-              /* <Route path="/state=:state(.*)&session_state=:session_state(.*)&access_token=:access_token(.*)&token_type=:token_type(.*)&expires_in=:expires_in(.*)" component={OIDLoginCallback} /> */
-            }
-              <Route exact path="/oidc/login" component={OIDLoginCallback} />
+            <Route exact path="/oidc/login" component={OIDLoginCallback} />
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
             <Route path="/search" component={isFHIR ? Fhir : Search} />
             <AuthenticationRequiredRoute path="/imports" component={ImportHome} />

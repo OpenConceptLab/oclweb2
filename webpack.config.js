@@ -114,6 +114,10 @@ module.exports = (env) => {
         'process.env.HOTJAR_ID': JSON.stringify(env.HOTJAR_ID),
         'process.env.ERRBIT_URL': JSON.stringify(env.ERRBIT_URL),
         'process.env.ERRBIT_KEY': JSON.stringify(env.ERRBIT_KEY),
+        'process.env.LOGIN_REDIRECT_URL': JSON.stringify(env.LOGIN_REDIRECT_URL),
+        'process.env.OIDC_SERVER_URL': JSON.stringify(env.OIDC_SERVER_URL),
+        'process.env.OIDC_RP_CLIENT_ID': JSON.stringify(env.OIDC_RP_CLIENT_ID),
+        'process.env.OIDC_REALM': JSON.stringify(env.OIDC_REALM),
       }),
       new IgnorePlugin({ resourceRegExp: /moment\/locale\// })
     ],

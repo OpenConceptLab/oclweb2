@@ -19,3 +19,7 @@ services:
       - ERRBIT_URL
       - ERRBIT_KEY
       - HOTJAR_ID
+      - LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL=http://127.0.0.1:4000}
+      - OIDC_SERVER_URL
+      - OIDC_RP_CLIENT_ID
+      - OIDC_REALM
