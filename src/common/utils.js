@@ -741,7 +741,7 @@ export const isOpera = () => (!!window.opr && !!opr.addons) || !!window.opera ||
 
 export const isDeprecatedBrowser = () => isIE() || isOpera();
 
-export isSSOEnabled = () => {
+export const isSSOEnabled = () => {
   const openIDServerURL = window.OIDC_SERVER_URL || process.env.OIDC_SERVER_URL
   const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const realm = window.OIDC_REALM || process.env.OIDC_REALM
