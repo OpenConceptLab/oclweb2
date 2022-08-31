@@ -223,9 +223,17 @@ const handleLookupValuesResponse = (data, callback, attr) => {
   callback(orderBy(uniqBy(map(data, cc => ({id: get(cc, _attr), name: get(cc, _attr)})), 'name')), 'name');
 }
 
-export const fetchLocales = callback => {
+export const fetchLocales = (callback, includeRawName=false) => {
   APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/lookup/').get(null, null, {verbose: true}).then(response => {
-    callback(orderBy(map(response.data, l => ({id: l.id, name: `${l.display_name} [${l.id}]`, uuid: l.uuid})), 'name'));
+    const mapper = locale => {
+      let data = {id: locale.id, name: `${locale.display_name} [${locale.id}]`, uuid: locale.uuid}
+      if(includeRawName) {
+        data.name = locale.display_name
+        data.displayName = `${locale.display_name} [${locale.id}]`
+      }
+      return data
+    }
+    callback(orderBy(map(response.data, mapper), 'displayName'));
   });
 }
 
