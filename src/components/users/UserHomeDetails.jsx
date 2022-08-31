@@ -18,7 +18,7 @@ import {
 import { includes, startCase, get, merge, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser, isSuperuser
+  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser, isSuperuser, isSSOEnabled
 } from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -202,7 +202,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
               </React.Fragment>
           }
           {
-            isSuperuser() && !isSameAsCurrentUser && !isEmpty(user) && !isSelectedUserSuperuser &&
+            isSuperuser() && !isSameAsCurrentUser && !isEmpty(user) && !isSelectedUserSuperuser && !isSSOEnabled() &&
               <React.Fragment>
                 <Divider style={{width: '100%', margin: '5px 0'}} />
                 <UserManagement user={user} />
