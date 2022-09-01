@@ -8,7 +8,7 @@ import CustomText from '../common/CustomText';
 import OrgHomeChildrenList from './OrgHomeChildrenList';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
-import SourceForm from '../sources/SourceForm';
+import SourceForm from '../sources/forms/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConfigSelect from '../common/ConfigSelect';
 import MembersForm from './MembersForm'
@@ -120,7 +120,7 @@ const OrgHomeTabs = props => {
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
         formComponent={
-          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={url} />
+          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} owner={org} />
         }
       />
       <CommonFormDrawer

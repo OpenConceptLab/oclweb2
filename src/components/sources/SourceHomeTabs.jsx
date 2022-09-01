@@ -92,7 +92,7 @@ const SourceHomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
-  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text'], selectedTabConfig.type) && !selectedTabConfig.uri;
+  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text'], get(selectedTabConfig, 'type')) && !get(selectedTabConfig, 'uri');
 
   return (
     <div className='col-xs-12 sub-tab' style={{width: width}}>

@@ -10,6 +10,9 @@ const AboutPage = props => {
     setText(value)
     props.onChange({text: value})
   }
+
+  React.useEffect(() => props.edit && setText(props.repo.text || ''), [])
+
   return (
     <CommonAccordion square title={configs.title} subTitle={configs.subTitle}>
       <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>

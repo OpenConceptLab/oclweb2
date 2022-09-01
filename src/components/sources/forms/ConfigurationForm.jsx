@@ -1,11 +1,13 @@
 import React from 'react';
 import { TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { get, merge, map } from 'lodash';
+import { fetchLocales } from '../../../common/utils';
+import { get, merge, map, find, filter, includes } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
 import LocaleAutoComplete from '../../common/LocaleAutoComplete'
 
 const ConfigurationForm = props => {
+  const [locales, setLocales] = React.useState([])
   const [showSupportedLocales, setShowSupportedLocales] = React.useState(false)
   const [defaultLocale, setDefaultLocale] = React.useState(null)
   const [supportedLocales, setSupportedLocales] = React.useState([])
@@ -18,19 +20,38 @@ const ConfigurationForm = props => {
   }
   const toState = newValue => merge({public_access: publicAccess}, newValue)
   const configs = props.configuration
+  const setUp = () => {
+    fetchLocales(_locales => {
+      setLocales(_locales)
+      if(props.edit) {
+        setDefaultLocale(find(_locales, {id: props.repo.default_locale}))
+        if(props.repo.supported_locales) {
+          setShowSupportedLocales(true)
+          setSupportedLocales(filter(_locales, _locale => includes(props.repo.supported_locales, _locale.id)))
+        }
+        const _type = get(props.repo, `${props.resource}_type`)
+        setType({id: _type, name: _type})
+        setPublicAccess(props.repo.public_access)
+        setCanonicalURL(props.repo.canonical_url || '')
+      }
+    }, true)
+  }
+
+  React.useEffect(setUp, [])
 
   return (
     <div className='col-xs-12 no-side-padding' style={{marginBottom: '20px'}}>
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
-      <div className='col-xs-12 no-side-padding' style={{marginBottom: '5px'}}>
+      <div className='col-xs-12 no-side-padding' style={{marginBottom: '10px'}}>
         <div className='col-xs-12 no-side-padding form-text-gray'>
           {configs.subTitle}
         </div>
       </div>
       <div className='col-xs-12 no-side-padding flex-vertical-center'>
         <LocaleAutoComplete
+          cachedLocales={locales}
           label={configs.defaultLanguage.label}
           size='small'
           required
@@ -44,6 +65,7 @@ const ConfigurationForm = props => {
           showSupportedLocales ?
             <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px'}}>
               <LocaleAutoComplete
+                cachedLocales={locales}
                 multiple
                 filterSelectedOptions
                 label={configs.supportedLanguages.label}
@@ -104,13 +126,13 @@ const ConfigurationForm = props => {
                 onChange={event => onChange('public_access', event.target.value, setPublicAccess)}
               >
                 <MenuItem value='View'>
-                  <ListItemText primary="Public (read only)" secondary={`Anyone can view the content is this ${props.resource}`} />
+                  <ListItemText primary="Public (read only)" secondary={`Anyone can view the content in this ${props.resource}`} />
                 </MenuItem>
                 <MenuItem value='Edit'>
-                  <ListItemText primary="Public (read/write)" secondary={`Anyone can view/edit the content is this ${props.resource}`} />
+                  <ListItemText primary="Public (read/write)" secondary={`Anyone can view/edit the content in this ${props.resource}`} />
                 </MenuItem>
                 <MenuItem value='None'>
-                  <ListItemText primary="Private" secondary={`No one can view the content is this ${props.resource}`} />
+                  <ListItemText primary="Private" secondary={`No one can view the content in this ${props.resource}`} />
                 </MenuItem>
               </Select>
             </FormControl>

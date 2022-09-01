@@ -32,6 +32,18 @@ const ResourceIDAssignmentSettings = props => {
     autoid_mapping_external_id: toValue(autoIDMappingExternalID),
     autoid_mapping_external_id_start_from: parseInt(autoIDMappingExternalIDStartFrom),
   }, newValue)
+  const setFieldsForEdit = () => {
+    setAutoIDConceptID(props.repo.autoid_concept_mnemonic || 'None')
+    setAutoIDConceptIDStartFrom(props.repo.autoid_concept_mnemonic_start_from || 1)
+    setAutoIDConceptExternalID(props.repo.autoid_concept_external_id || 'None')
+    setAutoIDConceptExternalIDStartFrom(props.repo.autoid_concept_external_id_start_from || 1)
+    setAutoIDMappingID(props.repo.autoid_mapping_mnemonic || 'None')
+    setAutoIDMappingIDStartFrom(props.repo.autoid_mapping_mnemonic_start_from || 1)
+    setAutoIDMappingExternalID(props.repo.autoid_concept_external_id || 'None')
+    setAutoIDMappingExternalIDStartFrom(props.repo.autoid_mapping_external_id_start_from || 1)
+  }
+
+  React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
   const Template = (id, config, value, setter, defaultValue, startFromValue, startFromSetter, startFromConfig) => {
     const isExternalID = id.includes('External')

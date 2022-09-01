@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import {
   TextField, FormControlLabel, Checkbox
 } from '@mui/material';
@@ -24,6 +25,23 @@ const FHIRSettings = props => {
     setter(value)
     props.onChange({[id]: value})
   }
+  const setFieldsForEdit = () => {
+    setPublisher(props.repo.publisher || '')
+    setJurisdiction(props.repo.jurisdiction || '')
+    setPurpose(props.repo.purpose || '')
+    setCopyright(props.repo.copyright || '')
+    setIdentifier(props.repo.identifier || '')
+    setContact(props.repo.contact || '')
+    setContentType(props.repo.content_type || '')
+    if(props.repo.revision_date)
+      setRevisionDate(moment(props.repo.revision_date).format('YYYY-MM-DD'))
+    setExperimental(props.repo.experimental || false)
+    setCaseSensitive(props.repo.case_sensitive || false)
+    setCompositional(props.repo.compositional || false)
+    setVersionNeeded(props.repo.version_needed || false)
+  }
+
+  React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (
@@ -63,7 +81,7 @@ const FHIRSettings = props => {
         {TextFieldTemplate('identifier', configs.identifier, identifier, setIdentifier)}
         {TextFieldTemplate('contact', configs.contact, contact, setContact)}
         {TextFieldTemplate('content_type', configs.contentType, contentType, setContentType)}
-        {TextFieldTemplate('revision_date', configs.revisionDate, revisionDate, setRevisionDate, 'datetime-local', { shrink: true })}
+        {TextFieldTemplate('revision_date', configs.revisionDate, revisionDate, setRevisionDate, 'date', { shrink: true })}
         {CheckboxFieldTemplate('experimental', configs.experimental, experimental, setExperimental)}
         {CheckboxFieldTemplate('case_sensitive', configs.caseSensitive, caseSensitive, setCaseSensitive)}
         {CheckboxFieldTemplate('compositional', configs.compositional, compositional, setCompositional)}

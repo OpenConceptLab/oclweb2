@@ -12,7 +12,6 @@ import { currentUserHasAccess } from '../../common/utils';
 import Search from '../search/Search';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import OrgForm from '../orgs/OrgForm';
-import SourceForm2 from '../sources/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import SourceForm from '../sources/forms/SourceForm';
 
@@ -153,7 +152,7 @@ const UserHomeTabs = props => {
         onClose={() => setSourceForm(false)}
         size='small'
         formComponent={
-          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={user.url} owner={user} />
+          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} owner={user} />
         }
       />
       <CommonFormDrawer

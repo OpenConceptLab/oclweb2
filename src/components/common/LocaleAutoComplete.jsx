@@ -3,11 +3,11 @@ import { TextField, Box, Divider, Autocomplete } from '@mui/material';
 import { get, isEmpty } from 'lodash'
 import { fetchLocales } from '../../common/utils';
 
-const LocaleAutoComplete = ({ id, selected, multiple, required, onChange, label, error, size, fullWidth, ...rest }) => {
-  const [locales, setLocales] = React.useState([])
+const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, ...rest }) => {
+  const [locales, setLocales] = React.useState(cachedLocales || [])
   const _fullWidth = !(fullWidth === false)
 
-  React.useEffect(() => fetchLocales(_locales => setLocales(_locales), true), [])
+  React.useEffect(() => isEmpty(cachedLocales) && fetchLocales(_locales => setLocales(_locales), true), [])
 
   return (
     <Autocomplete

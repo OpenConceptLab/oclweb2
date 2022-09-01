@@ -1,7 +1,7 @@
 import React from 'react';
-import { ChevronRight as RightIcon } from '@mui/icons-material';
-import { TextField } from '@mui/material';
-import { merge } from 'lodash';
+import { ChevronRight as RightIcon, List as ListIcon } from '@mui/icons-material';
+import { TextField, Button } from '@mui/material';
+import { GREEN, WHITE } from '../../../common/constants';
 import OwnerSelectorButton from '../../common/OwnerSelectorButton';
 import FormTooltip from '../../common/FormTooltip';
 
@@ -20,6 +20,15 @@ const NameAndDescription = props => {
     props.onChange({[id]: value}, id === 'owner' ? 'owner' : false)
   }
 
+  const setFieldsForEdit = () => {
+    setId(props.repo.short_code)
+    setShortName(props.repo.name || '')
+    setFullName(props.repo.full_name || '')
+    setDescription(props.repo.description || '')
+  }
+
+  React.useEffect(() => props.edit && setFieldsForEdit(), [])
+
   return (
     <div className='col-xs-12 no-side-padding' style={{marginTop: '10px', marginBottom: '20px'}}>
       <div className='col-xs-12 no-side-padding'>
@@ -36,19 +45,26 @@ const NameAndDescription = props => {
             onChange={newOwner => onChange('owner', newOwner, setOwner)}
             owner={props.owner}
             style={{maxWidth: '80%'}}
+            disabled={props.edit}
           />
           <span className='form-text-gray' style={{margin: '0 10px', display: 'flex'}}>
             <RightIcon />
           </span>
           <span>
-            <TextField
-              size='small'
-              label={configs.shortCode.label}
-              required
-              onChange={event => onChange('id', event.target.value || '', setId)}
-              inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
-              value={id}
-            />
+            {
+              props.edit ?
+                <Button variant='contained' style={{background: GREEN, color: WHITE, pointerEvents: 'none'}} startIcon={<ListIcon />} >
+                  {id}
+                </Button> :
+                <TextField
+                  size='small'
+                  label={configs.shortCode.label}
+                  required
+                  onChange={event => onChange('id', event.target.value || '', setId)}
+                  inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
+                  value={id}
+                />
+            }
           </span>
             <FormTooltip title={configs.shortCode.tooltip} style={{marginLeft: '10px'}} />
         </div>

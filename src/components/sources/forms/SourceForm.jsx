@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { Divider, Button } from '@mui/material';
-import { orderBy, map, merge, cloneDeep, pickBy, get } from 'lodash';
+import { orderBy, map, merge, cloneDeep, get } from 'lodash';
 import APIService from '../../../services/APIService';
 import { SOURCE_TYPES } from '../../../common/constants'
 import FormHeader from './FormHeader';
@@ -9,9 +9,10 @@ import NameAndDescription from './NameAndDescription';
 import ConfigurationForm from './ConfigurationForm';
 import AdvanceSettings from './AdvanceSettings';
 
-const SOURCE_CONFIGS = {
+const CONFIG = {
   resource: 'source',
   title: 'Create a new source',
+  editTitle: 'Edit Source',
   subTitle: 'A repository for content that you create',
   nameAndDescription: {
     title: 'Name and description',
@@ -56,7 +57,7 @@ const SOURCE_CONFIGS = {
     canonicalURL: {
       label: 'Canonical URL',
       tooltip: 'URL-formatted identifier for your Source',
-    }
+    },
   },
   advanceSettings: {
     title: 'Advance Settings',
@@ -184,7 +185,7 @@ class SourceForm extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { edit } = this.props
+    const { edit, source } = this.props
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
@@ -192,7 +193,7 @@ class SourceForm extends React.Component {
       const payload = this.getPayload()
       const service = APIService.new().overrideURL(this.state.owner.url + 'sources/')
       if(edit)
-        service.appendToUrl(`${fields.id}/`).put(payload).then(response => this.handleSubmitResponse(response))
+        service.appendToUrl(`${source.id}/`).put(payload).then(response => this.handleSubmitResponse(response))
       else
         service.post(payload).then(response => this.handleSubmitResponse(response))
     }
@@ -236,26 +237,27 @@ class SourceForm extends React.Component {
       if(fields[field] !== 'sequential')
         delete fields[`${field}_start_from`]
     })
-    fields.source_type = fields.type
+    const sourceType = fields.type || get(this.props.source, 'source_type')
+    if(sourceType)
+      fields.source_type = sourceType
 
     return fields
   }
 
   render () {
-    const configs = {...SOURCE_CONFIGS}
+    const { edit, owner, source } = this.props
     return (
       <form>
         <div className='col-xs-12' style={{marginBottom: '30px'}}>
-          <FormHeader {...configs} />
-          <NameAndDescription {...configs} owner={this.props.owner} onChange={this.onChange} />
+          <FormHeader {...CONFIG} edit={edit} />
+          <NameAndDescription {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
           <Divider style={{width: '100%'}} />
-          <ConfigurationForm {...configs} owner={this.props.owner} types={TYPES} onChange={this.onChange}/>
+          <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={source} />
           <Divider style={{width: '100%'}} />
-          <AdvanceSettings {...configs} owner={this.props.owner} onChange={this.onChange}/>
-
+          <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
           <div className='col-xs-12 no-side-padding' style={{marginTop: '30px'}}>
             <Button variant='contained' type='submit' onClick={this.onSubmit}>
-              Create Source
+              {edit ? 'Update Source' : 'Create Source'}
             </Button>
           </div>
         </div>

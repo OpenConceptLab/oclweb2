@@ -43,9 +43,9 @@ const OwnerSelectorButton = props => {
     <React.Fragment>
     <Button
       startIcon={<DynamicConfigResourceIcon resource={selected.type.toLowerCase()} />}
-      endIcon={<DownIcon />}
+      endIcon={props.disabled ? undefined : <DownIcon />}
       variant='contained'
-      style={{backgroundColor: ORANGE, color: WHITE, ...(props.style || {})}}
+      style={{backgroundColor: ORANGE, color: WHITE, pointerEvents: props.disabled ? 'none' : 'all', ...(props.style || {})}}
       onClick={props.disabled ? () => {} : onToggle}
     >
       {selected.username || selected.id}

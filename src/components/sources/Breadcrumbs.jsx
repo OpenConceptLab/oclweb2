@@ -18,7 +18,7 @@ import ConceptButton from '../common/ConceptButton';
 import MappingButton from '../common/MappingButton';
 import ResourceVersionButton from '../common/VersionButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
-import SourceForm from './SourceForm';
+import SourceForm from './forms/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import VersionSelectorButton from '../common/VersionSelectorButton';
@@ -128,6 +128,15 @@ const Breadcrumbs = ({
     if(openOperations)
       width += 350
     return `calc(100% - ${width}px)`
+  }
+
+  const getOwner = () => {
+    let owner = {url: container.owner_url, type: container.owner_type}
+    if(owner.type === 'User')
+      owner.username = container.owner
+    else
+      owner.id = container.owner
+    return owner
   }
 
   return (
@@ -265,7 +274,7 @@ const Breadcrumbs = ({
           isOpen={sourceForm}
           onClose={() => setSourceForm(false)}
           formComponent={
-            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
+            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} parentURL={versionedObjectURL} owner={getOwner()} />
           }
         />
       }

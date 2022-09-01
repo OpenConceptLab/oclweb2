@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { cloneDeep, map, pullAt } from 'lodash';
+import { cloneDeep, map, pullAt, isEmpty } from 'lodash';
 import CommonAccordion from '../../common/CommonAccordion';
 import ExtrasForm from '../../common/ExtrasForm';
 import { arrayToObject } from '../../../common/utils';
@@ -27,6 +27,10 @@ const CustomAttributes = props => {
     setExtras(newExtras)
     props.onChange({extras: arrayToObject(newExtras)}, 'extras')
   }
+  const setFieldsForEdit = () => !isEmpty(props.repo.extras) && setExtras(map(props.repo.extras, (v, k) => ({key: k, value: v})))
+
+  React.useEffect(() => props.edit && setFieldsForEdit(), [])
+
 
   return (
     <CommonAccordion square title={configs.title} subTitle={configs.subTitle}>
