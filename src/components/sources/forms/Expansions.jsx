@@ -23,6 +23,7 @@ const Expansions = props => {
         <FormControlLabel
           control={<Checkbox checked={autoexpandHEAD} onChange={event => onChange(event.target.checked)} />}
           label={configs.autoexpandHEAD.label}
+          disabled={props.edit}
         />
         <FormTooltip title={configs.autoexpandHEAD.tooltip} style={{marginLeft: '10px'}} />
 
