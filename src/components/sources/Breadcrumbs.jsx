@@ -28,7 +28,7 @@ import MappingForm from '../mappings/MappingForm';
 import { OperationsContext } from '../app/LayoutContext';
 
 const Breadcrumbs = ({
-  params, selectedResource, container, isVersionedObject, versionedObjectURL, versions, onSplitViewClose,
+  params, selectedResource, container, isVersionedObject, versions, onSplitViewClose,
   isLoadingExpansions, expansions, expansion
 }) => {
   const { openOperations, menuOpen } = React.useContext(OperationsContext);
@@ -273,8 +273,9 @@ const Breadcrumbs = ({
           style={{zIndex: '1202'}}
           isOpen={sourceForm}
           onClose={() => setSourceForm(false)}
+          size='smedium'
           formComponent={
-            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} parentURL={versionedObjectURL} owner={getOwner()} />
+            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} owner={getOwner()} />
           }
         />
       }
@@ -284,8 +285,9 @@ const Breadcrumbs = ({
           style={{zIndex: '1202'}}
           isOpen={collectionForm}
           onClose={() => setCollectionForm(false)}
+          size='smedium'
           formComponent={
-            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
+            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} owner={getOwner()} />
           }
         />
       }

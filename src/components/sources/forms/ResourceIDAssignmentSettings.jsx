@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Select, ListItemText, MenuItem, FormControl, TextField
 } from '@mui/material';
-import { merge, includes } from 'lodash'
+import { merge, includes, some } from 'lodash'
 import FormTooltip from '../../common/FormTooltip';
 import CommonAccordion from '../../common/CommonAccordion';
 
@@ -101,8 +101,10 @@ const ResourceIDAssignmentSettings = props => {
     )
   }
 
+  const defaultExpanded = props.edit && some([props.repo.autoid_concept_mnemonic, props.repo.autoid_concept_external_id, props.repo.autoid_mapping_mnemonic !== 'sequential', props.repo.autoid_mapping_external_id])
+
   return (
-    <CommonAccordion square title={configs.title} subTitle={configs.subTitle}>
+    <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
       <React.Fragment>
         {
           Template('conceptID', configs.conceptID, autoIDConceptID, setAutoIDConceptID, 'None', autoIDConceptIDStartFrom, setAutoIDConceptIDStartFrom, configs.conceptIDStartFrom)

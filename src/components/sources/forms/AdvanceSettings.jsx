@@ -3,6 +3,8 @@ import FHIRSettings from './FHIRSettings';
 import ResourceIDAssignmentSettings from './ResourceIDAssignmentSettings'
 import CustomAttributes from './CustomAttributes'
 import AboutPage from './AboutPage'
+import Expansions from './Expansions';
+import Others from './Others';
 
 const AdvanceSettings = props => {
   const configs = props.advanceSettings
@@ -16,11 +18,16 @@ const AdvanceSettings = props => {
           <FHIRSettings {...props} />
       }
       {
+        configs.expansions &&
+          <Expansions {...props} />
+      }
+      {
         configs.assigningIds &&
           <ResourceIDAssignmentSettings {...props} />
       }
       <CustomAttributes {...props} />
       <AboutPage {...props} />
+    <Others {...props} />
     </div>
   )
 }

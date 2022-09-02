@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { Divider, Button } from '@mui/material';
-import { orderBy, map, merge, cloneDeep, get } from 'lodash';
+import { orderBy, map, merge, cloneDeep, get, isEmpty } from 'lodash';
 import APIService from '../../../services/APIService';
 import { SOURCE_TYPES } from '../../../common/constants'
 import FormHeader from './FormHeader';
@@ -50,13 +50,18 @@ const CONFIG = {
       label: 'Select source type',
       tooltip: 'Select source type',
     },
+    customValidationSchema: {
+      label: 'Validation Schema',
+      tooltip: 'Helps OCL format the dictionary according to a custom schema',
+    },
     publicAccess: {
       label: 'Source visibility - who can view your source?',
       tooltip: "This determines who can see your Source's content. Set it to Private if your content should only be shown to authorized users or organizations."
     },
     canonicalURL: {
       label: 'Canonical URL',
-      tooltip: 'URL-formatted identifier for your Source',
+      tooltip: "This provides a unique identifier for your Source. It will allow you to leverage OCL's powerful collection management features using this Source.",
+      helperText: 'Unique URL - formatted identifier for your Source'
     },
   },
   advanceSettings: {
@@ -156,6 +161,23 @@ const CONFIG = {
     about: {
       title: 'About Page',
       subTitle: 'Add a page containing rich text information about your Source'
+    },
+    others: {
+      title: 'Other Source Attributes',
+      website: {
+        label: 'Website',
+        tooltip: 'Link to an associated website for this Source',
+      },
+      externalID: {
+        label: 'External ID',
+        tooltip: 'An identifier for the Source that is external to OCL'
+      },
+      meta: {
+        label: 'Meta',
+      },
+      collectionReference: {
+        label: 'Collection Reference'
+      }
     }
   }
 }
@@ -254,7 +276,10 @@ class SourceForm extends React.Component {
           <Divider style={{width: '100%'}} />
           <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={source} />
           <Divider style={{width: '100%'}} />
-          <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
+          {
+            ((edit && !isEmpty(source)) || !edit) &&
+              <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
+          }
           <div className='col-xs-12 no-side-padding' style={{marginTop: '30px'}}>
             <Button variant='contained' type='submit' onClick={this.onSubmit}>
               {edit ? 'Update Source' : 'Create Source'}

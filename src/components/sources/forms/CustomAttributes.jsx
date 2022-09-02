@@ -28,12 +28,13 @@ const CustomAttributes = props => {
     props.onChange({extras: arrayToObject(newExtras)}, 'extras')
   }
   const setFieldsForEdit = () => !isEmpty(props.repo.extras) && setExtras(map(props.repo.extras, (v, k) => ({key: k, value: v})))
+  const defaultExpanded = props.edit && !isEmpty(props.repo.extras)
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
 
   return (
-    <CommonAccordion square title={configs.title} subTitle={configs.subTitle}>
+    <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
       <React.Fragment>
         {
           map(extras, (extra, index) => (

@@ -3,6 +3,7 @@ import moment from 'moment';
 import {
   TextField, FormControlLabel, Checkbox
 } from '@mui/material';
+import { isObject, isEmpty, some } from 'lodash'
 import FormTooltip from '../../common/FormTooltip';
 import CommonAccordion from '../../common/CommonAccordion';
 
@@ -21,58 +22,79 @@ const FHIRSettings = props => {
   const [caseSensitive, setCaseSensitive] = React.useState(false)
   const [compositional, setCompositional] = React.useState(false)
   const [versionNeeded, setVersionNeeded] = React.useState(false)
+  const [immutable, setImmutable] = React.useState(false)
   const onChange = (id, value, setter) => {
     setter(value)
     props.onChange({[id]: value})
   }
+  const toFormValue = value => {
+    if(isObject(value))
+      return isEmpty(value) ? '' : JSON.stringify(value)
+    return value
+  }
   const setFieldsForEdit = () => {
     setPublisher(props.repo.publisher || '')
-    setJurisdiction(props.repo.jurisdiction || '')
+    setJurisdiction(toFormValue(props.repo.jurisdiction) || '')
     setPurpose(props.repo.purpose || '')
     setCopyright(props.repo.copyright || '')
-    setIdentifier(props.repo.identifier || '')
-    setContact(props.repo.contact || '')
-    setContentType(props.repo.content_type || '')
+    setIdentifier(toFormValue(props.repo.identifier) || '')
+    setContact(toFormValue(props.repo.contact) || '')
+    if(props.repo.content_type)
+      setContentType(props.repo.content_type || '') //for source
     if(props.repo.revision_date)
       setRevisionDate(moment(props.repo.revision_date).format('YYYY-MM-DD'))
     setExperimental(props.repo.experimental || false)
     setCaseSensitive(props.repo.case_sensitive || false)
     setCompositional(props.repo.compositional || false)
     setVersionNeeded(props.repo.version_needed || false)
+    setImmutable(props.repo.immutable || false)
   }
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
+  const defaultExpanded = props.edit && some([props.repo.publisher, toFormValue(props.repo.jurisdiction), props.repo.purpose, props.repo.copyright, toFormValue(props.repo.identifier), toFormValue(props.repo.contact), props.repo.contentType, props.repo.revisionDate, props.repo.experimental, props.repo.caseSensitive, props.repo.compositional, props.repo.versionNeeded, props.repo.immutable])
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (
-      <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
-        <TextField
-          id={id}
-          fullWidth
-          size='small'
-          label={config.label}
-          value={value}
-          onChange={event => onChange(id, event.target.value || '', setter)}
-          type={textType || 'text'}
-          InputLabelProps={InputLabelProps || {}}
-        />
-        <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />
-      </div>
+      <React.Fragment>
+        {
+          config &&
+            <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
+              <TextField
+                id={id}
+                fullWidth
+                size='small'
+                label={config.label}
+                value={value}
+                onChange={event => onChange(id, event.target.value || '', setter)}
+                type={textType || 'text'}
+                InputLabelProps={InputLabelProps || {}}
+              />
+              <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />
+            </div>
+        }
+      </React.Fragment>
     )
   }
 
-  const CheckboxFieldTemplate = (id, config, value, setter) => (
-    <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
-      <FormControlLabel
-        control={<Checkbox name={id} checked={value} onChange={event => onChange(id, event.target.checked, setter)} />}
-        label={config.label}
-      />
-      <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />
-    </div>
-  )
+  const CheckboxFieldTemplate = (id, config, value, setter) => {
+    return (
+      <React.Fragment>
+        {
+          config &&
+            <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
+              <FormControlLabel
+                control={<Checkbox name={id} checked={value} onChange={event => onChange(id, event.target.checked, setter)} />}
+                label={config.label}
+              />
+              <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />
+            </div>
+        }
+      </React.Fragment>
+    )
+  }
 
   return (
-    <CommonAccordion square defaultStyle title={configs.title} subTitle={configs.subTitle}>
+    <CommonAccordion square defaultStyle title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
       <React.Fragment>
         {TextFieldTemplate('publisher', configs.publisher, publisher, setPublisher)}
         {TextFieldTemplate('jurisdiction', configs.jurisdiction, jurisdiction, setJurisdiction)}
@@ -86,6 +108,7 @@ const FHIRSettings = props => {
         {CheckboxFieldTemplate('case_sensitive', configs.caseSensitive, caseSensitive, setCaseSensitive)}
         {CheckboxFieldTemplate('compositional', configs.compositional, compositional, setCompositional)}
         {CheckboxFieldTemplate('version_needed', configs.versionNeeded, versionNeeded, setVersionNeeded)}
+        {CheckboxFieldTemplate('immutable', configs.immutable, immutable, setImmutable)}
       </React.Fragment>
     </CommonAccordion>
   )

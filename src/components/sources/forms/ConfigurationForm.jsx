@@ -1,8 +1,8 @@
 import React from 'react';
-import { TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem } from '@mui/material';
+import { TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
-import { get, merge, map, find, filter, includes } from 'lodash';
+import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
 import LocaleAutoComplete from '../../common/LocaleAutoComplete'
 
@@ -12,6 +12,7 @@ const ConfigurationForm = props => {
   const [defaultLocale, setDefaultLocale] = React.useState(null)
   const [supportedLocales, setSupportedLocales] = React.useState([])
   const [type, setType] = React.useState(null)
+  const [customValidationSchema, setCustomValidationSchema] = React.useState('None')
   const [publicAccess, setPublicAccess] = React.useState('View')
   const [canonicalURL, setCanonicalURL] = React.useState('')
   const onChange = (id, value, setter, propogateValue) => {
@@ -22,12 +23,21 @@ const ConfigurationForm = props => {
   const configs = props.configuration
   const setUp = () => {
     fetchLocales(_locales => {
-      setLocales(_locales)
+      let __locales = [..._locales]
       if(props.edit) {
-        setDefaultLocale(find(_locales, {id: props.repo.default_locale}))
+        forEach(compact(flatten(compact([props.repo.default_locale, props.repo.supported_locales]))), _locale => {
+          if(!find(_locales, {id: _locale}))
+            __locales.push({id: _locale, displayName: _locale, name: _locale})
+        })
+      }
+      setLocales(__locales)
+      if(props.edit) {
+        if(props.repo.custom_validation_schema)
+          setCustomValidationSchema(props.repo.custom_validation_schema)
+        setDefaultLocale(find(__locales, {id: props.repo.default_locale}))
         if(props.repo.supported_locales) {
           setShowSupportedLocales(true)
-          setSupportedLocales(filter(_locales, _locale => includes(props.repo.supported_locales, _locale.id)))
+          setSupportedLocales(uniqBy(filter(__locales, _locale => includes(props.repo.supported_locales, _locale.id)), 'id'))
         }
         const _type = get(props.repo, `${props.resource}_type`)
         setType({id: _type, name: _type})
@@ -112,7 +122,35 @@ const ConfigurationForm = props => {
         </div>
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '10px'}}>
+        <div className='col-xs-12 no-side-padding form-text-gray'>
+          {`Helps with formatting of your ${props.resource}`}
+        </div>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '10px 0'}}>
+          <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
+            <FormControl variant="outlined" fullWidth  size="small">
+              <InputLabel id="demo-simple-select-label">{configs.customValidationSchema.label}</InputLabel>
+              <Select
+                label={configs.customValidationSchema.label}
+                required
+                id="publicAccess"
+                defaultValue="None"
+                value={customValidationSchema}
+                onChange={event => onChange('custom_validation_schema', event.target.value, setCustomValidationSchema, event.target.value === 'None' ? null : event.target.value)}
+              >
+                <MenuItem value='None'>
+                  <ListItemText primary="None" secondary="Default validation schema." />
+                </MenuItem>
+                <MenuItem value='OpenMRS'>
+                  <ListItemText primary="OpenMRS Validation Schema" secondary={`Custom OpenMRS Validation schema`} />
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormTooltip title={configs.customValidationSchema.tooltip} style={{marginLeft: '10px'}} />
+          </div>
+        </div>
+      </div>
+      <div className='col-xs-12 no-side-padding'>
+        <div className='col-xs-12 no-side-padding form-text-gray'>
           {configs.publicAccess.label}
         </div>
         <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '10px 0'}}>
@@ -147,8 +185,8 @@ const ConfigurationForm = props => {
           label={configs.canonicalURL.label}
           value={canonicalURL}
           onChange={event => onChange('canonical_url', event.target.value || '', setCanonicalURL)}
-          required
           fullWidth
+          helperText={configs.canonicalURL.helperText}
         />
         <FormTooltip title={configs.canonicalURL.tooltip} style={{marginLeft: '10px'}} />
       </div>

@@ -196,7 +196,7 @@ class AddToCollection extends React.Component {
                         Create New Collection?
                       </a>
                     </p> :
-                    <MenuList variant='menu' id="split-button-menu" style={{maxHeight: '100%', overflow: 'auto'}}>
+                      <MenuList variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '100%', overflow: 'auto'}}>
                       <TextField
                         id='collection-search-input'
                         placeholder='Search Collection...'
@@ -286,15 +286,16 @@ class AddToCollection extends React.Component {
           style={{zIndex: 1202}}
           isOpen={collectionForm}
           onClose={this.toggleCollectionForm}
+          size='smedium'
           formComponent={
             <CollectionForm
               anonymous
               newCollectionProps={{
                 name: (searchedValue || '').trim()
               }}
-                                 onCancel={this.toggleCollectionForm}
-                                 parentURL={get(getCurrentUser(), 'url')}
-                                 onSuccess={this.afterNewCollectionAdd}
+              onCancel={this.toggleCollectionForm}
+              owner={getCurrentUser()}
+              onSuccess={this.afterNewCollectionAdd}
             />
           }
         />

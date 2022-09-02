@@ -1,13 +1,31 @@
 import React from 'react';
 import { TextField, Box, Divider, Autocomplete } from '@mui/material';
-import { get, isEmpty } from 'lodash'
+import { get, isEmpty, find, uniqBy } from 'lodash'
 import { fetchLocales } from '../../common/utils';
 
 const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, ...rest }) => {
   const [locales, setLocales] = React.useState(cachedLocales || [])
   const _fullWidth = !(fullWidth === false)
 
-  React.useEffect(() => isEmpty(cachedLocales) && fetchLocales(_locales => setLocales(_locales), true), [])
+  React.useEffect(() => {
+    if(isEmpty(cachedLocales)) {
+      fetchLocales(_locales => {
+        prepareLocales(_locales)
+      }, true)
+    }
+  }, [])
+
+  React.useEffect(() => {
+    prepareLocales(locales)
+  }, [selected])
+
+  const prepareLocales = _locales => {
+    if(get(selected, 'id') && !find(_locales, {id: selected.id})) {
+      setLocales(uniqBy([..._locales, selected], 'id'))
+    } else {
+      setLocales(_locales)
+    }
+  }
 
   return (
     <Autocomplete
@@ -22,7 +40,7 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
       value={selected}
       id={id || 'localesAutoComplete'}
       options={locales}
-      getOptionLabel={option => (option.displayName || '')}
+      getOptionLabel={option => (option.displayName || option.name || '')}
       onChange={(event, item) => onChange(id || 'localesAutoComplete', item)}
       renderOption={(props, option) => {
         return (

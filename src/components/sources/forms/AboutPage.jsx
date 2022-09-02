@@ -10,11 +10,12 @@ const AboutPage = props => {
     setText(value)
     props.onChange({text: value})
   }
+  const defaultExpanded = props.edit && props.repo.text
 
   React.useEffect(() => props.edit && setText(props.repo.text || ''), [])
 
   return (
-    <CommonAccordion square title={configs.title} subTitle={configs.subTitle}>
+    <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
       <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
         <RTEditor
           onChange={onChange}

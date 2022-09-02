@@ -150,7 +150,7 @@ const UserHomeTabs = props => {
         style={{zIndex: 1202}}
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
-        size='small'
+        size='smedium'
         formComponent={
           <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} owner={user} />
         }
@@ -159,8 +159,9 @@ const UserHomeTabs = props => {
         style={{zIndex: 1202}}
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
+        size='smedium'
         formComponent={
-          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={user.url} />
+          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} owner={user} />
         }
       />
       <CommonFormDrawer
