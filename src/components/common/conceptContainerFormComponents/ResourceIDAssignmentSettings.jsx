@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Select, ListItemText, MenuItem, FormControl, TextField
+  Select, ListItemText, MenuItem, FormControl, TextField, FormHelperText
 } from '@mui/material';
 import { merge, includes, some } from 'lodash'
 import FormTooltip from '../../common/FormTooltip';
@@ -45,7 +45,7 @@ const ResourceIDAssignmentSettings = props => {
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
-  const Template = (id, config, value, setter, defaultValue, startFromValue, startFromSetter, startFromConfig) => {
+  const Template = (id, config, value, setter, defaultValue, startFromValue, startFromSetter, startFromConfig, helperText) => {
     const isExternalID = id.includes('External')
     const isConceptID = id.includes('concept')
     const autoIdFieldID = isConceptID ? 'autoid_concept_mnemonic' : 'autoid_mapping_mnemonic'
@@ -79,6 +79,9 @@ const ResourceIDAssignmentSettings = props => {
                   <ListItemText primary="Sequential" secondary={<span style={{whiteSpace: 'pre-wrap'}}>The ID is auto-assigned in a numeric format, increasing by 1 for each new resource. You can pick what number to start with.</span>} />
                 </MenuItem>
               </Select>
+              <FormHelperText>
+                {helperText}
+              </FormHelperText>
             </FormControl>
             <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />
           </div>
@@ -109,16 +112,16 @@ const ResourceIDAssignmentSettings = props => {
     <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
       <React.Fragment>
         {
-          Template('conceptID', configs.conceptID, autoIDConceptID, setAutoIDConceptID, 'None', autoIDConceptIDStartFrom, setAutoIDConceptIDStartFrom, configs.conceptIDStartFrom)
+          Template('conceptID', configs.conceptID, autoIDConceptID, setAutoIDConceptID, 'None', autoIDConceptIDStartFrom, setAutoIDConceptIDStartFrom, configs.conceptIDStartFrom, 'OpenMRS recommends using "sequential" here.')
         }
         {
-          Template('conceptExternalID', configs.conceptExternalID, autoIDConceptExternalID, setAutoIDConceptExternalID, 'None', autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom, configs.conceptExternalIDStartFrom)
+          Template('conceptExternalID', configs.conceptExternalID, autoIDConceptExternalID, setAutoIDConceptExternalID, 'None', autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom, configs.conceptExternalIDStartFrom, 'OpenMRS recommends using "uuid" here')
         }
         {
-          Template('mappingID', configs.mappingID, autoIDMappingID, setAutoIDMappingID, 'sequential', autoIDMappingIDStartFrom, setAutoIDMappingIDStartFrom, configs.mappingIDStartFrom)
+          Template('mappingID', configs.mappingID, autoIDMappingID, setAutoIDMappingID, 'sequential', autoIDMappingIDStartFrom, setAutoIDMappingIDStartFrom, configs.mappingIDStartFrom, 'OpenMRS recommends using "sequential" here')
         }
         {
-          Template('mappingExternalID', configs.mappingExternalID, autoIDMappingExternalID, setAutoIDMappingExternalID, 'None', autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom, configs.mappingExternalIDStartFrom)
+          Template('mappingExternalID', configs.mappingExternalID, autoIDMappingExternalID, setAutoIDMappingExternalID, 'None', autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom, configs.mappingExternalIDStartFrom, 'OpenMRS recommends using "uuid" here')
         }
       </React.Fragment>
     </CommonAccordion>
