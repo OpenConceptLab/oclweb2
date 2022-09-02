@@ -15,7 +15,7 @@ const Expansions = props => {
   }
   const defaultExpanded = props.edit && !props.repo.autoexpandHEAD
 
-  React.useEffect(() => props.edit && setAutoexpandHEAD(props.repo.autoexpandHEAD), [])
+  React.useEffect(() => props.edit && setAutoexpandHEAD(props.repo.autoexpandHEAD || false), [])
 
   return (
     <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>

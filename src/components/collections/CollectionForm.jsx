@@ -4,10 +4,10 @@ import { Divider, Button } from '@mui/material';
 import { orderBy, map, merge, cloneDeep, get, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import { COLLECTION_TYPES } from '../../common/constants'
-import FormHeader from '../sources/forms/FormHeader';
-import NameAndDescription from '../sources/forms/NameAndDescription';
-import ConfigurationForm from '../sources/forms/ConfigurationForm';
-import AdvanceSettings from '../sources/forms/AdvanceSettings';
+import FormHeader from '../common/conceptContainerFormComponents/FormHeader';
+import NameAndDescription from '../common/conceptContainerFormComponents/NameAndDescription';
+import ConfigurationForm from '../common/conceptContainerFormComponents/ConfigurationForm';
+import AdvanceSettings from '../common/conceptContainerFormComponents/AdvanceSettings';
 
 const CONFIG = {
   resource: 'collection',

@@ -6,7 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 import NewResourceButton from '../common/NewResourceButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
-import SourceForm from '../sources/forms/SourceForm';
+import SourceForm from '../sources/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConfigSelect from '../common/ConfigSelect';
 import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'

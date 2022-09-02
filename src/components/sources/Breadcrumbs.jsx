@@ -18,7 +18,7 @@ import ConceptButton from '../common/ConceptButton';
 import MappingButton from '../common/MappingButton';
 import ResourceVersionButton from '../common/VersionButton';
 import CommonFormDrawer from '../common/CommonFormDrawer';
-import SourceForm from './forms/SourceForm';
+import SourceForm from './SourceForm';
 import CollectionForm from '../collections/CollectionForm';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
 import VersionSelectorButton from '../common/VersionSelectorButton';

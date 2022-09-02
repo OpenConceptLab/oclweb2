@@ -10,7 +10,7 @@ const AboutPage = props => {
     setText(value)
     props.onChange({text: value})
   }
-  const defaultExpanded = props.edit && props.repo.text
+  const defaultExpanded = Boolean(props.edit && props.repo.text)
 
   React.useEffect(() => props.edit && setText(props.repo.text || ''), [])
 

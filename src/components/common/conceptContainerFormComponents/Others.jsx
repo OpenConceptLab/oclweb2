@@ -22,7 +22,7 @@ const Others = props => {
   const toFormValue = value => {
     if(isObject(value))
       return isEmpty(value) ? '' : JSON.stringify(value)
-    return value
+    return value || ''
   }
   const setFieldsForEdit = () => {
     setWebsite(toFormValue(props.repo.website))
@@ -34,7 +34,7 @@ const Others = props => {
   }
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
-  const defaultExpanded = props.edit && some([props.repo.website, toFormValue(props.repo.meta), props.repo.external_id, props.repo.locked_date, props.repo.collection_reference])
+  const defaultExpanded = Boolean(props.edit && some([props.repo.website, toFormValue(props.repo.meta), props.repo.external_id, props.repo.locked_date, props.repo.collection_reference]))
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (

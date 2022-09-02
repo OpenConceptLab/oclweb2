@@ -13,7 +13,7 @@ import Search from '../search/Search';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import OrgForm from '../orgs/OrgForm';
 import CollectionForm from '../collections/CollectionForm';
-import SourceForm from '../sources/forms/SourceForm';
+import SourceForm from '../sources/SourceForm';
 
 const HEIGHT = '50px'
 const ICON_STYLES = {marginRight: '10px', marginBottom: '0px'}
