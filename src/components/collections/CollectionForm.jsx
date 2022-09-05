@@ -13,7 +13,7 @@ const CONFIG = {
   resource: 'collection',
   title: 'Create a new collection',
   editTitle: 'Edit Collection',
-  subTitle: 'A repository for content from mix of sources',
+  subTitle: 'A repository for content from a mix of sources',
   nameAndDescription: {
     title: 'Name and description',
     subTitle: 'Choose a short code for your collection',
