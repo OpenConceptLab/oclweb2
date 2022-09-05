@@ -85,7 +85,7 @@ const ConfigurationForm = props => {
               />
               <FormTooltip title={configs.supportedLanguages.tooltip} style={{marginLeft: '10px'}} />
             </div> :
-          <Button size='small' variant='text' onClick={() => setShowSupportedLocales(true)} startIcon={<AddIcon />}>
+          <Button style={{marginTop: '8px'}} size='small' variant='text' onClick={() => setShowSupportedLocales(true)} startIcon={<AddIcon />}>
             Add Supported Language
           </Button>
         }
@@ -138,10 +138,10 @@ const ConfigurationForm = props => {
                 onChange={event => onChange('custom_validation_schema', event.target.value, setCustomValidationSchema, event.target.value === 'None' ? null : event.target.value)}
               >
                 <MenuItem value='None'>
-                  <ListItemText primary="None" secondary="Default validation schema." />
+    <ListItemText primary="None" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>Default validation schema.</span>} />
                 </MenuItem>
                 <MenuItem value='OpenMRS'>
-                  <ListItemText primary="OpenMRS Validation Schema" secondary={`Custom OpenMRS Validation schema`} />
+    <ListItemText primary="OpenMRS Validation Schema" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>Custom OpenMRS Validation schema</span>} />
                 </MenuItem>
               </Select>
             </FormControl>
@@ -164,13 +164,13 @@ const ConfigurationForm = props => {
                 onChange={event => onChange('public_access', event.target.value, setPublicAccess)}
               >
                 <MenuItem value='View'>
-                  <ListItemText primary="Public (read only)" secondary={`Anyone can view the content in this ${props.resource}`} />
+                  <ListItemText primary="Public (read only)" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>{`Anyone can view the content in this ${props.resource}`}</span>} />
                 </MenuItem>
                 <MenuItem value='Edit'>
-                  <ListItemText primary="Public (read/write)" secondary={`Anyone can view/edit the content in this ${props.resource}`} />
+                  <ListItemText primary="Public (read/write)" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>{`Anyone can view/edit the content in this ${props.resource}`}</span>} />
                 </MenuItem>
                 <MenuItem value='None'>
-                  <ListItemText primary="Private" secondary={`No one can view the content in this ${props.resource}`} />
+    <ListItemText primary="Private" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>{`No one can view the content in this ${props.resource}`}</span>} />
                 </MenuItem>
               </Select>
             </FormControl>

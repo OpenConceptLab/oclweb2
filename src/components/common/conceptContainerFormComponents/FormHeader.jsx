@@ -10,7 +10,7 @@ const FormHeader = props => {
       </span>
       <span style={{marginLeft: '10px', display: 'inline-block'}}>
         <div className='col-xs-12 no-side-padding'>
-          <h1 style={{marginBottom: 0, marginTop: '12px'}}>{props.edit ? props.editTitle : props.title}</h1>
+          <h1 style={{marginBottom: 0, marginTop: '12px', fontSize: '24px'}}>{props.edit ? props.editTitle : props.title}</h1>
         </div>
         <div className='col-xs-12 no-side-padding form-text-gray' style={{fontSize: '16px'}}>
           {props.subTitle}
