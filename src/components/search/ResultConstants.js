@@ -14,6 +14,7 @@ import {
   formatDate, formatWebsiteLink, formatDateTime
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
+import ReferenceTranslation from '../common/ReferenceTranslation';
 import OwnerChip from '../common/OwnerChip';
 import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
@@ -91,7 +92,7 @@ export const ALL_COLUMNS = {
     {id: 'last_login', label: 'Last Login', value: 'last_login', sortable: false, formatter: formatDateTime},
   ],
   references: [
-    {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
+    {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceTranslation {...reference} />},
     {id: 'concepts', label: 'Concepts', value: 'concepts', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'concepts/'} reference_type='concepts' last_resolved_at expression={reference.concepts} notReference /> : '-'},
     {id: 'mappings', label: 'Mappings', value: 'mappings', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'mappings/'} reference_type='mappings' last_resolved_at expression={reference.mappings} notReference /> : '-'}
   ],

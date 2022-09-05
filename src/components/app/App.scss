@@ -1173,3 +1173,8 @@ div.custom-attributes-accordion-content {
 .form-text-gray {
     color: rgba(0, 0, 0, 0.6);
 }
+.chip-label-wrapped {
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-overflow: clip;
+}
