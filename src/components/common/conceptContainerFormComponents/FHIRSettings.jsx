@@ -58,7 +58,7 @@ const FHIRSettings = props => {
       <React.Fragment>
         {
           config &&
-            <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
+            <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '20px'}}>
               <TextField
                 id={id}
                 fullWidth
@@ -83,7 +83,8 @@ const FHIRSettings = props => {
           config &&
             <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
               <FormControlLabel
-                control={<Checkbox name={id} checked={value} onChange={event => onChange(id, event.target.checked, setter)} />}
+                size='small'
+                control={<Checkbox size='small' name={id} checked={value} onChange={event => onChange(id, event.target.checked, setter)} />}
                 label={config.label}
               />
               <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />

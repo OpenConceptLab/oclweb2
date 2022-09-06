@@ -41,7 +41,7 @@ const Others = props => {
       <React.Fragment>
         {
           config &&
-            <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '10px'}}>
+            <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '20px'}}>
               <TextField
                 id={id}
                 fullWidth

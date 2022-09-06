@@ -21,7 +21,7 @@ const Expansions = props => {
     <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
       <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '10px'}}>
         <FormControlLabel
-          control={<Checkbox checked={autoexpandHEAD} onChange={event => onChange(event.target.checked)} />}
+          control={<Checkbox size='small' checked={autoexpandHEAD} onChange={event => onChange(event.target.checked)} />}
           label={configs.autoexpandHEAD.label}
           disabled={props.edit}
         />

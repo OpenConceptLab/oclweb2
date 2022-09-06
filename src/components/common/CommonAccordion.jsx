@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, FormHelperText } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
@@ -12,7 +12,7 @@ const CommonAccordion = ({title, subTitle, children, defaultStyle, ...accordionP
             <Typography>{title}</Typography>
             {
               subTitle &&
-                <div className='form-text-gray'>{subTitle}</div>
+                <FormHelperText>{subTitle}</FormHelperText>
             }
           </div>
         </AccordionSummary>

@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
-import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
+import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy, omit } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
 import LocaleAutoComplete from '../../common/LocaleAutoComplete'
 
@@ -15,6 +15,7 @@ const ConfigurationForm = props => {
   const [customValidationSchema, setCustomValidationSchema] = React.useState('None')
   const [publicAccess, setPublicAccess] = React.useState('View')
   const [canonicalURL, setCanonicalURL] = React.useState('')
+  const [helperText, setHelperText] = React.useState({})
   const onChange = (id, value, setter, propogateValue) => {
     setter(value)
     props.onChange(toState({[id]: propogateValue === undefined ? value : propogateValue}))
@@ -50,11 +51,11 @@ const ConfigurationForm = props => {
   React.useEffect(setUp, [])
 
   return (
-    <div className='col-xs-12 no-side-padding' style={{marginBottom: '20px'}}>
+    <div className='col-xs-12 no-side-padding' style={{margin: '-5px 0 20px 0'}}>
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
-      <div className='col-xs-12 no-side-padding' style={{marginBottom: '10px'}}>
+      <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
         <div className='col-xs-12 no-side-padding form-text-gray'>
           {configs.subTitle}
         </div>
@@ -91,10 +92,10 @@ const ConfigurationForm = props => {
         }
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '10px'}}>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '20px'}}>
           {`What type of ${props.resource} would you like to create?`}
         </div>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '10px 0'}}>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <Autocomplete
               openOnFocus
@@ -122,10 +123,10 @@ const ConfigurationForm = props => {
         </div>
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray'>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '5px'}}>
           {`Helps with formatting of your ${props.resource}`}
         </div>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '10px 0'}}>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <FormControl variant="outlined" fullWidth  size="small">
               <InputLabel id="demo-simple-select-label">{configs.customValidationSchema.label}</InputLabel>
@@ -150,10 +151,10 @@ const ConfigurationForm = props => {
         </div>
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray'>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '5px'}}>
           {configs.publicAccess.label}
         </div>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '10px 0'}}>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <FormControl variant="outlined" fullWidth  size="small">
               <Select
@@ -186,7 +187,9 @@ const ConfigurationForm = props => {
           value={canonicalURL}
           onChange={event => onChange('canonical_url', event.target.value || '', setCanonicalURL)}
           fullWidth
-          helperText={configs.canonicalURL.helperText}
+          helperText={helperText.canonicalURL}
+          onFocus={() => setHelperText({...helperText, canonicalURL: configs.canonicalURL.helperText})}
+          onBlur={() => setHelperText(omit(helperText, 'canonicalURL'))}
         />
         <FormTooltip title={configs.canonicalURL.tooltip} style={{marginLeft: '10px'}} />
       </div>
