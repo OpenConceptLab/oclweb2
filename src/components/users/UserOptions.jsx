@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material';
 import { get } from 'lodash';
 import APIService from '../../services/APIService';
-import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer, logoutUser, isLoggedIn } from '../../common/utils';
+import { getCurrentUser, getUserInitials, getAppliedServerConfig, canSwitchServer, logoutUser, isLoggedIn, isSSOEnabled } from '../../common/utils';
 import ServerConfigList from '../common/ServerConfigList';
 import PopperGrow from '../common/PopperGrow';
 
@@ -50,7 +50,7 @@ const UserOptions = () => {
   }
 
   React.useEffect(() => {
-    if(isLoggedIn())
+    if(isLoggedIn() && isSSOEnabled())
       intervalId = setInterval(checkIfStillAuthenticated, 2000)
   }, [])
 
