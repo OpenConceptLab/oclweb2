@@ -93,6 +93,10 @@ const CONFIG = {
         label: 'Contact',
         tooltip: 'Contact details to assist a user in finding and communicating with the publisher.'
       },
+      meta: {
+        label: 'Meta',
+        tooltip: 'The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.'
+      },
       revisionDate: {
         label: 'Revision Date',
         tooltip: 'The date (and optionally time) when the resource was published. The date must change when the business version changes and it must change if the status code changes. In addition, it should change when the substantive content of the code system changes.'
@@ -131,9 +135,6 @@ const CONFIG = {
       externalID: {
         label: 'External ID',
         tooltip: 'An identifier for the Collection that is external to OCL'
-      },
-      meta: {
-        label: 'Meta',
       },
       lockedDate: {
         label: 'Locked Date'

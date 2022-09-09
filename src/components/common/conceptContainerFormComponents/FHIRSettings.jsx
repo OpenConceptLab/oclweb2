@@ -17,6 +17,7 @@ const FHIRSettings = props => {
   const [identifier, setIdentifier] = React.useState('')
   const [contact, setContact] = React.useState('')
   const [contentType, setContentType] = React.useState('')
+  const [meta, setMeta] = React.useState('')
   const [revisionDate, setRevisionDate] = React.useState('')
   const [experimental, setExperimental] = React.useState(false)
   const [caseSensitive, setCaseSensitive] = React.useState(false)
@@ -39,6 +40,7 @@ const FHIRSettings = props => {
     setCopyright(props.repo.copyright || '')
     setIdentifier(toFormValue(props.repo.identifier) || '')
     setContact(toFormValue(props.repo.contact) || '')
+    setMeta(toFormValue(props.repo.meta) || '')
     if(props.repo.content_type)
       setContentType(props.repo.content_type || '') //for source
     if(props.repo.revision_date)
@@ -51,7 +53,7 @@ const FHIRSettings = props => {
   }
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
-  const defaultExpanded = props.edit && some([props.repo.publisher, toFormValue(props.repo.jurisdiction), props.repo.purpose, props.repo.copyright, toFormValue(props.repo.identifier), toFormValue(props.repo.contact), props.repo.contentType, props.repo.revisionDate, props.repo.experimental, props.repo.caseSensitive, props.repo.compositional, props.repo.versionNeeded, props.repo.immutable])
+  const defaultExpanded = props.edit && some([props.repo.publisher, toFormValue(props.repo.jurisdiction), props.repo.purpose, props.repo.copyright, toFormValue(props.repo.identifier), toFormValue(props.repo.contact), props.repo.contentType, toFormValue(props.repo.meta), props.repo.revisionDate, props.repo.experimental, props.repo.caseSensitive, props.repo.compositional, props.repo.versionNeeded, props.repo.immutable])
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (
@@ -104,6 +106,7 @@ const FHIRSettings = props => {
         {TextFieldTemplate('identifier', configs.identifier, identifier, setIdentifier)}
         {TextFieldTemplate('contact', configs.contact, contact, setContact)}
         {TextFieldTemplate('content_type', configs.contentType, contentType, setContentType)}
+        {TextFieldTemplate('meta', configs.meta, meta, setMeta)}
         {TextFieldTemplate('revision_date', configs.revisionDate, revisionDate, setRevisionDate, 'date', { shrink: true })}
         {CheckboxFieldTemplate('experimental', configs.experimental, experimental, setExperimental)}
         {CheckboxFieldTemplate('case_sensitive', configs.caseSensitive, caseSensitive, setCaseSensitive)}

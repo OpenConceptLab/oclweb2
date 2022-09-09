@@ -97,6 +97,10 @@ const CONFIG = {
         label: 'Content Type',
         tooltip: 'The extent of the content of the resource (the concepts and codes it defines) are represented in this resource instance.'
       },
+      meta: {
+        label: 'Meta',
+        tooltip: 'The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.'
+      },
       revisionDate: {
         label: 'Revision Date',
         tooltip: 'The date (and optionally time) when the resource was published. The date must change when the business version changes and it must change if the status code changes. In addition, it should change when the substantive content of the code system changes.'
@@ -171,9 +175,6 @@ const CONFIG = {
       externalID: {
         label: 'External ID',
         tooltip: 'An identifier for the Source that is external to OCL'
-      },
-      meta: {
-        label: 'Meta',
       },
       collectionReference: {
         label: 'Collection Reference'
