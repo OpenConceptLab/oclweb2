@@ -3,9 +3,10 @@ import moment from 'moment';
 import {
   TextField, FormControlLabel, Checkbox
 } from '@mui/material';
-import { isObject, isEmpty, some } from 'lodash'
+import { isObject, isEmpty, some, compact } from 'lodash'
 import FormTooltip from '../../common/FormTooltip';
 import CommonAccordion from '../../common/CommonAccordion';
+import TabCountLabel from '../TabCountLabel';
 
 
 const FHIRSettings = props => {
@@ -57,6 +58,7 @@ const FHIRSettings = props => {
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
   const defaultExpanded = props.edit && some([props.repo.publisher, toFormValue(props.repo.jurisdiction), props.repo.purpose, props.repo.copyright, toFormValue(props.repo.identifier), toFormValue(props.repo.contact), props.repo.contentType, toFormValue(props.repo.meta), props.repo.revision_date, props.repo.locked_date, props.repo.experimental, props.repo.caseSensitive, props.repo.compositional, props.repo.version_needed, props.repo.immutable])
+  const count = compact([publisher, jurisdiction, purpose, copyright, identifier, contact, contentType, meta, revisionDate, lockedDate, experimental, caseSensitive, compositional, versionNeeded, immutable]).length
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (
@@ -100,7 +102,16 @@ const FHIRSettings = props => {
   }
 
   return (
-    <CommonAccordion square defaultStyle title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
+    <CommonAccordion
+      square
+      defaultStyle
+      title={
+        <span className='flex-vertical-center'>
+          <TabCountLabel label={configs.title} count={count || false} />
+        </span>
+      }
+      subTitle={configs.subTitle}
+      defaultExpanded={defaultExpanded}>
       <React.Fragment>
         {TextFieldTemplate('publisher', configs.publisher, publisher, setPublisher)}
         {TextFieldTemplate('jurisdiction', configs.jurisdiction, jurisdiction, setJurisdiction)}

@@ -2,9 +2,10 @@ import React from 'react';
 import {
   TextField
 } from '@mui/material';
-import { isObject, isEmpty, some } from 'lodash'
+import { isObject, isEmpty, some, compact } from 'lodash'
 import FormTooltip from '../../common/FormTooltip';
 import CommonAccordion from '../../common/CommonAccordion';
+import TabCountLabel from '../TabCountLabel';
 
 
 const Others = props => {
@@ -29,6 +30,7 @@ const Others = props => {
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
   const defaultExpanded = Boolean(props.edit && some([props.repo.website, props.repo.external_id, props.repo.collection_reference]))
+  const count = compact([website, externalID, collectionReference]).length
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (
@@ -57,9 +59,17 @@ const Others = props => {
   }
 
   return (
-    <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
+    <CommonAccordion
+      square
+      title={
+        <span className='flex-vertical-center'>
+          <TabCountLabel label={configs.title} count={count || false} />
+        </span>
+      }
+      subTitle={configs.subTitle}
+      defaultExpanded={defaultExpanded}>
       <React.Fragment>
-        {TextFieldTemplate('website', configs.website, website, setWebsite)}
+        {TextFieldTemplate('website', configs.website, website, setWebsite, 'url')}
         {TextFieldTemplate('external_id', configs.externalID, externalID, setExternalID)}
         {TextFieldTemplate('collection_reference', configs.collectionReference, collectionReference, setCollectionReference)}
       </React.Fragment>

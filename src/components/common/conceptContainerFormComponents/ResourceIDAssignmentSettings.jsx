@@ -2,9 +2,10 @@ import React from 'react';
 import {
   Select, ListItemText, MenuItem, FormControl, TextField, FormHelperText
 } from '@mui/material';
-import { merge, includes, some } from 'lodash'
+import { merge, includes, some, compact } from 'lodash'
 import FormTooltip from '../../common/FormTooltip';
 import CommonAccordion from '../../common/CommonAccordion';
+import TabCountLabel from '../TabCountLabel';
 
 
 const ResourceIDAssignmentSettings = props => {
@@ -42,6 +43,7 @@ const ResourceIDAssignmentSettings = props => {
     setAutoIDMappingExternalID(props.repo.autoid_concept_external_id || 'None')
     setAutoIDMappingExternalIDStartFrom(props.repo.autoid_mapping_external_id_start_from || 1)
   }
+  const count = compact([toValue(autoIDConceptID), toValue(autoIDConceptExternalID), toValue(autoIDMappingID), toValue(autoIDMappingExternalID)]).length
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
@@ -109,7 +111,15 @@ const ResourceIDAssignmentSettings = props => {
   const defaultExpanded = props.edit && some([props.repo.autoid_concept_mnemonic, props.repo.autoid_concept_external_id, props.repo.autoid_mapping_mnemonic !== 'sequential', props.repo.autoid_mapping_external_id])
 
   return (
-    <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
+    <CommonAccordion
+      square
+      title={
+        <span className='flex-vertical-center'>
+          <TabCountLabel label={configs.title} count={count || false} />
+        </span>
+      }
+      subTitle={configs.subTitle}
+      defaultExpanded={defaultExpanded}>
       <React.Fragment>
         {
           Template('conceptID', configs.conceptID, autoIDConceptID, setAutoIDConceptID, 'None', autoIDConceptIDStartFrom, setAutoIDConceptIDStartFrom, configs.conceptIDStartFrom, 'OpenMRS recommends using "sequential" here.')

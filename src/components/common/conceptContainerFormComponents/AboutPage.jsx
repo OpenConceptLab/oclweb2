@@ -1,6 +1,7 @@
 import React from 'react';
 import CommonAccordion from '../../common/CommonAccordion';
 import RTEditor from '../../common/RTEditor';
+import TabCountLabel from '../TabCountLabel';
 
 
 const AboutPage = props => {
@@ -15,7 +16,15 @@ const AboutPage = props => {
   React.useEffect(() => props.edit && setText(props.repo.text || ''), [])
 
   return (
-    <CommonAccordion square title={configs.title} subTitle={configs.subTitle} defaultExpanded={defaultExpanded}>
+    <CommonAccordion
+      square
+      title={
+        <span className='flex-vertical-center'>
+          <TabCountLabel label={configs.title} count={text ? 1 : false} />
+        </span>
+      }
+      subTitle={configs.subTitle}
+      defaultExpanded={defaultExpanded}>
       <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
         <RTEditor
           onChange={onChange}

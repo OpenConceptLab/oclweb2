@@ -22,7 +22,7 @@ const AdvanceSettings = props => {
       }
       <CustomAttributes {...props} />
       <AboutPage {...props} />
-    <Others {...props} />
+      <Others {...props} />
     </div>
   )
 }
