@@ -3,7 +3,7 @@ import alertifyjs from 'alertifyjs';
 import { Divider, Button } from '@mui/material';
 import { orderBy, map, merge, cloneDeep, get, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
-import { SOURCE_TYPES } from '../../common/constants'
+import { SOURCE_TYPES, WHITE } from '../../common/constants'
 import FormHeader from '../common/conceptContainerFormComponents/FormHeader';
 import NameAndDescription from '../common/conceptContainerFormComponents/NameAndDescription';
 import ConfigurationForm from '../common/conceptContainerFormComponents/ConfigurationForm';
@@ -280,8 +280,8 @@ class SourceForm extends React.Component {
             ((edit && !isEmpty(source)) || !edit) &&
               <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
           }
-          <div className='col-xs-12 no-side-padding' style={{marginTop: '30px'}}>
-            <Button variant='contained' type='submit' onClick={this.onSubmit}>
+          <div className='col-xs-12 no-side-padding' style={{position: 'fixed', background: WHITE, bottom: 0}}>
+            <Button variant='contained' type='submit' onClick={this.onSubmit} style={{margin: '10px 0'}}>
               {edit ? 'Update Source' : 'Create Source'}
             </Button>
           </div>

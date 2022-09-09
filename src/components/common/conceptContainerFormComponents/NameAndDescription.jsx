@@ -30,7 +30,7 @@ const NameAndDescription = props => {
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
   return (
-    <div className='col-xs-12 no-side-padding' style={{marginTop: '10px', marginBottom: '20px'}}>
+    <div className='col-xs-12 no-side-padding' style={{marginTop: '80px', marginBottom: '20px'}}>
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>

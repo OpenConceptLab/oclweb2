@@ -1,10 +1,11 @@
 import React from 'react';
 import DynamicConfigResourceIcon from '../../common/DynamicConfigResourceIcon';
+import { WHITE } from '../../../common/constants'
 
 const FormHeader = props => {
   const iconMarginTop = props.resource === 'source' ? '8px' : '20px'
   return (
-    <div className='col-xs-12 no-side-padding' style={{display: 'flex'}}>
+    <div className='col-xs-12 no-side-padding' style={{display: 'flex', position: 'fixed', background: WHITE, zIndex: '1999'}}>
       <span style={{display: 'inline-block'}}>
         <DynamicConfigResourceIcon resource={props.resource} enableColor style={{fontSize: '4em', marginTop: iconMarginTop}} />
       </span>

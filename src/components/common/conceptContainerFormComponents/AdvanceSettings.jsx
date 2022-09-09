@@ -9,7 +9,7 @@ import Others from './Others';
 const AdvanceSettings = props => {
   const configs = props.advanceSettings
   return (
-    <div className='col-xs-12 no-side-padding'>
+    <div className='col-xs-12 no-side-padding' style={{marginBottom: '40px'}}>
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
