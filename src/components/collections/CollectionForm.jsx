@@ -62,7 +62,11 @@ const CONFIG = {
       label: 'Canonical URL',
       tooltip: "This provides a unique identifier for your Collection. It will allow you to leverage OCL's powerful collection management features using this Collection.",
       helperText: 'Unique URL - formatted identifier for your Collection'
-    }
+    },
+    autoexpandHEAD: {
+      label: 'Auto Expand HEAD',
+      tooltip: 'This determines if this Collection needs to be auto expanded or deferred.'
+    },
   },
   advanceSettings: {
     title: 'Advance Settings',
@@ -110,14 +114,6 @@ const CONFIG = {
         tooltip: 'If this is set to ‘true’, then no new versions of the content logical definition can be created. Note: Other metadata might still change.'
       },
     },
-    expansions: {
-      title: 'Expansions',
-      subTitle: 'Configure and control expansion computations',
-      autoexpandHEAD: {
-        label: 'Auto Expand HEAD',
-        tooltip: 'This determines if this Collection needs to be auto expanded or deferred.'
-      },
-    },
     customAttributes: {
       title: 'Custom Attributes',
       subTitle: 'Manage your own Collection attributes',
@@ -130,7 +126,7 @@ const CONFIG = {
       title: 'Other Collection Attributes',
       website: {
         label: 'Website',
-        tooltip: 'Link to an associated website for this Collection',
+        tooltip: 'Link to a user-friendly website associated with this Collection',
       },
       externalID: {
         label: 'External ID',

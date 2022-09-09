@@ -170,7 +170,7 @@ const CONFIG = {
       title: 'Other Source Attributes',
       website: {
         label: 'Website',
-        tooltip: 'Link to an associated website for this Source',
+        tooltip: 'Link to a user-friendly website associated with this Source',
       },
       externalID: {
         label: 'External ID',

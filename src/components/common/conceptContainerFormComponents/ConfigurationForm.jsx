@@ -1,5 +1,8 @@
 import React from 'react';
-import { TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel } from '@mui/material';
+import {
+  TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel,
+  FormControlLabel, Checkbox
+} from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
 import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
@@ -15,6 +18,7 @@ const ConfigurationForm = props => {
   const [customValidationSchema, setCustomValidationSchema] = React.useState('None')
   const [publicAccess, setPublicAccess] = React.useState('View')
   const [canonicalURL, setCanonicalURL] = React.useState('')
+  const [autoexpandHEAD, setAutoexpandHEAD] = React.useState(true)
   const onChange = (id, value, setter, propogateValue) => {
     setter(value)
     props.onChange(toState({[id]: propogateValue === undefined ? value : propogateValue}))
@@ -32,6 +36,7 @@ const ConfigurationForm = props => {
       }
       setLocales(__locales)
       if(props.edit) {
+        setAutoexpandHEAD(props.repo.autoexpand_head)
         if(props.repo.custom_validation_schema)
           setCustomValidationSchema(props.repo.custom_validation_schema)
         setDefaultLocale(find(__locales, {id: props.repo.default_locale}))
@@ -190,6 +195,17 @@ const ConfigurationForm = props => {
         />
         <FormTooltip title={configs.canonicalURL.tooltip} style={{marginLeft: '10px'}} />
       </div>
+      {
+        configs.autoexpandHEAD &&
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '10px'}}>
+            <FormControlLabel
+              control={<Checkbox size='small' checked={autoexpandHEAD} onChange={event => onChange('autoexpand_head', event.target.checked, setAutoexpandHEAD)} />}
+              label={configs.autoexpandHEAD.label}
+              disabled={props.edit}
+            />
+            <FormTooltip title={configs.autoexpandHEAD.tooltip} style={{marginLeft: '10px'}} />
+          </div>
+      }
     </div>
   )
 }
