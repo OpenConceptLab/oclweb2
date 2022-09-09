@@ -15,7 +15,6 @@ const ConfigurationForm = props => {
   const [customValidationSchema, setCustomValidationSchema] = React.useState('None')
   const [publicAccess, setPublicAccess] = React.useState('View')
   const [canonicalURL, setCanonicalURL] = React.useState('')
-  const [helperText, setHelperText] = React.useState({})
   const onChange = (id, value, setter, propogateValue) => {
     setter(value)
     props.onChange(toState({[id]: propogateValue === undefined ? value : propogateValue}))
@@ -187,9 +186,7 @@ const ConfigurationForm = props => {
           value={canonicalURL}
           onChange={event => onChange('canonical_url', event.target.value || '', setCanonicalURL)}
           fullWidth
-          helperText={helperText.canonicalURL}
-          onFocus={() => setHelperText({...helperText, canonicalURL: configs.canonicalURL.helperText})}
-          onBlur={() => setHelperText(omit(helperText, 'canonicalURL'))}
+          helperText={configs.canonicalURL.helperText}
         />
         <FormTooltip title={configs.canonicalURL.tooltip} style={{marginLeft: '10px'}} />
       </div>
