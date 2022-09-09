@@ -19,6 +19,7 @@ const FHIRSettings = props => {
   const [contentType, setContentType] = React.useState('')
   const [meta, setMeta] = React.useState('')
   const [revisionDate, setRevisionDate] = React.useState('')
+  const [lockedDate, setLockedDate] = React.useState('')
   const [experimental, setExperimental] = React.useState(false)
   const [caseSensitive, setCaseSensitive] = React.useState(false)
   const [compositional, setCompositional] = React.useState(false)
@@ -45,6 +46,8 @@ const FHIRSettings = props => {
       setContentType(props.repo.content_type || '') //for source
     if(props.repo.revision_date)
       setRevisionDate(moment(props.repo.revision_date).format('YYYY-MM-DD'))
+    if(props.repo.locked_date)
+      setLockedDate(moment(props.repo.locked_date).format('YYYY-MM-DD'))
     setExperimental(props.repo.experimental || false)
     setCaseSensitive(props.repo.case_sensitive || false)
     setCompositional(props.repo.compositional || false)
@@ -53,7 +56,7 @@ const FHIRSettings = props => {
   }
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
-  const defaultExpanded = props.edit && some([props.repo.publisher, toFormValue(props.repo.jurisdiction), props.repo.purpose, props.repo.copyright, toFormValue(props.repo.identifier), toFormValue(props.repo.contact), props.repo.contentType, toFormValue(props.repo.meta), props.repo.revisionDate, props.repo.experimental, props.repo.caseSensitive, props.repo.compositional, props.repo.versionNeeded, props.repo.immutable])
+  const defaultExpanded = props.edit && some([props.repo.publisher, toFormValue(props.repo.jurisdiction), props.repo.purpose, props.repo.copyright, toFormValue(props.repo.identifier), toFormValue(props.repo.contact), props.repo.contentType, toFormValue(props.repo.meta), props.repo.revision_date, props.repo.locked_date, props.repo.experimental, props.repo.caseSensitive, props.repo.compositional, props.repo.version_needed, props.repo.immutable])
 
   const TextFieldTemplate = (id, config, value, setter, textType, InputLabelProps) => {
     return (
@@ -108,6 +111,7 @@ const FHIRSettings = props => {
         {TextFieldTemplate('content_type', configs.contentType, contentType, setContentType)}
         {TextFieldTemplate('meta', configs.meta, meta, setMeta)}
         {TextFieldTemplate('revision_date', configs.revisionDate, revisionDate, setRevisionDate, 'date', { shrink: true })}
+        {TextFieldTemplate('locked_date', configs.lockedDate, lockedDate, setLockedDate, 'date', { shrink: true })}
         {CheckboxFieldTemplate('experimental', configs.experimental, experimental, setExperimental)}
         {CheckboxFieldTemplate('case_sensitive', configs.caseSensitive, caseSensitive, setCaseSensitive)}
         {CheckboxFieldTemplate('compositional', configs.compositional, compositional, setCompositional)}

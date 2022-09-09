@@ -65,7 +65,7 @@ const CONFIG = {
     },
     autoexpandHEAD: {
       label: 'Auto Expand HEAD',
-      tooltip: 'This determines if this Collection needs to be auto expanded or deferred.'
+      tooltip: 'If enabled, all collection versions will automatically get an expansion. If disabled, you must manually trigger all expansions.'
     },
   },
   advanceSettings: {
@@ -105,6 +105,10 @@ const CONFIG = {
         label: 'Revision Date',
         tooltip: 'The date (and optionally time) when the resource was published. The date must change when the business version changes and it must change if the status code changes. In addition, it should change when the substantive content of the code system changes.'
       },
+      lockedDate: {
+        label: 'Locked Date',
+        tooltip: 'Fixed date for references with no specified version (transitive)',
+      },
       experimental: {
         label: 'Experimental',
         tooltip: 'A Boolean value to indicate that this resource is authored for testing purposes (or education/evaluation/marketing) and is not intended to be used for genuine usage.'
@@ -132,9 +136,6 @@ const CONFIG = {
         label: 'External ID',
         tooltip: 'An identifier for the Collection that is external to OCL'
       },
-      lockedDate: {
-        label: 'Locked Date'
-      }
     }
   }
 }
