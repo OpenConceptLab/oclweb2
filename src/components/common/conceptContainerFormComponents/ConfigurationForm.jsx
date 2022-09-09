@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
-import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy, omit } from 'lodash';
+import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
 import LocaleAutoComplete from '../../common/LocaleAutoComplete'
 
