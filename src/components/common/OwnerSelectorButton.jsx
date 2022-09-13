@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { ArrowDropDown as DownIcon } from '@mui/icons-material';
-import { map } from 'lodash';
+import { map, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { getCurrentUser } from '../../common/utils';
 import { ORANGE, WHITE } from '../../common/constants';
@@ -25,7 +25,7 @@ const OwnerSelectorButton = props => {
         .orgs()
         .get()
         .then(response => setOwners(
-          [...map(response.data, org => ({id: org.id, type: org.type, url: org.url})), {username: user.username, type: 'User', url: user.url}]
+          [{username: user.username, type: 'User', url: user.url}, ...map(response.data, org => ({id: org.id, type: org.type, url: org.url}))]
         ))
 
   React.useEffect(() => !props.disabled && getOwners(), [])
@@ -53,7 +53,7 @@ const OwnerSelectorButton = props => {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={onToggle}>
         {
           map(owners, (owner, index) => (
-            <MenuItem key={index} onClick={() => onSelect(owner)}>
+            <MenuItem key={index} onClick={() => onSelect(owner)} selected={(get(owner, 'id') && get(owner, 'id') === get(selected, 'id')) || (get(owner, 'username') && get(owner, 'username') === get(selected, 'username'))}>
               <ListItemIcon>
                 <DynamicConfigResourceIcon resource={owner.type.toLowerCase()} />
               </ListItemIcon>
