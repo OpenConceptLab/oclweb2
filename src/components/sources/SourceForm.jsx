@@ -271,17 +271,19 @@ class SourceForm extends React.Component {
     const { edit, owner, source } = this.props
     return (
       <form>
-        <div className='col-xs-12' style={{marginBottom: '30px'}}>
+        <div className='col-xs-12 no-side-padding' style={{marginBottom: '30px', overflowX: 'hidden'}}>
           <FormHeader {...CONFIG} edit={edit} />
-          <NameAndDescription {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
-          <Divider style={{width: '100%'}} />
-          <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={source} />
-          <Divider style={{width: '100%'}} />
-          {
-            ((edit && !isEmpty(source)) || !edit) &&
-              <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
-          }
-          <div className='col-xs-12 no-side-padding' style={{position: 'fixed', background: WHITE, bottom: 0, zIndex: 1999}}>
+          <div className='col-xs-12'>
+            <NameAndDescription {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
+            <Divider style={{width: '100%'}} />
+            <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={source} />
+            <Divider style={{width: '100%'}} />
+            {
+              ((edit && !isEmpty(source)) || !edit) &&
+                <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
+            }
+          </div>
+          <div className='col-xs-12' style={{position: 'fixed', background: WHITE, bottom: 0, zIndex: 1999}}>
             <Button variant='contained' type='submit' onClick={this.onSubmit} style={{margin: '10px 0'}}>
               {edit ? 'Update Source' : 'Create Source'}
             </Button>

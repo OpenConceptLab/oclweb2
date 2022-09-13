@@ -228,17 +228,19 @@ class CollectionForm extends React.Component {
     const { edit, owner, collection } = this.props
     return (
       <form>
-        <div className='col-xs-12' style={{marginBottom: '30px'}}>
+        <div className='col-xs-12 no-side-padding' style={{marginBottom: '30px', overflowX: 'hidden'}}>
           <FormHeader {...CONFIG} edit={edit} />
-          <NameAndDescription {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={collection} />
-          <Divider style={{width: '100%'}} />
-          <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={collection} />
-          <Divider style={{width: '100%'}} />
-          {
-            ((edit && !isEmpty(collection)) || !edit) &&
-              <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={collection} />
-          }
-          <div className='col-xs-12 no-side-padding' style={{position: 'fixed', background: WHITE, bottom: 0, zIndex: 1999}}>
+          <div className='col-xs-12'>
+            <NameAndDescription {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={collection} />
+            <Divider style={{width: '100%'}} />
+            <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={collection} />
+            <Divider style={{width: '100%'}} />
+            {
+              ((edit && !isEmpty(collection)) || !edit) &&
+                <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={collection} />
+            }
+          </div>
+          <div className='col-xs-12' style={{position: 'fixed', background: WHITE, bottom: 0, zIndex: 1999}}>
             <Button variant='contained' type='submit' onClick={this.onSubmit} style={{margin: '10px 0'}}>
               {edit ? 'Update Collection' : 'Create Collection'}
             </Button>
