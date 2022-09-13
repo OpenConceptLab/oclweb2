@@ -14,10 +14,27 @@ const NameAndDescription = props => {
   const [description, setDescription] = React.useState('')
   const configs = props.nameAndDescription
   const getNewRepoURL = () => `/users/${owner.id || owner.username}/${props.resource}s/`
-  const getCode = () => <b>{id ? id : 'short-code'}/</b>
+  const getCode = () => {
+    const hasError = id && !document.getElementById('short-code').checkValidity()
+    const code = id ? `[${id}]` : '[short-code]'
+
+    return (
+      <span>
+        <span style={hasError ? {color: 'red'} : {}}>
+          <b>{code}</b>
+        </span>
+        <span>/</span>
+      </span>
+    )
+  }
   const onChange = (id, value, setter) => {
     setter(value)
     props.onChange({[id]: value}, id === 'owner' ? 'owner' : false)
+  }
+
+  const onShortCodeBlur = event => {
+    if(event.target.value)
+      event.target.reportValidity()
   }
 
   const setFieldsForEdit = () => {
@@ -63,6 +80,8 @@ const NameAndDescription = props => {
                   onChange={event => onChange('id', event.target.value || '', setId)}
                   inputProps={{ pattern: "[a-zA-Z0-9-._@]+" }}
                   value={id}
+                  onBlur={onShortCodeBlur}
+                  id='short-code'
                 />
             }
           </span>
