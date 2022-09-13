@@ -238,7 +238,7 @@ class CollectionForm extends React.Component {
             ((edit && !isEmpty(collection)) || !edit) &&
               <AdvanceSettings {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={collection} />
           }
-          <div className='col-xs-12 no-side-padding' style={{position: 'fixed', background: WHITE, bottom: 0}}>
+          <div className='col-xs-12 no-side-padding' style={{position: 'fixed', background: WHITE, bottom: 0, zIndex: 1999}}>
             <Button variant='contained' type='submit' onClick={this.onSubmit} style={{margin: '10px 0'}}>
               {edit ? 'Update Collection' : 'Create Collection'}
             </Button>
