@@ -69,7 +69,7 @@ const CONFIG = {
     },
   },
   advanceSettings: {
-    title: 'Advance Settings',
+    title: 'Advanced Settings',
     fhirSettings: {
       title: 'FHIR Settings',
       subTitle: 'Ensure your collection is FHIR compliant with these fields',
@@ -123,7 +123,7 @@ const CONFIG = {
       subTitle: 'Manage your own Collection attributes',
     },
     about: {
-      title: 'About Page',
+      title: 'Collection About Page',
       subTitle: 'Add a page containing rich text information about your Collection'
     },
     others: {

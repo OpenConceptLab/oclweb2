@@ -65,7 +65,7 @@ const CONFIG = {
     },
   },
   advanceSettings: {
-    title: 'Advance Settings',
+    title: 'Advanced Settings',
     fhirSettings: {
       title: 'FHIR Settings',
       subTitle: 'Ensure your source is FHIR compliant with these fields',
@@ -123,7 +123,7 @@ const CONFIG = {
       },
     },
     assigningIds: {
-      title: 'Assigning IDs',
+      title: 'ID Auto-Assignment',
       subTitle: 'Configure ID assignment for Concepts and Mappings',
       conceptID: {
         label: 'Concept IDs',
@@ -163,7 +163,7 @@ const CONFIG = {
       subTitle: 'Manage your own Source attributes',
     },
     about: {
-      title: 'About Page',
+      title: 'Source About Page',
       subTitle: 'Add a page containing rich text information about your Source'
     },
     others: {
