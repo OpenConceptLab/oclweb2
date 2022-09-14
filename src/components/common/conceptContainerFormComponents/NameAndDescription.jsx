@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronRight as RightIcon, List as ListIcon } from '@mui/icons-material';
 import { TextField, Button } from '@mui/material';
+import APIService from '../../../services/APIService';
 import { GREEN, WHITE } from '../../../common/constants';
 import OwnerSelectorButton from '../../common/OwnerSelectorButton';
 import FormTooltip from '../../common/FormTooltip';
@@ -9,13 +10,14 @@ import FormTooltip from '../../common/FormTooltip';
 const NameAndDescription = props => {
   const [owner, setOwner] = React.useState(props.owner)
   const [id, setId] = React.useState('')
+  const [idError, setIdError] = React.useState(false)
   const [shortName, setShortName] = React.useState('')
   const [fullName, setFullName] = React.useState('')
   const [description, setDescription] = React.useState('')
   const configs = props.nameAndDescription
   const getNewRepoURL = () => `/users/${owner.id || owner.username}/${props.resource}s/`
   const getCode = () => {
-    const hasError = id && !document.getElementById('short-code').checkValidity()
+    const hasError = id && (idError || !document.getElementById('short-code').checkValidity())
     const code = id ? `[${id}]` : '[short-code]'
 
     return (
@@ -33,8 +35,20 @@ const NameAndDescription = props => {
   }
 
   const onShortCodeBlur = event => {
-    if(event.target.value)
-      event.target.reportValidity()
+    if(event.target.value) {
+      const result = event.target.reportValidity()
+      if(result && owner) {
+        setIdError(false)
+        const service = APIService.new().overrideURL(owner.url)
+        props.resource === 'source' ? service.appendToUrl('sources/') : service.appendToUrl('collections/')
+        service.appendToUrl(`${id}/`)
+        service.head().then(response => {
+          if(response?.status === 200) {
+            setIdError(`${props.resource} with this short code already exists`)
+          }
+        })
+      }
+    }
   }
 
   const setFieldsForEdit = () => {
@@ -57,14 +71,14 @@ const NameAndDescription = props => {
         </div>
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center'}}>
+        <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'flex-start'}}>
           <OwnerSelectorButton
             onChange={newOwner => onChange('owner', newOwner, setOwner)}
             owner={props.owner}
             style={{maxWidth: '80%'}}
             disabled={props.edit}
           />
-          <span className='form-text-gray' style={{margin: '0 10px', display: 'flex'}}>
+          <span className='form-text-gray' style={{margin: '0 10px', display: 'flex', marginTop: '6px'}}>
             <RightIcon />
           </span>
           <span>
@@ -82,6 +96,8 @@ const NameAndDescription = props => {
                   value={id}
                   onBlur={onShortCodeBlur}
                   id='short-code'
+                  helperText={idError}
+                  error={Boolean(idError)}
                 />
             }
           </span>
