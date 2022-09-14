@@ -3,11 +3,38 @@ import {
   TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel,
   FormControlLabel, Checkbox
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import {
+  Add as AddIcon,
+  Public as PublicIcon,
+  Lock as PrivateIcon,
+} from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
 import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
 import LocaleAutoComplete from '../../common/LocaleAutoComplete'
+
+const SelectItemText = ({icon, primaryText, secondaryText}) => (
+  <ListItemText
+    primary={
+      <span className='flex-vertical-center'>
+        {
+          icon &&
+            <span className='flex-vertical-center' style={{marginRight: '5px', marginLeft: '-5px'}}>
+              {icon}
+            </span>
+        }
+        <span className='flex-vertical-center'>
+          {primaryText}
+        </span>
+      </span>
+    }
+    secondary={
+      <span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>
+        {secondaryText}
+      </span>
+    }
+  />
+)
 
 const ConfigurationForm = props => {
   const [locales, setLocales] = React.useState([])
@@ -142,11 +169,19 @@ const ConfigurationForm = props => {
                 value={customValidationSchema}
                 onChange={event => onChange('custom_validation_schema', event.target.value, setCustomValidationSchema, event.target.value === 'None' ? null : event.target.value)}
               >
-                <MenuItem value='None'>
-    <ListItemText primary="None" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>Default validation schema.</span>} />
+                <MenuItem value="None">
+                  <SelectItemText
+                    value='None'
+                    primaryText='None'
+                    secondaryText="Default validation schema"
+                  />
                 </MenuItem>
                 <MenuItem value='OpenMRS'>
-    <ListItemText primary="OpenMRS Validation Schema" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>Custom OpenMRS Validation schema</span>} />
+                  <SelectItemText
+                    value='OpenMRS'
+                    primaryText='OpenMRS Validation Schema'
+                    secondaryText="Custom OpenMRS Validation schema"
+                  />
                 </MenuItem>
               </Select>
             </FormControl>
@@ -168,14 +203,26 @@ const ConfigurationForm = props => {
                 value={publicAccess}
                 onChange={event => onChange('public_access', event.target.value, setPublicAccess)}
               >
-                <MenuItem value='View'>
-                  <ListItemText primary="Public (read only)" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>{`Anyone can view the content in this ${props.resource}`}</span>} />
+                <MenuItem value="View">
+                  <SelectItemText
+                    icon={<PublicIcon fontSize="small" />}
+                    primaryText="Public (read only)"
+                    secondaryText={`Anyone can view the content in this ${props.resource}`}
+                  />
                 </MenuItem>
                 <MenuItem value='Edit'>
-                  <ListItemText primary="Public (read/write)" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>{`Anyone can view/edit the content in this ${props.resource}`}</span>} />
+                  <SelectItemText
+                    icon={<PublicIcon fontSize="small" />}
+                    primaryText="Public (read/write)"
+                    secondaryText={`Anyone can view/edit the content in this ${props.resource}`}
+                  />
                 </MenuItem>
                 <MenuItem value='None'>
-    <ListItemText primary="Private" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>{`No one can view the content in this ${props.resource}`}</span>} />
+                  <SelectItemText
+                    icon={<PrivateIcon fontSize="small" />}
+                    primaryText="Private"
+                    secondaryText={`No one can view the content in this ${props.resource}`}
+                  />
                 </MenuItem>
               </Select>
             </FormControl>
@@ -207,7 +254,7 @@ const ConfigurationForm = props => {
           </div>
       }
     </div>
-  )
+)
 }
 
 export default ConfigurationForm;
