@@ -13,12 +13,12 @@ const AdvanceSettings = props => {
         <h2>{configs.title}</h2>
       </div>
       {
-        configs.fhirSettings &&
-          <FHIRSettings {...props} />
-      }
-      {
         configs.assigningIds &&
           <ResourceIDAssignmentSettings {...props} />
+      }
+      {
+        configs.fhirSettings &&
+          <FHIRSettings {...props} />
       }
       <CustomAttributes {...props} />
       <AboutPage {...props} />

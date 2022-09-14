@@ -113,6 +113,7 @@ const ResourceIDAssignmentSettings = props => {
   return (
     <CommonAccordion
       square
+      defaultStyle
       title={
         <span className='flex-vertical-center'>
           <TabCountLabel label={configs.title} count={count || false} />

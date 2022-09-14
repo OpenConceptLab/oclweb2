@@ -104,7 +104,7 @@ const FHIRSettings = props => {
   return (
     <CommonAccordion
       square
-      defaultStyle
+      defaultStyle={props.resource === 'collection'}
       title={
         <span className='flex-vertical-center'>
           <TabCountLabel label={configs.title} count={count || false} />
