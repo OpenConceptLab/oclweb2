@@ -58,8 +58,8 @@ const CustomAttributes = props => {
             </div>
           ))
         }
-        <div className='col-xs-12 no-side-padding' onClick={onAddExtras} style={{marginTop: '8px'}}>
-          <Button variant='text' startIcon={<AddIcon />} size='small'>
+        <div className='col-xs-12 no-side-padding' style={{marginTop: '8px'}}>
+          <Button variant='text' startIcon={<AddIcon />} size='small' onClick={onAddExtras}>
             Add Attribute
           </Button>
         </div>
