@@ -8,32 +8,32 @@ const CONFIG = {
     subTitle: 'Choose a short code for your collection',
     shortCode: {
       label: 'Short Code',
-      tooltip: "Identifies the Collection. This is OCL's key identifier for the Collection, so keep it short and sweet but also unique and distinct. Alphanumeric characters plus @, hyphens, periods, and underscores are allowed."
+      tooltip: "OCL's key identifier for your Collection . Keep this short and sweet but also unique and distinct. Alphanumeric characters plus @, hyphens, periods, and underscores are allowed."
     },
     shortName: {
       label: 'Short Name',
-      tooltip: "Gives a shorter name for the Collection, such as a nickname or an abbreviation."
+      tooltip: "Short display name for your Collection, such as a nickname or an abbreviation."
     },
     fullName: {
       label: 'Full Name',
-      tooltip: "The fully spelled out name."
+      tooltip: "Fully-specified name for your Collection."
     },
     description: {
       label: 'Description',
-      tooltip: "Descriptions are like a headline for your Collection. If you have lots of information, put it in the About page below."
+      tooltip: "A headline for your Collection. If you have lots of information, put it in the About page below."
     },
   },
   language: {
     title: 'Language',
-    subTitle: 'Choose a default language',
+    subTitle: 'Collection Languages',
     defaultLanguage: {
       label: 'Default Language',
       placeholder: 'Choose a default language',
-      tooltip: 'Select one language that your Collection will use the most. Other languages can be added as Supported Languages.',
+      tooltip: 'The primary language for concepts in your Collection. Other languages can be added as Supported Languages.',
     },
     supportedLanguages: {
       label: 'Supported Languages',
-      tooltip: 'Other languages that may appear in your Collection.',
+      tooltip: 'Other languages that may be used in your Collection.',
     },
   },
   configuration: {
@@ -41,20 +41,19 @@ const CONFIG = {
     subTitle: 'What type of collection would like to create?',
     type: {
       label: 'Select collection type',
-      tooltip: 'Select collection type',
+      tooltip: 'The type of Source that you want to create. Note that some Collection types have special meaning.',
     },
     customValidationSchema: {
       label: 'Validation Schema',
-      tooltip: 'Helps OCL format the dictionary according to a custom schema',
+      tooltip: 'A specific format for your Source. If specified, OCL will validate your Source according to rules defined in this schema.',
     },
     publicAccess: {
       label: 'Collection visibility - who can view your collection?',
-      tooltip: "This determines who can see your Collection's content. Set it to Private if your content should only be shown to authorized users or organizations."
+      tooltip: "The audience who can see your Collection's content. Set it to Private if your content should only be shown to authorized users or organizations."
     },
     canonicalURL: {
       label: 'Canonical URL',
-      tooltip: "This provides a unique identifier for your Collection. It will allow you to leverage OCL's powerful collection management features using this Collection.",
-      helperText: 'Unique URL - formatted identifier for your Collection'
+      tooltip: "A unique identifier for your Collection in URL format. It will allow you to leverage OCL's powerful collection management features using this Collection.'
     },
     autoexpandHEAD: {
       label: 'Auto Expand HEAD',
