@@ -16,7 +16,7 @@ const NameAndDescription = props => {
   const [fullName, setFullName] = React.useState('')
   const [description, setDescription] = React.useState('')
   const configs = props.nameAndDescription
-  const getNewRepoURL = () => `/users/${owner.id || owner.username}/${props.resource}s/`
+  const getNewRepoURL = () => `${owner.url}${props.resource}s/`
   const getCode = () => {
     const hasError = id && (idError || !document.getElementById('short-code').checkValidity())
     const code = id ? `${id}` : '[short-code]'
