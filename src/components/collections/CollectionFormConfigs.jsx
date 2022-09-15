@@ -53,7 +53,7 @@ const CONFIG = {
     },
     canonicalURL: {
       label: 'Canonical URL',
-      tooltip: "A unique identifier for your Collection in URL format. It will allow you to leverage OCL's powerful collection management features using this Collection.'
+      tooltip: "A unique identifier for your Collection in URL format. It will allow you to leverage OCL's powerful collection management features using this Collection."
     },
     autoexpandHEAD: {
       label: 'Auto Expand HEAD',
