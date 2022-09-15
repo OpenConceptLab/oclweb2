@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronRight as RightIcon, List as ListIcon } from '@mui/icons-material';
 import { TextField, Button } from '@mui/material';
+import { upperFirst } from 'lodash';
 import APIService from '../../../services/APIService';
 import { GREEN, WHITE } from '../../../common/constants';
 import OwnerSelectorButton from '../../common/OwnerSelectorButton';
@@ -18,7 +19,7 @@ const NameAndDescription = props => {
   const getNewRepoURL = () => `/users/${owner.id || owner.username}/${props.resource}s/`
   const getCode = () => {
     const hasError = id && (idError || !document.getElementById('short-code').checkValidity())
-    const code = id ? `[${id}]` : '[short-code]'
+    const code = id ? `${id}` : '[short-code]'
 
     return (
       <span>
@@ -44,7 +45,7 @@ const NameAndDescription = props => {
         service.appendToUrl(`${id}/`)
         service.head().then(response => {
           if(response?.status === 200) {
-            setIdError(`${props.resource} with this short code already exists`)
+            setIdError(`A ${upperFirst(props.resource)} with this short code already exists`)
           }
         })
       }
