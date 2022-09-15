@@ -18,7 +18,7 @@ const NameAndDescription = props => {
   const configs = props.nameAndDescription
   const getNewRepoURL = () => `${owner.url}${props.resource}s/`
   const getCode = () => {
-    const hasError = id && (idError || !document.getElementById('short-code').checkValidity())
+    const hasError = !props.edit && id && (idError || !document.getElementById('short-code').checkValidity())
     const code = id ? `${id}` : '[short-code]'
 
     return (

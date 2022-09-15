@@ -1,17 +1,14 @@
 import React from 'react';
 import {
-  TextField, Button, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel,
+  TextField, Autocomplete, FormControl, Select, ListItemText, MenuItem, InputLabel,
   FormControlLabel, Checkbox
 } from '@mui/material';
 import {
-  Add as AddIcon,
   Public as PublicIcon,
   Lock as PrivateIcon,
 } from '@mui/icons-material';
-import { fetchLocales } from '../../../common/utils';
-import { get, merge, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
+import { get, merge } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
-import LocaleAutoComplete from '../../common/LocaleAutoComplete'
 
 const SelectItemText = ({icon, primaryText, secondaryText}) => (
   <ListItemText
@@ -37,10 +34,6 @@ const SelectItemText = ({icon, primaryText, secondaryText}) => (
 )
 
 const ConfigurationForm = props => {
-  const [locales, setLocales] = React.useState([])
-  const [showSupportedLocales, setShowSupportedLocales] = React.useState(false)
-  const [defaultLocale, setDefaultLocale] = React.useState(null)
-  const [supportedLocales, setSupportedLocales] = React.useState([])
   const [type, setType] = React.useState(null)
   const [customValidationSchema, setCustomValidationSchema] = React.useState('None')
   const [publicAccess, setPublicAccess] = React.useState('View')
@@ -53,30 +46,15 @@ const ConfigurationForm = props => {
   const toState = newValue => merge({public_access: publicAccess}, newValue)
   const configs = props.configuration
   const setUp = () => {
-    fetchLocales(_locales => {
-      let __locales = [..._locales]
-      if(props.edit) {
-        forEach(compact(flatten(compact([props.repo.default_locale, props.repo.supported_locales]))), _locale => {
-          if(!find(_locales, {id: _locale}))
-            __locales.push({id: _locale, displayName: _locale, name: _locale})
-        })
-      }
-      setLocales(__locales)
-      if(props.edit) {
-        setAutoexpandHEAD(props.repo.autoexpand_head)
-        if(props.repo.custom_validation_schema)
-          setCustomValidationSchema(props.repo.custom_validation_schema)
-        setDefaultLocale(find(__locales, {id: props.repo.default_locale}))
-        if(props.repo.supported_locales) {
-          setShowSupportedLocales(true)
-          setSupportedLocales(uniqBy(filter(__locales, _locale => includes(props.repo.supported_locales, _locale.id)), 'id'))
-        }
-        const _type = get(props.repo, `${props.resource}_type`)
-        setType({id: _type, name: _type})
-        setPublicAccess(props.repo.public_access)
-        setCanonicalURL(props.repo.canonical_url || '')
-      }
-    }, true)
+    if(props.edit) {
+      setAutoexpandHEAD(props.repo.autoexpand_head)
+      if(props.repo.custom_validation_schema)
+        setCustomValidationSchema(props.repo.custom_validation_schema)
+      const _type = get(props.repo, `${props.resource}_type`)
+      setType({id: _type, name: _type})
+      setPublicAccess(props.repo.public_access)
+      setCanonicalURL(props.repo.canonical_url || '')
+    }
   }
 
   React.useEffect(setUp, [])
@@ -86,46 +64,12 @@ const ConfigurationForm = props => {
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
-      <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+      <div className='col-xs-12 no-side-padding'>
         <div className='col-xs-12 no-side-padding form-text-gray'>
           {configs.subTitle}
         </div>
       </div>
-      <div className='col-xs-12 no-side-padding flex-vertical-center'>
-        <LocaleAutoComplete
-          cachedLocales={locales}
-          label={configs.defaultLanguage.label}
-          size='small'
-          required
-          value={defaultLocale}
-          onChange={(id, item) => onChange('default_locale', item, setDefaultLocale, get(item, 'id'))}
-        />
-        <FormTooltip title={configs.defaultLanguage.tooltip} style={{marginLeft: '10px'}} />
-      </div>
-      <div className='col-xs-12 no-side-padding flex-vertical-center'>
-        {
-          showSupportedLocales ?
-            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px'}}>
-              <LocaleAutoComplete
-                cachedLocales={locales}
-                multiple
-                filterSelectedOptions
-                label={configs.supportedLanguages.label}
-                size='small'
-                value={supportedLocales}
-                onChange={(id, items) => onChange('supported_locales', items, setSupportedLocales, map(items, 'id').join(','))}
-              />
-              <FormTooltip title={configs.supportedLanguages.tooltip} style={{marginLeft: '10px'}} />
-            </div> :
-          <Button style={{marginTop: '8px'}} size='small' variant='text' onClick={() => setShowSupportedLocales(true)} startIcon={<AddIcon />}>
-            Add Supported Language
-          </Button>
-        }
-      </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '20px'}}>
-          {`What type of ${props.resource} would you like to create?`}
-        </div>
         <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <Autocomplete

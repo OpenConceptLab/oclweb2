@@ -23,8 +23,8 @@ const CONFIG = {
       tooltip: "Descriptions are like a headline for your Source. If you have lots of information, put it in the About page below."
     },
   },
-  configuration: {
-    title: 'Configuration',
+  language: {
+    title: 'Language',
     subTitle: 'Choose a default language',
     defaultLanguage: {
       label: 'Default Language',
@@ -35,6 +35,10 @@ const CONFIG = {
       label: 'Supported Languages',
       tooltip: 'Other languages that may appear in your Source.',
     },
+ },
+  configuration: {
+    title: 'Configuration',
+    subTitle: 'What type of source would like to create?',
     type: {
       label: 'Select source type',
       tooltip: 'Select source type',

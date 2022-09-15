@@ -7,6 +7,7 @@ import { SOURCE_TYPES, WHITE } from '../../common/constants'
 import FormHeader from '../common/conceptContainerFormComponents/FormHeader';
 import NameAndDescription from '../common/conceptContainerFormComponents/NameAndDescription';
 import ConfigurationForm from '../common/conceptContainerFormComponents/ConfigurationForm';
+import LanguageForm from '../common/conceptContainerFormComponents/LanguageForm';
 import AdvanceSettings from '../common/conceptContainerFormComponents/AdvanceSettings';
 import CONFIG from './SourceFormConfigs'
 
@@ -95,6 +96,8 @@ class SourceForm extends React.Component {
           <FormHeader {...CONFIG} edit={edit} />
           <div className='col-xs-12'>
             <NameAndDescription {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
+            <Divider style={{width: '100%'}} />
+            <LanguageForm {...CONFIG} edit={edit} owner={owner} onChange={this.onChange} repo={source} />
             <Divider style={{width: '100%'}} />
             <ConfigurationForm {...CONFIG} edit={edit} owner={owner} types={TYPES} onChange={this.onChange} repo={source} />
             <Divider style={{width: '100%'}} />
