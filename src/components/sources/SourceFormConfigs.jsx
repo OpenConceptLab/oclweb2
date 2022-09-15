@@ -53,7 +53,7 @@ const CONFIG = {
     },
     canonicalURL: {
       label: 'Canonical URL',
-      tooltip: "A unique identifier for your Source in URL format. It will allow you to leverage OCL's powerful collection management features using this Source.'
+      tooltip: "A unique identifier for your Source in URL format. It will allow you to leverage OCL's powerful collection management features using this Source."
     },
   },
   advanceSettings: {
