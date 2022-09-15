@@ -8,32 +8,32 @@ const CONFIG = {
     subTitle: 'Choose a short code for your source',
     shortCode: {
       label: 'Short Code',
-      tooltip: "Identifies the Source. This is OCL's key identifier for the Source, so keep it short and sweet but also unique and distinct. Alphanumeric characters plus @, hyphens, periods, and underscores are allowed."
+      tooltip: "OCL's key identifier for your Source. Keep this short and sweet but also unique and distinct. Alphanumeric characters plus @, hyphens, periods, and underscores are allowed."
     },
     shortName: {
       label: 'Short Name',
-      tooltip: "Gives a shorter name for the Source, such as a nickname or an abbreviation."
+      tooltip: "Short display name for your Source, such as a nickname or an abbreviation."
     },
     fullName: {
       label: 'Full Name',
-      tooltip: "The fully spelled out name."
+      tooltip: "Fully-specified name for your Source."
     },
     description: {
       label: 'Description',
-      tooltip: "Descriptions are like a headline for your Source. If you have lots of information, put it in the About page below."
+      tooltip: "A headline for your Source. If you have lots of information, put it in the About page below."
     },
   },
   language: {
     title: 'Language',
-    subTitle: 'Choose a default language',
+    subTitle: 'Source Languages',
     defaultLanguage: {
       label: 'Default Language',
       placeholder: 'Choose a default language',
-      tooltip: 'Select one language that your Source will use the most. Other languages can be added as Supported Languages.',
+      tooltip: 'The primary language for your Source used to define concepts. Other languages can be added as Supported Languages.',
     },
     supportedLanguages: {
       label: 'Supported Languages',
-      tooltip: 'Other languages that may appear in your Source.',
+      tooltip: 'Other languages that may be used in your Source.',
     },
  },
   configuration: {
@@ -41,20 +41,19 @@ const CONFIG = {
     subTitle: 'What type of source would like to create?',
     type: {
       label: 'Select source type',
-      tooltip: 'Select source type',
+      tooltip: 'The type of Source that you want to create. Note that some Source types have special meaning.',
     },
     customValidationSchema: {
       label: 'Validation Schema',
-      tooltip: 'Helps OCL format the dictionary according to a custom schema',
+      tooltip: 'A specific format for your Source. If specified, OCL will validate your Source according to rules defined in this schema.',
     },
     publicAccess: {
       label: 'Source visibility - who can view your source?',
-      tooltip: "This determines who can see your Source's content. Set it to Private if your content should only be shown to authorized users or organizations."
+      tooltip: "The audience who can see your Source's content. Set it to Private if your content should only be shown to authorized users or organizations."
     },
     canonicalURL: {
       label: 'Canonical URL',
-      tooltip: "This provides a unique identifier for your Source. It will allow you to leverage OCL's powerful collection management features using this Source.",
-      helperText: 'Unique URL - formatted identifier for your Source'
+      tooltip: "A unique identifier for your Source in URL format. It will allow you to leverage OCL's powerful collection management features using this Source.'
     },
   },
   advanceSettings: {
