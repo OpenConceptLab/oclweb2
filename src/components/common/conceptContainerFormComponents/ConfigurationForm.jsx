@@ -33,12 +33,38 @@ const SelectItemText = ({icon, primaryText, secondaryText}) => (
   />
 )
 
+const TextFieldTemplate = ({id, config, value, setter, textType, InputLabelProps, onChange}) => (
+  <React.Fragment>
+    {
+      config &&
+        <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'center', marginTop: '15px'}}>
+          <TextField
+            id={id}
+            fullWidth
+            size='small'
+            label={config.label}
+            value={value}
+            onChange={event => onChange(id, event.target.value || '', setter)}
+            type={textType || 'text'}
+            InputLabelProps={InputLabelProps || {}}
+          />
+          {
+            config.tooltip &&
+              <FormTooltip title={config.tooltip} style={{marginLeft: '10px'}} />
+          }
+        </div>
+    }
+  </React.Fragment>
+)
+
 const ConfigurationForm = props => {
   const [type, setType] = React.useState(null)
   const [customValidationSchema, setCustomValidationSchema] = React.useState('None')
   const [publicAccess, setPublicAccess] = React.useState('View')
   const [canonicalURL, setCanonicalURL] = React.useState('')
   const [autoexpandHEAD, setAutoexpandHEAD] = React.useState(true)
+  const [website, setWebsite] = React.useState('')
+  const [externalID, setExternalID] = React.useState('')
   const onChange = (id, value, setter, propogateValue) => {
     setter(value)
     props.onChange(toState({[id]: propogateValue === undefined ? value : propogateValue}))
@@ -54,6 +80,8 @@ const ConfigurationForm = props => {
       setType({id: _type, name: _type})
       setPublicAccess(props.repo.public_access)
       setCanonicalURL(props.repo.canonical_url || '')
+      setWebsite(props.repo.website || '')
+      setExternalID(props.repo.external_id || '')
     }
   }
 
@@ -196,8 +224,23 @@ const ConfigurationForm = props => {
             <FormTooltip title={configs.autoexpandHEAD.tooltip} style={{marginLeft: '10px'}} />
           </div>
       }
+      <TextFieldTemplate
+        id='website'
+        config={configs.website}
+        value={website}
+        setter={setWebsite}
+        textType='url'
+        onChange={onChange}
+      />
+      <TextFieldTemplate
+        id='external_id'
+        config={configs.externalID}
+        value={externalID}
+        setter={setExternalID}
+        onChange={onChange}
+      />
     </div>
-)
+  )
 }
 
 export default ConfigurationForm;

@@ -12,17 +12,11 @@ const AdvanceSettings = props => {
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
-      {
-        configs.assigningIds &&
-          <ResourceIDAssignmentSettings {...props} />
-      }
-      {
-        configs.fhirSettings &&
-          <FHIRSettings {...props} />
-      }
+      { configs.assigningIds && <ResourceIDAssignmentSettings {...props} /> }
+      { configs.fhirSettings && <FHIRSettings {...props} /> }
       <CustomAttributes {...props} />
       <AboutPage {...props} />
-      <Others {...props} />
+      { configs.others && <Others {...props} /> }
     </div>
   )
 }

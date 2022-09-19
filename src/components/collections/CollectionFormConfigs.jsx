@@ -57,6 +57,14 @@ const CONFIG = {
       label: 'Auto Expand HEAD',
       tooltip: 'If enabled, all collection versions will automatically get an expansion. If disabled, you must manually trigger all expansions.'
     },
+    website: {
+      label: 'Website',
+      tooltip: 'Link to a user-friendly website associated with this Collection',
+    },
+    externalID: {
+      label: 'External ID',
+      tooltip: 'An identifier for the Collection that is external to OCL'
+    },
   },
   advanceSettings: {
     title: 'Advanced Settings',
@@ -116,17 +124,6 @@ const CONFIG = {
       title: 'Collection About Page',
       subTitle: 'Add a page containing rich text information about your Collection'
     },
-    others: {
-      title: 'Other Collection Attributes',
-      website: {
-        label: 'Website',
-        tooltip: 'Link to a user-friendly website associated with this Collection',
-      },
-      externalID: {
-        label: 'External ID',
-        tooltip: 'An identifier for the Collection that is external to OCL'
-      },
-    }
   }
 }
 

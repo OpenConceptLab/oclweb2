@@ -53,6 +53,14 @@ const CONFIG = {
       label: 'Canonical URL',
       tooltip: "A unique identifier for your Source in URL format. It will allow you to leverage OCL's powerful collection management features using this Source."
     },
+    website: {
+      label: 'Website',
+      tooltip: 'Link to a user-friendly website associated with this Source',
+    },
+    externalID: {
+      label: 'External ID',
+      tooltip: 'An identifier for the Source that is external to OCL'
+    },
   },
   advanceSettings: {
     title: 'Advanced Settings',
@@ -156,20 +164,6 @@ const CONFIG = {
       title: 'Source About Page',
       subTitle: 'Add a page containing rich text information about your Source'
     },
-    others: {
-      title: 'Other Source Attributes',
-      website: {
-        label: 'Website',
-        tooltip: 'Link to a user-friendly website associated with this Source',
-      },
-      externalID: {
-        label: 'External ID',
-        tooltip: 'An identifier for the Source that is external to OCL'
-      },
-      collectionReference: {
-        label: 'Collection Reference'
-      }
-    }
   }
 }
 
