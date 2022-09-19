@@ -47,11 +47,14 @@ const LanguageForm = props => {
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
-      <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
-        <div className='col-xs-12 no-side-padding form-text-gray'>
-          {configs.subTitle}
-        </div>
-      </div>
+      {
+        configs.subTitle &&
+          <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+            <div className='col-xs-12 no-side-padding form-text-gray'>
+              {configs.subTitle}
+            </div>
+          </div>
+      }
       <div className='col-xs-12 no-side-padding flex-vertical-center'>
         <LocaleAutoComplete
           cachedLocales={locales}

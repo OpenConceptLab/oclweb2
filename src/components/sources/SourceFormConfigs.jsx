@@ -25,7 +25,6 @@ const CONFIG = {
   },
   language: {
     title: 'Language',
-    subTitle: 'Source Languages',
     defaultLanguage: {
       label: 'Default Language',
       placeholder: 'Choose a default language',
