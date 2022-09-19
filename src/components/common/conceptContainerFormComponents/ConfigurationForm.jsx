@@ -64,13 +64,16 @@ const ConfigurationForm = props => {
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
+      {
+        configs.subTitle &&
+          <div className='col-xs-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding form-text-gray'>
+              {configs.subTitle}
+            </div>
+          </div>
+      }
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray'>
-          {configs.subTitle}
-        </div>
-      </div>
-      <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
+        <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '10px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <Autocomplete
               openOnFocus
@@ -98,17 +101,14 @@ const ConfigurationForm = props => {
         </div>
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '5px'}}>
-          {`Helps with formatting of your ${props.resource}`}
-        </div>
         <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <FormControl variant="outlined" fullWidth  size="small">
-              <InputLabel id="demo-simple-select-label">{configs.customValidationSchema.label}</InputLabel>
+              <InputLabel>{configs.customValidationSchema.label}</InputLabel>
               <Select
                 label={configs.customValidationSchema.label}
                 required
-                id="publicAccess"
+                id="customValidationSchema"
                 defaultValue="None"
                 value={customValidationSchema}
                 onChange={event => onChange('custom_validation_schema', event.target.value, setCustomValidationSchema, event.target.value === 'None' ? null : event.target.value)}
@@ -134,13 +134,12 @@ const ConfigurationForm = props => {
         </div>
       </div>
       <div className='col-xs-12 no-side-padding'>
-        <div className='col-xs-12 no-side-padding form-text-gray' style={{marginTop: '5px'}}>
-          {configs.publicAccess.label}
-        </div>
         <div className='col-xs-12 no-side-padding form-text-gray' style={{margin: '15px 0'}}>
           <div className='col-xs-12 no-side-padding form-text-gray flex-vertical-center'>
             <FormControl variant="outlined" fullWidth  size="small">
+              <InputLabel>{configs.publicAccess.label}</InputLabel>
               <Select
+                label={configs.publicAccess.label}
                 required
                 id="publicAccess"
                 defaultValue="View"

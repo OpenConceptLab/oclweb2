@@ -37,7 +37,6 @@ const CONFIG = {
   },
   configuration: {
     title: 'Configuration',
-    subTitle: 'What type of collection would like to create?',
     type: {
       label: 'Select collection type',
       tooltip: 'The type of Source that you want to create. Note that some Collection types have special meaning.',
@@ -47,7 +46,7 @@ const CONFIG = {
       tooltip: 'A specific format for your Source. If specified, OCL will validate your Source according to rules defined in this schema.',
     },
     publicAccess: {
-      label: 'Collection visibility - who can view your collection?',
+      label: 'Visibility',
       tooltip: "The audience who can see your Collection's content. Set it to Private if your content should only be shown to authorized users or organizations."
     },
     canonicalURL: {

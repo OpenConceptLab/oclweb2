@@ -37,7 +37,6 @@ const CONFIG = {
  },
   configuration: {
     title: 'Configuration',
-    subTitle: 'What type of source would like to create?',
     type: {
       label: 'Select source type',
       tooltip: 'The type of Source that you want to create. Note that some Source types have special meaning.',
@@ -47,7 +46,7 @@ const CONFIG = {
       tooltip: 'A specific format for your Source. If specified, OCL will validate your Source according to rules defined in this schema.',
     },
     publicAccess: {
-      label: 'Source visibility - who can view your source?',
+      label: 'Visibility',
       tooltip: "The audience who can see your Source's content. Set it to Private if your content should only be shown to authorized users or organizations."
     },
     canonicalURL: {
