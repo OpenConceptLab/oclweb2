@@ -66,11 +66,14 @@ const NameAndDescription = props => {
       <div className='col-xs-12 no-side-padding'>
         <h2>{configs.title}</h2>
       </div>
-      <div className='col-xs-12 no-side-padding' style={{marginBottom: '5px'}}>
-        <div className='col-xs-12 no-side-padding form-text-gray'>
-          {configs.subTitle}
-        </div>
-      </div>
+      {
+        !props.edit &&
+          <div className='col-xs-12 no-side-padding' style={{marginBottom: '5px'}}>
+            <div className='col-xs-12 no-side-padding form-text-gray'>
+              {configs.subTitle}
+            </div>
+          </div>
+      }
       <div className='col-xs-12 no-side-padding'>
         <div className='col-xs-12 no-side-padding' style={{display: 'inline-flex', alignItems: 'flex-start'}}>
           <OwnerSelectorButton
