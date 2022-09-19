@@ -70,7 +70,7 @@ const CONFIG = {
     title: 'Advanced Settings',
     fhirSettings: {
       title: 'FHIR Settings',
-      subTitle: 'Ensure your collection is FHIR compliant with these fields',
+      subTitle: 'Manage how your collection is represented as a FHIR resource',
       publisher: {
         label: 'Publisher',
         tooltip: 'The name of the organization or individual that published the resource.'
