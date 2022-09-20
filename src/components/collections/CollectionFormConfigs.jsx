@@ -39,11 +39,11 @@ const CONFIG = {
     title: 'Configuration',
     type: {
       label: 'Select collection type',
-      tooltip: 'The type of Source that you want to create. Note that some Collection types have special meaning.',
+      tooltip: 'The type of Collection that you want to create. Note that some Collection types have special meaning.',
     },
     customValidationSchema: {
       label: 'Validation Schema',
-      tooltip: 'A specific format for your Source. If specified, OCL will validate your Source according to rules defined in this schema.',
+      tooltip: 'A specific format for your Collection. If specified, OCL will validate your Collection according to rules defined in this schema.',
     },
     publicAccess: {
       label: 'Visibility',
