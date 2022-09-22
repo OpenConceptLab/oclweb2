@@ -55,7 +55,7 @@ const CONFIG = {
     },
     autoexpandHEAD: {
       label: 'Auto Expand HEAD',
-      tooltip: 'If enabled, all collection versions will automatically get an expansion. If disabled, you must manually trigger all expansions.'
+      tooltip: "If enabled, updates to your collection's references will automatically be evaluated and reflected in your collection's HEAD version using the collection's default settings. Disable this to have full control over when and how your references are evaluated."
     },
     website: {
       label: 'Website',
@@ -73,11 +73,11 @@ const CONFIG = {
       subTitle: 'Manage how your collection is represented as a FHIR resource',
       publisher: {
         label: 'Publisher',
-        tooltip: 'The name of the organization or individual that published the resource.'
+        tooltip: 'The name of the organization or individual responsible for the release and ongoing maintenance of the resource.'
       },
       jurisdiction: {
         label: 'Jurisdiction',
-        tooltip: 'A legal or geographic region in which the resource is intended to be used.'
+        tooltip: 'A legal or geographic region in which the resource is intended to be used. (Format: JSON)'
       },
       purpose: {
         label: 'Purpose',
@@ -89,15 +89,15 @@ const CONFIG = {
       },
       identifier: {
         label: 'Identifier',
-        tooltip: 'A formal identifier that is used to identify this code system when it is represented in other formats, or referenced in a specification, model, design or an instance.'
+        tooltip: 'A formal identifier that is used to identify this code system when it is represented in other formats, or referenced in a specification, model, design or an instance. (Format: JSON)'
       },
       contact: {
         label: 'Contact',
-        tooltip: 'Contact details to assist a user in finding and communicating with the publisher.'
+        tooltip: 'Contact details to assist a user in finding and communicating with the publisher. (Format: JSON)'
       },
       meta: {
         label: 'Meta',
-        tooltip: 'The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.'
+        tooltip: 'The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. (Format: JSON)'
       },
       revisionDate: {
         label: 'Revision Date',
