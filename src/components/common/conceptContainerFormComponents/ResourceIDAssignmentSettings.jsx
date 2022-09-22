@@ -56,6 +56,13 @@ const ResourceIDAssignmentSettings = props => {
     const autoIdExternalIDStartFromFieldID = isConceptID ? 'autoid_concept_external_id_start_from' : 'autoid_mapping_external_id_start_from'
     const fieldID = isExternalID ? autoExternalIDFieldID : autoIdFieldID
     const startFromID = isExternalID ? autoIdExternalIDStartFromFieldID : autoIdStartFromFieldID
+    const STYLE = {
+      fontSize: '12px',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: 'block',
+    }
     return (
       <div className='col-xs-12 no-side-padding' style={{marginBottom: '18px'}}>
         <div className='col-xs-12 no-side-padding'>
@@ -72,13 +79,13 @@ const ResourceIDAssignmentSettings = props => {
                 disabled={props.edit}
               >
                 <MenuItem value='None'>
-                  <ListItemText primary="Enter Manually" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>The ID must be entered manually each time you create a new concept.</span>} />
+                  <ListItemText primary="Enter Manually" secondary={<span style={STYLE}>The ID must be entered manually each time you create a new concept.</span>} />
                 </MenuItem>
                 <MenuItem value='uuid'>
-                  <ListItemText primary="UUID" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>The ID is is auto-assigned in the UUID format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</span>} />
+                  <ListItemText primary="UUID" secondary={<span style={STYLE}>The ID is is auto-assigned in the UUID format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</span>} />
                 </MenuItem>
                 <MenuItem value='sequential'>
-                  <ListItemText primary="Sequential" secondary={<span style={{whiteSpace: 'pre-wrap', fontSize: '12px'}}>The ID is auto-assigned in a numeric format, increasing by 1 for each new resource. You can pick what number to start with.</span>} />
+                  <ListItemText primary="Sequential" secondary={<span style={STYLE}>The ID is auto-assigned in a numeric format, increasing by 1 for each new resource. You can pick what number to start with.</span>} />
                 </MenuItem>
               </Select>
               <FormHelperText>
