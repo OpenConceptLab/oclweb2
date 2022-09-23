@@ -26,7 +26,7 @@ const ReferenceTranslation = props => {
                  classes={{label: 'chip-label-wrapped'}}
                />
   return (
-    <span style={{display: 'flex'}}>
+    <span style={{display: 'flex', alignItems: 'center'}}>
       <a href={toFullAPIURL(props.uri)} target='_blank' rel='noopener noreferrer'>
         {chip}
       </a>
