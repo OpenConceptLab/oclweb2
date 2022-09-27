@@ -67,6 +67,8 @@ const Breadcrumbs = ({
         alertifyjs.success(`${containerLabel} Delete Accepted. This may take few minutes.`)
       else if(get(response, 'status') === 400)
         alertifyjs.error(get(response, 'data.detail', `${containerLabel} Delete Failed`))
+      else if(get(response, 'status') === 409)
+        alertifyjs.error(get(response, 'data.detail', `${containerLabel} delete already in queue`))
       else
         alertifyjs.error('Something bad happened!')
     })
