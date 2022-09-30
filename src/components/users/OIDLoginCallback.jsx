@@ -16,6 +16,7 @@ class OIDLoginCallback extends React.Component {
   exchangeCodeForToken = () => {
     const queryParams = new URLSearchParams(this.props.location.search)
     const code = queryParams.get('code')
+    const idToken = queryParams.get('id_token')
     if(code) {
       /*eslint no-undef: 0*/
       const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
@@ -23,6 +24,7 @@ class OIDLoginCallback extends React.Component {
         if(res.data?.access_token) {
           localStorage.removeItem('server_configs')
           localStorage.setItem('token', res.data.access_token)
+          localStorage.setItem('id_token', idToken)
           this.cacheUserData()
         } else {
           alertifyjs.error(res.data)

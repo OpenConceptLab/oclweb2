@@ -620,10 +620,14 @@ export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title
 export const getRandomColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`;
 
 export const logoutUser = (alert = true, redirectToLogin) => {
-  const callback = () => {
+  const clearTokens = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('id_token');
     localStorage.removeItem('user');
     localStorage.removeItem('visits');
+  }
+  const callback = () => {
+    clearTokens()
     if(alert)
       alertifyjs.success('You have signed out.');
 
@@ -634,10 +638,11 @@ export const logoutUser = (alert = true, redirectToLogin) => {
       window.location.reload();
     }
   }
-  const realm = window.OIDC_REALM || process.env.OIDC_REALM
-  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
-  if(realm && oidClientID)
-    APIService.users().appendToUrl('oidc/logout/').post({}).then(callback)
+  const logoutURL = getSSOLogoutURL()
+  if(logoutURL) {
+    clearTokens()
+    window.location = logoutURL
+  }
   else
     callback()
 }
@@ -756,6 +761,16 @@ export const getLoginURL = () => {
   const realm = window.OIDC_REALM || process.env.OIDC_REALM
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
   if(openIDServerURL && redirectURL && realm && oidClientID)
-    return `${openIDServerURL}/realms/${realm}/protocol/openid-connect/auth?client_id=${oidClientID}&response_type=code&state=fj8o3n7bdy1op5&redirect_uri=${redirectURL}`
+    return `${openIDServerURL}/realms/${realm}/protocol/openid-connect/auth?client_id=${oidClientID}&response_type=code id_token&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
   return '/#/accounts/login'
+}
+
+
+export const getSSOLogoutURL = () => {
+  const openIDServerURL = window.OIDC_SERVER_URL || process.env.OIDC_SERVER_URL
+  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const realm = window.OIDC_REALM || process.env.OIDC_REALM
+  const idToken = localStorage.id_token
+  if(openIDServerURL && redirectURL && realm && idToken)
+    return `${openIDServerURL}/realms/${realm}/protocol/openid-connect/logout?&post_logout_redirect_uri=${redirectURL}&id_token_hint=${idToken}`
 }
