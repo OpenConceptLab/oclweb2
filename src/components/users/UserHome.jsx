@@ -3,7 +3,7 @@ import { reject, get, isObject, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import {
   defaultCreatePin, defaultDeletePin, getCurrentUserUsername, isAdminUser,
-  replaceCurrentUserCacheWith
+  replaceCurrentUserCacheWith, isSSOEnabled, currentUserToken
 } from '../../common/utils';
 import Pins from '../common/Pins';
 import UserHomeDetails from './UserHomeDetails';
@@ -22,7 +22,8 @@ class UserHome extends React.Component {
       permissionDenied: false,
       user: {},
       pins: [],
-      tab: this.getDefaultTabIndex()
+      tab: this.getDefaultTabIndex(),
+      apiToken: null,
     }
   }
 
@@ -67,6 +68,7 @@ class UserHome extends React.Component {
   componentDidMount() {
     this.refreshDataByURL()
     this.getUserPins()
+    this.fetchAPIToken()
   }
 
   componentDidUpdate(prevProps) {
@@ -75,7 +77,18 @@ class UserHome extends React.Component {
       this.refreshDataByURL()
       this.getUserPins()
       this.onTabChange(null, this.getDefaultTabIndex())
+      this.fetchAPIToken()
     }
+  }
+
+  fetchAPIToken = () => {
+    const canAccess = this.getUsername() === getCurrentUserUsername()
+    if(isSSOEnabled() && canAccess && !this.state.apiToken)
+      APIService.users().appendToUrl('api-token/').get().then(response => this.setState({apiToken: response?.data?.token}))
+    else if (canAccess)
+      this.setState({apiToken: currentUserToken()})
+    else
+      this.setState({apiToken: null})
   }
 
   refreshDataByURL() {
@@ -137,7 +150,7 @@ class UserHome extends React.Component {
   }
 
   render() {
-    const { user, pins, notFound, accessDenied, permissionDenied } = this.state;
+    const { user, pins, notFound, accessDenied, permissionDenied, apiToken } = this.state;
     const canActOnPins = this.canActOnPins()
     const hasError = notFound || accessDenied || permissionDenied;
     return (
@@ -149,7 +162,7 @@ class UserHome extends React.Component {
           !hasError && !isEmpty(user) &&
             <div className="col-xs-12">
               <div className="col-xs-2 no-side-padding" style={{width: '15%'}}>
-                <UserHomeDetails user={user} />
+                <UserHomeDetails user={user} apiToken={apiToken} />
               </div>
               <div className='col-xs-10 no-side-padding' style={{width: '85%'}}>
                 <Pins

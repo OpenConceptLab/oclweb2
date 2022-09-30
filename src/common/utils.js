@@ -755,14 +755,17 @@ export const isSSOEnabled = () => {
   return Boolean(openIDServerURL && redirectURL && realm && oidClientID)
 }
 
-export const getLoginURL = () => {
+export const getLoginURL = returnTo => {
   const openIDServerURL = window.OIDC_SERVER_URL || process.env.OIDC_SERVER_URL
   const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const realm = window.OIDC_REALM || process.env.OIDC_REALM
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
   if(openIDServerURL && redirectURL && realm && oidClientID)
     return `${openIDServerURL}/realms/${realm}/protocol/openid-connect/auth?client_id=${oidClientID}&response_type=code id_token&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
-  return '/#/accounts/login'
+  let url = '/#/accounts/login'
+  if(returnTo)
+    url += `?returnTo=${returnTo}`
+  return url
 }
 
 
