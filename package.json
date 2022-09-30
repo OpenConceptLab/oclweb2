@@ -9,13 +9,13 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
-    "@mui/lab": "^5.0.0-alpha.93",
-    "@mui/material": "^5.9.3",
-    "@mui/styles": "^5.9.3",
-    "@mui/x-date-pickers": "^5.0.0-beta.3",
+    "@mui/lab": "^5.0.0-alpha.101",
+    "@mui/material": "^5.10.7",
+    "@mui/styles": "^5.10.7",
+    "@mui/x-date-pickers": "^5.0.3",
     "alertifyjs": "^1.13.1",
     "axios": "^0.21.4",
-    "core-js": "^3.24.1",
+    "core-js": "^3.25.3",
     "d3": "^7.6.1",
     "d3-v6-tip": "^1.0.9",
     "lodash": "^4.17.21",
@@ -43,8 +43,8 @@
     "stacktrace-js": "^2.0.2"
   },
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.HOTJAR_ID=${HOTJAR_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --env.LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL} --env.OIDC_SERVER_URL=${OIDC_SERVER_UR} --env.OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID} --env.OIDC_REALM=${OIDC_REALM} --mode ${NODE_ENV} --hot",
-    "build": "./node_modules/webpack/bin/webpack.js --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.HOTJAR_ID=${HOTJAR_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --env.LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL} --env.OIDC_SERVER_URL=${OIDC_SERVER_UR} --env.OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID} --env.OIDC_REALM=${OIDC_REALM} --mode ${NODE_ENV}",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --host 0.0.0.0 --port ${WEB_PORT} --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.HOTJAR_ID=${HOTJAR_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --env.LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL} --env.OIDC_SERVER_URL=${OIDC_SERVER_URL} --env.OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID} --env.OIDC_REALM=${OIDC_REALM} --mode ${NODE_ENV} --hot",
+    "build": "./node_modules/webpack/bin/webpack.js --progress --host 0.0.0.0 --port 443 --env.API_URL=${API_URL} --env.NODE_ENV=${NODE_ENV} --env.RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY} --env.GA_ACCOUNT_ID=${GA_ACCOUNT_ID} --env.HOTJAR_ID=${HOTJAR_ID} --env.ERRBIT_URL=${ERRBIT_URL} --env.ERRBIT_KEY=${ERRBIT_KEY} --env.LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL} --env.OIDC_SERVER_URL=${OIDC_SERVER_URL} --env.OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID} --env.OIDC_REALM=${OIDC_REALM} --mode ${NODE_ENV}",
     "eslint": "./node_modules/.bin/eslint ./src"
   },
   "devDependencies": {
