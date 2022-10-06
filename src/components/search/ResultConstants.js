@@ -92,7 +92,7 @@ export const ALL_COLUMNS = {
     {id: 'last_login', label: 'Last Login', value: 'last_login', sortable: false, formatter: formatDateTime},
   ],
   references: [
-    {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceTranslation {...reference} />},
+    {id: 'expression', label: 'Reference', value: 'expression', sortable: false, translation: true, renderer: (reference, translation) => translation ? <ReferenceTranslation {...reference} /> : <ReferenceChip {...reference} />},
     {id: 'concepts', label: 'Concepts', value: 'concepts', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'concepts/'} reference_type='concepts' last_resolved_at expression={reference.concepts} notReference /> : '-'},
     {id: 'mappings', label: 'Mappings', value: 'mappings', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'mappings/'} reference_type='mappings' last_resolved_at expression={reference.mappings} notReference /> : '-'}
   ],
