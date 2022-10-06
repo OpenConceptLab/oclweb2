@@ -159,7 +159,11 @@ class Search extends React.Component {
     let appliedFacets = {}
     const facetQuery = queryParams.get('facets') || false;
     if(facetQuery)
-      appliedFacets = JSON.parse(facetQuery)
+      try {
+        appliedFacets = JSON.parse(facetQuery)
+      } catch {
+        appliedFacets = {}
+      }
 
     const includeRetired = this.getLayoutAttrValue('includeRetired', 'bool') || (appliedFacets.retired?.false && appliedFacets.retired?.true)
     if(includeRetired) {
