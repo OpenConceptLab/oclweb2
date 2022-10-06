@@ -23,7 +23,7 @@ const ManageSourceChildButton = ({
   const toggleMenu = event => setAnchorEl(anchorEl ? null : event.currentTarget)
   const hasAccess = currentUserHasAccess();
   const isAdmin = isAdminUser()
-  const onCopyClick = () => copyURL(toFullAPIURL(encodeURI(currentURL.replace('#', ''))))
+  const onCopyClick = () => copyURL(toFullAPIURL(currentURL.replace('#', '')))
   const onClick = (event, action) => {
     setAnchorEl(null)
     action(event)

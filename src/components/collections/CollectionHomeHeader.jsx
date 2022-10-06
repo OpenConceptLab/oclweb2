@@ -181,7 +181,7 @@ const CollectionHomeHeader = ({
         onClose={() => setCollectionForm(false)}
         formComponent={
           isVersionedObject &&
-            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={collection} parentURL={versionedObjectURL} />
+            <CollectionForm edit reloadOnSuccess size='smedium' onCancel={() => setCollectionForm(false)} collection={collection} parentURL={versionedObjectURL} />
         }
       />
       {

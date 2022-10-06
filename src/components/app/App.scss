@@ -610,6 +610,10 @@ div.login-paper {
         width: 50%;
         min-width: 50%;
     }
+    &.smedium {
+        width: 35%;
+        min-width: 35%;
+    }
     &.small {
         width: 25%;
         min-width: 25%;
@@ -1165,4 +1169,12 @@ div.custom-attributes-accordion-content {
     p {
         font-size: 12px
     }
+}
+.form-text-gray {
+    color: rgba(0, 0, 0, 0.6);
+}
+.chip-label-wrapped {
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-overflow: clip;
 }

@@ -119,16 +119,18 @@ const OrgHomeTabs = props => {
         style={{zIndex: 1202}}
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
+        size='smedium'
         formComponent={
-          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={url} />
+          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} owner={org} />
         }
       />
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
+        size='smedium'
         formComponent={
-          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={url} />
+          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} owner={org} />
         }
       />
       <CommonFormDrawer

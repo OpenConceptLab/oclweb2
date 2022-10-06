@@ -15,7 +15,8 @@ import {
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
   CheckCircle as DefaultIcon, BrightnessAuto as AutoIcon,
   MenuOpen as ViewParametersIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  Functions as SummaryIcon
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
@@ -152,6 +153,17 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
     })
   }
 
+  const onComputeSummaryClick = version => {
+    APIService.new().overrideURL(version.version_url).appendToUrl('summary/').put().then(response => {
+      if(response.detail || response.error)
+        alertifyjs.error(response.detail || response.error, 5)
+      else if(response.status === 202)
+        alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of reporsitory. Please revisit in few minutes.', 10)
+      else
+        alertifyjs.error('Something went wrong.', 5)
+    })
+  }
+
   React.useEffect(() => fetchExpansionsForAllVersions(), [versions])
 
   return (
@@ -242,6 +254,14 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                           resource='collection'
                           size='small'
                         />
+                    }
+                    {
+                      version &&
+                        <Tooltip arrow title='Re-compute Summary'>
+                          <IconButton onClick={() => onComputeSummaryClick(version)} size='small'>
+                            <SummaryIcon fontSize='inherit' />
+                          </IconButton>
+                        </Tooltip>
                     }
                     <Tooltip arrow title='Explore Version'>
                       <IconButton href={`#${version.concepts_url}`} color='primary' size="small">

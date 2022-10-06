@@ -22,9 +22,12 @@ class RTEditor extends React.Component {
     const { label, placeholder } = this.props
     return (
       <React.Fragment>
-        <div className='col-md-12'>
-          <h3>{label}</h3>
-        </div>
+        {
+          label &&
+            <div className='col-md-12'>
+              <h3>{label}</h3>
+            </div>
+        }
         <div className='col-md-12 no-side-padding'>
           <ReactQuill
             theme="snow"

@@ -14,6 +14,7 @@ import {
   formatDate, formatWebsiteLink, formatDateTime
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
+import ReferenceTranslation from '../common/ReferenceTranslation';
 import OwnerChip from '../common/OwnerChip';
 import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
@@ -32,9 +33,9 @@ export const ALL_COLUMNS = {
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},
-    {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
+    {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.id}</span>},
     {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
-    {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall'},
+    {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.map_type}</span>},
     {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
   ],
@@ -91,7 +92,7 @@ export const ALL_COLUMNS = {
     {id: 'last_login', label: 'Last Login', value: 'last_login', sortable: false, formatter: formatDateTime},
   ],
   references: [
-    {id: 'expression', label: 'Reference', value: 'expression', sortable: false, renderer: reference => <ReferenceChip {...reference} />},
+    {id: 'expression', label: 'Reference', value: 'expression', sortable: false, translation: true, renderer: (reference, translation) => translation ? <ReferenceTranslation {...reference} /> : <ReferenceChip {...reference} />},
     {id: 'concepts', label: 'Concepts', value: 'concepts', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'concepts/'} reference_type='concepts' last_resolved_at expression={reference.concepts} notReference /> : '-'},
     {id: 'mappings', label: 'Mappings', value: 'mappings', sortable: false, align: 'center', renderer: reference => reference.last_resolved_at ? <ReferenceChip uri={reference.uri + 'mappings/'} reference_type='mappings' last_resolved_at expression={reference.mappings} notReference /> : '-'}
   ],

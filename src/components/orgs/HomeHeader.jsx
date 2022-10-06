@@ -123,6 +123,8 @@ const HomeHeader = ({
         alertifyjs.success('Organization delete is queued, this may take few minutes.', () => window.location.reload())
       else if(response.status === 204)
         alertifyjs.success('Organization is deleted', 3, () => window.location.reload())
+      else if(response.status === 409)
+        alertifyjs.warning('Organization delete is already in queue', 0)
       else
         alertifyjs.error('Something bad might have happened!')
     })

@@ -230,6 +230,11 @@ class ConceptContainerForm extends React.Component {
     this.setFieldValue('selected_supported_locales', items)
   }
 
+  onDefaultLocaleChange = (id, item) => {
+    this.setFieldValue(id, get(item, 'id', ''))
+    this.setFieldValue('selected_default_locale', item)
+  }
+
   setFieldValue(id, value, setObject=false) {
     const newState = {...this.state}
     set(newState, id, value)
@@ -553,7 +558,7 @@ class ConceptContainerForm extends React.Component {
                 <LocaleAutoComplete
                   id="fields.default_locale"
                   label="Default Locale"
-                  onChange={this.onAutoCompleteChange}
+                  onChange={this.onDefaultLocaleChange}
                   required
                   selected={selected_default_locale}
                   error={Boolean(fieldErrors.default_locale)}

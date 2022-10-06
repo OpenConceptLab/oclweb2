@@ -10,6 +10,7 @@ import {
   Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
+  Functions as SummaryIcon
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
@@ -96,6 +97,17 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     const message = `Are you sure you want to ${label} this ${resource} version ${version.id}?`
 
     handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, onUpdate))
+  }
+
+  const onComputeSummaryClick = version => {
+    APIService.new().overrideURL(version.version_url).appendToUrl('summary/').put().then(response => {
+      if(response.detail || response.error)
+        alertifyjs.error(response.detail || response.error, 5)
+      else if(response.status === 202)
+        alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of reporsitory. Please revisit in few minutes.', 10)
+      else
+        alertifyjs.error('Something went wrong.', 5)
+    })
   }
 
   return (
@@ -191,6 +203,14 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                                 version={version}
                                 resource={resource}
                               />
+                            }
+                            {
+                              version && !fhir &&
+                                <Tooltip arrow title='Re-compute Summary'>
+                                  <IconButton onClick={() => onComputeSummaryClick(version)} size='small'>
+                                    <SummaryIcon fontSize='inherit' />
+                                  </IconButton>
+                                </Tooltip>
                             }
                             {
                               !fhir &&

@@ -28,7 +28,7 @@ import MappingForm from '../mappings/MappingForm';
 import { OperationsContext } from '../app/LayoutContext';
 
 const Breadcrumbs = ({
-  params, selectedResource, container, isVersionedObject, versionedObjectURL, versions, onSplitViewClose,
+  params, selectedResource, container, isVersionedObject, versions, onSplitViewClose,
   isLoadingExpansions, expansions, expansion
 }) => {
   const { openOperations, menuOpen } = React.useContext(OperationsContext);
@@ -50,7 +50,9 @@ const Breadcrumbs = ({
   const parentURL = `${ownerURL}${parentType}s/${parent}/`;
   const parentVersionURL = parentVersion === 'HEAD' ? parentURL : `${parentURL}${parentVersion}/`;
   const resourceURL = `${parentVersionURL}${resourceType}s/${resource}/`
+  const resourceEncodedURL = `${parentVersionURL}${resourceType}s/${encodeURIComponent(encodeURIComponent(resource))}/`
   const resourceVersionURL = `${resourceURL}${resourceVersion}/`
+  const resourceVersionEncodedURL = `${resourceEncodedURL}${resourceVersion}/`
   const unselectedParentProps = {variant: 'outlined', style: {borderColor: GREEN, color: GREEN, boxShadow: 'none', textTransform: 'none', border: '1px solid', background: params.search ? '#f1f1f1' : WHITE}}
   const parentProps = (parentVersion === 'HEAD' && !resource) ? {} : unselectedParentProps;
   const parentVersionProps = (expansion || (resource && selectedResource)) ? {...unselectedParentProps, className: ''} : {}
@@ -67,6 +69,8 @@ const Breadcrumbs = ({
         alertifyjs.success(`${containerLabel} Delete Accepted. This may take few minutes.`)
       else if(get(response, 'status') === 400)
         alertifyjs.error(get(response, 'data.detail', `${containerLabel} Delete Failed`))
+      else if(get(response, 'status') === 409)
+        alertifyjs.error(get(response, 'data.detail', `${containerLabel} delete already in queue`))
       else
         alertifyjs.error('Something bad happened!')
     })
@@ -102,7 +106,7 @@ const Breadcrumbs = ({
   }
 
   const retire = comment => {
-    APIService.new().overrideURL(resourceURL.replace('#', '')).delete({comment: comment}).then(response => {
+    APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${startCase(resource)} Retired`, 1, () => window.location.reload())
       else
@@ -111,7 +115,7 @@ const Breadcrumbs = ({
   }
 
   const unretire = comment => {
-    APIService.new().overrideURL(resourceURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+    APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${startCase(resource)} Unretired`, 1, () => window.location.reload())
       else
@@ -128,6 +132,15 @@ const Breadcrumbs = ({
     if(openOperations)
       width += 350
     return `calc(100% - ${width}px)`
+  }
+
+  const getOwner = () => {
+    let owner = {url: container.owner_url, type: container.owner_type}
+    if(owner.type === 'User')
+      owner.username = container.owner
+    else
+      owner.id = container.owner
+    return owner
   }
 
   return (
@@ -236,7 +249,7 @@ const Breadcrumbs = ({
                         resource={resourceType}
                         instance={selectedResource}
                         isVersionedObject={Boolean(!resourceVersion)}
-                        currentURL={resourceVersion ? resourceVersionURL : resourceURL}
+                        currentURL={resourceVersion ? resourceVersionEncodedURL : resourceEncodedURL}
                         onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
                         onRetire={() => params.source ? onRetire() : null}
                         onUnretire={() => params.source ? onUnretire() : null}
@@ -264,8 +277,9 @@ const Breadcrumbs = ({
           style={{zIndex: '1202'}}
           isOpen={sourceForm}
           onClose={() => setSourceForm(false)}
+          size='smedium'
           formComponent={
-            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
+            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} owner={getOwner()} />
           }
         />
       }
@@ -275,8 +289,9 @@ const Breadcrumbs = ({
           style={{zIndex: '1202'}}
           isOpen={collectionForm}
           onClose={() => setCollectionForm(false)}
+          size='smedium'
           formComponent={
-            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} parentURL={versionedObjectURL} />
+            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} owner={getOwner()} />
           }
         />
       }

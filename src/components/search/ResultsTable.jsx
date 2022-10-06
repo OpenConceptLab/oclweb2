@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
-  CircularProgress,
+  CircularProgress, FormControlLabel, Switch
 } from '@mui/material';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -120,12 +120,12 @@ const RESOURCE_DEFINITIONS = {
   },
 }
 
-const getValue = (item, column) => {
+const getValue = (item, column, refTranslation) => {
   const value = get(item, column.value, '')
   if(get(column, 'formatter') && value)
     return column.formatter(value)
   if(get(column, 'renderer'))
-    return column.renderer(item)
+    return column.translation ? column.renderer(item, refTranslation) : column.renderer(item)
   if(isArray(value))
     return value.join(', ')
   return value
@@ -343,7 +343,7 @@ const LocalesTable = ({ locales, isDescription }) => {
 const ExpandibleRow = props => {
   const {
     item, resourceDefinition, resource, isSelected, isSelectable, onPinCreate, onPinDelete, pins,
-    showPin, columns, hapi, fhir, history, asReference, lastSelected
+    showPin, columns, hapi, fhir, history, asReference, lastSelected, refTranslation
   } = props;
   const [isFetchingMappings, setIsFetchingMappings] = React.useState(true);
   const [mappings, setMappings] = React.useState([]);
@@ -624,7 +624,7 @@ const ExpandibleRow = props => {
         {
           map(columns, column => (
             <TableCell key={column.id} align={column.align || 'left'} className={column.className}>
-              { getValue(item, column) }
+              { getValue(item, column, refTranslation) }
             </TableCell>
           ))
         }
@@ -744,6 +744,7 @@ const ResultsTable = (
   }
 ) => {
   const [details, setDetails] = React.useState(null);
+  const [refTranslation, setRefTranslation] = React.useState(true)
   const resourceDefinition = RESOURCE_DEFINITIONS[resource];
   const theadBgColor = get(resourceDefinition, 'headBgColor', BLUE);
   const theadTextColor = get(resourceDefinition, 'headTextColor', WHITE);
@@ -841,7 +842,6 @@ const ResultsTable = (
   const hasItems = Boolean(selectedCount)
   const isAllSelected = hasItems && selectedCount === get(results, 'items.length', 0)
   const isSomeSelected = hasItems && selectedCount > 0 && !isAllSelected
-
   return (
     <React.Fragment>
       <div className='col-sm-12 no-side-padding'>
@@ -918,7 +918,30 @@ const ResultsTable = (
                             </TableCell>
                           ) : (
                             <TableCell key={column.id} align={column.align || 'left'} style={{color: theadTextColor, ...theadStyles}}>
-                              {column.label}
+                              {
+                                column.translation ?
+                                  <span>
+                                    <span>{column.label}</span>
+                                    <span style={{marginLeft: '20px'}}>
+                                      <FormControlLabel
+                                        size='small'
+                                        control={
+                                          <Switch
+                                            color="default"
+                                            size='small'
+                                            checked={refTranslation}
+                                            onChange={event => setRefTranslation(event.target.checked)} />
+                                        }
+                                        label={
+                                          <span style={{fontSize: '12px', marginleft: '5px'}}>
+                                            {refTranslation ? 'Show Expression' : 'Show Translation'}
+                                          </span>
+                                        }
+                                      />
+                                    </span>
+                                  </span> :
+                                column.label
+                              }
                             </TableCell>
                           )
                         })
@@ -962,6 +985,7 @@ const ResultsTable = (
                         history={history}
                         asReference={asReference}
                         lastSelected={last(selectedList)}
+                        refTranslation={refTranslation}
                       />
                       )))
                     }

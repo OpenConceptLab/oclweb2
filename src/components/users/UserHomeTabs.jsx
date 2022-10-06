@@ -12,8 +12,8 @@ import { currentUserHasAccess } from '../../common/utils';
 import Search from '../search/Search';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import OrgForm from '../orgs/OrgForm';
-import SourceForm from '../sources/SourceForm';
 import CollectionForm from '../collections/CollectionForm';
+import SourceForm from '../sources/SourceForm';
 
 const HEIGHT = '50px'
 const ICON_STYLES = {marginRight: '10px', marginBottom: '0px'}
@@ -150,16 +150,18 @@ const UserHomeTabs = props => {
         style={{zIndex: 1202}}
         isOpen={sourceForm}
         onClose={() => setSourceForm(false)}
+        size='smedium'
         formComponent={
-          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} parentURL={user.url} />
+          <SourceForm onCancel={() => setSourceForm(false)} reloadOnSuccess={tab==0} owner={user} />
         }
       />
       <CommonFormDrawer
         style={{zIndex: 1202}}
         isOpen={collectionForm}
         onClose={() => setCollectionForm(false)}
+        size='smedium'
         formComponent={
-          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} parentURL={user.url} />
+          <CollectionForm onCancel={() => setCollectionForm(false)} reloadOnSuccess={tab==1} owner={user} />
         }
       />
       <CommonFormDrawer

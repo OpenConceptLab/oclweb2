@@ -1,5 +1,5 @@
 import React from 'react'
-import { cloneDeep, get, map, isEmpty, sortBy, filter, reject, uniqBy, findIndex, includes, has, keys, values } from 'lodash';
+import { cloneDeep, get, map, isEmpty, sortBy, filter, reject, uniqBy, includes, has, keys, values, intersectionWith } from 'lodash';
 import Comparison from '../common/Comparison'
 import APIService from '../../services/APIService';
 import { toObjectArray, toParentURI, formatDate } from '../../common/utils';
@@ -118,16 +118,8 @@ export default function ConceptsComparison() {
   const sortMappings = (state) => {
     if(!isEmpty(get(state.lhs, 'mappings')) && !isEmpty(get(state.rhs, 'mappings'))) {
       const newState = {...state};
-      if(newState.lhs.mappings.length > newState.rhs.mappings.length) {
-        newState.lhs.mappings = uniqBy([...sortBy(
-          newState.rhs.mappings, m1 => findIndex(newState.lhs.mappings, m2 => m1.id === m2.id)
-        ), ...newState.lhs.mappings], 'id')
-      } else {
-        newState.rhs.mappings = uniqBy([...sortBy(
-          newState.lhs.mappings, m1 => findIndex(newState.rhs.mappings, m2 => m1.id === m2.id)
-        ), ...newState.rhs.mappings], 'id')
-      }
-
+      newState.lhs.mappings = uniqBy([...intersectionWith(newState.lhs.mappings, newState.rhs.mappings, (m1, m2) => m1.id === m2.id), ...newState.lhs.mappings], 'id')
+      newState.rhs.mappings = uniqBy([...intersectionWith(newState.rhs.mappings, newState.lhs.mappings, (m1, m2) => m1.id === m2.id), ...newState.rhs.mappings], 'id')
       return newState
     }
   }
