@@ -50,7 +50,9 @@ const Breadcrumbs = ({
   const parentURL = `${ownerURL}${parentType}s/${parent}/`;
   const parentVersionURL = parentVersion === 'HEAD' ? parentURL : `${parentURL}${parentVersion}/`;
   const resourceURL = `${parentVersionURL}${resourceType}s/${resource}/`
+  const resourceEncodedURL = `${parentVersionURL}${resourceType}s/${encodeURIComponent(encodeURIComponent(resource))}/`
   const resourceVersionURL = `${resourceURL}${resourceVersion}/`
+  const resourceVersionEncodedURL = `${resourceEncodedURL}${resourceVersion}/`
   const unselectedParentProps = {variant: 'outlined', style: {borderColor: GREEN, color: GREEN, boxShadow: 'none', textTransform: 'none', border: '1px solid', background: params.search ? '#f1f1f1' : WHITE}}
   const parentProps = (parentVersion === 'HEAD' && !resource) ? {} : unselectedParentProps;
   const parentVersionProps = (expansion || (resource && selectedResource)) ? {...unselectedParentProps, className: ''} : {}
@@ -104,7 +106,7 @@ const Breadcrumbs = ({
   }
 
   const retire = comment => {
-    APIService.new().overrideURL(resourceURL.replace('#', '')).delete({comment: comment}).then(response => {
+    APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${startCase(resource)} Retired`, 1, () => window.location.reload())
       else
@@ -113,7 +115,7 @@ const Breadcrumbs = ({
   }
 
   const unretire = comment => {
-    APIService.new().overrideURL(resourceURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+    APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${startCase(resource)} Unretired`, 1, () => window.location.reload())
       else
@@ -247,7 +249,7 @@ const Breadcrumbs = ({
                         resource={resourceType}
                         instance={selectedResource}
                         isVersionedObject={Boolean(!resourceVersion)}
-                        currentURL={resourceVersion ? resourceVersionURL : resourceURL}
+                        currentURL={resourceVersion ? resourceVersionEncodedURL : resourceEncodedURL}
                         onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
                         onRetire={() => params.source ? onRetire() : null}
                         onUnretire={() => params.source ? onUnretire() : null}

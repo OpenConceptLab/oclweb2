@@ -33,9 +33,9 @@ export const ALL_COLUMNS = {
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},
-    {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
+    {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.id}</span>},
     {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
-    {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall'},
+    {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.map_type}</span>},
     {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
   ],

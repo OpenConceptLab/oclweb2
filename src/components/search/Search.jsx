@@ -161,7 +161,7 @@ class Search extends React.Component {
     if(facetQuery)
       appliedFacets = JSON.parse(facetQuery)
 
-    const includeRetired = this.getLayoutAttrValue('includeRetired', 'bool')
+    const includeRetired = this.getLayoutAttrValue('includeRetired', 'bool') || (appliedFacets.retired?.false && appliedFacets.retired?.true)
     if(includeRetired) {
       set(appliedFacets, 'retired.true', includeRetired)
       set(appliedFacets, 'retired.false', includeRetired)
