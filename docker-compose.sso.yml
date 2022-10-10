@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  web:
+    image: openconceptlab/oclweb2:${TAG-dev}
+    build:
+      context: .
+      target: build
+      args:
+        NODE_ENV: development
+    ports:
+      - "4000:4000"
+      - "4001:35729"
+      - "6006:6006"
+    restart: on-failure
+    volumes:
+      - .:/app:z
+    environment:
+      - LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL-http://localhost:4000}
+      - OIDC_SERVER_URL=${OIDC_SERVER_URL-http://localhost:8080}
+      - OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID-ocllocal}
+      - OIDC_REALM=${OIDC_REALM-ocl}
