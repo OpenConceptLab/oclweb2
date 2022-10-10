@@ -81,16 +81,9 @@ class ConceptHierarchyTree extends React.Component {
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
       if(this.state.hasEntries) {
         this.renderTree()
-        setTimeout(this.positionTree, 200)
       }
     })
   })
-
-  positionTree = () => {
-    const svg = document.getElementById('hierarchy-tree')
-    const box = svg.getBBox()
-    svg.viewBox.baseVal.width = box.width - box.x + 100
-  }
 
   getSourceName = (data, urlKey) => {
     if(data.target_source_name && data.target_source_owner)
@@ -139,7 +132,7 @@ class ConceptHierarchyTree extends React.Component {
   existsInOCL = node => Boolean(node.data.type === 'Concept' || (node.data.type === 'Mapping' && node.data.target_concept_url))
 
   renderTree = () => {
-    const width = this.props.width || 960;
+    const width = this.props.width || 1500;
     const fontSize = this.props.fontSize || '16';
     const dx = this.props.dx || 60;
     const data = this.state.tree
@@ -209,7 +202,7 @@ class ConceptHierarchyTree extends React.Component {
       const transition = svg
         .transition()
         .duration(duration)
-        .attr("viewBox", [-marginLeft, left.x - margin.top, width, height + 50])
+        .attr("viewBox", [-marginLeft, left.x - margin.top, width + 200, height + 50])
         .tween(
           "resize",
           window.ResizeObserver ? null : () => () => svg.dispatch("toggle")

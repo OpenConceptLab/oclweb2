@@ -7,6 +7,7 @@ import {
 import {
   InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
+  Close as CloseIcon
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map, find, compact, flatten, values } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
@@ -225,19 +226,34 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
       </Accordion>
       {
         !noAssociations && hierarchy &&
-        <Dialog fullWidth open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition} maxWidth='lg'>
+        <Dialog fullScreen open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition}>
           <DialogTitle>
-            <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
             <div className='col-xs-12 no-side-padding'>
-            <span>Associations</span>
-            <span style={{marginLeft: '20px'}}>
-              <HierarchyTreeFilters
-                filters={cascadeFilters}
-                onChange={onCascadeFilterChange}
-                onMapTypesFilterChange={onMapTypesFilterChange}
-                size='medium'
-              />
-            </span>
+              <div className='col-xs-11 no-side-padding'>
+                <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
+                <div className='col-xs-12 no-side-padding'>
+                  <span>Associations</span>
+                  <span style={{marginLeft: '20px'}}>
+                    <HierarchyTreeFilters
+                      filters={cascadeFilters}
+                      onChange={onCascadeFilterChange}
+                      onMapTypesFilterChange={onMapTypesFilterChange}
+                      size='medium'
+                    />
+                  </span>
+                </div>
+              </div>
+              <div className='col-xs-1 no-side-padding'>
+                <span style={{float: 'right'}}>
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    onClick={onHierarchyViewToggle}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </span>
+              </div>
             </div>
           </DialogTitle>
           <DialogContent>
