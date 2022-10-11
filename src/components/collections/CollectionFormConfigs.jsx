@@ -38,7 +38,7 @@ const CONFIG = {
   configuration: {
     title: 'Configuration',
     type: {
-      label: 'Select collection type',
+      label: 'Collection type',
       tooltip: 'The type of Collection that you want to create. Note that some Collection types have special meaning.',
     },
     customValidationSchema: {
