@@ -10,7 +10,7 @@ import { getSiteTitle, toParentURI } from '../../common/utils';
 
 const SITE_TITLE = getSiteTitle()
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }) => {
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf }) => {
   const conceptCodeAttr = 'target_concept_code'
   const conceptCodeName = 'target_concept_name'
   const sourceAttr = 'target_source_name';
@@ -50,7 +50,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
         mapType &&
         <TableRow hover>
           <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
-            <Tooltip title={isIndirect ? 'Inverse Mappings' : 'Direct Mappings'}>
+            <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
               <Chip
                 size='small'
                 variant='outlined'
@@ -59,6 +59,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
                   <span>
                     <span>{mapType}</span>
                     {isIndirect && <sup>-1</sup>}
+                    {isSelf && <sup>∞</sup>}
                   </span>
                 }
                 style={{border: 'none'}}
