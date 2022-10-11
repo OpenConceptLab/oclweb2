@@ -38,7 +38,7 @@ const groupMappings = (orderedMappings, concept, mappings, forward) => {
       if(!mapType)
         mapType = forward ? 'children' : 'parent'
       orderedMappings[mapType] = orderedMappings[mapType] || {order: null, direct: [], indirect: [], unknown: [], hierarchy: [], reverseHierarchy: [], self: []}
-      const isSelfMapping = isMapping && concept.url === resource.target_concept_url
+      const isSelfMapping = isMapping && dropVersion(concept.url) === dropVersion(resource.target_concept_url)
       let _resource = isMapping ? {...resource, isSelf: isSelfMapping, target_concept_name: resource.target_concept_name || get(find(mappings, m => dropVersion(m.url) === dropVersion(resource.target_concept_url)), 'display_name')} : {...resource, target_concept_name: resource.display_name}
       if(isSelfMapping) {
         if(!map(orderedMappings[mapType].self, 'id').includes(resource.id))
