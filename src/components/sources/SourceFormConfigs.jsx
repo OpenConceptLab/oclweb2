@@ -38,7 +38,7 @@ const CONFIG = {
   configuration: {
     title: 'Configuration',
     type: {
-      label: 'Select source type',
+      label: 'Source type',
       tooltip: 'The type of Source that you want to create. Note that some Source types have special meaning.',
     },
     customValidationSchema: {
