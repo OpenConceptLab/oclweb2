@@ -99,7 +99,7 @@ const ResourceIDAssignmentSettings = props => {
         </div>
         {
           value === 'sequential' &&
-            <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px'}}>
+            <div className='col-xs-12 flex-vertical-center' style={{marginTop: '15px'}}>
               <TextField
                 style={{width: '50%'}}
                 size='small'
@@ -107,7 +107,7 @@ const ResourceIDAssignmentSettings = props => {
                 onChange={event => onChange(startFromID, event.target.value || '', startFromSetter)}
                 type='number'
                 label={startFromConfig.label}
-                inputProps={{min: 1}}
+                inputProps={{min: 1, step: 1}}
                 disabled={props.edit}
               />
               <FormTooltip title={startFromConfig.tooltip} style={{marginLeft: '10px'}} />
