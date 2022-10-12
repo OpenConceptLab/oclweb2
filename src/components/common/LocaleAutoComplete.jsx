@@ -3,7 +3,7 @@ import { TextField, Box, Divider, Autocomplete } from '@mui/material';
 import { get, isEmpty, find, uniqBy } from 'lodash'
 import { fetchLocales } from '../../common/utils';
 
-const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, ...rest }) => {
+const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, placeholder, ...rest }) => {
   const [locales, setLocales] = React.useState(cachedLocales || [])
   const _fullWidth = !(fullWidth === false)
 
@@ -64,6 +64,7 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
             size={size || 'medium'}
             required={required}
             label={label}
+            placeholder={placeholder}
             error={error}
             variant="outlined"
             fullWidth={_fullWidth}

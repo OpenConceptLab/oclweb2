@@ -60,6 +60,7 @@ const LanguageForm = props => {
         <LocaleAutoComplete
           cachedLocales={locales}
           label={configs.defaultLanguage.label}
+          placeholder={configs.defaultLanguage.placeholder}
           size='small'
           required
           value={defaultLocale}
@@ -76,6 +77,7 @@ const LanguageForm = props => {
                 multiple
                 filterSelectedOptions
                 label={configs.supportedLanguages.label}
+                placeholder={configs.supportedLanguages.placeholder}
                 size='small'
                 value={supportedLocales}
                 onChange={(id, items) => onChange('supported_locales', items, setSupportedLocales, map(items, 'id').join(','))}

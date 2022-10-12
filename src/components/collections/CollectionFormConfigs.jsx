@@ -32,6 +32,7 @@ const CONFIG = {
     },
     supportedLanguages: {
       label: 'Supported Languages',
+      placeholder: 'Choose Supported languages',
       tooltip: 'Other languages that may be used in your Collection.',
     },
   },
@@ -39,6 +40,7 @@ const CONFIG = {
     title: 'Configuration',
     type: {
       label: 'Collection type',
+      placeholder: 'Select collection type',
       tooltip: 'The type of Collection that you want to create. Note that some Collection types have special meaning.',
     },
     customValidationSchema: {

@@ -118,6 +118,7 @@ const ConfigurationForm = props => {
                             {...params}
                             required
                             label={configs.type.label}
+                            placeholder={configs.type.placeholder}
                             variant="outlined"
                             fullWidth
                           />
