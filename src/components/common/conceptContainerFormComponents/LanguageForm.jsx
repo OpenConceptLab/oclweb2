@@ -6,7 +6,7 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
-import { get, map, find, filter, includes, forEach, compact, flatten, uniqBy } from 'lodash';
+import { get, map, find, filter, includes, forEach, compact, flatten, uniqBy, without } from 'lodash';
 import FormTooltip from '../../common/FormTooltip';
 import LocaleAutoComplete from '../../common/LocaleAutoComplete'
 
@@ -34,7 +34,8 @@ const LanguageForm = props => {
         setDefaultLocale(find(__locales, {id: props.repo.default_locale}))
         if(props.repo.supported_locales) {
           setShowSupportedLocales(true)
-          setSupportedLocales(uniqBy(filter(__locales, _locale => includes(props.repo.supported_locales, _locale.id)), 'id'))
+          const _supportedLocales = without(props.repo.supported_locales, props.repo.default_locale)
+          setSupportedLocales(uniqBy(filter(__locales, _locale => includes(_supportedLocales, _locale.id)), 'id'))
         }
       }
     }, true)
