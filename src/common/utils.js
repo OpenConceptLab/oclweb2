@@ -759,8 +759,9 @@ export const isSSOEnabled = () => {
   const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const realm = window.OIDC_REALM || process.env.OIDC_REALM
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  const oidClientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
 
-  return Boolean(openIDServerURL && redirectURL && realm && oidClientID)
+  return Boolean(openIDServerURL && redirectURL && realm && oidClientID && oidClientSecret)
 }
 
 export const getLoginURL = returnTo => {

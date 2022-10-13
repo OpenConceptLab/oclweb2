@@ -20,7 +20,10 @@ class OIDLoginCallback extends React.Component {
     if(code) {
       /*eslint no-undef: 0*/
       const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
-      APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL}).then(res => {
+      const clientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
+      const clientId = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+
+      APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, client_secret: clientSecret}).then(res => {
         if(res.data?.access_token) {
           localStorage.removeItem('server_configs')
           localStorage.setItem('token', res.data.access_token)
