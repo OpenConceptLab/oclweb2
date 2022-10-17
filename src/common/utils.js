@@ -768,7 +768,7 @@ export const getLoginURL = returnTo => {
   const realm = window.OIDC_REALM || process.env.OIDC_REALM
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
   if(redirectURL && realm && oidClientID)
-    return `${getAPIURL()}/users/login/?client_id=${oidClientID}&response_type=code id_token&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
+    return `${getAPIURL()}/users/login/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
   let url = '/#/accounts/login'
   if(returnTo)
     url += `?returnTo=${returnTo}`
