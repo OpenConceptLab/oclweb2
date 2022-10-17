@@ -35,9 +35,6 @@ fi
 if [[ ! -z "${OIDC_RP_CLIENT_SECRET}" ]]; then
     echo "var OIDC_RP_CLIENT_SECRET = \"${OIDC_RP_CLIENT_SECRET}\";" >> ${ENV_FILE}
 fi
-if [[ ! -z "${OIDC_REALM}" ]]; then
-    echo "var OIDC_REALM = \"${OIDC_REALM}\";" >> ${ENV_FILE}
-fi
 
 echo "Adjusting nginx configuration"
 envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf

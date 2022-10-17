@@ -19,4 +19,3 @@ services:
       - LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL-http://localhost:4000}
       - OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID-ocllocal}
       - OIDC_RP_CLIENT_SECRET
-      - OIDC_REALM=${OIDC_REALM-ocl}
