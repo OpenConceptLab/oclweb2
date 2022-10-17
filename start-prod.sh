@@ -29,9 +29,6 @@ fi
 if [[ ! -z "${LOGIN_REDIRECT_URL}" ]]; then
     echo "var LOGIN_REDIRECT_URL = \"${LOGIN_REDIRECT_URL}\";" >> ${ENV_FILE}
 fi
-if [[ ! -z "${OIDC_SERVER_URL}" ]]; then
-    echo "var OIDC_SERVER_URL = \"${OIDC_SERVER_URL}\";" >> ${ENV_FILE}
-fi
 if [[ ! -z "${OIDC_RP_CLIENT_ID}" ]]; then
     echo "var OIDC_RP_CLIENT_ID = \"${OIDC_RP_CLIENT_ID}\";" >> ${ENV_FILE}
 fi
