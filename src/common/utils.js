@@ -421,8 +421,8 @@ export const getAppliedServerConfig = () => {
 }
 
 export const isServerSwitched = () => {
-  const selectedConfig = getSelectedServerConfig();
-  return selectedConfig && selectedConfig.url !== (window.API_URL || process.env.API_URL);
+  const selectedServer = getSelectedServerConfig()
+  return selectedServer && selectedServer.id !== getDefaultServerConfig()?.id;
 };
 
 export const getDefaultServerConfig = () => {
@@ -513,7 +513,7 @@ export const getServerConfigsForCurrentUser = () => {
   }
 
   eligible = compact([defaultConfig, appliedConfig, ...eligible]);
-  return uniqBy(eligible, 'url');
+  return uniqBy(eligible, 'id');
 }
 
 export const arrayToSentence = (arr, separator, lastSeparator=' and ') => {
