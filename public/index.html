@@ -31,6 +31,12 @@
      if(window.location.pathname.startsWith('/search')) {
        window.location = '/#/search/' + window.location.search;
      }
+     if(window.location.hash.startsWith('#/state=')) {
+       window.location = '/#/oidc/login/' + window.location.hash.replace('#/', '?');
+     }
+     if(window.location.hash.startsWith('#state=')) {
+       window.location = '/#/oidc/login/' + window.location.hash.replace('#', '?');
+     }
     </script>
     <title></title>
   </head>

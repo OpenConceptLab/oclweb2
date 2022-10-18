@@ -36,6 +36,7 @@ import './App.scss';
 import { hotjar } from 'react-hotjar';
 import { OperationsContext } from './LayoutContext';
 import DeprecatedBrowser from './DeprecatedBrowser';
+import OIDLoginCallback from '../users/OIDLoginCallback';
 
 
 const SITE_TITLE = getSiteTitle()
@@ -112,11 +113,11 @@ const App = props => {
       <Header {...props} onOpen={setMenuOpen} />
       <ErrorBoundary>
         {
-          openOperations &&
-            <OperationsDrawer />
+          openOperations && <OperationsDrawer />
         }
         <main className={getClasses()}>
           <Switch>
+            <Route exact path="/oidc/login" component={OIDLoginCallback} />
             <Route exact path="/" component={isFHIR ? Fhir : RootView} />
             <Route path="/search" component={isFHIR ? Fhir : Search} />
             <AuthenticationRequiredRoute path="/imports" component={ImportHome} />

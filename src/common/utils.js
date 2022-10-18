@@ -628,18 +628,31 @@ export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title
 export const getRandomColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`;
 
 export const logoutUser = (alert = true, redirectToLogin) => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  localStorage.removeItem('visits');
-  if(alert)
-    alertifyjs.success('You have signed out.');
-
-  if(redirectToLogin)
-    window.location.hash = '#/accounts/login';
-  else {
-    window.location.hash = '#/';
-    window.location.reload();
+  const clearTokens = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('visits');
   }
+  const callback = () => {
+    clearTokens()
+    if(alert)
+      alertifyjs.success('You have signed out.');
+
+    if(redirectToLogin)
+      window.location.hash = '#/accounts/login';
+    else {
+      window.location.hash = '#/';
+      window.location.reload();
+    }
+  }
+  const logoutURL = getSSOLogoutURL()
+  if(logoutURL) {
+    clearTokens()
+    window.location = logoutURL
+  }
+  else
+    callback()
 }
 
 export const paramsToParentURI = (params, versioned=false) => {
@@ -740,3 +753,29 @@ export const isChrome = () => !!window.chrome && (!!window.chrome.webstore || !!
 export const isOpera = () => (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 
 export const isDeprecatedBrowser = () => isIE() || isOpera();
+
+export const isSSOEnabled = () => {
+  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  const oidClientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
+
+  return Boolean(redirectURL && oidClientID && oidClientSecret)
+}
+
+export const getLoginURL = returnTo => {
+  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  if(isSSOEnabled())
+    return `${getAPIURL()}/users/login/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
+  let url = '/#/accounts/login'
+  if(returnTo)
+    url += `?returnTo=${returnTo}`
+  return url
+}
+
+export const getSSOLogoutURL = () => {
+  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const idToken = localStorage.id_token
+  if(redirectURL && idToken)
+    return `${getAPIURL()}/users/logout/?&post_logout_redirect_uri=${redirectURL}&id_token_hint=${idToken}`
+}

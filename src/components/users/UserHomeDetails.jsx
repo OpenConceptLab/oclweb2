@@ -18,14 +18,14 @@ import {
 import { includes, startCase, get, merge, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  formatDate, currentUserToken, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser, isSuperuser
+  formatDate, formatWebsiteLink, copyToClipboard, getCurrentUserUsername, isAdminUser, isSuperuser, isSSOEnabled
 } from '../../common/utils';
 import HeaderLogo from '../common/HeaderLogo';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import UserForm from './UserForm';
 import UserManagement from './UserManagement';
 
-const UserHomeDetails = ({ user, isLoading }) => {
+const UserHomeDetails = ({ user, isLoading, apiToken }) => {
   const [logoURL, setLogoURL] = React.useState(user.logo_url)
   const [uploading, setUploading] = React.useState(false);
   const [editForm, setEditForm] = React.useState(false);
@@ -59,7 +59,6 @@ const UserHomeDetails = ({ user, isLoading }) => {
   }
 
   const currentUserUsername = getCurrentUserUsername()
-  const token = currentUserToken();
   const isSameAsCurrentUser = user.username === currentUserUsername;
   const isSelectedUserSuperuser = user.is_superuser
   const isAdmin = isAdminUser()
@@ -188,13 +187,13 @@ const UserHomeDetails = ({ user, isLoading }) => {
             </Tooltip>
           </div>
           {
-            token && isSameAsCurrentUser &&
+            apiToken &&
               <React.Fragment>
                 <Divider style={{width: '100%', margin: '5px 0'}} />
                 <p>
                   <strong>API Token</strong>
                   <Tooltip arrow title="Click to copy Token" placement='right'>
-                    <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(token, 'Token copied to clipboard!')}>
+                    <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(apiToken, 'Token copied to clipboard!')}>
                       <CopyIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -202,7 +201,7 @@ const UserHomeDetails = ({ user, isLoading }) => {
               </React.Fragment>
           }
           {
-            isSuperuser() && !isSameAsCurrentUser && !isEmpty(user) && !isSelectedUserSuperuser &&
+            isSuperuser() && !isSameAsCurrentUser && !isEmpty(user) && !isSelectedUserSuperuser && !isSSOEnabled() &&
               <React.Fragment>
                 <Divider style={{width: '100%', margin: '5px 0'}} />
                 <UserManagement user={user} />

@@ -26,6 +26,15 @@ fi
 if [[ ! -z "${HOTJAR_ID}" ]]; then
     echo "var HOTJAR_ID = \"${HOTJAR_ID}\";" >> ${ENV_FILE}
 fi
+if [[ ! -z "${LOGIN_REDIRECT_URL}" ]]; then
+    echo "var LOGIN_REDIRECT_URL = \"${LOGIN_REDIRECT_URL}\";" >> ${ENV_FILE}
+fi
+if [[ ! -z "${OIDC_RP_CLIENT_ID}" ]]; then
+    echo "var OIDC_RP_CLIENT_ID = \"${OIDC_RP_CLIENT_ID}\";" >> ${ENV_FILE}
+fi
+if [[ ! -z "${OIDC_RP_CLIENT_SECRET}" ]]; then
+    echo "var OIDC_RP_CLIENT_SECRET = \"${OIDC_RP_CLIENT_SECRET}\";" >> ${ENV_FILE}
+fi
 
 echo "Adjusting nginx configuration"
 envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf

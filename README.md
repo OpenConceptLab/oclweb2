@@ -5,6 +5,10 @@ Overhauled OCL Web Authoring Interface v2
 1. docker-compose up -d
 2. Visit http://localhost:4000
 
+### Run Dev with KeyCloak (SSO)
+1. docker-compose -f docker-compose.yml -f docker-compose.sso.yml up -d
+2. Visit http://localhost:4000
+
 ### Run Production (do check CORS origin policy with API_URL)
 1. docker-compose -f docker-compose.yml up -d
 2. Visit http://localhost:4000
