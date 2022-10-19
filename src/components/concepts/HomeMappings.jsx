@@ -60,6 +60,7 @@ const DEFAULT_CASCADE_FILTERS = {
   cascadeHierarchy: true,
   cascadeMappings: true,
   reverse: false,
+  returnMapTypes: '*',
 }
 
 const Transition = React.forwardRef(function Transition(props, ref) {
