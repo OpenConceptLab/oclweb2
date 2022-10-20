@@ -6,9 +6,9 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
-import { get, map, find, filter, includes, forEach, compact, flatten, uniqBy, without } from 'lodash';
-import FormTooltip from '../../common/FormTooltip';
-import LocaleAutoComplete from '../../common/LocaleAutoComplete'
+import { get, map, find, filter, includes, forEach, compact, flatten, uniqBy, without, uniq } from 'lodash';
+import FormTooltip from '../FormTooltip';
+import LocaleAutoComplete from '../LocaleAutoComplete'
 
 const LanguageForm = props => {
   const [locales, setLocales] = React.useState([])
@@ -26,12 +26,12 @@ const LanguageForm = props => {
       if(props.edit) {
         forEach(compact(flatten(compact([props.repo.default_locale, props.repo.supported_locales]))), _locale => {
           if(!find(_locales, {id: _locale}))
-            __locales.push({id: _locale, displayName: _locale, name: _locale})
+            __locales.push({id: _locale, name: _locale})
         })
       }
       setLocales(__locales)
       if(props.edit) {
-        setDefaultLocale(find(__locales, {id: props.repo.default_locale}))
+        setDefaultLocale(compact([find(__locales, {id: props.repo.default_locale})]))
         if(props.repo.supported_locales) {
           setShowSupportedLocales(true)
           const _supportedLocales = without(props.repo.supported_locales, props.repo.default_locale)
@@ -63,8 +63,11 @@ const LanguageForm = props => {
           placeholder={configs.defaultLanguage.placeholder}
           size='small'
           required
-          value={defaultLocale}
-          onChange={(id, item) => onChange('default_locale', item, setDefaultLocale, get(item, 'id'))}
+          value={compact(defaultLocale)}
+          onChange={(id, items) => onChange('default_locale', items, setDefaultLocale, map(items, 'id').join(','))}
+          custom
+          multiple
+          limit={1}
         />
         <FormTooltip title={configs.defaultLanguage.tooltip} style={{marginLeft: '10px'}} />
       </div>
@@ -79,8 +82,9 @@ const LanguageForm = props => {
                 label={configs.supportedLanguages.label}
                 placeholder={configs.supportedLanguages.placeholder}
                 size='small'
-                value={supportedLocales}
-                onChange={(id, items) => onChange('supported_locales', items, setSupportedLocales, map(items, 'id').join(','))}
+                value={compact(supportedLocales)}
+                onChange={(id, items) => onChange('supported_locales', items, setSupportedLocales, uniq(map(items, 'id')).join(','))}
+                custom
               />
               <FormTooltip title={configs.supportedLanguages.tooltip} style={{marginLeft: '10px'}} />
             </div> :

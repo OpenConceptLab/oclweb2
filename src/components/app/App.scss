@@ -1178,3 +1178,10 @@ div.custom-attributes-accordion-content {
     white-space: normal;
     text-overflow: clip;
 }
+
+.invalid-locale-chip {
+    color: $blue;
+    svg {
+        color: $blue !important;
+    }
+}

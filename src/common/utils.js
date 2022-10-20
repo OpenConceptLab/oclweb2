@@ -226,10 +226,10 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 export const fetchLocales = (callback, includeRawName=false) => {
   APIService.locales().get(null, null, {verbose: true}).then(response => {
     const mapper = locale => {
-      let data = {id: locale.id, name: `${locale.display_name} [${locale.id}]`, uuid: locale.uuid}
+      let data = {id: locale.id, name: locale.display_name, uuid: locale.uuid, locale: locale.locale}
       if(includeRawName) {
         data.name = locale.display_name
-        data.displayName = `${locale.display_name} [${locale.id}]`
+        data.displayName = locale.display_name
       }
       return data
     }
