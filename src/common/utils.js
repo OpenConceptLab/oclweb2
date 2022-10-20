@@ -224,7 +224,7 @@ const handleLookupValuesResponse = (data, callback, attr) => {
 }
 
 export const fetchLocales = (callback, includeRawName=false) => {
-  APIService.orgs('OCL').sources('Locales').appendToUrl('concepts/lookup/').get(null, null, {verbose: true}).then(response => {
+  APIService.locales().get(null, null, {verbose: true}).then(response => {
     const mapper = locale => {
       let data = {id: locale.id, name: `${locale.display_name} [${locale.id}]`, uuid: locale.uuid}
       if(includeRawName) {
