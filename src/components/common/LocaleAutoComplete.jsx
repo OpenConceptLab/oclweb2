@@ -69,7 +69,7 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
   }
 
   const getOptionLabel = option => {
-    if(option.displayName) {
+    if(option?.displayName) {
       let label = option.locale
       const name = option.displayName || option.name
       const suffix = option.id.length > 3 ? option.id : ''
@@ -80,12 +80,12 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
 
       return label
     } else
-      return option.name || option.id
+      return option?.name || option?.id || ''
   }
 
   const isValidOption = option => Boolean(option.displayName)
 
-  const _value = selected || value || []
+  const _value = selected || value || (multiple ? [] : '')
   const isLimitReached = limit && Boolean(multiple) && _value.length === limit
 
   const onCustomAdd = newValues => {
@@ -124,10 +124,10 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
             <React.Fragment key={option.id + option.name}>
               <Box component='li' {...props}>
                 <span style={{width: '100%', display: 'flex'}}>
-                  <span style={{minWidth: '10%'}} className='form-text-gray'>
+                  <span style={{minWidth: '10%', marginRight: '10px'}} className='form-text-gray'>
                     {option.locale}
                   </span>
-                  <span style={{minWidth: suffix ? '80%' : '90%'}}>
+                  <span style={{minWidth: suffix ? '75%' : '85%'}}>
                     {option.name}
                   </span>
                   {
