@@ -25,7 +25,7 @@ class APIService {
     else this.URL = `${apiURL}/${name}/`;
     this.headers = {
       'Content-Type': 'application/json',
-      Accept: 'application/json'
+      Accept: '*/*'
     };
 
     if (id) {
