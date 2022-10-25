@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert, TextField, Box, Divider, Autocomplete, Dialog, DialogContent, DialogActions, DialogTitle, Button, Chip, Tooltip } from '@mui/material';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import { Add as AddIcon } from '@mui/icons-material';
 import { get, isEmpty, find, uniqBy, compact, map } from 'lodash'
 import { fetchLocales, getSiteTitle } from '../../common/utils';
@@ -42,7 +43,7 @@ const CustomLocaleDialog = ({ open, onClose, onSave }) => {
   )
 }
 
-const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, placeholder, custom, limit, disabled, value, ...rest }) => {
+const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, placeholder, custom, limit, disabled, value, optionsLimit, ...rest }) => {
   const [locales, setLocales] = React.useState(cachedLocales || [])
   const _fullWidth = !(fullWidth === false)
   const [input, setInput] = React.useState('')
@@ -102,10 +103,34 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
     )
   }
 
+  const defaultFilterOptions = createFilterOptions();
+  const filterOptions = (options, state) => {
+    let result = defaultFilterOptions(options, state)
+    if(optionsLimit) {
+      let _limit = optionsLimit
+      if(custom)
+        _limit += 1
+
+      result = result.slice(0, _limit)
+
+      if(custom)
+        result.push({id: 'custom', name: 'Add custom code'})
+    }
+    return result
+  };
+
+  const onCustomAddOptionClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setCustomDialog(true)
+  }
+
+
   return (
     <React.Fragment>
       <Autocomplete
         openOnFocus
+        filterOptions={filterOptions}
         fullWidth={_fullWidth}
         blurOnSelect={!multiple}
         disableCloseOnSelect={Boolean(multiple)}
@@ -119,24 +144,34 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
         getOptionLabel={getOptionLabel}
         onChange={(event, item) => onChange(id || 'localesAutoComplete', item)}
         renderOption={(props, option) => {
-          const suffix = option.id.length > 3 ? option.id : false
+          const isCustom = option.id === 'custom'
+          const suffix = (option.id.length > 3 && !isCustom) ? option.id : false
           return (
             <React.Fragment key={option.id + option.name}>
               <Box component='li' {...props}>
-                <span style={{width: '100%', display: 'flex'}}>
-                  <span style={{minWidth: '10%', marginRight: '10px'}} className='form-text-gray'>
-                    {option.locale}
-                  </span>
-                  <span style={{minWidth: suffix ? '75%' : '85%'}}>
-                    {option.name}
-                  </span>
-                  {
-                    suffix &&
-                      <span style={{minWidth: '10%'}} className='form-text-gray'>
-                        {suffix}
+                {
+                  isCustom ?
+                    <span className='flex-vertical-center' style={{cursor: 'pointer'}} onClick={onCustomAddOptionClick}>
+                      <AddIcon fontSize='small' style={{marginRight: '5px'}}/>
+                      <span>
+                        Add custom code
                       </span>
-                  }
-                </span>
+                    </span> :
+                  <span style={{width: '100%', display: 'flex'}}>
+                    <span style={{minWidth: '10%', marginRight: '10px'}} className='form-text-gray'>
+                      {option.locale}
+                    </span>
+                    <span style={{minWidth: suffix ? '75%' : '85%'}}>
+                      {option.name}
+                    </span>
+                    {
+                      suffix &&
+                        <span style={{minWidth: '10%'}} className='form-text-gray'>
+                          {suffix}
+                        </span>
+                    }
+                  </span>
+                }
               </Box>
               <Divider style={{width: '100%'}}/>
             </React.Fragment>
@@ -165,14 +200,6 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
               }}
             />
           )
-        }
-        noOptionsText={
-          custom ?
-            <span className='flex-vertical-center' style={{cursor: 'pointer'}} onClick={() => setCustomDialog(true)}>
-              <AddIcon fontSize='small' style={{marginRight: '5px'}}/>
-              <span>{`Add "${input}" as custom language code...`}</span>
-            </span> :
-          'No options'
         }
         renderTags={(tagValue, getTagProps) =>
           tagValue.map((option, index) => {

@@ -6,7 +6,7 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { fetchLocales } from '../../../common/utils';
-import { get, map, find, filter, includes, forEach, compact, flatten, uniqBy, without, uniq } from 'lodash';
+import { map, find, filter, includes, forEach, compact, flatten, uniqBy, without, uniq } from 'lodash';
 import FormTooltip from '../FormTooltip';
 import LocaleAutoComplete from '../LocaleAutoComplete'
 
@@ -68,6 +68,7 @@ const LanguageForm = props => {
           custom
           multiple
           limit={1}
+          optionsLimit={6}
         />
         <FormTooltip title={configs.defaultLanguage.tooltip} style={{marginLeft: '10px'}} />
       </div>
@@ -85,6 +86,7 @@ const LanguageForm = props => {
                 value={compact(supportedLocales)}
                 onChange={(id, items) => onChange('supported_locales', items, setSupportedLocales, uniq(map(items, 'id')).join(','))}
                 custom
+                optionsLimit={6}
               />
               <FormTooltip title={configs.supportedLanguages.tooltip} style={{marginLeft: '10px'}} />
             </div> :
