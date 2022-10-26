@@ -11,7 +11,7 @@ const CollapsibleDivider = ({open, tooltip, onClick, light, width, style}) => {
   return (
     <div onClick={onClick} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={merge({justifyContent: 'center', cursor: 'pointer'}, style || {})}>
       <Divider style={{width: _width, backgroundColor: open ? expandColor : LIGHT_GRAY}} />
-      <Tooltip title={tooltip || (open ? 'Collapse' : 'Exapnd')} arrow>
+      <Tooltip title={tooltip || (open ? 'Collapse' : 'Expand')} arrow>
         <IconButton onClick={onClick} color={open ? 'secondary' : 'default'} size='small' style={{border: '1px solid', borderColor: open ? expandColor : LIGHT_GRAY}}>
           {open ? <UpIcon fontSize='inherit' /> : <DownIcon fontSize='inherit' />}
         </IconButton>

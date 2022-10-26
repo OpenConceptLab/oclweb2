@@ -63,11 +63,11 @@ const HomeHeader = ({
   const showControls = !isExpandedHeader || has(config, 'config.header.controls') ? config.config.header.controls : true;
   const showAttributes = has(config, 'config.header.attributes') ? config.config.header.attributes : true
   const showSignatures = has(config, 'config.header.signatures') ? config.config.header.signatures : true;
-  const customTitle = get(config, 'config.header.forground.title')
-  const customDescription = get(config, 'config.header.forground.description')
-  const forgroundTextColor = isExpandedHeader ? get(config, 'config.header.forground.color') : get(config, 'config.header.shrunkHeader.forground.color')
-  const customTitleColor = isExpandedHeader ? (get(config, 'config.header.forground.titleColor') || forgroundTextColor) : get(config, 'config.header.shrunkHeader.forground.color')
-  const customDescriptionColor = isExpandedHeader && (get(config, 'config.header.forground.descriptionColor') || forgroundTextColor)
+  const customTitle = get(config, 'config.header.foreground.title')
+  const customDescription = get(config, 'config.header.foreground.description')
+  const foregroundTextColor = isExpandedHeader ? get(config, 'config.header.foreground.color') : get(config, 'config.header.shrunkHeader.foreground.color')
+  const customTitleColor = isExpandedHeader ? (get(config, 'config.header.foreground.titleColor') || foregroundTextColor) : get(config, 'config.header.shrunkHeader.foreground.color')
+  const customDescriptionColor = isExpandedHeader && (get(config, 'config.header.foreground.descriptionColor') || foregroundTextColor)
   const hasBackgroundImage = Boolean(get(config, 'config.header.background.image'))
   const getBackgroundStyles = () => {
     const defaultStyles = {backgroundColor: HEADER_GRAY}
@@ -101,7 +101,7 @@ const HomeHeader = ({
   const getDescriptionStyles = () => {
     const style = {
       alignItems: 'start',
-      width: get(config, 'config.header.forground.descriptionWidth') || '40%'
+      width: get(config, 'config.header.foreground.descriptionWidth') || '40%'
     }
     if(customDescriptionColor)
       style['color'] = customDescriptionColor
@@ -280,7 +280,7 @@ const HomeHeader = ({
             org={org}
             url={url}
             selectedConfig={config}
-            tabColor={forgroundTextColor}
+            tabColor={foregroundTextColor}
             {...rest}
           />
         </div>

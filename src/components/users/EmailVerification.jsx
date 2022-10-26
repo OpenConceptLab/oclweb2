@@ -47,7 +47,7 @@ class EmailVerification extends React.Component {
       } else if(get(response, 'detail'))
         this.setState({failureMsg: response.detail})
       else
-        alertifyjs.error('Something bad happend')
+        alertifyjs.error('Something bad happened')
     })
   }
 

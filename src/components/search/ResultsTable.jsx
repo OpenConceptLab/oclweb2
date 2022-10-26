@@ -933,7 +933,7 @@ const ResultsTable = (
                                             onChange={event => setRefTranslation(event.target.checked)} />
                                         }
                                         label={
-                                          <span style={{fontSize: '12px', marginleft: '5px'}}>
+                                          <span style={{fontSize: '12px', marginLeft: '5px'}}>
                                             {refTranslation ? 'Show Expression' : 'Show Translation'}
                                           </span>
                                         }

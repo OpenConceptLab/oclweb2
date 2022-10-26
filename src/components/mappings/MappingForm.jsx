@@ -131,13 +131,13 @@ class MappingForm extends React.Component {
         {
           source.autoid_mapping_mnemonic === 'sequential' &&
             <React.Fragment>
-              <span>This is optional since the parent repostiory is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
+              <span>This is optional since the parent repository is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
             </React.Fragment>
         }
         {
           source.autoid_mapping_mnemonic === 'uuid' &&
             <React.Fragment>
-              <span>This is optional since the parent repostiory is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
+              <span>This is optional since the parent repository is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
             </React.Fragment>
         }
         <span>Alphanumeric characters, @, hyphens, periods, and underscores are allowed.</span>
@@ -169,11 +169,11 @@ class MappingForm extends React.Component {
         }
         {
           source.autoid_mapping_external_id === 'sequence' &&
-            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
+            <span>This is optional since the parent repository is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
         }
         {
           source.autoid_mapping_external_id === 'uuid' &&
-            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
+            <span>This is optional since the parent repository is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
         }
         {
           !source.autoid_mapping_external_id && ''

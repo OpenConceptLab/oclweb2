@@ -15,7 +15,7 @@ const None = () => {
   return <div style={{padding: '5px 15px', fontWeight: '300'}}>None</div>
 }
 
-const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) => {
+const CustomAttributesAccordion = ({headingStyles, detailStyles, attributes}) => {
   const [raw, setRaw] = React.useState(false)
   const [expanded, setExpanded] = React.useState({});
   const hasAttributes = !isEmpty(attributes)
@@ -53,7 +53,7 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   return (
     <Accordion expanded style={{borderRadius: 'unset'}}>
       <AccordionSummary
-        className='light-gray-bg less-paded-accordian-header'
+        className='light-gray-bg less-paded-accordion-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
         style={{cursor: 'inherit'}}
@@ -163,4 +163,4 @@ const CustomAttributesAccordian = ({headingStyles, detailStyles, attributes}) =>
   )
 }
 
-export default CustomAttributesAccordian;
+export default CustomAttributesAccordion;

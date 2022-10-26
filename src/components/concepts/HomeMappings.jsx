@@ -120,7 +120,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     <React.Fragment>
       <Accordion expanded style={{borderRadius: 'unset'}}>
         <AccordionSummary
-          className='light-gray-bg less-paded-accordian-header'
+          className='light-gray-bg less-paded-accordion-header'
           expandIcon={<span />}
           aria-controls="panel1a-content"
           style={{minHeight: '40px', height: '100%', cursor: 'inherit'}}

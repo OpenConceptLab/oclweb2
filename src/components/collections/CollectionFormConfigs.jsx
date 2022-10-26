@@ -115,7 +115,7 @@ const CONFIG = {
       },
       immutable: {
         label: 'Immutable',
-        tooltip: 'If this is set to ‘true’, then no new versions of the content logical definition can be created. Note: Other metadata might still change.'
+        tooltip: 'If this is set to "true", then no new versions of the content logical definition can be created. Note: Other metadata might still change.'
       },
     },
     customAttributes: {

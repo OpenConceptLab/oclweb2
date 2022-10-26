@@ -6,7 +6,7 @@ import { map } from 'lodash';
 const MappingOptions = ({ mapping }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
-  const onMenuToogle = event => {
+  const onMenuToggle = event => {
     event.preventDefault()
     event.stopPropagation()
     setOpen(!open)
@@ -39,10 +39,10 @@ const MappingOptions = ({ mapping }) => {
 
   return (
     <React.Fragment>
-      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToogle}>
+      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToggle}>
         <MenuIcon fontSize='inherit' />
       </IconButton>
-      <Menu open={open} anchorEl={anchorRef.current} onClose={onMenuToogle}>
+      <Menu open={open} anchorEl={anchorRef.current} onClose={onMenuToggle}>
         <MenuList>
           {
             map(getOptions(), (option, index) => (

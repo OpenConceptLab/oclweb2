@@ -74,7 +74,7 @@ const ORG_BACKGROUND_CONFIG = {
     backgroundColor: "",
     imageOverlay: true
   },
-  forground: {
+  foreground: {
     color: "",
     titleColor: "",
     descriptionColor: "",

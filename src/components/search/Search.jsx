@@ -376,7 +376,7 @@ class Search extends React.Component {
     }
   }
 
-  filterQueryParamsfromUserFilters = () => pickBy(
+  filterQueryParamsFromUserFilters = () => pickBy(
     this.state.userFilters, (v, k) => includes(keys(pickBy(this.props.extraControlFilters, f => !f.url)), k)
   )
 
@@ -420,7 +420,7 @@ class Search extends React.Component {
       let _resource = resource
       if(_resource === 'organizations')
         _resource = 'orgs'
-      let params = {...staticParams, ...this.filterQueryParamsfromUserFilters()}
+      let params = {...staticParams, ...this.filterQueryParamsFromUserFilters()}
       if(!noQuery)
         params = {...params, ...queryParams, ...sortParams, ...(configQueryParams || {})}
       if(fhir) {

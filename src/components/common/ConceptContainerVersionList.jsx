@@ -104,7 +104,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
       if(response.detail || response.error)
         alertifyjs.error(response.detail || response.error, 5)
       else if(response.status === 202)
-        alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of reporsitory. Please revisit in few minutes.', 10)
+        alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of repository. Please revisit in few minutes.', 10)
       else
         alertifyjs.error('Something went wrong.', 5)
     })
@@ -115,7 +115,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
       <div className='col-md-8 no-left-padding'>
         <Accordion defaultExpanded>
           <AccordionSummary
-            className='light-gray-bg less-paded-accordian-header'
+            className='light-gray-bg less-paded-accordion-header'
             expandIcon={<span />}
             aria-controls="panel1a-content"
           >

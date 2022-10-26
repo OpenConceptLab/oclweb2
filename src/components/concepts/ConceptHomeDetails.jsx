@@ -2,7 +2,7 @@ import React from 'react';
 import { get } from 'lodash';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from '../common/SourceChildCollections';
-import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
+import CustomAttributesAccordion from '../common/CustomAttributesAccordion';
 import ResourceReferences from '../common/ResourceReferences';
 import HomeLocales from './HomeLocales';
 import VersionList from '../common/VersionList';
@@ -36,7 +36,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           label='Descriptions'
           isDescription
         />
-        <CustomAttributesAccordian
+        <CustomAttributesAccordion
           attributes={concept.extras || {}}
           headingStyles={ACCORDIAN_HEADING_STYLES}
           detailStyles={ACCORDIAN_DETAILS_STYLES}

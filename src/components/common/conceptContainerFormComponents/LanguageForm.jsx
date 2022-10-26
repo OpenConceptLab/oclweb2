@@ -15,9 +15,9 @@ const LanguageForm = props => {
   const [showSupportedLocales, setShowSupportedLocales] = React.useState(false)
   const [defaultLocale, setDefaultLocale] = React.useState(null)
   const [supportedLocales, setSupportedLocales] = React.useState([])
-  const onChange = (id, value, setter, propogateValue) => {
+  const onChange = (id, value, setter, propagateValue) => {
     setter(value)
-    props.onChange({[id]: propogateValue === undefined ? value : propogateValue})
+    props.onChange({[id]: propagateValue === undefined ? value : propagateValue})
   }
   const configs = props.language
   const setUp = () => {
