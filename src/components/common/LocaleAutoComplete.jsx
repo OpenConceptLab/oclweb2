@@ -8,22 +8,40 @@ import FormTooltip from './FormTooltip';
 
 const SITE_TITLE = getSiteTitle()
 
-const CustomLocaleDialog = ({ open, onClose, onSave }) => {
+const CUSTOM_MODEL_CONFIG = {
+  multiple: {
+    title: 'Add custom language code(s)',
+    warning: 'OCL is optimized for 2-letter and 4-letter language codes (e.g. “en” or “en-GB”). Only use custom codes if absolutely necessary.',
+    label: 'Custom language code(s)',
+    helperText: 'Use a comma or space to separate multiple custom codes',
+    validation: 'Letters and “-” are allowed for language codes. Comma or space can be used to separate custom codes if applicable. No other characters e.g. numbers are accepted.',
+    tooltip: 'Language codes in OCL use the syntax “en” or “en-GB” in accordance with ISO 639-1, with an optional 2-letter country code following BCP47. OCL allows language codes in other formats, however these codes may limit certain features or be incompatible with client systems, like OpenMRS. Letters and “-” are allowed for language codes.'
+  },
+  single: {
+    title: 'Add custom language code',
+    warning: 'OCL is optimized for 2-letter and 4-letter language codes (e.g. “en” or “en-GB”). Only use custom codes if absolutely necessary.',
+    label: 'Custom language code',
+    validation: 'Letters and “-” are allowed for language code. No other characters e.g. numbers are accepted.',
+    tooltip: 'Language codes in OCL use the syntax “en” or “en-GB” in accordance with ISO 639-1, with an optional 2-letter country code following BCP47. OCL allows language codes in other formats, however these codes may limit certain features or be incompatible with client systems, like OpenMRS. Letters and “-” are allowed for language codes.'
+  }
+}
+
+const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
   const [input, setInput] = React.useState('')
+  const config = isMultiple ? CUSTOM_MODEL_CONFIG.multiple : CUSTOM_MODEL_CONFIG.single
   return (
     <Dialog open={open}>
-      <DialogTitle>Add custom language code</DialogTitle>
+      <DialogTitle>{config.title}</DialogTitle>
       <DialogContent>
         <Alert severity="warning">
-          OCL is optimized for 2-letter and 4-letter language codes (e.g. “en” or “en-GB”). Only use custom codes if absolutely necessary.
+          {config.warning}
         </Alert>
         <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '20px'}}>
           <TextField
             size='small'
             autoFocus
             margin="dense"
-            label="Custom Codes"
-            placeholder='Enter custom codes'
+            label={config.label}
             fullWidth
             variant="outlined"
             InputLabelProps={{
@@ -31,8 +49,9 @@ const CustomLocaleDialog = ({ open, onClose, onSave }) => {
             }}
             value={input}
             onChange={event => setInput(event.target.value || '')}
+            helperText={config.helperText}
           />
-          <FormTooltip title='Language codes in OCL use the syntax “en” or “en-GB” in accordance with ISO 639-1, with an optional 2-letter country code following BCP47. OCL allows language codes in other formats, however these codes may limit certain features or be incompatible with client systems, like OpenMRS. Letters and “-” are allowed for language codes.' style={{marginLeft: '10px'}} />
+          <FormTooltip title={config.tooltip} style={{marginLeft: '10px', marginTop: '-20px'}} />
         </div>
       </DialogContent>
       <DialogActions>
@@ -146,12 +165,13 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
         renderOption={(props, option) => {
           const isCustom = option.id === 'custom'
           const suffix = (option.id.length > 3 && !isCustom) ? option.id : false
+          const boxProps = isCustom ? {...props, onClick: onCustomAddOptionClick} : props
           return (
             <React.Fragment key={option.id + option.name}>
-              <Box component='li' {...props}>
+              <Box component='li' {...boxProps}>
                 {
                   isCustom ?
-                    <span className='flex-vertical-center' style={{cursor: 'pointer'}} onClick={onCustomAddOptionClick}>
+                    <span className='flex-vertical-center' style={{cursor: 'pointer'}}>
                       <AddIcon fontSize='small' style={{marginRight: '5px'}}/>
                       <span>
                         Add custom code
@@ -222,7 +242,7 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
         disabled={disabled || isLimitReached}
         {...rest}
       />
-      <CustomLocaleDialog open={customDialog} searchText={input} onClose={() => setCustomDialog(false)} onSave={onCustomAdd}/>
+      <CustomLocaleDialog isMultiple={multiple && (!limit || limit > 1) } open={customDialog} searchText={input} onClose={() => setCustomDialog(false)} onSave={onCustomAdd}/>
     </React.Fragment>
 );
 }
