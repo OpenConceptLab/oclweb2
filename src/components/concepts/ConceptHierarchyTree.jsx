@@ -294,7 +294,7 @@ class ConceptHierarchyTree extends React.Component {
         if(d.data.target_concept_code)
           name = d.data.target_concept_code
         else {
-          name = d.data.name
+          name = d.data.display_name
           if(isEmpty(d.data.children) && d.data.uuid !== d.parent.data.uuid) {
             if(d.data.terminal === false)
               name += '⁺'
