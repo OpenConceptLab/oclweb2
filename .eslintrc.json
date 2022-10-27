@@ -198,7 +198,8 @@
           "concepts’",
           "xxxx",
           "xxxxxxxx",
-          "xxxxxxxxxxxx"
+          "xxxxxxxxxxxx",
+          "forground"
         ],
         "skipIfMatch": [
           "http://[^s]*",

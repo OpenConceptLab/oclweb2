@@ -21,7 +21,7 @@ class OverviewSettings extends React.Component {
         imageOverlay: false,
         backgroundColor: ''
       },
-      foreground: {
+      forground: {
         color: '',
         title: props.org.name,
         titleColor: '',
@@ -35,7 +35,7 @@ class OverviewSettings extends React.Component {
           imageOverlay: false,
           backgroundColor: ''
         },
-        foreground: {
+        forground: {
           color: '',
         },
       }
@@ -45,7 +45,7 @@ class OverviewSettings extends React.Component {
   componentDidMount() {
     const { org } = this.props
     if(!isEmpty(org.overview)) {
-      let descriptionWidth = org.overview.foreground.descriptionWidth
+      let descriptionWidth = org.overview.forground.descriptionWidth
       let height = org.overview.height
       if(isString(descriptionWidth)) {
         descriptionWidth = parseInt(descriptionWidth.replace('%'))
@@ -53,7 +53,7 @@ class OverviewSettings extends React.Component {
       if(isString(height)) {
         height = parseInt(height.replace('px'))
       }
-      this.setState({...org.overview, height: height, foreground: {...org.overview.foreground, descriptionWidth: descriptionWidth}})
+      this.setState({...org.overview, height: height, forground: {...org.overview.forground, descriptionWidth: descriptionWidth}})
     }
   }
 
@@ -62,7 +62,7 @@ class OverviewSettings extends React.Component {
 
   formatValues = () => {
     const values = cloneDeep({...this.state})
-    values.foreground.descriptionWidth = `${values.foreground.descriptionWidth}%`
+    values.forground.descriptionWidth = `${values.forground.descriptionWidth}%`
     values.height = `${values.height}px`
     return values
   }
@@ -195,27 +195,27 @@ class OverviewSettings extends React.Component {
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
-                  'foreground.color',
+                  'forground.color',
                   'Text Color',
-                  this.state.foreground.color
+                  this.state.forground.color
                 )
               }
             </div>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
-                  'foreground.titleColor',
+                  'forground.titleColor',
                   'Title Color',
-                  this.state.foreground.titleColor
+                  this.state.forground.titleColor
                 )
               }
             </div>
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
-                  'foreground.descriptionColor',
+                  'forground.descriptionColor',
                   'Description Color',
-                  this.state.foreground.descriptionColor
+                  this.state.forground.descriptionColor
                 )
               }
             </div>
@@ -223,7 +223,7 @@ class OverviewSettings extends React.Component {
               <TextField
                 label='Description Width'
                 type='number'
-                id='foreground.descriptionWidth'
+                id='forground.descriptionWidth'
                 InputProps={{
                   inputProps: { min: 25, max: 100 },
                   endAdornment: (
@@ -232,7 +232,7 @@ class OverviewSettings extends React.Component {
                     </InputAdornment>
                   )
                 }}
-                value={this.state.foreground.descriptionWidth}
+                value={this.state.forground.descriptionWidth}
                 onChange={this.onTextFieldChange}
                 margin="dense"
                 fullWidth
@@ -272,9 +272,9 @@ class OverviewSettings extends React.Component {
             <div className='col-xs-12 no-side-padding flex-vertical-center'>
               {
                 this.getColorField(
-                  'shrunkHeader.foreground.color',
+                  'shrunkHeader.forground.color',
                   'Text Color',
-                  this.state.shrunkHeader.foreground.color
+                  this.state.shrunkHeader.forground.color
                 )
               }
             </div>
