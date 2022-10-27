@@ -580,12 +580,12 @@ const ExpandibleRow = props => {
             {
               isPublic ?
               <Tooltip arrow title='Public'>
-                <span className='flex-vertical-center'>
+                <span className='flex-vertical-center' style={{marginTop: '5px'}}>
                   <PublicIcon fontSize='small' />
                 </span>
               </Tooltip> :
               <Tooltip arrow title='Private'>
-                <span className='flex-vertical-center'>
+                <span className='flex-vertical-center' style={{marginTop: '5px'}}>
                   <PrivateIcon fontSize='small' />
                 </span>
               </Tooltip>

@@ -22,7 +22,7 @@ import ConceptDisplayName from '../concepts/ConceptDisplayName';
 
 export const ALL_COLUMNS = {
   concepts: [
-    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} />, essential: false},
+    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
     {id: 'name', label: 'Display Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
@@ -31,7 +31,7 @@ export const ALL_COLUMNS = {
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
   ],
   mappings: [
-    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} />, essential: false},
+    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.id}</span>},
     {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
@@ -40,7 +40,7 @@ export const ALL_COLUMNS = {
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
   ],
   sources: [
-    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} />, essential: false},
+    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
     {id: 'sourceType', label: 'Type', value: 'source_type', sortOn: 'source_type'},
@@ -59,7 +59,7 @@ export const ALL_COLUMNS = {
     {id: 'revision_date', label: 'Revision Date', value: 'revision_date', sortable: false, formatter: formatDate},
   ],
   collections: [
-    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} />, essential: false},
+    {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
     {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},
@@ -77,12 +77,12 @@ export const ALL_COLUMNS = {
     {id: 'revision_date', label: 'Revision Date', value: 'revision_date', sortable: false, formatter: formatDate},
   ],
   organizations: [
-    {id: 'id', label: 'ID', value: 'id', sortOn: 'mnemonic', renderer: org => <OwnerChip ownerType='Organization' owner={org.id} />},
+    {id: 'id', label: 'ID', value: 'id', sortOn: 'mnemonic', renderer: org => <OwnerChip ownerType='Organization' owner={org.id} className='owner-chip-no-border' />},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
     {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
   ],
   users: [
-    {id: 'username', label: 'Username', value: 'username', sortOn: 'username', renderer: user => <OwnerChip ownerType='user' owner={user.username} />, sortBy: 'asc'},
+    {id: 'username', label: 'Username', value: 'username', sortOn: 'username', renderer: user => <OwnerChip ownerType='user' owner={user.username} className='owner-chip-no-border' />, sortBy: 'asc'},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
     {id: 'date_joined', label: 'Joined On', value: 'date_joined', formatter: formatDate, sortOn: 'date_joined'},
     {id: 'email', label: 'Email', value: 'email', sortable: false},

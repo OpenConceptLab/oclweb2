@@ -1185,3 +1185,9 @@ div.custom-attributes-accordion-content {
         color: $blue !important;
     }
 }
+.owner-chip-no-border {
+    border: none;
+    span {
+        margin-top: 5px;
+    }
+}
