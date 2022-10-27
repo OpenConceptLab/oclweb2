@@ -29,6 +29,13 @@ const CUSTOM_MODEL_CONFIG = {
 const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
   const [input, setInput] = React.useState('')
   const config = isMultiple ? CUSTOM_MODEL_CONFIG.multiple : CUSTOM_MODEL_CONFIG.single
+  const [error, setError] = React.useState(false)
+  const onChange = event => {
+    const newValue = event.target.value || ''
+    setInput(newValue)
+    const values = newValue.trim().split(/[\s,]+/)
+    setError(Boolean(!values || (!isMultiple && values.length > 1)))
+  }
   return (
     <Dialog open={open}>
       <DialogTitle>{config.title}</DialogTitle>
@@ -48,7 +55,7 @@ const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
               shrink: true,
             }}
             value={input}
-            onChange={event => setInput(event.target.value || '')}
+            onChange={onChange}
             helperText={config.helperText}
           />
           <FormTooltip title={config.tooltip} style={{marginLeft: '10px', marginTop: '-20px'}} />
@@ -56,7 +63,7 @@ const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant='text'>Cancel</Button>
-        <Button onClick={() => onSave(input)} variant='contained'>Save</Button>
+        <Button onClick={() => onSave(input)} variant='contained' disabled={error}>Save</Button>
       </DialogActions>
     </Dialog>
   )
