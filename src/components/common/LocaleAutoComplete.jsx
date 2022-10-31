@@ -31,11 +31,18 @@ const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
   const config = isMultiple ? CUSTOM_MODEL_CONFIG.multiple : CUSTOM_MODEL_CONFIG.single
   const [error, setError] = React.useState(false)
   const onChange = event => {
+    const isValid = event.target.checkValidity()
     const newValue = event.target.value || ''
     setInput(newValue)
-    const values = newValue.trim().split(/[\s,]+/)
-    setError(Boolean(!values || (!isMultiple && values.length > 1)))
+    if(!isValid) {
+      setError(true)
+      event.target.reportValidity()
+    } else {
+      const values = newValue.trim().split(/[\s,]+/)
+      setError(Boolean(!values || (!isMultiple && values.length > 1)))
+    }
   }
+  const pattern = isMultiple ? "[a-zA-Z-, ]+" : "[a-zA-Z-]+"
   return (
     <Dialog open={open}>
       <DialogTitle>{config.title}</DialogTitle>
@@ -57,6 +64,8 @@ const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
             value={input}
             onChange={onChange}
             helperText={config.helperText}
+            inputProps={{ pattern: pattern }}
+            error={error}
           />
           <FormTooltip title={config.tooltip} style={{marginLeft: '10px', marginTop: '-20px'}} />
         </div>
