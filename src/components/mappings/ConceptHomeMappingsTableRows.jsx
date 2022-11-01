@@ -79,7 +79,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
           const cursor = targetURL ? 'pointer' : 'not-allowed'
           return (
             <TableRow
-              hover key={mapping.uuid} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
+              hover key={mapping.url} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
               <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
                 <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                   <span className='flex-vertical-center' style={{marginRight: '4px'}}>

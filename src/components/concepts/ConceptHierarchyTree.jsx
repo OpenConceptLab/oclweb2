@@ -225,7 +225,7 @@ class ConceptHierarchyTree extends React.Component {
           const sourceHeader = targetSource ? `<div><span class='gray'>Source: </span><span><b>${targetSource}</b></span></div> ` : '';
           let terminalHeader = '';
           if(!d.data.cascade_target_concept_code && isEmpty(d.data.children)) {
-            if(d.data.uuid === d.parent.data.uuid)
+            if(d.data.url === d.parent.data.url)
               terminalHeader = '<div class="gray-italics-small">(Same As Parent)</div> ';
             else if(d.data.terminal === false)
               terminalHeader = '<div class="gray-italics-small">(not terminal - cascaded elsewhere)</div> ';
@@ -295,7 +295,7 @@ class ConceptHierarchyTree extends React.Component {
             name = d.data.cascade_target_concept_code
         else {
           name = d.data.display_name
-          if(isEmpty(d.data.children) && d.data.uuid !== d.parent.data.uuid) {
+          if(isEmpty(d.data.children) && d.data.url !== d.parent.data.url) {
             if(d.data.terminal === false)
               name += '⁺'
             else if (d.data.terminal === null)
