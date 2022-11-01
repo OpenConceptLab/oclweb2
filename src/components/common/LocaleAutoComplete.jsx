@@ -13,13 +13,14 @@ const CUSTOM_MODEL_CONFIG = {
     title: 'Add custom language code(s)',
     warning: 'OCL is optimized for 2-letter and 4-letter language codes (e.g. “en” or “en-GB”). Only use custom codes if absolutely necessary.',
     label: 'Custom language code(s)',
-    helperText: 'Use a comma or space to separate multiple custom codes',
+    helperText: 'Custom language codes may only have letters and hyphens, e.g. "eng". Use a comma or space to separate multiple custom codes',
     validation: 'Letters and “-” are allowed for language codes. Comma or space can be used to separate custom codes if applicable. No other characters e.g. numbers are accepted.',
     tooltip: 'Language codes in OCL use the syntax “en” or “en-GB” in accordance with ISO 639-1, with an optional 2-letter country code following BCP47. OCL allows language codes in other formats, however these codes may limit certain features or be incompatible with client systems, like OpenMRS. Letters and “-” are allowed for language codes.'
   },
   single: {
     title: 'Add custom language code',
     warning: 'OCL is optimized for 2-letter and 4-letter language codes (e.g. “en” or “en-GB”). Only use custom codes if absolutely necessary.',
+    helperText: 'Custom language code may only have letters and hyphens, e.g. "eng".',
     label: 'Custom language code',
     validation: 'Letters and “-” are allowed for language code. No other characters e.g. numbers are accepted.',
     tooltip: 'Language codes in OCL use the syntax “en” or “en-GB” in accordance with ISO 639-1, with an optional 2-letter country code following BCP47. OCL allows language codes in other formats, however these codes may limit certain features or be incompatible with client systems, like OpenMRS. Letters and “-” are allowed for language codes.'
@@ -36,7 +37,6 @@ const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
     setInput(newValue)
     if(!isValid) {
       setError(true)
-      event.target.reportValidity()
     } else {
       const values = newValue.trim().split(/[\s,]+/)
       setError(Boolean(!values || (!isMultiple && values.length > 1)))
