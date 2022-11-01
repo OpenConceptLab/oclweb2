@@ -5,7 +5,7 @@ import {
   AccountTreeRounded as TreeIcon,
   List as ListIcon,
   Person as PersonIcon,
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   Loyalty as LoyaltyIcon,
   AspectRatio as ExpansionIcon
 } from '@mui/icons-material'

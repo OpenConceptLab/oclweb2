@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
   Delete as DeleteIcon

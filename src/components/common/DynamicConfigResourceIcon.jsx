@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from '@mui/material';
 import {
   List as SourceIcon, Loyalty as CollectionIcon, Person as UserIcon,
-  Info as InfoIcon, Home as HomeIcon, Link as MappingIcon,
+  Info as InfoIcon, AccountBalance as HomeIcon, Link as MappingIcon,
   AccountTreeRounded as VersionIcon, LocalOffer as ConceptIcon,
   Search as SearchIcon, Publish as ImportsIcon,
   CompareArrows as CompareIcon,

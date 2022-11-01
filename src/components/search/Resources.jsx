@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, Chip, CircularProgress } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon, List as ListIcon,
-  Loyalty as LoyaltyIcon, Home as HomeIcon, Person as PersonIcon,
+  Loyalty as LoyaltyIcon, AccountBalance as HomeIcon, Person as PersonIcon,
 } from '@mui/icons-material'
 import { map, get } from 'lodash';
 import { BLUE, WHITE, DARKGRAY } from '../../common/constants';

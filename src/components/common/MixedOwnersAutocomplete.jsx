@@ -1,5 +1,5 @@
 import React from 'react';
-import {Person as PersonIcon, Home as HomeIcon} from '@mui/icons-material';
+import {Person as PersonIcon, AccountBalance as HomeIcon} from '@mui/icons-material';
 import { TextField, CircularProgress } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { get, debounce, map, orderBy, isEmpty } from 'lodash'

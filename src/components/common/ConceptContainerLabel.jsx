@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Person as PersonIcon,
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
   AccountTreeRounded as TreeIcon,

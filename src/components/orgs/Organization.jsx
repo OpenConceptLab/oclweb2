@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import { Tooltip } from '@mui/material';
 import {
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   Person as PersonIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
