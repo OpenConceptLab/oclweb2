@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chip, Tooltip } from '@mui/material';
 import {
-  FilterAltOutlined as FilterIcon,
+  FilterAlt as FilterIcon,
 } from '@mui/icons-material';
 
 const FilterButton = ({tooltipTitle, label, count, disabled, onClick, size, minWidth, isOpen}) => {
