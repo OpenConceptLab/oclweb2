@@ -767,6 +767,13 @@ const ResultsTable = (
   const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
 
+  const hasZeroActiveButSomeRetiredResults = () => results?.total === 0 && Boolean(retiredResults())
+
+  const retiredResults = () => {
+    const retired = results.facets?.fields?.retired
+    return get(find(retired, info => info[0] === 'true' && info[1] > 0 && info[2] === false), '1')
+  }
+
   const onAllSelect = event => {
     const newList = event.target.checked ? map(results.items, 'uuid') : [];
     setSelectedList(newList)
@@ -1015,7 +1022,18 @@ const ResultsTable = (
               />
             </Paper>
           </div> :
-          <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
+          <div style={{padding: '2px'}}>
+            {
+              hasZeroActiveButSomeRetiredResults() ?
+                <span>
+                  We found 0 {startCase(resource)}. Would you like to view
+                  <Link to={window.location.hash.replace('#/', '/') + '&facets={"retired":{"true":true}}'} style={{marginLeft: '3px'}}>
+                    {`${retiredResults()} Retired ${startCase(resource)}?`}
+                  </Link>
+                  </span> :
+              `We found 0 ${startCase(resource)}.`
+            }
+          </div>
         }
       </div>
     </React.Fragment>
