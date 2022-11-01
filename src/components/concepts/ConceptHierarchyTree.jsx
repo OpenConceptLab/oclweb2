@@ -77,7 +77,7 @@ class ConceptHierarchyTree extends React.Component {
 
   makeInitialTree = () => this.getChildren(this.props.concept, tree => {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
-    data.target_source = this.getSourceName(data)
+    data.cascade_target_source = this.getSourceName(data)
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
       if(this.state.hasEntries) {
         this.renderTree()
@@ -86,8 +86,8 @@ class ConceptHierarchyTree extends React.Component {
   })
 
   getSourceName = (data, urlKey) => {
-    if(data.target_source_name && data.target_source_owner)
-      return `${data.target_source_owner} / ${data.target_source_name}`
+    if(data.cascade_target_source_name && data.cascade_target_source_owner)
+      return `${data.cascade_target_source_owner} / ${data.cascade_target_source_name}`
 
     const key = urlKey || 'url'
 
@@ -107,12 +107,12 @@ class ConceptHierarchyTree extends React.Component {
     children.forEach(child => {
       if(!child.data.map_type) {
         child.data.map_type = this.getMapType(child)
-        child.data.target_source = this.getSourceName(child.data)
+        child.data.cascade_target_source = this.getSourceName(child.data)
       }
-      if(!child.data.target_concept_url)
+      if(!child.data.cascade_target_concept_url)
         result.push(child)
-      if(child.data.target_concept_url && !find(children, c => dropVersion(c.data.url) === dropVersion(child.data.target_concept_url) && c.data.type === 'Concept')) {
-        child.data.target_source = this.getSourceName(child.data, 'target_concept_url')
+      if(child.data.cascade_target_concept_url && !find(children, c => dropVersion(c.data.url) === dropVersion(child.data.cascade_target_concept_url) && c.data.type === 'Concept')) {
+        child.data.cascade_target_source = this.getSourceName(child.data, 'cascade_target_concept_url')
         result.push(child)
       }
     })
@@ -125,11 +125,11 @@ class ConceptHierarchyTree extends React.Component {
     if(node.data.map_type)
       return node.data.map_type
     const siblings = get(node, 'parent.allChildren', [])
-    const mappingForConcept = find(siblings, sibling => dropVersion(sibling.data.target_concept_url) === dropVersion(node.data.url))
+    const mappingForConcept = find(siblings, sibling => dropVersion(sibling.data.cascade_target_concept_url) === dropVersion(node.data.url))
     return mappingForConcept ? mappingForConcept.data.map_type : HIERARCHY_CHILD_REL;
   }
 
-  existsInOCL = node => Boolean(node.data.type === 'Concept' || (node.data.type === 'Mapping' && node.data.target_concept_url))
+  existsInOCL = node => Boolean(node.data.type === 'Concept' || (node.data.type === 'Mapping' && node.data.cascade_target_concept_url))
 
   renderTree = () => {
     const width = this.props.width || 1500;
@@ -221,10 +221,10 @@ class ConceptHierarchyTree extends React.Component {
             mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : `Has ${rel}`
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
-          const targetSource = d.data.target_source || that.getSourceName(d.data)
+          const targetSource = d.data.cascade_target_source || that.getSourceName(d.data)
           const sourceHeader = targetSource ? `<div><span class='gray'>Source: </span><span><b>${targetSource}</b></span></div> ` : '';
           let terminalHeader = '';
-          if(!d.data.target_concept_code && isEmpty(d.data.children)) {
+          if(!d.data.cascade_target_concept_code && isEmpty(d.data.children)) {
             if(d.data.uuid === d.parent.data.uuid)
               terminalHeader = '<div class="gray-italics-small">(Same As Parent)</div> ';
             else if(d.data.terminal === false)
@@ -244,7 +244,7 @@ class ConceptHierarchyTree extends React.Component {
               </div>
               <div>
                 <span class='gray'>Name:</span>
-                <span><b>${d.data.display_name || d.data.target_concept_code}</b></span>
+                <span><b>${d.data.display_name || d.data.cascade_target_concept_code}</b></span>
                 ${retiredText}
               </div>
             </div>`
@@ -291,8 +291,8 @@ class ConceptHierarchyTree extends React.Component {
         .attr('text-decoration', d => d.data.retired ? 'line-through' : 'none')
         .text(d => {
         let name;
-        if(d.data.target_concept_code)
-          name = d.data.target_concept_code
+          if(d.data.cascade_target_concept_code)
+            name = d.data.cascade_target_concept_code
         else {
           name = d.data.display_name
           if(isEmpty(d.data.children) && d.data.uuid !== d.parent.data.uuid) {
