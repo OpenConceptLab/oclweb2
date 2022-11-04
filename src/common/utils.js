@@ -207,7 +207,7 @@ export const currentUserHasAccess = () => {
 
   const currentUser = getCurrentUser();
   if(ownerType === 'users')
-    return currentUser.username === owner;
+    return currentUser?.username === owner;
   if(ownerType === 'orgs')
     return isSubscribedTo(owner);
 
