@@ -12,7 +12,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
   }
 
   const count = get(concepts, 'length') || 0
-  const getOrderedConcepts = () => orderBy(concepts, 'name')
+  const getOrderedConcepts = () => orderBy(concepts, 'display_name')
 
   return (
     <React.Fragment>
@@ -39,7 +39,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
                 {get(concept, 'id')}
               </TableCell>
               <TableCell align='left'>
-                { get(concept, 'name') }
+                { get(concept, 'display_name') }
               </TableCell>
               <TableCell align='left'>
                 {get(source, 'id')}
