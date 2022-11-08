@@ -38,6 +38,7 @@ class ReferenceForm extends React.Component {
       byResource: false,
       cascadeMappings: false,
       cascadeToConcepts: false,
+      cascadeMethod: false,
       fields: {
         expressions: [cloneDeep(EXPRESSION_MODEL)],
       },
@@ -132,17 +133,19 @@ class ReferenceForm extends React.Component {
 
   submitReferences = () => {
     this.setState({isSubmitting: true}, () => {
-      const { cascadeMappings, cascadeToConcepts } = this.state
+      const { cascadeMappings, cascadeToConcepts, cascadeMethod } = this.state
       const { parentURL } = this.props
       let queryParams = {}
       if(cascadeToConcepts)
-        queryParams = {cascade: 'sourceToConcepts'}
+        queryParams = {cascade: 'sourcetoconcepts'}
       else if(cascadeMappings)
-        queryParams = {cascade: 'sourceMappings'}
+        queryParams = {cascade: 'sourcemappings'}
+      else if(cascadeMethod)
+        queryParams = {cascade: {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}}
 
 
       APIService.new().overrideURL(parentURL).appendToUrl('references/').put(
-        {data: this.getExpressionsToSubmit()}, null, null, queryParams
+        {data: this.getExpressionsToSubmit(), cascade: queryParams.cascade}, null, null, queryParams
       ).then(response => this.setState(
         {cascadeDialog: false, isSubmitting: false}, () => this.handleSubmitResponse(response))
       )
@@ -324,7 +327,7 @@ class ReferenceForm extends React.Component {
             open={cascadeDialog}
             references={fields.expressions}
             onCascadeChange={states => this.setState({
-                cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings
+              cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings, cascadeMethod: states.cascadeMethod
             })}
             collectionName={`${collection.owner}/${collection.short_code}`}
             onClose={() => this.setState({cascadeDialog: false})}

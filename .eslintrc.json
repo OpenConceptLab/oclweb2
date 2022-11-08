@@ -200,7 +200,9 @@
           "xxxxxxxx",
           "xxxxxxxxxxxx",
           "forground",
-          "eng"
+          "eng",
+          "sourcetoconcepts",
+          "sourcemappings"
         ],
         "skipIfMatch": [
           "http://[^s]*",

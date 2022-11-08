@@ -12,7 +12,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
   const onChange = event => {
     const newValue = event.target.value
     setCascadeMethod(newValue)
-    onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts'})
+    onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts', cascadeMethod: newValue})
   }
 
   const getContent = () => (
@@ -68,6 +68,20 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                       Cascade to associated mappings and target concepts in the same source
                     </span>
                     <Tooltip arrow title="Add reference(s) to the selected resource(s) AND any of those concepts’ mappings AND the target concepts of those mappings (only for resources in the same source as the selected resource)">
+                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                    </Tooltip>
+                  </span>
+                }
+              />
+              <FormControlLabel
+                value="OpenMRSCascade"
+                control={<Radio />}
+                label={
+                  <span className='flex-vertical-center'>
+                    <span style={{marginRight: '5px', fontSize: '14px'}}>
+                      OpenMRS Cascade
+                    </span>
+                    <Tooltip arrow title='A specialized cascade option for OpenMRS that, for each selected concept, adds the concept AND all its mappings and any concepts that are answers or set members (i.e. concepts that are associated by a "Q-AND-A" or "CONCEPT-SET" map type) if they are in the same source as the selected concept(s).'>
                       <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
                     </Tooltip>
                   </span>
