@@ -87,6 +87,7 @@ class AddToCollection extends React.Component {
     const isMapping = Boolean(get(references, '0.map_type'))
     let expressions = [];
     let queryParams = {}
+    let cascadePayload = {}
     if(isMapping) {
       if(addMappings)
         expressions = map(references, 'url')
@@ -101,8 +102,10 @@ class AddToCollection extends React.Component {
         queryParams = {cascade: 'sourcetoconcepts'}
       else if(cascadeMappings)
         queryParams = {cascade: 'sourcemappings'}
-      else if(cascadeMethod)
-        queryParams = {cascade: {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}}
+      else if(cascadeMethod) {
+        cascadePayload = {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}
+        queryParams = {cascade: {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}, transformReferences: 'resourceVersions'}
+      }
     }
     if(isEmpty(expressions)) {
       alertifyjs.error('No expressions to add')
@@ -111,7 +114,7 @@ class AddToCollection extends React.Component {
         this._collectionName = this.getCollectionName()
         APIService.new().overrideURL(selectedCollection.url)
           .appendToUrl('references/')
-          .put({data: {expressions: expressions}, cascade: queryParams.cascade}, null, null, queryParams)
+          .put({data: {expressions: expressions}, cascade: cascadePayload}, null, null, queryParams)
           .then(response => {
             this.setState({isAdding: false}, () => {
               if(response.status === 200) {
