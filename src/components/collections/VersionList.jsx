@@ -256,7 +256,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                         />
                     }
                     {
-                      version &&
+                      canEdit && version &&
                         <Tooltip arrow title='Re-compute Summary'>
                           <IconButton onClick={() => onComputeSummaryClick(version)} size='small'>
                             <SummaryIcon fontSize='inherit' />

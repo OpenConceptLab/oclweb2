@@ -205,7 +205,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                               />
                             }
                             {
-                              version && !fhir &&
+                              canEdit && version && !fhir &&
                                 <Tooltip arrow title='Re-compute Summary'>
                                   <IconButton onClick={() => onComputeSummaryClick(version)} size='small'>
                                     <SummaryIcon fontSize='inherit' />
