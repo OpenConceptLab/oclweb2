@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText,
-  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio
+  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio, FormHelperText
 } from '@mui/material'
 import {
   Help as HelpIcon,
@@ -15,13 +15,19 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
     onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts', cascadeMethod: newValue})
   }
 
+  const helperTextStyle = {
+    marginLeft: '30px',
+    marginTop: '-8px',
+    fontStyle: 'italic',
+  }
+
   const getContent = () => (
     <DialogContent>
       {
         isAdding ?
-        <div className='col-md-12' style={{textAlign: 'center'}}>
-          <CircularProgress />
-        </div> :
+          <div className='col-md-12' style={{textAlign: 'center'}}>
+            <CircularProgress />
+          </div> :
         <React.Fragment>
           <DialogContentText style={{color: 'black', marginBottom: '20px'}}>
             {`${references.length} selected reference(s) will be added to collection ${collectionName}`}
@@ -59,6 +65,12 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                   </span>
                 }
               />
+              {
+                cascadeMethod === 'cascadeMappings' &&
+                  <FormHelperText id="cascadeMappings" style={helperTextStyle}>
+                    ?cascadeLevels=1&method=sourcemappings
+                  </FormHelperText>
+              }
               <FormControlLabel
                 value="cascadeToConcepts"
                 control={<Radio />}
@@ -73,6 +85,12 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                   </span>
                 }
               />
+              {
+                cascadeMethod === 'cascadeToConcepts' &&
+                  <FormHelperText id="cascadeToConcepts" style={helperTextStyle}>
+                    ?cascadeLevels=1&method=sourcetoconcepts
+                  </FormHelperText>
+              }
               <FormControlLabel
                 value="OpenMRSCascade"
                 control={<Radio />}
@@ -87,6 +105,12 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                   </span>
                 }
               />
+              {
+                cascadeMethod === 'OpenMRSCascade' &&
+                  <FormHelperText id="OpenMRSCascade" style={helperTextStyle}>
+                    ?cascadeLevels=*&method=sourcetoconcepts&mapTypes=Q-AND-A,CONCEPT-SET&returnMapTypes=*&transformReferences=resourceVersions
+                  </FormHelperText>
+              }
             </RadioGroup>
           </FormControl>
         </React.Fragment>
@@ -97,28 +121,28 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
     <React.Fragment>
       {
         open ?
-        (
-          <Dialog open={open} onClose={onClose}>
-            {
-              title &&
-              <DialogTitle>
-                {title}
-              </DialogTitle>
-            }
-            { getContent() }
-            <DialogActions>
-              <React.Fragment>
-                <Button onClick={onClose} color="primary" disabled={isAdding}>
-                  Cancel
-                </Button>
-                <Button onClick={onAdd} color="primary" disabled={isAdding}>
-                  Add
-                </Button>
-              </React.Fragment>
-            </DialogActions>
-          </Dialog>
-        ) :
-        (getContent())
+          (
+            <Dialog open={open} onClose={onClose}>
+              {
+                title &&
+                  <DialogTitle>
+                    {title}
+                  </DialogTitle>
+              }
+              { getContent() }
+              <DialogActions>
+                <React.Fragment>
+                  <Button onClick={onClose} color="primary" disabled={isAdding}>
+                    Cancel
+                  </Button>
+                  <Button onClick={onAdd} color="primary" disabled={isAdding}>
+                    Add
+                  </Button>
+                </React.Fragment>
+              </DialogActions>
+            </Dialog>
+          ) :
+          (getContent())
       }
     </React.Fragment>
   )
