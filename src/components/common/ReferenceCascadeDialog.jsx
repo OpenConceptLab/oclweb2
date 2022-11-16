@@ -79,9 +79,9 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                 label={
                   <span className='flex-vertical-center'>
                     <span style={{marginRight: '5px', fontSize: '14px'}}>
-                      OpenMRS Cascade
+                      OpenMRS-compatible Cascade
                     </span>
-                    <Tooltip arrow title='A specialized cascade option for OpenMRS that, for each selected concept, adds the concept AND all its mappings and any concepts that are answers or set members (i.e. concepts that are associated by a "Q-AND-A" or "CONCEPT-SET" map type) if they are in the same source as the selected concept(s).'>
+                    <Tooltip arrow title='A specialized cascade option that adds a concept and all of its mappings, and then recursively adds any of its associated answer or set member concepts (i.e. concepts that are associated by a "Q-AND-A" or "CONCEPT-SET" map type) with all of their mappings, and so on. Resources are only added if they are defined in the same source as the selected concept(s).'>
                       <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
                     </Tooltip>
                   </span>
