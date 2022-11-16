@@ -101,7 +101,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                 {get(mapping, sourceAttr)}
               </TableCell>
               <TableCell align='right' style={{width: '24px', paddingRight: '5px'}}>
-                <MappingOptions mapping={mapping} />
+                <MappingOptions mapping={mapping} concept={concept} />
               </TableCell>
             </TableRow>
           )

@@ -3,7 +3,7 @@ import { Menu, MenuItem, MenuList, IconButton } from '@mui/material';
 import { MoreVert as MenuIcon } from '@mui/icons-material';
 import { map } from 'lodash';
 
-const MappingOptions = ({ mapping }) => {
+const MappingOptions = ({ mapping, concept }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const onMenuToggle = event => {
@@ -22,16 +22,20 @@ const MappingOptions = ({ mapping }) => {
     return false
   }
 
-  const compareConceptHref = `/concepts/compare?lhs=${mapping.from_concept_url}&rhs=${mapping.to_concept_url}`
   const getOptions = () => {
     const options = [{label: 'Open Mapping Details', href: mapping.url},]
     const currentURL = window.location.hash.split('?')[0].split('#')[1]
+    const toConcept = mapping?.from_concept_url ? concept : null
+    const fromConcept = mapping?.to_concept_url ? concept : null
+    const fromConceptURL = mapping.from_concept_url || fromConcept?.url
+    const toConceptURL = mapping?.to_concept_url || toConcept?.url
+    const compareConceptHref = `/concepts/compare?lhs=${fromConceptURL}&rhs=${toConceptURL}`
 
-    if(mapping.from_concept_url && mapping.from_concept_url !== currentURL)
-      options.push({label: 'Open From Concept', href: mapping.from_concept_url})
-    if(mapping.to_concept_url && mapping.to_concept_url !== currentURL)
-      options.push({label: 'Open To Concept', href: mapping.to_concept_url})
-    if(mapping.to_concept_url && mapping.from_concept_url)
+    if(fromConceptURL && fromConceptURL !== currentURL)
+      options.push({label: 'Open From Concept', href: fromConceptURL})
+    if(toConceptURL && toConceptURL !== currentURL)
+      options.push({label: 'Open To Concept', href: toConceptURL})
+    if(fromConceptURL && toConceptURL)
       options.push({label: 'Compare Concepts', href: compareConceptHref})
 
     return options
