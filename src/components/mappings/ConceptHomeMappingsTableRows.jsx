@@ -7,10 +7,13 @@ import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
 import { getSiteTitle, toParentURI } from '../../common/utils';
+import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf }) => {
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping }) => {
+  const [form, setForm] = React.useState(false)
+  const [addNewMapType, setAddNewMapType] = React.useState('')
   const conceptCodeAttr = 'cascade_target_concept_code'
   const conceptCodeName = 'cascade_target_concept_name'
   const sourceAttr = 'cascade_target_source_name';
@@ -44,12 +47,20 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     return [...orderBy(sameParentMappings, 'cascade_target_concept_name'), ...orderBy(differentParentMappings, ['cascade_target_source_name', 'cascade_target_concept_name'])]
   }
 
+  const onAddNewClick = mapType => {
+    setAddNewMapType(mapType)
+    setForm(true)
+    return false
+  }
+
+  const rowSpanCount = count + 1 + (form ? 1 : 0)
+
   return (
     <React.Fragment>
       {
         mapType &&
         <TableRow hover>
-          <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
+          <TableCell align='left' rowSpan={rowSpanCount} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
             <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
               <Chip
                 size='small'
@@ -101,11 +112,30 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                 {get(mapping, sourceAttr)}
               </TableCell>
               <TableCell align='right' style={{width: '24px', paddingRight: '5px'}}>
-                <MappingOptions mapping={mapping} concept={concept} />
+                <MappingOptions
+                  mapping={mapping}
+                  concept={concept}
+                  onAddNewClick={onAddNewClick}
+                  showNewMappingOption={!isSelf && onCreateNewMapping}
+                />
               </TableCell>
             </TableRow>
           )
         })
+      }
+      {
+        form &&
+          <TableRow>
+            <TableCell colSpan={4}>
+              <MappingInlineForm
+                defaultMapType={addNewMapType}
+                concept={concept}
+                onClose={() => setForm(false)}
+                isDirect={!isIndirect}
+                onSubmit={onCreateNewMapping}
+              />
+              </TableCell>
+          </TableRow>
       }
     </React.Fragment>
   )

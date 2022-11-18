@@ -14,7 +14,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   overflowX: 'auto', width: '100%', padding: '0'
 }
 
-const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle, onCreateNewMapping }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   let classes = 'col-sm-12 padding-5';
@@ -43,7 +43,15 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
         />
       </div>
       <div className={classes} style={{paddingTop: '10px'}}>
-        <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} source={source} sourceVersion={sourceVersion} parent={parent} onIncludeRetiredToggle={onIncludeRetiredAssociationsToggle} />
+        <HomeMappings
+          concept={concept}
+          isLoadingMappings={isLoadingMappings}
+          source={source}
+          sourceVersion={sourceVersion}
+          parent={parent}
+          onIncludeRetiredToggle={onIncludeRetiredAssociationsToggle}
+          onCreateNewMapping={onCreateNewMapping}
+        />
         {
           scoped === 'collection' ?
             <ResourceReferences

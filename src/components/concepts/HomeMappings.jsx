@@ -7,12 +7,14 @@ import {
 import {
   InfoOutlined as InfoIcon,
   FormatIndentIncrease as HierarchyIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  Add as AddIcon,
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map, find, compact, flatten, values } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString, dropVersion } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
+import MappingInlineForm from '../mappings/MappingInlineForm';
 import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
 import ConceptHierarchyTree from './ConceptHierarchyTree';
@@ -67,7 +69,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping }) => {
+  const [mappingForm, setMappingForm] = React.useState(false)
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
   const [includeRetired, setIncludeRetired] = React.useState(false)
@@ -116,6 +119,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
   const orderedMappings = getMappings()
   const getCount = () => flatten(compact(flatten(map(values(orderedMappings), mapping => values(mapping))))).length
 
+  const _onCreateNewMapping = (payload, targetConcept, isDirect) => onCreateNewMapping(payload, targetConcept, isDirect, () => setMappingForm(false))
+
   return (
     <React.Fragment>
       <Accordion expanded style={{borderRadius: 'unset'}}>
@@ -158,7 +163,9 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
             isLoadingMappings ?
               <div style={{textAlign: 'center', padding: '10px'}}>
                 <CircularProgress />
-              </div> : (
+              </div> :
+            <div>
+              {
                 noAssociations ?
                   None() :
                   <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
@@ -185,6 +192,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mappings={oMappings.self}
                                     mapType={mapType}
                                     isSelf
+                                    onCreateNewMapping={onCreateNewMapping}
                                   />
                               }
                             </React.Fragment>
@@ -219,6 +227,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     concept={concept}
                                     mappings={oMappings.direct}
                                     mapType={mapType}
+                                    onCreateNewMapping={onCreateNewMapping}
                                   />
                               }
                             </React.Fragment>
@@ -238,15 +247,38 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mappings={oMappings.indirect}
                                     mapType={mapType}
                                     isIndirect
+                                    onCreateNewMapping={onCreateNewMapping}
                                   />
                               }
                             </React.Fragment>
                           )
                         })
                       }
+                      {
+                        mappingForm &&
+                          <TableRow>
+                            <TableCell colSpan={5}>
+                              <MappingInlineForm
+                                concept={concept}
+                                onClose={() => setMappingForm(false)}
+                                isDirect
+                                onSubmit={_onCreateNewMapping}
+                              />
+                            </TableCell>
+                          </TableRow>
+                      }
                     </TableBody>
                   </Table>
-              )
+              }
+              {
+                onCreateNewMapping &&
+                  <div className='col-xs-12' style={{padding: '0 5px'}}>
+                    <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
+                      Add New Mapping
+                    </Button>
+                  </div>
+              }
+            </div>
           }
         </AccordionDetails>
       </Accordion>

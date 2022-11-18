@@ -1,7 +1,8 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { get, isObject, isBoolean, has } from 'lodash';
+import { get, isObject, isBoolean, has, flatten, values, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -184,6 +185,48 @@ class ConceptHome extends React.Component {
     })
   }
 
+  onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
+    const { concept, mappings, reverseMappings } = this.state
+    const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
+    APIService.new().overrideURL(URL).post(payload).then(response => {
+      if(response.status === 201) {
+        alertifyjs.success('Success')
+        let newMapping = {
+          ...response.data,
+          cascade_target_concept_code: targetConcept.id,
+          cascade_target_concept_url: targetConcept.url,
+          cascade_target_source_owner: targetConcept.owner,
+          cascade_target_source_name: targetConcept.source,
+          cascade_target_concept_name: targetConcept.display_name,
+        }
+        if(isDirect)
+          this.setState({
+            mappings: [
+              ...mappings,
+              newMapping,
+              {...targetConcept, entries: []}
+            ]
+          })
+        else
+          this.setState({
+            reverseMappings: [
+              ...reverseMappings,
+              newMapping,
+              {...targetConcept, entries: []}
+            ]
+          })
+        if(successCallback)
+          successCallback()
+      } else {
+        const errors = flatten(values(response))
+        if(isArray(errors) && errors.length)
+          alertifyjs.error(errors[0])
+        else
+          alertifyjs.error('Something bad happened!')
+      }
+    })
+  }
+
   onIncludeRetiredAssociationsToggle = includeRetired => this.setState({includeRetiredAssociations: includeRetired}, this.getMappings)
 
   getCollectionVersions() {
@@ -204,21 +247,22 @@ class ConceptHome extends React.Component {
   onConceptClick = concept => {
     this.setState({isUpdatingFromHierarchy: true, isLoading: true}, () => {
       window.location.hash = concept.url
-      APIService.new()
-                                    .overrideURL(encodeURI(concept.url))
-                                    .get().then(response => {
-                                      this.setState(
-                                        {
-                                          isLoading: false,
-                                          concept: response.data,
-                                          isUpdatingFromHierarchy: false
-                                        },
-                                        () => {
-                                          this.getVersions()
-                                          window.scrollTo(0, 0)
-                                        }
-                                      )
-                                    })
+      APIService
+        .new()
+        .overrideURL(encodeURI(concept.url))
+        .get().then(response => {
+          this.setState(
+            {
+              isLoading: false,
+              concept: response.data,
+              isUpdatingFromHierarchy: false
+            },
+            () => {
+              this.getVersions()
+              window.scrollTo(0, 0)
+            }
+          )
+        })
     })
   }
 
@@ -267,6 +311,7 @@ class ConceptHome extends React.Component {
                 sourceVersion={get(this.props.match, 'params.version')}
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
+                onCreateNewMapping={isVersionedObject && this.props.scoped != 'collection'  ? this.onCreateNewMapping : false}
               />
             </div>
           </React.Fragment>
