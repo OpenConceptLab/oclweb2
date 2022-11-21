@@ -271,7 +271,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                   </Table>
               }
               {
-                onCreateNewMapping &&
+                onCreateNewMapping && !mappingForm &&
                   <div className='col-xs-12' style={{padding: '0 5px'}}>
                     <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
                       Add New Mapping
