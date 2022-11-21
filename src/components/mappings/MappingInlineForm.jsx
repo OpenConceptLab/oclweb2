@@ -81,7 +81,7 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
           Save
         </Button>
         <Button variant='text' size='small' color='secondary' onClick={onClose}>
-          Remove
+          Cancel
         </Button>
       </div>
     </div>
