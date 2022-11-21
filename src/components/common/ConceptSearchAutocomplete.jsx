@@ -58,7 +58,7 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
       loading={loading}
       loadingText={loading ? 'Loading...' : `Type atleast ${minLength} characters to search`}
       noOptionsText={(isSearchable && !loading) ? "No results" : 'Start typing...'}
-      getOptionLabel={option => option ? option.display_name || option.id : ''}
+      getOptionLabel={option => option ? option.id : ''}
       fullWidth
       required={required}
       onInputChange={handleInputChange}
