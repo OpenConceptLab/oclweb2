@@ -112,13 +112,16 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
                   </Typography>
                 }
                 secondary={
-                  <Typography
-                    sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
-                    component="span"
-                    className='flex-vertical-center'>
-                    <ConceptIcon size='small' style={{marginRight: '4px', fontSize: '1rem'}} />
-                    {option.summary.active_concepts}
-                  </Typography>
+                  (
+                    option.summary.active_concepts &&
+                      <Typography
+                        sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
+                        component="span"
+                        className='flex-vertical-center'>
+                        <ConceptIcon size='small' style={{marginRight: '4px', fontSize: '1rem'}} />
+                        {option.summary.active_concepts.toLocaleString()}
+                      </Typography>
+                  )
                 }
               />
             </ListItem>
