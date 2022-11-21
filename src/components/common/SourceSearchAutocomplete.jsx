@@ -5,7 +5,7 @@ import {
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce, orderBy, isEmpty } from 'lodash'
+import { get, debounce, orderBy } from 'lodash'
 import APIService from '../../services/APIService';
 import { GREEN } from '../../common/constants';
 
@@ -13,16 +13,16 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
   const minLength = minCharactersForSearch || 2;
   const [input, setInput] = React.useState('')
   const [open, setOpen] = React.useState(false)
-  const [fetched, setFetched] = React.useState(false)
   const [sources, setSources] = React.useState([])
   const [selected, setSelected] = React.useState(undefined)
+  const [loading, setLoading] = React.useState(false)
   const isSearchable = input && input.length >= minLength;
-  const loading = Boolean(open && !fetched && isSearchable && isEmpty(sources))
   const handleInputChange = debounce((event, value, reason) => {
     setInput(value || '')
-    setFetched(false)
     if(reason !== 'reset' && value && value.length >= minLength)
       fetchSources(value)
+    else
+      setLoading(false)
   }, 300)
 
   const handleChange = (event, id, item) => {
@@ -33,11 +33,13 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
   }
 
   const fetchSources = searchStr => {
+    setLoading(true)
+    setSources([])
     const query = {limit: 25, q: searchStr, includeSummary: true}
     APIService.sources().get(null, null, query).then(response => {
       const sources = orderBy(response.data, ['name'])
       setSources(sources)
-      setFetched(true)
+      setLoading(false)
     })
   }
 

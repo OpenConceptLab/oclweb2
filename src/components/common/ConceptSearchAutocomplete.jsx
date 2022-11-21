@@ -4,7 +4,7 @@ import {
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce, orderBy, isEmpty } from 'lodash'
+import { get, debounce, orderBy } from 'lodash'
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 
@@ -12,16 +12,16 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
   const minLength = minCharactersForSearch || 1;
   const [input, setInput] = React.useState('')
   const [open, setOpen] = React.useState(false)
-  const [fetched, setFetched] = React.useState(false)
   const [concepts, setConcepts] = React.useState([])
   const [selected, setSelected] = React.useState(undefined)
+  const [loading, setLoading] = React.useState(false)
   const isSearchable = input && input.length >= minLength;
-  const loading = Boolean(open && !fetched && isSearchable && isEmpty(concepts))
   const handleInputChange = debounce((event, value, reason) => {
     setInput(value || '')
-    setFetched(false)
     if(reason !== 'reset' && value && value.length >= minLength)
       fetchConcepts(value)
+    else
+      setLoading(false)
   }, 300)
 
   const handleChange = (event, id, item) => {
@@ -32,12 +32,14 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
   }
 
   const fetchConcepts = searchStr => {
+    setLoading(true)
     const query = {limit: 10, q: searchStr}
     let service = parentURI ? APIService.new().overrideURL(parentURI).appendToUrl('concepts/') : APIService.concepts()
+    setConcepts([])
     service.get(null, null, query).then(response => {
       const concepts = orderBy(response.data, ['display_name'])
       setConcepts(concepts)
-      setFetched(true)
+      setLoading(false)
     })
   }
 
