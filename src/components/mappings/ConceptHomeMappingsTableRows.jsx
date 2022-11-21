@@ -116,7 +116,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                   mapping={mapping}
                   concept={concept}
                   onAddNewClick={onAddNewClick}
-                  showNewMappingOption={!isSelf && onCreateNewMapping}
+                  showNewMappingOption={onCreateNewMapping}
                 />
               </TableCell>
             </TableRow>
