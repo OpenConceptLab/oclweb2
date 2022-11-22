@@ -5,7 +5,7 @@ import {
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce, orderBy } from 'lodash'
+import { get, debounce, orderBy, isNumber } from 'lodash'
 import APIService from '../../services/APIService';
 import { GREEN } from '../../common/constants';
 
@@ -115,14 +115,15 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
                 }
                 secondary={
                   (
-                    option.summary.active_concepts &&
+                    isNumber(option.summary.active_concepts) ?
                       <Typography
                         sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
                         component="span"
                         className='flex-vertical-center'>
                         <ConceptIcon size='small' style={{marginRight: '4px', fontSize: '1rem'}} />
                         {option.summary.active_concepts.toLocaleString()}
-                      </Typography>
+                      </Typography> :
+                    ''
                   )
                 }
               />
