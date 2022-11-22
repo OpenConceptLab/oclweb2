@@ -4,7 +4,7 @@ import {
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce, orderBy } from 'lodash'
+import { get, debounce } from 'lodash'
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import AutocompleteLoading from './AutocompleteLoading';
@@ -38,8 +38,7 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
     let service = parentURI ? APIService.new().overrideURL(parentURI).appendToUrl('concepts/') : APIService.concepts()
     setConcepts([])
     service.get(null, null, query).then(response => {
-      const concepts = orderBy(response.data, ['display_name'])
-      setConcepts(concepts)
+      setConcepts(response.data)
       setLoading(false)
     })
   }
