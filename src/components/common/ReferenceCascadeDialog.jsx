@@ -1,11 +1,14 @@
 import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText,
-  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio, FormHelperText
+  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio, FormHelperText,
+  Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@mui/material'
 import {
   Help as HelpIcon,
+  ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material'
+
 
 const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding }) => {
   const [cascadeMethod, setCascadeMethod] = React.useState('none')
@@ -30,8 +33,11 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
           </div> :
         <React.Fragment>
           <DialogContentText style={{color: 'black', marginBottom: '20px'}}>
-            {`${references.length} selected reference(s) will be added to collection ${collectionName}`}
+            {`${references.length} selected Reference(s) will be added to Collection: ${collectionName}`}
           </DialogContentText>
+          <h4 style={{marginBottom: '5px'}}>
+            Would you like to also include associated Concepts and Mappings?
+          </h4>
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
@@ -44,10 +50,9 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                 control={<Radio />}
                 label={
                   <span className='flex-vertical-center'>
-                    <span style={{marginRight: '5px', fontSize: '14px'}}>Do not cascade (default)</span>
-                    <Tooltip arrow title="Add reference(s) to the selected resource(s) ONLY">
-                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                    </Tooltip>
+                    <span style={{marginRight: '5px', fontSize: '14px'}}>
+                      No, only include the selected resources
+                    </span>
                   </span>
                 }
               />
@@ -57,11 +62,8 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                 label={
                   <span className='flex-vertical-center'>
                     <span style={{marginRight: '5px', fontSize: '14px'}}>
-                      Cascade to associated mappings in the same source
+                      Yes, include associated Mappings from the same source
                     </span>
-                    <Tooltip arrow title="Add reference(s) to the selected resource(s) AND any of those concepts’ mappings (only if the mapping is in the same source as the concept)">
-                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                    </Tooltip>
                   </span>
                 }
               />
@@ -77,11 +79,8 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                 label={
                   <span className='flex-vertical-center'>
                     <span style={{marginRight: '5px', fontSize: '14px'}}>
-                      Cascade to associated mappings and target concepts in the same source
+                      Yes, include associated Mappings and target Concepts from the same source
                     </span>
-                    <Tooltip arrow title="Add reference(s) to the selected resource(s) AND any of those concepts’ mappings AND the target concepts of those mappings (only for resources in the same source as the selected resource)">
-                      <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                    </Tooltip>
                   </span>
                 }
               />
@@ -97,9 +96,9 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                 label={
                   <span className='flex-vertical-center'>
                     <span style={{marginRight: '5px', fontSize: '14px'}}>
-                      OpenMRS-compatible Cascade
+                      Yes, apply OpenMRS-compatible cascade
                     </span>
-                    <Tooltip arrow title='A specialized cascade option that adds a concept and all of its mappings, and then recursively adds any of its associated answer or set member concepts (i.e. concepts that are associated by a "Q-AND-A" or "CONCEPT-SET" map type) with all of their mappings, and so on. Resources are only added if they are defined in the same source as the selected concept(s).'>
+                    <Tooltip arrow title='Yes, include associated Mappings and target Concepts from the same source, and recursively add any of their associated answer and set member concepts and mappings (e.g. Q-AND-A and CONCEPT-SET mappings)'>
                       <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
                     </Tooltip>
                   </span>
@@ -113,6 +112,14 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
               }
             </RadioGroup>
           </FormControl>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} style={{background: 'rgba(0, 0, 0, 0.1)'}}>
+              <Typography>API details</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              POST /something
+            </AccordionDetails>
+          </Accordion>
         </React.Fragment>
       }
     </DialogContent>

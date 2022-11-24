@@ -257,7 +257,7 @@ class AddToCollection extends React.Component {
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose}>
           <DialogTitle>
-            {`Add To Collection: ${collectionName}`}
+            Add References to Collection
           </DialogTitle>
           {
             isAdding ?
