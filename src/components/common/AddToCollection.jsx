@@ -81,11 +81,11 @@ class AddToCollection extends React.Component {
       this.setState({selectedCollection: collection}, () => this.handleClose(event))
   }
 
-  handleAdd = () => {
-    const { selectedCollection, cascadeMappings, cascadeToConcepts, cascadeMethod, addMappings, addToConcepts, addFromConcepts } = this.state
+  getPayload = (cascadeToConcepts, cascadeMappings, cascadeMethod) => {
+    const { addMappings, addToConcepts, addFromConcepts } = this.state
     const { references } = this.props
     const isMapping = Boolean(get(references, '0.map_type'))
-    let expressions = [];
+    let expressions = map(references, 'url')
     let queryParams = {}
     let cascadePayload = {}
     if(isMapping) {
@@ -104,17 +104,26 @@ class AddToCollection extends React.Component {
         queryParams = {cascade: 'sourcemappings'}
       else if(cascadeMethod) {
         cascadePayload = {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}
-        queryParams = {cascade: {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}, transformReferences: 'resourceVersions'}
+        queryParams = {transformReferences: 'resourceVersions'}
       }
     }
-    if(isEmpty(expressions)) {
+    let payload = {payload: {data: {expressions: expressions}}, queryParams: queryParams}
+    if(!isEmpty(cascadePayload))
+      payload.payload.cascadePayload = cascadePayload
+    return payload
+  }
+
+  handleAdd = () => {
+    const { selectedCollection, cascadeMappings, cascadeToConcepts, cascadeMethod } = this.state
+    const payload = this.getPayload(cascadeToConcepts, cascadeMappings, cascadeMethod)
+    if(isEmpty(payload?.payload?.data?.expressions)) {
       alertifyjs.error('No expressions to add')
     } else {
       this.setState({isAdding: true}, () => {
         this._collectionName = this.getCollectionName()
         APIService.new().overrideURL(selectedCollection.url)
           .appendToUrl('references/')
-          .put({data: {expressions: expressions}, cascade: cascadePayload}, null, null, queryParams)
+          .put(payload.payload, null, null, payload.queryParams)
           .then(response => {
             this.setState({isAdding: false}, () => {
               if(response.status === 200) {
@@ -265,7 +274,16 @@ class AddToCollection extends React.Component {
             (
               isMappingReferences ?
                 <MappingReferenceAddOptionsDialog references={references} onChange={states => this.setState({addMappings: states.addMappings, addToConcepts: states.addToConcepts, addFromConcepts: states.addFromConcepts})} collectionName={collectionName} /> :
-              <ReferenceCascadeDialog references={references} onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings, cascadeMethod: states.cascadeMethod})} collectionName={collectionName} />
+              <ReferenceCascadeDialog
+                references={references}
+                onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings, cascadeMethod: states.cascadeMethod})}
+                collectionName={collectionName}
+                collection={selectedCollection}
+                noCascadePayloadFunc={() => this.getPayload()}
+                cascadeMappingsFunc={() => this.getPayload(false, true, false)}
+                cascadeToConceptsFunc={() => this.getPayload(true, false, false)}
+                cascadeOpenMRSFunc={() => this.getPayload(false, false, true)}
+              />
             )
           }
           <DialogActions>

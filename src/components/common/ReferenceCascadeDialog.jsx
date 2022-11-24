@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText,
-  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio, FormHelperText,
+  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio,
   Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@mui/material'
 import {
@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material'
 
 
-const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding }) => {
+const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc }) => {
   const [cascadeMethod, setCascadeMethod] = React.useState('none')
   const onChange = event => {
     const newValue = event.target.value
@@ -18,11 +18,20 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
     onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts', cascadeMethod: newValue})
   }
 
-  const helperTextStyle = {
-    marginLeft: '30px',
-    marginTop: '-8px',
-    fontStyle: 'italic',
+  const getPayload = () => {
+    if(cascadeMethod === 'none' && noCascadePayloadFunc)
+      return noCascadePayloadFunc()
+    if(cascadeMethod === 'cascadeMappings' && cascadeMappingsFunc)
+      return cascadeMappingsFunc()
+    if(cascadeMethod === 'cascadeToConcepts' && cascadeToConceptsFunc)
+      return cascadeToConceptsFunc()
+    if(cascadeMethod === 'OpenMRSCascade' && cascadeOpenMRSFunc)
+      return cascadeOpenMRSFunc()
   }
+
+  const cascadePayload = getPayload()
+  const queryString = new URLSearchParams(cascadePayload?.queryParams).toString()
+  const requestURL = collection ? collection.url + 'references/' + (queryString ? `?${queryString}` : '') : null
 
   const getContent = () => (
     <DialogContent>
@@ -67,12 +76,6 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                   </span>
                 }
               />
-              {
-                cascadeMethod === 'cascadeMappings' &&
-                  <FormHelperText id="cascadeMappings" style={helperTextStyle}>
-                    ?cascadeLevels=1&method=sourcemappings
-                  </FormHelperText>
-              }
               <FormControlLabel
                 value="cascadeToConcepts"
                 control={<Radio />}
@@ -84,12 +87,6 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                   </span>
                 }
               />
-              {
-                cascadeMethod === 'cascadeToConcepts' &&
-                  <FormHelperText id="cascadeToConcepts" style={helperTextStyle}>
-                    ?cascadeLevels=1&method=sourcetoconcepts
-                  </FormHelperText>
-              }
               <FormControlLabel
                 value="OpenMRSCascade"
                 control={<Radio />}
@@ -104,22 +101,30 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                   </span>
                 }
               />
-              {
-                cascadeMethod === 'OpenMRSCascade' &&
-                  <FormHelperText id="OpenMRSCascade" style={helperTextStyle}>
-                    ?cascadeLevels=*&method=sourcetoconcepts&mapTypes=Q-AND-A,CONCEPT-SET&returnMapTypes=*&transformReferences=resourceVersions
-                  </FormHelperText>
-              }
             </RadioGroup>
           </FormControl>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} style={{background: 'rgba(0, 0, 0, 0.1)'}}>
-              <Typography>API details</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              POST /something
-            </AccordionDetails>
-          </Accordion>
+          {
+            cascadePayload &&
+              <Accordion style={{marginTop: '10px'}}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} style={{background: 'rgba(0, 0, 0, 0.1)'}}>
+                  <Typography>API details</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div style={{fontWeight: 'bold'}}>
+                    {
+                      `PUT ${requestURL}`
+                    }
+                  </div>
+                  <div>
+                    <pre style={{color: '#FFF', backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '10px'}}>
+                      {
+                        JSON.stringify(cascadePayload.payload, undefined, 2)
+                      }
+                    </pre>
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+          }
         </React.Fragment>
       }
     </DialogContent>
