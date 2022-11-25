@@ -3,6 +3,7 @@ import { TextField, Button, Autocomplete } from '@mui/material';
 import { fetchMapTypes } from '../../common/utils';
 import SourceSearchAutocomplete from '../common/SourceSearchAutocomplete';
 import ConceptSearchAutocomplete from '../common/ConceptSearchAutocomplete';
+import FormTooltip from '../common/FormTooltip';
 
 const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect}) => {
   const [mapTypes, setMapTypes] = React.useState([])
@@ -33,10 +34,17 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
   return (
     <form id='mapping-inline-form'>
       <div className='col-xs-12' style={{marginBottom: '15px', padding: defaultMapType ? '0 8px 0 0' : '0 8px'}}>
-        <h3 style={{margin: '15px 0 0 0'}}>Add a mapping</h3>
+        <h3 style={{margin: '15px 0 0 0', display: 'flex'}}>
+          Add a mapping
+          <FormTooltip
+            size='small'
+            title={`Create a new mapping that will be saved to ${concept.source}`}
+            style={{marginLeft: '10px'}}
+          />
+        </h3>
       {
         !defaultMapType &&
-          <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+          <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px'}}>
             <Autocomplete
               openOnFocus
               isOptionEqualToValue={(option, value) => option.id === value?.id}
@@ -57,6 +65,10 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
                           />
               }
               onChange={(event, item) => setMapType(item)}
+            />
+            <FormTooltip
+              title="Defines the relationship between the two concepts. For example, “Concept A is the SAME-AS Concept B”, where Concept A is the “from concept” and Concept B is the “target concept”."
+              style={{marginLeft: '10px'}}
             />
           </div>
       }
