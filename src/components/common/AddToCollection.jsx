@@ -109,7 +109,7 @@ class AddToCollection extends React.Component {
     }
     let payload = {payload: {data: {expressions: expressions}}, queryParams: queryParams}
     if(!isEmpty(cascadePayload))
-      payload.payload.cascadePayload = cascadePayload
+      payload.payload.cascade = cascadePayload
     return payload
   }
 
