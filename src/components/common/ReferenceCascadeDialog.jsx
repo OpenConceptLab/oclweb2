@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText,
+  Button, Dialog, DialogActions, DialogContent, DialogContentText,
   FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio,
   Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@mui/material'
@@ -8,6 +8,7 @@ import {
   Help as HelpIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material'
+import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 
 
 const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc }) => {
@@ -137,14 +138,14 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
             <Dialog open={open} onClose={onClose}>
               {
                 title &&
-                  <DialogTitle>
+                  <DialogTitleWithCloseButton onClose={onClose}>
                     {title}
-                  </DialogTitle>
+                  </DialogTitleWithCloseButton>
               }
               { getContent() }
               <DialogActions>
                 <React.Fragment>
-                  <Button onClick={onClose} color="primary" disabled={isAdding}>
+                  <Button onClick={onClose} color="secondary" disabled={isAdding}>
                     Cancel
                   </Button>
                   <Button onClick={onAdd} color="primary" disabled={isAdding}>

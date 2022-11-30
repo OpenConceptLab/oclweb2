@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
-  CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle,
+  CircularProgress, Dialog, DialogActions, DialogContent,
   TextField, InputAdornment, Chip
 } from '@mui/material'
 import {
@@ -18,6 +18,7 @@ import CollectionForm from '../collections/CollectionForm';
 import AddReferencesResult from './AddReferencesResult';
 import ReferenceCascadeDialog from './ReferenceCascadeDialog';
 import MappingReferenceAddOptionsDialog from './MappingReferenceAddOptionsDialog';
+import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -265,9 +266,9 @@ class AddToCollection extends React.Component {
           )}
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose}>
-          <DialogTitle>
+          <DialogTitleWithCloseButton onClose={this.handleDialogClose}>
             Add References to Collection
-          </DialogTitle>
+          </DialogTitleWithCloseButton>
           {
             isAdding ?
               <DialogContent style={{textAlign: 'center', margin: '50px'}}><CircularProgress /></DialogContent> :
@@ -288,7 +289,7 @@ class AddToCollection extends React.Component {
           }
           <DialogActions>
             <React.Fragment>
-              <Button onClick={this.handleDialogClose} color="primary" disabled={isAdding}>
+              <Button onClick={this.handleDialogClose} color="secondary" disabled={isAdding}>
                 Cancel
               </Button>
               <Button onClick={this.handleAdd} color="primary" disabled={isAdding}>
