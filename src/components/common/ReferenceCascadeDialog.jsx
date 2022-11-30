@@ -95,7 +95,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                     <span style={{marginRight: '5px', fontSize: '14px'}}>
                       Yes, apply OpenMRS-compatible cascade
                     </span>
-                    <Tooltip arrow title='Yes, include associated Mappings and target Concepts from the same source, and recursively add any of their associated answer and set member concepts and mappings (e.g. Q-AND-A and CONCEPT-SET mappings)'>
+                    <Tooltip arrow title='Includes associated Mappings and target Concepts from the same source, and recursively adds any of their associated answer and set member concepts and mappings (e.g. Q-AND-A and CONCEPT-SET mappings)'>
                       <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
                     </Tooltip>
                   </span>
