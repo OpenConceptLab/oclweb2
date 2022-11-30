@@ -166,18 +166,21 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
               </div> :
             <div>
               {
-                noAssociations ?
+                noAssociations && !mappingForm ?
                   None() :
                   <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
-                    <TableHead>
-                      <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
-                        <TableCell align='left' style={tbHeadCellStyles}><b>Relationship</b></TableCell>
-                        <TableCell align='left' style={tbHeadCellStyles}><b>Code</b></TableCell>
-                        <TableCell align='left' style={tbHeadCellStyles}><b>Name</b></TableCell>
-                        <TableCell align='left' style={tbHeadCellStyles}><b>Source</b></TableCell>
-                        <TableCell align='right' />
-                      </TableRow>
-                    </TableHead>
+                    {
+                      !noAssociations &&
+                        <TableHead>
+                          <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
+                            <TableCell align='left' style={tbHeadCellStyles}><b>Relationship</b></TableCell>
+                            <TableCell align='left' style={tbHeadCellStyles}><b>Code</b></TableCell>
+                            <TableCell align='left' style={tbHeadCellStyles}><b>Name</b></TableCell>
+                            <TableCell align='left' style={tbHeadCellStyles}><b>Source</b></TableCell>
+                            <TableCell align='right' />
+                          </TableRow>
+                        </TableHead>
+                    }
                     <TableBody>
                       {
                         map(orderedMappings, (oMappings, mapType) => {
