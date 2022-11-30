@@ -106,7 +106,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
           {
             cascadePayload &&
               <Accordion style={{marginTop: '10px'}}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} style={{background: 'rgba(0, 0, 0, 0.1)'}}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography>API details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
