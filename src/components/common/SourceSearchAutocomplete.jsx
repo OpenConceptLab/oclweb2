@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  List as SourceIcon, LocalOfferOutlined as ConceptIcon,
+  List as SourceIcon, LocalOffer as ConceptIcon,
   Person as UserIcon, AccountBalance as OrgIcon,
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
@@ -20,6 +20,7 @@ const GroupHeader = styled('div')({
   backgroundColor: '#f5f5f5',
   fontSize: '12px',
   color: 'rgba(0, 0, 0, 0.6)',
+  borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
 });
 
 const GroupItems = styled('ul')({
@@ -138,8 +139,10 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
           <React.Fragment key={option.url}>
             <ListItem
               {...props}
+              alignItems="flex-start"
+              style={{alignItems: 'flex-start'}}
               secondaryAction={
-                <span className='flex-vertical-center'>
+                <span style={{display: 'flex', marginTop: '-22px', alignItems: 'center'}}>
                   {
                     option.owner_type === 'User' ?
                       <UserIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px' }}/> :
@@ -150,8 +153,8 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
                   </span>
                 </span>
               }>
-              <ListItemIcon>
-                <SourceIcon style={{color: GREEN}} fontSize='large' />
+              <ListItemIcon style={{minWidth: 'auto', marginRight: '10px'}}>
+                <SourceIcon style={{color: GREEN, marginTop: '-5px'}} fontSize='large' />
               </ListItemIcon>
               <ListItemText
                 primary={
