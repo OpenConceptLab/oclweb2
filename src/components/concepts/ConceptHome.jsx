@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI } from '../../common/utils'
+import { toParentURI, currentUserHasAccess } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -293,6 +293,7 @@ class ConceptHome extends React.Component {
     const isVersionedObject = this.isVersionedObject()
     const hasError = notFound || accessDenied || permissionDenied;
     const detailsMargin = this.getContentMarginTop()
+    const hasAccess = currentUserHasAccess()
     const conceptDetails = (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -327,7 +328,7 @@ class ConceptHome extends React.Component {
                 sourceVersion={get(this.props.match, 'params.version')}
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
-                onCreateNewMapping={isVersionedObject && this.props.scoped != 'collection'  ? this.onCreateNewMapping : false}
+                onCreateNewMapping={hasAccess && isVersionedObject && this.props.scoped != 'collection'  ? this.onCreateNewMapping : false}
               />
             </div>
           </React.Fragment>
