@@ -69,7 +69,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources }) => {
   const [mappingForm, setMappingForm] = React.useState(false)
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
@@ -120,6 +120,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
   const getCount = () => flatten(compact(flatten(map(values(orderedMappings), mapping => values(mapping))))).length
 
   const _onCreateNewMapping = (payload, targetConcept, isDirect) => onCreateNewMapping(payload, targetConcept, isDirect, () => setMappingForm(false))
+
+  const suggested = compact([{...source, suggestionType: 'Current Source'}, ...map(mappedSources, _source => ({..._source, suggestionType: 'Mapped Source'}))])
 
   return (
     <React.Fragment>
@@ -196,6 +198,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mapType={mapType}
                                     isSelf
                                     onCreateNewMapping={onCreateNewMapping}
+                                    suggested={suggested}
                                   />
                               }
                             </React.Fragment>
@@ -231,6 +234,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mappings={oMappings.direct}
                                     mapType={mapType}
                                     onCreateNewMapping={onCreateNewMapping}
+                                    suggested={suggested}
                                   />
                               }
                             </React.Fragment>
@@ -251,6 +255,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mapType={mapType}
                                     isIndirect
                                     onCreateNewMapping={onCreateNewMapping}
+                                    suggested={suggested}
                                   />
                               }
                             </React.Fragment>
@@ -266,6 +271,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                 onClose={() => setMappingForm(false)}
                                 isDirect
                                 onSubmit={_onCreateNewMapping}
+                                suggested={suggested}
                               />
                             </TableCell>
                           </TableRow>

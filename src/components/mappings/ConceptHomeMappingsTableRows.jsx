@@ -11,7 +11,7 @@ import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping }) => {
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested }) => {
   const [form, setForm] = React.useState(false)
   const [addNewMapType, setAddNewMapType] = React.useState('')
   const conceptCodeAttr = 'cascade_target_concept_code'
@@ -133,6 +133,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                 onClose={() => setForm(false)}
                 isDirect={!isIndirect}
                 onSubmit={onCreateNewMapping}
+                suggested={suggested}
               />
               </TableCell>
           </TableRow>

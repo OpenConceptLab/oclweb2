@@ -9,12 +9,12 @@ import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import AutocompleteLoading from './AutocompleteLoading';
 
-const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, parentURI, disabled}) => {
+const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, parentURI, disabled, value}) => {
   const minLength = minCharactersForSearch || 1;
   const [input, setInput] = React.useState('')
   const [open, setOpen] = React.useState(false)
   const [concepts, setConcepts] = React.useState([])
-  const [selected, setSelected] = React.useState(undefined)
+  const [selected, setSelected] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const isSearchable = input && input.length >= minLength;
   const handleInputChange = debounce((event, value, reason) => {
@@ -42,6 +42,14 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
       setLoading(false)
     })
   }
+
+  React.useEffect(() => {
+    setSelected(value || '')
+    if(!value) {
+      setInput('')
+      setConcepts([])
+    }
+  }, [value])
 
   return (
     <Autocomplete

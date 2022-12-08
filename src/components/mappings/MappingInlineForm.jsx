@@ -5,7 +5,7 @@ import SourceSearchAutocomplete from '../common/SourceSearchAutocomplete';
 import ConceptSearchAutocomplete from '../common/ConceptSearchAutocomplete';
 import FormTooltip from '../common/FormTooltip';
 
-const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect}) => {
+const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect, suggested}) => {
   const [mapTypes, setMapTypes] = React.useState([])
   const [mapType, setMapType] = React.useState(defaultMapType ? {id: defaultMapType, name: defaultMapType} : '')
   const [source, setSource] = React.useState('')
@@ -13,7 +13,10 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
 
   React.useEffect(() => !defaultMapType && fetchMapTypes(data => setMapTypes(data)), [])
 
-  const onSourceChange = (id, item) => setSource(item || '')
+  const onSourceChange = (id, item) => {
+    setSource(item || '')
+    setTargetConcept('')
+  }
 
   const onConceptChange = (id, item) => setTargetConcept(item || '')
 
@@ -77,6 +80,7 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
           onChange={onSourceChange}
           required
           size='small'
+          suggested={suggested}
         />
       </div>
       <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
@@ -86,6 +90,7 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
           required
           size='small'
           disabled={!source}
+          value={targetConcept}
         />
       </div>
       <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>

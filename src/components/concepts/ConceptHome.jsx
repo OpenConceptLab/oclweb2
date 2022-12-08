@@ -33,6 +33,7 @@ class ConceptHome extends React.Component {
       reverseMappings: [],
       collections: [],
       source: {},
+      mappedSources: [],
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
       includeRetiredAssociations: false,
     }
@@ -118,7 +119,21 @@ class ConceptHome extends React.Component {
     const { concept } = this.state
 
     if(get(concept, 'url'))
-      APIService.new().overrideURL(toParentURI(concept.url)).get().then(response => this.setState({source: response.data}))
+      APIService
+      .new()
+      .overrideURL(toParentURI(concept.url))
+      .get(null, null, {includeSummary: true})
+      .then(response => this.setState({source: response.data}, () => {
+        if(this.isVersionedObject())
+          this.fetchParentMappedSources()
+      }))
+  }
+
+  fetchParentMappedSources() {
+    const { source } = this.state
+    if(source?.url) {
+      APIService.new().overrideURL(source.url).appendToUrl('mapped-sources/').get(null, null, {includeSummary: true}).then(response => this.setState({mappedSources: response.data}))
+    }
   }
 
   getHierarchy = () => this.setState({isLoadingHierarchy: true}, () => {
@@ -272,7 +287,7 @@ class ConceptHome extends React.Component {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading,
       notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
-      isLoadingHierarchy, collections, isLoadingCollections, source, reverseMappings
+      isLoadingHierarchy, collections, isLoadingCollections, source, reverseMappings, mappedSources
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
@@ -304,6 +319,7 @@ class ConceptHome extends React.Component {
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}
                 source={source}
+                mappedSources={mappedSources}
                 concept={{...concept, mappings: mappings, collections: collections, reverseMappings: reverseMappings}}
                 isLoadingMappings={isLoadingMappings}
                 isLoadingCollections={isLoadingCollections}
