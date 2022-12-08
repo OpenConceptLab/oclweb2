@@ -5,7 +5,7 @@ import {
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce, orderBy, isNumber, map } from 'lodash'
+import { get, debounce, isNumber, map } from 'lodash'
 import APIService from '../../services/APIService';
 import { GREEN } from '../../common/constants';
 import { styled } from '@mui/system';
@@ -73,7 +73,7 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
     setSources([])
     const query = {limit: 25, q: searchStr, includeSummary: true}
     APIService.sources().get(null, null, query).then(response => {
-      const sources = orderBy(response.data, ['name'])
+      const sources = response.data
       setSources(map(sources, source => ({...source, resultType: 'Search Results'})))
       setLoading(false)
     })
