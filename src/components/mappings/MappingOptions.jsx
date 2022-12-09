@@ -6,7 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 
 const hasAccess = currentUserHasAccess()
 
-const MappingOptions = ({ mapping, concept, onAddNewClick, showNewMappingOption }) => {
+const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMappingOption }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const onMenuToggle = event => {
@@ -42,6 +42,8 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, showNewMappingOption 
       options.push({label: 'Compare Concepts', href: compareConceptHref})
     if(hasAccess && showNewMappingOption)
       options.push({label: `Add new ${mapping.map_type} mapping`, onClick: onAddNewMappingClick })
+    if(hasAccess && showNewMappingOption && !mapping.retired)
+      options.push({label: `Remove this mapping`, onClick: onRemoveMappingClick, type: 'delete' })
 
     return options
   }
@@ -51,6 +53,14 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, showNewMappingOption 
     event.stopPropagation()
     setOpen(false)
     onAddNewClick(mapping.map_type)
+    return false
+  }
+
+  const onRemoveMappingClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(false)
+    onRemove(mapping)
     return false
   }
 
@@ -68,8 +78,10 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, showNewMappingOption 
                 __props.href = `/#${option.href}`
                 __props.component = 'a'
               }
+              if(option.type === 'delete')
+                __props['style'] = {color: '#d32f2f'}
               return (
-                <MenuItem key={index} onClick={event => option.onClick ? option.onClick(event, option) : onOptionClick(event, option)} {...__props}>
+                <MenuItem key={index} onClick={event => option.onClick ? option.onClick(event, option, mapping) : onOptionClick(event, option)} {...__props}>
                   {option.label}
                 </MenuItem>
               )

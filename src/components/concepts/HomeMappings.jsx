@@ -69,7 +69,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping }) => {
   const [mappingForm, setMappingForm] = React.useState(false)
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
@@ -197,7 +197,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mappings={oMappings.self}
                                     mapType={mapType}
                                     isSelf
-                                    onCreateNewMapping={onCreateNewMapping}
+                                    onCreateNewMapping={_onCreateNewMapping}
+                                    onRemoveMapping={onRemoveMapping}
                                     suggested={suggested}
                                   />
                               }
@@ -233,7 +234,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     concept={concept}
                                     mappings={oMappings.direct}
                                     mapType={mapType}
-                                    onCreateNewMapping={onCreateNewMapping}
+                                    onCreateNewMapping={_onCreateNewMapping}
+                                    onRemoveMapping={onRemoveMapping}
                                     suggested={suggested}
                                   />
                               }
@@ -254,7 +256,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mappings={oMappings.indirect}
                                     mapType={mapType}
                                     isIndirect
-                                    onCreateNewMapping={onCreateNewMapping}
+                                    onCreateNewMapping={_onCreateNewMapping}
+                                    onRemoveMapping={onRemoveMapping}
                                     suggested={suggested}
                                   />
                               }

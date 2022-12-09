@@ -11,7 +11,7 @@ import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested }) => {
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping }) => {
   const [form, setForm] = React.useState(false)
   const [addNewMapType, setAddNewMapType] = React.useState('')
   const conceptCodeAttr = 'cascade_target_concept_code'
@@ -52,6 +52,8 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     setForm(true)
     return false
   }
+
+  const onRemoveClick = mapping => onRemoveMapping(mapping, !isIndirect)
 
   const rowSpanCount = count + 1 + (form ? 1 : 0)
 
@@ -116,7 +118,8 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                   mapping={mapping}
                   concept={concept}
                   onAddNewClick={onAddNewClick}
-                  showNewMappingOption={onCreateNewMapping}
+                  onRemove={onRemoveClick}
+                  showNewMappingOption={Boolean(onCreateNewMapping)}
                 />
               </TableCell>
             </TableRow>

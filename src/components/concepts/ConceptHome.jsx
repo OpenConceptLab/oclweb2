@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
+import { get, isObject, isBoolean, has, flatten, values, isArray, find, reject } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI, currentUserHasAccess } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -200,6 +200,35 @@ class ConceptHome extends React.Component {
     })
   }
 
+  onRemoveMapping = (mapping, isDirect) => {
+    const prompt = alertifyjs.prompt()
+    prompt.setContent('<form id="retireForm"> <p>Retire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+    prompt.set('onok', () => {
+      document.getElementById('retireForm').reportValidity();
+      const comment = document.getElementById('comment').value
+      if(!comment)
+        return false
+      this.retireMapping(mapping, comment, isDirect)
+    })
+    prompt.set('title', 'Retire Mapping')
+    prompt.show()
+  }
+
+  retireMapping = (mapping, comment, isDirect) => {
+    const { mappings, reverseMappings } = this.state
+    APIService.new().overrideURL(mapping.url).delete({comment: comment}).then(response => {
+      if(get(response, 'status') === 204)
+        alertifyjs.success('Mapping Retired', 1, () => {
+          if(isDirect)
+            this.setState({mappings: reject(mappings, {url: mapping.url})})
+          else
+            this.setState({reverseMappings: reject(reverseMappings, {url: mapping.url})})
+        })
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
   onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
@@ -333,6 +362,7 @@ class ConceptHome extends React.Component {
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
                 onCreateNewMapping={hasAccess && isVersionedObject && this.props.scoped != 'collection'  ? this.onCreateNewMapping : false}
+                onRemoveMapping={hasAccess && isVersionedObject && this.props.scoped != 'collection'  ? this.onRemoveMapping : false}
               />
             </div>
           </React.Fragment>
