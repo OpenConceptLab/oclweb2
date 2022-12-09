@@ -3,7 +3,7 @@ import {
   List as SourceIcon, LocalOffer as ConceptIcon,
   Person as UserIcon, AccountBalance as OrgIcon,
 } from '@mui/icons-material';
-import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
+import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography, Tooltip } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { get, debounce, isNumber, map } from 'lodash'
 import APIService from '../../services/APIService';
@@ -142,6 +142,7 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
               alignItems="flex-start"
               style={{alignItems: 'flex-start'}}
               secondaryAction={
+                <Tooltip title={option.owner}>
                 <span style={{display: 'flex', marginTop: '-22px', alignItems: 'center'}}>
                   {
                     option.owner_type === 'User' ?
@@ -149,9 +150,10 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
                     <OrgIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}} />
                   }
                   <span className='flex-vertical-center' style={{maxWidth: '70px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}}>
-                    {option.owner}
+                      {option.owner}
                   </span>
                 </span>
+                </Tooltip>
               }>
               <ListItemIcon style={{minWidth: 'auto', marginRight: '10px'}}>
                 <SourceIcon style={{color: GREEN, marginTop: '-5px'}} fontSize='large' />
