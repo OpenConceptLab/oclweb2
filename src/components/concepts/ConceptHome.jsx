@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { get, isObject, isBoolean, has, flatten, values, isArray } from 'lodash';
+import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI, currentUserHasAccess } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -203,8 +203,12 @@ class ConceptHome extends React.Component {
   onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
+    const targetSourceURL = toParentURI(targetConcept.url)
+    const refetchMappedSources = !find(this.state.mappedSources, {url: targetSourceURL})
     APIService.new().overrideURL(URL).post(payload).then(response => {
       if(response.status === 201) {
+        if(refetchMappedSources)
+          this.fetchParentMappedSources()
         alertifyjs.success('Success')
         let newMapping = {
           ...response.data,
