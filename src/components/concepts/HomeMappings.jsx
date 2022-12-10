@@ -119,7 +119,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
   const orderedMappings = getMappings()
   const getCount = () => flatten(compact(flatten(map(values(orderedMappings), mapping => values(mapping))))).length
 
-  const _onCreateNewMapping = (payload, targetConcept, isDirect) => onCreateNewMapping(payload, targetConcept, isDirect, () => setMappingForm(false))
+  const _onCreateNewMapping = onCreateNewMapping ? (payload, targetConcept, isDirect) => onCreateNewMapping(payload, targetConcept, isDirect, () => setMappingForm(false)) : false
 
   const suggested = compact([{...source, suggestionType: 'Current Source'}, ...map(mappedSources, _source => ({..._source, suggestionType: 'Mapped Source'}))])
 
