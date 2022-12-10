@@ -120,6 +120,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                   onAddNewClick={onAddNewClick}
                   onRemove={onRemoveClick}
                   showNewMappingOption={Boolean(onCreateNewMapping)}
+                  isIndirect={isIndirect}
                 />
               </TableCell>
             </TableRow>

@@ -6,7 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 
 const hasAccess = currentUserHasAccess()
 
-const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMappingOption }) => {
+const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMappingOption, isIndirect }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const onMenuToggle = event => {
@@ -33,6 +33,16 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMapp
     const fromConceptURL = mapping.from_concept_url || fromConcept?.url
     const toConceptURL = mapping?.to_concept_url || toConcept?.url
     const compareConceptHref = `/concepts/compare?lhs=${fromConceptURL}&rhs=${toConceptURL}`
+    const addNewMapTypeMappingLabel = (
+      <span>
+        Add new
+        <span style={{margin: '0 5px'}}>
+          {mapping?.map_type}
+          {isIndirect && <sup>-1</sup>}
+        </span>
+        mapping
+      </span>
+    )
 
     if(fromConceptURL && fromConceptURL !== currentURL)
       options.push({label: 'Open From Concept', href: fromConceptURL})
@@ -41,7 +51,7 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMapp
     if(fromConceptURL && toConceptURL)
       options.push({label: 'Compare Concepts', href: compareConceptHref})
     if(hasAccess && showNewMappingOption)
-      options.push({label: `Add new ${mapping.map_type} mapping`, onClick: onAddNewMappingClick })
+      options.push({label: addNewMapTypeMappingLabel, onClick: onAddNewMappingClick })
     if(hasAccess && showNewMappingOption && !mapping.retired)
       options.push({label: `Retire mapping`, onClick: onRemoveMappingClick, type: 'delete' })
 
