@@ -43,7 +43,7 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMapp
     if(hasAccess && showNewMappingOption)
       options.push({label: `Add new ${mapping.map_type} mapping`, onClick: onAddNewMappingClick })
     if(hasAccess && showNewMappingOption && !mapping.retired)
-      options.push({label: `Remove this mapping`, onClick: onRemoveMappingClick, type: 'delete' })
+      options.push({label: `Retire mapping`, onClick: onRemoveMappingClick, type: 'delete' })
 
     return options
   }
