@@ -3,6 +3,7 @@ import { Menu, MenuItem, MenuList, IconButton } from '@mui/material';
 import { MoreVert as MenuIcon } from '@mui/icons-material';
 import { map } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
+import { ACTION_RED } from '../../common/constants';
 
 const hasAccess = currentUserHasAccess()
 
@@ -99,7 +100,7 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivat
                 __props.component = 'a'
               }
               if(option.type === 'delete')
-                __props['style'] = {color: '#d32f2f'}
+                __props['style'] = {color: ACTION_RED}
               return (
                 <MenuItem key={index} onClick={event => option.onClick ? option.onClick(event, option, mapping) : onOptionClick(event, option)} {...__props}>
                   {option.label}
