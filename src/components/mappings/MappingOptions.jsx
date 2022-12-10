@@ -6,7 +6,7 @@ import { currentUserHasAccess } from '../../common/utils';
 
 const hasAccess = currentUserHasAccess()
 
-const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMappingOption, isIndirect }) => {
+const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivate, showNewMappingOption, isIndirect }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const onMenuToggle = event => {
@@ -54,6 +54,8 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMapp
       options.push({label: addNewMapTypeMappingLabel, onClick: onAddNewMappingClick })
     if(hasAccess && showNewMappingOption && !mapping.retired)
       options.push({label: `Retire mapping`, onClick: onRemoveMappingClick, type: 'delete' })
+    if(hasAccess && showNewMappingOption && mapping.retired)
+      options.push({label: `Reactivate mapping`, onClick: onReactivateMappingClick, type: 'delete' })
 
     return options
   }
@@ -71,6 +73,14 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, showNewMapp
     event.stopPropagation()
     setOpen(false)
     onRemove(mapping)
+    return false
+  }
+
+  const onReactivateMappingClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(false)
+    onReactivate(mapping)
     return false
   }
 

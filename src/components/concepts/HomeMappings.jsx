@@ -69,7 +69,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping }) => {
   const [mappingForm, setMappingForm] = React.useState(false)
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
@@ -199,6 +199,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     isSelf
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
+                                    onReactivateMapping={onReactivateMapping}
                                     suggested={suggested}
                                   />
                               }
@@ -236,6 +237,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     mapType={mapType}
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
+                                    onReactivateMapping={onReactivateMapping}
                                     suggested={suggested}
                                   />
                               }
@@ -258,6 +260,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     isIndirect
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
+                                    onReactivateMapping={onReactivateMapping}
                                     suggested={suggested}
                                   />
                               }
