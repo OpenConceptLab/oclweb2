@@ -124,18 +124,21 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
                 </React.Fragment>
             }
           </div>
-          <div>
-            <Chip
-              className='underline-text'
-              icon={<EditIcon fontSize='small' style={{width: '14px'}} />}
-              size='small'
-              label="Edit Profile"
-              style={{border: 'none'}}
-              variant='outlined'
-              color='primary'
-              onClick={onEditClick}
-            />
-          </div>
+          {
+            (apiToken || isAdmin) &&
+              <div>
+                <Chip
+                  className='underline-text'
+                  icon={<EditIcon fontSize='small' style={{width: '14px'}} />}
+                  size='small'
+                  label="Edit Profile"
+                  style={{border: 'none'}}
+                  variant='outlined'
+                  color='primary'
+                  onClick={onEditClick}
+                />
+              </div>
+          }
           <Divider style={{width: '100%', margin: '5px 0'}} />
           {
             user.company &&
