@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Tooltip } from '@mui/material';
-import { Home as HomeIcon } from '@mui/icons-material';
+import { AccountBalance as HomeIcon } from '@mui/icons-material';
 import { ORANGE, WHITE } from '../../common/constants';
 
 const OrgButton = ({label, onClick, href, ...rest}) => {

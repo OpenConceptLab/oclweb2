@@ -580,12 +580,12 @@ const ExpandibleRow = props => {
             {
               isPublic ?
               <Tooltip arrow title='Public'>
-                <span className='flex-vertical-center'>
+                <span className='flex-vertical-center' style={{marginTop: '5px'}}>
                   <PublicIcon fontSize='small' />
                 </span>
               </Tooltip> :
               <Tooltip arrow title='Private'>
-                <span className='flex-vertical-center'>
+                <span className='flex-vertical-center' style={{marginTop: '5px'}}>
                   <PrivateIcon fontSize='small' />
                 </span>
               </Tooltip>
@@ -767,6 +767,13 @@ const ResultsTable = (
   const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
 
+  const hasZeroActiveButSomeRetiredResults = () => results?.total === 0 && Boolean(retiredResults())
+
+  const retiredResults = () => {
+    const retired = results.facets?.fields?.retired
+    return get(find(retired, info => info[0] === 'true' && info[1] > 0 && info[2] === false), '1')
+  }
+
   const onAllSelect = event => {
     const newList = event.target.checked ? map(results.items, 'uuid') : [];
     setSelectedList(newList)
@@ -933,7 +940,7 @@ const ResultsTable = (
                                             onChange={event => setRefTranslation(event.target.checked)} />
                                         }
                                         label={
-                                          <span style={{fontSize: '12px', marginleft: '5px'}}>
+                                          <span style={{fontSize: '12px', marginLeft: '5px'}}>
                                             {refTranslation ? 'Show Expression' : 'Show Translation'}
                                           </span>
                                         }
@@ -1015,7 +1022,18 @@ const ResultsTable = (
               />
             </Paper>
           </div> :
-          <div style={{padding: '2px'}}>We found 0 {startCase(resource)}.</div>
+          <div style={{padding: '2px'}}>
+            {
+              hasZeroActiveButSomeRetiredResults() ?
+                <span>
+                  We found 0 {startCase(resource)}. Would you like to view
+                  <Link to={window.location.hash.replace('#/', '/') + '&facets={"retired":{"true":true}}'} style={{marginLeft: '3px'}}>
+                    {`${retiredResults()} Retired ${startCase(resource)}?`}
+                  </Link>
+                  </span> :
+              `We found 0 ${startCase(resource)}.`
+            }
+          </div>
         }
       </div>
     </React.Fragment>

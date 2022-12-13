@@ -14,7 +14,7 @@ const ResourceReferences = ({headingStyles, detailStyles, references, resource})
   return (
     <Accordion expanded style={{borderRadius: 'unset'}}>
       <AccordionSummary
-        className='light-gray-bg less-paded-accordian-header'
+        className='light-gray-bg less-paded-accordion-header'
         expandIcon={<span />}
         aria-controls="panel1a-content"
         style={{cursor: 'inherit'}}

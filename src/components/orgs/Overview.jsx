@@ -1,6 +1,6 @@
 import React from 'react';
 import { isEmpty, has } from 'lodash'
-import { Home as OrgIcon } from '@mui/icons-material';
+import { AccountBalance as OrgIcon } from '@mui/icons-material';
 import Pins from '../common/Pins';
 import PinIcon from '../common/PinIcon';
 import Members from './Members';

@@ -398,7 +398,7 @@ class CollectionHome extends React.Component {
                             parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                             mapping={selected}
                             location={{pathname: selected.version_url || selected.url}}
-                    match={{params: {mappingVersion: selected.verison, version: this.props.match.params.version}}}
+                    match={{params: {mappingVersion: selected.version, version: this.props.match.params.version}}}
                             header={false}
                             noRedirect
                   /> :

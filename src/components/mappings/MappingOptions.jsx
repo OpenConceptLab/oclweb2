@@ -2,11 +2,15 @@ import React from 'react';
 import { Menu, MenuItem, MenuList, IconButton } from '@mui/material';
 import { MoreVert as MenuIcon } from '@mui/icons-material';
 import { map } from 'lodash';
+import { currentUserHasAccess } from '../../common/utils';
+import { ACTION_RED } from '../../common/constants';
 
-const MappingOptions = ({ mapping }) => {
+const hasAccess = currentUserHasAccess()
+
+const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivate, showNewMappingOption, isIndirect }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
-  const onMenuToogle = event => {
+  const onMenuToggle = event => {
     event.preventDefault()
     event.stopPropagation()
     setOpen(!open)
@@ -22,34 +26,87 @@ const MappingOptions = ({ mapping }) => {
     return false
   }
 
-  const compareConceptHref = `/concepts/compare?lhs=${mapping.from_concept_url}&rhs=${mapping.to_concept_url}`
   const getOptions = () => {
     const options = [{label: 'Open Mapping Details', href: mapping.url},]
     const currentURL = window.location.hash.split('?')[0].split('#')[1]
+    const toConcept = mapping?.from_concept_url ? concept : null
+    const fromConcept = mapping?.to_concept_url ? concept : null
+    const fromConceptURL = mapping.from_concept_url || fromConcept?.url
+    const toConceptURL = mapping?.to_concept_url || toConcept?.url
+    const compareConceptHref = `/concepts/compare?lhs=${fromConceptURL}&rhs=${toConceptURL}`
+    const addNewMapTypeMappingLabel = (
+      <span>
+        Add new
+        <span style={{margin: '0 5px'}}>
+          {mapping?.map_type}
+          {isIndirect && <sup>-1</sup>}
+        </span>
+        mapping
+      </span>
+    )
 
-    if(mapping.from_concept_url && mapping.from_concept_url !== currentURL)
-      options.push({label: 'Open From Concept', href: mapping.from_concept_url})
-    if(mapping.to_concept_url && mapping.to_concept_url !== currentURL)
-      options.push({label: 'Open To Concept', href: mapping.to_concept_url})
-    if(mapping.to_concept_url && mapping.from_concept_url)
+    if(fromConceptURL && fromConceptURL !== currentURL)
+      options.push({label: 'Open From Concept', href: fromConceptURL})
+    if(toConceptURL && toConceptURL !== currentURL)
+      options.push({label: 'Open To Concept', href: toConceptURL})
+    if(fromConceptURL && toConceptURL)
       options.push({label: 'Compare Concepts', href: compareConceptHref})
+    if(hasAccess && showNewMappingOption)
+      options.push({label: addNewMapTypeMappingLabel, onClick: onAddNewMappingClick })
+    if(hasAccess && showNewMappingOption && !mapping.retired)
+      options.push({label: `Retire mapping`, onClick: onRemoveMappingClick, type: 'delete' })
+    if(hasAccess && showNewMappingOption && mapping.retired)
+      options.push({label: `Reactivate mapping`, onClick: onReactivateMappingClick, type: 'delete' })
 
     return options
   }
 
+  const onAddNewMappingClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(false)
+    onAddNewClick(mapping.map_type)
+    return false
+  }
+
+  const onRemoveMappingClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(false)
+    onRemove(mapping)
+    return false
+  }
+
+  const onReactivateMappingClick = event => {
+    event.preventDefault()
+    event.stopPropagation()
+    setOpen(false)
+    onReactivate(mapping)
+    return false
+  }
+
   return (
     <React.Fragment>
-      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToogle}>
+      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToggle}>
         <MenuIcon fontSize='inherit' />
       </IconButton>
-      <Menu open={open} anchorEl={anchorRef.current} onClose={onMenuToogle}>
+      <Menu open={open} anchorEl={anchorRef.current} onClose={onMenuToggle}>
         <MenuList>
           {
-            map(getOptions(), (option, index) => (
-              <MenuItem key={index} component='a' href={`/#${option.href}`} onClick={event => onOptionClick(event, option)}>
-                {option.label}
-              </MenuItem>
-            ))
+            map(getOptions(), (option, index) => {
+              let __props = {}
+              if(option.href) {
+                __props.href = `/#${option.href}`
+                __props.component = 'a'
+              }
+              if(option.type === 'delete')
+                __props['style'] = {color: ACTION_RED}
+              return (
+                <MenuItem key={index} onClick={event => option.onClick ? option.onClick(event, option, mapping) : onOptionClick(event, option)} {...__props}>
+                  {option.label}
+                </MenuItem>
+              )
+            })
           }
         </MenuList>
       </Menu>

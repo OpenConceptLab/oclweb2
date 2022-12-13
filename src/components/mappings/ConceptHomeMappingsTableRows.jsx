@@ -7,13 +7,16 @@ import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
 import { getSiteTitle, toParentURI } from '../../common/utils';
+import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }) => {
-  const conceptCodeAttr = 'target_concept_code'
-  const conceptCodeName = 'target_concept_name'
-  const sourceAttr = 'target_source_name';
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping }) => {
+  const [form, setForm] = React.useState(false)
+  const [addNewMapType, setAddNewMapType] = React.useState('')
+  const conceptCodeAttr = 'cascade_target_concept_code'
+  const conceptCodeName = 'cascade_target_concept_name'
+  const sourceAttr = 'cascade_target_source_name';
 
   const onDefaultClick = (event, targetURL) => {
     event.stopPropagation()
@@ -36,21 +39,32 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
     const sameParentMappings = []
     const differentParentMappings = []
     forEach(mappings, mapping => {
-      if(mapping.target_concept_url && toParentURI(mapping.target_concept_url) === parentURL)
+      if(mapping.cascade_target_concept_url && toParentURI(mapping.cascade_target_concept_url) === parentURL)
         sameParentMappings.push(mapping)
       else
         differentParentMappings.push(mapping)
     })
-    return [...orderBy(sameParentMappings, 'target_concept_name'), ...orderBy(differentParentMappings, ['target_source_name', 'target_concept_name'])]
+    return [...orderBy(sameParentMappings, 'cascade_target_concept_name'), ...orderBy(differentParentMappings, ['cascade_target_source_name', 'cascade_target_concept_name'])]
   }
+
+  const onAddNewClick = mapType => {
+    setAddNewMapType(mapType)
+    setForm(true)
+    return false
+  }
+
+  const onRemoveClick = mapping => onRemoveMapping(mapping, !isIndirect)
+  const onReactivateClick = mapping => onReactivateMapping(mapping, !isIndirect)
+
+  const rowSpanCount = count + 1 + (form ? 1 : 0)
 
   return (
     <React.Fragment>
       {
         mapType &&
         <TableRow hover>
-          <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
-            <Tooltip title={isIndirect ? 'Inverse Mappings' : 'Direct Mappings'}>
+          <TableCell align='left' rowSpan={rowSpanCount} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
+            <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
               <Chip
                 size='small'
                 variant='outlined'
@@ -59,6 +73,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
                   <span>
                     <span>{mapType}</span>
                     {isIndirect && <sup>-1</sup>}
+                    {isSelf && <sup>∞</sup>}
                   </span>
                 }
                 style={{border: 'none'}}
@@ -69,7 +84,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
       }
       {
         map(getOrderedMappings(), mapping => {
-          const targetURL = get(mapping, 'target_concept_url')
+          const targetURL = get(mapping, 'cascade_target_concept_url')
           let title;
           if(targetURL)
             title = isIndirect ? `Source concept is defined in ${SITE_TITLE}` : `Target concept is defined in ${SITE_TITLE}`
@@ -78,7 +93,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
           const cursor = targetURL ? 'pointer' : 'not-allowed'
           return (
             <TableRow
-              hover key={mapping.uuid} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
+              hover key={mapping.url} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
               <TableCell align='left' className='ellipsis-text' style={{maxWidth: '200px'}}>
                 <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                   <span className='flex-vertical-center' style={{marginRight: '4px'}}>
@@ -100,11 +115,34 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect }
                 {get(mapping, sourceAttr)}
               </TableCell>
               <TableCell align='right' style={{width: '24px', paddingRight: '5px'}}>
-                <MappingOptions mapping={mapping} />
+                <MappingOptions
+                  mapping={mapping}
+                  concept={concept}
+                  onAddNewClick={onAddNewClick}
+                  onRemove={onRemoveClick}
+                  onReactivate={onReactivateClick}
+                  showNewMappingOption={Boolean(onCreateNewMapping)}
+                  isIndirect={isIndirect}
+                />
               </TableCell>
             </TableRow>
           )
         })
+      }
+      {
+        form &&
+          <TableRow>
+            <TableCell colSpan={4}>
+              <MappingInlineForm
+                defaultMapType={addNewMapType}
+                concept={concept}
+                onClose={() => setForm(false)}
+                isDirect={!isIndirect}
+                onSubmit={onCreateNewMapping}
+                suggested={suggested}
+              />
+              </TableCell>
+          </TableRow>
       }
     </React.Fragment>
   )

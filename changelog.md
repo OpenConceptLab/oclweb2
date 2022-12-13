@@ -302,7 +302,7 @@
 - [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | fixing header
 - [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | SplitView initial width for global search
 - [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | SplitView styles for global search
-- Accordian label count to show 0 as well
+- Accordion label count to show 0 as well
 - [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | split view open | keeping margins consistent
 - [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | collection button | not transforming text
 - [OpenConceptLab/ocl_issues#1203](https://github.com/OpenConceptLab/ocl_issues/issues/1203) | Collection | split view for concepts/mappings

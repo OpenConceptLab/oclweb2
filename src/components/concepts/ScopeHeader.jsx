@@ -69,7 +69,7 @@ const ScopeHeader = ({
 
   const resourceURL = ((get(concept, 'versioned_object_id') || '').toString() === concept.uuid || concept.is_latest_version) ? concept.url : concept.version_url
   return (
-    <header className='resource-header home-header col-xs-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 1, paddingLeft: '5px'}}>
+    <header className='resource-header home-header col-xs-12' style={{paddingTop: '5px', paddingBottom: 0, position: 'fixed', zIndex: 2, paddingLeft: '5px'}}>
       <div className='col-md-12 no-side-padding container' style={{lineHeight: 'normal'}}>
         <div className="col-xs-12 no-side-padding">
           {

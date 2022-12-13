@@ -65,7 +65,7 @@ class SortButton extends React.Component {
     const sortBy = this.isAsc() ? DESC : ASC;
 
     if(sortBy !== this.state.sortBy)
-      this.setState({sortBy: sortBy }, this.propogate)
+      this.setState({sortBy: sortBy }, this.propagate)
   }
 
   toggleOpen = () => {
@@ -74,12 +74,12 @@ class SortButton extends React.Component {
 
   setSelectedOption = value => {
     if(value !== this.state.selectedOption)
-      this.setState({selectedOption: value}, this.propogate)
+      this.setState({selectedOption: value}, this.propagate)
   }
 
   handleMenuItemClick = value => {
     if(includes(['name', 'username', 'numeric_id'], value) && value !== this.state.selectedOption)
-      this.setState({sortBy: ASC, selectedOption: value}, this.propogate)
+      this.setState({sortBy: ASC, selectedOption: value}, this.propagate)
     else
       this.setSelectedOption(value || 'score');
 
@@ -91,7 +91,7 @@ class SortButton extends React.Component {
     return this.isAsc() ? {sortAsc: selectedOption} : {sortDesc: selectedOption}
   }
 
-  propogate() {
+  propagate() {
     this.props.onChange(this.toQueryParams())
   }
 

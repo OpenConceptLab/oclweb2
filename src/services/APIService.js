@@ -14,6 +14,7 @@ const RESOURCES = [
   { name: 'user', relations: ['orgs'] },
   { name: 'feedback', relations: [] },
   { name: 'version', relations: [] },
+  { name: 'locales', relations: [] },
   { name: 'new', relations: [] },
 ];
 
@@ -24,7 +25,7 @@ class APIService {
     else this.URL = `${apiURL}/${name}/`;
     this.headers = {
       'Content-Type': 'application/json',
-      Accept: 'application/json'
+      Accept: '*/*'
     };
 
     if (id) {

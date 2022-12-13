@@ -158,7 +158,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
       if(response.detail || response.error)
         alertifyjs.error(response.detail || response.error, 5)
       else if(response.status === 202)
-        alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of reporsitory. Please revisit in few minutes.', 10)
+        alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of repository. Please revisit in few minutes.', 10)
       else
         alertifyjs.error('Something went wrong.', 5)
     })
@@ -256,7 +256,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                         />
                     }
                     {
-                      version &&
+                      canEdit && version &&
                         <Tooltip arrow title='Re-compute Summary'>
                           <IconButton onClick={() => onComputeSummaryClick(version)} size='small'>
                             <SummaryIcon fontSize='inherit' />
@@ -385,7 +385,7 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
                                     <CopyIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip arrow title='View Expanson Parameters'>
+                                <Tooltip arrow title='View Expansion Parameters'>
                                   <IconButton onClick={() => setOpenExpansionDialog(expansion)} size="medium">
                                     <ViewParametersIcon fontSize='inherit' />
                                   </IconButton>

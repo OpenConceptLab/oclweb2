@@ -32,13 +32,15 @@ const CONFIG = {
     },
     supportedLanguages: {
       label: 'Supported Languages',
+      placeholder: 'Choose Supported languages',
       tooltip: 'Other languages that may be used in your Collection.',
     },
   },
   configuration: {
     title: 'Configuration',
     type: {
-      label: 'Select collection type',
+      label: 'Collection type',
+      placeholder: 'Select collection type',
       tooltip: 'The type of Collection that you want to create. Note that some Collection types have special meaning.',
     },
     customValidationSchema: {
@@ -113,7 +115,7 @@ const CONFIG = {
       },
       immutable: {
         label: 'Immutable',
-        tooltip: 'If this is set to ‘true’, then no new versions of the content logical definition can be created. Note: Other metadata might still change.'
+        tooltip: 'If this is set to "true", then no new versions of the content logical definition can be created. Note: Other metadata might still change.'
       },
     },
     customAttributes: {

@@ -3,7 +3,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import {
   TextField
 } from '@mui/material';
-import { Person as PersonIcon, Home as HomeIcon } from '@mui/icons-material';
+import { Person as PersonIcon, AccountBalance as HomeIcon } from '@mui/icons-material';
 import { get, map, uniqBy, startCase, compact } from 'lodash';
 import APIService from '../../services/APIService';
 import { ORANGE } from '../../common/constants';

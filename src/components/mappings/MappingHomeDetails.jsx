@@ -1,7 +1,7 @@
 import React from 'react';
 import { get } from 'lodash';
 import MappingCollections from '../common/SourceChildCollections';
-import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
+import CustomAttributesAccordion from '../common/CustomAttributesAccordion';
 import VersionList from '../common/VersionList';
 import ResourceReferences from '../common/ResourceReferences';
 
@@ -19,7 +19,7 @@ const MappingHomeDetails = ({ mapping, singleColumn, versions, isLoadingCollecti
   return (
     <div className='row' style={{width: '100%', margin: 0}}>
       <div className={classes}>
-        <CustomAttributesAccordian
+        <CustomAttributesAccordion
           attributes={mapping.extras || {}}
           headingStyles={ACCORDIAN_HEADING_STYLES}
           detailStyles={ACCORDIAN_DETAILS_STYLES}

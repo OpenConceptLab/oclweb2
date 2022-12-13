@@ -3,7 +3,7 @@ import { Tabs, Tab, AppBar, CircularProgress, Button } from '@mui/material';
 import {
   List as ListIcon,
   Loyalty as LoyaltyIcon,
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
 import { isEmpty, startCase } from 'lodash';

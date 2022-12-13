@@ -2,7 +2,7 @@ import React from 'react';
 import { get } from 'lodash';
 import HomeMappings from './HomeMappings';
 import ConceptCollections from '../common/SourceChildCollections';
-import CustomAttributesAccordian from '../common/CustomAttributesAccordian';
+import CustomAttributesAccordion from '../common/CustomAttributesAccordion';
 import ResourceReferences from '../common/ResourceReferences';
 import HomeLocales from './HomeLocales';
 import VersionList from '../common/VersionList';
@@ -14,7 +14,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   overflowX: 'auto', width: '100%', padding: '0'
 }
 
-const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle, onCreateNewMapping, onRemoveMapping, onReactivateMapping, mappedSources }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   let classes = 'col-sm-12 padding-5';
@@ -36,14 +36,25 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           label='Descriptions'
           isDescription
         />
-        <CustomAttributesAccordian
+        <CustomAttributesAccordion
           attributes={concept.extras || {}}
           headingStyles={ACCORDIAN_HEADING_STYLES}
           detailStyles={ACCORDIAN_DETAILS_STYLES}
         />
       </div>
       <div className={classes} style={{paddingTop: '10px'}}>
-        <HomeMappings concept={concept} isLoadingMappings={isLoadingMappings} source={source} sourceVersion={sourceVersion} parent={parent} onIncludeRetiredToggle={onIncludeRetiredAssociationsToggle} />
+        <HomeMappings
+          concept={concept}
+          isLoadingMappings={isLoadingMappings}
+          source={source}
+          mappedSources={mappedSources}
+          sourceVersion={sourceVersion}
+          parent={parent}
+          onIncludeRetiredToggle={onIncludeRetiredAssociationsToggle}
+          onCreateNewMapping={onCreateNewMapping}
+          onRemoveMapping={onRemoveMapping}
+          onReactivateMapping={onReactivateMapping}
+        />
         {
           scoped === 'collection' ?
             <ResourceReferences

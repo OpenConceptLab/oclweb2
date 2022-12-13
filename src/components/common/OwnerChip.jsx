@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chip, Tooltip } from '@mui/material';
 import {
-  Home as HomeIcon, Person as PersonIcon
+  AccountBalance as HomeIcon, Person as PersonIcon
 } from '@mui/icons-material';
 import { startCase } from 'lodash';
 

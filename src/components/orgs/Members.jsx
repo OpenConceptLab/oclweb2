@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, Stack, IconButton, Divider, Badge } from '@mui/material'
 import {
-  List as SourceIcon, Loyalty as CollectionIcon, Home as OrgIcon,
+  List as SourceIcon, Loyalty as CollectionIcon, AccountBalance as OrgIcon,
   AdminPanelSettings as AdminIcon, PersonOff as UserDisabledIcon,
   PrivacyTip as UnverifiedIcon,
   VerifiedUser as VerifiedIcon,

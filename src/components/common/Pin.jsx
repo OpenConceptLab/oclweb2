@@ -5,7 +5,7 @@ import {
   CircularProgress, Tooltip
 } from '@mui/material';
 import {
-  List as ListIcon, Loyalty as LoyaltyIcon, Home as HomeIcon,
+  List as ListIcon, Loyalty as LoyaltyIcon, AccountBalance as HomeIcon,
   LocalOffer as LocalOfferIcon, Link as LinkIcon,
   AccountTreeRounded as TreeIcon,
   AspectRatio as ExpansionIcon

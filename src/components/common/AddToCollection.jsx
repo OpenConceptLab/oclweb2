@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
-  CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle,
+  CircularProgress, Dialog, DialogActions, DialogContent,
   TextField, InputAdornment, Chip
 } from '@mui/material'
 import {
@@ -18,6 +18,7 @@ import CollectionForm from '../collections/CollectionForm';
 import AddReferencesResult from './AddReferencesResult';
 import ReferenceCascadeDialog from './ReferenceCascadeDialog';
 import MappingReferenceAddOptionsDialog from './MappingReferenceAddOptionsDialog';
+import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -34,6 +35,7 @@ class AddToCollection extends React.Component {
       collections: [],
       cascadeMappings: false,
       cascadeToConcepts: false,
+      cascadeMethod: false,
       result: false,
       collectionForm: false,
       addMappings: true,
@@ -80,12 +82,13 @@ class AddToCollection extends React.Component {
       this.setState({selectedCollection: collection}, () => this.handleClose(event))
   }
 
-  handleAdd = () => {
-    const { selectedCollection, cascadeMappings, cascadeToConcepts, addMappings, addToConcepts, addFromConcepts } = this.state
+  getPayload = (cascadeToConcepts, cascadeMappings, cascadeMethod) => {
+    const { addMappings, addToConcepts, addFromConcepts } = this.state
     const { references } = this.props
     const isMapping = Boolean(get(references, '0.map_type'))
-    let expressions = [];
+    let expressions = map(references, 'url')
     let queryParams = {}
+    let cascadePayload = {}
     if(isMapping) {
       if(addMappings)
         expressions = map(references, 'url')
@@ -97,18 +100,31 @@ class AddToCollection extends React.Component {
     } else {
       expressions = map(references, 'url')
       if(cascadeToConcepts)
-        queryParams = {cascade: 'sourceToConcepts'}
+        queryParams = {cascade: 'sourcetoconcepts'}
       else if(cascadeMappings)
-        queryParams = {cascade: 'sourceMappings'}
+        queryParams = {cascade: 'sourcemappings'}
+      else if(cascadeMethod) {
+        cascadePayload = {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}
+        queryParams = {transformReferences: 'resourceVersions'}
+      }
     }
-    if(isEmpty(expressions)) {
+    let payload = {payload: {data: {expressions: expressions}}, queryParams: queryParams}
+    if(!isEmpty(cascadePayload))
+      payload.payload.cascade = cascadePayload
+    return payload
+  }
+
+  handleAdd = () => {
+    const { selectedCollection, cascadeMappings, cascadeToConcepts, cascadeMethod } = this.state
+    const payload = this.getPayload(cascadeToConcepts, cascadeMappings, cascadeMethod)
+    if(isEmpty(payload?.payload?.data?.expressions)) {
       alertifyjs.error('No expressions to add')
     } else {
       this.setState({isAdding: true}, () => {
         this._collectionName = this.getCollectionName()
         APIService.new().overrideURL(selectedCollection.url)
           .appendToUrl('references/')
-          .put({data: {expressions: expressions}}, null, null, queryParams)
+          .put(payload.payload, null, null, payload.queryParams)
           .then(response => {
             this.setState({isAdding: false}, () => {
               if(response.status === 200) {
@@ -250,21 +266,30 @@ class AddToCollection extends React.Component {
           )}
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose}>
-          <DialogTitle>
-            {`Add To Collection: ${collectionName}`}
-          </DialogTitle>
+          <DialogTitleWithCloseButton onClose={this.handleDialogClose}>
+            Add References to Collection
+          </DialogTitleWithCloseButton>
           {
             isAdding ?
               <DialogContent style={{textAlign: 'center', margin: '50px'}}><CircularProgress /></DialogContent> :
             (
               isMappingReferences ?
                 <MappingReferenceAddOptionsDialog references={references} onChange={states => this.setState({addMappings: states.addMappings, addToConcepts: states.addToConcepts, addFromConcepts: states.addFromConcepts})} collectionName={collectionName} /> :
-              <ReferenceCascadeDialog references={references} onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings})} collectionName={collectionName} />
+              <ReferenceCascadeDialog
+                references={references}
+                onCascadeChange={states => this.setState({cascadeToConcepts: states.cascadeToConcepts, cascadeMappings: states.cascadeMappings, cascadeMethod: states.cascadeMethod})}
+                collectionName={collectionName}
+                collection={selectedCollection}
+                noCascadePayloadFunc={() => this.getPayload()}
+                cascadeMappingsFunc={() => this.getPayload(false, true, false)}
+                cascadeToConceptsFunc={() => this.getPayload(true, false, false)}
+                cascadeOpenMRSFunc={() => this.getPayload(false, false, true)}
+              />
             )
           }
           <DialogActions>
             <React.Fragment>
-              <Button onClick={this.handleDialogClose} color="primary" disabled={isAdding}>
+              <Button onClick={this.handleDialogClose} color="secondary" disabled={isAdding}>
                 Cancel
               </Button>
               <Button onClick={this.handleAdd} color="primary" disabled={isAdding}>

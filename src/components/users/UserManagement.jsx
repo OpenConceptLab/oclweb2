@@ -12,7 +12,7 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 const UserManagement = ({ user }) => {
   const [status, setStatus] = React.useState(user.status)
   const [isAdmin, setIsAdmin] = React.useState(user.is_staff)
-  const [isResetingPassword, setIsResetingPassword] = React.useState(false)
+  const [isResettingPassword, setIsResettingPassword] = React.useState(false)
   const isVerified = status === 'verified'
   const isUnverified = includes(['verification_pending', 'unverified'], status)
   const isDeactivated = status === 'deactivated'
@@ -124,7 +124,7 @@ const UserManagement = ({ user }) => {
 
   const resetPassword = newPassword => {
     APIService.users(user.username).put({password: newPassword}).then(response => {
-      setIsResetingPassword(false)
+      setIsResettingPassword(false)
       if(response.status === 200)
         alertifyjs.success('Successfully resetted user password. Reloading...')
       else
@@ -174,15 +174,15 @@ const UserManagement = ({ user }) => {
       </FormControl>
       <Tooltip arrow title="Reset this user's password." placement='right'>
         <span>
-          <Button color='error' variant={isResetingPassword ? 'contained' : 'outlined'} size='small' style={{textTransform: 'none', marginRight: '10px'}} onClick={() => setIsResetingPassword(true)} disabled={isDeactivated || !isVerified}>
+          <Button color='error' variant={isResettingPassword ? 'contained' : 'outlined'} size='small' style={{textTransform: 'none', marginRight: '10px'}} onClick={() => setIsResettingPassword(true)} disabled={isDeactivated || !isVerified}>
             Reset Password
           </Button>
         </span>
       </Tooltip>
 
       {
-        isResetingPassword &&
-          <Dialog open={isResetingPassword} onClose={() => setIsResetingPassword(false)} maxWidth="md" fullWidth>
+        isResettingPassword &&
+          <Dialog open={isResettingPassword} onClose={() => setIsResettingPassword(false)} maxWidth="md" fullWidth>
             <div className='col-xs-12 no-side-padding' style={{marginBottom: '25px'}}>
               <ForgotPasswordForm match={{params: {user: user.username, token: 'unknown-token'}}} forceReset user={user} onSubmit={resetPassword} />
               </div>

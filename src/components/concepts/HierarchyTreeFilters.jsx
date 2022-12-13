@@ -23,6 +23,7 @@ const LEVEL_OPTIONS = [
 const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size}) => {
   const [mapTypes, setMapTypes] = React.useState(filters.mapTypes || '')
   const [excludeMapTypes, setExcludeMapTypes] = React.useState(filters.excludeMapTypes || '')
+  const [returnMapTypes, setReturnMapTypes] = React.useState(filters.returnMapTypes || '')
   const [levelAnchorEl, setLevelAnchorEl] = React.useState(null);
   const [mapTypeAnchorEl, setMapTypeAnchorEl] = React.useState(null);
   const cascadeLevelText = filters.cascadeLevels === '*' ? 'Levels: All' : `Levels: ${filters.cascadeLevels}`
@@ -34,7 +35,7 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
   }
   const onMapTypesChange = () => {
     toggleMapTypeAnchor()
-    onMapTypesFilterChange({...filters, mapTypes: mapTypes, excludeMapTypes: excludeMapTypes})
+    onMapTypesFilterChange({...filters, mapTypes: mapTypes, excludeMapTypes: excludeMapTypes, returnMapTypes: returnMapTypes})
   }
   const _size = size || 'small'
 
@@ -157,6 +158,19 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
                 fullWidth
                 value={excludeMapTypes}
                 onChange={event => setExcludeMapTypes(event.target.value)}
+                placeholder='e.g. SAME-AS,NARROWER-THAN,CONCEPT-SET'
+              />
+            </div>
+          </div>
+          <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+            <div className='col-xs-12 no-side-padding' style={{fontWeight: 'bold', marginBottom: '5px'}}>
+              Return MapTypes
+            </div>
+            <div className='col-xs-12 no-side-padding'>
+              <TextField
+                fullWidth
+                value={returnMapTypes}
+                onChange={event => setReturnMapTypes(event.target.value)}
                 placeholder='e.g. SAME-AS,NARROWER-THAN,CONCEPT-SET'
               />
             </div>

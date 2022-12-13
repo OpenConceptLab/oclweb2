@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Autocomplete from '@mui/material/Autocomplete';
 import {
-  Add as AddIcon , Person as PersonIcon, Home as HomeIcon,
+  Add as AddIcon , Person as PersonIcon, AccountBalance as HomeIcon,
   BubbleChart as TipIcon
 } from '@mui/icons-material';
 import {

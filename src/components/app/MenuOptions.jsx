@@ -3,7 +3,7 @@ import {
   Info as AboutIcon,
   Chat as BlogIcon,
   People as CommunityIcon,
-  AccountBalance as ArchCommunityCallIcon,
+  Architecture as ArchCommunityCallIcon,
   DeveloperMode as DevCommunityCallIcon,
   SpeakerNotes as OpenHIETerminologyServiceIcon,
   GitHub as GitHubIcon,

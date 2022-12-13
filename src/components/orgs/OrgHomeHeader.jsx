@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   FileCopy as CopyIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';

@@ -1,9 +1,10 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { get, isObject, isBoolean, has } from 'lodash';
+import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI } from '../../common/utils'
+import { toParentURI, currentUserHasAccess } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -32,6 +33,7 @@ class ConceptHome extends React.Component {
       reverseMappings: [],
       collections: [],
       source: {},
+      mappedSources: [],
       openHierarchy: isBoolean(props.openHierarchy) ? props.openHierarchy : false,
       includeRetiredAssociations: false,
     }
@@ -117,7 +119,21 @@ class ConceptHome extends React.Component {
     const { concept } = this.state
 
     if(get(concept, 'url'))
-      APIService.new().overrideURL(toParentURI(concept.url)).get().then(response => this.setState({source: response.data}))
+      APIService
+      .new()
+      .overrideURL(toParentURI(concept.url))
+      .get(null, null, {includeSummary: true})
+      .then(response => this.setState({source: response.data}, () => {
+        if(this.isVersionedObject())
+          this.fetchParentMappedSources()
+      }))
+  }
+
+  fetchParentMappedSources() {
+    const { source } = this.state
+    if(source?.url) {
+      APIService.new().overrideURL(source.url).appendToUrl('mapped-sources/').get(null, null, {includeSummary: true}).then(response => this.setState({mappedSources: response.data}))
+    }
   }
 
   getHierarchy = () => this.setState({isLoadingHierarchy: true}, () => {
@@ -161,26 +177,145 @@ class ConceptHome extends React.Component {
               })
   }
 
-  getMappings() {
+  getMappings = directOnly => {
     this.setState({isLoadingMappings: true}, () => {
       let url = this.getConceptURLFromPath()
       if(this.props.scoped === 'collection' && this.props.parentURL)
         url = `${this.props.parentURL}concepts/${encodeURIComponent(this.state.concept.id)}/`
+
       APIService.new()
         .overrideURL(encodeURI(url))
         .appendToUrl('$cascade/')
-        .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', includeRetired: this.state.includeRetiredAssociations})
-                .then(response => {
-                  this.setState({mappings: get(response.data, 'entry.entries', []), isLoadingMappings: true}, () => {
-                    APIService.new()
-                      .overrideURL(encodeURI(url))
-                      .appendToUrl('$cascade/')
-                      .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true, includeRetired: this.state.includeRetiredAssociations})
-                      .then(response => {
-                        this.setState({reverseMappings: get(response.data, 'entry.entries', []), isLoadingMappings: false})
-                      })
-                  })
-                })
+        .get(
+          null,
+          null,
+          {
+            cascadeLevels: 1,
+            method: 'sourceToConcepts',
+            view: 'hierarchy',
+            includeRetired: this.state.includeRetiredAssociations
+          }
+        )
+        .then(response => this.setState(
+          {
+            mappings: get(response.data, 'entry.entries', []),
+            isLoadingMappings: !directOnly
+          },
+          () => !directOnly && this.getInverseMappings()
+        ))
+    })
+  }
+
+  getInverseMappings = inverseOnly => {
+    let url = this.getConceptURLFromPath()
+    if(this.props.scoped === 'collection' && this.props.parentURL)
+      url = `${this.props.parentURL}concepts/${encodeURIComponent(this.state.concept.id)}/`
+
+    const _fetch = () => APIService.new()
+      .overrideURL(encodeURI(url))
+      .appendToUrl('$cascade/')
+      .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true, includeRetired: this.state.includeRetiredAssociations})
+      .then(response => {
+        this.setState({reverseMappings: get(response.data, 'entry.entries', []), isLoadingMappings: false})
+      })
+
+    inverseOnly ? this.setState({isLoadingMappings: true}, _fetch) : _fetch()
+
+  }
+
+  onRemoveMapping = (mapping, isDirect) => {
+    const prompt = alertifyjs.prompt()
+    prompt.setContent('<form id="retireForm"> <p>Retire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+    prompt.set('onok', () => {
+      document.getElementById('retireForm').reportValidity();
+      const comment = document.getElementById('comment').value
+      if(!comment)
+        return false
+      this.retireMapping(mapping, comment, isDirect)
+    })
+    prompt.set('title', 'Retire Mapping')
+    prompt.show()
+  }
+
+  onReactivateMapping = (mapping, isDirect) => {
+    const prompt = alertifyjs.prompt()
+    prompt.setContent('<form id="retireForm"> <p>Unretire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
+    prompt.set('onok', () => {
+      document.getElementById('retireForm').reportValidity();
+      const comment = document.getElementById('comment').value
+      if(!comment)
+        return false
+      this.unretireMapping(mapping, comment, isDirect)
+    })
+    prompt.set('title', 'Unretire Mapping')
+    prompt.show()
+  }
+
+  retireMapping = (mapping, comment, isDirect) => {
+    APIService.new().overrideURL(mapping.url).delete({comment: comment}).then(response => {
+      if(get(response, 'status') === 204) {
+        isDirect ? this.getMappings(true) : this.getInverseMappings(true)
+        alertifyjs.success('Mapping Retired', 1)
+      }
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  unretireMapping = (mapping, comment, isDirect) => {
+    APIService.new().overrideURL(mapping.url).appendToUrl('reactivate/').put({comment: comment}).then(response => {
+      if(get(response, 'status') === 204) {
+        isDirect ? this.getMappings(true) : this.getInverseMappings(true)
+        alertifyjs.success('Mapping UnRetired', 1)
+      }
+      else
+        alertifyjs.error('Something bad happened!')
+    })
+  }
+
+  onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
+    const { concept, mappings, reverseMappings } = this.state
+    const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
+    const targetSourceURL = toParentURI(targetConcept.url)
+    const refetchMappedSources = !find(this.state.mappedSources, {url: targetSourceURL})
+    APIService.new().overrideURL(URL).post(payload).then(response => {
+      if(response.status === 201) {
+        if(refetchMappedSources)
+          this.fetchParentMappedSources()
+        alertifyjs.success('Success')
+        let newMapping = {
+          ...response.data,
+          cascade_target_concept_code: targetConcept.id,
+          cascade_target_concept_url: targetConcept.url,
+          cascade_target_source_owner: targetConcept.owner,
+          cascade_target_source_name: targetConcept.source,
+          cascade_target_concept_name: targetConcept.display_name,
+        }
+        if(isDirect)
+          this.setState({
+            mappings: [
+              ...mappings,
+              newMapping,
+              {...targetConcept, entries: []}
+            ]
+          })
+        else
+          this.setState({
+            reverseMappings: [
+              ...reverseMappings,
+              newMapping,
+              {...targetConcept, entries: []}
+            ]
+          })
+        if(successCallback)
+          successCallback()
+      } else {
+        const errors = flatten(values(response))
+        if(isArray(errors) && errors.length)
+          alertifyjs.error(errors[0])
+        else
+          alertifyjs.error('Something bad happened!')
+      }
     })
   }
 
@@ -204,21 +339,22 @@ class ConceptHome extends React.Component {
   onConceptClick = concept => {
     this.setState({isUpdatingFromHierarchy: true, isLoading: true}, () => {
       window.location.hash = concept.url
-      APIService.new()
-                                    .overrideURL(encodeURI(concept.url))
-                                    .get().then(response => {
-                                      this.setState(
-                                        {
-                                          isLoading: false,
-                                          concept: response.data,
-                                          isUpdatingFromHierarchy: false
-                                        },
-                                        () => {
-                                          this.getVersions()
-                                          window.scrollTo(0, 0)
-                                        }
-                                      )
-                                    })
+      APIService
+        .new()
+        .overrideURL(encodeURI(concept.url))
+        .get().then(response => {
+          this.setState(
+            {
+              isLoading: false,
+              concept: response.data,
+              isUpdatingFromHierarchy: false
+            },
+            () => {
+              this.getVersions()
+              window.scrollTo(0, 0)
+            }
+          )
+        })
     })
   }
 
@@ -228,12 +364,14 @@ class ConceptHome extends React.Component {
     const {
       concept, versions, mappings, isLoadingMappings, isLoading,
       notFound, accessDenied, permissionDenied, hierarchy, openHierarchy, newChildren,
-      isLoadingHierarchy, collections, isLoadingCollections, source, reverseMappings
+      isLoadingHierarchy, collections, isLoadingCollections, source, reverseMappings, mappedSources
     } = this.state;
     const currentURL = this.getConceptURLFromPath()
     const isVersionedObject = this.isVersionedObject()
     const hasError = notFound || accessDenied || permissionDenied;
     const detailsMargin = this.getContentMarginTop()
+    const hasAccess = currentUserHasAccess()
+    const canAct = Boolean(hasAccess && isVersionedObject && this.props.scoped != 'collection')
     const conceptDetails = (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -260,6 +398,7 @@ class ConceptHome extends React.Component {
                 scoped={this.props.scoped}
                 singleColumn={this.props.singleColumn}
                 source={source}
+                mappedSources={mappedSources}
                 concept={{...concept, mappings: mappings, collections: collections, reverseMappings: reverseMappings}}
                 isLoadingMappings={isLoadingMappings}
                 isLoadingCollections={isLoadingCollections}
@@ -267,6 +406,9 @@ class ConceptHome extends React.Component {
                 sourceVersion={get(this.props.match, 'params.version')}
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
+                onCreateNewMapping={canAct ? this.onCreateNewMapping : false}
+                onRemoveMapping={canAct ? this.onRemoveMapping : false}
+                onReactivateMapping={canAct ? this.onReactivateMapping : false}
               />
             </div>
           </React.Fragment>

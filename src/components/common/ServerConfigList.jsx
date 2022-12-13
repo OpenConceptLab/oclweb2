@@ -19,7 +19,7 @@ const ServerConfigList = ({ onClose }) => {
   const onChange = (event, config) => {
     event.preventDefault();
     event.stopPropagation();
-    if(get(selectedConfig, 'url') === config.url){
+    if(selectedConfig?.id ? selectedConfig.id === config.id : selectedConfig?.url === config.url){
       onClose();
       return;
     }
@@ -45,8 +45,8 @@ const ServerConfigList = ({ onClose }) => {
     <List component="div" disablePadding>
       {
         map(eligibleServerConfigs, config => {
-          const selected = get(selectedConfig, 'url') === config.url;
-          const isDefault = config.url === defaultConfig.url;
+          const selected = selectedConfig.id ? selectedConfig.id === config.id : get(selectedConfig, 'url') === config.url;
+          const isDefault = defaultConfig.id ? defaultConfig.id === config.id : config.url === defaultConfig.url;
           return (
             <ListItem disabled={config.disabled} selected={selected} className='btn' button key={config.id} onClick={event => onChange(event, config)} style={{cursor: config.disabled ? 'not-allowed' : 'pointer'}}>
               <ListItemIcon style={{minWidth: 'auto', marginRight: '15px', width: '22px', height: '22px'}}>

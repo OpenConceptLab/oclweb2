@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Person as UserIcon,
-  Home as OrgIcon,
+  AccountBalance as OrgIcon,
   ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
 import { getAppliedServerConfig } from '../../common/utils';

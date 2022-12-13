@@ -37,7 +37,7 @@ const getValue = (item, column) => {
 
 const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChange, selectedList, level }) => {
   const [open, setOpen] = React.useState(false);
-  const [children, setChidren] = React.useState([]);
+  const [children, setChildren] = React.useState([]);
   const [selected, setSelected] = React.useState(isSelected);
   const [fetched, setFetched] = React.useState(!item.has_children);
 
@@ -76,7 +76,7 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
   const fetchChildren = () => {
     if(!fetched) {
       APIService.new().overrideURL(item.url).appendToUrl('children/').get().then(response => {
-        setChidren(response.data || [])
+        setChildren(response.data || [])
         setFetched(true)
       })
     }

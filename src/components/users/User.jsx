@@ -5,7 +5,7 @@ import {
   Person as PersonIcon,
   List as ListIcon,
   Loyalty as LoyaltyIcon,
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
 } from '@mui/icons-material'
 import { merge, get } from 'lodash'
 import { DARKGRAY } from '../../common/constants';

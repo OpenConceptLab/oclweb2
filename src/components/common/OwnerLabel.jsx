@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Home as HomeIcon,
+  AccountBalance as HomeIcon,
   Person as PersonIcon,
 } from '@mui/icons-material';
 import { Button } from '@mui/material'

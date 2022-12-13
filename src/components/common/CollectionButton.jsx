@@ -9,7 +9,7 @@ import {
   ArrowDropDown as DownIcon,
   GetApp as DownloadIcon,
 } from '@mui/icons-material';
-import { GREEN, WHITE } from '../../common/constants';
+import { GREEN, WHITE, ACTION_RED } from '../../common/constants';
 import { toParentURI, currentUserHasAccess, copyURL, toFullAPIURL } from '../../common/utils';
 import DownloadButton from './DownloadButton';
 
@@ -80,20 +80,10 @@ const CollectionButton = ({label, onClick, href, childURI, onEditClick, onDelete
                 </ListItemText>
               </MenuItem>
             }
-            {
-              hasAccess && onDeleteClick &&
-              <MenuItem onClick={event => onActionClick(event, onDeleteClick)}>
-                <ListItemIcon style={{minWidth: '28px'}}>
-                  <DeleteIcon fontSize='inherit' />
-                </ListItemIcon>
-                <ListItemText>
-                  Delete Collection
-                </ListItemText>
-              </MenuItem>
-            }
             <DownloadButton
               resource={collection}
               filename={downloadFileName}
+              tooltipPlacement="right"
               buttonFunc={params => (
                 <MenuItem {...params}>
                   <ListItemIcon style={{minWidth: '28px'}}>
@@ -105,7 +95,17 @@ const CollectionButton = ({label, onClick, href, childURI, onEditClick, onDelete
                 </MenuItem>
               )}
             />
-
+            {
+              hasAccess && onDeleteClick &&
+                <MenuItem onClick={event => onActionClick(event, onDeleteClick)}>
+                  <ListItemIcon style={{minWidth: '28px', color: ACTION_RED}}>
+                    <DeleteIcon fontSize='inherit' />
+                  </ListItemIcon>
+                  <ListItemText style={{color: ACTION_RED}}>
+                    Delete Collection
+                  </ListItemText>
+                </MenuItem>
+            }
           </MenuList>
         </Menu>
       }

@@ -112,13 +112,13 @@ class ConceptForm extends React.Component {
               {
                 source.autoid_concept_mnemonic === 'sequential' &&
                   <React.Fragment>
-                    <span>This is optional since the parent repostiory is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
+                    <span>This is optional since the parent repository is set can to take care of generating the ID. The ID will be generated to next in sequence.</span><br/>
                   </React.Fragment>
               }
               {
                 source.autoid_concept_mnemonic === 'uuid' &&
                   <React.Fragment>
-                    <span>This is optional since the parent repostiory is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
+                    <span>This is optional since the parent repository is set to take care of generating the ID. The ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span><br/>
                   </React.Fragment>
               }
               <span>Your new concept will live at: <br />
@@ -145,11 +145,11 @@ class ConceptForm extends React.Component {
         }
         {
           source.autoid_concept_external_id === 'sequence' &&
-            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
+            <span>This is optional since the parent repository is set to take care of generating the External ID. The External ID will be generated to next in sequence.</span>
         }
         {
           source.autoid_concept_external_id === 'uuid' &&
-            <span>This is optional since the parent repostiory is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
+            <span>This is optional since the parent repository is set to take care of generating the External ID. The External ID will be generated in UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.</span>
         }
         {
           !source.autoid_concept_external_id && ''

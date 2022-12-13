@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 import { startCase } from 'lodash';
 import { currentUserHasAccess, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
+import { ACTION_RED } from '../../common/constants';
 import DownloadButton from './DownloadButton';
 import { OperationsContext } from '../app/LayoutContext';
 
@@ -83,25 +84,6 @@ const ManageSourceChildButton = ({
             </MenuItem>
           }
           {
-            hasAccess && isVersionedObject &&
-            <MenuItem onClick={event => onClick(event, instance.retired ? onUnretire : onRetire)}>
-              <ListItemIcon style={{minWidth: '28px'}}>
-                {
-                  instance.retired ?
-                  <RestoreIcon fontSize='inherit' /> :
-                  <DeleteIcon fontSize='inherit' />
-                }
-              </ListItemIcon>
-              <ListItemText>
-                {
-                  instance.retired ?
-                  `Un-Retire ${resourceLabel}` :
-                  `Retire ${resourceLabel}`
-                }
-              </ListItemText>
-            </MenuItem>
-          }
-          {
             conceptCompareURL &&
             <MenuItem onClick={onCompareConceptsClick}>
               <ListItemIcon style={{minWidth: '28px'}}>
@@ -136,6 +118,25 @@ const ManageSourceChildButton = ({
                 </ListItemIcon>
                 <ListItemText>
                   Operations
+                </ListItemText>
+              </MenuItem>
+          }
+          {
+            hasAccess && isVersionedObject &&
+              <MenuItem onClick={event => onClick(event, instance.retired ? onUnretire : onRetire)}>
+                <ListItemIcon style={{minWidth: '28px', color: ACTION_RED}}>
+                  {
+                    instance.retired ?
+                      <RestoreIcon fontSize='inherit' /> :
+                      <DeleteIcon fontSize='inherit' />
+                  }
+                </ListItemIcon>
+                <ListItemText style={{color: ACTION_RED}}>
+                  {
+                    instance.retired ?
+                      `Un-Retire ${resourceLabel}` :
+                      `Retire ${resourceLabel}`
+                  }
                 </ListItemText>
               </MenuItem>
           }

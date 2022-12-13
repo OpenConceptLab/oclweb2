@@ -32,13 +32,15 @@ const CONFIG = {
     },
     supportedLanguages: {
       label: 'Supported Languages',
+      placeholder: 'Choose Supported languages',
       tooltip: 'Other languages that may be used in your Source.',
     },
  },
   configuration: {
     title: 'Configuration',
     type: {
-      label: 'Select source type',
+      label: 'Source type',
+      placeholder: 'Select source type',
       tooltip: 'The type of Source that you want to create. Note that some Source types have special meaning.',
     },
     customValidationSchema: {

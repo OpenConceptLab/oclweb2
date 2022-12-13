@@ -411,11 +411,11 @@ div.login-paper {
     border: 1px solid #dca7a7;
     border-radius: 4px;
 }
-.less-paded-accordian-header {
+.less-paded-accordion-header {
     height: 40px !important;
     min-height: 40px !important;
 }
-.less-margin-accordian-summary-content {
+.less-margin-accordion-summary-content {
     div:first-child {
         margin: 2px 5px;
     }
@@ -1177,4 +1177,20 @@ div.custom-attributes-accordion-content {
     overflow-wrap: break-word;
     white-space: normal;
     text-overflow: clip;
+}
+
+.invalid-locale-chip {
+    color: $blue;
+    svg {
+        color: $blue !important;
+    }
+}
+.owner-chip-no-border {
+    border: none;
+    span {
+        margin-top: 5px;
+    }
+    svg {
+        color: inherit;
+    }
 }

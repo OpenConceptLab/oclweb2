@@ -65,9 +65,9 @@ const ConfigurationForm = props => {
   const [autoexpandHEAD, setAutoexpandHEAD] = React.useState(true)
   const [website, setWebsite] = React.useState('')
   const [externalID, setExternalID] = React.useState('')
-  const onChange = (id, value, setter, propogateValue) => {
+  const onChange = (id, value, setter, propagateValue) => {
     setter(value)
-    props.onChange(toState({[id]: propogateValue === undefined ? value : propogateValue}))
+    props.onChange(toState({[id]: propagateValue === undefined ? value : propagateValue}))
   }
   const toState = newValue => merge({public_access: publicAccess}, newValue)
   const configs = props.configuration
@@ -118,6 +118,7 @@ const ConfigurationForm = props => {
                             {...params}
                             required
                             label={configs.type.label}
+                            placeholder={configs.type.placeholder}
                             variant="outlined"
                             fullWidth
                           />

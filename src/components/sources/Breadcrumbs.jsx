@@ -151,7 +151,7 @@ const Breadcrumbs = ({
             <span className='flex-vertical-center' style={{width: getWidth()}}>
               {
                 params.search &&
-                <span className='search-breadcurmbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '125px'}}>
+                <span className='search-breadcrumbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '125px'}}>
                   <span className='flex-vertical-center' style={{fontWeight: 'bold', paddingLeft: '8px'}}>
                     <SearchIcon style={{marginRight: '5px'}} fontSize='small' />
                     {params.search}
@@ -159,7 +159,7 @@ const Breadcrumbs = ({
 
                 </span>
               }
-              <span className='container-breadcurmbs flex-vertical-center' style={{paddingLeft: params.search ? '15px' : '10px', background: params.search ? '#f1f1f1' : WHITE, width: ownerURL ? 'auto': '100%', minHeight: '60px', paddingRight: params.search ? '0' : '15px'}}>
+              <span className='container-breadcrumbs flex-vertical-center' style={{paddingLeft: params.search ? '15px' : '10px', background: params.search ? '#f1f1f1' : WHITE, width: ownerURL ? 'auto': '100%', minHeight: '60px', paddingRight: params.search ? '0' : '15px'}}>
                 {
                   ownerURL &&
                   <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
@@ -226,7 +226,7 @@ const Breadcrumbs = ({
               </span>
               {
                 resource && selectedResource &&
-                <span className='resource-breadcurmbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', paddingLeft: params.search ? 0 : '10px', border: '3px solid #f1f1f1', flex: 1, justifyContent: 'space-between'}}>
+                <span className='resource-breadcrumbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', paddingLeft: params.search ? 0 : '10px', border: '3px solid #f1f1f1', flex: 1, justifyContent: 'space-between'}}>
                   <span className='flex-vertical-center'>
                     {
                       params.search &&
@@ -265,7 +265,7 @@ const Breadcrumbs = ({
               }
               {
                 !params.search && ownerURL && !selectedResource &&
-                <span className='resource-breadcurmbs flex-vertical-center' style={{background: WHITE, padding: '10px', border: `3px solid ${WHITE}`, flex: 1, minHeight: '60px'}} />
+                <span className='resource-breadcrumbs flex-vertical-center' style={{background: WHITE, padding: '10px', border: `3px solid ${WHITE}`, flex: 1, minHeight: '60px'}} />
               }
             </span>
           </div>
