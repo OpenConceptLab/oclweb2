@@ -90,7 +90,7 @@ const SourceButton = ({label, onClick, href, childURI, onEditClick, onDeleteClic
                     <DownloadIcon fontSize="inherit" />
                   </ListItemIcon>
                   <ListItemText>
-                    Download
+                    Download Metadata
                   </ListItemText>
                 </MenuItem>
               )}

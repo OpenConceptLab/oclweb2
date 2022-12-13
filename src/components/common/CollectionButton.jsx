@@ -90,7 +90,7 @@ const CollectionButton = ({label, onClick, href, childURI, onEditClick, onDelete
                     <DownloadIcon fontSize="inherit" />
                   </ListItemIcon>
                   <ListItemText>
-                    Download
+                    Download Metadata
                   </ListItemText>
                 </MenuItem>
               )}
