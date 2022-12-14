@@ -4,10 +4,51 @@ import {
 } from '@mui/icons-material';
 import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce } from 'lodash'
+import { get, debounce, map } from 'lodash'
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import AutocompleteLoading from './AutocompleteLoading';
+
+const SubText = ({ label, value, divider }) => (
+  <span className='flex-vertical-center'>
+    <Typography
+      sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
+      component="span"
+      className='flex-vertical-center'>
+      <span className='flex-vertical-center'>
+        {
+          divider &&
+            <span className='flex-vertical-center' style={{backgroundColor: 'rgba(0, 0, 0, 0.6)', width: '3px', height: '3px', borderRadius: '100px', margin: '0 8px'}} />
+        }
+
+        <span className='flex-vertical-center'>
+          {
+            label &&
+              <span className='flex-vertical-center' style={{fontSize: '14px', marginRight: '5px'}}>
+                {`${label}:`}
+              </span>
+          }
+          <span className='flex-vertical-center' style={{fontSize: '14px'}}>
+            {value}
+          </span>
+        </span>
+      </span>
+    </Typography>
+  </span>
+)
+
+const SubTexts = ({ option }) => {
+  return (
+    <span className='flex-vertical-center'>
+      {
+        map([{field: 'id', label: 'ID'}, {field: 'concept_class', label: 'Concept Class'}], (field, index) => (
+          <SubText key={index} label={field.label} value={option[field.field]} divider={index != 0} />
+        ))
+      }
+    </span>
+  )
+}
+
 
 const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, parentURI, disabled, value}) => {
   const minLength = minCharactersForSearch || 1;
@@ -120,12 +161,7 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
                   </Typography>
                 }
                 secondary={
-                  <Typography
-                    sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
-                    component="span"
-                    className='flex-vertical-center'>
-                    {option.id}
-                  </Typography>
+                  <SubTexts option={option} />
                 }
               />
             </ListItem>
