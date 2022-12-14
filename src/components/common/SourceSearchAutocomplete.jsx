@@ -27,7 +27,8 @@ const GroupItems = styled('ul')({
   padding: 0,
 });
 
-const SuggestionOption = ({ option, divider }) => (
+
+const SubText = ({ text, divider }) => (
   <span className='flex-vertical-center'>
     <Typography
       sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
@@ -39,11 +40,27 @@ const SuggestionOption = ({ option, divider }) => (
             <span className='flex-vertical-center' style={{backgroundColor: 'rgba(0, 0, 0, 0.6)', width: '3px', height: '3px', borderRadius: '100px', margin: '0 8px'}} />
         }
         <span className='flex-vertical-center' style={{fontSize: '14px'}}>
-          {option.suggestionType}
+          {text}
         </span>
       </span>
     </Typography>
   </span>
+)
+
+
+const Owner = ({ option, marginTop }) => (
+  <Tooltip title={option.owner}>
+    <span style={{display: 'flex', marginTop: marginTop || 0, alignItems: 'center'}}>
+      {
+        option.owner_type === 'User' ?
+          <UserIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px' }}/> :
+        <OrgIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}} />
+      }
+      <span className='flex-vertical-center' style={{maxWidth: '70px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}}>
+        {option.owner}
+      </span>
+    </span>
+  </Tooltip>
 )
 
 const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, suggested}) => {
@@ -142,18 +159,7 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
               alignItems="flex-start"
               style={{alignItems: 'flex-start'}}
               secondaryAction={
-                <Tooltip title={option.owner}>
-                <span style={{display: 'flex', marginTop: '-22px', alignItems: 'center'}}>
-                  {
-                    option.owner_type === 'User' ?
-                      <UserIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px' }}/> :
-                    <OrgIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}} />
-                  }
-                  <span className='flex-vertical-center' style={{maxWidth: '70px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}}>
-                      {option.owner}
-                  </span>
-                </span>
-                </Tooltip>
+                <Owner option={option} marginTop='-22px' />
               }>
               <ListItemIcon style={{minWidth: 'auto', marginRight: '10px'}}>
                 <SourceIcon style={{color: GREEN, marginTop: '-5px'}} fontSize='large' />
@@ -176,10 +182,10 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
                           <ConceptIcon size='small' style={{marginRight: '4px', width: '13.3px', height: '13.3px'}} />
                           {option.summary.active_concepts.toLocaleString()}
                         </Typography>
-                        { option.suggestionType && <SuggestionOption option={option} divider /> }
+                        { option.suggestionType && <SubText text={option.suggestionType} divider /> }
                       </span> :
                     (
-                      option.suggestionType ? <SuggestionOption option={option} /> : ''
+                      option.suggestionType ? <SubText text={option.suggestionType} /> : ''
                     )
                   )
                 }
