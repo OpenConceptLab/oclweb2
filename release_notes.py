@@ -102,9 +102,6 @@ def run():
         if not from_message or not to_message:
             throw_error()
 
-        #from_SHA = get_commit_sha_from_message(from_message)
-        #to_SHA = get_commit_sha_from_message(to_message)
-
         batches = []
         if iterate_interim_versions:
             from_minor_version = int(from_message.split('.')[-1])
@@ -124,8 +121,6 @@ def run():
                     if commits:
                         release_date = get_release_date(to_tag)
                         batches.append(dict(heading=format_md(value="{} - {}".format(to_tag, release_date), heading_level=5), commits=format_md(value=commits), order=order))
-                        #print(format_md(value="{} - {}".format(to_tag, release_date), heading_level=5))
-                        #print(format_md(value=commits))
 
                 from_minor_version = next_minor_version
                 next_minor_version += 1
