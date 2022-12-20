@@ -4,7 +4,8 @@ import subprocess
 import sys
 
 SYSTEM_COMMIT_PATTERNS = [
-    'Increase maintenance version', 'updated packages', '\[skip ci\]'
+    'Increase maintenance version', 'updated packages', '\[skip ci\]',
+    'fixing typo', 'Fixing typo'
 ]
 
 
@@ -96,17 +97,40 @@ def run():
         from_message = sys.argv[1]
         to_message = sys.argv[2]
         is_verbose = len(sys.argv) > 3 and sys.argv[3] in [True, 'true', 'True']
+        iterate_interim_versions = True
 
         if not from_message or not to_message:
             throw_error()
 
-        commits = get_commits(
-            get_commit_sha_from_message(from_message), get_commit_sha_from_message(to_message), is_verbose)
-        release_date = get_release_date(to_message)
+        #from_SHA = get_commit_sha_from_message(from_message)
+        #to_SHA = get_commit_sha_from_message(to_message)
 
-        print(format_md(value="{} - {}".format(to_message, release_date), heading_level=5))
-        print(format_md(value=commits))
-    except Exception:
+        batches = []
+        if iterate_interim_versions:
+            from_minor_version = int(from_message.split('.')[-1])
+            to_minor_version = int(to_message.split('.')[-1])
+            next_minor_version = from_minor_version + 1
+            prefix = '.'.join(from_message.split('.')[:-1])
+            while next_minor_version <= to_minor_version:
+                from_tag = prefix + '.' + str(from_minor_version)
+                to_tag = prefix + '.' + str(next_minor_version)
+                from_sha = get_commit_sha_from_message(from_tag)
+                to_sha = get_commit_sha_from_message(to_tag)
+
+                if from_sha and to_sha:
+                    commits = get_commits(from_sha, to_sha, is_verbose)
+                    commits = [commit for commit in commits if commit]
+                    if commits:
+                        release_date = get_release_date(to_tag)
+                        print(format_md(value="{} - {}".format(to_tag, release_date), heading_level=5))
+                        print(format_md(value=commits))
+
+                from_minor_version = next_minor_version
+                next_minor_version += 1
+
+
+    except Exception as ex:
+        print("***", ex)
         throw_error()
 
 
