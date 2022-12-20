@@ -111,6 +111,7 @@ def run():
             to_minor_version = int(to_message.split('.')[-1])
             next_minor_version = from_minor_version + 1
             prefix = '.'.join(from_message.split('.')[:-1])
+            order = 1
             while next_minor_version <= to_minor_version:
                 from_tag = prefix + '.' + str(from_minor_version)
                 to_tag = prefix + '.' + str(next_minor_version)
@@ -122,12 +123,17 @@ def run():
                     commits = [commit for commit in commits if commit]
                     if commits:
                         release_date = get_release_date(to_tag)
-                        print(format_md(value="{} - {}".format(to_tag, release_date), heading_level=5))
-                        print(format_md(value=commits))
+                        batches.append(dict(heading=format_md(value="{} - {}".format(to_tag, release_date), heading_level=5), commits=format_md(value=commits), order=order))
+                        #print(format_md(value="{} - {}".format(to_tag, release_date), heading_level=5))
+                        #print(format_md(value=commits))
 
                 from_minor_version = next_minor_version
                 next_minor_version += 1
+                order += 1
 
+        for batch in sorted(batches, key=lambda b: b['order'], reverse=True):
+            print(batch['heading'])
+            print(batch['commits'])
 
     except Exception as ex:
         print("***", ex)
