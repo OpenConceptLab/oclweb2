@@ -43,6 +43,7 @@ class MappingForm extends React.Component {
         to_source_version: '',
         comment: '',
         extras: [],
+        sort_weight: ''
       }
     }
   }
@@ -65,7 +66,7 @@ class MappingForm extends React.Component {
       'from_concept_url', 'from_concept_name',
       'from_source_url', 'from_source_version',
       'to_concept_url', 'to_concept_name',
-      'to_source_url', 'to_source_version',
+      'to_source_url', 'to_source_version', 'sort_weight'
     ]
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(instance, attr, '') || ''))
@@ -395,6 +396,20 @@ class MappingForm extends React.Component {
                     helperText={edit ? undefined : this.getExternalIdHelperText()}
                   />
                 }
+              </div>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <TextField
+                  error={Boolean(fieldErrors.sort_weight)}
+                  id="fields.sort_weight"
+                  label="Sort Weight"
+                  placeholder="e.g. 1.0"
+                  variant="outlined"
+                  fullWidth
+                  onChange={this.onTextFieldChange}
+                  value={fields.sort_weight}
+                  inputProps={{ pattern: "[0-9.]+", min: 0, step: 0.00001 }}
+                  type='number'
+                />
               </div>
               {
                 edit &&
