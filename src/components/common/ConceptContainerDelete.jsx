@@ -4,7 +4,7 @@ import MuiAlert from '@mui/material/Alert';
 import { last } from 'lodash';
 import { RED } from '../../common/constants';
 
-const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedResources}) => {
+const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedResources, associationRelation, summaryContent}) => {
   const resourceEntity = resource.type
   const resourceType = resourceEntity.toLowerCase()
   const resourceId = resource.short_code || resource.id
@@ -17,6 +17,7 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedRe
   }
   const associations = (associatedResources || ['versions', 'concepts', 'mappings'])
   let associationsLabel = associations.slice(0, -1).join(', ') + ' and ' + last(associations)
+  const relationship = associationRelation || 'associated'
   return (
     <React.Fragment>
       <Dialog open={open} onClose={onClose}>
@@ -31,10 +32,11 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedRe
             {`Are you sure you want to permanently delete this ${resourceType} `}
             <b>{resourceId}</b>?
           </p>
+          { summaryContent || '' }
           <p>
             This action <b>cannot</b> be undone!
             {
-              ` This will delete the entire ${resourceType} and all of its associated ${associationsLabel}.`
+              ` This will delete the entire ${resourceType} and all of its ${relationship} ${associationsLabel} (if any).`
             }
           </p>
           <p>
