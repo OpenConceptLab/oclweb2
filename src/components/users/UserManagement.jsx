@@ -109,7 +109,7 @@ const UserManagement = ({ user }) => {
   const onHardDelete = () => {
     APIService.users(user.username).appendToUrl('?hardDelete=true').delete().then(response => {
       if(response.status === 204)
-        alertifyjs.success('Successfully deleted this user. Reloading...', 2, () => window.location.reload())
+        alertifyjs.success('Successfully deleted this user. Reloading...', 2, () => window.location.hash = '/search/?type=users')
       else
         alertifyjs.error('Something bad happened! Reloading to refresh User state.', 2, () => window.location.reload())
     })
