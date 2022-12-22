@@ -407,8 +407,7 @@ class MappingForm extends React.Component {
                   fullWidth
                   onChange={this.onTextFieldChange}
                   value={fields.sort_weight}
-                  inputProps={{ pattern: "[0-9.]+", min: 0, step: 0.00001 }}
-                  type='number'
+                  inputProps={{ pattern: "[0-9.]+" }}
                 />
               </div>
               {
