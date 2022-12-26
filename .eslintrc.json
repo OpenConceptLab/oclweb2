@@ -202,7 +202,8 @@
           "forground",
           "eng",
           "sourcetoconcepts",
-          "sourcemappings"
+          "sourcemappings",
+          "upsert"
         ],
         "skipIfMatch": [
           "http://[^s]*",

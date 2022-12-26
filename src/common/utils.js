@@ -1,12 +1,13 @@
 /*eslint no-process-env: 0*/
 import 'core-js/features/url-search-params';
 import React from 'react';
+import ReactGA from 'react-ga';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
@@ -557,8 +558,31 @@ export const getOpenMRSURL = () => {
   return OPENMRS_URL.replace('openmrs.', `openmrs.${env}`);
 }
 
+export const recordGAPageView = () => {
+  /*eslint no-undef: 0*/
+  ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
+  ReactGA.pageview(window.location.pathname + location.search);
+}
+
+export const recordGAAction = (category, action, label) => {
+  /*eslint no-undef: 0*/
+  if(category && action) {
+    ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
+    ReactGA.event({category: category, action: action, label: label || action});
+  }
+}
+
+export const recordGAUpsertEvent = (category, edit, resource) => {
+  const actionPrefix = edit ? 'update' : 'create'
+  resource = resource || category.replaceAll(' ', '_').toLowerCase()
+  let action = `${actionPrefix}_${resource}`
+  let label = `${startCase(actionPrefix)} ${startCase(resource)}`
+  recordGAAction(category, action, label)
+}
+
 export const setUpRecentHistory = history => {
   history.listen(location => {
+    recordGAPageView()
     let visits = JSON.parse(get(localStorage, 'visits', '[]'));
     let urlParts = compact(location.pathname.split('/'));
     let type = '';

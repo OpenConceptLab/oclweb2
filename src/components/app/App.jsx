@@ -1,11 +1,10 @@
 /*eslint no-process-env: 0*/
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import ReactGA from 'react-ga';
 import { get } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
-  isDeprecatedBrowser
+  isDeprecatedBrowser, recordGAPageView
 } from '../../common/utils';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
@@ -52,11 +51,6 @@ const App = props => {
   // For recent history
   setUpRecentHistory(props.history);
   const { openOperations, menuOpen, setMenuOpen } = React.useContext(OperationsContext);
-  const setupGA = () => {
-    /*eslint no-undef: 0*/
-    ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
-    ReactGA.pageview(window.location.pathname + window.location.hash);
-  }
   const setupHotJar = () => {
     /*eslint no-undef: 0*/
     const HID = window.HOTJAR_ID || process.env.HOTJAR_ID
@@ -77,7 +71,7 @@ const App = props => {
 
   React.useEffect(() => {
     addLogoutListenerForAllTabs()
-    setupGA()
+    recordGAPageView()
     setupHotJar()
   }, [])
 

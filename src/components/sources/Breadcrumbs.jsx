@@ -7,7 +7,7 @@ import {
 } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { isEmpty, get, startCase } from 'lodash';
-import { currentUserHasAccess } from '../../common/utils';
+import { currentUserHasAccess, recordGAAction } from '../../common/utils';
 import { WHITE, ORANGE, GREEN, BLUE } from '../../common/constants';
 import APIService from '../../services/APIService';
 import OwnerButton from '../common/OwnerButton';
@@ -86,7 +86,7 @@ const Breadcrumbs = ({
         return false
       retire(comment)
     })
-    prompt.set('title', 'Retire Concept')
+    prompt.set('title', `Retire ${startCase(resourceType)}`)
     prompt.show()
   }
 
@@ -101,23 +101,27 @@ const Breadcrumbs = ({
           return false
         unretire(comment)
       })
-      .set('title', 'Unretire Concept')
+      .set('title', `Unretire ${startCase(resourceType)}`)
       .show()
   }
 
   const retire = comment => {
+    const resourceLabel = startCase(resourceType)
+    recordGAAction(resourceLabel, `retired_${resourceType}`, `Retired ${resourceLabel}`)
     APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
-        alertifyjs.success(`${startCase(resource)} Retired`, 1, () => window.location.reload())
+        alertifyjs.success(`${resourceLabel} Retired`, 1, () => window.location.reload())
       else
         alertifyjs.error('Something bad happened!')
     })
   }
 
   const unretire = comment => {
+    const resourceLabel = startCase(resourceType)
+    recordGAAction(resourceLabel, `unretired_${resourceType}`, `Reactivated ${resourceLabel}`)
     APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
-        alertifyjs.success(`${startCase(resource)} Unretired`, 1, () => window.location.reload())
+        alertifyjs.success(`${resourceLabel} Unretired`, 1, () => window.location.reload())
       else
         alertifyjs.error('Something bad happened!')
     })

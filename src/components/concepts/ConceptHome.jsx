@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess } from '../../common/utils'
+import { toParentURI, currentUserHasAccess, recordGAAction, recordGAUpsertEvent } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -252,6 +252,7 @@ class ConceptHome extends React.Component {
   }
 
   retireMapping = (mapping, comment, isDirect) => {
+    recordGAAction('Mapping Inline', 'retired_mapping', 'Retried Mapping from Concept Details using Quick Actions')
     APIService.new().overrideURL(mapping.url).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204) {
         isDirect ? this.getMappings(true) : this.getInverseMappings(true)
@@ -263,6 +264,7 @@ class ConceptHome extends React.Component {
   }
 
   unretireMapping = (mapping, comment, isDirect) => {
+    recordGAAction('Mapping Inline', 'unretired_mapping', 'Reactivated retired Mapping from Concept Details using Quick Actions')
     APIService.new().overrideURL(mapping.url).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204) {
         isDirect ? this.getMappings(true) : this.getInverseMappings(true)
@@ -274,6 +276,8 @@ class ConceptHome extends React.Component {
   }
 
   onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
+    recordGAAction('Mapping Inline', 'create_mapping', 'Created Mapping from Concept Details using Quick Actions')
+    recordGAUpsertEvent('Mapping Inline', false, 'mapping')
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
     const targetSourceURL = toParentURI(targetConcept.url)
