@@ -561,7 +561,7 @@ export const getOpenMRSURL = () => {
 export const recordGAPageView = () => {
   /*eslint no-undef: 0*/
   ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
-  ReactGA.pageview(window.location.pathname + location.search);
+  ReactGA.pageview(window.location.pathname + window.location.hash);
 }
 
 export const recordGAAction = (category, action, label) => {
