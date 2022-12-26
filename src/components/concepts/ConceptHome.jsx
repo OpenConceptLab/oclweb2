@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess, recordGAAction, recordGAUpsertEvent } from '../../common/utils'
+import { toParentURI, currentUserHasAccess, recordGAAction } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -277,7 +277,6 @@ class ConceptHome extends React.Component {
 
   onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
     recordGAAction('Mapping Inline', 'create_mapping', 'Created Mapping from Concept Details using Quick Actions')
-    recordGAUpsertEvent('Mapping Inline', false, 'mapping')
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
     const targetSourceURL = toParentURI(targetConcept.url)
