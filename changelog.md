@@ -1,3 +1,14 @@
+##### 2.1.50 - Wed Dec 28 03:22:31 2022 +0000
+- [OpenConceptLab/ocl_issues#1445](https://github.com/OpenConceptLab/ocl_issues/issues/1445) | fixing duplicate events
+- [OpenConceptLab/ocl_issues#1445](https://github.com/OpenConceptLab/ocl_issues/issues/1445) | record click events on create/update of everything | retire/reactivate for concept/mapping
+- [OpenConceptLab/ocl_issues#1446](https://github.com/OpenConceptLab/ocl_issues/issues/1446) | not using numeric text field | using patterns
+- [OpenConceptLab/ocl_issues#1448](https://github.com/OpenConceptLab/ocl_issues/issues/1448) | post delete redirect to user listing
+- [OpenConceptLab/ocl_issues#1448](https://github.com/OpenConceptLab/ocl_issues/issues/1448) | Admin can hard delete other users
+##### 2.1.49 - Thu Dec 22 05:33:25 2022 +0000
+- [OpenConceptLab/ocl_issues#1446](https://github.com/OpenConceptLab/ocl_issues/issues/1446) | mapping sort_weight field and ordering
+##### 2.1.48 - Wed Dec 21 07:49:36 2022 +0000
+- Source Search autocomplete | refactoring
+- Concept Search autocomplete | showing id and class
 ##### 2.1.47 - Wed Dec 14 04:06:45 2022 +0000
 - [OpenConceptLab/ocl_issues#1441](https://github.com/OpenConceptLab/ocl_issues/issues/1441) | Download -> Download Metadata
 - [OpenConceptLab/ocl_issues#1135](https://github.com/OpenConceptLab/ocl_issues/issues/1135) | removed users tab for logged out users
