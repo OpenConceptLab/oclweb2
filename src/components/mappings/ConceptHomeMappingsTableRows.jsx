@@ -44,7 +44,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       else
         differentParentMappings.push(mapping)
     })
-    return [...orderBy(sameParentMappings, ['map_type', 'sort_weight', 'cascade_target_concept_name']), ...orderBy(differentParentMappings, ['map_type', 'sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])]
+    return orderBy([...sameParentMappings, ...differentParentMappings], ['map_type', 'sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
   }
 
   const onAddNewClick = mapType => {
