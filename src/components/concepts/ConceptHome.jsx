@@ -88,30 +88,32 @@ class ConceptHome extends React.Component {
 
   refreshDataByURL(url) {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
+      const URL = encodeURI(url || this.getConceptURLFromPath())
       APIService.new()
-                .overrideURL(encodeURI(url || this.getConceptURLFromPath()))
+        .overrideURL(URL)
         .get(null, null, {includeReferences: this.props.scoped === 'collection'})
-                .then(response => {
-                  if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
-                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
-                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: true, permissionDenied: false})
-                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
-                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: false, permissionDenied: true})
-                  else if(!isObject(response))
-                    this.setState({isLoading: false}, () => {throw response})
-                  else
-                    this.setState({isLoading: false, concept: response.data}, () => {
-                      this.getMappings()
-                      this.fetchParent()
-                      if(this.props.scoped !== 'collection') {
-                        this.getVersions()
-                        this.getCollectionVersions()
-                      }
-                      if(!this.props.scoped)
-                        this.getHierarchy()
-                    })
-                })
+        .then(response => {
+          recordGAAction('Concept', 'split_view', `Concept - ${URL}`)
+          if(get(response, 'detail') === "Not found.")
+            this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
+          else if(get(response, 'detail') === "Authentication credentials were not provided.")
+            this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: true, permissionDenied: false})
+          else if(get(response, 'detail') === "You do not have permission to perform this action.")
+            this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: false, permissionDenied: true})
+          else if(!isObject(response))
+            this.setState({isLoading: false}, () => {throw response})
+          else
+            this.setState({isLoading: false, concept: response.data}, () => {
+              this.getMappings()
+              this.fetchParent()
+              if(this.props.scoped !== 'collection') {
+                this.getVersions()
+                this.getCollectionVersions()
+              }
+              if(!this.props.scoped)
+                this.getHierarchy()
+            })
+        })
     })
   }
 
