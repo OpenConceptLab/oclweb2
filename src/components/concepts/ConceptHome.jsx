@@ -12,8 +12,10 @@ import HierarchyTraversalList from './HierarchyTraversalList';
 import ScopeHeader from './ScopeHeader'
 import ConceptHomeDetails from './ConceptHomeDetails';
 import '../common/Split.scss';
+import { OperationsContext } from '../app/LayoutContext';
 
 class ConceptHome extends React.Component {
+  static contextType = OperationsContext
   constructor(props) {
     super(props);
     this.state = {
@@ -104,6 +106,8 @@ class ConceptHome extends React.Component {
             this.setState({isLoading: false}, () => {throw response})
           else
             this.setState({isLoading: false, concept: response.data}, () => {
+              const { setOperationItem } = this.context
+              setOperationItem({...response.data, parentVersion: this.props.match.params.version})
               this.getMappings()
               this.fetchParent()
               if(this.props.scoped !== 'collection') {
