@@ -49,3 +49,23 @@ export const OPENMRS_URL = 'https://openmrs.openconceptlab.org';
 export const DEFAULT_FHIR_SERVER_FOR_LOCAL_ID = 6;
 export const FHIR_OPERATIONS = ['$validate-code', '$lookup'];
 export const UUID_LENGTH = 8+4+4+4+12+4; // last 4 is for 4 hyphens
+
+export const CASCADE_OPTIONS = {
+  method: [
+    {id: 'sourcetoconcepts', name: 'Mappings & Target Concepts'},
+    {id: 'sourcemappings', name: 'Mappings'},
+  ],
+  view: ['flat', 'hierarchy']
+}
+export const DEFAULT_CASCADE_PARAMS = {
+  method: 'sourcetoconcepts',
+  mapTypes: '',
+  excludeMapTypes: '',
+  returnMapTypes: '*',
+  cascadeHierarchy: true,
+  cascadeMappings: true,
+  includeRetired: false,
+  cascadeLevels: '*',
+  reverse: false,
+  view: 'flat'
+}

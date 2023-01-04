@@ -16,8 +16,9 @@ import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL
 } from '../../common/utils';
-import { FHIR_OPERATIONS, GREEN, ERROR_RED, BLACK } from '../../common/constants';
+import { FHIR_OPERATIONS, GREEN, ERROR_RED, BLACK, DEFAULT_CASCADE_PARAMS } from '../../common/constants';
 import APIService from '../../services/APIService';
+import CascadeParametersForm from './CascadeParametersForm';
 
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
@@ -142,6 +143,7 @@ const OperationsDrawer = () => {
   const [url, setURL] = React.useState(null);
   const [isFetching, setIsFetching] = React.useState(false);
   const [selectedFHIRServerId, setSelectedFHIRServerId] = React.useState(get(fhirServer, 'id', ''))
+  const [cascadeParams, setCascadeParams] = React.useState({...DEFAULT_CASCADE_PARAMS})
   const onOperationChange = event => setOperation(event.target.value)
   const onExecute = event => {
     setIsFetching(true)
@@ -182,7 +184,8 @@ const OperationsDrawer = () => {
         setURL(null)
       }
     } else {
-      APIService.new().overrideURL(parentItem.version_url || parentItem.url).appendToUrl(`concepts/${code}/${operation}/`).get().then(
+      let queryParams = operation === '$cascade' ? cascadeParams : {}
+      APIService.new().overrideURL(parentItem.version_url || parentItem.url).appendToUrl(`concepts/${code}/${operation}/`).get(null, null, queryParams).then(
         _response => {
           setURL(_response.config.url)
           setResponse(_response)
@@ -329,6 +332,15 @@ const OperationsDrawer = () => {
                 </FormControl>
               </div>
             </div>
+            {
+              operation === '$cascade' &&
+            <div className='col-xs-12 no-side-padding'>
+              <h4 style={{marginTop: '30px', marginBottom: '15px'}}>
+                Cascade Parameters
+              </h4>
+              <CascadeParametersForm onChange={setCascadeParams} />
+            </div>
+            }
             <div className='col-xs-12 no-side-padding' style={{textAlign: 'right', margin: '15px 0'}}>
               <Button onClick={onExecute} variant='contained' disabled={!operation}>Execute</Button>
             </div>
