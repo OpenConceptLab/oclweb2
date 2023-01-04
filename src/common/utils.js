@@ -803,3 +803,12 @@ export const getSSOLogoutURL = () => {
   if(redirectURL && idToken)
     return `${getAPIURL()}/users/logout/?&post_logout_redirect_uri=${redirectURL}&id_token_hint=${idToken}`
 }
+
+
+export const urlSearchParamsToObject = urlSearchParams => {
+  const result = {}
+  for(const [key, value] of urlSearchParams.entries()) { // each 'entry' is a [key, value] tuple
+    result[key] = value;
+  }
+  return result;
+}

@@ -179,6 +179,10 @@ class SourceHome extends React.Component {
                     }, () => {
                       this.setTab()
                       this.getVersions()
+
+                      const { setParentResource, setParentItem } = this.context
+                      setParentItem(this.state.source)
+                      setParentResource('source')
                     })
                   }
                 })
@@ -237,10 +241,8 @@ class SourceHome extends React.Component {
   }
 
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false}, () => {
-    const { setOperationItem, setParentResource, setParentItem } = this.context
+    const { setOperationItem } = this.context
     setOperationItem({...selected, parentVersion: this.props.match.params.version})
-    setParentItem(this.state.source)
-    setParentResource('source')
   })
 
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
@@ -362,6 +364,8 @@ class SourceHome extends React.Component {
                     singleColumn
                     scoped
                     mapping={selected}
+                    _location={this.props.location}
+                    _match={this.props.match}
                     location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
                     match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
                     header={false}
@@ -373,6 +377,8 @@ class SourceHome extends React.Component {
                     scoped
                     concept={selected}
                     parent={source}
+                    _location={this.props.location}
+                    _match={this.props.match}
                     location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
                     match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
                     openHierarchy={false}

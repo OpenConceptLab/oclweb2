@@ -106,8 +106,10 @@ class ConceptHome extends React.Component {
             this.setState({isLoading: false}, () => {throw response})
           else
             this.setState({isLoading: false, concept: response.data}, () => {
-              const { setOperationItem } = this.context
+              const { setOperationItem, setOpenOperations } = this.context
               setOperationItem({...response.data, parentVersion: this.props.match.params.version})
+              if(this.props._location?.pathname.includes('/$cascade'))
+                setOpenOperations(true)
               this.getMappings()
               this.fetchParent()
               if(this.props.scoped !== 'collection') {
