@@ -1,3 +1,11 @@
+##### 2.1.52 - Thu Jan 5 05:56:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1457](https://github.com/OpenConceptLab/ocl_issues/issues/1457) | cascade params from url to operations panel
+- [OpenConceptLab/ocl_issues#1454](https://github.com/OpenConceptLab/ocl_issues/issues/1454) | Operations panel | setting concept on load
+- [OpenConceptLab/ocl_issues#1454](https://github.com/OpenConceptLab/ocl_issues/issues/1454) | cascade input parameters in Operations Panel
+- [OpenConceptLab/ocl_issues#1445](https://github.com/OpenConceptLab/ocl_issues/issues/1445) | Added event on split view
+- [OpenConceptLab/ocl_issues#1446](https://github.com/OpenConceptLab/ocl_issues/issues/1446) | fixing sorting of mappings for non-existent concepts
+##### 2.1.51 - Mon Jan 2 10:19:26 2023 +0000
+- updated changelog
 ##### 2.1.50 - Wed Dec 28 03:22:31 2022 +0000
 - [OpenConceptLab/ocl_issues#1445](https://github.com/OpenConceptLab/ocl_issues/issues/1445) | fixing duplicate events
 - [OpenConceptLab/ocl_issues#1445](https://github.com/OpenConceptLab/ocl_issues/issues/1445) | record click events on create/update of everything | retire/reactivate for concept/mapping
