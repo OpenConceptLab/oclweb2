@@ -48,9 +48,11 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 )
 
 const App = props => {
+  const { openOperations, menuOpen, setMenuOpen, setOpenOperations } = React.useContext(OperationsContext);
+
   // For recent history
   setUpRecentHistory(props.history);
-  const { openOperations, menuOpen, setMenuOpen } = React.useContext(OperationsContext);
+
   const setupHotJar = () => {
     /*eslint no-undef: 0*/
     const HID = window.HOTJAR_ID || process.env.HOTJAR_ID
@@ -69,10 +71,25 @@ const App = props => {
       }
     });
 
+  const myStateRef = React.useRef(openOperations);
+  const setMyState = data => {
+    myStateRef.current = data;
+    setOpenOperations(data);
+  };
+
+  const _listenKey = event => {
+    const isCtrlO = event.keyCode === 79 && event.ctrlKey;
+    if (isCtrlO) {
+      setMyState(!myStateRef.current)
+    }
+  };
+
   React.useEffect(() => {
     addLogoutListenerForAllTabs()
     recordGAPageView()
     setupHotJar()
+    document.body.addEventListener("keydown", _listenKey)
+    return () => document.body.removeEventListener("keydown", _listenKey)
   }, [])
 
   const isFHIR = isFHIRServer();
