@@ -190,7 +190,7 @@ const OperationsDrawer = () => {
           } else {
             setResponse(_response)
           }
-          setURL(_response.config.url)
+          setURL(_response?.request?.responseURL || _response?.config?.url)
           setIsFetching(false)
         })
       } else {
@@ -206,7 +206,7 @@ const OperationsDrawer = () => {
       let queryParams = operation === '$cascade' ? cascadeParams : {}
       APIService.new().overrideURL(parentItem.version_url || parentItem.url).appendToUrl(`concepts/${code}/${operation}/`).get(null, null, queryParams).then(
         _response => {
-          setURL(_response.config.url)
+          setURL(_response?.request?.responseURL || _response?.config?.url)
           setResponse(_response)
           setIsFetching(false)
         }
