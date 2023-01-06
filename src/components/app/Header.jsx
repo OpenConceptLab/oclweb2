@@ -322,7 +322,7 @@ const Header = props => {
                                 <ListItemIcon
                                   sx={{
                                     minWidth: 0,
-                                    mr: open ? 3 : 'auto',
+                                    mr: 3,
                                     justifyContent: 'center',
                                   }}
                                 >
