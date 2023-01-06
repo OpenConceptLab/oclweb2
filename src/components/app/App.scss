@@ -14,22 +14,18 @@ $white: #fff;
     }
 }
 .content {
-    margin-top: 65px;
     margin-bottom: 50px;
     display: inline-block;
-    width: calc(100% - 60px);
+    width: 100%;
     height: auto;
-    margin-left: 60px;
     &.menu-open {
-        width: calc(100% - 250px) !important;
-        margin-left: 250px !important;
+        width: 100%;
         &.with-operations {
-            width: calc(100% - 600px - 60px) !important;
+            width: calc(100% - 600px) !important;
         }
     }
     &.no-menu {
         width: 100%;
-        margin-left: 0px;
         &.with-operations {
             width: calc(100% - 350px) !important;
         }
@@ -332,7 +328,7 @@ span.separator-small {
     }
 
     &-container {
-        padding: 10px;
+        padding: 10px 0;
         box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1);
         border-radius: 0 0 4px 4px;
         overflow: visible !important;

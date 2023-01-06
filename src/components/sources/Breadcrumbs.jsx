@@ -31,7 +31,7 @@ const Breadcrumbs = ({
   params, selectedResource, container, isVersionedObject, versions, onSplitViewClose,
   isLoadingExpansions, expansions, expansion
 }) => {
-  const { openOperations, menuOpen } = React.useContext(OperationsContext);
+  const { openOperations } = React.useContext(OperationsContext);
   const [conceptForm, setConceptForm] = React.useState(false);
   const [mappingForm, setMappingForm] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
@@ -92,7 +92,7 @@ const Breadcrumbs = ({
 
   const onUnretire = () => {
     const prompt = alertifyjs
-      .prompt()
+          .prompt()
     prompt.setContent('<form id="retireForm"> <p>Unretire Reason</p> <textarea required id="comment" style="width: 100%;"></textarea> </form>')
       .set('onok', () => {
         document.getElementById('retireForm').reportValidity();
@@ -128,11 +128,9 @@ const Breadcrumbs = ({
   }
 
   const getWidth = () => {
-    if(!menuOpen && !openOperations)
+    if(!openOperations)
       return '100%'
     let width = 0;
-    if(menuOpen)
-      width += 190
     if(openOperations)
       width += 350
     return `calc(100% - ${width}px)`
@@ -155,121 +153,121 @@ const Breadcrumbs = ({
             <span className='flex-vertical-center' style={{width: getWidth()}}>
               {
                 params.search &&
-                <span className='search-breadcrumbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '125px'}}>
-                  <span className='flex-vertical-center' style={{fontWeight: 'bold', paddingLeft: '8px'}}>
-                    <SearchIcon style={{marginRight: '5px'}} fontSize='small' />
-                    {params.search}
-                  </span>
+                  <span className='search-breadcrumbs flex-vertical-center' style={{background: WHITE, minHeight: '60px', paddingRight: '15px', minWidth: '125px'}}>
+                    <span className='flex-vertical-center' style={{fontWeight: 'bold', paddingLeft: '8px'}}>
+                      <SearchIcon style={{marginRight: '5px'}} fontSize='small' />
+                      {params.search}
+                    </span>
 
-                </span>
+                  </span>
               }
               <span className='container-breadcrumbs flex-vertical-center' style={{paddingLeft: params.search ? '15px' : '10px', background: params.search ? '#f1f1f1' : WHITE, width: ownerURL ? 'auto': '100%', minHeight: '60px', paddingRight: params.search ? '0' : '15px'}}>
                 {
                   ownerURL &&
-                  <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
+                    <OwnerButton uri={ownerURL} owner={owner} variant='outlined' style={{borderColor: ORANGE, color: ORANGE, boxShadow: 'none', textTransform: 'none', border: '1px solid'}} />
                 }
                 {
                   parentURL &&
-                  <React.Fragment>
-                    {
-                      parent &&
-                      <span className='separator'><SeparatorIcon /></span>
-                    }
-                    {
-                      params.source &&
-                      <SourceButton
-                        noActions={!container}
-                        source={container}
-                        label={parent}
-                        href={parentURL}
-                        onEditClick={() => params.source ? setSourceForm(true) : setCollectionForm(true)}
-                        onDeleteClick={() => setDeleteDialog(true) }
-                        downloadFileName={downloadFileName}
-                        {...parentProps}
-                      />
-                    }
-                    {
-                      params.collection &&
-                      <CollectionButton
-                        noActions={!container}
-                        collection={container}
-                        label={parent}
-                        href={parentURL}
-                        onEditClick={() => setCollectionForm(true)}
-                        onDeleteClick={() => setDeleteDialog(true) }
-                        downloadFileName={downloadFileName}
-                        {...parentProps}
-                      />
-                    }
-                    {
-                      container &&
-                      <React.Fragment>
-                        <span className='separator'><SeparatorIcon /></span>
-                        <VersionSelectorButton
-                          selected={container}
-                          versions={versions}
-                          resource={parentType}
-                          {...parentVersionProps}
-                        />
-                      </React.Fragment>
-                    }
-                    {
-                      params.collection && !isEmpty(expansions) && !isLoadingExpansions &&
-                      <React.Fragment>
-                        <span className='separator'><SeparatorIcon /></span>
-                        <ExpansionSelectorButton
-                          selected={expansion}
-                          expansions={expansions}
-                          version={container}
-                          {...expansionProps}
-                        />
-                      </React.Fragment>
-                    }
-                  </React.Fragment>
+                    <React.Fragment>
+                      {
+                        parent &&
+                          <span className='separator'><SeparatorIcon /></span>
+                      }
+                      {
+                        params.source &&
+                          <SourceButton
+                            noActions={!container}
+                            source={container}
+                            label={parent}
+                            href={parentURL}
+                            onEditClick={() => params.source ? setSourceForm(true) : setCollectionForm(true)}
+                            onDeleteClick={() => setDeleteDialog(true) }
+                            downloadFileName={downloadFileName}
+                            {...parentProps}
+                          />
+                      }
+                      {
+                        params.collection &&
+                          <CollectionButton
+                            noActions={!container}
+                            collection={container}
+                            label={parent}
+                            href={parentURL}
+                            onEditClick={() => setCollectionForm(true)}
+                            onDeleteClick={() => setDeleteDialog(true) }
+                            downloadFileName={downloadFileName}
+                            {...parentProps}
+                          />
+                      }
+                      {
+                        container &&
+                          <React.Fragment>
+                            <span className='separator'><SeparatorIcon /></span>
+                            <VersionSelectorButton
+                              selected={container}
+                              versions={versions}
+                              resource={parentType}
+                              {...parentVersionProps}
+                            />
+                          </React.Fragment>
+                      }
+                      {
+                        params.collection && !isEmpty(expansions) && !isLoadingExpansions &&
+                          <React.Fragment>
+                            <span className='separator'><SeparatorIcon /></span>
+                            <ExpansionSelectorButton
+                              selected={expansion}
+                              expansions={expansions}
+                              version={container}
+                              {...expansionProps}
+                            />
+                          </React.Fragment>
+                      }
+                    </React.Fragment>
                 }
               </span>
               {
                 resource && selectedResource &&
-                <span className='resource-breadcrumbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', paddingLeft: params.search ? 0 : '10px', border: '3px solid #f1f1f1', flex: 1, justifyContent: 'space-between'}}>
-                  <span className='flex-vertical-center'>
-                    {
-                      params.search &&
-                      <span className='separator'><SeparatorIcon /></span>
-                    }
-                    {
-                      params.concept ?
-                      <ConceptButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} /> :
-                      <MappingButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} />
-                    }
-                    {
-                      resourceVersion &&
-                      <React.Fragment>
-                        <span className='separator'><SeparatorIcon /></span>
-                        <ResourceVersionButton label={resourceVersion} href={params.source ? resourceVersionURL : undefined} />
-                      </React.Fragment>
-                    }
-                    <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-                      <ManageSourceChildButton
-                        resource={resourceType}
-                        instance={selectedResource}
-                        isVersionedObject={Boolean(!resourceVersion)}
-                        currentURL={resourceVersion ? resourceVersionEncodedURL : resourceEncodedURL}
-                        onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
-                        onRetire={() => params.source ? onRetire() : null}
-                        onUnretire={() => params.source ? onUnretire() : null}
-                      />
+                  <span className='resource-breadcrumbs flex-vertical-center' style={{background: '#f1f1f1', padding: '10px', paddingLeft: params.search ? 0 : '10px', border: '3px solid #f1f1f1', flex: 1, justifyContent: 'space-between'}}>
+                    <span className='flex-vertical-center'>
+                      {
+                        params.search &&
+                          <span className='separator'><SeparatorIcon /></span>
+                      }
+                      {
+                        params.concept ?
+                          <ConceptButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} /> :
+                        <MappingButton label={resource} href={params.source ? resourceURL : undefined} {...resourceProps} />
+                      }
+                      {
+                        resourceVersion &&
+                          <React.Fragment>
+                            <span className='separator'><SeparatorIcon /></span>
+                            <ResourceVersionButton label={resourceVersion} href={params.source ? resourceVersionURL : undefined} />
+                          </React.Fragment>
+                      }
+                      <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
+                        <ManageSourceChildButton
+                          resource={resourceType}
+                          instance={selectedResource}
+                          isVersionedObject={Boolean(!resourceVersion)}
+                          currentURL={resourceVersion ? resourceVersionEncodedURL : resourceEncodedURL}
+                          onEditClick={() => params.source ? (resourceType === 'concept' ? setConceptForm(true) : setMappingForm(true)) : null}
+                          onRetire={() => params.source ? onRetire() : null}
+                          onUnretire={() => params.source ? onUnretire() : null}
+                        />
+                      </span>
+                    </span>
+                    <span className='flex-vertical-center' style={{background: '#f1f1f1', border: '1px solid #f1f1f1', marginRight: '60px'}}>
+                      <IconButton size='small' color='secondary' onClick={onSplitViewClose}>
+                        <CancelIcon fontSize='inherit' />
+                      </IconButton>
                     </span>
                   </span>
-                  <span className='flex-vertical-center' style={{background: '#f1f1f1', border: '1px solid #f1f1f1', marginRight: '60px'}}>
-                    <IconButton size='small' color='secondary' onClick={onSplitViewClose}>
-                      <CancelIcon fontSize='inherit' />
-                    </IconButton>
-                  </span>
-                </span>
               }
               {
                 !params.search && ownerURL && !selectedResource &&
-                <span className='resource-breadcrumbs flex-vertical-center' style={{background: WHITE, padding: '10px', border: `3px solid ${WHITE}`, flex: 1, minHeight: '60px'}} />
+                  <span className='resource-breadcrumbs flex-vertical-center' style={{background: WHITE, padding: '10px', border: `3px solid ${WHITE}`, flex: 1, minHeight: '60px'}} />
               }
             </span>
           </div>
@@ -277,53 +275,53 @@ const Breadcrumbs = ({
       </div>
       {
         container && sourceForm &&
-        <CommonFormDrawer
-          style={{zIndex: '1202'}}
-          isOpen={sourceForm}
-          onClose={() => setSourceForm(false)}
-          size='smedium'
-          formComponent={
-            <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} owner={getOwner()} />
-          }
-        />
+          <CommonFormDrawer
+            style={{zIndex: '1202'}}
+            isOpen={sourceForm}
+            onClose={() => setSourceForm(false)}
+            size='smedium'
+            formComponent={
+              <SourceForm edit reloadOnSuccess onCancel={() => setSourceForm(false)} source={{...container, id: container.short_code}} owner={getOwner()} />
+            }
+          />
       }
       {
         container && collectionForm &&
-        <CommonFormDrawer
-          style={{zIndex: '1202'}}
-          isOpen={collectionForm}
-          onClose={() => setCollectionForm(false)}
-          size='smedium'
-          formComponent={
-            <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} owner={getOwner()} />
-          }
-        />
+          <CommonFormDrawer
+            style={{zIndex: '1202'}}
+            isOpen={collectionForm}
+            onClose={() => setCollectionForm(false)}
+            size='smedium'
+            formComponent={
+              <CollectionForm edit reloadOnSuccess onCancel={() => setCollectionForm(false)} collection={{...container, id: container.short_code}} owner={getOwner()} />
+            }
+          />
       }
       {
         conceptForm && selectedResource &&
-        <CommonFormDrawer
-          style={{zIndex: 1202}}
-          isOpen={conceptForm}
-          onClose={() => setConceptForm(false)}
-          formComponent={
-            <ConceptForm edit reloadOnSuccess onCancel={() => setConceptForm(false)} concept={selectedResource} parentURL={resourceURL.replace('#', '')} />
-          }
-        />
+          <CommonFormDrawer
+            style={{zIndex: 1202}}
+            isOpen={conceptForm}
+            onClose={() => setConceptForm(false)}
+            formComponent={
+              <ConceptForm edit reloadOnSuccess onCancel={() => setConceptForm(false)} concept={selectedResource} parentURL={resourceURL.replace('#', '')} />
+            }
+          />
       }
       {
         mappingForm && selectedResource &&
-        <CommonFormDrawer
-          style={{zIndex: 1202}}
-          isOpen={mappingForm}
-          onClose={() => setMappingForm(false)}
-          formComponent={
-            <MappingForm edit reloadOnSuccess onCancel={() => setMappingForm(false)} mapping={selectedResource} parentURL={resourceURL.replace('#', '')} />
-          }
-        />
+          <CommonFormDrawer
+            style={{zIndex: 1202}}
+            isOpen={mappingForm}
+            onClose={() => setMappingForm(false)}
+            formComponent={
+              <MappingForm edit reloadOnSuccess onCancel={() => setMappingForm(false)} mapping={selectedResource} parentURL={resourceURL.replace('#', '')} />
+            }
+          />
       }
       {
         hasAccess && !isEmpty(container) &&
-        <ConceptContainerDelete open={deleteDialog} resource={{...container, id: container.short_code}} onClose={() => setDeleteDialog(false)} onDelete={deleteContainer} />
+          <ConceptContainerDelete open={deleteDialog} resource={{...container, id: container.short_code}} onClose={() => setDeleteDialog(false)} onDelete={deleteContainer} />
       }
     </header>
   )

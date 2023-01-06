@@ -165,7 +165,7 @@ class CollectionHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value, selected: null}, () => {
+    this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
     })
@@ -324,106 +324,106 @@ class CollectionHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', marginLeft: '5px', width: filtersOpen ? '88%' : '100%'}}>
-              <Breadcrumbs
-                params={this.getBreadcrumbParams()}
-                container={collection}
-                isVersionedObject={this.isVersionedObject()}
-                versionedObjectURL={versionedObjectURL}
-                currentURL={currentURL}
-                config={selectedConfig}
-                versions={versions}
-                selectedResource={selected}
-                onSplitViewClose={() => this.setState({selected: null, width: false})}
-                expansions={expansions}
-                isLoadingExpansions={isLoadingExpansions}
-                expansion={expansion}
-              />
-            </div>
+            <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
+              <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', width: filtersOpen ? '88%' : '100%'}}>
+                <Breadcrumbs
+                  params={this.getBreadcrumbParams()}
+                  container={collection}
+                  isVersionedObject={this.isVersionedObject()}
+                  versionedObjectURL={versionedObjectURL}
+                  currentURL={currentURL}
+                  config={selectedConfig}
+                  versions={versions}
+                  selectedResource={selected}
+                  onSplitViewClose={() => this.setState({selected: null, width: false})}
+                  expansions={expansions}
+                  isLoadingExpansions={isLoadingExpansions}
+                  expansion={expansion}
+                />
+              </div>
 
-            <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
-              <CollectionHomeHeader
-                collection={collection}
-                isVersionedObject={this.isVersionedObject()}
-                versionedObjectURL={versionedObjectURL}
-                currentURL={currentURL}
-                config={selectedConfig}
-                expansion={expansion}
-                tab={tab}
-                versions={versions}
-                expansions={expansions}
-                isLoadingExpansions={isLoadingExpansions}
-              />
-              <CollectionHomeTabs
-                tab={tab}
-                onTabChange={this.onTabChange}
-                collection={collection}
-                expansion={expansion}
-                versions={versions}
-                match={this.props.match}
-                location={this.props.location}
-                versionedObjectURL={versionedObjectURL}
-                currentVersion={this.getCurrentVersion()}
-                aboutTab={showAboutTab}
-                onVersionUpdate={this.onVersionUpdate}
-                customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
-                onConfigChange={this.onConfigChange}
-                selectedConfig={selectedConfig}
-                showConfigSelection={this.customConfigFeatureApplicable()}
-                isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
-                isLoadingVersions={isLoadingVersions}
-                isLoadingExpansions={isLoadingExpansions}
-                onSelect={this.onResourceSelect}
-                onFilterDrawerToggle={this.onFilterDrawerToggle}
-              />
+              <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
+                <CollectionHomeHeader
+                  collection={collection}
+                  isVersionedObject={this.isVersionedObject()}
+                  versionedObjectURL={versionedObjectURL}
+                  currentURL={currentURL}
+                  config={selectedConfig}
+                  expansion={expansion}
+                  tab={tab}
+                  versions={versions}
+                  expansions={expansions}
+                  isLoadingExpansions={isLoadingExpansions}
+                />
+                <CollectionHomeTabs
+                  tab={tab}
+                  onTabChange={this.onTabChange}
+                  collection={collection}
+                  expansion={expansion}
+                  versions={versions}
+                  match={this.props.match}
+                  location={this.props.location}
+                  versionedObjectURL={versionedObjectURL}
+                  currentVersion={this.getCurrentVersion()}
+                  aboutTab={showAboutTab}
+                  onVersionUpdate={this.onVersionUpdate}
+                  customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
+                  onConfigChange={this.onConfigChange}
+                  selectedConfig={selectedConfig}
+                  showConfigSelection={this.customConfigFeatureApplicable()}
+                  isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
+                  isLoadingVersions={isLoadingVersions}
+                  isLoadingExpansions={isLoadingExpansions}
+                  onSelect={this.onResourceSelect}
+                  onFilterDrawerToggle={this.onFilterDrawerToggle}
+                />
+              </div>
             </div>
-          </div>
         }
         {
           (isMappingSelected || isConceptSelected) &&
-          <ResponsiveDrawer
-            width={openOperations ? "29.5%" : "39.5%"}
-            paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
-            variant='persistent'
-            isOpen
-            onClose={() => this.setState({selected: null, width: false})}
-            onWidthChange={newWidth => this.setState({width: newWidth})}
-            formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
-                {
-                  isMappingSelected ?
-                  <MappingHome
-                    singleColumn
-                    scoped='collection'
-                    parent={collection}
-                    parentURL={get(expansion, 'url') || collection.url || collection.version_url}
-                    mapping={selected}
-                    _location={this.props.location}
-                    _match={this.props.match}
-                    location={{pathname: selected.version_url || selected.url}}
-                    match={{params: {mappingVersion: selected.version, version: this.props.match.params.version}}}
-                    header={false}
-                    noRedirect
-                  /> :
-                  <ConceptHome
-                    singleColumn
-                    scoped='collection'
-                    parent={collection}
-                    parentURL={get(expansion, 'url') || collection.url || collection.version_url}
-                    concept={selected}
-                    _location={this.props.location}
-                    _match={this.props.match}
-                    location={{pathname: selected.version_url || selected.url}}
-                    match={{params: {conceptVersion: selected.version, version: this.props.match.params.version}}}
-                    openHierarchy={false}
-                    header={false}
-                    noRedirect
-                  />
-                }
-              </div>
-            }
-          />
+            <ResponsiveDrawer
+              width={openOperations ? "29.5%" : "39.5%"}
+              paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
+              variant='persistent'
+              isOpen
+              onClose={() => this.setState({selected: null, width: false})}
+              onWidthChange={newWidth => this.setState({width: newWidth})}
+              formComponent={
+                <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
+                  {
+                    isMappingSelected ?
+                      <MappingHome
+                        singleColumn
+                        scoped='collection'
+                        parent={collection}
+                        parentURL={get(expansion, 'url') || collection.url || collection.version_url}
+                        mapping={selected}
+                        _location={this.props.location}
+                        _match={this.props.match}
+                        location={{pathname: selected.version_url || selected.url}}
+                        match={{params: {mappingVersion: selected.version, version: this.props.match.params.version}}}
+                        header={false}
+                        noRedirect
+                      /> :
+                    <ConceptHome
+                      singleColumn
+                      scoped='collection'
+                      parent={collection}
+                      parentURL={get(expansion, 'url') || collection.url || collection.version_url}
+                      concept={selected}
+                      _location={this.props.location}
+                      _match={this.props.match}
+                      location={{pathname: selected.version_url || selected.url}}
+                      match={{params: {conceptVersion: selected.version, version: this.props.match.params.version}}}
+                      openHierarchy={false}
+                      header={false}
+                      noRedirect
+                    />
+                  }
+                </div>
+              }
+            />
         }
       </div>
     )

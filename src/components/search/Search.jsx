@@ -539,7 +539,7 @@ class Search extends React.Component {
     const shouldGetCounts = !isEmpty(this.state.appliedFacets);
 
     this.setState(
-      {resource: resource, appliedFacets: {}, sortParams: {sortDesc: '_score'}, userFilters: {}},
+      {resource: resource, appliedFacets: {}, sortParams: {sortDesc: '_score'}, userFilters: {}, width: false},
       () => this.fetchNewResults(null, shouldGetCounts, true, true)
     )
   }
