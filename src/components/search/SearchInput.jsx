@@ -13,6 +13,8 @@ class SearchInput extends React.Component {
   constructor(props){
     super(props);
 
+    this.inputRef = React.createRef();
+
     this.state = {
       siteTitle: getSiteTitle(),
       input: undefined,
@@ -28,7 +30,21 @@ class SearchInput extends React.Component {
     return queryParams.get(attr, defaultValue || '')
   }
 
+  _listenKey = event => {
+    const isCtrlS = event.keyCode === 83 && event.ctrlKey;
+    if (!isCtrlS) {
+      return;
+    }
+
+    this.inputRef.current.focus();
+  };
+
+  componentWillUnmount() {
+    document.body.removeEventListener("keydown", this._listenKey);
+  }
+
   componentDidMount() {
+    document.body.addEventListener("keydown", this._listenKey);
     this.setState({
       input: this.getValueFromURL('q'), exactMatch: this.getValueFromURL('exactMatch')
     })
@@ -121,6 +137,7 @@ class SearchInput extends React.Component {
           fullWidth
           onChange={this.handleInputChange}
           onKeyPress={this.handleKeyPress}
+          inputRef={this.inputRef}
         />
         {
           input &&
