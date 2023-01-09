@@ -116,6 +116,15 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           size='small'
         />
       </div>
+      <div className='col-xs-12 no-side-padding' style={{marginBottom: '10px'}}>
+        <TextField
+          fullWidth
+          value={params.omitIfExistsIn}
+          label='OmitIfExistsIn'
+          onChange={event => _onChange('omitIfExistsIn', event.target.value)}
+          size='small'
+        />
+      </div>
     </div>
   )
 }
