@@ -125,6 +125,17 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           size='small'
         />
       </div>
+      <div className='col-xs-12 no-side-padding' style={{marginBottom: '10px'}}>
+        <TextField
+          fullWidth
+          value={params.equivalencyMapType}
+          label='EquivalencyMapType'
+          onChange={event => _onChange('equivalencyMapType', event.target.value)}
+          size='small'
+          placeholder='e.g. SAME-AS,CONCEPT-SET'
+          disabled={!params.omitIfExistsIn}
+        />
+      </div>
     </div>
   )
 }

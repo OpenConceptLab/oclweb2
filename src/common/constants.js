@@ -69,4 +69,5 @@ export const DEFAULT_CASCADE_PARAMS = {
   reverse: false,
   view: 'flat',
   omitIfExistsIn: '',
+  equivalencyMapType: '',
 }
