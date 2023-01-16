@@ -132,6 +132,12 @@ class ConceptHome extends React.Component {
       .overrideURL(toParentURI(concept.url))
       .get(null, null, {includeSummary: true})
       .then(response => this.setState({source: response.data}, () => {
+        const { setParentResource, setParentItem, parentItem } = this.context
+        if(!parentItem) {
+          setParentItem(this.state.source)
+          setParentResource('source')
+        }
+
         if(this.isVersionedObject())
           this.fetchParentMappedSources()
       }))

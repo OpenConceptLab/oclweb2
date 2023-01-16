@@ -42,7 +42,7 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           value={params.cascadeHierarchy}
           control={<Checkbox size='small' checked={params.cascadeHierarchy} />}
           label="Cascade Hierarchy"
-          labelPlacement="right"
+          labelPlacement="end"
         />
         <FormControlLabel
           size='small'
@@ -50,7 +50,7 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           value={params.cascadeMappings}
           control={<Checkbox size='small' checked={params.cascadeMappings} />}
           label="Cascade Mappings"
-          labelPlacement="right"
+          labelPlacement="end"
         />
         <FormControlLabel
           size='small'
@@ -58,7 +58,7 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           value={params.includeRetired}
           control={<Checkbox size='small' checked={params.includeRetired} />}
           label="Include Retired"
-          labelPlacement="right"
+          labelPlacement="end"
         />
         <FormControlLabel
           size='small'
@@ -66,7 +66,7 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           value={params.reverse}
           control={<Checkbox size='small' checked={params.reverse} />}
           label="Cascade Direction Backwards"
-          labelPlacement="right"
+          labelPlacement="end"
         />
         <FormControlLabel
           size='small'
@@ -74,7 +74,7 @@ const CascadeParametersForm = ({onChange, defaultParams}) => {
           value={params.view === 'hierarchy'}
           control={<Checkbox size='small' checked={params.view === 'hierarchy'} />}
           label="Hierarchical Response"
-          labelPlacement="right"
+          labelPlacement="end"
         />
       </div>
       <div className='col-xs-12 no-side-padding' style={{marginBottom: '10px'}}>
