@@ -45,7 +45,7 @@ class ConceptHierarchyTree extends React.Component {
   }
 
   componentDidMount() {
-    this.makeInitialTree()
+    this.props.treeData ? this.makeTree(this.props.treeData) : this.makeInitialTree()
   }
 
   componentDidUpdate(prevProps) {
@@ -75,7 +75,9 @@ class ConceptHierarchyTree extends React.Component {
       .then(response => callback(response.data.entry));
   }
 
-  makeInitialTree = () => this.getChildren(this.props.concept, tree => {
+  makeInitialTree = () => this.getChildren(this.props.concept, this.makeTree)
+
+  makeTree = tree => {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
     data.cascade_target_source = this.getSourceName(data)
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
@@ -83,7 +85,7 @@ class ConceptHierarchyTree extends React.Component {
         this.renderTree()
       }
     })
-  })
+  }
 
   getSourceName = (data, urlKey) => {
     if(data.cascade_target_source_name && data.cascade_target_source_owner)

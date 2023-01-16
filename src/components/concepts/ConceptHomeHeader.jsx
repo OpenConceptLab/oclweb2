@@ -6,7 +6,7 @@ import {
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
-  FormatIndentIncrease as HierarchyIcon,
+  QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
 import { get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';

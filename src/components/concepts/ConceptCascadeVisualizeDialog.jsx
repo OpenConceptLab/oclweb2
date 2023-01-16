@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ConceptCascadeVisualizeDialog = ({concept, open, onClose, filters, onFilterChange, onCascadeFilterChange, source, sourceVersion, hierarchyMeaning, parent}) => {
+const ConceptCascadeVisualizeDialog = ({concept, open, onClose, filters, onFilterChange, onCascadeFilterChange, source, sourceVersion, hierarchyMeaning, parent, treeData}) => {
   return (
     <Dialog fullScreen open={open} onClose={onClose} TransitionComponent={Transition}>
       <DialogTitle>
@@ -52,7 +52,7 @@ const ConceptCascadeVisualizeDialog = ({concept, open, onClose, filters, onFilte
       </DialogTitle>
       <DialogContent>
         <div className='col-xs-12' style={{padding: '10px'}}>
-          <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={filters} sourceVersion={sourceVersion} source={source} parent={parent} reverse={get(filters, 'reverse', false)} />
+          <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={filters} sourceVersion={sourceVersion} source={source} parent={parent} reverse={get(filters, 'reverse', false)} treeData={treeData} />
         </div>
       </DialogContent>
       <DialogActions>

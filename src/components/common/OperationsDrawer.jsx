@@ -2,7 +2,7 @@ import React from 'react';
 import ReactJson from 'react-json-view'
 import alertifyjs from 'alertifyjs';
 import {
-  Toolbar, Button, Drawer, IconButton, TextField, FormControl, InputLabel, Select, MenuItem,
+  Toolbar, Button, Drawer, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Tooltip,
   ButtonGroup
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -10,6 +10,7 @@ import {
   CancelOutlined as CloseIcon,
   OpenInNew as NewTabIcon,
   FileCopy as CopyIcon,
+  QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
 import { get, map, includes, uniq, filter, find, startCase, isString, isObject, merge, forEach } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
@@ -19,6 +20,7 @@ import {
 import { FHIR_OPERATIONS, GREEN, ERROR_RED, BLACK, DEFAULT_CASCADE_PARAMS } from '../../common/constants';
 import APIService from '../../services/APIService';
 import CascadeParametersForm from './CascadeParametersForm';
+import ConceptCascadeVisualizeDialog from '../concepts/ConceptCascadeVisualizeDialog';
 
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
@@ -92,6 +94,7 @@ const OperationsDrawer = () => {
   const fhirResourceDisplay = startCase(fhirResource).replace(' ', '')
   const operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
   const [byURL, setByURL] = React.useState(false)
+  const [visualize, setVisualize] = React.useState(false)
   React.useEffect(
     () => {
       setItem(operationItem)
@@ -236,6 +239,10 @@ const OperationsDrawer = () => {
     return response
   }
 
+  const onVisualizeCascadeClick = () => setVisualize(!visualize)
+
+  const showVisualizeOption = operation === '$cascade' && cascadeParams?.view === 'hierarchy' && response?.data
+
   return (
     <React.Fragment>
       <Drawer
@@ -377,6 +384,14 @@ const OperationsDrawer = () => {
                           <IconButton onClick={onCopyURLClick} size='small'>
                             <CopyIcon fontSize='inherit' />
                           </IconButton>
+                          {
+                            showVisualizeOption &&
+                              <Tooltip title='Visualize'>
+                                <IconButton onClick={onVisualizeCascadeClick} size='small'>
+                                  <HierarchyIcon fontSize='inherit' />
+                                </IconButton>
+                              </Tooltip>
+                          }
                         </React.Fragment>
                     }
                   </h4>
@@ -395,6 +410,18 @@ const OperationsDrawer = () => {
           </div>
         </div>
       </Drawer>
+      {
+        visualize &&
+          <ConceptCascadeVisualizeDialog
+            open
+            onClose={onVisualizeCascadeClick}
+            concept={item}
+            filters={false}
+            parent={parentItem}
+            treeData={response?.data?.entry || {}}
+          />
+
+      }
     </React.Fragment>
   )
 }
