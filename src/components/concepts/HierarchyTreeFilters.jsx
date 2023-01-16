@@ -20,7 +20,7 @@ const LEVEL_OPTIONS = [
   {id: '*', name: 'All'},
 ]
 
-const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size}) => {
+const HierarchyTreeFilters = ({filters, onChange, onFilterChange, size}) => {
   const [mapTypes, setMapTypes] = React.useState(filters.mapTypes || '')
   const [excludeMapTypes, setExcludeMapTypes] = React.useState(filters.excludeMapTypes || '')
   const [returnMapTypes, setReturnMapTypes] = React.useState(filters.returnMapTypes || '')
@@ -39,11 +39,11 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
   }
   const onMapTypesChange = () => {
     toggleMapTypeAnchor()
-    onMapTypesFilterChange({...filters, mapTypes: mapTypes, excludeMapTypes: excludeMapTypes, returnMapTypes: returnMapTypes})
+    onFilterChange({...filters, mapTypes: mapTypes, excludeMapTypes: excludeMapTypes, returnMapTypes: returnMapTypes})
   }
   const onOmitIfExistsInChange = () => {
     toggleOmitIfExistsInAnchor()
-    onMapTypesFilterChange({...filters, omitIfExistsIn: omitIfExistsIn, equivalencyMapType: equivalencyMapType})
+    onFilterChange({...filters, omitIfExistsIn: omitIfExistsIn, equivalencyMapType: equivalencyMapType})
   }
   const _size = size || 'small'
 

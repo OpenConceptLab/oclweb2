@@ -1,13 +1,12 @@
 import React from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails, CircularProgress,
-  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton, Dialog, DialogContent, DialogTitle,
-  DialogActions, Button, Slide, Chip
+  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton,
+  Button, Chip
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
-  FormatIndentIncrease as HierarchyIcon,
-  Close as CloseIcon,
+  QueryStats as HierarchyIcon,
   Add as AddIcon,
 } from '@mui/icons-material'
 import { get, isEmpty, forEach, map, find, compact, flatten, values } from 'lodash';
@@ -17,9 +16,7 @@ import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRo
 import MappingInlineForm from '../mappings/MappingInlineForm';
 import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
-import ConceptHierarchyTree from './ConceptHierarchyTree';
-import HierarchyTreeFilters from './HierarchyTreeFilters';
-import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
+import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -65,10 +62,6 @@ const DEFAULT_CASCADE_FILTERS = {
   returnMapTypes: undefined,
 }
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping }) => {
   const [mappingForm, setMappingForm] = React.useState(false)
   const [hierarchy, setHierarchy] = React.useState(false);
@@ -96,7 +89,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     )
   }
   const onCascadeFilterChange = (attr, value) => setCascadeFilters({...cascadeFilters, [attr]: value})
-  const onMapTypesFilterChange = newFilters => setCascadeFilters(newFilters)
+  const onFilterChange = newFilters => setCascadeFilters(newFilters)
   const onHierarchyViewToggle = event => {
     event.preventDefault()
     event.stopPropagation()
@@ -299,45 +292,18 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
       </Accordion>
       {
         !noAssociations && hierarchy &&
-          <Dialog fullScreen open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition}>
-            <DialogTitle>
-              <div className='col-xs-12 no-side-padding'>
-                <div className='col-xs-11 no-side-padding'>
-                  <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
-                  <div className='col-xs-12 no-side-padding'>
-                    <span>Associations</span>
-                    <span style={{marginLeft: '20px'}}>
-                      <HierarchyTreeFilters
-                        filters={cascadeFilters}
-                        onChange={onCascadeFilterChange}
-                        onMapTypesFilterChange={onMapTypesFilterChange}
-                        size='medium'
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className='col-xs-1 no-side-padding'>
-                  <span style={{float: 'right'}}>
-                    <IconButton
-                      edge="end"
-                      color="inherit"
-                      onClick={onHierarchyViewToggle}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </span>
-                </div>
-              </div>
-            </DialogTitle>
-            <DialogContent>
-              <div className='col-xs-12' style={{padding: '10px'}}>
-                <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} sourceVersion={sourceVersion} source={source} parent={parent} reverse={get(cascadeFilters, 'reverse', false)} />
-              </div>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={onHierarchyViewToggle}>Close</Button>
-            </DialogActions>
-          </Dialog>
+          <ConceptCascadeVisualizeDialog
+            open
+            onClose={onHierarchyViewToggle}
+            concept={concept}
+            source={source}
+            sourceVersion={sourceVersion}
+            filters={cascadeFilters}
+            onCascadeFilterChange={onCascadeFilterChange}
+            onFilterChange={onFilterChange}
+            hierarchyMeaning={hierarchyMeaning}
+            parent={parent}
+          />
       }
     </React.Fragment>
   )
