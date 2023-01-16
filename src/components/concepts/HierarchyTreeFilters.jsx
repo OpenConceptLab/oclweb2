@@ -24,11 +24,15 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
   const [mapTypes, setMapTypes] = React.useState(filters.mapTypes || '')
   const [excludeMapTypes, setExcludeMapTypes] = React.useState(filters.excludeMapTypes || '')
   const [returnMapTypes, setReturnMapTypes] = React.useState(filters.returnMapTypes || '')
+  const [omitIfExistsIn, setOmitIfExistsIn] = React.useState(filters.omitIfExistsIn || '')
+  const [equivalencyMapType, setEquivalencyMapType] = React.useState(filters.equivalencyMapType || '')
   const [levelAnchorEl, setLevelAnchorEl] = React.useState(null);
   const [mapTypeAnchorEl, setMapTypeAnchorEl] = React.useState(null);
+  const [omitIfExistsInAnchorEl, setOmitIfExistsInAnchorEl] = React.useState(null);
   const cascadeLevelText = filters.cascadeLevels === '*' ? 'Levels: All' : `Levels: ${filters.cascadeLevels}`
   const toggleLevelAnchor = event => setLevelAnchorEl(levelAnchorEl ? null : event.currentTarget)
   const toggleMapTypeAnchor = event => setMapTypeAnchorEl(mapTypeAnchorEl ? null : event.currentTarget)
+  const toggleOmitIfExistsInAnchor = event => setOmitIfExistsInAnchorEl(omitIfExistsInAnchorEl ? null : event.currentTarget)
   const onLevelChange = newLevel => {
     toggleLevelAnchor()
     onChange('cascadeLevels', newLevel)
@@ -36,6 +40,10 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
   const onMapTypesChange = () => {
     toggleMapTypeAnchor()
     onMapTypesFilterChange({...filters, mapTypes: mapTypes, excludeMapTypes: excludeMapTypes, returnMapTypes: returnMapTypes})
+  }
+  const onOmitIfExistsInChange = () => {
+    toggleOmitIfExistsInAnchor()
+    onMapTypesFilterChange({...filters, omitIfExistsIn: omitIfExistsIn, equivalencyMapType: equivalencyMapType})
   }
   const _size = size || 'small'
 
@@ -94,6 +102,19 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
           />
         </Tooltip>
       }
+          <Tooltip title="Omit If Exists In Repo Version" arrow placement='top'>
+            <Chip
+              color={filters.omitIfExistsIn ? "primary" : "secondary"}
+              variant="outlined"
+              label="OmitIfExistsIn"
+              size={_size}
+              clickable
+              deleteIcon={<FilterIcon />}
+              onDelete={toggleOmitIfExistsInAnchor}
+              onClick={toggleOmitIfExistsInAnchor}
+              style={{marginLeft: '2px'}}
+            />
+          </Tooltip>
       <Tooltip title={filters.includeRetired ? 'Exclude Retired' : 'Include Retired'} arrow placement='top'>
         <Chip
           color="primary"
@@ -181,6 +202,47 @@ const HierarchyTreeFilters = ({filters, onChange, onMapTypesFilterChange, size})
             Close
           </Button>
           <Button onClick={onMapTypesChange} color="primary" variant='outlined'>
+            Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={Boolean(omitIfExistsInAnchorEl)} onClose={toggleOmitIfExistsInAnchor}>
+        <DialogTitle>
+          Omit If Exists In Repo Version
+        </DialogTitle>
+        <DialogContent style={{minWidth: '400px'}}>
+          <div className='col-xs-12 no-side-padding'>
+            <div className='col-xs-12 no-side-padding' style={{fontWeight: 'bold', marginBottom: '5px'}}>
+              OmitIfExistsIn
+            </div>
+            <div className='col-xs-12 no-side-padding'>
+              <TextField
+                fullWidth
+                value={omitIfExistsIn}
+                onChange={event => setOmitIfExistsIn(event.target.value)}
+                placeholder='e.g. /orgs/MyOrg/collections/MyCollection/'
+              />
+            </div>
+          </div>
+          <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+            <div className='col-xs-12 no-side-padding' style={{fontWeight: 'bold', marginBottom: '5px'}}>
+              EquivalencyMapType
+            </div>
+            <div className='col-xs-12 no-side-padding'>
+              <TextField
+                fullWidth
+                value={equivalencyMapType}
+                onChange={event => setEquivalencyMapType(event.target.value)}
+                placeholder='e.g. SAME-AS,CONCEPT-SET'
+              />
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={toggleOmitIfExistsInAnchor} variant='outlined' color='secondary'>
+            Close
+          </Button>
+          <Button onClick={onOmitIfExistsInChange} color="primary" variant='outlined'>
             Apply
           </Button>
         </DialogActions>
