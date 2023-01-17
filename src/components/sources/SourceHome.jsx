@@ -92,6 +92,12 @@ class SourceHome extends React.Component {
   componentDidMount() {
     this.setPaths()
     this.refreshDataByURL()
+    this.interval = setInterval(this.setContainerWidth, 100)
+  }
+
+  componentWillUnmount() {
+    if(this.interval)
+      clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps) {
@@ -250,13 +256,15 @@ class SourceHome extends React.Component {
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
 
   getContainerWidth = () => {
-    const { openOperations } = this.context
     const { selected, width, filtersOpen } = this.state;
     let totalWidth = 100
-    let operationsWidth = openOperations ? 60 : 0;
     if(selected) {
+      const resourceDom = document.getElementById('resource-item-container')
+      let itemWidth = 0
+      if(resourceDom)
+        itemWidth = resourceDom.getBoundingClientRect()?.width || 0
       if(width)
-        totalWidth = `calc(${totalWidth}% - ${width - 10}px - ${operationsWidth}px)`
+        totalWidth = `calc(${totalWidth}% - ${itemWidth - 10}px)`
       else
         totalWidth -= filtersOpen ? 46 : 40.5
     }
@@ -264,6 +272,14 @@ class SourceHome extends React.Component {
     if(isNumber(totalWidth))
       totalWidth = `${totalWidth}%`
     return totalWidth
+  }
+
+  setContainerWidth = () => {
+    const el = document.getElementById('source-container')
+    if(el) {
+      const width = this.getContainerWidth()
+      el.style.width = width
+    }
   }
 
   getBreadcrumbParams = () => {
@@ -313,7 +329,7 @@ class SourceHome extends React.Component {
                   onSplitViewClose={() => this.setState({selected: null, width: false})}
                 />
               </div>
-              <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
+              <div id='source-container' className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
                 <SourceHomeHeader
                   source={source}
                   isVersionedObject={this.isVersionedObject()}

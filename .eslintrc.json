@@ -205,7 +205,8 @@
           "sourcemappings",
           "upsert",
           "Unmount",
-          "keydown"
+          "keydown",
+          "rect"
         ],
         "skipIfMatch": [
           "http://[^s]*",

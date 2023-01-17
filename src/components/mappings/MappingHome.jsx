@@ -132,7 +132,7 @@ class MappingHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 home-container no-side-padding'>
+            <div id='resource-item-container' className='col-xs-12 home-container no-side-padding'>
             {
               this.props.scoped ?
               <ScopeHeader

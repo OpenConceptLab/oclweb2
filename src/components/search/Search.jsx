@@ -95,6 +95,13 @@ class Search extends React.Component {
     if(this.props.references)
       this.setState({results: {...this.state.results, references: cloneDeep(resourceResultStruct)}})
     this.setQueryParamsInState()
+    if(!this.props.nested)
+      this.interval = setInterval(this.setSearchContainerWidth, 100)
+  }
+
+  componentWillUnmount() {
+    if(this.interval)
+      clearInterval(this.interval)
   }
 
   getLayoutAttrValue(attr, type) {
@@ -706,7 +713,6 @@ class Search extends React.Component {
   }
 
   getContainerLayoutProps = () => {
-    const { openOperations, menuOpen } = this.context
     const layout = {width: 100, paddingRight: this.props.nested ? 0 : '10px', paddingLeft: this.props.nested ? 0: '10px', marginTop: this.props.nested ? 0 : '60px'}
     if(this.state.openFacetsDrawer && !this.props.nested) {
       layout.width -= 12
@@ -715,8 +721,11 @@ class Search extends React.Component {
     }
     if(this.state.selectedItem) {
       if(this.state.width) {
-        let peripheralWidth = openOperations ? (menuOpen ? 250 : 60) : 0
-        layout.width = `calc(${layout.width}% - ${this.state.width - 5}px - ${peripheralWidth}px)`
+        const resourceDom = document.getElementById('resource-item-container')
+        let itemWidth = 0
+        if(resourceDom)
+          itemWidth = resourceDom.getBoundingClientRect()?.width || 0
+        layout.width = `calc(${layout.width}% - ${itemWidth}px)`
       }
       else
         layout.width -= 39.7
@@ -726,6 +735,16 @@ class Search extends React.Component {
       layout.width = `${layout.width}%`
 
     return layout
+  }
+
+  setSearchContainerWidth = () => {
+    const el = document.getElementById('search-container')
+    if(el) {
+      const props = this.getContainerLayoutProps()
+      const existingWidth = el.getBoundingClientRect()?.width || 0
+      if(props.width !== existingWidth)
+        el.style.width = props.width
+    }
   }
 
   getMainContainerProps = () => {
@@ -798,7 +817,7 @@ class Search extends React.Component {
             />
           }
         </div>
-        <div className='col-xs-12' style={layoutProps}>
+        <div id="search-container" className='col-xs-12' style={layoutProps}>
           <div className='col-xs-12 no-side-padding'>
             {
               nested &&
