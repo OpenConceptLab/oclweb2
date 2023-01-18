@@ -241,7 +241,8 @@ const OperationsDrawer = () => {
 
   const onVisualizeCascadeClick = () => setVisualize(!visualize)
 
-  const showVisualizeOption = operation === '$cascade' && cascadeParams?.view === 'hierarchy' && response?.data
+  const showVisualizeOption = operation === '$cascade' && response?.data
+  const isDisabledVisualize = showVisualizeOption && !response.request.responseURL.includes('view=hierarchy')
 
   return (
     <React.Fragment>
@@ -386,10 +387,12 @@ const OperationsDrawer = () => {
                           </IconButton>
                           {
                             showVisualizeOption &&
-                              <Tooltip title='Visualize'>
-                                <IconButton onClick={onVisualizeCascadeClick} size='small'>
-                                  <HierarchyIcon fontSize='inherit' />
-                                </IconButton>
+                              <Tooltip title='Visualize - Only available when using the Hierarchical Response format'>
+                                <span>
+                                  <IconButton onClick={onVisualizeCascadeClick} size='small' disabled={isDisabledVisualize}>
+                                    <HierarchyIcon fontSize='inherit' />
+                                  </IconButton>
+                                </span>
                               </Tooltip>
                           }
                         </React.Fragment>
