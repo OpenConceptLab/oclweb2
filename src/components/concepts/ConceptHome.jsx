@@ -62,7 +62,12 @@ class ConceptHome extends React.Component {
       let URL = parent.url
       if(version && version !== 'HEAD')
         URL += version + '/'
+      else
+        URL
       URL += `concepts/${encodeURIComponent(concept.id)}/`
+      if(match?.params?.conceptVersion)
+        URL += `${match.params.conceptVersion}/`
+
       return URL
     }
 
