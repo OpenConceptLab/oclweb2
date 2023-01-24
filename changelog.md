@@ -1,3 +1,20 @@
+##### 2.1.55 - Wed Jan 18 07:28:02 2023 +0000
+- [OpenConceptLab/ocl_issues#1459](https://github.com/OpenConceptLab/ocl_issues/issues/1459) | fixing visualize button
+- correcting concept version url
+##### 2.1.54 - Wed Jan 18 03:38:20 2023 +0000
+- [OpenConceptLab/ocl_issues#1460](https://github.com/OpenConceptLab/ocl_issues/issues/1460) | fixing resizing
+- [OpenConceptLab/ocl_issues#1459](https://github.com/OpenConceptLab/ocl_issues/issues/1459) | Concept cascade visualization from Operation Drawer
+- [OpenConceptLab/ocl_issues#1459](https://github.com/OpenConceptLab/ocl_issues/issues/1459) | Concept cascade dialog extracted
+- [OpenConceptLab/ocl_issues#1459](https://github.com/OpenConceptLab/ocl_issues/issues/1459) | hierarchy view filters | added omit if exists in and equivalency map type
+- [OpenConceptLab/ocl_issues#1461](https://github.com/OpenConceptLab/ocl_issues/issues/1461) | fixing operations from global search
+- [OpenConceptLab/ocl_issues#1457](https://github.com/OpenConceptLab/ocl_issues/issues/1457) | cascade param equivalencyMapType in Operations Panel
+- [OpenConceptLab/ocl_issues#1454](https://github.com/OpenConceptLab/ocl_issues/issues/1454) | added omit of exists in
+- fixing nested header option icon margin
+- Refactoring Header | using MUI for header transition
+##### 2.1.53 - Fri Jan 6 05:37:09 2023 +0000
+- Open/close Operations Panel with ctrl + o
+- Focus on search input with ctrl + s
+- [OpenConceptLab/ocl_issues#1454](https://github.com/OpenConceptLab/ocl_issues/issues/1454) | Operations Panel | full URL with query params for copy and in new tab
 ##### 2.1.52 - Thu Jan 5 05:56:38 2023 +0000
 - [OpenConceptLab/ocl_issues#1457](https://github.com/OpenConceptLab/ocl_issues/issues/1457) | cascade params from url to operations panel
 - [OpenConceptLab/ocl_issues#1454](https://github.com/OpenConceptLab/ocl_issues/issues/1454) | Operations panel | setting concept on load
