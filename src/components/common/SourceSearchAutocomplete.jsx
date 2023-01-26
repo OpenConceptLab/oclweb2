@@ -1,15 +1,11 @@
 import React from 'react';
-import {
-  List as SourceIcon, LocalOffer as ConceptIcon,
-  Person as UserIcon, AccountBalance as OrgIcon,
-} from '@mui/icons-material';
-import { TextField, CircularProgress, ListItem, ListItemIcon, ListItemText, Divider, Typography, Tooltip } from '@mui/material';
+import { TextField, CircularProgress, Divider } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { get, debounce, isNumber, map } from 'lodash'
+import { get, debounce, map } from 'lodash'
 import APIService from '../../services/APIService';
-import { GREEN } from '../../common/constants';
 import { styled } from '@mui/system';
 import AutocompleteLoading from './AutocompleteLoading';
+import SourceListItem from './SourceListItem';
 
 
 const GroupHeader = styled('div')({
@@ -27,41 +23,6 @@ const GroupItems = styled('ul')({
   padding: 0,
 });
 
-
-const SubText = ({ text, divider }) => (
-  <span className='flex-vertical-center'>
-    <Typography
-      sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)' }}
-      component="span"
-      className='flex-vertical-center'>
-      <span className='flex-vertical-center'>
-        {
-          divider &&
-            <span className='flex-vertical-center' style={{backgroundColor: 'rgba(0, 0, 0, 0.6)', width: '3px', height: '3px', borderRadius: '100px', margin: '0 8px'}} />
-        }
-        <span className='flex-vertical-center' style={{fontSize: '14px'}}>
-          {text}
-        </span>
-      </span>
-    </Typography>
-  </span>
-)
-
-
-const Owner = ({ option, marginTop }) => (
-  <Tooltip title={option.owner}>
-    <span style={{display: 'flex', marginTop: marginTop || 0, alignItems: 'center'}}>
-      {
-        option.owner_type === 'User' ?
-          <UserIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px' }}/> :
-        <OrgIcon style={{marginRight: '4px', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}} />
-      }
-      <span className='flex-vertical-center' style={{maxWidth: '70px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'rgba(0, 0, 0, 0.26)', fontSize: '13px'}}>
-        {option.owner}
-      </span>
-    </span>
-  </Tooltip>
-)
 
 const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, suggested}) => {
   const minLength = minCharactersForSearch || 2;
@@ -124,7 +85,7 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
       onChange={(event, item) => handleChange(event, id || 'source', item)}
       groupBy={option => option.resultType}
       renderGroup={params => (
-        <li style={{listStyle: 'none'}}>
+        <li style={{listStyle: 'none'}} key={params.group}>
           <GroupHeader>{params.group}</GroupHeader>
           <GroupItems>{params.children}</GroupItems>
         </li>
@@ -154,43 +115,7 @@ const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersF
       renderOption={
         (props, option) => (
           <React.Fragment key={option.url}>
-            <ListItem
-              {...props}
-              alignItems="flex-start"
-              style={{alignItems: 'flex-start'}}
-              secondaryAction={
-                <Owner option={option} marginTop='-22px' />
-              }>
-              <ListItemIcon style={{minWidth: 'auto', marginRight: '10px'}}>
-                <SourceIcon style={{color: GREEN, marginTop: '-5px'}} fontSize='large' />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography
-                    sx={{ maxWidth: 'calc(100% - 90px)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {option.name}
-                  </Typography>
-                }
-                secondary={
-                  (
-                    isNumber(option.summary.active_concepts) ?
-                      <span className='flex-vertical-center'>
-                        <Typography
-                          sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)', fontSize: '14px' }}
-                          component="span"
-                          className='flex-vertical-center'>
-                          <ConceptIcon size='small' style={{marginRight: '4px', width: '13.3px', height: '13.3px'}} />
-                          {option.summary.active_concepts.toLocaleString()}
-                        </Typography>
-                        { option.suggestionType && <SubText text={option.suggestionType} divider /> }
-                      </span> :
-                    (
-                      option.suggestionType ? <SubText text={option.suggestionType} /> : ''
-                    )
-                  )
-                }
-              />
-            </ListItem>
+            <SourceListItem listItemProps={props} option={option} />
             <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
           </React.Fragment>
         )
