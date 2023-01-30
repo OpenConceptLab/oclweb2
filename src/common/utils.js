@@ -350,15 +350,17 @@ export const memorySizeOf = (obj, format=true) => {
 export const getCurrentUserCollections = callback => {
   const username = getCurrentUserUsername();
   if(username) {
-    APIService.users(username)
-              .collections()
-              .get(null, null, {limit: 1000})
-              .then(response => isArray(response.data) ? callback(response.data) : false);
-    APIService.users(username)
-              .orgs()
-              .appendToUrl('collections/')
-              .get(null, null, {limit: 1000})
-              .then(response => isArray(response.data) ? callback(response.data) : false);
+    APIService
+      .users(username)
+      .collections()
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
+    APIService
+      .users(username)
+      .orgs()
+      .appendToUrl('collections/')
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
   }
 }
 
