@@ -194,13 +194,13 @@ class AddToCollection extends React.Component {
     return (
       <React.Fragment>
         {button}
-        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1000}}>
+        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1300}}>
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
               style={{
                 transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                zIndex: '1000'
+                zIndex: '1300'
               }}
             >
               <Paper>
