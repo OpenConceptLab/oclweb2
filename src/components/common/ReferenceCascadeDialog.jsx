@@ -2,13 +2,12 @@ import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText,
   FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio,
-  Accordion, AccordionSummary, AccordionDetails, Typography
 } from '@mui/material'
 import {
   Help as HelpIcon,
-  ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material'
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
+import APIPreview from './APIPreview'
 
 
 const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc }) => {
@@ -106,25 +105,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
           </FormControl>
           {
             cascadePayload &&
-              <Accordion style={{marginTop: '10px'}}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>API details</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <div style={{fontWeight: 'bold'}}>
-                    {
-                      `PUT ${requestURL}`
-                    }
-                  </div>
-                  <div>
-                    <pre style={{color: '#FFF', backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '10px'}}>
-                      {
-                        JSON.stringify(cascadePayload.payload, undefined, 2)
-                      }
-                    </pre>
-                  </div>
-                </AccordionDetails>
-              </Accordion>
+              <APIPreview verb='PUT' payload={cascadePayload.payload} url={requestURL}/>
           }
         </React.Fragment>
       }
