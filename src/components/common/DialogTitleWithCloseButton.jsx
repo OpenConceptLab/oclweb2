@@ -5,13 +5,14 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 
-const DialogTitleWithCloseButton = ({ children, onClose, ...other }) => {
+const DialogTitleWithCloseButton = ({ children, onClose, disabled, ...other }) => {
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       { children }
       {
         onClose &&
           <IconButton
+            disabled={disabled}
             aria-label="close"
             onClick={onClose}
             sx={{
