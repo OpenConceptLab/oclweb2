@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
-import { getRandomColor, getWidthOfText, dropVersion } from '../../common/utils';
+import { getRandomColor, getWidthOfText, dropVersion, toParentURI } from '../../common/utils';
 import './d3Tree.scss';
 
 const HIERARCHY_CHILD_REL = '-haschild-'
@@ -59,10 +59,12 @@ class ConceptHierarchyTree extends React.Component {
     if(parent) {
       URL = parent.url
       URL += parent.version + '/'
-    } else {
+    } else if (source) {
       URL = source.url
       if(sourceVersion)
         URL += sourceVersion + '/'
+    } else {
+      URL = toParentURI(concept.version_url)
     }
 
     URL += 'concepts/' + encodeURIComponent(encodeURIComponent(concept.id)) + '/'
