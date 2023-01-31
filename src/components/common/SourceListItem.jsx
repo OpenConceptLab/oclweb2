@@ -4,7 +4,7 @@ import {
   List as SourceIcon, LocalOffer as ConceptIcon,
   Person as UserIcon, AccountBalance as OrgIcon,
 } from '@mui/icons-material';
-import { isNumber } from 'lodash'
+import { isNumber, merge } from 'lodash'
 import { GREEN } from '../../common/constants';
 
 const SubText = ({ text, divider }) => (
@@ -42,12 +42,12 @@ const Owner = ({ option, marginTop }) => (
   </Tooltip>
 )
 
-const SourceListItem = ({ option, listItemProps }) => {
+const SourceListItem = ({ option, listItemProps, style }) => {
   return (
     <ListItem
       {...listItemProps}
       alignItems="flex-start"
-      style={{alignItems: 'flex-start'}}
+      style={merge({alignItems: 'flex-start'}, (style || {}))}
       secondaryAction={
         <Owner option={option} marginTop='-22px' />
       }>
