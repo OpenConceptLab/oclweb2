@@ -423,7 +423,6 @@ const OperationsDrawer = () => {
             parent={parentItem}
             treeData={response?.data?.entry || {}}
           />
-
       }
     </React.Fragment>
   )

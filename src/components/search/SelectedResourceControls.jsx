@@ -12,6 +12,7 @@ import { map, includes, get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn } from '../../common/utils'
 import DownloadButton from '../common/DownloadButton';
 import AddToCollection from '../common/AddToCollection';
+import CloneToSource from '../common/CloneToSource';
 
 const SelectedResourceControls = ({
   selectedItems, resource, onCreateSimilarClick, onCreateMappingClick, onReferencesDelete, extraControls
@@ -94,6 +95,12 @@ const SelectedResourceControls = ({
         <span style={{marginLeft: MARGIN}}>
           <AddToCollection {...buttonProps} references={selectedItems} />
         </span>
+      }
+      {
+        shouldShowAddToCollection && isConceptResource &&
+          <span style={{marginLeft: MARGIN}}>
+            <CloneToSource {...buttonProps} references={selectedItems} />
+          </span>
       }
       {
         shouldShowCompareOption &&

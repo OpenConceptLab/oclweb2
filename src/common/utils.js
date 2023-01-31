@@ -364,6 +364,23 @@ export const getCurrentUserCollections = callback => {
   }
 }
 
+export const getCurrentUserSources = callback => {
+  const username = getCurrentUserUsername();
+  if(username) {
+    APIService
+      .users(username)
+      .sources()
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
+    APIService
+      .users(username)
+      .orgs()
+      .appendToUrl('sources/')
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
+  }
+}
+
 export const isValidPassword = (password, strength, minStrength = 3) => {
   return Boolean(
     password &&
