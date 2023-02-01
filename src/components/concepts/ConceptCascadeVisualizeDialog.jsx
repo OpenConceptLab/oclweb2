@@ -15,13 +15,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ConceptCascadeVisualizeDialog = ({concept, open, onClose, filters, onFilterChange, onCascadeFilterChange, source, sourceVersion, hierarchyMeaning, parent, treeData}) => {
+const ConceptCascadeVisualizeDialog = ({concept, open, onClose, filters, onFilterChange, onCascadeFilterChange, source, sourceVersion, hierarchyMeaning, parent, treeData, noBreadcrumbs}) => {
   return (
     <Dialog fullScreen open={open} onClose={onClose} TransitionComponent={Transition}>
       <DialogTitle>
         <div className='col-xs-12 no-side-padding'>
           <div className='col-xs-11 no-side-padding'>
-            <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
+            {
+              !noBreadcrumbs &&
+                <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
+            }
             <div className='col-xs-12 no-side-padding'>
               <span>Associations</span>
               {

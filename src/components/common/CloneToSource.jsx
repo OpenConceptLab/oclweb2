@@ -8,8 +8,8 @@ import {
 import {
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
-  List as SourceIcon,
   Search as SearchIcon,
+  AutoAwesome as BetaIcon,
 } from '@mui/icons-material'
 import { map, isEmpty, filter, omit, get } from 'lodash';
 import APIService from '../../services/APIService';
@@ -20,7 +20,6 @@ import SourceListItem from './SourceListItem';
 import CascadeParametersForm from './CascadeParametersForm';
 import ConceptTable from '../concepts/ConceptTable';
 import APIPreview from './APIPreview'
-import ConceptDisplayName from '../concepts/ConceptDisplayName';
 
 class CloneToSource extends React.Component {
   constructor(props) {
@@ -153,12 +152,12 @@ class CloneToSource extends React.Component {
       return (
         <Tooltip arrow title='Clone into source'>
           <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest} color='secondary'>
-            <SourceIcon fontSize='inherit' />
+            <BetaIcon fontSize='inherit' />
           </Button>
         </Tooltip>
       )
     return (
-      <Chip className='selected-control-chip' ref={this.anchorRef} onClick={this.toggleOpen} icon={<SourceIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label='Clone (beta)' />
+      <Chip className='selected-control-chip' ref={this.anchorRef} onClick={this.toggleOpen} icon={<BetaIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label='Clone (beta)' />
     )
   }
 
@@ -241,11 +240,11 @@ class CloneToSource extends React.Component {
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose} scroll='paper' fullWidth maxWidth='md' disableEscapeKeyDown={isAdding}>
           <DialogTitleWithCloseButton disaled={isAdding} onClose={this.handleDialogClose}>
-            {`Clone Concept(s) to Source: ${this.getSourceName()}`}
+            <BetaIcon style={{marginRight: '5px'}} /> Clone Concept(s) to Source: <b>{this.getSourceName()}</b>
           </DialogTitleWithCloseButton>
             <DialogContent>
               <DialogContentText>
-                {'This operation will clone the selected concept, plus its mappings and target concepts, recursively following specified mappings. This will skip any concepts that would be duplicated based on the concepts in your Source that already have an equivalent mapping of type "SAME-AS". This equivalence map type can be changed in the Advanced Settings.'}
+                This operation will clone the selected concept(s), plus any answers or set members recursively following specified mappings. This will skip any concepts already (SAME-AS) in the destination.
               </DialogContentText>
               <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
                 <Button
@@ -264,6 +263,11 @@ class CloneToSource extends React.Component {
                   {
                     this.state.advancedSettings &&
                       <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
+                        <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
+                          <DialogContentText style={{fontSize: '14px', marginBottom: '20px', marginTop: '-10px'}}>
+                            Caution: changing these settings could yield an incomplete clone (e.g., missing answers or set members).
+                          </DialogContentText>
+                          </div>
                         <CascadeParametersForm
                           fieldClasses='col-xs-4'
                           hiddenFields={['method', 'cascadeHierarchy', 'omitIfExistsIn']}
@@ -286,36 +290,6 @@ class CloneToSource extends React.Component {
               <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
                 <APIPreview url={requestURL} payload={this.getPayload()} verb='POST' />
               </div>
-              {
-                result &&
-                  <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
-                    <DialogContentText>
-                      Results:
-                    </DialogContentText>
-                    {
-                      map(concepts, concept => {
-                        const entries = concept?.bundle?.entry || []
-                        let conceptsAdded = filter(entries, {type: 'Concept'}).length
-                        const mappingsAdded = filter(entries, {type: 'Mapping'}).length
-                        return (
-                          <React.Fragment key={concept.url}>
-                            <DialogContentText>
-                              <ConceptDisplayName concept={concept} />
-                              <span style={{marginLeft: '15px'}}>
-                                <span style={{marginLeft: '15px'}}>
-                                  Concepts: {conceptsAdded}
-                                </span>
-                                <span style={{marginLeft: '15px'}}>
-                                  Mappings: {mappingsAdded}
-                                </span>
-                              </span>
-                            </DialogContentText>
-                          </React.Fragment>
-                        )
-                      })
-                    }
-                  </div>
-              }
             </DialogContent>
           <DialogActions>
             <React.Fragment>

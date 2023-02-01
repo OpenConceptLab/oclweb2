@@ -3,28 +3,45 @@ import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, 
 import {
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material'
-import { map } from 'lodash';
+import { map, find } from 'lodash';
 import ConceptDisplayName from './ConceptDisplayName';
 import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
 
-const ConceptStatus = ({ status, added }) => {
+const ConceptStatus = ({ status, added, onVisualize }) => {
   let color = 'success'
-  if(status === 200 && !added)
+  const isSuccess = status === 200
+  if(isSuccess && !added)
     color = 'warning'
-  if(status !== 200)
+  if(!isSuccess)
     color = 'error'
+
   return (
     <Badge badgeContent={added} color={color} showZero style={{margin: '5px 0'}}>
-      <Chip size='small' label={status === 200 ? 'Success' : 'Failed'} variant='outlined' color={color}/>
+      {
+        (isSuccess && added) ?
+          <Tooltip title='Visualize (Beta)' placement='right'>
+            <IconButton size='small' color='primary' onClick={onVisualize}>
+              <HierarchyIcon fontSize='inherit'/>
+            </IconButton>
+          </Tooltip> :
+        <Chip size='small' label={status === 200 ? 'Success' : 'Failed'} variant='outlined' color={color}/>
+      }
     </Badge>
   )
 }
 
 const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => {
   const [visualize, setVisualize] = React.useState(false);
+  const [isClonedConcept, setIsClonedConcept] = React.useState(false)
   let headers = ["Owner", "ID", "Display Name", "Class", "DataType", ""]
   if(showStatus)
     headers = ["Status", ...headers]
+
+  const getClonedConcept = concept => find(concept?.bundle?.entry, {id: concept.id})
+  const onVisualize = (concept, isClonedConcept) => {
+    setVisualize(concept)
+    setIsClonedConcept(Boolean(isClonedConcept))
+  }
 
   return (
     <React.Fragment>
@@ -53,7 +70,7 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => 
                     }
                     {
                       !showProgress && concept.status &&
-                        <ConceptStatus status={concept.status} added={concept.total} />
+                        <ConceptStatus status={concept.status} added={concept.total} onVisualize={() => onVisualize(getClonedConcept(concept), true)}/>
                     }
                   </TableCell>
               }
@@ -74,7 +91,7 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => 
               </TableCell>
               <TableCell align='right'>
                 <Tooltip title='Visualize (Beta)' placement='right'>
-                  <IconButton size='small' color='primary' onClick={() => setVisualize(concept)}>
+                  <IconButton size='small' color='secondary' onClick={() => setVisualize(concept)}>
                     <HierarchyIcon fontSize='inherit'/>
                   </IconButton>
                 </Tooltip>
@@ -90,7 +107,8 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => 
             open
             onClose={() => setVisualize(false)}
             concept={visualize}
-            filters={visualFilters}
+            filters={isClonedConcept ? false : visualFilters}
+            noBreadcrumbs={isClonedConcept}
           />
       }
       </React.Fragment>
