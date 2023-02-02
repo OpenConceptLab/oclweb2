@@ -3,7 +3,7 @@ import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, 
 import {
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material'
-import { map, find } from 'lodash';
+import { map, get } from 'lodash';
 import ConceptDisplayName from './ConceptDisplayName';
 import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
 
@@ -37,7 +37,7 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => 
   if(showStatus)
     headers = ["Status", ...headers]
 
-  const getClonedConcept = concept => find(concept?.bundle?.entry, {id: concept.id})
+  const getClonedConcept = concept => get(concept, 'bundle.entry.0')
   const onVisualize = (concept, isClonedConcept) => {
     setVisualize(concept)
     setIsClonedConcept(Boolean(isClonedConcept))
