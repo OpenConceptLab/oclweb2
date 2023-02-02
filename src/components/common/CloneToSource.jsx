@@ -240,7 +240,7 @@ class CloneToSource extends React.Component {
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose} scroll='paper' fullWidth maxWidth='md' disableEscapeKeyDown={isAdding}>
           <DialogTitleWithCloseButton disaled={isAdding} onClose={this.handleDialogClose}>
-            <BetaIcon style={{marginRight: '5px'}} /> Clone Concept(s) to Source: <b>{this.getSourceName()}</b>
+            <BetaIcon style={{marginRight: '5px'}} /> Clone Concept(s) to Source: <b>{this.getSourceName()}</b> (beta)
           </DialogTitleWithCloseButton>
             <DialogContent>
               <DialogContentText>
