@@ -2,24 +2,23 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Button, Popper, List, Grow, Paper, ClickAwayListener, Tooltip,
-  CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText,
-  TextField, InputAdornment, Chip, Divider, Collapse
+  CircularProgress, Dialog,
+  TextField, InputAdornment, Chip, Divider
 } from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon,
-  ArrowDropUp as ArrowDropUpIcon,
+  ArrowBack as BackIcon,
   Search as SearchIcon,
   AutoAwesome as BetaIcon,
 } from '@mui/icons-material'
-import { map, isEmpty, filter, omit, get } from 'lodash';
+import { map, isEmpty, filter, omit, get, find } from 'lodash';
 import APIService from '../../services/APIService';
 import { getCurrentUserSources } from '../../common/utils';
 import { DEFAULT_CASCADE_PARAMS } from '../../common/constants';
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import SourceListItem from './SourceListItem';
-import CascadeParametersForm from './CascadeParametersForm';
-import ConceptTable from '../concepts/ConceptTable';
-import APIPreview from './APIPreview'
+import CloneToSourceDialogContent from './CloneToSourceDialogContent';
+import CloneToSourceResultPreview from './CloneToSourceResultPreview';
 
 class CloneToSource extends React.Component {
   constructor(props) {
@@ -33,12 +32,14 @@ class CloneToSource extends React.Component {
       allSources: [],
       sources: [],
       result: false,
+      previewResults: {},
       advancedSettings: false,
       params: {
         ...omit(DEFAULT_CASCADE_PARAMS, ['method', 'cascadeHierarchy', 'cascadeMappings', 'includeRetired', 'reverse', 'view', 'omitIfExistsIn']),
         equivalencyMapType: 'SAME-AS',
         mapTypes: 'Q-AND-A,CONCEPT-SET'
-      }
+      },
+      previewConcept: false,
     }
     this.anchorRef = React.createRef(null);
   }
@@ -68,7 +69,7 @@ class CloneToSource extends React.Component {
 
   toggleOpen = () => this.setState({open: !this.state.open, result: !this.state.open ? false : this.state.result})
 
-  handleDialogClose = () => this.setState({selectedSource: null, result: false})
+  handleDialogClose = () => this.setState({selectedSource: null, result: false, previewConcept: false, previewResults: {}})
 
   onCheckboxChange = event => this.setState({[event.target.name]: event.target.checked})
 
@@ -87,20 +88,35 @@ class CloneToSource extends React.Component {
 
   getReferences = () => {
     const { references } = this.props
-    const { result } = this.state
-    if(result && references) {
-      return map(references, concept => {
-        const response = get(result, concept.url)
+    const { result, previewResults } = this.state
+    let concepts = [...references]
+    if((result || !isEmpty(previewResults)) && !isEmpty(concepts)) {
+      concepts = map(concepts, concept => {
         let res = {...concept}
-        if(response) {
-          res.status = response.status
-          res.total = response?.bundle?.total || 0
-          res.bundle = response?.bundle
+        if(result) {
+          const response = get(result, concept.url)
+          if(response) {
+            res.status = response.status
+            res.total = response?.bundle?.total || 0
+            res.bundle = response?.bundle
+          }
         }
+        res.previewBundle = previewResults[concept.url]
         return res
       })
     }
-    return references
+    return concepts
+  }
+
+  fetchPreviewResults = () => {
+    const { previewConcept, previewResults, params, selectedSource } = this.state
+    if(previewConcept && isEmpty(previewResults[previewConcept.url])) {
+      APIService.new().overrideURL(previewConcept.url).appendToUrl('$cascade/').get(null, null, {...params, omitIfExistsIn: selectedSource?.url, view: 'flat', listing: true, includeSelf: false}).then(response => {
+        this.setState({previewResults: {[previewConcept.url]: response.data}}, () => {
+          this.setState({previewConcept: find(this.getReferences(), {url: previewConcept.url})})
+        })
+      })
+    }
   }
 
   handleAdd = () => {
@@ -163,9 +179,14 @@ class CloneToSource extends React.Component {
 
   getSourceName = () => this.state.selectedSource ? `${this.state.selectedSource.owner}/${this.state.selectedSource.short_code}` : ''
 
+  onPreviewClick = concept => this.setState({previewConcept: concept}, this.fetchPreviewResults)
+
+  onPreviewClose = () => this.setState({previewConcept: false})
+
   render() {
     const {
-      open, sources, selectedSource, isAdding, isLoading, searchedValue, result
+      open, sources, selectedSource, isAdding, isLoading, searchedValue, result, previewConcept,
+      advancedSettings, params
     } = this.state;
     const openDialog = Boolean(selectedSource)
     const _sources = [...sources]
@@ -173,6 +194,8 @@ class CloneToSource extends React.Component {
     const button = this.getButton();
     const requestURL = selectedSource?.url ? `${selectedSource.url}concepts/$clone/` : null
     const concepts = this.getReferences()
+    const isFetchingResultsForPreview = previewConcept && !get(previewConcept, 'previewBundle')
+    const payload = this.getPayload()
 
     return (
       <React.Fragment>
@@ -239,74 +262,40 @@ class CloneToSource extends React.Component {
           )}
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose} scroll='paper' fullWidth maxWidth='md' disableEscapeKeyDown={isAdding}>
-          <DialogTitleWithCloseButton disaled={isAdding} onClose={this.handleDialogClose}>
+          <DialogTitleWithCloseButton disabled={isAdding} onClose={this.handleDialogClose}>
+            {
+              previewConcept &&
+                <Button size='small' startIcon={<BackIcon fontSize='inherit'/>} onClick={this.onPreviewClose} style={{marginRight: '10px'}}>
+                  Back
+                </Button>
+            }
             <BetaIcon style={{marginRight: '5px'}} /> Clone Concept(s) to Source: <b>{this.getSourceName()}</b> (beta)
           </DialogTitleWithCloseButton>
-            <DialogContent>
-              <DialogContentText>
-                This operation will clone the selected concept(s), plus any answers or set members recursively following specified mappings. This will skip any concepts already (SAME-AS) in the destination.
-              </DialogContentText>
-              <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
-                <Button
-                  size='small'
-                  variant='text'
-                  endIcon={
-                    this.state.advancedSettings ?
-                      <ArrowDropUpIcon fontSize='inherit' /> :
-                      <ArrowDropDownIcon fontSize='inherit' />
-                  }
-                  style={{textTransform: 'none', marginLeft: '-4px'}}
-                  onClick={this.toggleSettings}>
-                  Advanced Settings
-                </Button>
-                <Collapse in={this.state.advancedSettings} timeout="auto" unmountOnExit>
-                  {
-                    this.state.advancedSettings &&
-                      <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
-                        <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
-                          <DialogContentText style={{fontSize: '14px', marginBottom: '20px', marginTop: '-10px'}}>
-                            Caution: changing these settings could yield an incomplete clone (e.g., missing answers or set members).
-                          </DialogContentText>
-                          </div>
-                        <CascadeParametersForm
-                          fieldClasses='col-xs-4'
-                          hiddenFields={['method', 'cascadeHierarchy', 'omitIfExistsIn']}
-                          defaultParams={{...this.state.params, omitIfExistsIn: selectedSource?.url}}
-                          onChange={_params => this.setState({params: _params})}
-                        />
-                      </div>
-                  }
-                </Collapse>
-              </div>
-              <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
-                <DialogContentText>
-                  {`${concepts.length} selected Concept(s) will be cloned into: `} <b>{this.getSourceName()}</b>
-                </DialogContentText>
-              </div>
-              <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
-                <ConceptTable concepts={concepts} showProgress={isAdding} showStatus={isAdding || result} visualFilters={this.state.params} />
-              </div>
-
-              <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
-                <APIPreview url={requestURL} payload={this.getPayload()} verb='POST' />
-              </div>
-            </DialogContent>
-          <DialogActions>
-            <React.Fragment>
-              <Button onClick={this.handleDialogClose} color="secondary" disabled={isAdding}>
-                Close
-              </Button>
-              {
-                !result &&
-                  <Button onClick={this.handleAdd} color="primary" disabled={isAdding}>
-                    Add
-                  </Button>
-              }
-            </React.Fragment>
-          </DialogActions>
+          {
+            previewConcept ?
+              <CloneToSourceResultPreview
+                concept={previewConcept}
+                isLoading={isFetchingResultsForPreview}
+              /> :
+            <CloneToSourceDialogContent
+              onClose={this.handleDialogClose}
+              onAdd={this.handleAdd}
+              advancedSettings={advancedSettings}
+              toggleSettings={this.toggleSettings}
+              defaultParams={{...params, omitIfExistsIn: selectedSource?.url}}
+              onParamsChange={_params => this.setState({params: _params, previewResults: {}})}
+              sourceName={this.getSourceName()}
+              concepts={concepts}
+              isAdding={isAdding}
+              result={result}
+              onPreviewClick={this.onPreviewClick}
+              payload={payload}
+              requestURL={requestURL}
+            />
+          }
         </Dialog>
       </React.Fragment>
-  )
+    )
 }
 }
 

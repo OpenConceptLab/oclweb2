@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, Badge, CircularProgress, Chip } from '@mui/material';
+import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, Badge, CircularProgress, Chip, Button } from '@mui/material';
 import {
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material'
@@ -30,7 +30,7 @@ const ConceptStatus = ({ status, added, onVisualize }) => {
   )
 }
 
-const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => {
+const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPreviewClick }) => {
   const [visualize, setVisualize] = React.useState(false);
   const [isClonedConcept, setIsClonedConcept] = React.useState(false)
   let headers = ["Owner", "ID", "Display Name", "Class", "DataType", ""]
@@ -103,6 +103,10 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters }) => 
                     <HierarchyIcon fontSize='inherit'/>
                   </IconButton>
                 </Tooltip>
+                {
+                  onPreviewClick &&
+                    <Button style={{marginLeft: '5px', textTransform: 'none'}} component="a" size='small' variant='text' onClick={() => onPreviewClick(concept)}>Preview</Button>
+                }
               </TableCell>
             </TableRow>
           ))
