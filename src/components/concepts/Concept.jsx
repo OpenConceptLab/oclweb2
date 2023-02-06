@@ -37,6 +37,7 @@ const Concept = props => {
         <ResourceLabel
           id={props.display_name} name={props.id} noSeparator
           icon={<LocalOfferIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
+          owner={props.owner} parent={props.source}
         />
       </span>
       {
