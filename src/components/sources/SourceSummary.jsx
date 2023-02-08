@@ -119,18 +119,18 @@ const SelfSummary = ({ summary, isVersion }) => {
           <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
             <TableCell align='left' colSpan={3}>
               <span style={{padding: '20px', width: width, display: 'inline-block' }}>
-              <Bar first={summary.retired_concepts} second={summary.active_concepts} firstTooltip={`${toNumDisplay(summary.retired_concepts)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary.active_concepts)} Active Concepts`} />
-                <div><b>{toNumDisplay(summary.active_concepts)}</b> Active out of <b>{toNumDisplay((summary.active_concepts || 0) + (summary.retired_concepts || 0))}</b> Concepts</div>
+              <Bar first={summary?.concepts?.retired} second={summary?.concepts?.active} firstTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} />
+                <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div>
                 </span>
               <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-              <Bar first={summary.retired_mappings} second={summary.active_mappings} firstTooltip={`${toNumDisplay(summary.retired_mappings)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary.active_mappings)} Active Mappings`} />
-              <div><b>{toNumDisplay(summary.active_mappings)}</b> Active out of <b>{toNumDisplay((summary.active_mappings || 0) + (summary.retired_mappings || 0))}</b> Mappings</div>
+                <Bar first={summary?.mappings?.retired} second={summary?.mappings?.active} firstTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} />
+                <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div>
             </span>
             {
               !isVersion &&
                 <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                  <Bar first={summary.released_versions} second={summary.versions - summary.released_versions} firstTooltip={`${toNumDisplay(summary.released_versions)} Released Versions`} secondTooltip={`${toNumDisplay(summary.versions - summary.released_versions)} Remaining Versions`} />
-                  <div><b>{toNumDisplay(summary.released_versions)}</b> Released out of <b>{toNumDisplay(summary.versions)}</b> Versions</div>
+                  <Bar first={summary?.versions?.released} second={summary?.versions?.total - summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} />
+                  <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div>
                 </span>
             }
               </TableCell>
@@ -138,7 +138,7 @@ const SelfSummary = ({ summary, isVersion }) => {
           <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
             <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '33.3%'}}>
               <p style={{margin: 0}}>
-                <b>{toNumDisplay(summary.concept_class)}</b>
+                <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
               </p>
               <p style={{margin: 0}}>
                 Concept Classes
@@ -146,7 +146,7 @@ const SelfSummary = ({ summary, isVersion }) => {
             </TableCell>
             <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '33.3%'}}>
               <p style={{margin: 0}}>
-                <b>{toNumDisplay(summary.datatype)}</b>
+                <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
               </p>
               <p style={{margin: 0}}>
                 Datatype
@@ -154,7 +154,7 @@ const SelfSummary = ({ summary, isVersion }) => {
             </TableCell>
             <TableCell align='center'>
               <p style={{margin: 0}}>
-                <b>{toNumDisplay(summary.map_types)}</b>
+                <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
               </p>
               <p style={{margin: 0}}>
                 MapTypes
