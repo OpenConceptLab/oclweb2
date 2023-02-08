@@ -102,7 +102,9 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
   )
 }
 
-const SelfSummary = ({ summary }) => {
+const SelfSummary = ({ summary, isVersion }) => {
+  const columns = isVersion ? 2 : 3;
+  const width = `${100/columns}%`
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -115,18 +117,23 @@ const SelfSummary = ({ summary }) => {
         </TableHead>
         <TableBody>
           <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell align='left' style={{padding: '20px', width: '33.3%'}}>
+            <TableCell align='left' colSpan={3}>
+              <span style={{padding: '20px', width: width, display: 'inline-block' }}>
               <Bar first={summary.retired_concepts} second={summary.active_concepts} firstTooltip={`${toNumDisplay(summary.retired_concepts)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary.active_concepts)} Active Concepts`} />
-              <div><b>{toNumDisplay(summary.active_concepts)}</b> Active out of <b>{toNumDisplay((summary.active_concepts || 0) + (summary.retired_concepts || 0))}</b> Concepts</div>
-            </TableCell>
-            <TableCell align='left' style={{padding: '20px', width: '33.3%'}}>
+                <div><b>{toNumDisplay(summary.active_concepts)}</b> Active out of <b>{toNumDisplay((summary.active_concepts || 0) + (summary.retired_concepts || 0))}</b> Concepts</div>
+                </span>
+              <span style={{padding: '20px', width: width, display: 'inline-block'}}>
               <Bar first={summary.retired_mappings} second={summary.active_mappings} firstTooltip={`${toNumDisplay(summary.retired_mappings)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary.active_mappings)} Active Mappings`} />
               <div><b>{toNumDisplay(summary.active_mappings)}</b> Active out of <b>{toNumDisplay((summary.active_mappings || 0) + (summary.retired_mappings || 0))}</b> Mappings</div>
-            </TableCell>
-            <TableCell align='left' style={{padding: '20px', width: '33.3%'}}>
-              <Bar first={summary.released_versions} second={summary.versions - summary.released_versions} firstTooltip={`${toNumDisplay(summary.released_versions)} Released Versions`} secondTooltip={`${toNumDisplay(summary.versions - summary.released_versions)} Remaining Versions`} />
-              <div><b>{toNumDisplay(summary.released_versions)}</b> Released out of <b>{toNumDisplay(summary.versions)}</b> Versions</div>
-            </TableCell>
+            </span>
+            {
+              !isVersion &&
+                <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                  <Bar first={summary.released_versions} second={summary.versions - summary.released_versions} firstTooltip={`${toNumDisplay(summary.released_versions)} Released Versions`} secondTooltip={`${toNumDisplay(summary.versions - summary.released_versions)} Remaining Versions`} />
+                  <div><b>{toNumDisplay(summary.released_versions)}</b> Released out of <b>{toNumDisplay(summary.versions)}</b> Versions</div>
+                </span>
+            }
+              </TableCell>
           </TableRow>
           <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
             <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '33.3%'}}>
@@ -160,7 +167,8 @@ const SelfSummary = ({ summary }) => {
   )
 }
 
-const SourceSummary = ({ summary }) => {
+const SourceSummary = ({ summary, source }) => {
+  const isVersion = source.type === 'Source Version'
   const [openFromSources, setOpenFromSources] = React.useState(false)
   const [openToSources, setOpenToSources] = React.useState(false)
   const fromSources = isEmpty(summary?.from_sources) ? [] : summary.from_sources
@@ -168,7 +176,7 @@ const SourceSummary = ({ summary }) => {
   return (
     <div className='col-xs-12' style={{width: '90%', margin: '0 5%'}}>
       <div className='col-xs-12 no-side-padding'>
-        <SelfSummary summary={summary} />
+        <SelfSummary summary={summary} isVersion={isVersion} />
       </div>
       <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
         <div onClick={() => setOpenToSources(!openToSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
