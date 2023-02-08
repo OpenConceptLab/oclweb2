@@ -831,3 +831,5 @@ export const urlSearchParamsToObject = urlSearchParams => {
   }
   return result;
 }
+
+export const toNumDisplay = number => number ? number.toLocaleString() : number

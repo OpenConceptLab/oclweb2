@@ -14,13 +14,14 @@ import DynamicConfigResourceIcon from '../common/DynamicConfigResourceIcon'
 import ConceptForm from '../concepts/ConceptForm';
 import MappingForm from '../mappings/MappingForm';
 import SourceVersionForm from './SourceVersionForm';
+import SourceSummary from './SourceSummary';
 
 const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
     onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, hierarchy, onHierarchyToggle,
-    onFilterDrawerToggle
+    onFilterDrawerToggle, sourceVersionSummary
   } = props;
   const tabConfigs = (aboutTab ? get(selectedConfig, 'config.tabs') : reject((get(selectedConfig, 'config.tabs') || {}), {type: 'about'})) || {};
   const selectedTabConfig = tabConfigs[tab];
@@ -71,6 +72,8 @@ const SourceHomeTabs = props => {
       href = `#${currentResourceURL}about`
     else if(tabConfig.type === 'versions')
       href = `#${currentResourceURL}versions`
+    else if(tabConfig.type === 'summary')
+      href = `#${currentResourceURL}summary`
     else if(tabConfig.href)
       href = `#${currentResourceURL}${tabConfig.href}`
     else {
@@ -92,7 +95,7 @@ const SourceHomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
-  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text'], get(selectedTabConfig, 'type')) && !get(selectedTabConfig, 'uri');
+  const isInvalidTabConfig = !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'summary'], get(selectedTabConfig, 'type')) && !get(selectedTabConfig, 'uri');
 
   return (
     <div className='col-xs-12 sub-tab' style={{width: width}}>
@@ -149,6 +152,10 @@ const SourceHomeTabs = props => {
           <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
         }
         {
+          !isInvalidTabConfig && selectedTabConfig.type === 'summary' &&
+            <SourceSummary summary={sourceVersionSummary} />
+        }
+        {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
           <div className='col-xs-12'>
             {
@@ -161,7 +168,7 @@ const SourceHomeTabs = props => {
           </div>
         }
         {
-          !isInvalidTabConfig && !includes(['about', 'text', 'versions'], selectedTabConfig.type) &&
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'summary'], selectedTabConfig.type) &&
           <SourceHomeChildrenList
             source={source}
             match={match}

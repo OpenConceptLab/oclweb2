@@ -266,6 +266,7 @@ export const SOURCE_DEFAULT_CONFIG = {
       },
       { type: "mappings", label: "Mappings", page_size: 25, layout: "table" },
       { type: "versions", label: "Versions", page_size: 25, layout: "table" },
+      { type: "summary", label: "Summary" },
       { type: "about", label: "About" },
     ],
   },

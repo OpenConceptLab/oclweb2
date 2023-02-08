@@ -36,6 +36,7 @@ class SourceHome extends React.Component {
       selected: null,
       hierarchy: false,
       filtersOpen: false,
+      sourceVersionSummary: {},
     }
   }
 
@@ -78,6 +79,8 @@ class SourceHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
+      return 4;
+    if(location.pathname.indexOf('/summary') > -1)
       return 3;
     if(location.pathname.indexOf('/versions') > -1)
       return 2;
@@ -156,6 +159,15 @@ class SourceHome extends React.Component {
         this.getVersions()
       if(this.isVersionTabSelected())
         this.fetchVersionsSummary()
+      if(this.isSummaryTabSelected())
+        this.fetchSelectedSourceVersionSummary()
+    })
+  }
+
+  fetchSelectedSourceVersionSummary = () => {
+    this.setState({sourceVersionSummary: {}}, () => {
+      const { source } = this.state
+      APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true}).then(response => this.setState({sourceVersionSummary: response.data}))
     })
   }
 
@@ -189,6 +201,8 @@ class SourceHome extends React.Component {
               const { setParentResource, setParentItem } = this.context
               setParentItem(this.state.source)
               setParentResource('source')
+              if(this.isSummaryTabSelected())
+                this.fetchSelectedSourceVersionSummary()
             })
           }
         })
@@ -254,6 +268,8 @@ class SourceHome extends React.Component {
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
 
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
+
+  isSummaryTabSelected = () => get(this.currentTabConfig(), 'type') === 'summary';
 
   getContainerWidth = () => {
     const { selected, width, filtersOpen } = this.state;
@@ -359,6 +375,7 @@ class SourceHome extends React.Component {
                   hierarchy={hierarchy}
                   onHierarchyToggle={get(source, 'hierarchy_root_url') ? () => this.setState({hierarchy: !hierarchy}) : false}
                   onFilterDrawerToggle={this.onFilterDrawerToggle}
+                  sourceVersionSummary={this.state.sourceVersionSummary}
                 />
               </div>
             </div>

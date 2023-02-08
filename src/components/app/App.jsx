@@ -267,7 +267,15 @@ const App = props => {
                 component={SourceHome}
               />
               <Route
+                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/summary"
+                component={SourceHome}
+              />
+              <Route
                 path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/versions"
+                component={SourceHome}
+              />
+              <Route
+                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/summary"
                 component={SourceHome}
               />
               <Route
@@ -287,7 +295,15 @@ const App = props => {
                 component={SourceHome}
               />
               <Route
+                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/summary"
+                component={SourceHome}
+              />
+              <Route
                 path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/versions"
+                component={SourceHome}
+              />
+              <Route
+                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/summary"
                 component={SourceHome}
               />
               <Route
