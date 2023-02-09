@@ -12,7 +12,7 @@ const SummaryTable = ({ summary }) => {
     <React.Fragment>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell>
-          <a href={summary.version_url} target='_blank' rel='noreferrer noopener'>
+          <a href={'#' + summary.version_url} target='_blank' rel='noreferrer noopener'>
             {summary.short_code}
           </a>
         </TableCell>
