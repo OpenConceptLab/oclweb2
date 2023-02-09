@@ -174,45 +174,55 @@ const SelfSummary = ({ summary, source, isVersion }) => {
               </TableCell>
             </TableRow>
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: "pointer"}} onClick={event => toggle(event, 'concept_class')}>
-                <p style={{margin: 0}}>
-                  <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
-                </p>
-                <p style={{margin: 0}}>
-                  Concept Classes
-                </p>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+                <Button variant='text' onClick={event => toggle(event, 'concept_class')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+                  <p style={{margin: 0}}>
+                    <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
+                  </p>
+                  <p style={{margin: 0}}>
+                    Concept Classes
+                  </p>
+                </Button>
               </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: "pointer"}} onClick={event => toggle(event, 'datatype')}>
-                <p style={{margin: 0}}>
-                  <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
-                </p>
-                <p style={{margin: 0}}>
-                  Datatype
-                </p>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+                <Button variant='text' onClick={event => toggle(event, 'datatype')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+                  <p style={{margin: 0}}>
+                    <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
+                  </p>
+                  <p style={{margin: 0}}>
+                    Datatype
+                  </p>
+                </Button>
               </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: 'pointer'}} onClick={event => toggle(event, 'map_type')}>
-                <p style={{margin: 0}}>
-                  <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
-                </p>
-                <p style={{margin: 0}}>
-                  MapTypes
-                </p>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+                <Button variant='text' onClick={event => toggle(event, 'map_type')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+                  <p style={{margin: 0}}>
+                    <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
+                  </p>
+                  <p style={{margin: 0}}>
+                    MapTypes
+                  </p>
+                </Button>
               </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: 'pointer'}} onClick={event => toggle(event, 'name_locale')}>
-                <p style={{margin: 0}}>
-                  <b>{toNumDisplay(summary?.locales?.locales)}</b>
-                </p>
-                <p style={{margin: 0}}>
-                  Languages
-                </p>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+                <Button variant='text' onClick={event => toggle(event, 'name_locale')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+                  <p style={{margin: 0}}>
+                    <b>{toNumDisplay(summary?.locales?.locales)}</b>
+                  </p>
+                  <p style={{margin: 0}}>
+                    Languages
+                  </p>
+                </Button>
               </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: 'pointer'}} onClick={event => toggle(event, 'name_type')}>
-                <p style={{margin: 0}}>
-                  <b>{toNumDisplay(summary?.locales?.names)}</b>
-                </p>
-                <p style={{margin: 0}}>
-                  Name Types
-                </p>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+                <Button variant='text' onClick={event => toggle(event, 'name_type')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+                  <p style={{margin: 0}}>
+                    <b>{toNumDisplay(summary?.locales?.names)}</b>
+                  </p>
+                  <p style={{margin: 0}}>
+                    Name Types
+                  </p>
+                </Button>
               </TableCell>
             </TableRow>
           </TableBody>
@@ -341,7 +351,7 @@ const SourceSummary = ({ summary, source }) => {
         </Collapse>
       </div>
     </div>
-  )
+)
 }
 
 export default SourceSummary;
