@@ -1,10 +1,33 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { map, max, isEmpty } from 'lodash';
+import { map, max, isEmpty, get } from 'lodash';
 import { TOMATO_RED, BLUE, WHITE, LIGHT_GRAY } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
+import APIService from '../../services/APIService';
+import PopperGrow from '../common/PopperGrow';
+
+
+const FieldDistribution = ({distribution, field}) => {
+  return distribution ?
+    (
+      <List dense>
+        {
+          map(distribution, state => (
+            <ListItem key={state[field]} secondaryAction={toNumDisplay(state.count)}>
+              {state[field]}
+            </ListItem>
+          ))
+        }
+      </List>
+    ) : (
+      <div style={{textAlign: 'center', padding: '10px'}}>
+        <CircularProgress />
+      </div>
+    )
+}
+
 
 const SummaryTable = ({ summary }) => {
   const [open, setOpen] = React.useState(false)
@@ -102,68 +125,108 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
   )
 }
 
-const SelfSummary = ({ summary, isVersion }) => {
+const SelfSummary = ({ summary, source, isVersion }) => {
+  const [distribution, setDistribution] = React.useState({})
+  const [open, setOpen] = React.useState(false)
+  const [anchorRef, setAnchorRef] = React.useState(null)
+  const getFieldDistribution = field => {
+    if(field && !distribution[field])
+      APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true, distribution: field}).then(response => setDistribution({...distribution, [field]: get(response.data, `distribution.${field}`)}))
+  }
+
+  const toggle = (event, field) => {
+    const newOpen = (!field || open === field) ? false : field
+    setOpen(newOpen)
+    setAnchorRef(newOpen ? {current: event.currentTarget} : null)
+    getFieldDistribution(field)
+  }
   const columns = isVersion ? 2 : 3;
   const width = `${100/columns}%`
   return (
-    <TableContainer component={Paper}>
-      <Table size="small">
-        <TableHead>
-          <TableRow colSpan={3}>
-            <TableCell colSpan={3} style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-              Overview
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell align='left' colSpan={3}>
-              <span style={{padding: '20px', width: width, display: 'inline-block' }}>
-              <Bar first={summary?.concepts?.retired} second={summary?.concepts?.active} firstTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} />
-                <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div>
-                </span>
-              <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                <Bar first={summary?.mappings?.retired} second={summary?.mappings?.active} firstTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} />
-                <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div>
-            </span>
-            {
-              !isVersion &&
-                <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                  <Bar first={summary?.versions?.released} second={summary?.versions?.total - summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} />
-                  <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div>
-                </span>
-            }
+    <React.Fragment>
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell colSpan={5} style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                Overview
               </TableCell>
-          </TableRow>
-          <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '33.3%'}}>
-              <p style={{margin: 0}}>
-                <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
-              </p>
-              <p style={{margin: 0}}>
-                Concept Classes
-              </p>
-            </TableCell>
-            <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '33.3%'}}>
-              <p style={{margin: 0}}>
-                <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
-              </p>
-              <p style={{margin: 0}}>
-                Datatype
-              </p>
-            </TableCell>
-            <TableCell align='center'>
-              <p style={{margin: 0}}>
-                <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
-              </p>
-              <p style={{margin: 0}}>
-                MapTypes
-              </p>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell align='left' colSpan={5}>
+                <span style={{padding: '20px', width: width, display: 'inline-block' }}>
+                  <Bar first={summary?.concepts?.retired} second={summary?.concepts?.active} firstTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} />
+                  <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div>
+                </span>
+                <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                  <Bar first={summary?.mappings?.retired} second={summary?.mappings?.active} firstTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} />
+                  <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div>
+                </span>
+                {
+                  !isVersion &&
+                    <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                      <Bar first={summary?.versions?.released} second={summary?.versions?.total - summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} />
+                      <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div>
+                    </span>
+                }
+              </TableCell>
+            </TableRow>
+            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: "pointer"}} onClick={event => toggle(event, 'concept_class')}>
+                <p style={{margin: 0}}>
+                  <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
+                </p>
+                <p style={{margin: 0}}>
+                  Concept Classes
+                </p>
+              </TableCell>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: "pointer"}} onClick={event => toggle(event, 'datatype')}>
+                <p style={{margin: 0}}>
+                  <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
+                </p>
+                <p style={{margin: 0}}>
+                  Datatype
+                </p>
+              </TableCell>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: 'pointer'}} onClick={event => toggle(event, 'map_type')}>
+                <p style={{margin: 0}}>
+                  <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
+                </p>
+                <p style={{margin: 0}}>
+                  MapTypes
+                </p>
+              </TableCell>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: 'pointer'}} onClick={event => toggle(event, 'name_locale')}>
+                <p style={{margin: 0}}>
+                  <b>{toNumDisplay(summary?.locales?.locales)}</b>
+                </p>
+                <p style={{margin: 0}}>
+                  Languages
+                </p>
+              </TableCell>
+              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', cursor: 'pointer'}} onClick={event => toggle(event, 'name_type')}>
+                <p style={{margin: 0}}>
+                  <b>{toNumDisplay(summary?.locales?.names)}</b>
+                </p>
+                <p style={{margin: 0}}>
+                  Name Types
+                </p>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+          {
+            Boolean(open) &&
+              <PopperGrow open={Boolean(open)} anchorRef={anchorRef} handleClose={toggle}>
+                <div style={{maxHeight: '250px', overflow: 'auto'}}>
+                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} />
+                </div>
+              </PopperGrow>
+          }
+        </Table>
+      </TableContainer>
+    </React.Fragment>
   )
 }
 
@@ -176,7 +239,7 @@ const SourceSummary = ({ summary, source }) => {
   return (
     <div className='col-xs-12' style={{width: '90%', margin: '0 5%'}}>
       <div className='col-xs-12 no-side-padding'>
-        <SelfSummary summary={summary} isVersion={isVersion} />
+        <SelfSummary summary={summary} isVersion={isVersion} source={source} />
       </div>
       <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
         <div onClick={() => setOpenToSources(!openToSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
@@ -186,7 +249,7 @@ const SourceSummary = ({ summary, source }) => {
           </span>
           <Divider style={{width: '40%', backgroundColor: LIGHT_GRAY}} />
         </div>
-        <Collapse in={toSources.length && openToSources} timeout="auto" unmountOnExit>
+        <Collapse in={Boolean(toSources.length && openToSources)} timeout="auto" unmountOnExit>
           <TableContainer component={Paper} style={{margin: '15px 0'}}>
             <Table size='small'>
               <TableHead>
@@ -237,7 +300,7 @@ const SourceSummary = ({ summary, source }) => {
           </span>
           <Divider style={{width: '40%', backgroundColor: LIGHT_GRAY}} />
         </div>
-        <Collapse in={fromSources.length && openFromSources} timeout="auto" unmountOnExit>
+        <Collapse in={Boolean(fromSources.length && openFromSources)} timeout="auto" unmountOnExit>
           <TableContainer component={Paper} style={{margin: '15px 0'}}>
             <Table size='small'>
               <TableHead>
@@ -278,7 +341,7 @@ const SourceSummary = ({ summary, source }) => {
         </Collapse>
       </div>
     </div>
-)
+  )
 }
 
 export default SourceSummary;
