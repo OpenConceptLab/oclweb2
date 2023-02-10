@@ -6,6 +6,7 @@ import {
 import { map, get, find, isEmpty, includes } from 'lodash';
 import ConceptDisplayName from './ConceptDisplayName';
 import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
+import BetaLabel from '../common/BetaLabel';
 
 const ConceptStatus = ({ status, added, onVisualize }) => {
   let color = 'success'
@@ -19,7 +20,7 @@ const ConceptStatus = ({ status, added, onVisualize }) => {
     <Badge badgeContent={added} color={color} showZero style={{margin: '5px 0'}}>
       {
         (isSuccess && added) ?
-          <Tooltip title='Visualize (Beta)' placement='right'>
+          <Tooltip title={<BetaLabel label='Visualize' />} placement='right'>
             <IconButton size='small' color='primary' onClick={onVisualize}>
               <HierarchyIcon fontSize='inherit'/>
             </IconButton>
@@ -98,7 +99,7 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPre
                 {concept.datatype}
               </TableCell>
               <TableCell align='right'>
-                <Tooltip title='Visualize (Beta)' placement='right'>
+                <Tooltip title={<BetaLabel label='Visualize' />} placement='right'>
                   <IconButton size='small' color='secondary' onClick={() => setVisualize(concept)}>
                     <HierarchyIcon fontSize='inherit'/>
                   </IconButton>

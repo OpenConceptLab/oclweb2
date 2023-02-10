@@ -21,6 +21,7 @@ import { FHIR_OPERATIONS, GREEN, ERROR_RED, BLACK, DEFAULT_CASCADE_PARAMS } from
 import APIService from '../../services/APIService';
 import CascadeParametersForm from './CascadeParametersForm';
 import ConceptCascadeVisualizeDialog from '../concepts/ConceptCascadeVisualizeDialog';
+import BetaLabel from './BetaLabel';
 
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
@@ -257,7 +258,7 @@ const OperationsDrawer = () => {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <div style={{justifyContent: 'space-between', display: 'flex', alignItems: 'center'}}>
-            <h3>Operations (Beta)</h3>
+            <h3><BetaLabel label="Operations" /></h3>
             <IconButton size='small' color='secondary' onClick={() => setOpenOperations(false)} style={{float: 'right'}}>
               <CloseIcon fontSize='inherit' />
             </IconButton>

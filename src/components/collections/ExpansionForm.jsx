@@ -8,6 +8,7 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { recordGAUpsertEvent } from '../../common/utils';
+import BetaLabel from '../common/BetaLabel';
 
 const DEFAULT_TOOLTIP = 'This parameter is not yet supported.'
 const PARAMETERS = {
@@ -281,7 +282,7 @@ class ExpansionForm extends React.Component {
             <div className='col-md-12 no-side-padding'>
               <div className='col-md-12 no-side-padding'>
                 <h4 style={{marginTop: '20px', marginBottom: '5px', paddingLeft: '5px'}}>
-                  Parameters (Beta)
+                  <BetaLabel label="Parameters"/>
                 </h4>
               </div>
               {

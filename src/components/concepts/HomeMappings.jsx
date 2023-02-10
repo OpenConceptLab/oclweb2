@@ -17,6 +17,7 @@ import MappingInlineForm from '../mappings/MappingInlineForm';
 import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
 import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
+import BetaLabel from '../common/BetaLabel'
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -137,7 +138,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                       </Tooltip>
                     </span>
                     <span>
-                      <Tooltip title='Visualize (Beta)'>
+                      <Tooltip title={<BetaLabel label='Visualize' />}>
                         <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
                           <HierarchyIcon fontSize='inherit' />
                         </IconButton>

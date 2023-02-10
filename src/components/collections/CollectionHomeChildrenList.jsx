@@ -13,6 +13,7 @@ import { DARKGRAY } from '../../common/constants';
 import ResourceLabel from '../common/ResourceLabel';
 import Search from '../search/Search';
 import APIService from '../../services/APIService';
+import BetaLabel from '../common/BetaLabel';
 
 class CollectionHomeChildrenList extends React.Component {
   constructor(props) {
@@ -164,10 +165,10 @@ class CollectionHomeChildrenList extends React.Component {
               <DialogTitle>
                 <span style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <span className='flex-vertical-center'>
-                    <Tooltip arrow title='Beta' placement='top'>
+                    <Tooltip arrow title='beta' placement='top'>
                       <BetaIcon style={{marginRight: '5px'}}/>
                     </Tooltip>
-                    Remove Resources by Reference
+                    <BetaLabel label="Remove Resources by Reference" />
                   </span>
                   <span>
                     <Button onClick={this.onExecute} variant='contained' color='error' disabled={!haveAllActions}>

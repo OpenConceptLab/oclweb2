@@ -19,6 +19,7 @@ import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import SourceListItem from './SourceListItem';
 import CloneToSourceDialogContent from './CloneToSourceDialogContent';
 import CloneToSourceResultPreview from './CloneToSourceResultPreview';
+import BetaLabel from './BetaLabel'
 
 class CloneToSource extends React.Component {
   constructor(props) {
@@ -166,14 +167,14 @@ class CloneToSource extends React.Component {
     const { iconButton, ...rest } = this.props;
     if(iconButton)
       return (
-        <Tooltip arrow title='Clone into source'>
+        <Tooltip arrow title='Clone to Source'>
           <Button ref={this.anchorRef} onClick={this.toggleOpen} {...rest} color='secondary'>
             <BetaIcon fontSize='inherit' />
           </Button>
         </Tooltip>
       )
     return (
-      <Chip className='selected-control-chip' ref={this.anchorRef} onClick={this.toggleOpen} icon={<BetaIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label='Clone (beta)' />
+      <Chip className='selected-control-chip' ref={this.anchorRef} onClick={this.toggleOpen} icon={<BetaIcon />} deleteIcon={<ArrowDropDownIcon />} color='secondary' {...rest} onDelete={this.toggleOpen} label={<BetaLabel label="Clone to Source"/>} />
     )
   }
 
@@ -269,7 +270,7 @@ class CloneToSource extends React.Component {
                   Back
                 </Button>
             }
-            <BetaIcon style={{marginRight: '5px'}} /> Clone Concept(s) to Source: <b>{this.getSourceName()}</b> (beta)
+            <BetaIcon style={{marginRight: '5px'}} /> <BetaLabel label="Clone" /> Concept(s) to Source: <b>{this.getSourceName()}</b>
           </DialogTitleWithCloseButton>
           {
             previewConcept ?
