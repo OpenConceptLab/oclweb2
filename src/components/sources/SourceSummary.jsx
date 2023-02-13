@@ -2,23 +2,32 @@ import React from 'react';
 import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress, Chip } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { map, max, isEmpty, get, isNull } from 'lodash';
+import { map, max, isEmpty, get, isNull, camelCase } from 'lodash';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
 import APIService from '../../services/APIService';
 import PopperGrow from '../common/PopperGrow';
 
 
-const FieldDistribution = ({distribution, field}) => {
+const FieldDistribution = ({distribution, field, source}) => {
+  let baseURL = source.version_url || source.url
+  baseURL += field.includes('map_type') ? 'mappings/' : 'concepts/'
+
   return distribution ?
     (
       <List dense>
         {
-          map(distribution, state => (
-            <ListItem key={state[field]} secondaryAction={toNumDisplay(state.count)}>
-              {isNull(state[field]) ? <i>None</i> : state[field]}
-            </ListItem>
-          ))
+          map(distribution, state => {
+            const isNameType = field === 'type'
+            let _field = isNameType ? 'nameTypes' : camelCase(field)
+            let value = isNameType ? state[field] : (state[field] || '').toLowerCase()
+            let url = baseURL + `?facets={"${_field}":{"${value}":true}}`
+            return (
+              <ListItem key={state[field]} secondaryAction={toNumDisplay(state.count)}>
+                <a href={"#" + url}>{isNull(state[field]) ? <i>None</i> : state[field]}</a>
+              </ListItem>
+            )
+          })
         }
       </List>
     ) : (
@@ -29,8 +38,10 @@ const FieldDistribution = ({distribution, field}) => {
 }
 
 
-const SummaryTable = ({ summary, retired, columns }) => {
+const SummaryTable = ({ summary, retired, columns, source, fromSource }) => {
   const [open, setOpen] = React.useState(false)
+  const baseURL = (source.version_url || source.url || '') + 'mappings/'
+  const targetSource = fromSource ? "fromConceptSource" : "toConceptSource"
   return (
     <React.Fragment>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -70,28 +81,32 @@ const SummaryTable = ({ summary, retired, columns }) => {
       </TableRow>
       {
         open && (
-          map(summary.distribution.map_types, stats => (
-            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={stats.map_type}>
-              <TableCell style={{paddingLeft: '50px'}}>
-                {stats.map_type}
-              </TableCell>
-              <TableCell align='right'>
-                {toNumDisplay(stats.concepts)}
-              </TableCell>
-              {
-                retired &&
-                  <TableCell align='right'>
-                    {toNumDisplay(stats.retired)}
-                  </TableCell>
-              }
-              <TableCell align='right'>
-                {toNumDisplay(stats.active)}
-              </TableCell>
-              <TableCell align='right'>
-                {toNumDisplay(stats.total)}
-              </TableCell>
-            </TableRow>
-          ))
+          map(summary.distribution.map_types, stats => {
+            //facets={"mapType":{"broader-than":true},"toConceptSource":{"cloneFrom":true}}
+            let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary.short_code}":true}}`
+            return (
+              <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={stats.map_type}>
+                <TableCell style={{paddingLeft: '50px'}}>
+                  <a href={"#" + url}>{stats.map_type}</a>
+                </TableCell>
+                <TableCell align='right'>
+                  {toNumDisplay(stats.concepts)}
+                </TableCell>
+                {
+                  retired &&
+                    <TableCell align='right'>
+                      {toNumDisplay(stats.retired)}
+                    </TableCell>
+                }
+                <TableCell align='right'>
+                  {toNumDisplay(stats.active)}
+                </TableCell>
+                <TableCell align='right'>
+                  {toNumDisplay(stats.total)}
+                </TableCell>
+              </TableRow>
+            )
+          })
         )
       }
     </React.Fragment>
@@ -233,7 +248,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
             Boolean(open) &&
               <PopperGrow open={Boolean(open)} anchorRef={anchorRef} handleClose={toggle}>
                 <div style={{maxHeight: '250px', overflow: 'auto'}}>
-                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} />
+                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} />
                 </div>
               </PopperGrow>
           }
@@ -297,9 +312,9 @@ const SourceSummary = ({ summary, source }) => {
               <TableBody>
                 <React.Fragment>
                   {
-                    map(toSources, source => (
-                      <React.Fragment key={source.version_url}>
-                        <SummaryTable summary={source} retired={retired} columns={columns} />
+                    map(toSources, _source => (
+                      <React.Fragment key={_source.version_url}>
+                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} />
                         <TableRow>
                           <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
                         </TableRow>
@@ -346,9 +361,9 @@ const SourceSummary = ({ summary, source }) => {
               <TableBody>
                 <React.Fragment>
                   {
-                    map(fromSources, source => (
-                      <React.Fragment key={source.version_url}>
-                        <SummaryTable summary={source} retired={retired} columns={columns} />
+                    map(fromSources, _source => (
+                      <React.Fragment key={_source.version_url}>
+                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={true} />
                         <TableRow>
                           <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
                         </TableRow>
@@ -362,7 +377,7 @@ const SourceSummary = ({ summary, source }) => {
         </Collapse>
       </div>
     </div>
-)
+  )
 }
 
 export default SourceSummary;
