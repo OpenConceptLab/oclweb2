@@ -20,7 +20,7 @@ const FieldDistribution = ({distribution, field, source}) => {
           map(distribution, state => {
             const isNameType = field === 'type'
             let _field = isNameType ? 'nameTypes' : camelCase(field)
-            let value = isNameType ? state[field] : (state[field] || '').toLowerCase()
+            let value = isNameType ? (state[field] ? state[field] : 'None') : (state[field] || '').toLowerCase()
             let url = baseURL + `?facets={"${_field}":{"${value}":true}}`
             return (
               <ListItem key={state[field]} secondaryAction={toNumDisplay(state.count)}>
