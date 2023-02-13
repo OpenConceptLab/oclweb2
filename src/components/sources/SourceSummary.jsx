@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress, Chip } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { map, max, isEmpty, get } from 'lodash';
+import { map, max, isEmpty, get, isNull } from 'lodash';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -16,7 +16,7 @@ const FieldDistribution = ({distribution, field}) => {
         {
           map(distribution, state => (
             <ListItem key={state[field]} secondaryAction={toNumDisplay(state.count)}>
-              {state[field]}
+              {isNull(state[field]) ? <i>None</i> : state[field]}
             </ListItem>
           ))
         }
