@@ -111,7 +111,9 @@ class CloneToSource extends React.Component {
 
   fetchPreviewResults = isCloned => {
     const { previewConcept, previewResults, params, selectedSource } = this.state
-    if(previewConcept && isEmpty(previewResults[previewConcept.url])) {
+    if(previewConcept && isCloned && previewResults[previewConcept.url])
+      this.setState({previewConcept: {...previewConcept, previewBundle: previewResults[previewConcept.url]}})
+    else if(previewConcept && isEmpty(previewResults[previewConcept.url])) {
       let _params = {view: 'flat', listing: true}
       if(!isCloned)
         _params = {...params, omitIfExistsIn: selectedSource?.url, includeSelf: false, ..._params}
