@@ -2,9 +2,11 @@ import React from 'react';
 import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, Badge, CircularProgress, Chip } from '@mui/material';
 import {
   QueryStats as HierarchyIcon,
-  FormatListNumbered as ListIcon
+  FormatListNumbered as ListIcon,
+  Error as ErrorIcon
 } from '@mui/icons-material'
 import { map, get, find, isEmpty, includes } from 'lodash';
+import { toParentURI } from '../../common/utils';
 import ConceptDisplayName from './ConceptDisplayName';
 import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
 import BetaLabel from '../common/BetaLabel';
@@ -55,7 +57,7 @@ const ConceptStatus = ({ status, added, onVisualize, onPreview }) => {
   )
 }
 
-const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPreviewClick }) => {
+const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPreviewClick, toSource }) => {
   const [visualize, setVisualize] = React.useState(false);
   const [isClonedConcept, setIsClonedConcept] = React.useState(false)
   let headers = ["Owner", "ID", "Display Name", "Class", "DataType", "Preview"]
@@ -95,7 +97,15 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPre
             map(concepts, concept => (
               <TableRow key={concept.id}>
                 <TableCell>
-                  {concept.owner}/{concept.source}
+                  <span style={{display: 'flex', alignItems: 'center'}}>
+                  {
+                    toSource?.url === toParentURI(concept.url) &&
+                      <Tooltip title='Same source as destination. Nothing will be cloned'>
+                        <ErrorIcon color='error' style={{marginRight: '5px'}}/>
+                      </Tooltip>
+                  }
+                    {concept.owner}/{concept.source}
+                    </span>
                 </TableCell>
                 <TableCell>
                   {concept.id}

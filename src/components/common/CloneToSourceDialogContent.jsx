@@ -11,7 +11,7 @@ import CascadeParametersForm from './CascadeParametersForm';
 import ConceptTable from '../concepts/ConceptTable';
 import APIPreview from './APIPreview'
 
-const CloneToSourceDialogContent = ({onClose, onAdd, advancedSettings, toggleSettings, defaultParams, onParamsChange, sourceName, concepts, isAdding, result, onPreviewClick, payload, requestURL }) => {
+const CloneToSourceDialogContent = ({onClose, onAdd, advancedSettings, toggleSettings, defaultParams, onParamsChange, sourceName, concepts, isAdding, result, onPreviewClick, payload, requestURL, toSource }) => {
   return (
     <React.Fragment>
       <DialogContent>
@@ -56,7 +56,7 @@ const CloneToSourceDialogContent = ({onClose, onAdd, advancedSettings, toggleSet
           </DialogContentText>
         </div>
         <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
-          <ConceptTable concepts={concepts} showProgress={isAdding} showStatus={isAdding || result} visualFilters={defaultParams} onPreviewClick={onPreviewClick} />
+          <ConceptTable toSource={toSource} concepts={concepts} showProgress={isAdding} showStatus={isAdding || result} visualFilters={defaultParams} onPreviewClick={onPreviewClick} />
         </div>
 
         <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>

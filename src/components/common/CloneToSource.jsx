@@ -295,6 +295,7 @@ class CloneToSource extends React.Component {
               onPreviewClick={this.onPreviewClick}
               payload={payload}
               requestURL={requestURL}
+              toSource={selectedSource}
             />
           }
         </Dialog>
