@@ -1,14 +1,32 @@
 import React from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, Badge, CircularProgress, Chip, Button } from '@mui/material';
+import { Table, TableHead, TableBody, TableRow, TableCell, IconButton, Tooltip, Badge, CircularProgress, Chip } from '@mui/material';
 import {
   QueryStats as HierarchyIcon,
+  FormatListNumbered as ListIcon
 } from '@mui/icons-material'
 import { map, get, find, isEmpty, includes } from 'lodash';
 import ConceptDisplayName from './ConceptDisplayName';
 import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
 import BetaLabel from '../common/BetaLabel';
 
-const ConceptStatus = ({ status, added, onVisualize }) => {
+
+const HierarchyButton = props => (
+  <Tooltip title={<BetaLabel label='Visualize' />} placement='right'>
+    <IconButton size='small' color='primary' {...props}>
+      <HierarchyIcon fontSize='inherit'/>
+    </IconButton>
+  </Tooltip>
+)
+
+const PreviewButton = ({title, ...rest}) => (
+  <Tooltip title={title || 'Preview'} placement='right'>
+    <IconButton size='small' color='primary' {...rest}>
+      <ListIcon fontSize='inherit'/>
+    </IconButton>
+  </Tooltip>
+)
+
+const ConceptStatus = ({ status, added, onVisualize, onPreview }) => {
   let color = 'success'
   const isSuccess = status === 200
   if(isSuccess && !added)
@@ -19,12 +37,18 @@ const ConceptStatus = ({ status, added, onVisualize }) => {
   return (
     <Badge badgeContent={added} color={color} showZero style={{margin: '5px 0'}}>
       {
-        (isSuccess && added) ?
-          <Tooltip title={<BetaLabel label='Visualize' />} placement='right'>
-            <IconButton size='small' color='primary' onClick={onVisualize}>
-              <HierarchyIcon fontSize='inherit'/>
-            </IconButton>
-          </Tooltip> :
+        isSuccess ?
+          <React.Fragment>
+            <HierarchyButton onClick={onVisualize} />
+            {
+              onPreview &&
+                <PreviewButton
+                  style={{marginLeft: '5px'}}
+                  size='small'
+                  onClick={onPreview}
+                />
+            }
+          </React.Fragment> :
         <Chip size='small' label={status === 200 ? 'Success' : 'Failed'} variant='outlined' color={color}/>
       }
     </Badge>
@@ -34,9 +58,9 @@ const ConceptStatus = ({ status, added, onVisualize }) => {
 const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPreviewClick }) => {
   const [visualize, setVisualize] = React.useState(false);
   const [isClonedConcept, setIsClonedConcept] = React.useState(false)
-  let headers = ["Owner", "ID", "Display Name", "Class", "DataType", ""]
+  let headers = ["Owner", "ID", "Display Name", "Class", "DataType", "Preview"]
   if(showStatus)
-    headers = ["Status", ...headers]
+    headers = [...headers, "Results"]
 
 
   const getClonedConcept = concept => {
@@ -54,66 +78,66 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPre
 
   return (
     <React.Fragment>
-    <Table stickyHeader size='small'>
-      <TableHead>
-        <TableRow>
+      <Table stickyHeader size='small'>
+        <TableHead>
+          <TableRow>
+            {
+              headers.map(header => (
+                <TableCell style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}} key={header} align={['Preview', 'Results'].includes(header) ? 'center' : 'left'}>
+                  <b>{header}</b>
+                </TableCell>
+              ))
+            }
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {
-            headers.map(header => (
-              <TableCell style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}} key={header}>
-                <b>{header}</b>
-              </TableCell>
+            map(concepts, concept => (
+              <TableRow key={concept.id}>
+                <TableCell>
+                  {concept.owner}/{concept.source}
+                </TableCell>
+                <TableCell>
+                  {concept.id}
+                </TableCell>
+                <TableCell>
+                  <ConceptDisplayName concept={concept} />
+                </TableCell>
+                <TableCell>
+                  {concept.concept_class}
+                </TableCell>
+                <TableCell>
+                  {concept.datatype}
+                </TableCell>
+                <TableCell align='center'>
+                  <HierarchyButton  onClick={() => setVisualize(concept)} />
+                  {
+                    onPreviewClick &&
+                      <PreviewButton
+                        style={{marginLeft: '5px'}}
+                        size='small'
+                        onClick={() => onPreviewClick(concept)}
+                      />
+                  }
+                </TableCell>
+                {
+                  showStatus &&
+                    <TableCell align='center'>
+                      {
+                        showProgress &&
+                          <CircularProgress />
+                      }
+                      {
+                        !showProgress && concept.status &&
+                          <ConceptStatus status={concept.status} added={concept.total} onVisualize={() => onVisualize(getClonedConcept(concept), true)} onPreview={() => onPreviewClick(getClonedConcept(concept), true)} />
+                      }
+                    </TableCell>
+                }
+              </TableRow>
             ))
           }
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {
-          map(concepts, concept => (
-            <TableRow key={concept.id}>
-              {
-                showStatus &&
-                  <TableCell>
-                    {
-                      showProgress &&
-                        <CircularProgress />
-                    }
-                    {
-                      !showProgress && concept.status &&
-                        <ConceptStatus status={concept.status} added={concept.total} onVisualize={() => onVisualize(getClonedConcept(concept), true)}/>
-                    }
-                  </TableCell>
-              }
-              <TableCell>
-                {concept.owner}/{concept.source}
-              </TableCell>
-              <TableCell>
-                {concept.id}
-              </TableCell>
-              <TableCell>
-                <ConceptDisplayName concept={concept} />
-              </TableCell>
-              <TableCell>
-                {concept.concept_class}
-              </TableCell>
-              <TableCell>
-                {concept.datatype}
-              </TableCell>
-              <TableCell align='right'>
-                <Tooltip title={<BetaLabel label='Visualize' />} placement='right'>
-                  <IconButton size='small' color='secondary' onClick={() => setVisualize(concept)}>
-                    <HierarchyIcon fontSize='inherit'/>
-                  </IconButton>
-                </Tooltip>
-                {
-                  onPreviewClick &&
-                    <Button style={{marginLeft: '5px', textTransform: 'none'}} component="a" size='small' variant='text' onClick={() => onPreviewClick(concept)}>Preview</Button>
-                }
-              </TableCell>
-            </TableRow>
-          ))
-        }
-      </TableBody>
-    </Table>
+        </TableBody>
+      </Table>
       {
         visualize &&
           <ConceptCascadeVisualizeDialog
@@ -124,7 +148,7 @@ const ConceptTable = ({ concepts, showProgress, showStatus, visualFilters, onPre
             noBreadcrumbs={isClonedConcept}
           />
       }
-      </React.Fragment>
+    </React.Fragment>
   )
 }
 

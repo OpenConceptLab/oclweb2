@@ -109,12 +109,15 @@ class CloneToSource extends React.Component {
     return concepts
   }
 
-  fetchPreviewResults = () => {
+  fetchPreviewResults = isCloned => {
     const { previewConcept, previewResults, params, selectedSource } = this.state
     if(previewConcept && isEmpty(previewResults[previewConcept.url])) {
-      APIService.new().overrideURL(previewConcept.url).appendToUrl('$cascade/').get(null, null, {...params, omitIfExistsIn: selectedSource?.url, view: 'flat', listing: true, includeSelf: false}).then(response => {
+      let _params = {view: 'flat', listing: true}
+      if(!isCloned)
+        _params = {...params, omitIfExistsIn: selectedSource?.url, includeSelf: false, ..._params}
+      APIService.new().overrideURL(previewConcept.url).appendToUrl('$cascade/').get(null, null, _params).then(response => {
         this.setState({previewResults: {[previewConcept.url]: response.data}}, () => {
-          this.setState({previewConcept: find(this.getReferences(), {url: previewConcept.url})})
+          this.setState({previewConcept: isCloned ? {...previewConcept, previewBundle: response.data} : find(this.getReferences(), {url: previewConcept.url})})
         })
       })
     }
@@ -180,7 +183,7 @@ class CloneToSource extends React.Component {
 
   getSourceName = () => this.state.selectedSource ? `${this.state.selectedSource.owner}/${this.state.selectedSource.short_code}` : ''
 
-  onPreviewClick = concept => this.setState({previewConcept: concept}, this.fetchPreviewResults)
+  onPreviewClick = (concept, isCloned) => this.setState({previewConcept: concept}, () => this.fetchPreviewResults(isCloned))
 
   onPreviewClose = () => this.setState({previewConcept: false})
 
