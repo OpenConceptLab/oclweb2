@@ -268,7 +268,7 @@ class CloneToSource extends React.Component {
           )}
         </Popper>
         <Dialog open={openDialog} onClose={this.handleDialogClose} scroll='paper' fullWidth maxWidth='md' disableEscapeKeyDown={isAdding}>
-          <DialogTitleWithCloseButton disabled={isAdding} onClose={this.handleDialogClose}>
+          <DialogTitleWithCloseButton disabled={isAdding} onClose={previewConcept ? null : this.handleDialogClose}>
             {
               previewConcept &&
                 <Button size='small' startIcon={<BackIcon fontSize='inherit'/>} onClick={this.onPreviewClose} style={{marginRight: '10px'}}>
