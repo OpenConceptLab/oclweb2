@@ -14,7 +14,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   overflowX: 'auto', width: '100%', padding: '0'
 }
 
-const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle, onCreateNewMapping, onRemoveMapping, onReactivateMapping, mappedSources }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle, onCreateNewMapping, onRemoveMapping, onReactivateMapping, mappedSources, onUpdateMappingsSorting }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   let classes = 'col-sm-12 padding-5';
@@ -52,6 +52,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           parent={parent}
           onIncludeRetiredToggle={onIncludeRetiredAssociationsToggle}
           onCreateNewMapping={onCreateNewMapping}
+          onUpdateMappingsSorting={onUpdateMappingsSorting}
           onRemoveMapping={onRemoveMapping}
           onReactivateMapping={onReactivateMapping}
         />

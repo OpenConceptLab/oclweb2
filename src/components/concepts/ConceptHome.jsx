@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
+import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
 import { toParentURI, currentUserHasAccess, recordGAAction } from '../../common/utils'
 import NotFound from '../common/NotFound';
@@ -341,6 +341,12 @@ class ConceptHome extends React.Component {
     })
   }
 
+  onUpdateMappingsSorting = mappings => {
+    Promise.all(map(mappings, mapping => APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: mapping._sort_weight, comment: 'Updated Sort Weight'}))).then(() => {
+      alertifyjs.success('Mappings successfully updated.')
+    })
+  }
+
   onIncludeRetiredAssociationsToggle = includeRetired => this.setState({includeRetiredAssociations: includeRetired}, this.getMappings)
 
   getCollectionVersions() {
@@ -429,6 +435,7 @@ class ConceptHome extends React.Component {
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
                 onCreateNewMapping={canAct ? this.onCreateNewMapping : false}
+                onUpdateMappingsSorting={canAct ? this.onUpdateMappingsSorting : false}
                 onRemoveMapping={canAct ? this.onRemoveMapping : false}
                 onReactivateMapping={canAct ? this.onReactivateMapping : false}
               />

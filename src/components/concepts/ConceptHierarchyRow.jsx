@@ -18,7 +18,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
     <React.Fragment>
       {
         mapType &&
-        <TableRow hover>
+        <TableRow>
           <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px'}}>
               <Chip
                 size='small'
