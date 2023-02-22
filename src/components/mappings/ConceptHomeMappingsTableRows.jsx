@@ -177,7 +177,6 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                             style={{width: '100%'}}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            {...provided.dragHandleProps}
                           >
                             <TableBody>
                               <TableRow
@@ -186,7 +185,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                   <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                                     {
                                       canSort &&
-                                        <span className='flex-vertical-center' style={{marginRight: '4px'}}>
+                                        <span className='flex-vertical-center' style={{marginRight: '4px'}} {...provided.dragHandleProps}>
                                           <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
                                         </span>
                                     }
