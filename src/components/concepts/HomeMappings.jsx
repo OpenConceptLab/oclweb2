@@ -284,7 +284,6 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
                                     suggested={suggested}
-                                    onSortEnd={onSortEnd}
                                   />
                               }
                             </React.Fragment>

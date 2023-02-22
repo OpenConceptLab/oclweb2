@@ -166,10 +166,11 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                     const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
                     const bgColor = isUpdated ? 'rgba(51, 115, 170, 0.2)' : WHITE
                     const canAct = Boolean(onCreateNewMapping)
-                    const cursor = (targetURL || canAct) ? 'pointer' : 'not-allowed'
+                    const canSort = Boolean(onSortEnd)
+                    const cursor = (targetURL || canSort) ? 'pointer' : 'not-allowed'
                     const isLast = index == oMappings.length - 1
                     return (
-                      <Draggable key={mapping.url} draggableId={mapping.url} index={index} isDragDisabled={!canAct}>
+                      <Draggable key={mapping.url} draggableId={mapping.url} index={index} isDragDisabled={!canSort}>
                         {(provided) => (
                           <Table
                             key={mapping.url}
@@ -184,7 +185,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                 <TableCell align='left' className='ellipsis-text' style={{width: '27%', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', backgroundColor: bgColor}}>
                                   <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                                     {
-                                      canAct &&
+                                      canSort &&
                                         <span className='flex-vertical-center' style={{marginRight: '4px'}}>
                                           <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
                                         </span>
