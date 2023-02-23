@@ -1190,3 +1190,12 @@ div.custom-attributes-accordion-content {
         color: inherit;
     }
 }
+
+
+tr.droppable-disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: no-drop;
+    td {
+        cursor: no-drop !important;
+    }
+}

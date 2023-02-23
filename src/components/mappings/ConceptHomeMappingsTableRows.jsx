@@ -11,8 +11,7 @@ import { map, get, forEach, orderBy, filter, find, isNumber } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
-import { getSiteTitle, toParentURI } from '../../common/utils';
-import { WHITE } from '../../common/constants';
+import { getSiteTitle, toParentURI, getSiblings } from '../../common/utils';
 import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
@@ -107,6 +106,8 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
   }
 
   const onDragEnd = result => {
+    updateSiblings(false)
+
     // dropped outside the list
     if (!result.destination) {
       return;
@@ -116,13 +117,28 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       reorderMappings(result.source.index, result.destination.index)
   }
 
+
+  const onDragStart = () => updateSiblings(true)
+
+  const updateSiblings = disable => {
+    const thisRow = document.getElementById(mapType)
+    if(thisRow) {
+      const siblings = getSiblings(thisRow) || []
+      siblings.forEach(
+        sibling => disable ?
+          sibling.classList.add('droppable-disabled') :
+          sibling.classList.remove('droppable-disabled')
+      )
+    }
+  }
+
   React.useEffect(() => setMappings(getOrderedMappings()), [mappings])
 
   const hasAnyCustomSortMapping = oMappings.length > 1 && Boolean(find(oMappings, mapping => isNumber(mapping.sort_weight)))
 
   return (
     <React.Fragment>
-      <TableRow>
+      <TableRow id={mapType}>
         <TableCell rowSpan={form ? 2 : 1} align='left' style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px', width: '10%'}}>
           <span className='flex-vertical-center'>
           <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
@@ -148,7 +164,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
           }
             </span>
         </TableCell>
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           <Droppable droppableId="droppable">
             {(provided) => (
               <TableCell
@@ -164,7 +180,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                     else
                       title = isIndirect ? `Source concept is not defined in ${SITE_TITLE}` : `Target concept is not defined in ${SITE_TITLE}`
                     const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
-                    const bgColor = isUpdated ? 'rgba(51, 115, 170, 0.2)' : WHITE
+                    const bgColor = isUpdated ? 'rgba(51, 115, 170, 0.2)' : 'inherit'
                     const canAct = Boolean(onCreateNewMapping)
                     const canSort = Boolean(onSortEnd)
                     const cursor = (targetURL || canSort) ? 'pointer' : 'not-allowed'
