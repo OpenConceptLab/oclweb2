@@ -72,3 +72,5 @@ export const DEFAULT_CASCADE_PARAMS = {
   omitIfExistsIn: '',
   equivalencyMapType: '',
 }
+
+export const ALL = '*';

@@ -245,6 +245,8 @@ const OperationsDrawer = () => {
   const showVisualizeOption = operation === '$cascade' && response?.data
   const isDisabledVisualize = showVisualizeOption && !response.request.responseURL.includes('view=hierarchy')
 
+  const parentItemURL = parentItem.version_url || parentItem.url
+
   return (
     <React.Fragment>
       <Drawer
@@ -366,7 +368,7 @@ const OperationsDrawer = () => {
               <h4 style={{marginTop: '30px', marginBottom: '15px'}}>
                 Cascade Parameters
               </h4>
-              <CascadeParametersForm onChange={setCascadeParams} defaultParams={cascadeParams} />
+              <CascadeParametersForm concepts={parentItemURL ? [{url: parentItemURL}] : []} onChange={setCascadeParams} defaultParams={cascadeParams} />
             </div>
             }
             <div className='col-xs-12 no-side-padding' style={{textAlign: 'right', margin: '15px 0'}}>

@@ -35,16 +35,18 @@ const CloneToSourceDialogContent = ({onClose, onAdd, advancedSettings, toggleSet
             {
               advancedSettings &&
                 <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
-                  <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
+                  <div className='col-xs-12 no-side-padding'>
                     <DialogContentText style={{fontSize: '14px', marginBottom: '20px', marginTop: '-10px'}}>
                       Caution: changing these settings could yield an incomplete clone (e.g., missing answers or set members).
                     </DialogContentText>
                   </div>
                   <CascadeParametersForm
-                    fieldClasses='col-xs-4'
+                    concepts={concepts}
+                    fieldClasses='col-xs-6'
                     hiddenFields={['method', 'cascadeHierarchy', 'omitIfExistsIn']}
                     defaultParams={defaultParams}
                     onChange={onParamsChange}
+                    toSource={toSource}
                   />
                 </div>
             }

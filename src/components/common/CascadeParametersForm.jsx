@@ -3,9 +3,12 @@ import { CASCADE_OPTIONS, DEFAULT_CASCADE_PARAMS } from '../../common/constants'
 import {
   TextField, FormControl, InputLabel, Select, MenuItem, FormControlLabel, Checkbox
 } from '@mui/material';
-import { map } from 'lodash'
+import { map, uniqBy } from 'lodash'
+import { toParentURI } from '../../common/utils';
+import CascadeLevelDropdown from './CascadeLevelDropdown';
+import SourceMapTypeDropdown from './SourceMapTypeDropdown';
 
-const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClasses}) => {
+const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClasses, concepts, toSource}) => {
   const [params, setParams] = React.useState(defaultParams || {...DEFAULT_CASCADE_PARAMS})
 
   const _onChange = (param, value) => {
@@ -16,12 +19,13 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
 
   const hidden = hiddenFields || []
   const gridClass = fieldClasses || 'col-xs-12 no-side-padding'
+  const conceptSources = uniqBy(map(concepts, concept => ({url: toParentURI(concept.url)})), 'url')
 
   return (
     <div className='col-xs-12 no-side-padding'>
       {
         !hidden.includes('method') &&
-          <div className={gridClass} style={{marginBottom: '10px'}}>
+          <div className={gridClass} style={{marginBottom: '15px'}}>
             <FormControl fullWidth>
               <InputLabel>Method</InputLabel>
               <Select
@@ -43,7 +47,7 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
       }
       {
         !hidden.includes('cascadeHierarchy') &&
-          <div className={gridClass} style={{marginBottom: '10px'}}>
+          <div className={gridClass} style={{marginBottom: '15px'}}>
             <FormControlLabel
               size='small'
               onChange={event => _onChange('cascadeHierarchy', event.target.checked)}
@@ -86,67 +90,88 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
             />
           </div>
       }
-      <div className={gridClass} style={{marginBottom: '10px'}}>
-        <TextField
-          fullWidth
-          value={params.cascadeLevels}
-          label='Cascade Levels'
-          onChange={event => _onChange('cascadeLevels', event.target.value)}
-          size='small'
-          placeholder='e.g. 1, 2, 3...*'
-        />
+      <div className={gridClass} style={{marginBottom: '15px'}}>
+        <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+          <CascadeLevelDropdown
+            onChange={val => _onChange('cascadeLevels', val)}
+            value={params.cascadeLevels}
+            fullWidth
+            size='small'
+            placeholder='e.g. 1, 2, 3...*'
+          />
+        </div>
+        <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+          <SourceMapTypeDropdown
+            label='MapTypes'
+            sources={conceptSources}
+            size='small'
+            placeholder='e.g. Q-AND-A,CONCEPT-SET'
+            onChange={val => _onChange('mapTypes', val)}
+            value={params.mapTypes}
+            multiple
+          />
+        </div>
+        <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+          <SourceMapTypeDropdown
+            label='ExcludeMapTypes'
+            sources={conceptSources}
+            size='small'
+            placeholder='e.g. Q-AND-A,CONCEPT-SET'
+            onChange={val => _onChange('excludeMapTypes', val)}
+            value={params.excludeMapTypes}
+            multiple
+          />
+        </div>
+        <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+          <SourceMapTypeDropdown
+            label='ReturnMapTypes'
+            sources={conceptSources}
+            size='small'
+            placeholder='e.g. Q-AND-A,CONCEPT-SET'
+            onChange={val => _onChange('returnMapTypes', val)}
+            value={params.returnMapTypes}
+            multiple
+            includeAll
+          />
+        </div>
+        {
+          !hidden.includes('omitIfExistsIn') &&
+            <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
+              <TextField
+                fullWidth
+                value={params.omitIfExistsIn}
+                label='OmitIfExistsIn'
+                onChange={event => _onChange('omitIfExistsIn', event.target.value)}
+                size='small'
+              />
+            </div>
+        }
       </div>
-      <div className={gridClass} style={{marginBottom: '10px'}}>
-        <TextField
-          fullWidth
-          value={params.mapTypes}
-          label='MapTypes'
-          onChange={event => _onChange('mapTypes', event.target.value)}
-          size='small'
-          placeholder='e.g. Q-AND-A,CONCEPT-SET'
-        />
-      </div>
-      <div className={gridClass} style={{marginBottom: '10px'}}>
-        <TextField
-          fullWidth
-          value={params.excludeMapTypes}
-          label='ExcludeMapTypes'
-          onChange={event => _onChange('excludeMapTypes', event.target.value)}
-          size='small'
-          placeholder='e.g. Q-AND-A,CONCEPT-SET'
-        />
-      </div>
-      <div className={gridClass} style={{marginBottom: '10px'}}>
-        <TextField
-          fullWidth
-          value={params.returnMapTypes}
-          label='ReturnMapTypes'
-          onChange={event => _onChange('returnMapTypes', event.target.value)}
-          size='small'
-        />
-      </div>
-      {
-        !hidden.includes('omitIfExistsIn') &&
-          <div className={gridClass} style={{marginBottom: '10px'}}>
-            <TextField
-              fullWidth
-              value={params.omitIfExistsIn}
-              label='OmitIfExistsIn'
-              onChange={event => _onChange('omitIfExistsIn', event.target.value)}
+      <div className={gridClass} style={{marginBottom: '15px'}}>
+        {
+          toSource ?
+            <SourceMapTypeDropdown
+              label='EquivalencyMapType'
+              sources={[toSource]}
               size='small'
-            />
-          </div>
-      }
-      <div className={gridClass} style={{marginBottom: '10px'}}>
-        <TextField
-          fullWidth
-          value={params.equivalencyMapType}
-          label='EquivalencyMapType'
-          onChange={event => _onChange('equivalencyMapType', event.target.value)}
-          size='small'
-          placeholder='e.g. SAME-AS,CONCEPT-SET'
-          disabled={!params.omitIfExistsIn}
-        />
+              placeholder='e.g. SAME-AS,CONCEPT-SET'
+              disabled={!params.omitIfExistsIn}
+              onChange={val => _onChange('equivalencyMapType', val)}
+              value={params.equivalencyMapType}
+              multiple
+              freeSolo
+              includeSameAs
+            /> :
+          <TextField
+            fullWidth
+            value={params.equivalencyMapType}
+            label='EquivalencyMapType'
+            onChange={event => _onChange('equivalencyMapType', event.target.value)}
+            size='small'
+            placeholder='e.g. SAME-AS,CONCEPT-SET'
+            disabled={!params.omitIfExistsIn}
+          />
+        }
       </div>
     </div>
   )

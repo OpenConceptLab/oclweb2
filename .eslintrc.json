@@ -206,7 +206,8 @@
           "upsert",
           "Unmount",
           "keydown",
-          "rect"
+          "rect",
+          "Dropdown"
         ],
         "skipIfMatch": [
           "http://[^s]*",
