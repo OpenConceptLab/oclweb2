@@ -32,7 +32,7 @@ const SourceHomeHeader = ({
   const hasAccess = currentUserHasAccess();
   const [openHeader, setOpenHeader] = React.useState(!get(config, 'config.header.shrink', false));
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [logoURL, setLogoURL] = React.useState(source.logo_url)
+  const [logoURL, setLogoURL] = React.useState(source?.logo_url)
   const [sourceForm, setSourceForm] = React.useState(false);
   const onLogoUpload = (base64, name) => {
     APIService.new().overrideURL(versionedObjectURL).appendToUrl('logo/')
