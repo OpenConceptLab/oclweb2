@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, CircularProgress,
+  Accordion, AccordionSummary, AccordionDetails, AccordionActions, CircularProgress,
   Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton,
   Button, Chip
 } from '@mui/material';
@@ -180,7 +180,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
             </span>
           </span>
         </AccordionSummary>
-        <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
+        <AccordionDetails style={{...ACCORDIAN_DETAILS_STYLES, maxHeight: '450px', overflow: 'auto'}}>
           {
             isLoadingMappings ?
               <div style={{textAlign: 'center', padding: '10px'}}>
@@ -307,33 +307,34 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                     </TableBody>
                   </Table>
               }
-              {
-                onCreateNewMapping && !mappingForm && isEmpty(updatedMappings) &&
-                  <div className='col-xs-12' style={{padding: '0 5px'}}>
-                    <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
-                      Add New Mapping
-                    </Button>
-                  </div>
-              }
-
-              {
-                onCreateNewMapping && !isEmpty(updatedMappings) &&
-                  <div className='col-xs-12 flex-vertical-center' style={{padding: '10px', backgroundColor: BLUE, color: WHITE}}>
-                    <WarnIcon size='small' style={{marginRight: '10px'}} />
-                    {updatedMappings.length} change(s) made. Saving will create a new Mapping Version.
-
-                    <Button size='small' color='primary' variant='text' style={{marginLeft: '5px', boxShadow: 'none', color: 'rgba(255, 255, 255, 0.7)'}} onClick={onSortCancel}>
-                      Undo
-                    </Button>
-                    <Button size='small' color='primary' variant='text' style={{color: WHITE}} onClick={onSortSave}>
-                      Save
-                    </Button>
-                  </div>
-              }
 
             </div>
           }
         </AccordionDetails>
+        <AccordionActions style={{padding: 0}}>
+          {
+            onCreateNewMapping && !mappingForm && isEmpty(updatedMappings) &&
+              <div className='col-xs-12' style={{padding: '0 5px'}}>
+                <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
+                  Add New Mapping
+                </Button>
+              </div>
+          }
+          {
+            onCreateNewMapping && !isEmpty(updatedMappings) &&
+              <div className='col-xs-12 flex-vertical-center' style={{padding: '10px', backgroundColor: BLUE, color: WHITE}}>
+                <WarnIcon size='small' style={{marginRight: '10px'}} />
+                {updatedMappings.length} change(s) made. Saving will create a new Mapping Version.
+
+                <Button size='small' color='primary' variant='text' style={{marginLeft: '5px', boxShadow: 'none', color: 'rgba(255, 255, 255, 0.7)'}} onClick={onSortCancel}>
+                  Undo
+                </Button>
+                <Button size='small' color='primary' variant='text' style={{color: WHITE}} onClick={onSortSave}>
+                  Save
+                </Button>
+              </div>
+          }
+        </AccordionActions>
       </Accordion>
       {
         !noAssociations && hierarchy &&
