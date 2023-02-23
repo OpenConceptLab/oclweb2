@@ -182,7 +182,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                     const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
                     const bgColor = isUpdated ? 'rgba(51, 115, 170, 0.2)' : 'inherit'
                     const canAct = Boolean(onCreateNewMapping)
-                    const canSort = Boolean(onSortEnd)
+                    const canSort = Boolean(onSortEnd) && oMappings.length > 1
                     const cursor = (targetURL || canSort) ? 'pointer' : 'not-allowed'
                     const isLast = index == oMappings.length - 1
                     return (
