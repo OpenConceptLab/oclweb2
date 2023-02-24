@@ -10,7 +10,7 @@ import {
   set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, fetchMapTypes } from '../../common/utils';
+import { arrayToObject, fetchMapTypes, recordGAUpsertEvent } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
 
@@ -43,6 +43,7 @@ class MappingForm extends React.Component {
         to_source_version: '',
         comment: '',
         extras: [],
+        sort_weight: ''
       }
     }
   }
@@ -65,7 +66,7 @@ class MappingForm extends React.Component {
       'from_concept_url', 'from_concept_name',
       'from_source_url', 'from_source_version',
       'to_concept_url', 'to_concept_name',
-      'to_source_url', 'to_source_version',
+      'to_source_url', 'to_source_version', 'sort_weight'
     ]
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(instance, attr, '') || ''))
@@ -208,6 +209,8 @@ class MappingForm extends React.Component {
 
     const { parent } = this.state;
     const { edit } = this.props
+
+
     const parentURL = edit ? this.props.parentURL : get(parent, 'url');
     let fields = cloneDeep(this.state.fields);
     const form = document.getElementsByTagName('form')[0];
@@ -215,6 +218,7 @@ class MappingForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
+      recordGAUpsertEvent('Mapping', edit)
       fields.extras = arrayToObject(fields.extras)
       if(edit)
         fields.update_comment = fields.comment
@@ -395,6 +399,19 @@ class MappingForm extends React.Component {
                     helperText={edit ? undefined : this.getExternalIdHelperText()}
                   />
                 }
+              </div>
+              <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                <TextField
+                  error={Boolean(fieldErrors.sort_weight)}
+                  id="fields.sort_weight"
+                  label="Sort Weight"
+                  placeholder="e.g. 1.0"
+                  variant="outlined"
+                  fullWidth
+                  onChange={this.onTextFieldChange}
+                  value={fields.sort_weight}
+                  inputProps={{ pattern: "[0-9.]+" }}
+                />
               </div>
               {
                 edit &&

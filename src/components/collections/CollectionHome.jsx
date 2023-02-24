@@ -92,6 +92,12 @@ class CollectionHome extends React.Component {
   componentDidMount() {
     this.setPaths()
     this.refreshDataByURL()
+    this.interval = setInterval(this.setContainerWidth, 100)
+  }
+
+  componentWillUnmount() {
+    if(this.interval)
+      clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps) {
@@ -165,7 +171,7 @@ class CollectionHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value, selected: null}, () => {
+    this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
     })
@@ -194,36 +200,40 @@ class CollectionHome extends React.Component {
       this.URLs = this.getResourceURLs()
       const url = this.URLs.version ? this.URLs.version : this.URLs.collection
       APIService.new()
-                                                              .overrideURL(url)
-                                                              .get(null, null, {includeSummary: true, includeClientConfigs: true})
-                                                              .then(response => {
-                                                                if(get(response, 'detail') === "Not found.")
-                                                                  this.setState({isLoading: false, notFound: true, collection: {}, accessDenied: false, permissionDenied: false})
-                                                                else if(get(response, 'detail') === "Authentication credentials were not provided.")
-                                                                  this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: true, permissionDenied: false})
-                                                                else if(get(response, 'detail') === "You do not have permission to perform this action.")
-                                                                  this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: false, permissionDenied: true})
-                                                                else if(!isObject(response))
-                                                                  this.setState({isLoading: false}, () => {throw response})
-                                                                else {
-                                                                  const collection = response.data;
-                                                                  const customConfigs = get(collection, 'client_configs', [])
-                                                                  const defaultCustomConfig = find(customConfigs, {is_default: true});
-                                                                  this.setState({
-                                                                    isLoading: false,
-                                                                    collection: collection,
-                                                                    selectedConfig: defaultCustomConfig || COLLECTION_DEFAULT_CONFIG,
-                                                                    customConfigs: customConfigs,
-                                                                  }, () => {
-                                                                    const expansionURL = this.URLs.expansion || collection.expansion_url
-                                                                    if(expansionURL)
-                                                                      this.fetchExpansion(expansionURL)
-                                                                    this.setTab()
-                                                                    this.getVersions()
-                                                                    this.getExpansions()
-                                                                  })
-                                                                }
-                                                              })
+        .overrideURL(url)
+        .get(null, null, {includeSummary: true, includeClientConfigs: true})
+        .then(response => {
+          if(get(response, 'detail') === "Not found.")
+            this.setState({isLoading: false, notFound: true, collection: {}, accessDenied: false, permissionDenied: false})
+          else if(get(response, 'detail') === "Authentication credentials were not provided.")
+            this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: true, permissionDenied: false})
+          else if(get(response, 'detail') === "You do not have permission to perform this action.")
+            this.setState({isLoading: false, notFound: false, collection: {}, accessDenied: false, permissionDenied: true})
+          else if(!isObject(response))
+            this.setState({isLoading: false}, () => {throw response})
+          else {
+            const collection = response.data;
+            const customConfigs = get(collection, 'client_configs', [])
+            const defaultCustomConfig = find(customConfigs, {is_default: true});
+            this.setState({
+              isLoading: false,
+              collection: collection,
+              selectedConfig: defaultCustomConfig || COLLECTION_DEFAULT_CONFIG,
+              customConfigs: customConfigs,
+            }, () => {
+              const expansionURL = this.URLs.expansion || collection.expansion_url
+              if(expansionURL)
+                this.fetchExpansion(expansionURL)
+              this.setTab()
+              this.getVersions()
+              this.getExpansions()
+
+              const { setParentResource, setParentItem } = this.context
+              setParentItem(this.state.collection)
+              setParentResource('collection')
+            })
+          }
+        })
     })
   }
 
@@ -264,26 +274,34 @@ class CollectionHome extends React.Component {
   }
 
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false}, () => {
-    const { setOperationItem, setParentResource, setParentItem } = this.context
+    const { setOperationItem } = this.context
     setOperationItem({...selected, parentVersion: this.props.match.params.version})
-    setParentItem(this.state.collection)
-    setParentResource('collection')
   })
 
   getContainerWidth = () => {
-    const { openOperations } = this.context
     const { selected, width, filtersOpen } = this.state;
     let totalWidth = 100
-    let operationsWidth = openOperations ? 60 : 0;
     if(selected) {
+      const resourceDom = document.getElementById('resource-item-container')
+      let itemWidth = 0
+      if(resourceDom)
+        itemWidth = resourceDom.getBoundingClientRect()?.width || 0
       if(width)
-        totalWidth = `calc(${totalWidth}% - ${width - 10}px - ${operationsWidth}px)`
+        totalWidth = `calc(${totalWidth}% - ${itemWidth - 10}px)`
       else
         totalWidth -= filtersOpen ? 46 : 40.5
     }
     if(isNumber(totalWidth))
       totalWidth = `${totalWidth}%`
     return totalWidth
+  }
+
+  setContainerWidth = () => {
+    const el = document.getElementById('coll-container')
+    if(el) {
+      const width = this.getContainerWidth()
+      el.style.width = width
+    }
   }
 
   getBreadcrumbParams = () => {
@@ -322,102 +340,106 @@ class CollectionHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', marginLeft: '5px', width: filtersOpen ? '88%' : '100%'}}>
-              <Breadcrumbs
-                params={this.getBreadcrumbParams()}
-                container={collection}
-                isVersionedObject={this.isVersionedObject()}
-                versionedObjectURL={versionedObjectURL}
-                currentURL={currentURL}
-                config={selectedConfig}
-                versions={versions}
-                selectedResource={selected}
-                onSplitViewClose={() => this.setState({selected: null, width: false})}
-                expansions={expansions}
-                isLoadingExpansions={isLoadingExpansions}
-                expansion={expansion}
-              />
-            </div>
+            <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
+              <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', width: filtersOpen ? '88%' : '100%'}}>
+                <Breadcrumbs
+                  params={this.getBreadcrumbParams()}
+                  container={collection}
+                  isVersionedObject={this.isVersionedObject()}
+                  versionedObjectURL={versionedObjectURL}
+                  currentURL={currentURL}
+                  config={selectedConfig}
+                  versions={versions}
+                  selectedResource={selected}
+                  onSplitViewClose={() => this.setState({selected: null, width: false})}
+                  expansions={expansions}
+                  isLoadingExpansions={isLoadingExpansions}
+                  expansion={expansion}
+                />
+              </div>
 
-            <div className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
-              <CollectionHomeHeader
-                collection={collection}
-                isVersionedObject={this.isVersionedObject()}
-                versionedObjectURL={versionedObjectURL}
-                currentURL={currentURL}
-                config={selectedConfig}
-                expansion={expansion}
-                tab={tab}
-                versions={versions}
-                expansions={expansions}
-                isLoadingExpansions={isLoadingExpansions}
-              />
-              <CollectionHomeTabs
-                tab={tab}
-                onTabChange={this.onTabChange}
-                collection={collection}
-                expansion={expansion}
-                versions={versions}
-                match={this.props.match}
-                location={this.props.location}
-                versionedObjectURL={versionedObjectURL}
-                currentVersion={this.getCurrentVersion()}
-                aboutTab={showAboutTab}
-                onVersionUpdate={this.onVersionUpdate}
-                customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
-                onConfigChange={this.onConfigChange}
-                selectedConfig={selectedConfig}
-                showConfigSelection={this.customConfigFeatureApplicable()}
-                isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
-                isLoadingVersions={isLoadingVersions}
-                isLoadingExpansions={isLoadingExpansions}
-                onSelect={this.onResourceSelect}
-                onFilterDrawerToggle={this.onFilterDrawerToggle}
-              />
+              <div id='coll-container' className='col-md-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
+                <CollectionHomeHeader
+                  collection={collection}
+                  isVersionedObject={this.isVersionedObject()}
+                  versionedObjectURL={versionedObjectURL}
+                  currentURL={currentURL}
+                  config={selectedConfig}
+                  expansion={expansion}
+                  tab={tab}
+                  versions={versions}
+                  expansions={expansions}
+                  isLoadingExpansions={isLoadingExpansions}
+                />
+                <CollectionHomeTabs
+                  tab={tab}
+                  onTabChange={this.onTabChange}
+                  collection={collection}
+                  expansion={expansion}
+                  versions={versions}
+                  match={this.props.match}
+                  location={this.props.location}
+                  versionedObjectURL={versionedObjectURL}
+                  currentVersion={this.getCurrentVersion()}
+                  aboutTab={showAboutTab}
+                  onVersionUpdate={this.onVersionUpdate}
+                  customConfigs={[...customConfigs, COLLECTION_DEFAULT_CONFIG]}
+                  onConfigChange={this.onConfigChange}
+                  selectedConfig={selectedConfig}
+                  showConfigSelection={this.customConfigFeatureApplicable()}
+                  isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
+                  isLoadingVersions={isLoadingVersions}
+                  isLoadingExpansions={isLoadingExpansions}
+                  onSelect={this.onResourceSelect}
+                  onFilterDrawerToggle={this.onFilterDrawerToggle}
+                />
+              </div>
             </div>
-          </div>
         }
         {
           (isMappingSelected || isConceptSelected) &&
-          <ResponsiveDrawer
-            width={openOperations ? "29.5%" : "39.5%"}
-            paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
-            variant='persistent'
-            isOpen
-            onClose={() => this.setState({selected: null, width: false})}
-            onWidthChange={newWidth => this.setState({width: newWidth})}
-            formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
-                {
-                  isMappingSelected ?
-                  <MappingHome
-                    singleColumn
-                    scoped='collection'
-                    parent={collection}
-                            parentURL={get(expansion, 'url') || collection.url || collection.version_url}
-                            mapping={selected}
-                            location={{pathname: selected.version_url || selected.url}}
-                    match={{params: {mappingVersion: selected.version, version: this.props.match.params.version}}}
-                            header={false}
-                            noRedirect
-                  /> :
-                  <ConceptHome
-                    singleColumn
-                    scoped='collection'
-                    parent={collection}
-                            parentURL={get(expansion, 'url') || collection.url || collection.version_url}
-                            concept={selected}
-                            location={{pathname: selected.version_url || selected.url}}
-                    match={{params: {conceptVersion: selected.version, version: this.props.match.params.version}}}
-                            openHierarchy={false}
-                            header={false}
-                            noRedirect
-                  />
-                }
-              </div>
-            }
-          />
+            <ResponsiveDrawer
+              width={openOperations ? "29.5%" : "39.5%"}
+              paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
+              variant='persistent'
+              isOpen
+              onClose={() => this.setState({selected: null, width: false})}
+              onWidthChange={newWidth => this.setState({width: newWidth})}
+              formComponent={
+                <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
+                  {
+                    isMappingSelected ?
+                      <MappingHome
+                        singleColumn
+                        scoped='collection'
+                        parent={collection}
+                        parentURL={get(expansion, 'url') || collection.url || collection.version_url}
+                        mapping={selected}
+                        _location={this.props.location}
+                        _match={this.props.match}
+                        location={{pathname: selected.version_url || selected.url}}
+                        match={{params: {mappingVersion: selected.version, version: this.props.match.params.version}}}
+                        header={false}
+                        noRedirect
+                      /> :
+                    <ConceptHome
+                      singleColumn
+                      scoped='collection'
+                      parent={collection}
+                      parentURL={get(expansion, 'url') || collection.url || collection.version_url}
+                      concept={selected}
+                      _location={this.props.location}
+                      _match={this.props.match}
+                      location={{pathname: selected.version_url || selected.url}}
+                      match={{params: {conceptVersion: selected.version, version: this.props.match.params.version}}}
+                      openHierarchy={false}
+                      header={false}
+                      noRedirect
+                    />
+                  }
+                </div>
+              }
+            />
         }
       </div>
     )

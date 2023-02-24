@@ -6,7 +6,7 @@ import {
   Delete as DeleteIcon,
   RestoreFromTrash as RestoreIcon,
   FileCopy as CopyIcon,
-  FormatIndentIncrease as HierarchyIcon,
+  QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
 import { get } from 'lodash';
 import { currentUserHasAccess, isLoggedIn, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
@@ -24,6 +24,7 @@ import CollapsibleDivider from '../common/CollapsibleDivider';
 import ConceptIcon from './ConceptIcon';
 import ConceptForm from './ConceptForm';
 import ConceptDisplayName from './ConceptDisplayName';
+import BetaLabel from '../common/BetaLabel';
 
 const ConceptHomeHeader = ({
   concept, mappings, isVersionedObject, versionedObjectURL, currentURL, hierarchy, onHierarchyClick,
@@ -144,7 +145,7 @@ const ConceptHomeHeader = ({
                 }
                 {
                   isAdminUser() &&
-                  <Tooltip arrow title={hierarchy ? 'Hide Hierarchy' : 'Show Hierarchy (Beta)'}>
+                    <Tooltip arrow title={hierarchy ? 'Hide Hierarchy' : <BetaLabel label='Show Hierarchy' />}>
                     <Button onClick={onHierarchyClick} color={hierarchy ? 'primary' : 'secondary'}>
                       <HierarchyIcon fontSize='inherit' />
                     </Button>

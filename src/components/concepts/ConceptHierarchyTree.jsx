@@ -10,7 +10,7 @@ import { CircularProgress } from '@mui/material';
 import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
-import { getRandomColor, getWidthOfText, dropVersion } from '../../common/utils';
+import { getRandomColor, getWidthOfText, dropVersion, toParentURI } from '../../common/utils';
 import './d3Tree.scss';
 
 const HIERARCHY_CHILD_REL = '-haschild-'
@@ -45,7 +45,7 @@ class ConceptHierarchyTree extends React.Component {
   }
 
   componentDidMount() {
-    this.makeInitialTree()
+    this.props.treeData ? this.makeTree(this.props.treeData) : this.makeInitialTree()
   }
 
   componentDidUpdate(prevProps) {
@@ -59,10 +59,12 @@ class ConceptHierarchyTree extends React.Component {
     if(parent) {
       URL = parent.url
       URL += parent.version + '/'
-    } else {
+    } else if (source) {
       URL = source.url
       if(sourceVersion)
         URL += sourceVersion + '/'
+    } else {
+      URL = toParentURI(concept.version_url)
     }
 
     URL += 'concepts/' + encodeURIComponent(encodeURIComponent(concept.id)) + '/'
@@ -75,7 +77,9 @@ class ConceptHierarchyTree extends React.Component {
       .then(response => callback(response.data.entry));
   }
 
-  makeInitialTree = () => this.getChildren(this.props.concept, tree => {
+  makeInitialTree = () => this.getChildren(this.props.concept, this.makeTree)
+
+  makeTree = tree => {
     const data = JSON.parse(JSON.stringify(tree).replaceAll('entries', 'children'))
     data.cascade_target_source = this.getSourceName(data)
     this.setState({isLoading: false, tree: data, hasEntries: !isEmpty(data.children)}, () => {
@@ -83,7 +87,7 @@ class ConceptHierarchyTree extends React.Component {
         this.renderTree()
       }
     })
-  })
+  }
 
   getSourceName = (data, urlKey) => {
     if(data.cascade_target_source_name && data.cascade_target_source_owner)

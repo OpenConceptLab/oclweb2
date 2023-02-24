@@ -2,9 +2,9 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
-import { get, isObject, isBoolean, has, flatten, values, isArray, find } from 'lodash';
+import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess } from '../../common/utils'
+import { toParentURI, currentUserHasAccess, recordGAAction } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -12,8 +12,10 @@ import HierarchyTraversalList from './HierarchyTraversalList';
 import ScopeHeader from './ScopeHeader'
 import ConceptHomeDetails from './ConceptHomeDetails';
 import '../common/Split.scss';
+import { OperationsContext } from '../app/LayoutContext';
 
 class ConceptHome extends React.Component {
+  static contextType = OperationsContext
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +62,12 @@ class ConceptHome extends React.Component {
       let URL = parent.url
       if(version && version !== 'HEAD')
         URL += version + '/'
+      else
+        URL
       URL += `concepts/${encodeURIComponent(concept.id)}/`
+      if(match?.params?.conceptVersion)
+        URL += `${match.params.conceptVersion}/`
+
       return URL
     }
 
@@ -88,30 +95,36 @@ class ConceptHome extends React.Component {
 
   refreshDataByURL(url) {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, hierarchy: false, newChildren: []}, () => {
+      const URL = encodeURI(url || this.getConceptURLFromPath())
       APIService.new()
-                .overrideURL(encodeURI(url || this.getConceptURLFromPath()))
+        .overrideURL(URL)
         .get(null, null, {includeReferences: this.props.scoped === 'collection'})
-                .then(response => {
-                  if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
-                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
-                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: true, permissionDenied: false})
-                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
-                    this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: false, permissionDenied: true})
-                  else if(!isObject(response))
-                    this.setState({isLoading: false}, () => {throw response})
-                  else
-                    this.setState({isLoading: false, concept: response.data}, () => {
-                      this.getMappings()
-                      this.fetchParent()
-                      if(this.props.scoped !== 'collection') {
-                        this.getVersions()
-                        this.getCollectionVersions()
-                      }
-                      if(!this.props.scoped)
-                        this.getHierarchy()
-                    })
-                })
+        .then(response => {
+          recordGAAction('Concept', 'split_view', `Concept - ${URL}`)
+          if(get(response, 'detail') === "Not found.")
+            this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
+          else if(get(response, 'detail') === "Authentication credentials were not provided.")
+            this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: true, permissionDenied: false})
+          else if(get(response, 'detail') === "You do not have permission to perform this action.")
+            this.setState({isLoading: false, notFound: false, concept: {}, accessDenied: false, permissionDenied: true})
+          else if(!isObject(response))
+            this.setState({isLoading: false}, () => {throw response})
+          else
+            this.setState({isLoading: false, concept: response.data}, () => {
+              const { setOperationItem, setOpenOperations } = this.context
+              setOperationItem({...response.data, parentVersion: this.props.match.params.version})
+              if(this.props._location?.pathname.includes('/$cascade'))
+                setOpenOperations(true)
+              this.getMappings()
+              this.fetchParent()
+              if(this.props.scoped !== 'collection') {
+                this.getVersions()
+                this.getCollectionVersions()
+              }
+              if(!this.props.scoped)
+                this.getHierarchy()
+            })
+        })
     })
   }
 
@@ -124,6 +137,12 @@ class ConceptHome extends React.Component {
       .overrideURL(toParentURI(concept.url))
       .get(null, null, {includeSummary: true})
       .then(response => this.setState({source: response.data}, () => {
+        const { setParentResource, setParentItem, parentItem } = this.context
+        if(!parentItem) {
+          setParentItem(this.state.source)
+          setParentResource('source')
+        }
+
         if(this.isVersionedObject())
           this.fetchParentMappedSources()
       }))
@@ -252,6 +271,7 @@ class ConceptHome extends React.Component {
   }
 
   retireMapping = (mapping, comment, isDirect) => {
+    recordGAAction('Mapping Inline', 'retired_mapping', 'Retried Mapping from Concept Details using Quick Actions')
     APIService.new().overrideURL(mapping.url).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204) {
         isDirect ? this.getMappings(true) : this.getInverseMappings(true)
@@ -263,6 +283,7 @@ class ConceptHome extends React.Component {
   }
 
   unretireMapping = (mapping, comment, isDirect) => {
+    recordGAAction('Mapping Inline', 'unretired_mapping', 'Reactivated retired Mapping from Concept Details using Quick Actions')
     APIService.new().overrideURL(mapping.url).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204) {
         isDirect ? this.getMappings(true) : this.getInverseMappings(true)
@@ -274,6 +295,7 @@ class ConceptHome extends React.Component {
   }
 
   onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
+    recordGAAction('Mapping Inline', 'create_mapping', 'Created Mapping from Concept Details using Quick Actions')
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
     const targetSourceURL = toParentURI(targetConcept.url)
@@ -316,6 +338,12 @@ class ConceptHome extends React.Component {
         else
           alertifyjs.error('Something bad happened!')
       }
+    })
+  }
+
+  onUpdateMappingsSorting = mappings => {
+    Promise.all(map(mappings, mapping => APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: mapping._sort_weight, comment: 'Updated Sort Weight'}))).then(() => {
+      alertifyjs.success('Mappings successfully updated.')
     })
   }
 
@@ -407,6 +435,7 @@ class ConceptHome extends React.Component {
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
                 onCreateNewMapping={canAct ? this.onCreateNewMapping : false}
+                onUpdateMappingsSorting={canAct ? this.onUpdateMappingsSorting : false}
                 onRemoveMapping={canAct ? this.onRemoveMapping : false}
                 onReactivateMapping={canAct ? this.onReactivateMapping : false}
               />
@@ -416,7 +445,7 @@ class ConceptHome extends React.Component {
       </div>
     )
     return (
-      <div className='col-xs-12 home-container no-side-padding' style={this.props.scoped ? {background: '#f1f1f1'} : {}}>
+      <div id='resource-item-container' className='col-xs-12 home-container no-side-padding' style={this.props.scoped ? {background: '#f1f1f1'} : {}}>
         {
           openHierarchy ?
           <Split className='split' sizes={[25, 75]} minSize={50}>

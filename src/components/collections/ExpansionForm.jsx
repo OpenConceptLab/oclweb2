@@ -7,6 +7,9 @@ import {
   set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString, uniq
 } from 'lodash';
 import APIService from '../../services/APIService';
+import { recordGAUpsertEvent } from '../../common/utils';
+import BetaLabel from '../common/BetaLabel';
+
 const DEFAULT_TOOLTIP = 'This parameter is not yet supported.'
 const PARAMETERS = {
   filter: {
@@ -174,6 +177,8 @@ class ExpansionForm extends React.Component {
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(selectedVersion && isFormValid) {
+      recordGAUpsertEvent('Expansion', false)
+
       this.alert = alertifyjs.warning('Starting Expansion Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
       const url = selectedVersion.version === 'HEAD' ? selectedVersion.url + selectedVersion.version + '/' : selectedVersion.version_url
@@ -277,7 +282,7 @@ class ExpansionForm extends React.Component {
             <div className='col-md-12 no-side-padding'>
               <div className='col-md-12 no-side-padding'>
                 <h4 style={{marginTop: '20px', marginBottom: '5px', paddingLeft: '5px'}}>
-                  Parameters (Beta)
+                  <BetaLabel label="Parameters"/>
                 </h4>
               </div>
               {

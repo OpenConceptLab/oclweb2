@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button, ButtonGroup, MenuList, MenuItem, Tooltip } from '@mui/material';
 import {
   AccountTreeRounded as VersionIcon,
@@ -14,6 +15,7 @@ import PopperGrow from './PopperGrow';
 const HEAD = 'HEAD';
 
 const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) => {
+  const location = useLocation()
   const [open, setOpen] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState(selected)
   const anchorRef = React.useRef(null);
@@ -44,9 +46,13 @@ const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) =
   };
 
   const handleMenuItemClick = version => {
+    let prevVersion = selectedVersion
     setSelectedVersion(version)
     setOpen(false);
-    window.location.hash = version.version_url
+    let pathname = location.pathname.replace(prevVersion.version_url || prevVersion.url, '')
+    if(!pathname || pathname.length == 1)
+      pathname = ''
+    window.location.hash = version.version_url + (pathname || '')
   }
 
   React.useEffect(() => setSelectedVersion(selected), [selected])

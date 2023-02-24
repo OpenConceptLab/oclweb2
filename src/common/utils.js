@@ -1,12 +1,13 @@
 /*eslint no-process-env: 0*/
 import 'core-js/features/url-search-params';
 import React from 'react';
+import ReactGA from 'react-ga';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
@@ -349,15 +350,34 @@ export const memorySizeOf = (obj, format=true) => {
 export const getCurrentUserCollections = callback => {
   const username = getCurrentUserUsername();
   if(username) {
-    APIService.users(username)
-              .collections()
-              .get(null, null, {limit: 1000})
-              .then(response => isArray(response.data) ? callback(response.data) : false);
-    APIService.users(username)
-              .orgs()
-              .appendToUrl('collections/')
-              .get(null, null, {limit: 1000})
-              .then(response => isArray(response.data) ? callback(response.data) : false);
+    APIService
+      .users(username)
+      .collections()
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
+    APIService
+      .users(username)
+      .orgs()
+      .appendToUrl('collections/')
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
+  }
+}
+
+export const getCurrentUserSources = callback => {
+  const username = getCurrentUserUsername();
+  if(username) {
+    APIService
+      .users(username)
+      .sources()
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
+    APIService
+      .users(username)
+      .orgs()
+      .appendToUrl('sources/')
+      .get(null, null, {limit: 1000, includeSummary: true})
+      .then(response => isArray(response.data) ? callback(response.data) : false);
   }
 }
 
@@ -557,8 +577,31 @@ export const getOpenMRSURL = () => {
   return OPENMRS_URL.replace('openmrs.', `openmrs.${env}`);
 }
 
+export const recordGAPageView = () => {
+  /*eslint no-undef: 0*/
+  ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
+  ReactGA.pageview(window.location.pathname + window.location.hash);
+}
+
+export const recordGAAction = (category, action, label) => {
+  /*eslint no-undef: 0*/
+  if(category && action) {
+    ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
+    ReactGA.event({category: category, action: action, label: label || action});
+  }
+}
+
+export const recordGAUpsertEvent = (category, edit, resource) => {
+  const actionPrefix = edit ? 'update' : 'create'
+  resource = resource || category.replaceAll(' ', '_').toLowerCase()
+  let action = `${actionPrefix}_${resource}`
+  let label = `${startCase(actionPrefix)} ${startCase(resource)}`
+  recordGAAction(category, action, label)
+}
+
 export const setUpRecentHistory = history => {
   history.listen(location => {
+    recordGAPageView()
     let visits = JSON.parse(get(localStorage, 'visits', '[]'));
     let urlParts = compact(location.pathname.split('/'));
     let type = '';
@@ -779,3 +822,33 @@ export const getSSOLogoutURL = () => {
   if(redirectURL && idToken)
     return `${getAPIURL()}/users/logout/?&post_logout_redirect_uri=${redirectURL}&id_token_hint=${idToken}`
 }
+
+
+export const urlSearchParamsToObject = urlSearchParams => {
+  const result = {}
+  for(const [key, value] of urlSearchParams.entries()) { // each 'entry' is a [key, value] tuple
+    result[key] = value;
+  }
+  return result;
+}
+
+export const toNumDisplay = number => number ? number.toLocaleString() : number
+
+
+export const getSiblings = elem => {
+
+	// Setup siblings array and get the first sibling
+	var siblings = [];
+	var sibling = elem.parentNode.firstChild;
+
+	// Loop through each sibling and push to the array
+	while (sibling) {
+		if (sibling.nodeType === 1 && sibling !== elem) {
+			siblings.push(sibling);
+		}
+		sibling = sibling.nextSibling
+	}
+
+	return siblings;
+
+};

@@ -11,6 +11,7 @@ export const COLOR_ROW_SELECTED = 'rgba(119, 119, 119, 0.16)';
 export const GREEN = '#5cb85c';
 export const RED = '#c33';
 export const ERROR_RED = '#f44336';
+export const TOMATO_RED = '#ef6030';
 export const ACTION_RED = '#d32f2f';
 export const ORANGE = 'rgb(253, 164, 41)';
 export const EMPTY_VALUE = '-';
@@ -49,3 +50,27 @@ export const OPENMRS_URL = 'https://openmrs.openconceptlab.org';
 export const DEFAULT_FHIR_SERVER_FOR_LOCAL_ID = 6;
 export const FHIR_OPERATIONS = ['$validate-code', '$lookup'];
 export const UUID_LENGTH = 8+4+4+4+12+4; // last 4 is for 4 hyphens
+
+export const CASCADE_OPTIONS = {
+  method: [
+    {id: 'sourcetoconcepts', name: 'Mappings & Target Concepts'},
+    {id: 'sourcemappings', name: 'Mappings'},
+  ],
+  view: ['flat', 'hierarchy']
+}
+export const DEFAULT_CASCADE_PARAMS = {
+  method: 'sourcetoconcepts',
+  mapTypes: '',
+  excludeMapTypes: '',
+  returnMapTypes: '*',
+  cascadeHierarchy: true,
+  cascadeMappings: true,
+  includeRetired: false,
+  cascadeLevels: '*',
+  reverse: false,
+  view: 'flat',
+  omitIfExistsIn: '',
+  equivalencyMapType: '',
+}
+
+export const ALL = '*';

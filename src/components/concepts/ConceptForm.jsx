@@ -9,7 +9,7 @@ import {
 import APIService from '../../services/APIService';
 import {
   arrayToObject, fetchDatatypes, fetchNameTypes,
-  fetchDescriptionTypes, fetchConceptClasses,
+  fetchDescriptionTypes, fetchConceptClasses, recordGAUpsertEvent
 } from '../../common/utils';
 import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
@@ -249,6 +249,7 @@ class ConceptForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
+      recordGAUpsertEvent('Concept', edit)
       if(edit)
         fields.update_comment = fields.comment
       fields.extras = arrayToObject(fields.extras)

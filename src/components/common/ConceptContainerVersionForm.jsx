@@ -4,6 +4,8 @@ import moment from 'moment';
 import { TextField, Button, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map } from 'lodash';
 import APIService from '../../services/APIService';
+import { recordGAUpsertEvent } from '../../common/utils';
+
 
 class ConceptContainerVersionForm extends React.Component {
   constructor(props) {
@@ -56,12 +58,14 @@ class ConceptContainerVersionForm extends React.Component {
   onSubmit = event => {
     event.preventDefault();
     event.stopPropagation();
-    const { parentURL, edit, resource } = this.props
+    const { parentURL, edit, resource, resourceType } = this.props
     let fields = cloneDeep(this.state.fields);
     const form = document.getElementsByTagName('form')[0];
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
+      const isCollectionVersion = (resource || resourceType) === 'collection'
+      recordGAUpsertEvent(isCollectionVersion ? `Collection Version` : 'Source Version', edit)
       this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
 
@@ -70,7 +74,7 @@ class ConceptContainerVersionForm extends React.Component {
       if(fields.revision_date)
         fields.revision_date = moment(fields.revision_date).utc().format('YYYY-MM-DD HH:mm:ss')
 
-      if(resource === 'collection') {
+      if(isCollectionVersion) {
         fields.autoexpand = isBoolean(this.state.fields.autoexpand) ? this.state.fields.autoexpand : false
         fields.expansion_url = this.state.fields.expansion_url || null
       } else {

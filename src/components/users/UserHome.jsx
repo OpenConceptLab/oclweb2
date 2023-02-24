@@ -161,7 +161,7 @@ class UserHome extends React.Component {
         {
           !hasError && !isEmpty(user) &&
             <div className="col-xs-12">
-              <div className="col-xs-2 no-side-padding" style={{width: '15%'}}>
+              <div className="col-xs-2 no-side-padding" style={{width: '15%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
                 <UserHomeDetails user={user} apiToken={apiToken} />
               </div>
               <div className='col-xs-10 no-side-padding' style={{width: '85%'}}>

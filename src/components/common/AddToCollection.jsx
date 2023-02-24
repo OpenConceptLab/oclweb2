@@ -1,9 +1,9 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Button, Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
+  Button, Popper, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent,
-  TextField, InputAdornment, Chip
+  TextField, InputAdornment, Chip, Divider
 } from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon,
@@ -19,6 +19,7 @@ import AddReferencesResult from './AddReferencesResult';
 import ReferenceCascadeDialog from './ReferenceCascadeDialog';
 import MappingReferenceAddOptionsDialog from './MappingReferenceAddOptionsDialog';
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
+import CollectionListItem from './CollectionListItem';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -59,7 +60,7 @@ class AddToCollection extends React.Component {
         allCollections: [...this.state.collections, ...collections],
         isLoading: false,
       })}
-    )
+                             )
   }
 
   handleClose = event => {
@@ -156,8 +157,8 @@ class AddToCollection extends React.Component {
   onSearchValueChange = event => this.setState({
     searchedValue: event.target.value,
     collections: event.target.value.trim() ?
-                 this.getFilteredCollections(event.target.value) :
-                 this.state.allCollections
+      this.getFilteredCollections(event.target.value) :
+      this.state.allCollections
   })
 
   getButton = () => {
@@ -193,72 +194,67 @@ class AddToCollection extends React.Component {
     return (
       <React.Fragment>
         {button}
-        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1000}}>
+        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1300}}>
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
               style={{
                 transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                zIndex: '1000'
+                zIndex: '1300'
               }}
-              >
+            >
               <Paper>
                 <ClickAwayListener onClickAway={this.handleClose}>
                   {
                     noOverallCollections ?
-                    <p style={{padding: '20px'}}>
-                      You do not have any collections.
-                      <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
-                        Create New Collection?
-                      </a>
-                    </p> :
+                      <p style={{padding: '20px'}}>
+                        You do not have any collections.
+                        <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
+                          Create New Collection?
+                        </a>
+                      </p> :
                       <MenuList variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '100%', overflow: 'auto'}}>
-                      <TextField
-                        id='collection-search-input'
-                        placeholder='Search Collection...'
-                        variant='outlined'
-                        size='small'
-                        style={{padding: '10px', width: '100%'}}
-                        autoFocus
-                        onChange={this.onSearchValueChange}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <SearchIcon />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                      {
-                        noSearchResults ?
-                        <p style={{padding: '0 20px'}}>
-                          No Matches.
-                          <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
-                            Create New Collection?
-                          </a>
-                        </p> :
-                        map(_collections, (collection, index) => (
-                          <MenuItem
-                            id={collection.url}
-                            key={index}
-                            onClick={event => this.handleMenuItemClick(event, collection)}
-                            style={{padding: '10px 15px'}}
-                            >
-                            <span className='flex-vertical-center'>
-                              {
-                                collection.owner ?
-                                <React.Fragment>
-                                  <span>{collection.owner}</span>
-                                  <span style={{margin: '0 2px'}}>/</span>
-                                  <span><b>{collection.short_code}</b></span>
-                                </React.Fragment> :
-                                <span><i>{collection.name}</i></span>
-                              }
-                            </span>
-                          </MenuItem>
-                        ))
-                      }
-                    </MenuList>
+                        <TextField
+                          id='collection-search-input'
+                          placeholder='Search Collection...'
+                          variant='outlined'
+                          size='small'
+                          style={{padding: '10px', width: '100%'}}
+                          autoFocus
+                          onChange={this.onSearchValueChange}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <SearchIcon />
+                              </InputAdornment>
+                            )
+                          }}
+                        />
+                        {
+                          isLoading ?
+                            <div style={{textAlign: 'center'}}>
+                              <CircularProgress />
+                            </div> : (
+                              noSearchResults ?
+                                <p style={{padding: '0 20px'}}>
+                                  No Matches.
+                                  <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
+                                    Create New Collection?
+                                  </a>
+                                </p> :
+                                map(_collections, (collection, index) => (
+                                  <React.Fragment key={index}>
+                                    <CollectionListItem
+                                      option={collection}
+                                      listItemProps={{onClick: event => this.handleMenuItemClick(event, collection)}}
+                                      style={{cursor: 'pointer'}}
+                                    />
+                                    <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
+                                  </React.Fragment>
+                                ))
+                            )
+                        }
+                      </MenuList>
                   }
                 </ClickAwayListener>
               </Paper>
@@ -300,12 +296,12 @@ class AddToCollection extends React.Component {
         </Dialog>
         {
           result &&
-          <AddReferencesResult
-            title={`Results: Add Reference(s) to ${this._collectionName}`}
-            open={Boolean(result)}
-            onClose={() => this.setState({result: false})}
-            result={result}
-          />
+            <AddReferencesResult
+              title={`Results: Add Reference(s) to ${this._collectionName}`}
+              open={Boolean(result)}
+              onClose={() => this.setState({result: false})}
+              result={result}
+            />
         }
         <CommonFormDrawer
           style={{zIndex: 1202}}

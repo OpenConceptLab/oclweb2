@@ -767,7 +767,7 @@ const ResultsTable = (
   const isSelectable = (isReferenceResource && hasAccess && isVersionedObject) ||
                        isSourceChild;
 
-  const hasZeroActiveButSomeRetiredResults = () => results?.total === 0 && Boolean(retiredResults())
+  const hasZeroActiveButSomeRetiredResults = () => isSourceChild && results?.total === 0 && Boolean(retiredResults())
 
   const retiredResults = () => {
     const retired = results.facets?.fields?.retired

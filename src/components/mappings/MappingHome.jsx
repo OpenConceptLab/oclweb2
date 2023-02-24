@@ -2,6 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@mui/material';
 import { get, isObject, has } from 'lodash';
 import APIService from '../../services/APIService';
+import { recordGAAction } from '../../common/utils'
 import ScopeHeader from './ScopeHeader'
 import MappingHomeHeader from './MappingHomeHeader';
 import MappingHomeDetails from './MappingHomeDetails';
@@ -57,26 +58,28 @@ class MappingHome extends React.Component {
 
   refreshDataByURL() {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
+      const URL = this.getMappingURLFromPath()
       APIService.new()
-                .overrideURL(this.getMappingURLFromPath())
-                .get(null, null, {includeReferences: this.props.scoped === 'collection'})
-                .then(response => {
-                  if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, mapping: {}, notFound: true, accessDenied: false, permissionDenied: false})
-                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
-                    this.setState({isLoading: false, notFound: false, mapping: {}, accessDenied: true, permissionDenied: false})
-                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
-                    this.setState({isLoading: false, notFound: false, mapping: {}, accessDenied: false, permissionDenied: true})
-                  else if(!isObject(response))
-                    this.setState({isLoading: false}, () => {throw response})
-                  else
-                    this.setState({isLoading: false, mapping: response.data}, () => {
-                      if(this.props.scoped !== 'collection') {
-                        this.getVersions()
-                        this.getCollectionVersions()
-                      }
-                    })
-                })
+        .overrideURL(URL)
+        .get(null, null, {includeReferences: this.props.scoped === 'collection'})
+        .then(response => {
+          recordGAAction('Mapping', 'split_view', `Mapping - ${URL}`)
+          if(get(response, 'detail') === "Not found.")
+            this.setState({isLoading: false, mapping: {}, notFound: true, accessDenied: false, permissionDenied: false})
+          else if(get(response, 'detail') === "Authentication credentials were not provided.")
+            this.setState({isLoading: false, notFound: false, mapping: {}, accessDenied: true, permissionDenied: false})
+          else if(get(response, 'detail') === "You do not have permission to perform this action.")
+            this.setState({isLoading: false, notFound: false, mapping: {}, accessDenied: false, permissionDenied: true})
+          else if(!isObject(response))
+            this.setState({isLoading: false}, () => {throw response})
+          else
+            this.setState({isLoading: false, mapping: response.data}, () => {
+              if(this.props.scoped !== 'collection') {
+                this.getVersions()
+                this.getCollectionVersions()
+              }
+            })
+        })
 
     })
   }
@@ -129,7 +132,7 @@ class MappingHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 home-container no-side-padding'>
+            <div id='resource-item-container' className='col-xs-12 home-container no-side-padding'>
             {
               this.props.scoped ?
               <ScopeHeader

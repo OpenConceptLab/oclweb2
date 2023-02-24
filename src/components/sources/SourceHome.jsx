@@ -36,6 +36,7 @@ class SourceHome extends React.Component {
       selected: null,
       hierarchy: false,
       filtersOpen: false,
+      sourceVersionSummary: {},
     }
   }
 
@@ -78,6 +79,8 @@ class SourceHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
+      return 4;
+    if(location.pathname.indexOf('/summary') > -1)
       return 3;
     if(location.pathname.indexOf('/versions') > -1)
       return 2;
@@ -92,6 +95,12 @@ class SourceHome extends React.Component {
   componentDidMount() {
     this.setPaths()
     this.refreshDataByURL()
+    this.interval = setInterval(this.setContainerWidth, 100)
+  }
+
+  componentWillUnmount() {
+    if(this.interval)
+      clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps) {
@@ -145,55 +154,70 @@ class SourceHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
-    this.setState({tab: value, selected: null}, () => {
+    this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
       if(this.isVersionTabSelected())
         this.fetchVersionsSummary()
+      if(this.isSummaryTabSelected())
+        this.fetchSelectedSourceVersionSummary()
+    })
+  }
+
+  fetchSelectedSourceVersionSummary = () => {
+    this.setState({sourceVersionSummary: {}}, () => {
+      const { source } = this.state
+      APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true}).then(response => this.setState({sourceVersionSummary: response.data}))
     })
   }
 
   refreshDataByURL() {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
-                .overrideURL(this.sourceVersionPath)
-                .get(null, null, {includeClientConfigs: true})
-                .then(response => {
-                  if(get(response, 'detail') === "Not found.")
-                    this.setState({isLoading: false, notFound: true, source: {}, accessDenied: false, permissionDenied: false})
-                  else if(get(response, 'detail') === "Authentication credentials were not provided.")
-                    this.setState({isLoading: false, notFound: false, source: {}, accessDenied: true, permissionDenied: false})
-                  else if(get(response, 'detail') === "You do not have permission to perform this action.")
-                    this.setState({isLoading: false, notFound: false, source: {}, accessDenied: false, permissionDenied: true})
-                  else if(!isObject(response))
-                    this.setState({isLoading: false}, () => {throw response})
-                  else {
-                    const source = response.data;
-                    const customConfigs = get(source, 'client_configs', [])
-                    const defaultCustomConfig = find(customConfigs, {is_default: true});
-                    this.setState({
-                      isLoading: false,
-                      source: source,
-                      selectedConfig: defaultCustomConfig || SOURCE_DEFAULT_CONFIG,
-                      customConfigs: customConfigs,
-                    }, () => {
-                      this.setTab()
-                      this.getVersions()
-                    })
-                  }
-                })
+        .overrideURL(this.sourceVersionPath)
+        .get(null, null, {includeClientConfigs: true})
+        .then(response => {
+          if(get(response, 'detail') === "Not found.")
+            this.setState({isLoading: false, notFound: true, source: {}, accessDenied: false, permissionDenied: false})
+          else if(get(response, 'detail') === "Authentication credentials were not provided.")
+            this.setState({isLoading: false, notFound: false, source: {}, accessDenied: true, permissionDenied: false})
+          else if(get(response, 'detail') === "You do not have permission to perform this action.")
+            this.setState({isLoading: false, notFound: false, source: {}, accessDenied: false, permissionDenied: true})
+          else if(!isObject(response))
+            this.setState({isLoading: false}, () => {throw response})
+          else {
+            const source = response.data;
+            const customConfigs = get(source, 'client_configs', [])
+            const defaultCustomConfig = find(customConfigs, {is_default: true});
+            this.setState({
+              isLoading: false,
+              source: source,
+              selectedConfig: defaultCustomConfig || SOURCE_DEFAULT_CONFIG,
+              customConfigs: customConfigs,
+            }, () => {
+              this.setTab()
+              this.getVersions()
+
+              const { setParentResource, setParentItem } = this.context
+              setParentItem(this.state.source)
+              setParentResource('source')
+              if(this.isSummaryTabSelected())
+                this.fetchSelectedSourceVersionSummary()
+            })
+          }
+        })
 
     })
   }
 
   fetchSummary() {
     APIService.new()
-              .overrideURL(this.sourcePath)
-              .appendToUrl('summary/')
-              .get()
-              .then(response => this.setState({
-                source: {...this.state.source, summary: omit(response.data, ['id', 'uuid'])}
-              }, this.setHEADSummary))
+      .overrideURL(this.sourcePath)
+      .appendToUrl('summary/')
+      .get()
+      .then(response => this.setState({
+        source: {...this.state.source, summary: omit(response.data, ['id', 'uuid'])}
+      }, this.setHEADSummary))
   }
 
   onConfigChange = config => this.setState({selectedConfig: config}, () => {
@@ -237,24 +261,26 @@ class SourceHome extends React.Component {
   }
 
   onResourceSelect = selected => this.setState({selected: selected, width: selected ? this.state.width : false}, () => {
-    const { setOperationItem, setParentResource, setParentItem } = this.context
+    const { setOperationItem } = this.context
     setOperationItem({...selected, parentVersion: this.props.match.params.version})
-    setParentItem(this.state.source)
-    setParentResource('source')
   })
 
   currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
 
   isVersionTabSelected = () => get(this.currentTabConfig(), 'type') === 'versions';
 
+  isSummaryTabSelected = () => get(this.currentTabConfig(), 'type') === 'summary';
+
   getContainerWidth = () => {
-    const { openOperations } = this.context
     const { selected, width, filtersOpen } = this.state;
     let totalWidth = 100
-    let operationsWidth = openOperations ? 60 : 0;
     if(selected) {
+      const resourceDom = document.getElementById('resource-item-container')
+      let itemWidth = 0
+      if(resourceDom)
+        itemWidth = resourceDom.getBoundingClientRect()?.width || 0
       if(width)
-        totalWidth = `calc(${totalWidth}% - ${width - 10}px - ${operationsWidth}px)`
+        totalWidth = `calc(${totalWidth}% - ${itemWidth - 10}px)`
       else
         totalWidth -= filtersOpen ? 46 : 40.5
     }
@@ -262,6 +288,14 @@ class SourceHome extends React.Component {
     if(isNumber(totalWidth))
       totalWidth = `${totalWidth}%`
     return totalWidth
+  }
+
+  setContainerWidth = () => {
+    const el = document.getElementById('source-container')
+    if(el) {
+      const width = this.getContainerWidth()
+      el.style.width = width
+    }
   }
 
   getBreadcrumbParams = () => {
@@ -297,96 +331,101 @@ class SourceHome extends React.Component {
         { permissionDenied && <PermissionDenied /> }
         {
           !isLoading && !hasError &&
-          <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
-            <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', marginLeft: '5px', width: filtersOpen ? '88%' : '100%'}}>
-              <Breadcrumbs
-                params={this.getBreadcrumbParams()}
-                container={source}
-                isVersionedObject={this.isVersionedObject()}
-                versionedObjectURL={this.sourcePath}
-                currentURL={this.sourceVersionPath}
-                config={selectedConfig}
-                versions={versions}
-                selectedResource={selected}
-                onSplitViewClose={() => this.setState({selected: null, width: false})}
-              />
+            <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
+              <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', width: filtersOpen ? '88%' : '100%'}}>
+                <Breadcrumbs
+                  params={this.getBreadcrumbParams()}
+                  container={source}
+                  isVersionedObject={this.isVersionedObject()}
+                  versionedObjectURL={this.sourcePath}
+                  currentURL={this.sourceVersionPath}
+                  config={selectedConfig}
+                  versions={versions}
+                  selectedResource={selected}
+                  onSplitViewClose={() => this.setState({selected: null, width: false})}
+                />
+              </div>
+              <div id='source-container' className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
+                <SourceHomeHeader
+                  source={source}
+                  isVersionedObject={this.isVersionedObject()}
+                  versionedObjectURL={this.sourcePath}
+                  currentURL={this.sourceVersionPath}
+                  config={selectedConfig}
+                  versions={versions}
+                />
+                <SourceHomeTabs
+                  tab={tab}
+                  onTabChange={this.onTabChange}
+                  source={source}
+                  versions={versions}
+                  location={this.props.location}
+                  match={this.props.match}
+                  versionedObjectURL={this.sourcePath}
+                  currentVersion={this.getCurrentVersion()}
+                  aboutTab={showAboutTab}
+                  onVersionUpdate={this.onVersionUpdate}
+                  customConfigs={[...customConfigs, SOURCE_DEFAULT_CONFIG]}
+                  onConfigChange={this.onConfigChange}
+                  selectedConfig={selectedConfig}
+                  showConfigSelection={this.customConfigFeatureApplicable()}
+                  isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
+                  isLoadingVersions={isLoadingVersions}
+                  onSelect={this.onResourceSelect}
+                  hierarchy={hierarchy}
+                  onHierarchyToggle={get(source, 'hierarchy_root_url') ? () => this.setState({hierarchy: !hierarchy}) : false}
+                  onFilterDrawerToggle={this.onFilterDrawerToggle}
+                  sourceVersionSummary={this.state.sourceVersionSummary}
+                />
+              </div>
             </div>
-            <div className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
-              <SourceHomeHeader
-                source={source}
-                isVersionedObject={this.isVersionedObject()}
-                versionedObjectURL={this.sourcePath}
-                currentURL={this.sourceVersionPath}
-                config={selectedConfig}
-                versions={versions}
-              />
-              <SourceHomeTabs
-                tab={tab}
-                onTabChange={this.onTabChange}
-                source={source}
-                versions={versions}
-                location={this.props.location}
-                match={this.props.match}
-                versionedObjectURL={this.sourcePath}
-                currentVersion={this.getCurrentVersion()}
-                aboutTab={showAboutTab}
-                onVersionUpdate={this.onVersionUpdate}
-                customConfigs={[...customConfigs, SOURCE_DEFAULT_CONFIG]}
-                onConfigChange={this.onConfigChange}
-                selectedConfig={selectedConfig}
-                showConfigSelection={this.customConfigFeatureApplicable()}
-                isOCLDefaultConfigSelected={isEqual(selectedConfig, SOURCE_DEFAULT_CONFIG)}
-                isLoadingVersions={isLoadingVersions}
-                onSelect={this.onResourceSelect}
-                hierarchy={hierarchy}
-                onHierarchyToggle={get(source, 'hierarchy_root_url') ? () => this.setState({hierarchy: !hierarchy}) : false}
-                onFilterDrawerToggle={this.onFilterDrawerToggle}
-              />
-            </div>
-          </div>
         }
         {
           selected &&
-          <ResponsiveDrawer
-            width={openOperations ? "29.5%" : "39.5%"}
-            paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
-            variant='persistent'
-            isOpen
-            onClose={() => this.setState({selected: null, width: false})}
-            onWidthChange={newWidth => this.setState({width: newWidth})}
-            formComponent={
-              <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
-                {
-                  isMappingSelected ?
-                  <MappingHome
-                    singleColumn
-                    scoped
-                    mapping={selected}
-                    location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
-                    match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
-                    header={false}
-                    source={source}
-                    noRedirect
-                  /> :
-                  <ConceptHome
-                    singleColumn
-                    scoped
-                    concept={selected}
-                    parent={source}
-                    location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
-                    match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
-                    openHierarchy={false}
-                    header={false}
-                    noRedirect
-                  />
-                }
-              </div>
-            }
-          />
+            <ResponsiveDrawer
+              width={openOperations ? "29.5%" : "39.5%"}
+              paperStyle={{background: '#f1f1f1', right: openOperations ? '350px' : 0}}
+              variant='persistent'
+              isOpen
+              onClose={() => this.setState({selected: null, width: false})}
+              onWidthChange={newWidth => this.setState({width: newWidth})}
+              formComponent={
+                <div className='col-xs-12 no-side-padding' style={{backgroundColor: '#f1f1f1', marginTop: '60px'}}>
+                  {
+                    isMappingSelected ?
+                      <MappingHome
+                        singleColumn
+                        scoped
+                        mapping={selected}
+                        _location={this.props.location}
+                        _match={this.props.match}
+                        location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
+                        match={{params: {mappingVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
+                        header={false}
+                        source={source}
+                        noRedirect
+                      /> :
+                    <ConceptHome
+                      singleColumn
+                      scoped
+                      concept={selected}
+                      parent={source}
+                      _location={this.props.location}
+                      _match={this.props.match}
+                      location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
+                      match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
+                      openHierarchy={false}
+                      header={false}
+                      noRedirect
+                    />
+                  }
+                </div>
+              }
+            />
         }
       </div>
-    )
-  }
+  )
+}
 }
 
 export default SourceHome;

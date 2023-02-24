@@ -6,7 +6,7 @@ import {
   getAppliedServerConfig
 } from '../../common/utils';
 import AppVersions from './AppVersions';
-const DEFAULT_FOOTER_TEXT = '2022 Open Concept Lab';
+const DEFAULT_FOOTER_TEXT = `${new Date().getFullYear()} Open Concept Lab`;
 const Footer = () => {
   const text = get(getAppliedServerConfig(), 'info.site.footerText', DEFAULT_FOOTER_TEXT);
   const isDefault = text === DEFAULT_FOOTER_TEXT;

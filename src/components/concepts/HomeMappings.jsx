@@ -1,25 +1,24 @@
 import React from 'react';
 import {
-  Accordion, AccordionSummary, AccordionDetails, CircularProgress,
-  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton, Dialog, DialogContent, DialogTitle,
-  DialogActions, Button, Slide, Chip
+  Accordion, AccordionSummary, AccordionDetails, AccordionActions, CircularProgress,
+  Table, TableHead, TableRow, TableCell, TableBody, Tooltip, IconButton,
+  Button, Chip
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon,
-  FormatIndentIncrease as HierarchyIcon,
-  Close as CloseIcon,
+  QueryStats as HierarchyIcon,
   Add as AddIcon,
+  WarningAmber as WarnIcon,
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, find, compact, flatten, values } from 'lodash';
+import { get, isEmpty, forEach, map, find, compact, flatten, values, uniqBy } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString, dropVersion } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
 import MappingInlineForm from '../mappings/MappingInlineForm';
 import ConceptHierarchyRow from './ConceptHierarchyRow';
 import TabCountLabel from '../common/TabCountLabel';
-import ConceptHierarchyTree from './ConceptHierarchyTree';
-import HierarchyTreeFilters from './HierarchyTreeFilters';
-import ResourceTextBreadcrumbs from '../common/ResourceTextBreadcrumbs';
+import ConceptCascadeVisualizeDialog from './ConceptCascadeVisualizeDialog';
+import BetaLabel from '../common/BetaLabel'
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -65,11 +64,9 @@ const DEFAULT_CASCADE_FILTERS = {
   returnMapTypes: undefined,
 }
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting }) => {
+  const [orderedMappings, setMappings] = React.useState({});
+  const [updatedMappings, setUpdatedMappings] = React.useState([]);
   const [mappingForm, setMappingForm] = React.useState(false)
   const [hierarchy, setHierarchy] = React.useState(false);
   const [cascadeFilters, setCascadeFilters] = React.useState({...DEFAULT_CASCADE_FILTERS});
@@ -96,7 +93,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     )
   }
   const onCascadeFilterChange = (attr, value) => setCascadeFilters({...cascadeFilters, [attr]: value})
-  const onMapTypesFilterChange = newFilters => setCascadeFilters(newFilters)
+  const onFilterChange = newFilters => setCascadeFilters(newFilters)
   const onHierarchyViewToggle = event => {
     event.preventDefault()
     event.stopPropagation()
@@ -116,12 +113,35 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     return _mappings
   }
 
-  const orderedMappings = getMappings()
+  React.useEffect(() => setMappings(getMappings()), [concept])
+
   const getCount = () => flatten(compact(flatten(map(values(orderedMappings), mapping => values(mapping))))).length
 
   const _onCreateNewMapping = onCreateNewMapping ? (payload, targetConcept, isDirect) => onCreateNewMapping(payload, targetConcept, isDirect, () => setMappingForm(false)) : false
 
   const suggested = compact([{...source, suggestionType: 'Current Source'}, ...map(mappedSources, _source => ({..._source, suggestionType: 'Mapped Source'}))])
+
+  const onSortEnd = onCreateNewMapping ? _mappings => setUpdatedMappings(uniqBy([...updatedMappings, ..._mappings], 'version_url')) : false
+
+  const onSortCancel = () => {
+    setUpdatedMappings([])
+    setMappings(getMappings())
+  }
+
+  const onSortSave = () => {
+    onUpdateMappingsSorting(updatedMappings)
+    const newMappings = {...orderedMappings}
+    forEach(newMappings, data => {
+      forEach([...data.direct, ...data.indirect, ...data.self], mapping => {
+        const _mapping = find(updatedMappings, {version_url: mapping.version_url})
+        mapping.sort_weight = _mapping?._sort_weight || mapping.sort_weight
+        mapping._sort_weight = undefined
+        mapping._initial_assigned_sort_weight = undefined
+      })
+    })
+    setMappings(newMappings)
+    setUpdatedMappings([])
+  }
 
   return (
     <React.Fragment>
@@ -144,7 +164,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                       </Tooltip>
                     </span>
                     <span>
-                      <Tooltip title='Visualize (Beta)'>
+                      <Tooltip title={<BetaLabel label='Visualize' />}>
                         <IconButton onClick={onHierarchyViewToggle} size='small' color={hierarchy ? 'primary' : 'default'}>
                           <HierarchyIcon fontSize='inherit' />
                         </IconButton>
@@ -160,7 +180,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
             </span>
           </span>
         </AccordionSummary>
-        <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
+        <AccordionDetails style={{...ACCORDIAN_DETAILS_STYLES, maxHeight: '450px', overflow: 'auto'}}>
           {
             isLoadingMappings ?
               <div style={{textAlign: 'center', padding: '10px'}}>
@@ -175,11 +195,11 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                       !noAssociations &&
                         <TableHead>
                           <TableRow style={{backgroundColor: BLUE, color: WHITE}}>
-                            <TableCell align='left' style={tbHeadCellStyles}><b>Relationship</b></TableCell>
-                            <TableCell align='left' style={tbHeadCellStyles}><b>Code</b></TableCell>
-                            <TableCell align='left' style={tbHeadCellStyles}><b>Name</b></TableCell>
-                            <TableCell align='left' style={tbHeadCellStyles}><b>Source</b></TableCell>
-                            <TableCell align='right' />
+                            <TableCell align='left' style={{...tbHeadCellStyles, width: '10%'}}><b>Relationship</b></TableCell>
+                            <TableCell align='left' style={{...tbHeadCellStyles, width: '30%'}}><b>Code</b></TableCell>
+                            <TableCell align='left' style={{...tbHeadCellStyles, width: '35%'}}><b>Name</b></TableCell>
+                            <TableCell align='left' style={{...tbHeadCellStyles, width: '20%'}}><b>Source</b></TableCell>
+                            <TableCell align='right' style={{width: '5%'}}/>
                           </TableRow>
                         </TableHead>
                     }
@@ -201,6 +221,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
                                     suggested={suggested}
+                                    onSortEnd={onSortEnd}
                                   />
                               }
                             </React.Fragment>
@@ -239,6 +260,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
                                     suggested={suggested}
+                                    onSortEnd={onSortEnd}
                                   />
                               }
                             </React.Fragment>
@@ -285,59 +307,49 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                     </TableBody>
                   </Table>
               }
-              {
-                onCreateNewMapping && !mappingForm &&
-                  <div className='col-xs-12' style={{padding: '0 5px'}}>
-                    <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
-                      Add New Mapping
-                    </Button>
-                  </div>
-              }
+
             </div>
           }
         </AccordionDetails>
+        <AccordionActions style={{padding: 0}}>
+          {
+            onCreateNewMapping && !mappingForm && isEmpty(updatedMappings) &&
+              <div className='col-xs-12' style={{padding: '0 5px'}}>
+                <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
+                  Add New Mapping
+                </Button>
+              </div>
+          }
+          {
+            onCreateNewMapping && !isEmpty(updatedMappings) &&
+              <div className='col-xs-12 flex-vertical-center' style={{padding: '10px', backgroundColor: BLUE, color: WHITE}}>
+                <WarnIcon size='small' style={{marginRight: '10px'}} />
+                {updatedMappings.length} change(s) made. Saving will create a new Mapping Version.
+
+                <Button size='small' color='primary' variant='text' style={{marginLeft: '5px', boxShadow: 'none', color: 'rgba(255, 255, 255, 0.7)'}} onClick={onSortCancel}>
+                  Undo
+                </Button>
+                <Button size='small' color='primary' variant='text' style={{color: WHITE}} onClick={onSortSave}>
+                  Save
+                </Button>
+              </div>
+          }
+        </AccordionActions>
       </Accordion>
       {
         !noAssociations && hierarchy &&
-          <Dialog fullScreen open={hierarchy} onClose={onHierarchyViewToggle} TransitionComponent={Transition}>
-            <DialogTitle>
-              <div className='col-xs-12 no-side-padding'>
-                <div className='col-xs-11 no-side-padding'>
-                  <ResourceTextBreadcrumbs resource={concept} includeSelf style={{marginLeft: '-15px', marginBottom: '10px'}} />
-                  <div className='col-xs-12 no-side-padding'>
-                    <span>Associations</span>
-                    <span style={{marginLeft: '20px'}}>
-                      <HierarchyTreeFilters
-                        filters={cascadeFilters}
-                        onChange={onCascadeFilterChange}
-                        onMapTypesFilterChange={onMapTypesFilterChange}
-                        size='medium'
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className='col-xs-1 no-side-padding'>
-                  <span style={{float: 'right'}}>
-                    <IconButton
-                      edge="end"
-                      color="inherit"
-                      onClick={onHierarchyViewToggle}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </span>
-                </div>
-              </div>
-            </DialogTitle>
-            <DialogContent>
-              <div className='col-xs-12' style={{padding: '10px'}}>
-                <ConceptHierarchyTree concept={concept} fontSize='14' dx={80} hierarchyMeaning={hierarchyMeaning} filters={cascadeFilters} sourceVersion={sourceVersion} source={source} parent={parent} reverse={get(cascadeFilters, 'reverse', false)} />
-              </div>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={onHierarchyViewToggle}>Close</Button>
-            </DialogActions>
-          </Dialog>
+          <ConceptCascadeVisualizeDialog
+            open
+            onClose={onHierarchyViewToggle}
+            concept={concept}
+            source={source}
+            sourceVersion={sourceVersion}
+            filters={cascadeFilters}
+            onCascadeFilterChange={onCascadeFilterChange}
+            onFilterChange={onFilterChange}
+            hierarchyMeaning={hierarchyMeaning}
+            parent={parent}
+          />
       }
     </React.Fragment>
   )

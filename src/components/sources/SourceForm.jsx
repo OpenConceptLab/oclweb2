@@ -3,6 +3,7 @@ import alertifyjs from 'alertifyjs';
 import { Divider, Button } from '@mui/material';
 import { orderBy, map, merge, cloneDeep, get, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
+import { recordGAUpsertEvent } from '../../common/utils';
 import { SOURCE_TYPES, WHITE } from '../../common/constants'
 import FormHeader from '../common/conceptContainerFormComponents/FormHeader';
 import NameAndDescription from '../common/conceptContainerFormComponents/NameAndDescription';
@@ -34,6 +35,7 @@ class SourceForm extends React.Component {
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(isFormValid) {
+      recordGAUpsertEvent('Source', edit)
       const payload = this.getPayload()
       const service = APIService.new().overrideURL(this.state.owner.url + 'sources/')
       if(edit)

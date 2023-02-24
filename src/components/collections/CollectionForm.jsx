@@ -3,6 +3,7 @@ import alertifyjs from 'alertifyjs';
 import { Divider, Button } from '@mui/material';
 import { orderBy, map, merge, cloneDeep, get, isEmpty } from 'lodash';
 import APIService from '../../services/APIService';
+import { recordGAUpsertEvent } from '../../common/utils';
 import { COLLECTION_TYPES, WHITE } from '../../common/constants'
 import FormHeader from '../common/conceptContainerFormComponents/FormHeader';
 import NameAndDescription from '../common/conceptContainerFormComponents/NameAndDescription';
@@ -42,6 +43,7 @@ class CollectionForm extends React.Component {
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(isFormValid) {
+      recordGAUpsertEvent('Collection', edit)
       const payload = this.getPayload()
       const service = APIService.new().overrideURL(this.state.owner.url + 'collections/')
       if(edit)

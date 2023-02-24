@@ -1,3 +1,6 @@
+import React from 'react';
+import BetaLabel from '../components/common/BetaLabel';
+
 export const CONCEPT_MAP_DEFAULT_CONFIG = {
   name: "FHIR Default (ConceptMap)",
   web_default: true,
@@ -266,6 +269,7 @@ export const SOURCE_DEFAULT_CONFIG = {
       },
       { type: "mappings", label: "Mappings", page_size: 25, layout: "table" },
       { type: "versions", label: "Versions", page_size: 25, layout: "table" },
+      { type: "summary", label: <BetaLabel label="Summary" /> },
       { type: "about", label: "About" },
     ],
   },

@@ -1,24 +1,26 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs'
 import {
-  Button, Tooltip, Switch, FormControlLabel, FormGroup, FormControl,
-  Dialog
+  Button, Tooltip, Switch, FormControlLabel, FormGroup, FormControl, Dialog
 } from '@mui/material';
 import { includes } from 'lodash'
 import APIService from '../../services/APIService'
 import ForgotPasswordForm from './ForgotPasswordForm';
+import ConceptContainerDelete from '../common/ConceptContainerDelete';
 
 
 const UserManagement = ({ user }) => {
   const [status, setStatus] = React.useState(user.status)
   const [isAdmin, setIsAdmin] = React.useState(user.is_staff)
   const [isResettingPassword, setIsResettingPassword] = React.useState(false)
+  const [isHardDelete, setIsHardDelete] = React.useState(false)
   const isVerified = status === 'verified'
   const isUnverified = includes(['verification_pending', 'unverified'], status)
   const isDeactivated = status === 'deactivated'
   const activateLabel = isDeactivated ? 'Activate' : 'Deactivate'
   const adminToggleLabel = isAdmin ? 'Remove Admin Privileges' : 'Make Admin'
   const userLabel = `<i>${user.name}(${user.username})</i>`
+
   const onMarkVerified = () => {
     alertifyjs.prompt(
       `Mark Verified ${userLabel}`,
@@ -104,6 +106,15 @@ const UserManagement = ({ user }) => {
     })
   }
 
+  const onHardDelete = () => {
+    APIService.users(user.username).appendToUrl('?hardDelete=true').delete().then(response => {
+      if(response.status === 204)
+        alertifyjs.success('Successfully deleted this user. Reloading...', 2, () => window.location.hash = '/search/?type=users')
+      else
+        alertifyjs.error('Something bad happened! Reloading to refresh User state.', 2, () => window.location.reload())
+    })
+  }
+
   const activate = () => {
     APIService.users(user.username).appendToUrl('reactivate/').put().then(response => {
       if(response.status === 204)
@@ -137,58 +148,87 @@ const UserManagement = ({ user }) => {
       <fieldset style={{border: `1px solid rgba(255, 129, 130, 0.4)`, width: '100%', borderRadius: '4px'}}>
         <legend style={{color: 'rgba(255, 129, 130)', fontStyle: 'italic'}}>&nbsp; Admin Only &nbsp;</legend>
 
-      <FormControl component='fieldset' variant='standard'>
-        <h4 style={{margin: '4px 0'}}>User Management</h4>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Tooltip arrow title="Mark this user as verified. This will allow them to login with there password." placement='right'>
-                <span>
-                  <Switch checked={isVerified} onChange={onMarkVerified} color='primary' disabled={isDeactivated || !isUnverified}/>
-                </span>
-              </Tooltip>
-            }
-            label={<span style={{fontSize: '0.9125rem'}}>Verified</span>}
-          />
-          <FormControlLabel
-            control={
-              <Tooltip arrow title={`${activateLabel} this user.`} placement='right'>
-                <span>
-                  <Switch checked={!isDeactivated} onChange={onActivateToggle} color='primary'/>
-                </span>
-              </Tooltip>
-            }
-            label={<span style={{fontSize: '0.9125rem'}}>Activated</span>}
-          />
-          <FormControlLabel
-            control={
-              <Tooltip arrow title={adminToggleLabel} placement='right'>
-                <span>
-                  <Switch checked={isAdmin} onChange={onAdminToggle} color='primary' disabled={!isVerified || isDeactivated} />
-                </span>
-              </Tooltip>
-            }
-            label={<span style={{fontSize: '0.9125rem'}}>Admin</span>}
-          />
-        </FormGroup>
-      </FormControl>
-      <Tooltip arrow title="Reset this user's password." placement='right'>
-        <span>
-          <Button color='error' variant={isResettingPassword ? 'contained' : 'outlined'} size='small' style={{textTransform: 'none', marginRight: '10px'}} onClick={() => setIsResettingPassword(true)} disabled={isDeactivated || !isVerified}>
-            Reset Password
-          </Button>
-        </span>
-      </Tooltip>
+        <FormControl component='fieldset' variant='standard'>
+          <h4 style={{margin: '4px 0'}}>User Management</h4>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Tooltip arrow title="Mark this user as verified. This will allow them to login with there password." placement='right'>
+                  <span>
+                    <Switch checked={isVerified} onChange={onMarkVerified} color='primary' disabled={isDeactivated || !isUnverified}/>
+                  </span>
+                </Tooltip>
+              }
+              label={<span style={{fontSize: '0.9125rem'}}>Verified</span>}
+            />
+            <FormControlLabel
+              control={
+                <Tooltip arrow title={`${activateLabel} this user.`} placement='right'>
+                  <span>
+                    <Switch checked={!isDeactivated} onChange={onActivateToggle} color='primary'/>
+                  </span>
+                </Tooltip>
+              }
+              label={<span style={{fontSize: '0.9125rem'}}>Activated</span>}
+            />
+            <FormControlLabel
+              control={
+                <Tooltip arrow title={adminToggleLabel} placement='right'>
+                  <span>
+                    <Switch checked={isAdmin} onChange={onAdminToggle} color='primary' disabled={!isVerified || isDeactivated} />
+                  </span>
+                </Tooltip>
+              }
+              label={<span style={{fontSize: '0.9125rem'}}>Admin</span>}
+            />
+          </FormGroup>
+        </FormControl>
+        <Tooltip arrow title="Reset this user's password." placement='right'>
+          <span>
+            <Button color='error' variant={isResettingPassword ? 'contained' : 'outlined'} size='small' style={{textTransform: 'none', marginRight: '10px'}} onClick={() => setIsResettingPassword(true)} disabled={isDeactivated || !isVerified}>
+              Reset Password
+            </Button>
+          </span>
+        </Tooltip>
 
-      {
-        isResettingPassword &&
-          <Dialog open={isResettingPassword} onClose={() => setIsResettingPassword(false)} maxWidth="md" fullWidth>
-            <div className='col-xs-12 no-side-padding' style={{marginBottom: '25px'}}>
-              <ForgotPasswordForm match={{params: {user: user.username, token: 'unknown-token'}}} forceReset user={user} onSubmit={resetPassword} />
+        <Tooltip arrow title="Delete this user" placement='right'>
+          <span>
+            <Button color='error' variant={isHardDelete ? 'contained' : 'outlined'} size='small' style={{textTransform: 'none', marginTop: '5px'}} onClick={() => setIsHardDelete(true)}>
+              Hard Delete
+            </Button>
+          </span>
+        </Tooltip>
+
+        {
+          isResettingPassword &&
+            <Dialog open={isResettingPassword} onClose={() => setIsResettingPassword(false)} maxWidth="md" fullWidth>
+              <div className='col-xs-12 no-side-padding' style={{marginBottom: '25px'}}>
+                <ForgotPasswordForm match={{params: {user: user.username, token: 'unknown-token'}}} forceReset user={user} onSubmit={resetPassword} />
               </div>
-          </Dialog>
-      }
-        </fieldset>
+            </Dialog>
+        }
+        {
+          isHardDelete &&
+            <ConceptContainerDelete
+              open={isHardDelete}
+              resource={{...user, short_code: user.username}}
+              onClose={() => setIsHardDelete(false)}
+              associatedResources={['organizations', 'sources', 'collections']}
+              associationRelation='owned'
+              onDelete={onHardDelete}
+              summaryContent={
+                <React.Fragment>
+                  <p>This user own:</p>
+                  <ul>
+                    <li>Organizations: {user.owned_orgs}</li>
+                    <li>Sources: {user.sources}</li>
+                    <li>Collections: {user.collections}</li>
+                  </ul>
+                </React.Fragment>
+              }
+            />
+        }
+      </fieldset>
     </div>
   )
 }
