@@ -105,7 +105,6 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
             label='MapTypes'
             sources={conceptSources}
             size='small'
-            placeholder='e.g. Q-AND-A,CONCEPT-SET'
             onChange={val => _onChange('mapTypes', val)}
             value={params.mapTypes}
             multiple
@@ -154,7 +153,6 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
               label='EquivalencyMapType'
               sources={[toSource]}
               size='small'
-              placeholder='e.g. SAME-AS,CONCEPT-SET'
               disabled={!params.omitIfExistsIn}
               onChange={val => _onChange('equivalencyMapType', val)}
               value={params.equivalencyMapType}
