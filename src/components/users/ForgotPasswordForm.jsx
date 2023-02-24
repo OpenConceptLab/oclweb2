@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withTranslation } from 'react-i18next';
 import { Button, Paper, CircularProgress } from '@mui/material';
 import {set, get, map, values} from 'lodash';
 import APIService from '../../services/APIService';
@@ -64,7 +65,7 @@ class ForgotPasswordForm extends React.Component {
 
     const isConfirmPasswordSameAsPassword = confirm_password === new_password;
     if(!isConfirmPasswordSameAsPassword) {
-      this.setState({serverError: ['New Password and Confirm Password must match.']})
+      this.setState({serverError: [this.props.t('user.auth.forgot_password_mismatch_error')]})
       return
     }
     const form = document.getElementsByTagName('form')[0];
@@ -90,22 +91,24 @@ class ForgotPasswordForm extends React.Component {
   }
 
   getNotFoundDOM() {
+    const { t } = this.props
     return (
       <React.Fragment>
-        <h1 style={{textAlign: 'center'}}>Not Found</h1>
+        <h1 style={{textAlign: 'center'}}>{t('common.not_found')}</h1>
         <p>
-          The password reset link was invalid, possibly because it has already been used. Please request a <Link to="/accounts/password/reset">new password reset</Link>.
+          {t('user.auth.password_reset_link_invalid')} {t('common.please')} <Link to="/accounts/password/reset">{t('user.auth.reset_again')}</Link>.
         </p>
       </React.Fragment>
     )
   }
 
   getInvalidLinkDOM() {
+    const { t } = this.props
     return (
       <React.Fragment>
-        <h1 style={{textAlign: 'center'}}>Bad Token</h1>
+        <h1 style={{textAlign: 'center'}}>{t('common.bad_token')}</h1>
         <p>
-          The password reset link was invalid, possibly because it has already been used. Please request a <Link to="/accounts/password/reset">new password reset</Link>.
+          {t('user.auth.password_reset_link_invalid')} {t('common.please')} <Link to="/accounts/password/reset">{t('user.auth.reset_again')}</Link>.
         </p>
 
       </React.Fragment>
@@ -126,6 +129,7 @@ class ForgotPasswordForm extends React.Component {
 
   render() {
     const { serverError, success, notFound, validToken, isLoading, new_password, captcha, validPassword } = this.state;
+    const { t } = this.props
     return (
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
@@ -138,7 +142,7 @@ class ForgotPasswordForm extends React.Component {
                 (success || notFound || !validToken) ?
                 this.getDOM() :
                 <React.Fragment>
-                  <h1>Change Password</h1>
+                  <h1>{t('user.auth.change_password')}</h1>
                   {
                     serverError &&
                     <div className='col-md-12 alert-danger'>
@@ -159,7 +163,7 @@ class ForgotPasswordForm extends React.Component {
                       </div>
                       <div style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
                         <Button disabled={!captcha || !validPassword} onClick={this.onSubmit} type='submit' color='primary' variant='contained'>
-                          Change Password
+                          {t('user.auth.change_password')}
                         </Button>
                       </div>
                     </form>
@@ -175,4 +179,4 @@ class ForgotPasswordForm extends React.Component {
   }
 }
 
-export default ForgotPasswordForm;
+export default withTranslation('translations')(ForgotPasswordForm);

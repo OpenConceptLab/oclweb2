@@ -1,6 +1,7 @@
 import 'core-js/features/url-search-params';
 import React from 'react';
 import { withRouter } from "react-router";
+import { withTranslation } from 'react-i18next';
 import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
@@ -632,7 +633,7 @@ class Search extends React.Component {
   }
 
   getFilterControls() {
-    const { nested, extraControls, fhir, extraControlFilters, asReference } = this.props;
+    const { nested, extraControls, fhir, extraControlFilters, asReference, t } = this.props;
     const {
       appliedFacets, resource,
       viewFilters, userFilters
@@ -649,7 +650,7 @@ class Search extends React.Component {
                 count={size(appliedFacets)}
                 onClick={this.toggleFacetsDrawer}
                 disabled={isDisabledFilters}
-                label='Filters'
+                label={t('search.filters')}
                 size={nested ? 'small' : 'medium'}
                 isOpen={this.state.openFacetsDrawer}
               />
@@ -792,7 +793,7 @@ class Search extends React.Component {
       nested, pins, onPinCreate, onPinDelete, showPin, essentialColumns, onReferencesDelete,
       isVersionedObject, parentResource, newResourceComponent, noFilters, onSelectChange,
       onCreateSimilarClick, onCreateMappingClick, viewFields, noControls, fhir, hapi, onSelect,
-      asReference, onHierarchyToggle, hierarchy
+      asReference, onHierarchyToggle, hierarchy, t
     } = this.props;
     const {
       resource, results, isLoading, sortParams, openFacetsDrawer, isTable, isInfinite, appliedFacets,
@@ -856,11 +857,11 @@ class Search extends React.Component {
                         <span className='filter-chip'>
                           <Chip
                             icon={<HierarchyIcon fontSize='small' />}
-                                 size='small'
-                      onClick={this.onHierarchyViewChange}
-                                 label='Hierarchy'
-                                 color={hierarchy ? 'primary' : 'secondary'}
-                                 variant={hierarchy ? 'contained' : 'outlined'}
+                            size='small'
+                            onClick={this.onHierarchyViewChange}
+                            label={t('common.hierarchy')}
+                            color={hierarchy ? 'primary' : 'secondary'}
+                            variant={hierarchy ? 'contained' : 'outlined'}
                           />
                         </span>
                       }
@@ -869,12 +870,12 @@ class Search extends React.Component {
                         <span className='filter-chip'>
                           <Tooltip title='Copy Link to this results'>
                             <Chip
-                        onClick={this.onShareClick}
-                                icon={<ShareIcon fontSize='small' />}
-                                label='Share'
-                                color='secondary'
-                                variant='outlined'
-                                size={nested ? 'small' : 'medium'}
+                              onClick={this.onShareClick}
+                              icon={<ShareIcon fontSize='small' />}
+                              label={t('common.share')}
+                              color='secondary'
+                              variant='outlined'
+                              size={nested ? 'small' : 'medium'}
                             />
                           </Tooltip>
                         </span>
@@ -889,7 +890,7 @@ class Search extends React.Component {
               <div className='col-sm-12 no-side-padding'>
                 <div style={{width: '100%', display: 'inline-flex', marginTop: '4px', fontSize: '12px', fontWeight: 'bold'}}>
                   <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{backgroundColor: GREEN, color: WHITE, padding: '4px', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px', border: `1px solid ${GREEN}`, textAlign: 'center', cursor: 'pointer'}}>
-                    Copy Expression
+                    {t('search.copy_expression')}
                   </span>
                   <span onClick={() => copyURL(toRelativeURL(this.searchURL))} style={{color: GREEN, padding: '4px', borderTopRightRadius: '16px', borderBottomRightRadius: '16px', border: `1px solid ${GREEN}`, maxWidth: 'calc(100% - 105px)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', cursor: 'pointer'}}>
                     {toRelativeURL(this.searchURL)}
@@ -1032,4 +1033,4 @@ class Search extends React.Component {
   }
 }
 
-export default withRouter(Search);
+export default withRouter(withTranslation('translations')(Search));

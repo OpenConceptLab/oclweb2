@@ -1,4 +1,5 @@
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import {
   Popper, MenuItem, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
   Chip,
@@ -108,16 +109,17 @@ class SortButton extends React.Component {
 
   getSelectedOptionName() {
     const { selectedOption } = this.state;
-    return selectedOption === 'score' ? 'Best Match' : startCase(selectedOption)
+    return selectedOption === 'score' ? t('search.best_match') : startCase(selectedOption)
   }
 
   formatOptionName(option) {
+    const { t } = this.props
     if(option === 'score')
-      return 'Best Match'
+      return t('search.best_match')
     if(option === 'id')
-      return 'ID'
+      return t('search.id')
     if(option === 'numeric_id')
-      return 'ID (numerically)'
+      return t('search.numeric_id')
 
     return startCase(option)
   }
@@ -182,4 +184,4 @@ class SortButton extends React.Component {
   }
 }
 
-export default SortButton;
+export default withTranslation('translations')(SortButton);

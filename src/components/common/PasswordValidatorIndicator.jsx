@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'
 import {
   CheckCircle as CorrectIcon, Cancel as WrongIcon
 } from '@mui/icons-material';
@@ -8,6 +9,7 @@ import { merge } from 'lodash';
 const correctIcon = <CorrectIcon color='primary' fontSize='inherit'/>;
 const incorrectIcon = <WrongIcon fontSize='inherit' style={{color: ERROR_RED}}/>;
 const Indicator = (predicate, label) => {
+  const { t } = useTranslation()
   const commonSpanStyles = {marginLeft: '5px'}
   const getStyles = predicate => predicate ? {color: BLUE} : {color: ERROR_RED};
 
@@ -32,16 +34,16 @@ const PasswordValidatorIndicator = ({password, strength, minStrength, minStrengt
     <React.Fragment>
       <div className='col-md-12 no-side-padding' style={{fontSize: '12px'}}>
         {
-          Indicator(hasMinLength, 'Must be 8 or more characters.')
+          Indicator(hasMinLength, t('user.auth.password_length_error'))
         }
         {
-          Indicator(hasNumber, 'Must have at least one number (0-9).')
+          Indicator(hasNumber, t('user.auth.password_number_error'))
         }
         {
-          Indicator(hasAlphabet, 'Must have at least one letter (a-z, A-Z).')
+          Indicator(hasAlphabet, t('user.auth.password_alpha_error'))
         }
         {
-          minStrength && Indicator(isMinStrength, `Must be of ${minStrengthLabel} strength.`)
+          minStrength && Indicator(isMinStrength, t('user.auth.password_strength_error', {strength: minStrengthLabel}))
         }
       </div>
     </React.Fragment>

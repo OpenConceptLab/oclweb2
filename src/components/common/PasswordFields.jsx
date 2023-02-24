@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'
 import PasswordStrengthBar from 'react-password-strength-bar';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import {
@@ -12,7 +13,7 @@ import PasswordValidatorIndicator from './PasswordValidatorIndicator';
 const PasswordFields = ({
   onChange, password, passwordErrors, passwordFieldId, confirmPasswordFieldId, onBlur
 }) => {
-
+  const { t } = useTranslation()
   const [tooltip, setTooltip] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [strength, setStrength] = React.useState(null);
@@ -31,13 +32,13 @@ const PasswordFields = ({
           arrow
           placement='right'
           open={tooltip}
-          title={<PasswordValidatorIndicator password={password} minStrengthLabel='Good' minStrength={minStrength} strength={strength} />}
+          title={<PasswordValidatorIndicator password={password} minStrengthLabel={t('common.good')} minStrength={minStrength} strength={strength} />}
         >
           <TextField
             required
             error={Boolean(passwordErrors || (password && !isValid))}
             helperText={get(passwordErrors, '0')}
-            label="Password"
+            label={t('user.auth.password')}
             variant="outlined"
             id={passwordFieldId}
             onChange={onChange}
@@ -49,7 +50,6 @@ const PasswordFields = ({
               endAdornment:(
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label="Toggle password visibility"
                     onClick={handleClickShowPassword}
                     size="large">
                     {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
@@ -63,7 +63,7 @@ const PasswordFields = ({
       <div style={{marginTop: '10px'}}>
         <TextField
           required
-          label="Confirm Password"
+          label={t('user.auth.confirm_password')}
           variant="outlined"
           id={confirmPasswordFieldId}
           onChange={onChange}

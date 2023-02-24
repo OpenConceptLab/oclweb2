@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'
 import { Tabs, Tab, AppBar, CircularProgress, Button } from '@mui/material';
 import {
   List as ListIcon,
@@ -20,6 +21,7 @@ const ICON_STYLES = {marginRight: '10px', marginBottom: '0px'}
 const TAB_STYLES = {minHeight: HEIGHT, paddingTop: '6px', height: HEIGHT}
 
 const UserHomeTabs = props => {
+  const { t } = useTranslation()
   const { tab, user } = props;
   const [orgForm, setOrgForm] = React.useState(false);
   const [sourceForm, setSourceForm] = React.useState(false);
@@ -50,7 +52,7 @@ const UserHomeTabs = props => {
         variant="outlined"
         startIcon={<AddIcon fontSize="inherit"/>}
         onClick={() => onNewResourceClick(resource)}>
-        {startCase(resource)}
+        {t(`resources.${resource}`)}
       </Button>
     )
   }
@@ -70,21 +72,21 @@ const UserHomeTabs = props => {
         >
           <Tab
             className='material-tab'
-            label="User Sources"
+            label={t('user.tabs.sources')}
             icon={<ListIcon fontSize='small' style={getIconStyles(0, GREEN)} />}
             style={getTabStyles(0, GREEN)}
             component="a" href={`#${user.url}sources/`}
           />
           <Tab
             className='material-tab'
-            label="User Collections"
+            label={t('user.tabs.collections')}
             icon={<LoyaltyIcon fontSize='small' style={getIconStyles(1, GREEN)} />}
             style={getTabStyles(1, GREEN)}
             component="a" href={`#${user.url}collections/`}
           />
           <Tab
             className='material-tab'
-            label="Organization Membership"
+            label={t('user.tabs.orgs')}
             icon={<HomeIcon fontSize='small' style={getIconStyles(2, ORANGE)} />}
             style={getTabStyles(2, ORANGE)}
             component="a" href={`#${user.url}orgs/`}
@@ -104,7 +106,7 @@ const UserHomeTabs = props => {
               baseURL={user.sources_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="sources"
-              searchInputPlaceholder={`Search ${user.username} sources...`}
+              searchInputPlaceholder={t('search.input_placeholder', {owner: user.username, resource: t('resources.sources').toLowerCase()})}
               newResourceComponent={hasAccess && getNewResourceButton('source')}
             /> :
             <CircularProgress color="primary" />
@@ -122,7 +124,7 @@ const UserHomeTabs = props => {
               baseURL={user.collections_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="collections"
-              searchInputPlaceholder={`Search ${user.username} collections...`}
+              searchInputPlaceholder={t('search.input_placeholder', {owner: user.username, resource: t('resources.collections').toLowerCase()})}
               newResourceComponent={hasAccess && getNewResourceButton('collection')}
             /> :
             <CircularProgress color="primary" />
@@ -139,7 +141,7 @@ const UserHomeTabs = props => {
               baseURL={user.organizations_url}
               fixedFilters={{isTable: true, limit: 25}}
               resource="organizations"
-              searchInputPlaceholder={`Search ${user.username} organizations...`}
+              searchInputPlaceholder={t('search.input_placeholder', {owner: user.username, resource: t('resources.orgs').toLowerCase()})}
               newResourceComponent={hasAccess && getNewResourceButton('organization')}
             /> :
             <CircularProgress color="primary" />

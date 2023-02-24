@@ -43,7 +43,7 @@ export const ALL_COLUMNS = {
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
     {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
-    {id: 'sourceType', label: 'Type', value: 'source_type', sortOn: 'source_type'},
+    {id: 'source_type', label: 'Type', value: 'source_type', sortOn: 'source_type'},
     {id: 'uuid', label: 'UUID', value: 'uuid', sortable: false},
     {id: 'full_name', label: 'Full Name', value: 'full_name', sortOn: 'full_name', sortBy: 'asc'},
     {id: 'description', label: 'Description', value: 'description', sortable: false},

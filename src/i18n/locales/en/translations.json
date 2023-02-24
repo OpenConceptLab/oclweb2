@@ -1,0 +1,178 @@
+{
+  "common": {
+    "admin": "Admin",
+    "company": "Company",
+    "location": "Location",
+    "website": "Website",
+    "email": "Email",
+    "upload": "Upload",
+    "close": "Close",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "update": "Update",
+    "updated": "Updated",
+    "created": "Created",
+    "create": "Create",
+    "delete": "Delete",
+    "save": "Save",
+    "add": "Add",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "not_found": "Not Found",
+    "bad_token": "Bad Token",
+    "please": "Please",
+    "good": "Good",
+    "associated": "associated",
+    "hierarchy": "Hierarchy",
+    "share": "Share",
+    "edit": "Edit",
+    "new": "New",
+    "reloading": "Reloading",
+    "custom_attributes": "Custom Attributes",
+    "attribute_name": "Attribute Name",
+    "attribute_name_placeholder": "Custom-name",
+    "value": "Value",
+    "fill_mandatory_fields": "Please fill mandatory fields.",
+    "logo": {
+      "tooltip": {
+        "add": "Upload Logo",
+        "edit": "Edit Logo"
+      },
+      "dialog": {
+        "title": {
+          "add": "Upload Logo",
+          "edit": "Edit Logo"
+        }
+      }
+    }
+  },
+  "resources": {
+    "org": "Organization",
+    "orgs": "Organizations",
+    "organization": "Organization",
+    "organizations": "Organizations",
+    "source": "Source",
+    "sources": "Sources",
+    "collection": "Collection",
+    "collections": "Collections",
+    "concept": "Concept",
+    "concepts": "Concepts",
+    "mapping": "Mapping",
+    "mappings": "Mappings",
+    "user": "User",
+    "users": "Users"
+  },
+  "search": {
+    "label": "Search",
+    "input_placeholder": "Search {{owner}} {{resource}}...",
+    "exact_match": "Exact Match",
+    "filters": "Filters",
+    "numerical_sort": "Numerical ID",
+    "best_match": "Best Match",
+    "id": "ID",
+    "numeric_id": "ID (numerically)",
+    "copy_expression": "Copy Expression",
+    "tooltip": {
+      "numerical_sort": "Sort By ID Numerically"
+    }
+  },
+  "user": {
+    "this_user_own": "This user own",
+    "tabs": {
+      "sources": "User Sources",
+      "collections": "User Collections",
+      "orgs": "Organization Membership"
+    },
+    "auth": {
+      "sign_in": "Sign In",
+      "sign_up": "Sign Up",
+      "forgot_password": "Forgot Password",
+      "username": "Username",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "password_reset_link_invalid": "The password reset link was invalid, possibly because it has already been used.",
+      "reset_again": "reset again",
+      "change_password": "Change Password",
+      "forgot_password_mismatch_error": "New Password and Confirm Password must match.",
+      "password_length_error": "Must be 8 or more characters.",
+      "password_number_error": "Must have at least one number (0-9).",
+      "password_alpha_error": "Must have at least one letter (a-z, A-Z).",
+      "password_strength_error": "Must be of {{strength}} strength."
+    },
+    "home": {
+      "profile": {
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "edit": "Edit Profile",
+        "date_joined": "Date Joined",
+        "api_token": "API Token",
+        "create_success_message": "Successfully created user",
+        "update_success_message": "Successfully updated user",
+        "tooltip": {
+          "superuser": "OCL Super Admin",
+          "staff": "OCL Admin",
+          "deactivated": "Deactivated",
+          "unverified": "Unverified",
+          "verified": "Verified",
+          "verification_pending": "Verification Pending",
+          "copy_token": "Click to copy API token"
+        }
+      },
+      "management": {
+        "title": "Admin Only",
+        "header": "User Management",
+        "remove_admin_privileges": "Remove Admin Privileges",
+        "make_admin": "Make Admin",
+        "username_confirmation_message": "Type the username of this user to confirm this action.",
+        "username_incorrect_message": "Incorrect username.",
+        "generic_error": "Something bad happened! Reloading to refresh User state.",
+        "mark_verified": {
+          "label": "Verified",
+          "title": "Mark Verified {{userLabel}}",
+          "body": "This action will mark the user as Verified and will enable the login. Type the username of this user to confirm this action.",
+          "success": "Successfully marked this user verified. Reloading..."
+        },
+        "activate": {
+          "label": "Activated",
+          "message": "This action will mark the user as active and verified, which will enable the login",
+          "success": "Successfully activated this user. Reloading..."
+        },
+        "deactivate": {
+          "message": "This action will mark the is_active=False which will deactivate the user login",
+          "success": "Successfully deactivated this user. Reloading..."
+        },
+        "mark_admin": {
+          "message": "This action will make the user OCL Admin (not superuser).",
+          "success": "Successfully toggle user state. Reloading..."
+        },
+        "unmark_admin": {
+          "message": "This action will remove all admin privileges from this user."
+        },
+        "hard_delete": {
+          "label": "Hard Delete",
+          "success": "Successfully deleted this user. Reloading..."
+        },
+        "reset_password": {
+          "label": "Reset Password",
+          "success": "Successfully resetted user password. Reloading..."
+        },
+        "tooltip": {
+          "mark_verified": "Mark this user as verified. This will allow them to login with there password.",
+          "activate": "{{activate_or_deactivate}} this user.",
+          "reset_password": "Reset this user's password.",
+          "hard_delete": "Delete this user"
+        }
+      }
+    }
+  },
+  "concept_container": {
+    "delete": {
+      "generic_error": "Unexpected bad things will happen if you don’t read this!",
+      "message": "This action <1>cannot</1> be undone!. This will delete the entire {{resourceType}} and all of its {{relationship}} {{associationsLabel}} (if any).",
+      "confirmation_title": "Are you sure you want to permanently delete this {{resourceType}}",
+      "confirmation_message": "Please type <1>{{resourceId}}</1> to confirm.",
+      "confirmation_button_label": "I understand the consequences, delete this {{resourceType}}"
+    }
+  }
+}

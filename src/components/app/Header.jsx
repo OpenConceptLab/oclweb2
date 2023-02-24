@@ -36,6 +36,7 @@ import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 /* import Feedback from '../common/Feedback'; */
 import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
+import Languages from './Languages';
 
 const drawerWidth = 250;
 
@@ -217,30 +218,33 @@ const Header = props => {
               canSwitchServer() && isServerSwitched() &&
                 <ServerConfigsChip />
             }
-            {
-              authenticated ?
                 <span style={{marginLeft: '20px'}}>
-                  <RecentHistory />
-                  <Favorites />
+                  <Languages />
                   {
-                    !hideAppsMenu &&
-                      <AppsMenu
-                        hideOpenMRSApp={hideOpenMRSApp}
-                        hideTermBrowserApp={hideTermBrowserApp}
-                        hideImportApp={hideImportApp}
-                      />
+                    authenticated ?
+                      <React.Fragment>
+                        <RecentHistory />
+                        <Favorites />
+                        {
+                          !hideAppsMenu &&
+                            <AppsMenu
+                              hideOpenMRSApp={hideOpenMRSApp}
+                              hideTermBrowserApp={hideTermBrowserApp}
+                              hideImportApp={hideImportApp}
+                            />
+                        }
+                        <UserOptions />
+                      </React.Fragment> :
+                    (
+                      !isFHIRServer &&
+                        <React.Fragment>
+                          <Button className='primary-btn' href={getLoginURL()} color='primary' variant='contained' style={{marginLeft: '10px'}}>
+                            Sign In
+                          </Button>
+                        </React.Fragment>
+                    )
                   }
-                  <UserOptions />
-                </span> :
-              (
-                !isFHIRServer &&
-                  <span style={{marginLeft: '20px'}}>
-                    <Button className='primary-btn' href={getLoginURL()} color='primary' variant='contained'>
-                      Sign In
-                    </Button>
-                  </span>
-              )
-            }
+                </span>
           </div>
         </Toolbar>
       </AppBar>
