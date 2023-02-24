@@ -8,7 +8,7 @@ import { toParentURI } from '../../common/utils';
 import CascadeLevelDropdown from './CascadeLevelDropdown';
 import SourceMapTypeDropdown from './SourceMapTypeDropdown';
 
-const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClasses, concepts, toSource}) => {
+const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClasses, concepts, toSource, includeHeader}) => {
   const [params, setParams] = React.useState(defaultParams || {...DEFAULT_CASCADE_PARAMS})
 
   const _onChange = (param, value) => {
@@ -90,7 +90,11 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
             />
           </div>
       }
-      <div className={gridClass} style={{marginBottom: '15px'}}>
+      <div className={gridClass}>
+        {
+          includeHeader &&
+            <h4 style={{marginTop: '0px'}}>Origination Source(s)</h4>
+        }
         <div className='col-xs-12 no-side-padding' style={{marginBottom: '15px'}}>
           <CascadeLevelDropdown
             onChange={val => _onChange('cascadeLevels', val)}
@@ -147,6 +151,10 @@ const CascadeParametersForm = ({onChange, defaultParams, hiddenFields, fieldClas
         }
       </div>
       <div className={gridClass} style={{marginBottom: '15px'}}>
+        {
+          includeHeader &&
+            <h4 style={{marginTop: '0px'}}>Destination Source</h4>
+        }
         {
           toSource ?
             <SourceMapTypeDropdown

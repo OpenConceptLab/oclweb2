@@ -47,6 +47,7 @@ const CloneToSourceDialogContent = ({onClose, onAdd, advancedSettings, toggleSet
                     defaultParams={defaultParams}
                     onChange={onParamsChange}
                     toSource={toSource}
+                    includeHeader
                   />
                 </div>
             }
