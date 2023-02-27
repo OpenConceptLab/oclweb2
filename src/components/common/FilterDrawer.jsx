@@ -252,7 +252,7 @@ const FilterDrawer = props => {
                 <Typography style={{padding: '0 10px 0', fontWeight: 'bold', fontSize: '14px', marginBottom: '2px'}}>
                   Updated Since
                 </Typography>
-                <span style={{marginLeft: '10px'}}>
+                <span style={{display: 'block', padding: '0px 10px', margin: '5px 0px 0px'}}>
                   <ChipDatePicker onChange={props.onUpdateSinceChange} label={props.updatedSinceText} date={props.updatedSince} size='small' />
                 </span>
               </div>
