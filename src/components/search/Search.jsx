@@ -751,7 +751,7 @@ class Search extends React.Component {
     const layout = {zIndex: 1201, position: 'fixed'}
     if(this.state.openFacetsDrawer && !this.props.nested) {
       layout.width = '88.5%'
-      layout.marginLeft = '12%'
+      layout.marginLeft = '11%'
       layout.padding = '0px 10px 0px 5px'
     } else {
       layout.paddingRight = '0'
