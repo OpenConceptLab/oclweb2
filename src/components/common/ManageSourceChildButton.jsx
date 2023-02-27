@@ -15,6 +15,7 @@ import { currentUserHasAccess, copyURL, toFullAPIURL, isAdminUser } from '../../
 import { ACTION_RED } from '../../common/constants';
 import DownloadButton from './DownloadButton';
 import { OperationsContext } from '../app/LayoutContext';
+import BetaLabel from './BetaLabel';
 
 const ManageSourceChildButton = ({
   instance, currentURL, isVersionedObject, onEditClick, onRetire, onUnretire, mappings, resource, conceptCompareURL
@@ -117,7 +118,7 @@ const ManageSourceChildButton = ({
                   <OperationsIcon fontSize="inherit" />
                 </ListItemIcon>
                 <ListItemText>
-                  Operations
+                  <BetaLabel label="Operations" />
                 </ListItemText>
               </MenuItem>
           }
