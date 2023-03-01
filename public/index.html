@@ -32,10 +32,10 @@
        window.location = '/#/search/' + window.location.search;
      }
      if(window.location.hash.startsWith('#/state=')) {
-       window.location = '/#/oidc/login/' + window.location.hash.replace('#/', '?');
+       window.location = '/#/oidc/login/' + window.location.hash.replace('#/', '?') + '&next=' + window.location.pathname;
      }
      if(window.location.hash.startsWith('#state=')) {
-       window.location = '/#/oidc/login/' + window.location.hash.replace('#', '?');
+       window.location = '/#/oidc/login/' + window.location.hash.replace('#', '?') + '&next=' + window.location.pathname;
      }
     </script>
     <title></title>

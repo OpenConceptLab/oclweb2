@@ -10,7 +10,7 @@ import {
 import { values, map, get } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  refreshCurrentUserCache, getAppliedServerConfig
+  refreshCurrentUserCache, getAppliedServerConfig, isSSOEnabled, getLoginURL
 } from '../../common/utils';
 import VerifyEmailMessage from './VerifyEmailMessage';
 
@@ -24,6 +24,13 @@ class Login extends React.Component {
       password: '',
       serverError: null,
       showPassword: false,
+    }
+  }
+
+  componentDidMount() {
+    if(isSSOEnabled()) {
+      const queryString = new URLSearchParams(window.location.hash.split('?')[1])
+      window.location = getLoginURL(queryString.get('next').replace('#', ''))
     }
   }
 
@@ -84,7 +91,8 @@ class Login extends React.Component {
 
   render() {
     const { serverError, verificationMsg, email, showPassword } = this.state;
-    return (
+    return (isSSOEnabled() ?
+      <p>Redirecting...</p> :
       <div className='col-md-12' style={{marginTop: '25px'}}>
         <div className='col-md-3' />
         <div className='col-md-6'>

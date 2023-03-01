@@ -43,7 +43,7 @@ const UserOptions = () => {
         if(!alertifyForLogout) {
           alertifyForLogout = true
           clearInterval(intervalId)
-          alertifyjs.error('Your token has been expired. You are logged out, please re-login.', 2, () => logoutUser(false, false))
+          alertifyjs.error('Your token has been expired. You are logged out, please re-login.', 2, () => logoutUser(false, false, true))
         }
       }
     })

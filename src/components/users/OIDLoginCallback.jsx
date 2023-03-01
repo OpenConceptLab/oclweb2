@@ -9,6 +9,12 @@ import APIService from '../../services/APIService'
 
 
 class OIDLoginCallback extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      next: null
+    }
+  }
   componentDidMount() {
     this.exchangeCodeForToken()
   }
@@ -17,21 +23,24 @@ class OIDLoginCallback extends React.Component {
     const queryParams = new URLSearchParams(this.props.location.search)
     const code = queryParams.get('code')
     const idToken = queryParams.get('id_token')
+    const next = queryParams.get('next')
     if(code) {
       /*eslint no-undef: 0*/
-      const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
-      const clientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
-      const clientId = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+      this.setState({next: next && next !== '/' ? next : null }, () => {
+        const redirectURL = this.state.next ? window.location.origin + this.state.next : (window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL)
+        const clientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
+        const clientId = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
 
-      APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, client_secret: clientSecret}).then(res => {
-        if(res.data?.access_token) {
-          localStorage.removeItem('server_configs')
-          localStorage.setItem('token', res.data.access_token)
-          localStorage.setItem('id_token', idToken)
-          this.cacheUserData()
-        } else {
-          alertifyjs.error(res.data)
-        }
+        APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, client_secret: clientSecret}).then(res => {
+          if(res.data?.access_token) {
+            localStorage.removeItem('server_configs')
+            localStorage.setItem('token', res.data.access_token)
+            localStorage.setItem('id_token', idToken)
+            this.cacheUserData()
+          } else {
+            alertifyjs.error(res.data)
+          }
+        })
       })
     }
   }
@@ -39,13 +48,17 @@ class OIDLoginCallback extends React.Component {
   cacheUserData() {
     refreshCurrentUserCache(response => {
       alertifyjs.success(`Successfully signed in`)
-      let returnToURL = response.data.url
-      if(get(this.props, 'location.search')) {
-        const queryParams = new URLSearchParams(this.props.location.search)
-        if(queryParams && queryParams.get('returnTo'))
-          returnToURL = queryParams.get('returnTo')
+      if(this.state.next)
+        window.location.hash = '#' + this.state.next
+      else {
+        let returnToURL = response.data.url
+        if(get(this.props, 'location.search')) {
+          const queryParams = new URLSearchParams(this.props.location.search)
+          if(queryParams && queryParams.get('returnTo'))
+            returnToURL = queryParams.get('returnTo')
+        }
+        window.location.hash  = '#' + returnToURL
       }
-      window.location.hash  = '#' + returnToURL
     })
   }
 
