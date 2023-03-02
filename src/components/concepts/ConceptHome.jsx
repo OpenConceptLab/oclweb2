@@ -361,7 +361,7 @@ class ConceptHome extends React.Component {
   }
 
   isVersionedObject() {
-    return !this.props.match.params.conceptVersion;
+    return this.props.global || !this.props.match.params.conceptVersion;
   }
 
   onConceptClick = concept => {
