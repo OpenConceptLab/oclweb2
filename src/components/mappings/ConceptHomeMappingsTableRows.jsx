@@ -1,10 +1,12 @@
 import React from 'react';
 import {
-  TableRow, TableCell, Chip, Tooltip, Table, TableBody
+  TableRow, TableCell, Chip, Tooltip, Table, TableBody, Badge
 } from '@mui/material';
 import {
   DragIndicator as DragIcon,
   ImportExport as SortIcon,
+  ArrowUpward as UpIcon,
+  ArrowDownward as DownIcon,
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { map, get, forEach, orderBy, filter, find, isNumber } from 'lodash';
@@ -52,6 +54,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     return orderBy(map(_mappings, (mapping, index) => {
       mapping._sort_weight = mapping._sort_weight || mapping.sort_weight || index
       mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight || index
+      mapping._original_position = index
       return mapping
     }), ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
   }
@@ -141,28 +144,28 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       <TableRow id={mapType}>
         <TableCell rowSpan={form ? 2 : 1} align='left' style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px', width: '10%'}}>
           <span className='flex-vertical-center'>
-          <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
-            <Chip
-              size='small'
-              variant='outlined'
-              color='default'
-              label={
-                <span>
-                  <span>{mapType}</span>
-                  {isIndirect && <sup>-1</sup>}
-                  {isSelf && <sup>∞</sup>}
-                </span>
-              }
-              style={{border: 'none'}}
-            />
-          </Tooltip>
-          {
-            hasAnyCustomSortMapping &&
-              <Tooltip title='Custom sorting has been applied'>
+            <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
+              <Chip
+                size='small'
+                variant='outlined'
+                color='default'
+                label={
+                  <span>
+                    <span>{mapType}</span>
+                    {isIndirect && <sup>-1</sup>}
+                    {isSelf && <sup>∞</sup>}
+                  </span>
+                }
+                style={{border: 'none'}}
+              />
+            </Tooltip>
+            {
+              hasAnyCustomSortMapping &&
+                <Tooltip title='Custom sorting has been applied'>
                   <SortIcon fontSize="small" style={{color: 'rgba(0, 0, 0, 0.54)'}} />
-              </Tooltip>
-          }
-            </span>
+                </Tooltip>
+            }
+          </span>
         </TableCell>
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           <Droppable droppableId="droppable">
@@ -170,6 +173,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
               <TableCell
                 {...provided.droppableProps}
                 ref={provided.innerRef}
+                style={{paddingLeft: '0px'}}
                 colSpan={4}>
                 {
                   map(oMappings, (mapping, index) => {
@@ -185,6 +189,9 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                     const canSort = Boolean(onSortEnd) && oMappings.length > 1
                     const cursor = (targetURL || canSort) ? 'pointer' : 'not-allowed'
                     const isLast = index == oMappings.length - 1
+                    const isMovedUp = Boolean(isUpdated && index < mapping._original_position)
+                    const isMovedDown = Boolean(isUpdated && index > mapping._original_position)
+                    const badgeIcon = isMovedUp ? <UpIcon style={{fontSize: '10px'}} color='success' /> : (isMovedDown ? <DownIcon style={{fontSize: '10px'}} color='error' /> : 0)
                     return (
                       <Draggable key={mapping.url} draggableId={mapping.url} index={index} isDragDisabled={!canSort}>
                         {(provided) => (
@@ -197,12 +204,14 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                             <TableBody>
                               <TableRow
                                 hover key={mapping.url} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
-                                <TableCell align='left' className='ellipsis-text' style={{width: '27%', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', backgroundColor: bgColor}}>
+                                <TableCell align='left' className='ellipsis-text' style={{width: '30%', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', backgroundColor: bgColor}}>
                                   <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                                     {
                                       canSort &&
                                         <span className='flex-vertical-center' style={{marginRight: '4px'}} {...provided.dragHandleProps}>
-                                          <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+                                          <Badge style={{background: 'transparent'}} badgeContent={badgeIcon} anchorOrigin={{horizontal: 'left', vertical: 'top'}}>
+                                            <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+                                          </Badge>
                                         </span>
                                     }
                                     <span className='flex-vertical-center' style={{marginRight: '4px'}}>
@@ -217,13 +226,13 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                     </span>
                                   </span>
                                 </TableCell>
-                                <TableCell align='left' style={{borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '30%', backgroundColor: bgColor}}>
+                                <TableCell align='left' style={{borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '35%', backgroundColor: bgColor}}>
                                   { getConceptName(mapping, conceptCodeName) }
                                 </TableCell>
                                 <TableCell align='left' style={{borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '20%', backgroundColor: bgColor}}>
                                   {get(mapping, sourceAttr)}
                                 </TableCell>
-                                <TableCell align='right' style={{paddingRight: '5px', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '5%', backgroundColor: bgColor}}>
+                                <TableCell align='right' style={{padding: '0px', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '5%', backgroundColor: bgColor}}>
                                   <MappingOptions
                                     mapping={mapping}
                                     concept={concept}
