@@ -94,7 +94,7 @@ class SourceHome extends React.Component {
 
   componentDidMount() {
     this.setPaths()
-    this.refreshDataByURL()
+    this.refreshDataByURL(true)
     this.interval = setInterval(this.setContainerWidth, 100)
   }
 
@@ -106,7 +106,7 @@ class SourceHome extends React.Component {
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.setPaths()
-      this.refreshDataByURL()
+      this.refreshDataByURL(false)
       this.onTabChange(null, this.getDefaultTabIndex())
     }
   }
@@ -154,6 +154,8 @@ class SourceHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
+    if(this.state.tab === value)
+      return
     this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
@@ -171,7 +173,7 @@ class SourceHome extends React.Component {
     })
   }
 
-  refreshDataByURL() {
+  refreshDataByURL(fetchSummary) {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
         .overrideURL(this.sourceVersionPath)
@@ -197,11 +199,10 @@ class SourceHome extends React.Component {
             }, () => {
               this.setTab()
               this.getVersions()
-
               const { setParentResource, setParentItem } = this.context
               setParentItem(this.state.source)
               setParentResource('source')
-              if(this.isSummaryTabSelected())
+              if(fetchSummary && this.isSummaryTabSelected())
                 this.fetchSelectedSourceVersionSummary()
             })
           }
