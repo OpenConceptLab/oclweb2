@@ -17,6 +17,10 @@ import { getSiteTitle, toParentURI, getSiblings } from '../../common/utils';
 import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
+const DEFAULT_ORDER_BY = ['sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name']
+const ORDER_BY = ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name']
+
+const order = (mappings, is_default) => orderBy(mappings, is_default ? DEFAULT_ORDER_BY : ORDER_BY)
 
 const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping, onSortEnd }) => {
   const [oMappings, setMappings] = React.useState([])
@@ -42,7 +46,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
 
   const getOrderedMappings = () => {
     if((find(mappings, _mapping => has(_mapping, '_sort_weight'))))
-      return orderBy(mappings, ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
+      return order(mappings)
     const parentURL = toParentURI(concept.url || concept.version_url)
     const sameParentMappings = []
     const differentParentMappings = []
@@ -53,13 +57,13 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
         differentParentMappings.push(mapping)
     })
     const allMappings = [...sameParentMappings, ...differentParentMappings]
-    let _mappings = orderBy(allMappings, ['sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
-    return orderBy(map(_mappings, (mapping, index) => {
+    let _mappings = order(allMappings, true)
+    return order(map(_mappings, (mapping, index) => {
       mapping._sort_weight = mapping._sort_weight || mapping.sort_weight || index
       mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight || index
       mapping._original_position = mapping._original_position || index
       return mapping
-    }), ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
+    }))
   }
 
   const onAddNewClick = mapType => {
@@ -98,7 +102,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       _mapping._sort_weight = index
     })
 
-    const _mappings = orderBy(newMappings, ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
+    const _mappings = order(newMappings)
     setMappings(_mappings)
     return _mappings
   }
