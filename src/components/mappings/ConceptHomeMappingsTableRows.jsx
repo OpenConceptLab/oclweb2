@@ -9,7 +9,7 @@ import {
   ArrowDownward as DownIcon,
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { map, get, forEach, orderBy, filter, find, isNumber } from 'lodash';
+import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
@@ -41,6 +41,8 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
   }
 
   const getOrderedMappings = () => {
+    if((find(mappings, _mapping => has(_mapping, '_sort_weight'))))
+      return orderBy(mappings, ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
     const parentURL = toParentURI(concept.url || concept.version_url)
     const sameParentMappings = []
     const differentParentMappings = []
@@ -50,11 +52,12 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       else
         differentParentMappings.push(mapping)
     })
-    let _mappings = orderBy([...sameParentMappings, ...differentParentMappings], ['sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
+    const allMappings = [...sameParentMappings, ...differentParentMappings]
+    let _mappings = orderBy(allMappings, ['sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
     return orderBy(map(_mappings, (mapping, index) => {
       mapping._sort_weight = mapping._sort_weight || mapping.sort_weight || index
       mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight || index
-      mapping._original_position = index
+      mapping._original_position = mapping._original_position || index
       return mapping
     }), ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
   }
@@ -91,21 +94,13 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     const beforeObjects = newMappings.slice(0, to);
     const afterObjects = newMappings.slice(to);
     newMappings = [...beforeObjects, mapping, ...afterObjects]
-
-    let prevMappingFromTargetPosition = newMappings[to-1]
-    let nextMappingFromTargetPosition = newMappings[to+1]
-    const prevMappingWeight = prevMappingFromTargetPosition?._sort_weight || 0
-    const nextMappingWeight = nextMappingFromTargetPosition?._sort_weight || prevMappingWeight + 1
-
-    mapping._sort_weight = getRandomDecimal(prevMappingWeight, nextMappingWeight)
-    if(prevMappingFromTargetPosition?._sort_weight >= mapping._sort_weight)
-      prevMappingFromTargetPosition._sort_weight = formatNumber(mapping._sort_weight - 0.0001)
-    if(nextMappingFromTargetPosition?._sort_weight <= mapping._sort_weight)
-      nextMappingFromTargetPosition._sort_weight = formatNumber(mapping._sort_weight + 0.0001)
+    newMappings = forEach(newMappings, (_mapping, index) => {
+      _mapping._sort_weight = index
+    })
 
     const _mappings = orderBy(newMappings, ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
-    onSortEnd(filter(_mappings, mapping => mapping._sort_weight !== mapping._initial_assigned_sort_weight))
     setMappings(_mappings)
+    return _mappings
   }
 
   const onDragEnd = result => {
@@ -116,8 +111,10 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       return;
     }
 
-    if(result.source.index !== result.destination.index)
-      reorderMappings(result.source.index, result.destination.index)
+    if(result.source.index !== result.destination.index) {
+      const newMappings = reorderMappings(result.source.index, result.destination.index)
+      onSortEnd(filter(newMappings, mapping => mapping._sort_weight !== mapping._initial_assigned_sort_weight), filter(newMappings, mapping => mapping._sort_weight === mapping._initial_assigned_sort_weight))
+    }
   }
 
 
@@ -135,7 +132,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     }
   }
 
-  React.useEffect(() => setMappings(getOrderedMappings()), [mappings])
+  React.useEffect(() => isEmpty(oMappings) && setMappings(getOrderedMappings()), [mappings])
 
   const hasAnyCustomSortMapping = oMappings.length > 1 && Boolean(find(oMappings, mapping => isNumber(mapping.sort_weight)))
 
