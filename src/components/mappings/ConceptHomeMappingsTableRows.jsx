@@ -9,7 +9,7 @@ import {
   ArrowDownward as DownIcon,
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty } from 'lodash';
+import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty, some } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
@@ -45,7 +45,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
   }
 
   const getOrderedMappings = () => {
-    if((find(mappings, _mapping => has(_mapping, '_sort_weight'))))
+    if(find(mappings, _mapping => has(_mapping, '_sort_weight')) && !some(mappings, _mapping => _mapping._sort_weight === undefined))
       return order(mappings)
     const parentURL = toParentURI(concept.url || concept.version_url)
     const sameParentMappings = []
@@ -58,10 +58,17 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     })
     const allMappings = [...sameParentMappings, ...differentParentMappings]
     let _mappings = order(allMappings, true)
+    let prevMapping;
     return order(map(_mappings, (mapping, index) => {
-      mapping._sort_weight = mapping._sort_weight || mapping.sort_weight || index
-      mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight || index
+      mapping._sort_weight = mapping._sort_weight || mapping.sort_weight
+      mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight
+      if(!isNumber(mapping._sort_weight)) {
+        const newWeight = isNumber(prevMapping?._sort_weight) ? prevMapping._sort_weight + 1 : index
+        mapping._sort_weight = newWeight
+        mapping._initial_assigned_sort_weight = newWeight
+      }
       mapping._original_position = mapping._original_position || index
+      prevMapping = mapping
       return mapping
     }))
   }
@@ -140,6 +147,21 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
 
   const hasAnyCustomSortMapping = oMappings.length > 1 && Boolean(find(oMappings, mapping => isNumber(mapping.sort_weight)))
 
+  const getBadgeProps = (mapping, index) => {
+    const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
+    const isMovedUp = Boolean(isUpdated && index < mapping._original_position)
+    const isMovedDown = Boolean(isUpdated && index > mapping._original_position)
+    const badgeIcon = isMovedUp ? <UpIcon style={{fontSize: '10px'}} color='success' /> : (isMovedDown ? <DownIcon style={{fontSize: '10px'}} color='error' /> : 0)
+    let badgeProps = {anchorOrigin: {horizontal: 'left', vertical: 'top'}}
+    //const hasExistingWeight = isNumber(mapping.sort_weight)
+    if(isMovedDown || isMovedUp)
+      badgeProps = {...badgeProps, badgeContent: badgeIcon, style: {background: 'transparent'}}
+    //else if(hasExistingWeight)
+      //badgeProps = {...badgeProps, variant: 'dot', invisible: false, color: 'primary'}
+
+    return badgeProps
+  }
+
   return (
     <React.Fragment>
       <TableRow id={mapType}>
@@ -190,9 +212,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                     const canSort = Boolean(onSortEnd) && oMappings.length > 1
                     const cursor = (targetURL || canSort) ? 'pointer' : 'not-allowed'
                     const isLast = index == oMappings.length - 1
-                    const isMovedUp = Boolean(isUpdated && index < mapping._original_position)
-                    const isMovedDown = Boolean(isUpdated && index > mapping._original_position)
-                    const badgeIcon = isMovedUp ? <UpIcon style={{fontSize: '10px'}} color='success' /> : (isMovedDown ? <DownIcon style={{fontSize: '10px'}} color='error' /> : 0)
+                    const badgeProps = getBadgeProps(mapping, index)
                     return (
                       <Draggable key={mapping.url} draggableId={mapping.url} index={index} isDragDisabled={!canSort}>
                         {(provided) => (
@@ -210,7 +230,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                     {
                                       canSort &&
                                         <span className='flex-vertical-center' style={{marginRight: '4px'}} {...provided.dragHandleProps}>
-                                          <Badge style={{background: 'transparent'}} badgeContent={badgeIcon} anchorOrigin={{horizontal: 'left', vertical: 'top'}}>
+                                          <Badge {...badgeProps}>
                                             <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
                                           </Badge>
                                         </span>
