@@ -109,7 +109,7 @@ class SortButton extends React.Component {
 
   getSelectedOptionName() {
     const { selectedOption } = this.state;
-    return selectedOption === 'score' ? t('search.best_match') : startCase(selectedOption)
+    return selectedOption === 'score' ? this.props.t('search.best_match') : startCase(selectedOption)
   }
 
   formatOptionName(option) {

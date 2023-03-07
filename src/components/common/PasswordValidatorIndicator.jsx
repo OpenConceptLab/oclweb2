@@ -8,8 +8,8 @@ import { merge } from 'lodash';
 
 const correctIcon = <CorrectIcon color='primary' fontSize='inherit'/>;
 const incorrectIcon = <WrongIcon fontSize='inherit' style={{color: ERROR_RED}}/>;
+const { t } = useTranslation()
 const Indicator = (predicate, label) => {
-  const { t } = useTranslation()
   const commonSpanStyles = {marginLeft: '5px'}
   const getStyles = predicate => predicate ? {color: BLUE} : {color: ERROR_RED};
 

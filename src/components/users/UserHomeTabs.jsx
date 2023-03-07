@@ -7,7 +7,7 @@ import {
   AccountBalance as HomeIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
-import { isEmpty, startCase } from 'lodash';
+import { isEmpty } from 'lodash';
 import { WHITE, GREEN, ORANGE } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import Search from '../search/Search';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import alertifyjs from 'alertifyjs'
 import {
@@ -226,9 +226,9 @@ const UserManagement = ({ user }) => {
                 <React.Fragment>
                   <p>{t('user.this_user_own')}:</p>
                   <ul>
-                    <li>{t('common.resoures.orgs')}: {user.owned_orgs}</li>
-                    <li>{t('common.resoures.sources')}: {user.sources}</li>
-                    <li>{t('common.resoures.collections')}: {user.collections}</li>
+                    <li>{t('common.resources.orgs')}: {user.owned_orgs}</li>
+                    <li>{t('common.resources.sources')}: {user.sources}</li>
+                    <li>{t('common.resources.collections')}: {user.collections}</li>
                   </ul>
                 </React.Fragment>
               }

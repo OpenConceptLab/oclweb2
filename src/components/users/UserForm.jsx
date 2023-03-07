@@ -158,8 +158,8 @@ class UserForm extends React.Component {
     const { onCancel, edit, t } = this.props;
     const userTranslation = t('resources.user')
     const editTranslation = t('common.edit')
-    const newTanslation = t('common.new')
-    const header = edit ? `${editTranslation} ${userTranslation}: ${fields.username}` : `${newTanslation} ${userTranslation}`;
+    const newTranslation = t('common.new')
+    const header = edit ? `${editTranslation} ${userTranslation}: ${fields.username}` : `${newTranslation} ${userTranslation}`;
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>

@@ -207,7 +207,10 @@
           "Unmount",
           "keydown",
           "rect",
-          "Dropdown"
+          "Dropdown",
+          "lang",
+          "Espa",
+          "unmark"
         ],
         "skipIfMatch": [
           "http://[^s]*",
