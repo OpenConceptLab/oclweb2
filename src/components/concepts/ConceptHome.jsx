@@ -344,6 +344,7 @@ class ConceptHome extends React.Component {
   onUpdateMappingsSorting = mappings => {
     Promise.all(map(mappings, mapping => APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: mapping._sort_weight, comment: 'Updated Sort Weight'}))).then(() => {
       alertifyjs.success('Mappings successfully updated.')
+      this.getMappings(true)
     })
   }
 

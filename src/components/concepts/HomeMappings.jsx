@@ -134,19 +134,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
 
   const onSortSave = () => {
     onUpdateMappingsSorting(updatedMappings)
-    const newMappings = {...orderedMappings}
-    forEach(newMappings, data => {
-      forEach([...data.direct, ...data.indirect, ...data.self], mapping => {
-        const _mapping = find(updatedMappings, {version_url: mapping.version_url})
-        mapping.sort_weight = _mapping?._sort_weight || mapping.sort_weight
-        mapping._sort_weight = undefined
-        mapping._initial_assigned_sort_weight = undefined
-      })
-    })
-    setMappings(newMappings)
     setUpdatedMappings([])
   }
-
 
   return (
     <React.Fragment>
