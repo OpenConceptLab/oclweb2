@@ -1,9 +1,9 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Button, Popper, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
+  Button, Popper, Grow, Paper, ClickAwayListener, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent,
-  TextField, InputAdornment, Chip, Divider
+  TextField, InputAdornment, Chip, Divider, List
 } from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon,
@@ -213,7 +213,7 @@ class AddToCollection extends React.Component {
                           Create New Collection?
                         </a>
                       </p> :
-                      <MenuList variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '100%', overflow: 'auto'}}>
+                      <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '300px', overflow: 'auto'}}>
                         <TextField
                           id='collection-search-input'
                           placeholder='Search Collection...'
@@ -254,7 +254,7 @@ class AddToCollection extends React.Component {
                                 ))
                             )
                         }
-                      </MenuList>
+                      </List>
                   }
                 </ClickAwayListener>
               </Paper>
