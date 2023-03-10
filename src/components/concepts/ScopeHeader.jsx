@@ -88,7 +88,7 @@ const ScopeHeader = ({
           }
         </div>
         <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
-        <div className='col-xs-10 no-right-padding'>
+        <div className='col-xs-11 no-side-padding'>
           <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>
             <Tooltip title="Navigate to this Concept under its Source" arrow placement="left">
               <Link to={resourceURL} className="no-anchor-styles">
@@ -122,7 +122,7 @@ const ScopeHeader = ({
               </span>
             }
           </div>
-          <div className='col-md-12 no-side-padding' style={{marginLeft: '4px'}}>
+          <div className='col-md-12 no-side-padding' style={{marginTop: '2px'}}>
             <div className='col-md-12 no-side-padding flex-vertical-center'>
               <span className='italic' style={{marginRight: '5px', color: '#707070'}}>
                 Class:
@@ -138,15 +138,6 @@ const ScopeHeader = ({
               </span>
             </div>
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
-              <span>
-                <LastUpdatedOnLabel
-                  date={concept.updated_on}
-                  by={concept.updated_by}
-                  iconSize='medium'
-                  noContainerClass
-                />
-              </span>
-              <span style={{marginLeft: '10px'}}>
                 <LastUpdatedOnLabel
                   label='Created'
                   date={concept.created_on}
@@ -154,7 +145,14 @@ const ScopeHeader = ({
                   iconSize='medium'
                   noContainerClass
                 />
-              </span>
+            </div>
+            <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '-6px'}}>
+              <LastUpdatedOnLabel
+                date={concept.updated_on}
+                by={concept.updated_by}
+                iconSize='medium'
+                noContainerClass
+              />
             </div>
             {
               concept.external_id &&

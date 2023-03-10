@@ -98,7 +98,7 @@ const ScopeHeader = ({
           }
         </div>
         <MappingIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
-        <div className='col-md-10 no-right-padding'>
+        <div className='col-md-11 no-side-padding'>
           <div className='col-md-12 no-side-padding' style={{fontSize: '20px'}}>
             <Tooltip title="Navigate to this Mapping under its Source" arrow placement="left">
               <Link to={resourceURL} className="no-anchor-styles">
@@ -132,7 +132,7 @@ const ScopeHeader = ({
               </span>
             }
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
+          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
             <span style={LABEL_STYLES}>
               From:
             </span>
@@ -140,7 +140,7 @@ const ScopeHeader = ({
               <FromConceptLabel {...mapping} />
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '5px'}}>
+          <div className='col-md-12 no-side-padding flex-vertical-center'>
             <span style={LABEL_STYLES}>
               To:
             </span>
@@ -148,16 +148,7 @@ const ScopeHeader = ({
               <ToConceptLabel {...mapping} />
             </span>
           </div>
-          <div className='col-md-12 no-side-padding flex-vertical-center' style={{paddingTop: '10px'}}>
-            <span>
-              <LastUpdatedOnLabel
-                date={mapping.updated_on}
-                by={mapping.updated_by}
-                iconSize='medium'
-                noContainerClass
-              />
-            </span>
-            <span style={{marginLeft: '10px'}}>
+          <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '5px'}}>
               <LastUpdatedOnLabel
                 label='Created'
                 date={mapping.created_on}
@@ -165,7 +156,14 @@ const ScopeHeader = ({
                 iconSize='medium'
                 noContainerClass
               />
-            </span>
+          </div>
+          <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '-6px'}}>
+              <LastUpdatedOnLabel
+                date={mapping.updated_on}
+                by={mapping.updated_by}
+                iconSize='medium'
+                noContainerClass
+              />
           </div>
           {
             mapping.external_id &&
