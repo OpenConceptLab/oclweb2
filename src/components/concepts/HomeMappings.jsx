@@ -121,7 +121,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
 
   const suggested = compact([{...source, suggestionType: 'Current Source'}, ...map(mappedSources, _source => ({..._source, suggestionType: 'Mapped Source'}))])
 
-  const onSortEnd = onCreateNewMapping ? (updated, unchanged) => {
+  const onSortEnd = onUpdateMappingsSorting ? (updated, unchanged) => {
     const unChangedMappingsVersionURLs = map(unchanged, 'version_url')
     const newMappings = reject([...updatedMappings, ...updated], mapping => unChangedMappingsVersionURLs.includes(mapping.version_url))
     setUpdatedMappings(uniqBy(newMappings, 'version_url'))

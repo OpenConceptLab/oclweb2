@@ -15,6 +15,7 @@ const RESOURCES = [
   { name: 'feedback', relations: [] },
   { name: 'version', relations: [] },
   { name: 'locales', relations: [] },
+  { name: 'toggles', relations: [] },
   { name: 'new', relations: [] },
 ];
 

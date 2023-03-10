@@ -1,7 +1,7 @@
 /*eslint no-process-env: 0*/
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { get } from 'lodash';
+import { get, isEmpty, forOwn, has } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
   isDeprecatedBrowser, recordGAPageView
@@ -36,6 +36,7 @@ import { hotjar } from 'react-hotjar';
 import { OperationsContext } from './LayoutContext';
 import DeprecatedBrowser from './DeprecatedBrowser';
 import OIDLoginCallback from '../users/OIDLoginCallback';
+import APIService from '../../services/APIService';
 
 
 const SITE_TITLE = getSiteTitle()
@@ -84,7 +85,23 @@ const App = props => {
     }
   };
 
+  const fetchToggles = async () => {
+    return new Promise(resolve => {
+      APIService.toggles().get().then(response => {
+        if (!isEmpty(response.data)) {
+          forOwn(response.data, (value, key) => {
+            if (!has(window, key) || window[key] !== value) {
+              window[key] = value;
+            }
+          });
+        }
+        resolve();
+      });
+    });
+  }
+
   React.useEffect(() => {
+    fetchToggles()
     addLogoutListenerForAllTabs()
     recordGAPageView()
     setupHotJar()

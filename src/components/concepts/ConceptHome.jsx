@@ -436,7 +436,7 @@ class ConceptHome extends React.Component {
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
                 onCreateNewMapping={canAct ? this.onCreateNewMapping : false}
-                onUpdateMappingsSorting={canAct ? this.onUpdateMappingsSorting : false}
+                onUpdateMappingsSorting={(canAct && window.MAPPING_SORTING_TOGGLE) ? this.onUpdateMappingsSorting : false}
                 onRemoveMapping={canAct ? this.onRemoveMapping : false}
                 onReactivateMapping={canAct ? this.onReactivateMapping : false}
               />
