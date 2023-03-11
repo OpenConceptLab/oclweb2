@@ -36,12 +36,12 @@ const AppsMenu = props => {
         </IconButton>
       </Tooltip>
       <PopperGrow open={open.value} anchorRef={anchorRef} handleClose={handleClose}>
-        <div className='app-menu' style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <Box className="app-container" display="flex" justifyContent="space-around">
+        <div className='app-menu'>
+          <Box className="app-container" display="inline-block" justifyContent="space-around" style={{width: '100%'}}>
             {
               !hideTermBrowserApp &&
-              <Link to="/" className='no-anchor-styles flex-vertical-center'>
-                <Box className={location.pathname !== "/imports" ? "app selected" : "app"} display="flex" flexDirection="column" alignItems="center">
+              <Link to="/" className='no-anchor-styles'>
+                <Box className={location.pathname !== "/imports" ? "app selected" : "app"} display="inline-block">
                   <MetadataBrowserIcon fontSize="large"/>
                   <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
                     {SITE_TITLE} <br/> TermBrowser
@@ -51,8 +51,8 @@ const AppsMenu = props => {
             }
             {
               !hideImportApp &&
-              <Link to='/imports' className='no-anchor-styles flex-vertical-center' onClick={handleClose}>
-                <Box className={location.pathname == "/imports" ? "app selected" : "app"} display="flex" flexDirection="column" alignItems="center">
+              <Link to='/imports' className='no-anchor-styles' onClick={handleClose}>
+                <Box className={location.pathname == "/imports" ? "app selected" : "app"} display="inline-block">
                   <ImportsIcon fontSize="large"/>
                   <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
                     Bulk <br/> Importer
