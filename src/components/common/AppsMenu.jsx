@@ -4,13 +4,12 @@ import { useLocation } from 'react-router';
 import { Apps as AppsIcon , Web as MetadataBrowserIcon, Publish as ImportsIcon } from '@mui/icons-material';
 import { Tooltip, IconButton, Box, Typography } from '@mui/material';
 import useToggle from '../../hooks/useToggle';
-import OpenMRSLogo from '../common/OpenMRSLogo';
-import { getOpenMRSURL, getSiteTitle } from '../../common/utils';
+import { getSiteTitle } from '../../common/utils';
 import PopperGrow from './PopperGrow';
 
 const SITE_TITLE = getSiteTitle()
 const AppsMenu = props => {
-  const { hideOpenMRSApp, hideTermBrowserApp, hideImportApp } = props;
+  const { hideTermBrowserApp, hideImportApp } = props;
   const open = useToggle()
   const location = useLocation()
   const handleClose = event => {
@@ -49,17 +48,6 @@ const AppsMenu = props => {
                   </Typography>
                 </Box>
               </Link>
-            }
-            {
-              !hideOpenMRSApp &&
-              <a href={getOpenMRSURL()} className='no-anchor-styles flex-vertical-center'>
-                <Box className="app" display="flex" flexDirection="column" alignItems="center">
-                  <OpenMRSLogo style={{width:"30px"}} />
-                  <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
-                    OpenMRS <br/> Dictionary <br/> Manager
-                  </Typography>
-                </Box>
-              </a>
             }
             {
               !hideImportApp &&
