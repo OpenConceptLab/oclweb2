@@ -326,7 +326,7 @@ const Header = props => {
                                 >
                                   {nestedOption.icon}
                                 </ListItemIcon>
-                                <ListItemText primary={nestedOption.label} />
+                                <ListItemText primary={nestedOption.label} secondary={nestedOption.deprecated ? 'deprecated' : undefined} style={nestedOption.deprecated ? {fontStyle: 'italic'} : {}} />
                               </ListItemButton>
                             ))
                           }

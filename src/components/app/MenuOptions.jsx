@@ -71,7 +71,8 @@ const TOOLS_OPTIONS = [
   {
     label: 'OpenMRS Dictionary Manager',
     href: SITE_URL + 'openmrs-dictionary-manager/',
-    icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />
+    icon: <OpenMRSLogo style={{width: '28px', marginLeft: '-2px'}} />,
+    deprecated: true
   },
 ];
 export const OPTIONS = [
