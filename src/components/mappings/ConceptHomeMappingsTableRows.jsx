@@ -239,7 +239,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                         </span>
                                     }
                                     {
-                                      canSort && !isNumber(mapping.sort_weight) && !isUpdated &&
+                                      Boolean(canSort && !isNumber(mapping.sort_weight) && !isUpdated && mappingsWithSortWeightCount) &&
                                         <span className='flex-vertical-center' style={{marginRight: '4px'}}>
                                           <Tooltip title='Mapping has no sort weight applied'>
                                             <WarningIcon fontSize='small' />
