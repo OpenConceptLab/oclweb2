@@ -37,6 +37,7 @@ import { OperationsContext } from './LayoutContext';
 import DeprecatedBrowser from './DeprecatedBrowser';
 import OIDLoginCallback from '../users/OIDLoginCallback';
 import APIService from '../../services/APIService';
+import OpenMRSDeprecationDialog from '../common/OpenMRSDeprecationDialog';
 
 
 const SITE_TITLE = getSiteTitle()
@@ -50,6 +51,7 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 
 const App = props => {
   const { openOperations, menuOpen, setMenuOpen, setOpenOperations } = React.useContext(OperationsContext);
+  const [openOpenMRSDeprecationDialog, setOpenOpenMRSDeprecationDialog] = React.useState(false)
 
   // For recent history
   setUpRecentHistory(props.history);
@@ -100,7 +102,17 @@ const App = props => {
     });
   }
 
+  const setUpOpenMRSDeprecationDialog = () => {
+    const queryString = window.location.hash.split('?')[1]
+    if(queryString) {
+      const queryParams = new URLSearchParams(queryString)
+      const isRedirectedFromDM = queryParams.get('origin').includes('openmrs')
+      setOpenOpenMRSDeprecationDialog(isRedirectedFromDM)
+    }
+  }
+
   React.useEffect(() => {
+    setUpOpenMRSDeprecationDialog()
     fetchToggles()
     addLogoutListenerForAllTabs()
     recordGAPageView()
@@ -133,6 +145,10 @@ const App = props => {
 
   return (
     <div>
+      {
+        openOpenMRSDeprecationDialog &&
+          <OpenMRSDeprecationDialog isOpen={openOpenMRSDeprecationDialog} />
+      }
       {
         isDeprecatedBrowser() && deprecatedBrowser &&
           <DeprecatedBrowser open onClose={() => setDeprecatedBrowser(false)} />
