@@ -7,6 +7,7 @@ import {
   ImportExport as SortIcon,
   ArrowUpward as UpIcon,
   ArrowDownward as DownIcon,
+  WarningAmber as WarningIcon
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty, some } from 'lodash';
@@ -145,7 +146,8 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
 
   React.useEffect(() => isEmpty(oMappings) && setMappings(getOrderedMappings()), [mappings])
 
-  const hasAnyCustomSortMapping = oMappings.length > 1 && Boolean(find(oMappings, mapping => isNumber(mapping.sort_weight)))
+  const mappingsWithSortWeightCount = oMappings.length > 1 ? filter(oMappings, mapping => isNumber(mapping.sort_weight)).length : 0
+  const allMappingsHaveSortWeight = oMappings.length === mappingsWithSortWeightCount
 
   const getBadgeProps = (mapping, index) => {
     const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
@@ -153,14 +155,13 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     const isMovedDown = Boolean(isUpdated && index > mapping._original_position)
     const badgeIcon = isMovedUp ? <UpIcon style={{fontSize: '10px'}} color='success' /> : (isMovedDown ? <DownIcon style={{fontSize: '10px'}} color='error' /> : 0)
     let badgeProps = {anchorOrigin: {horizontal: 'left', vertical: 'top'}}
-    //const hasExistingWeight = isNumber(mapping.sort_weight)
     if(isMovedDown || isMovedUp)
       badgeProps = {...badgeProps, badgeContent: badgeIcon, style: {background: 'transparent'}}
-    //else if(hasExistingWeight)
-      //badgeProps = {...badgeProps, variant: 'dot', invisible: false, color: 'primary'}
 
     return badgeProps
   }
+
+  const tooltipTitle = allMappingsHaveSortWeight ? 'Custom sorting has been applied' : (mappingsWithSortWeightCount ? `Custom sorting has been applied to ${mappingsWithSortWeightCount} mappings.` : undefined)
 
   return (
     <React.Fragment>
@@ -183,9 +184,11 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
               />
             </Tooltip>
             {
-              hasAnyCustomSortMapping &&
-                <Tooltip title='Custom sorting has been applied'>
-                  <SortIcon fontSize="small" style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+              tooltipTitle &&
+                <Tooltip title={tooltipTitle}>
+                  <Badge color="warning" badgeContent={allMappingsHaveSortWeight ? undefined : mappingsWithSortWeightCount}>
+                    <SortIcon fontSize="small" style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+                  </Badge>
                 </Tooltip>
             }
           </span>
@@ -233,6 +236,14 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                           <Badge {...badgeProps}>
                                             <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
                                           </Badge>
+                                        </span>
+                                    }
+                                    {
+                                      canSort && !isNumber(mapping.sort_weight) && !isUpdated &&
+                                        <span className='flex-vertical-center' style={{marginRight: '4px'}}>
+                                          <Tooltip title='Mapping has no sort weight applied'>
+                                            <WarningIcon fontSize='small' />
+                                          </Tooltip>
                                         </span>
                                     }
                                     <span className='flex-vertical-center' style={{marginRight: '4px'}}>
