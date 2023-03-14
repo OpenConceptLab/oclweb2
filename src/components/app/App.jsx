@@ -106,7 +106,7 @@ const App = props => {
     const queryString = window.location.hash.split('?')[1]
     if(queryString) {
       const queryParams = new URLSearchParams(queryString)
-      const isRedirectedFromDM = queryParams.get('origin').includes('openmrs')
+      const isRedirectedFromDM = (queryParams.get('origin') || '').includes('openmrs')
       setOpenOpenMRSDeprecationDialog(isRedirectedFromDM)
     }
   }
