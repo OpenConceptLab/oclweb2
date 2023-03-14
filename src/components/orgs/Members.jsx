@@ -125,7 +125,7 @@ const Members = ({ members, org }) => {
   return (
     <div className='col-xs-12' style={{padding: 0, paddingLeft: '20px'}}>
       <h3 style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}}>
-        Members
+        <Link style={{color: 'inherit'}} to={`/orgs/${org.id}/members`}>Members</Link>
       </h3>
       {
         isEmpty(members) ?
