@@ -348,6 +348,20 @@ class ConceptHome extends React.Component {
     })
   }
 
+  onClearSortWeight = mapping => {
+    APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: null, comment: 'Cleared Sort Weight'}).then(() => {
+      alertifyjs.success('Mappings successfully updated.')
+      this.getMappings(true)
+    })
+  }
+
+  onAssignSortWeight = (mapping, sort_weight) => {
+    APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: sort_weight, comment: 'Assigned Sort Weight'}).then(() => {
+      alertifyjs.success('Mappings successfully updated.')
+      this.getMappings(true)
+    })
+  }
+
   onIncludeRetiredAssociationsToggle = includeRetired => this.setState({includeRetiredAssociations: includeRetired}, this.getMappings)
 
   getCollectionVersions() {
@@ -401,6 +415,7 @@ class ConceptHome extends React.Component {
     const detailsMargin = this.getContentMarginTop()
     const hasAccess = currentUserHasAccess()
     const canAct = Boolean(hasAccess && isVersionedObject && this.props.scoped != 'collection')
+    const canSort = canAct && window.MAPPING_SORTING_TOGGLE
     const conceptDetails = (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -436,7 +451,9 @@ class ConceptHome extends React.Component {
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
                 onCreateNewMapping={canAct ? this.onCreateNewMapping : false}
-                onUpdateMappingsSorting={(canAct && window.MAPPING_SORTING_TOGGLE) ? this.onUpdateMappingsSorting : false}
+                onUpdateMappingsSorting={canSort ? this.onUpdateMappingsSorting : false}
+                onClearSortWeight={canSort ? this.onClearSortWeight : false}
+                onAssignSortWeight={canSort ? this.onAssignSortWeight : false}
                 onRemoveMapping={canAct ? this.onRemoveMapping : false}
                 onReactivateMapping={canAct ? this.onReactivateMapping : false}
               />

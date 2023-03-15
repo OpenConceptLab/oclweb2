@@ -64,7 +64,7 @@ const DEFAULT_CASCADE_FILTERS = {
   returnMapTypes: undefined,
 }
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting, onClearSortWeight, onAssignSortWeight }) => {
   const [orderedMappings, setMappings] = React.useState({});
   const [updatedMappings, setUpdatedMappings] = React.useState([]);
   const [mappingForm, setMappingForm] = React.useState(false)
@@ -212,6 +212,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
+                                    onAssignSortWeight={onAssignSortWeight}
+                                    onClearSortWeight={onClearSortWeight}
                                     suggested={suggested}
                                     onSortEnd={onSortEnd}
                                   />
@@ -251,6 +253,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
+                                    onAssignSortWeight={onAssignSortWeight}
+                                    onClearSortWeight={onClearSortWeight}
                                     suggested={suggested}
                                     onSortEnd={onSortEnd}
                                   />

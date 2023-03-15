@@ -6,14 +6,15 @@ import {
   Delete as RetireIcon,
   CompareArrows as CompareIcon,
   OpenInBrowser as OpenIcon,
+  ImportExport as SortIcon,
 } from '@mui/icons-material';
-import { map } from 'lodash';
+import { map, isNumber } from 'lodash';
 import { currentUserHasAccess } from '../../common/utils';
 import { ACTION_RED } from '../../common/constants';
 
 const hasAccess = currentUserHasAccess()
 
-const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivate, showNewMappingOption, isIndirect }) => {
+const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivate, showNewMappingOption, isIndirect, canSort, onAssignSortWeight, onClearSortWeight, disabled }) => {
   const anchorRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const onMenuToggle = event => {
@@ -59,6 +60,12 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivat
       options.push({label: 'Compare Concepts', href: compareConceptHref, type: 'compare'})
     if(hasAccess && showNewMappingOption)
       options.push({label: addNewMapTypeMappingLabel, onClick: onAddNewMappingClick, type: 'add' })
+    if(hasAccess && canSort && showNewMappingOption) {
+      if(isNumber(mapping.sort_weight))
+        options.push({label: `Clear Sort Weight`, onClick: () => onClearSortWeight(mapping), type: 'sort_weight_clear' })
+      else
+        options.push({label: `Assign Sort Weight`, onClick: () => onAssignSortWeight(mapping), type: 'sort_weight_assign' })
+    }
     if(hasAccess && showNewMappingOption && !mapping.retired)
       options.push({label: `Retire mapping`, onClick: onRemoveMappingClick, type: 'delete' })
     if(hasAccess && showNewMappingOption && mapping.retired)
@@ -93,7 +100,7 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivat
 
   return (
     <React.Fragment>
-      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToggle}>
+      <IconButton size='small' color='primary' ref={anchorRef} onClick={onMenuToggle} disabled={disabled}>
         <MenuIcon fontSize='inherit' />
       </IconButton>
       <Menu open={open} anchorEl={anchorRef.current} onClose={onMenuToggle}>
@@ -110,7 +117,7 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivat
               return (
                 <React.Fragment key={index}>
                   {
-                    ['add', 'delete', 'compare'].includes(option.type) && <Divider />
+                    ['add', 'delete', 'compare', 'sort_weight_assign', 'sort_weight_clear'].includes(option.type) && <Divider />
                   }
                   <MenuItem onClick={event => option.onClick ? option.onClick(event, option, mapping) : onOptionClick(event, option)} {...__props}>
                     <ListItemIcon>
@@ -125,6 +132,12 @@ const MappingOptions = ({ mapping, concept, onAddNewClick, onRemove, onReactivat
                       }
                       {
                         option.type === 'open' && <OpenIcon fontSize='small'/>
+                      }
+                      {
+                        option.type === 'sort_weight_assign' && <SortIcon fontSize='small'/>
+                      }
+                      {
+                        option.type === 'sort_weight_clear' && <SortIcon fontSize='small' color='error' />
                       }
                     </ListItemIcon>
                     <ListItemText>{option.label}</ListItemText>

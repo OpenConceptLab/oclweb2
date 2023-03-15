@@ -10,7 +10,7 @@ import {
   WarningAmber as WarningIcon
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty, some } from 'lodash';
+import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty, some, maxBy } from 'lodash';
 import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
 import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
@@ -23,7 +23,7 @@ const ORDER_BY = ['_sort_weight', 'cascade_target_source_name', 'cascade_target_
 
 const order = (mappings, is_default) => orderBy(mappings, is_default ? DEFAULT_ORDER_BY : ORDER_BY)
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping, onSortEnd }) => {
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping, onSortEnd, onClearSortWeight, onAssignSortWeight }) => {
   const [oMappings, setMappings] = React.useState([])
   const [form, setForm] = React.useState(false)
   const [addNewMapType, setAddNewMapType] = React.useState('')
@@ -151,6 +151,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
 
   const mappingsWithSortWeightCount = oMappings.length > 1 ? filter(oMappings, mapping => isNumber(mapping.sort_weight)).length : 0
   const allMappingsHaveSortWeight = oMappings.length === mappingsWithSortWeightCount
+  const isAnyUpdatedButUnsaved = find(oMappings, mapping => mapping._sort_weight !== mapping._initial_assigned_sort_weight)
 
   const getBadgeProps = (mapping, index) => {
     const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
@@ -165,6 +166,12 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
   }
 
   const tooltipTitle = allMappingsHaveSortWeight ? 'Custom sorting has been applied' : (mappingsWithSortWeightCount ? `Custom sorting has been applied to ${mappingsWithSortWeightCount} mappings.` : undefined)
+
+  const _onAssignSortWeight = mapping => {
+    let maxSortWeight = maxBy(oMappings, 'sort_weight')?.sort_weight
+    maxSortWeight = isNumber(maxSortWeight) ? maxSortWeight + 1 : 0
+    onAssignSortWeight(mapping, maxSortWeight)
+  }
 
   return (
     <React.Fragment>
@@ -277,6 +284,9 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                     showNewMappingOption={canAct}
                                     isIndirect={isIndirect}
                                     canSort={canSort}
+                                    onClearSortWeight={onClearSortWeight}
+                                    onAssignSortWeight={_onAssignSortWeight}
+                                    disabled={isAnyUpdatedButUnsaved}
                                   />
                                 </TableCell>
                               </TableRow>
