@@ -10,7 +10,7 @@ import {
   Add as AddIcon,
   WarningAmber as WarnIcon,
 } from '@mui/icons-material'
-import { get, isEmpty, forEach, map, find, compact, flatten, values, uniqBy, reject } from 'lodash';
+import { get, isEmpty, forEach, map, find, compact, flatten, values, uniqBy } from 'lodash';
 import { BLUE, WHITE } from '../../common/constants'
 import { generateRandomString, dropVersion } from '../../common/utils'
 import ConceptHomeMappingsTableRows from '../mappings/ConceptHomeMappingsTableRows';
@@ -121,10 +121,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
 
   const suggested = compact([{...source, suggestionType: 'Current Source'}, ...map(mappedSources, _source => ({..._source, suggestionType: 'Mapped Source'}))])
 
-  const onSortEnd = onUpdateMappingsSorting ? (updated, unchanged) => {
-    const unChangedMappingsVersionURLs = map(unchanged, 'version_url')
-    const newMappings = reject([...updatedMappings, ...updated], mapping => unChangedMappingsVersionURLs.includes(mapping.version_url))
-    setUpdatedMappings(uniqBy(newMappings, 'version_url'))
+  const onSortEnd = onUpdateMappingsSorting ? (updated) => {
+    setUpdatedMappings(uniqBy(updated, 'version_url'))
   } : false
 
   const onSortCancel = () => {

@@ -125,7 +125,10 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
 
     if(result.source.index !== result.destination.index) {
       const newMappings = reorderMappings(result.source.index, result.destination.index)
-      onSortEnd(filter(newMappings, mapping => mapping._sort_weight !== mapping._initial_assigned_sort_weight), filter(newMappings, mapping => mapping._sort_weight === mapping._initial_assigned_sort_weight))
+      if(find(newMappings, mapping => mapping.sort_weight !== mapping._sort_weight && mapping._sort_weight !== mapping._initial_assigned_sort_weight))
+        onSortEnd(newMappings)
+      else
+        onSortEnd([])
     }
   }
 
@@ -273,6 +276,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                     onReactivate={onReactivateClick}
                                     showNewMappingOption={canAct}
                                     isIndirect={isIndirect}
+                                    canSort={canSort}
                                   />
                                 </TableCell>
                               </TableRow>
