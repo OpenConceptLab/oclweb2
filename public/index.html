@@ -37,6 +37,9 @@
      if(window.location.hash.startsWith('#state=')) {
        window.location = '/#/oidc/login/' + window.location.hash.replace('#', '?') + '&next=' + window.location.pathname;
      }
+     if((window.location.search || '').includes('origin=openmrs')) {
+       window.location = '/#/search/?origin=openmrs&type=organizations'
+     }
     </script>
     <title></title>
   </head>

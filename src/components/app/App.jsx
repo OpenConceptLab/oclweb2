@@ -103,12 +103,8 @@ const App = props => {
   }
 
   const setUpOpenMRSDeprecationDialog = () => {
-    const queryString = window.location.hash.split('?')[1]
-    if(queryString) {
-      const queryParams = new URLSearchParams(queryString)
-      const isRedirectedFromDM = (queryParams.get('origin') || '').includes('openmrs')
-      setOpenOpenMRSDeprecationDialog(isRedirectedFromDM)
-    }
+    const isRedirectedFromDM = window.location.href.includes('?origin=openmrs')
+    setOpenOpenMRSDeprecationDialog(isRedirectedFromDM)
   }
 
   React.useEffect(() => {
