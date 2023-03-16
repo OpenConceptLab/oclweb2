@@ -6,7 +6,7 @@ const OpenMRSDeprecationDialog = ({ isOpen }) => {
   const [open, setOpen] = React.useState(isOpen || false);
   const onClose = () => setOpen(false);
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} id='openmrs-deprecation-dialog'>
       <DialogTitleWithCloseButton onClose={onClose}>
         The OpenMRS Dictionary Manager is going away!
       </DialogTitleWithCloseButton>

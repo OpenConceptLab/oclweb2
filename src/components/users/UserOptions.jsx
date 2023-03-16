@@ -38,8 +38,10 @@ const UserOptions = () => {
   const displayName = get(user, 'name') || username;
   const serverConfig = getAppliedServerConfig();
   const checkIfStillAuthenticated = () => {
+    if((document.getElementById('openmrs-deprecation-dialog')))
+      return
     APIService.version().get(null, null, null, true).then(res => {
-      if(get(res, 'response.status') === 401) {
+      if(get(res, 'response.status') === 401 ) {
         if(!alertifyForLogout) {
           alertifyForLogout = true
           clearInterval(intervalId)
