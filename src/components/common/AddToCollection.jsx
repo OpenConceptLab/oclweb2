@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Button, Popper, Grow, Paper, ClickAwayListener, Tooltip,
+  Button, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent,
   TextField, InputAdornment, Chip, Divider, List
 } from '@mui/material'
@@ -20,6 +20,7 @@ import ReferenceCascadeDialog from './ReferenceCascadeDialog';
 import MappingReferenceAddOptionsDialog from './MappingReferenceAddOptionsDialog';
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import CollectionListItem from './CollectionListItem';
+import PopperGrow from './PopperGrow';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -194,73 +195,61 @@ class AddToCollection extends React.Component {
     return (
       <React.Fragment>
         {button}
-        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1300}}>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                zIndex: '1300'
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={this.handleClose}>
+        <PopperGrow open={open} anchorRef={this.anchorRef} handleClose={this.handleClose} minWidth='450px'>
+          <div>
+            {
+              noOverallCollections ?
+                <p style={{padding: '20px'}}>
+                  You do not have any collections.
+                  <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
+                    Create New Collection?
+                  </a>
+                </p> :
+                <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '300px', overflow: 'auto'}}>
+                  <TextField
+                    id='collection-search-input'
+                    placeholder='Search Collection...'
+                    variant='outlined'
+                    size='small'
+                    style={{padding: '10px', width: '100%'}}
+                    autoFocus
+                    onChange={this.onSearchValueChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SearchIcon />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
                   {
-                    noOverallCollections ?
-                      <p style={{padding: '20px'}}>
-                        You do not have any collections.
-                        <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
-                          Create New Collection?
-                        </a>
-                      </p> :
-                      <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '300px', overflow: 'auto'}}>
-                        <TextField
-                          id='collection-search-input'
-                          placeholder='Search Collection...'
-                          variant='outlined'
-                          size='small'
-                          style={{padding: '10px', width: '100%'}}
-                          autoFocus
-                          onChange={this.onSearchValueChange}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <SearchIcon />
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                        {
-                          isLoading ?
-                            <div style={{textAlign: 'center'}}>
-                              <CircularProgress />
-                            </div> : (
-                              noSearchResults ?
-                                <p style={{padding: '0 20px'}}>
-                                  No Matches.
-                                  <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
-                                    Create New Collection?
-                                  </a>
-                                </p> :
-                                map(_collections, (collection, index) => (
-                                  <React.Fragment key={index}>
-                                    <CollectionListItem
-                                      option={collection}
-                                      listItemProps={{onClick: event => this.handleMenuItemClick(event, collection)}}
-                                      style={{cursor: 'pointer'}}
-                                    />
-                                    <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
-                                  </React.Fragment>
-                                ))
-                            )
-                        }
-                      </List>
+                    isLoading ?
+                      <div style={{textAlign: 'center'}}>
+                        <CircularProgress />
+                      </div> : (
+                        noSearchResults ?
+                          <p style={{padding: '0 20px'}}>
+                            No Matches.
+                            <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
+                              Create New Collection?
+                            </a>
+                          </p> :
+                          map(_collections, (collection, index) => (
+                            <React.Fragment key={index}>
+                              <CollectionListItem
+                                option={collection}
+                                listItemProps={{onClick: event => this.handleMenuItemClick(event, collection)}}
+                                style={{cursor: 'pointer'}}
+                              />
+                              <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
+                            </React.Fragment>
+                          ))
+                      )
                   }
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+                </List>
+            }
+          </div>
+        </PopperGrow>
         <Dialog open={openDialog} onClose={this.handleDialogClose}>
           <DialogTitleWithCloseButton onClose={this.handleDialogClose}>
             Add References to Collection
