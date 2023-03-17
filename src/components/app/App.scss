@@ -827,6 +827,7 @@ div.not-found {
     justify-content: center;
     height: 100%;
     min-height: 500px;
+    flex-direction: column;
     hr {
         height: 50px;
         background-color: rgba(0, 0, 0, 0.4);
