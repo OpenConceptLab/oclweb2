@@ -2,7 +2,7 @@
 import React from 'react';
 import StackTrace from "stacktrace-js";
 import { Notifier } from '@airbrake/browser';
-import { map } from 'lodash';
+import { map, isString } from 'lodash';
 import { getCurrentUser, getEnv } from '../../common/utils';
 import ErrorUI from './ErrorUI';
 
@@ -31,15 +31,14 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    StackTrace.fromError(error).then(traces => {
-      const newTraces = map(traces, trace => ({
-        column: trace.columnNumber,
-        file: trace.fileName,
-        'function': trace.functionName,
-        line: trace.lineNumber
-      }));
-
-      this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)}, () => {
+    this.setState({error: error, errorInfo: errorInfo, hasError: Boolean(error)}, () => {
+      StackTrace.fromError(this.state.error).then(traces => {
+        const newTraces = map(traces, trace => ({
+          column: trace.columnNumber,
+          file: trace.fileName,
+          'function': trace.functionName,
+          line: trace.lineNumber
+        }));
         const notifier = this.getNotifier()
         if(notifier) {
           const user = getCurrentUser() || {};
@@ -60,7 +59,7 @@ class ErrorBoundary extends React.Component {
   }
 
   getErrorUIProps() {
-    const props = {header: 'Error', message: 'Something went wrong.'}
+    const props = {header: 'Error', message: isString(this.state.error) ? this.state.error : 'Something went wrong.'}
 
     if(window.location.hash.match(/debug=true/))
       return {...props, error: this.state.error, errorInfo: this.state.errorInfo}
