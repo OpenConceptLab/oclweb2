@@ -1,8 +1,8 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress, Chip } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress, Chip, Skeleton } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { map, max, isEmpty, get, isNull, camelCase } from 'lodash';
+import { map, max, isEmpty, get, isNull, camelCase, isNumber } from 'lodash';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
 import APIService from '../../services/APIService';
@@ -121,7 +121,7 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
   const firstWidth = (_first/_total) * 100
   const secondWidth = (_second/_total) * 100
   const fullBorderRadius = '100px';
-  return (
+  return second ? (
     <span className='flex-vertical-center' style={{width: 'calc(100% + 2px)', backgroundColor: 'rgba(0, 0, 0, 0.03)', height: '10px', borderRadius: fullBorderRadius}}>
       {
         firstWidth ?
@@ -140,8 +140,24 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
           </Tooltip> : null
       }
     </span>
-  )
+  ) : <Skeleton />
 }
+
+
+const SelfSummaryCell = ({label, value, onClick}) => (
+  <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+    <Button variant='text' onClick={onClick} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+      <p style={{margin: 0, display: 'flex', alignItem: 'center', justifyContent: 'center'}}>
+        {
+          isNumber(value) ? <b>{toNumDisplay(value)}</b> : <Skeleton width={20} height={20} variant="circular" />
+        }
+      </p>
+      <p style={{margin: 0}}>
+        {isNumber(value) ? label : <Skeleton /> }
+      </p>
+    </Button>
+  </TableCell>
+)
 
 const SelfSummary = ({ summary, source, isVersion }) => {
   const [distribution, setDistribution] = React.useState({})
@@ -176,72 +192,39 @@ const SelfSummary = ({ summary, source, isVersion }) => {
               <TableCell align='left' colSpan={5}>
                 <span style={{padding: '20px', width: width, display: 'inline-block' }}>
                   <Bar first={summary?.concepts?.retired} second={summary?.concepts?.active} firstTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} />
-                  <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div>
+                  {
+                    summary?.concepts ?
+                      <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
+                    <Skeleton />
+                  }
                 </span>
                 <span style={{padding: '20px', width: width, display: 'inline-block'}}>
                   <Bar first={summary?.mappings?.retired} second={summary?.mappings?.active} firstTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} />
-                  <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div>
+                  {
+                    summary?.mappings ?
+                      <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
+                    <Skeleton />
+                  }
                 </span>
                 {
                   !isVersion &&
                     <span style={{padding: '20px', width: width, display: 'inline-block'}}>
                       <Bar first={summary?.versions?.released} second={summary?.versions?.total - summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} />
-                      <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div>
+                      {
+                        summary?.versions ?
+                          <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
+                        <Skeleton />
+                      }
                     </span>
                 }
               </TableCell>
             </TableRow>
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'concept_class')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Concept Classes
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'datatype')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Datatype
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'map_type')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    MapTypes
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'name_locale')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.locales?.locales)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Languages
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'name_type')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.locales?.names)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Name Types
-                  </p>
-                </Button>
-              </TableCell>
+              <SelfSummaryCell value={summary?.concepts?.concept_class} label='Concept Classes' onClick={event => toggle(event, 'concept_class')} />
+              <SelfSummaryCell value={summary?.concepts?.datatype} label='Datatype' onClick={event => toggle(event, 'datatype')} />
+              <SelfSummaryCell value={summary?.mappings?.map_types} label='MapTypes' onClick={event => toggle(event, 'map_type')} />
+              <SelfSummaryCell value={summary?.locales?.locales} label='Languages' onClick={event => toggle(event, 'name_locale')} />
+              <SelfSummaryCell value={summary?.locales?.names} label='Name Types' onClick={event => toggle(event, 'name_type')} />
             </TableRow>
           </TableBody>
           {
@@ -279,7 +262,11 @@ const SourceSummary = ({ summary, source }) => {
         <div onClick={() => setOpenToSources(!openToSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
           <Divider style={{width: '40%'}} />
           <span style={{width: '20%', textAlign: 'center'}}>
-            <b>{toSources.length.toLocaleString()}</b> Mapped To Sources
+            {
+              summary?.id ?
+                <React.Fragment><b>{toSources.length.toLocaleString()}</b> Mapped To Sources</React.Fragment> :
+              <Skeleton />
+            }
           </span>
           <Divider style={{width: '40%'}} />
         </div>
@@ -331,7 +318,11 @@ const SourceSummary = ({ summary, source }) => {
         <div onClick={() => setOpenFromSources(!openFromSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
           <Divider style={{width: '40%'}} />
           <span style={{width: '20%', textAlign: 'center'}}>
-            <b>{fromSources.length.toLocaleString()}</b> Mapped From Sources
+            {
+              summary?.id ?
+                <React.Fragment><b>{fromSources.length.toLocaleString()}</b> Mapped From Sources</React.Fragment> :
+              <Skeleton />
+            }
           </span>
           <Divider style={{width: '40%'}} />
         </div>
