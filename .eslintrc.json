@@ -207,7 +207,8 @@
           "Unmount",
           "keydown",
           "rect",
-          "Dropdown"
+          "Dropdown",
+          "uncheck"
         ],
         "skipIfMatch": [
           "http://[^s]*",

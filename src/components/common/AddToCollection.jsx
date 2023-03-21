@@ -43,6 +43,7 @@ class AddToCollection extends React.Component {
       addMappings: true,
       addToConcepts: false,
       addFromConcepts: false,
+      transformReferences: false,
     }
     this.anchorRef = React.createRef(null);
   }
@@ -89,7 +90,7 @@ class AddToCollection extends React.Component {
     const { references } = this.props
     const isMapping = Boolean(get(references, '0.map_type'))
     let expressions = map(references, 'url')
-    let queryParams = {}
+    let queryParams = this.state.transformReferences ? {transformReferences: 'resourceVersions'} : {}
     let cascadePayload = {}
     if(isMapping) {
       if(addMappings)
@@ -102,12 +103,11 @@ class AddToCollection extends React.Component {
     } else {
       expressions = map(references, 'url')
       if(cascadeToConcepts)
-        queryParams = {cascade: 'sourcetoconcepts'}
+        queryParams = {...queryParams, cascade: 'sourcetoconcepts'}
       else if(cascadeMappings)
-        queryParams = {cascade: 'sourcemappings'}
+        queryParams = {...queryParams, cascade: 'sourcemappings'}
       else if(cascadeMethod) {
         cascadePayload = {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}
-        queryParams = {transformReferences: 'resourceVersions'}
       }
     }
     let payload = {payload: {data: {expressions: expressions}}, queryParams: queryParams}
@@ -269,6 +269,7 @@ class AddToCollection extends React.Component {
                 cascadeMappingsFunc={() => this.getPayload(false, true, false)}
                 cascadeToConceptsFunc={() => this.getPayload(true, false, false)}
                 cascadeOpenMRSFunc={() => this.getPayload(false, false, true)}
+                onTransformReferencesChange={transform => this.setState({transformReferences: transform})}
               />
             )
           }

@@ -1,21 +1,31 @@
 import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText,
-  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio,
+  FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio, Checkbox
 } from '@mui/material'
 import {
   Help as HelpIcon,
 } from '@mui/icons-material'
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import APIPreview from './APIPreview'
+import HtmlToolTipRaw from './HtmlToolTipRaw';
 
 
-const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc }) => {
+const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc, onTransformReferencesChange }) => {
   const [cascadeMethod, setCascadeMethod] = React.useState('none')
+  const [transformReferences, setTransformReferences] = React.useState(false)
   const onChange = event => {
     const newValue = event.target.value
     setCascadeMethod(newValue)
+    if(newValue === 'OpenMRSCascade')
+      _onTransformReferencesChange(true)
+
     onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts', cascadeMethod: newValue})
+  }
+
+  const _onTransformReferencesChange = transform => {
+    setTransformReferences(transform)
+    onTransformReferencesChange(transform)
   }
 
   const getPayload = () => {
@@ -102,6 +112,37 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                 }
               />
             </RadioGroup>
+            {
+              Boolean(onTransformReferencesChange) &&
+                <FormControlLabel
+                  control={<Checkbox checked={transformReferences} onChange={() => _onTransformReferencesChange(!transformReferences)}/>}
+                  label={
+                    <span className='flex-vertical-center'>
+                      <span style={{marginRight: '5px', fontSize: '14px'}}>
+                        Transform to static references
+                      </span>
+                      <HtmlToolTipRaw
+                        placement='right'
+                        title={
+                          <span>
+                          <span>
+                            Transforming to static references means that after concepts and mappings are added to your collection, they will not change even if they are updated at the source.
+                          </span>
+                            <br />
+                            <br />
+                            <span>
+                              Uncheck this box to allow dynamic references, which may help you to keep your collection up to date in the future. See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer">YouTube video</a> for details.
+                            </span>
+                          </span>
+                        }
+                        arrow
+                      >
+                        <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                      </HtmlToolTipRaw>
+                    </span>
+                  }
+                />
+            }
           </FormControl>
           {
             cascadePayload &&
