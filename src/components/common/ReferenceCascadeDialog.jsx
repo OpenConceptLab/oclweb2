@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material'
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import APIPreview from './APIPreview'
-import HtmlToolTipRaw from './HtmlToolTipRaw';
+import { HtmlToolTipClone as HtmlToolTipRaw } from './HtmlToolTipRaw';
 
 
 const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc, onTransformReferencesChange }) => {
@@ -22,9 +22,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
   const onChange = event => {
     const newValue = event.target.value
     setCascadeMethod(newValue)
-    if(newValue === 'OpenMRSCascade')
-      _onTransformReferencesChange(true)
-
+    _onTransformReferencesChange(newValue === 'OpenMRSCascade')
     onCascadeChange({cascadeMappings: newValue === 'cascadeMappings', cascadeToConcepts: newValue === 'cascadeToConcepts', cascadeMethod: newValue})
   }
 
@@ -155,7 +153,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                                     <br />
                                     <br />
                                     <span>
-                                      Uncheck this box to allow dynamic references, which may help you to keep your collection up to date in the future. See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer">YouTube video</a> for details.
+                                      Uncheck this box to allow dynamic references, which may help you to keep your collection up to date in the future. See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer" style={{color: 'inherit', textDecoration: 'underline', fontWeight: 'bold'}}>YouTube video</a> for details.
                                     </span>
                                   </span>
                                 }
