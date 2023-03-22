@@ -128,7 +128,7 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
   const firstWidth = (_first/_total) * 100
   const secondWidth = (_second/_total) * 100
   const fullBorderRadius = '100px';
-  return second ? (
+  return isNumber(second) ? (
     <span className='flex-vertical-center' style={{width: 'calc(100% + 2px)', backgroundColor: 'rgba(0, 0, 0, 0.03)', height: '10px', borderRadius: fullBorderRadius}}>
       {
         firstWidth ?
