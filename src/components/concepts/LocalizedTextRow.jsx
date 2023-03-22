@@ -19,7 +19,7 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
   return (
     <React.Fragment key={locale}>
       <TableRow hover>
-        <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingLeft: '15px', width: '50px', paddingTop: '5px'}}>
+        <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingLeft: '15px', width: '50px', paddingTop: '8px'}}>
           <div className='gray-italics-small flex-vertical-center'>
             {`[${locale}]`}
           </div>
