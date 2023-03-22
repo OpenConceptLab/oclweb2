@@ -1,15 +1,15 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress, Chip, Skeleton } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, Chip, Skeleton } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { map, max, isEmpty, get, isNull, camelCase, isNumber } from 'lodash';
+import { map, max, isEmpty, get, isNull, camelCase, isNumber, times } from 'lodash';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
 import APIService from '../../services/APIService';
 import PopperGrow from '../common/PopperGrow';
 
 
-const FieldDistribution = ({distribution, field, source}) => {
+const FieldDistribution = ({distribution, field, source, count}) => {
   let baseURL = source.version_url || source.url
   baseURL += field.includes('map_type') ? 'mappings/' : 'concepts/'
 
@@ -31,9 +31,16 @@ const FieldDistribution = ({distribution, field, source}) => {
         }
       </List>
     ) : (
-      <div style={{textAlign: 'center', padding: '10px'}}>
-        <CircularProgress />
-      </div>
+      <List dense>
+        {
+          times(count, index => (
+              <ListItem key={index} secondaryAction={<Skeleton width={30} height={30} variant="circular" />}>
+                <Skeleton style={{width: '90%'}} height={30} />
+              </ListItem>
+            )
+          )
+        }
+      </List>
     )
 }
 
@@ -146,7 +153,7 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
 
 const SelfSummaryCell = ({label, value, onClick}) => (
   <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-    <Button variant='text' onClick={onClick} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
+    <Button variant='text' onClick={onClick} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}} disabled={value === 0}>
       <p style={{margin: 0, display: 'flex', alignItem: 'center', justifyContent: 'center'}}>
         {
           isNumber(value) ? <b>{toNumDisplay(value)}</b> : <Skeleton width={20} height={20} variant="circular" />
@@ -162,15 +169,17 @@ const SelfSummaryCell = ({label, value, onClick}) => (
 const SelfSummary = ({ summary, source, isVersion }) => {
   const [distribution, setDistribution] = React.useState({})
   const [open, setOpen] = React.useState(false)
+  const [selectedSummaryFieldCount, setSelectedSummaryFieldCount] = React.useState(null)
   const [anchorRef, setAnchorRef] = React.useState(null)
   const getFieldDistribution = field => {
     if(field && !distribution[field])
       APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true, distribution: field}).then(response => setDistribution({...distribution, [field]: get(response.data, `distribution.${field}`)}))
   }
 
-  const toggle = (event, field) => {
+  const toggle = (event, field, count) => {
     const newOpen = (!field || open === field) ? false : field
     setOpen(newOpen)
+    setSelectedSummaryFieldCount(newOpen ? count : null)
     setAnchorRef(newOpen ? {current: event.currentTarget} : null)
     getFieldDistribution(field)
   }
@@ -220,18 +229,18 @@ const SelfSummary = ({ summary, source, isVersion }) => {
               </TableCell>
             </TableRow>
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <SelfSummaryCell value={summary?.concepts?.concept_class} label='Concept Classes' onClick={event => toggle(event, 'concept_class')} />
-              <SelfSummaryCell value={summary?.concepts?.datatype} label='Datatype' onClick={event => toggle(event, 'datatype')} />
-              <SelfSummaryCell value={summary?.mappings?.map_types} label='MapTypes' onClick={event => toggle(event, 'map_type')} />
-              <SelfSummaryCell value={summary?.locales?.locales} label='Languages' onClick={event => toggle(event, 'name_locale')} />
-              <SelfSummaryCell value={summary?.locales?.names} label='Name Types' onClick={event => toggle(event, 'name_type')} />
+              <SelfSummaryCell value={summary?.concepts?.concept_class} label='Concept Classes' onClick={event => toggle(event, 'concept_class', summary?.concepts?.concept_class)} />
+              <SelfSummaryCell value={summary?.concepts?.datatype} label='Datatype' onClick={event => toggle(event, 'datatype', summary?.concepts?.datatype)} />
+              <SelfSummaryCell value={summary?.mappings?.map_types} label='MapTypes' onClick={event => toggle(event, 'map_type', 'map_types', summary?.mappings?.map_types)} />
+              <SelfSummaryCell value={summary?.locales?.locales} label='Languages' onClick={event => toggle(event, 'name_locale', 'locales', summary?.locales?.locales)} />
+              <SelfSummaryCell value={summary?.locales?.names} label='Name Types' onClick={event => toggle(event, 'name_type', 'names', summary?.locales?.names)} />
             </TableRow>
           </TableBody>
           {
             Boolean(open) &&
               <PopperGrow open={Boolean(open)} anchorRef={anchorRef} handleClose={toggle}>
                 <div style={{maxHeight: '250px', overflow: 'auto'}}>
-                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} />
+                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} count={selectedSummaryFieldCount} />
                 </div>
               </PopperGrow>
           }
