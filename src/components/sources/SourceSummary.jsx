@@ -34,11 +34,10 @@ const FieldDistribution = ({distribution, field, source, count}) => {
       <List dense>
         {
           times(count, index => (
-              <ListItem key={index} secondaryAction={<Skeleton width={30} height={30} variant="circular" />}>
-                <Skeleton style={{width: '90%'}} height={30} />
-              </ListItem>
-            )
-          )
+            <ListItem key={index} secondaryAction={<Skeleton width={30} height={30} variant="circular" />}>
+              <Skeleton style={{width: '90%'}} height={30} />
+            </ListItem>
+          ))
         }
       </List>
     )
@@ -204,7 +203,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                   {
                     summary?.concepts ?
                       <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
-                    <Skeleton />
+                      <Skeleton />
                   }
                 </span>
                 <span style={{padding: '20px', width: width, display: 'inline-block'}}>
@@ -212,7 +211,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                   {
                     summary?.mappings ?
                       <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
-                    <Skeleton />
+                      <Skeleton />
                   }
                 </span>
                 {
@@ -222,7 +221,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                       {
                         summary?.versions ?
                           <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
-                        <Skeleton />
+                          <Skeleton />
                       }
                     </span>
                 }
@@ -254,10 +253,71 @@ const RetiredChip = ({ retired, onClick }) => (
   <Chip size='small' label='Include Retired' color={retired ? 'error' : 'default'} variant={retired ? 'contained' : 'outlined'} onClick={onClick} style={{marginLeft: '20px'}} />
 )
 
+
+const MappedSources = ({title, label, sources, source, summary, retired, setRetired, columns, fromSource}) => {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
+      <div onClick={() => setOpen(!open)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
+        <Divider style={{width: '40%'}} />
+        <span style={{width: '20%', textAlign: 'center'}}>
+          {
+            summary?.id ?
+              <React.Fragment><b>{sources.length.toLocaleString()}</b> {title}</React.Fragment> :
+            <Skeleton />
+          }
+        </span>
+        <Divider style={{width: '40%'}} />
+      </div>
+      <Collapse in={Boolean(open && sources.length)} timeout="auto" unmountOnExit>
+        <TableContainer component={Paper} style={{margin: '15px 0'}}>
+          <Table size='small'>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  <span>{label}</span>
+                  <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
+                </TableCell>
+                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  Concepts
+                </TableCell>
+                {
+                  retired &&
+                    <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                      Retired
+                    </TableCell>
+                }
+                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  Active
+                </TableCell>
+                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  Total
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <React.Fragment>
+                {
+                  map(sources, _source => (
+                    <React.Fragment key={_source.version_url}>
+                      <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={fromSource} />
+                      <TableRow>
+                        <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
+                      </TableRow>
+                    </React.Fragment>
+                  ))
+                }
+              </React.Fragment>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Collapse>
+    </div>
+  )
+}
+
 const SourceSummary = ({ summary, source }) => {
   const isVersion = source.type === 'Source Version'
-  const [openFromSources, setOpenFromSources] = React.useState(false)
-  const [openToSources, setOpenToSources] = React.useState(false)
   const [retired, setRetired] = React.useState(false)
   const fromSources = isEmpty(summary?.from_sources) ? [] : summary.from_sources
   const toSources = isEmpty(summary?.to_sources) ? [] : summary.to_sources
@@ -267,115 +327,27 @@ const SourceSummary = ({ summary, source }) => {
       <div className='col-xs-12 no-side-padding'>
         <SelfSummary summary={summary} isVersion={isVersion} source={source} />
       </div>
-      <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
-        <div onClick={() => setOpenToSources(!openToSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
-          <Divider style={{width: '40%'}} />
-          <span style={{width: '20%', textAlign: 'center'}}>
-            {
-              summary?.id ?
-                <React.Fragment><b>{toSources.length.toLocaleString()}</b> Mapped To Sources</React.Fragment> :
-              <Skeleton />
-            }
-          </span>
-          <Divider style={{width: '40%'}} />
-        </div>
-        <Collapse in={Boolean(toSources.length && openToSources)} timeout="auto" unmountOnExit>
-          <TableContainer component={Paper} style={{margin: '15px 0'}}>
-            <Table size='small'>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    <span>Target Source</span>
-                    <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
-                  </TableCell>
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Concepts
-                  </TableCell>
-                  {
-                    retired &&
-                      <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                        Retired
-                      </TableCell>
-                  }
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Active
-                  </TableCell>
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Total
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <React.Fragment>
-                  {
-                    map(toSources, _source => (
-                      <React.Fragment key={_source.version_url}>
-                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} />
-                        <TableRow>
-                          <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
-                        </TableRow>
-                      </React.Fragment>
-                    ))
-                  }
-                </React.Fragment>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Collapse>
-      </div>
-      <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
-        <div onClick={() => setOpenFromSources(!openFromSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
-          <Divider style={{width: '40%'}} />
-          <span style={{width: '20%', textAlign: 'center'}}>
-            {
-              summary?.id ?
-                <React.Fragment><b>{fromSources.length.toLocaleString()}</b> Mapped From Sources</React.Fragment> :
-              <Skeleton />
-            }
-          </span>
-          <Divider style={{width: '40%'}} />
-        </div>
-        <Collapse in={Boolean(fromSources.length && openFromSources)} timeout="auto" unmountOnExit>
-          <TableContainer component={Paper} style={{margin: '15px 0'}}>
-            <Table size='small'>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    <span>From Source</span>
-                    <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
-                  </TableCell>
-                  {
-                    retired &&
-                      <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                        Retired
-                      </TableCell>
-                  }
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Active
-                  </TableCell>
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Total
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <React.Fragment>
-                  {
-                    map(fromSources, _source => (
-                      <React.Fragment key={_source.version_url}>
-                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={true} />
-                        <TableRow>
-                          <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
-                        </TableRow>
-                      </React.Fragment>
-                    ))
-                  }
-                </React.Fragment>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Collapse>
-      </div>
+      <MappedSources
+        title='Mapped To Sources'
+        label='Target Source'
+        sources={toSources}
+        source={source}
+        retired={retired}
+        setRetired={setRetired}
+        columns={columns}
+        summary={summary}
+      />
+      <MappedSources
+        title='Mapped From Sources'
+        label='From Source'
+        sources={fromSources}
+        source={source}
+        retired={retired}
+        setRetired={setRetired}
+        columns={columns}
+        fromSource
+        summary={summary}
+      />
     </div>
   )
 }
