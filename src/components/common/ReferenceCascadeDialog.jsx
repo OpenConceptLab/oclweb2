@@ -1,10 +1,12 @@
 import React from 'react';
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText,
+  Button, Dialog, DialogActions, DialogContent, DialogContentText, Collapse, Badge,
   FormControlLabel, Tooltip, CircularProgress, FormControl, RadioGroup, Radio, Checkbox
 } from '@mui/material'
 import {
   Help as HelpIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+  ArrowDropUp as ArrowDropUpIcon,
 } from '@mui/icons-material'
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import APIPreview from './APIPreview'
@@ -14,6 +16,9 @@ import HtmlToolTipRaw from './HtmlToolTipRaw';
 const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, open, onClose, title, onAdd, isAdding, collection, noCascadePayloadFunc, cascadeMappingsFunc, cascadeToConceptsFunc, cascadeOpenMRSFunc, onTransformReferencesChange }) => {
   const [cascadeMethod, setCascadeMethod] = React.useState('none')
   const [transformReferences, setTransformReferences] = React.useState(false)
+  const [advancedSettings, setAdvancedSettings] = React.useState(false)
+  const toggleSettings = () => setAdvancedSettings(!advancedSettings)
+  const showAdvancedSettings = Boolean(onTransformReferencesChange)
   const onChange = event => {
     const newValue = event.target.value
     setCascadeMethod(newValue)
@@ -57,7 +62,7 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
           <h4 style={{marginBottom: '5px'}}>
             Would you like to also include associated Concepts and Mappings?
           </h4>
-          <FormControl>
+          <FormControl style={{marginBottom: '5px'}}>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
@@ -113,35 +118,58 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
               />
             </RadioGroup>
             {
-              Boolean(onTransformReferencesChange) &&
-                <FormControlLabel
-                  control={<Checkbox checked={transformReferences} onChange={() => _onTransformReferencesChange(!transformReferences)}/>}
-                  label={
-                    <span className='flex-vertical-center'>
-                      <span style={{marginRight: '5px', fontSize: '14px'}}>
-                        Transform to static references
-                      </span>
-                      <HtmlToolTipRaw
-                        placement='right'
-                        title={
-                          <span>
-                          <span>
-                            Transforming to static references means that after concepts and mappings are added to your collection, they will not change even if they are updated at the source.
-                          </span>
-                            <br />
-                            <br />
-                            <span>
-                              Uncheck this box to allow dynamic references, which may help you to keep your collection up to date in the future. See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer">YouTube video</a> for details.
+              showAdvancedSettings &&
+                <div className='col-xs-12 no-side-padding' style={{marginTop: '10px'}}>
+                <Badge badgeContent={transformReferences && !advancedSettings ? 1 : 0} color='primary'>
+                  <Button
+                    size='small'
+                    variant='text'
+                    endIcon={
+                      advancedSettings ?
+                        <ArrowDropUpIcon fontSize='inherit' /> :
+                        <ArrowDropDownIcon fontSize='inherit' />
+                    }
+                    style={{textTransform: 'none', marginLeft: '-4px'}}
+                    onClick={toggleSettings}>
+                    Advanced Settings
+                  </Button>
+                </Badge>
+                  <Collapse in={advancedSettings} timeout="auto" unmountOnExit style={{marginTop: '-15px'}}>
+                    {
+                      advancedSettings &&
+                        <div className='col-xs-12 no-side-padding' style={{margin: '15px 0'}}>
+                        <FormControlLabel
+                          control={<Checkbox checked={transformReferences} onChange={() => _onTransformReferencesChange(!transformReferences)}/>}
+                          label={
+                            <span className='flex-vertical-center'>
+                              <span style={{marginRight: '5px', fontSize: '14px'}}>
+                                Transform to static references
+                              </span>
+                              <HtmlToolTipRaw
+                                placement='right'
+                                title={
+                                  <span>
+                                  <span>
+                                    Transforming to static references means that after concepts and mappings are added to your collection, they will not change even if they are updated at the source.
+                                  </span>
+                                    <br />
+                                    <br />
+                                    <span>
+                                      Uncheck this box to allow dynamic references, which may help you to keep your collection up to date in the future. See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer">YouTube video</a> for details.
+                                    </span>
+                                  </span>
+                                }
+                                arrow
+                              >
+                                <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
+                              </HtmlToolTipRaw>
                             </span>
-                          </span>
-                        }
-                        arrow
-                      >
-                        <HelpIcon fontSize='small' style={{fontSize: '14px'}}/>
-                      </HtmlToolTipRaw>
-                    </span>
-                  }
-                />
+                          }
+                        />
+                        </div>
+                    }
+                  </Collapse>
+        </div>
             }
           </FormControl>
           {
