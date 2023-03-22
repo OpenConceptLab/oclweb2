@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, Chip, Skeleton } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Button, List, ListItem, Chip, Skeleton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { map, max, isEmpty, get, isNull, camelCase, isNumber, times } from 'lodash';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
@@ -132,7 +133,7 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
       {
         firstWidth ?
           <Tooltip title={firstTooltip}>
-            <span style={{width: `${max([firstWidth, 1])}%`, backgroundColor: TOMATO_RED, borderRadius: firstWidth === 100 ? fullBorderRadius : '100px 0 0 100px', height: '10px'}} />
+            <span style={{width: `${max([firstWidth, 1])}%`, backgroundColor: BLUE, borderRadius: firstWidth === 100 ? fullBorderRadius : '100px 0 0 100px', height: '10px'}} />
           </Tooltip> : null
       }
       {
@@ -142,7 +143,7 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
       {
         secondWidth ?
           <Tooltip title={secondTooltip}>
-            <span style={{width: `${max([secondWidth, 1])}%`, backgroundColor: BLUE, borderRadius: secondWidth === 100 ? fullBorderRadius :  '0 100px 100px 0', height: '10px'}} />
+            <span style={{width: `${max([secondWidth, 1])}%`, backgroundColor: TOMATO_RED, borderRadius: secondWidth === 100 ? fullBorderRadius :  '0 100px 100px 0', height: '10px'}} />
           </Tooltip> : null
       }
     </span>
@@ -199,7 +200,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell align='left' colSpan={5}>
                 <span style={{padding: '20px', width: width, display: 'inline-block' }}>
-                  <Bar first={summary?.concepts?.retired} second={summary?.concepts?.active} firstTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} />
+                  <Bar first={summary?.concepts?.active} second={summary?.concepts?.retired} firstTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} />
                   {
                     summary?.concepts ?
                       <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
@@ -207,7 +208,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                   }
                 </span>
                 <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                  <Bar first={summary?.mappings?.retired} second={summary?.mappings?.active} firstTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} />
+                  <Bar first={summary?.mappings?.active} second={summary?.mappings?.retired} firstTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} />
                   {
                     summary?.mappings ?
                       <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
@@ -217,7 +218,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                 {
                   !isVersion &&
                     <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                      <Bar first={summary?.versions?.released} second={summary?.versions?.total - summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} />
+                      <Bar first={summary?.versions?.total - summary?.versions?.released} second={summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} />
                       {
                         summary?.versions ?
                           <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
@@ -255,63 +256,62 @@ const RetiredChip = ({ retired, onClick }) => (
 
 
 const MappedSources = ({title, label, sources, source, summary, retired, setRetired, columns, fromSource}) => {
-  const [open, setOpen] = React.useState(false)
   return (
-    <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
-      <div onClick={() => setOpen(!open)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
-        <Divider style={{width: '40%'}} />
-        <span style={{width: '20%', textAlign: 'center'}}>
+    <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '15px'}}>
+      <Accordion disabled={summary?.id && sources?.length == 0}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {
             summary?.id ?
-              <React.Fragment><b>{sources.length.toLocaleString()}</b> {title}</React.Fragment> :
-            <Skeleton />
-          }
-        </span>
-        <Divider style={{width: '40%'}} />
-      </div>
-      <Collapse in={Boolean(open && sources.length)} timeout="auto" unmountOnExit>
-        <TableContainer component={Paper} style={{margin: '15px 0'}}>
-          <Table size='small'>
-            <TableHead>
-              <TableRow>
-                <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                  <span>{label}</span>
-                  <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
-                </TableCell>
-                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                  Concepts
-                </TableCell>
-                {
-                  retired &&
-                    <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                      Retired
-                    </TableCell>
-                }
-                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                  Active
-                </TableCell>
-                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                  Total
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
               <React.Fragment>
-                {
-                  map(sources, _source => (
-                    <React.Fragment key={_source.version_url}>
-                      <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={fromSource} />
-                      <TableRow>
-                        <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
-                      </TableRow>
-                    </React.Fragment>
-                  ))
-                }
-              </React.Fragment>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Collapse>
+                <b style={{marginRight: '5px'}}>{sources.length.toLocaleString()}</b> {title}
+              </React.Fragment> :
+            <span className='flex-vertical-center' style={{width: '100%'}}>
+              <Skeleton width={25} height={25} variant="circular" style={{marginRight: '10px'}}/><Skeleton style={{width: '50%'}} height={30} />
+            </span>
+          }
+        </AccordionSummary>
+        <AccordionDetails>
+            <Table size='small'>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                    <span>{label}</span>
+                    <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
+                  </TableCell>
+                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                    Concepts
+                  </TableCell>
+                  {
+                    retired &&
+                      <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                        Retired
+                      </TableCell>
+                  }
+                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                    Active
+                  </TableCell>
+                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                    Total
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <React.Fragment>
+                  {
+                    map(sources, _source => (
+                      <React.Fragment key={_source.version_url}>
+                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={fromSource} />
+                        <TableRow>
+                          <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
+                        </TableRow>
+                      </React.Fragment>
+                    ))
+                  }
+                </React.Fragment>
+              </TableBody>
+            </Table>
+        </AccordionDetails>
+      </Accordion>
     </div>
   )
 }
