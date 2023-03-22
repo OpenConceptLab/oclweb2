@@ -415,7 +415,7 @@ class ConceptHome extends React.Component {
     const detailsMargin = this.getContentMarginTop()
     const hasAccess = currentUserHasAccess()
     const canAct = Boolean(hasAccess && isVersionedObject && this.props.scoped != 'collection')
-    const canSort = canAct && window.MAPPING_SORTING_TOGGLE
+    const canSort = canAct
     const conceptDetails = (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
