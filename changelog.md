@@ -1,3 +1,24 @@
+##### 2.1.71 - Wed Mar 22 04:04:47 2023 +0000
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | removed feature toggle
+- Concept Names/Descriptions | correcting vertical spacing/alignment
+- [OpenConceptLab/ocl_issues#1496](https://github.com/OpenConceptLab/ocl_issues/issues/1496) | transform references switch behind advanced settings button
+- [OpenConceptLab/ocl_issues#1496](https://github.com/OpenConceptLab/ocl_issues/issues/1496) | transform references switch
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Added skeleton
+- ErrorBoundary | formatting UI
+- ErrorBoundary | setting error first and then converting error for logging
+##### 2.1.70 - Thu Mar 16 06:25:09 2023 +0000
+- [OpenConceptLab/ocl_issues#1518](https://github.com/OpenConceptLab/ocl_issues/issues/1518) | redirect to TB from OpenMRS DM to not redirect to login if the popup is present
+##### 2.1.69 - Thu Mar 16 02:49:07 2023 +0000
+- Add To Collection/Clone To Source | added min width and not truncating text
+##### 2.1.68 - Wed Mar 15 04:24:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1518](https://github.com/OpenConceptLab/ocl_issues/issues/1518) | OpenMRS redirect
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | assign/clear sort weight options
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | sorting algo to apply sort_weight on all always
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | showing warning only if one of the mapping has sort_weight
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | added sorted icon
+- [OpenConceptLab/ocl_issues#1518](https://github.com/OpenConceptLab/ocl_issues/issues/1518) | OpenMRS deprecation dialog
+##### 2.1.67 - Tue Mar 14 04:20:55 2023 +0000
+- [OpenConceptLab/ocl_issues#1519](https://github.com/OpenConceptLab/ocl_issues/issues/1519) | Org overview members to redirect to members tab
 ##### 2.1.66 - Mon Mar 13 08:49:34 2023 +0000
 - [OpenConceptLab/ocl_issues#1514](https://github.com/OpenConceptLab/ocl_issues/issues/1514) | OpenMRS left panel option | added deprecated
 - [OpenConceptLab/ocl_issues#1514](https://github.com/OpenConceptLab/ocl_issues/issues/1514) | styling apps menu
