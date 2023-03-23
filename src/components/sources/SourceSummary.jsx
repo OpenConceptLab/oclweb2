@@ -3,7 +3,8 @@ import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { map, max, isEmpty, isNull, camelCase, isNumber, isArray, startCase } from 'lodash';
+import { map, max, isEmpty, isNull, camelCase, isNumber, isArray, startCase, times } from 'lodash';
+import APIService from '../../services/APIService';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
 import PopperGrow from '../common/PopperGrow';
@@ -237,15 +238,32 @@ const RetiredChip = ({ retired, onClick }) => (
 )
 
 
-const MappedSources = ({title, label, sources, source, summary, retired, setRetired, columns, fromSource}) => {
+const MappedSources = ({title, label, sources, source, summary, retired, setRetired, columns, fromSource, count}) => {
+  const [open, setOpen] = React.useState(false)
+  const [distribution, setDistribution] = React.useState(false)
+  const fetchDistribution = () => {
+    APIService
+      .new()
+      .overrideURL(source.version_url || source.url)
+      .appendToUrl('summary/')
+      .get(null, null, {verbose: true, distribution: fromSource ? 'from_sources_map_type' : 'to_sources_map_type'})
+      .then(response => setDistribution(response.data.distribution.to_sources_map_type))
+  }
+  const onToggle = () => {
+    const newOpen = !open
+    if(newOpen && distribution === false)
+      fetchDistribution()
+    setOpen(newOpen)
+  }
+
   return (
     <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '15px'}}>
-      <Accordion disabled={summary?.id && sources?.length == 0}>
+      <Accordion open={open} disabled={count === 0} onChange={onToggle}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {
             summary?.id ?
               <React.Fragment>
-                <b style={{marginRight: '5px'}}>{sources.length.toLocaleString()}</b> {title}
+                <b style={{marginRight: '5px'}}>{count.toLocaleString()}</b> {title}
               </React.Fragment> :
             <span className='flex-vertical-center' style={{width: '100%'}}>
               <Skeleton width={25} height={25} variant="circular" style={{marginRight: '10px'}}/><Skeleton style={{width: '50%'}} height={30} />
@@ -258,7 +276,6 @@ const MappedSources = ({title, label, sources, source, summary, retired, setReti
               <TableRow>
                 <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                   <span>{label}</span>
-                  <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
                 </TableCell>
                 <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                   Concepts
@@ -280,14 +297,41 @@ const MappedSources = ({title, label, sources, source, summary, retired, setReti
             <TableBody>
               <React.Fragment>
                 {
-                  map(sources, _source => (
+                  distribution ?
+                    (
+                      map(distribution, _source => (
                     <React.Fragment key={_source.version_url}>
                       <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={fromSource} />
                       <TableRow>
                         <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
                       </TableRow>
                     </React.Fragment>
-                  ))
+                      ))
+                    ) :
+                    (
+                      times(count, index => (
+                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCell>
+                            <Skeleton style={{width: '90%'}} height={25} />
+                          </TableCell>
+                          <TableCell align='right'>
+                            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
+                              <Skeleton variant='circular' width={25} height={25} />
+                            </span>
+                          </TableCell>
+                          <TableCell align='right'>
+                            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
+                              <Skeleton variant='circular' width={25} height={25} />
+                              </span>
+                          </TableCell>
+                          <TableCell align='right'>
+                            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
+                              <Skeleton variant='circular' width={25} height={25} />
+                              </span>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )
                 }
               </React.Fragment>
             </TableBody>
@@ -318,6 +362,7 @@ const SourceSummary = ({ summary, source }) => {
         setRetired={setRetired}
         columns={columns}
         summary={summary}
+        count={summary?.mappings?.to_concept_source}
       />
       <MappedSources
         title='Mapped From Sources'
@@ -329,6 +374,7 @@ const SourceSummary = ({ summary, source }) => {
         columns={columns}
         fromSource
         summary={summary}
+        count={summary?.mappings?.from_concept_source}
       />
     </div>
   )
