@@ -109,7 +109,8 @@ const App = props => {
 
   React.useEffect(() => {
     setUpOpenMRSDeprecationDialog()
-    fetchToggles()
+    if(!isFHIRServer())
+      fetchToggles()
     addLogoutListenerForAllTabs()
     recordGAPageView()
     setupHotJar()

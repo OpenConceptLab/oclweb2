@@ -121,15 +121,20 @@ class ContainerHome extends React.Component {
     let ownerType;
     let owner;
     let ownerURL;
-    if(selfLink.match('/orgs/')){
+    if(selfLink?.match('/orgs/')){
       ownerType = 'Organization'
       owner = get(get(selfLink.split('/orgs/'), '1', '').split('/'), '0')
       ownerURL = `/orgs/${owner}/`
     }
-    else if (selfLink.match('/users/')) {
+    else if (selfLink?.match('/users/')) {
       ownerType = 'User'
       owner = get(get(selfLink.split('/users/'), '1', '').split('/'), '0')
       ownerURL = `/users/${owner}/`
+    } else {
+      ownerType = this.props.match.params?.org ? 'Organization' : 'User'
+      owner = this.props.match.params?.org || this.props.match.params?.user
+      const ownerKey = this.props.match.params?.org ? 'orgs' : 'users'
+      ownerURL = `/${ownerKey}/${owner}/`
     }
     if(ownerType && owner)
       return {ownerType: ownerType, owner: owner, ownerURL: ownerURL}
@@ -153,7 +158,7 @@ class ContainerHome extends React.Component {
                   else if(!isObject(response))
                     this.setState({isLoading: false}, () => {throw response})
                   else {
-                    const resource = isHAPI ? response.data : get(response, 'data.entry.0.resource');
+                    const resource = isHAPI ? response.data : get(response, 'data.entry.0.resource') || response?.data;
                     const owner = isHAPI ? {owner: server.info.org.id} : this.getOwner(response.data)
                     const concepts = get(resource, 'concept') ||
                                      get(find(get(resource, 'compose.include', []), inc => !isEmpty(get(inc, 'concept'))), 'concept') || [];

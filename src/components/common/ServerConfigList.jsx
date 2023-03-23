@@ -10,6 +10,7 @@ import { get, map } from 'lodash';
 import {
   getAppliedServerConfig, getDefaultServerConfig,  isServerSwitched, getServerConfigsForCurrentUser
 } from '../../common/utils';
+import BetaLabel from './BetaLabel'
 
 const ServerConfigList = ({ onClose }) => {
   const selectedConfig = getAppliedServerConfig();
@@ -55,7 +56,7 @@ const ServerConfigList = ({ onClose }) => {
               <ListItemText
                 primary={
                   <span>
-                    <span>{ config.name }</span>
+                    <span>{ config.beta ? <BetaLabel label={config.name} /> : config.name }</span>
                     {
                       isDefault &&
                       <span style={{fontStyle: 'italic', marginLeft: '5px'}}>

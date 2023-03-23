@@ -469,7 +469,10 @@ const ExpandibleRow = props => {
 
   const getOCLFHIRResourceURL = item => {
     const identifiers = flatten([get(item, 'resource.identifier', [])])
-    return '/' + compact(get(find(identifiers, ident => get(ident, 'system', '').match('fhir.')), 'value', '').split('/')).splice(0, 4).join('/')
+    let ident = find(identifiers, ident => get(ident, 'system', '').match('fhir.'))
+    if(!ident)
+      ident = find(identifiers, ident => get(ident, 'system', '').match('api.'))
+    return '/' + compact(get(ident, 'value', '').split('/')).splice(0, 4).join('/')
   };
 
   const fetchVersions = () => {
