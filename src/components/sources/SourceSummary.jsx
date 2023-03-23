@@ -1,9 +1,9 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Button, List, ListItem, Chip, Skeleton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Button, List, ListItem, Skeleton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { map, max, isEmpty, isNull, camelCase, isNumber, isArray, startCase, times } from 'lodash';
+import { map, max, isNull, camelCase, isNumber, isArray, startCase, times } from 'lodash';
 import APIService from '../../services/APIService';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
@@ -35,7 +35,7 @@ const FieldDistribution = ({distribution, field, source, humanize}) => {
 }
 
 
-const SummaryTable = ({ summary, retired, columns, source, fromSource }) => {
+const SummaryTable = ({ summary, columns, source, fromSource }) => {
   const [open, setOpen] = React.useState(false)
   const baseURL = (source.version_url || source.url || '') + 'mappings/'
   const targetSource = fromSource ? "fromConceptSource" : "toConceptSource"
@@ -50,12 +50,6 @@ const SummaryTable = ({ summary, retired, columns, source, fromSource }) => {
         <TableCell align='right'>
           {toNumDisplay(summary.distribution.concepts)}
         </TableCell>
-        {
-          retired &&
-            <TableCell align='right'>
-              {toNumDisplay(summary.distribution.retired)}
-            </TableCell>
-        }
         <TableCell align='right'>
           {toNumDisplay(summary.distribution.active)}
         </TableCell>
@@ -89,12 +83,6 @@ const SummaryTable = ({ summary, retired, columns, source, fromSource }) => {
                 <TableCell align='right'>
                   {toNumDisplay(stats.concepts)}
                 </TableCell>
-                {
-                  retired &&
-                    <TableCell align='right'>
-                      {toNumDisplay(stats.retired)}
-                    </TableCell>
-                }
                 <TableCell align='right'>
                   {toNumDisplay(stats.active)}
                 </TableCell>
@@ -233,12 +221,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
   )
 }
 
-const RetiredChip = ({ retired, onClick }) => (
-  <Chip size='small' label='Include Retired' color={retired ? 'error' : 'default'} variant={retired ? 'contained' : 'outlined'} onClick={onClick} style={{marginLeft: '20px'}} />
-)
-
-
-const MappedSources = ({title, label, sources, source, summary, retired, setRetired, columns, fromSource, count}) => {
+const MappedSources = ({title, label, source, summary, columns, fromSource, count}) => {
   const [open, setOpen] = React.useState(false)
   const [distribution, setDistribution] = React.useState(false)
   const fetchDistribution = () => {
@@ -280,12 +263,6 @@ const MappedSources = ({title, label, sources, source, summary, retired, setReti
                 <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                   Concepts
                 </TableCell>
-                {
-                  retired &&
-                    <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                      Retired
-                    </TableCell>
-                }
                 <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                   Active
                 </TableCell>
@@ -301,7 +278,7 @@ const MappedSources = ({title, label, sources, source, summary, retired, setReti
                     (
                       map(distribution, _source => (
                     <React.Fragment key={_source.version_url}>
-                      <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={fromSource} />
+                      <SummaryTable summary={_source} columns={columns} source={source} fromSource={fromSource} />
                       <TableRow>
                         <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
                       </TableRow>
@@ -344,10 +321,7 @@ const MappedSources = ({title, label, sources, source, summary, retired, setReti
 
 const SourceSummary = ({ summary, source }) => {
   const isVersion = source.type === 'Source Version'
-  const [retired, setRetired] = React.useState(false)
-  const fromSources = isEmpty(summary?.from_sources) ? [] : summary.from_sources
-  const toSources = isEmpty(summary?.to_sources) ? [] : summary.to_sources
-  const columns = retired ? 5 : 4
+  const columns = 4
   return (
     <div className='col-xs-12' style={{width: '90%', margin: '0 5%'}}>
       <div className='col-xs-12 no-side-padding'>
@@ -356,10 +330,7 @@ const SourceSummary = ({ summary, source }) => {
       <MappedSources
         title='Mapped To Sources'
         label='Target Source'
-        sources={toSources}
         source={source}
-        retired={retired}
-        setRetired={setRetired}
         columns={columns}
         summary={summary}
         count={summary?.mappings?.to_concept_source}
@@ -367,10 +338,7 @@ const SourceSummary = ({ summary, source }) => {
       <MappedSources
         title='Mapped From Sources'
         label='From Source'
-        sources={fromSources}
         source={source}
-        retired={retired}
-        setRetired={setRetired}
         columns={columns}
         fromSource
         summary={summary}
