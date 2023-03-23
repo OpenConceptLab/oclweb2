@@ -856,11 +856,11 @@ class Search extends React.Component {
                         <span className='filter-chip'>
                           <Chip
                             icon={<HierarchyIcon fontSize='small' />}
-                                 size='small'
-                      onClick={this.onHierarchyViewChange}
-                                 label='Hierarchy'
-                                 color={hierarchy ? 'primary' : 'secondary'}
-                                 variant={hierarchy ? 'contained' : 'outlined'}
+                            size='small'
+                            onClick={this.onHierarchyViewChange}
+                            label='Hierarchy'
+                            color={hierarchy ? 'primary' : 'secondary'}
+                            variant={hierarchy ? 'contained' : 'outlined'}
                           />
                         </span>
                       }
@@ -869,12 +869,12 @@ class Search extends React.Component {
                         <span className='filter-chip'>
                           <Tooltip title='Copy Link to this results'>
                             <Chip
-                        onClick={this.onShareClick}
-                                icon={<ShareIcon fontSize='small' />}
-                                label='Share'
-                                color='secondary'
-                                variant='outlined'
-                                size={nested ? 'small' : 'medium'}
+                              onClick={this.onShareClick}
+                              icon={<ShareIcon fontSize='small' />}
+                              label='Share'
+                              color='secondary'
+                              variant='outlined'
+                              size={nested ? 'small' : 'medium'}
                             />
                           </Tooltip>
                         </span>
