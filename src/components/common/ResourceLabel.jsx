@@ -1,15 +1,11 @@
 import React from 'react';
-import { includes } from 'lodash';
 import {
   ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
-import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
-import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 
 const SEPARATOR = (<SeparatorIcon />)
 const ResourceLabel = props => {
-  const { resource, existsInOCL, noSeparator, noExistsIcon } = props;
-  const isSourceChild = includes(['concept', 'mapping'], resource);
+  const { noSeparator } = props;
 
   return (
     <div className='col-xs-12 no-side-padding flex-vertical-center' style={{flexWrap: 'wrap'}}>
@@ -40,13 +36,6 @@ const ResourceLabel = props => {
       <span className={'resource-label resource-id ' + (props.colorClass || '')} style={{maxWidth: '100%'}}>
         <span className='ellipsis-text'>{props.name}</span>
       </span>
-      {
-        !noExistsIcon && isSourceChild && (
-          existsInOCL ?
-          <ExistsInOCLIcon containerStyles={{marginLeft: '5px'}} /> :
-          <DoesnotExistsInOCLIcon containerStyles={{marginLeft: '5px'}} />
-        )
-      }
     </div>
   )
 }

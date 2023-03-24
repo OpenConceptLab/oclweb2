@@ -190,7 +190,6 @@ class CollectionHomeChildrenList extends React.Component {
                         <div className='col-xs-12' style={{marginBottom: '5px', borderRadius: '5px', border: '1px solid rgba(0, 0, 0, 0.1)', padding: '5px 10px'}}>
                           <div className='col-xs-12 no-side-padding'>
                             <ResourceLabel
-                              noExistsIcon
                               resource='concept'
                               owner={resource.owner}
                               parent={resource.source}

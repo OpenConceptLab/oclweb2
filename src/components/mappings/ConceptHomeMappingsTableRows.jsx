@@ -7,12 +7,11 @@ import {
   ImportExport as SortIcon,
   ArrowUpward as UpIcon,
   ArrowDownward as DownIcon,
-  WarningAmber as WarningIcon
+  WarningAmber as WarningIcon,
+  LocalOffer as LocalOfferIcon
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty, some, maxBy } from 'lodash';
-import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
-import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 import MappingOptions from './MappingOptions';
 import { getSiteTitle, toParentURI, getSiblings } from '../../common/utils';
 import MappingInlineForm from './MappingInlineForm';
@@ -257,11 +256,14 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                         </span>
                                     }
                                     <span className='flex-vertical-center' style={{marginRight: '4px'}}>
-                                      {
-                                        targetURL ?
-                                          <ExistsInOCLIcon title={title} /> :
-                                        <DoesnotExistsInOCLIcon title={title} />
-                                      }
+                                      <Tooltip title={title}>
+                                        <LocalOfferIcon
+                                          color={targetURL ? 'primary': 'warning'}
+                                          fontSize='small'
+                                          style={{width: '12pt'}}
+                                        />
+
+                                        </Tooltip>
                                     </span>
                                     <span className={mapping.retired ? 'retired' : ''}>
                                       { mapping[conceptCodeAttr] }

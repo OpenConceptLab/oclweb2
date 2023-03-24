@@ -1,9 +1,12 @@
 import React from 'react';
 import {
-  TableRow, TableCell, Chip
+  TableRow, TableCell, Chip, Tooltip
 } from '@mui/material';
+import {LocalOffer as LocalOfferIcon} from '@mui/icons-material'
 import { map, get, orderBy } from 'lodash';
-import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
+import { getSiteTitle } from '../../common/utils';
+
+const SITE_TITLE = getSiteTitle()
 
 const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
   const onDefaultClick = (event, concept) => {
@@ -39,7 +42,13 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
               <TableCell align='left' className='ellipsis-text' style={{width: '30%', paddingLeft: '5px'}}>
                 <span className='flex-vertical-center'>
                   <span className='flex-vertical-center' style={{marginRight: '4px'}}>
-                    <ExistsInOCLIcon />
+                    <Tooltip title={`Defined in ${SITE_TITLE}`}>
+                      <LocalOfferIcon
+                        color='primary'
+                        fontSize='small'
+                        style={{width: '12pt'}}
+                      />
+                    </Tooltip>
                   </span>
                   <span className={concept.retired ? 'retired' : ''}>
                     {get(concept, 'id')}
