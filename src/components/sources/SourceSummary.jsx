@@ -1,9 +1,10 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Button, List, ListItem, Skeleton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Button, List, ListItem, Skeleton, Accordion, AccordionSummary, AccordionDetails, IconButton } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { map, max, isNull, camelCase, isNumber, isArray, startCase, times } from 'lodash';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { map, max, isNull, camelCase, isNumber, isArray, startCase, get } from 'lodash';
 import APIService from '../../services/APIService';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
@@ -35,45 +36,76 @@ const FieldDistribution = ({distribution, field, source, humanize}) => {
 }
 
 
-const SummaryTable = ({ summary, columns, source, fromSource }) => {
-  const [open, setOpen] = React.useState(false)
+const SummaryTable = ({ summary, source, fromSource }) => {
+  const [expand, setExpand] = React.useState(false)
+  const [distribution, setDistribution] = React.useState(false)
+  const [isFetching, setIsFetching] = React.useState(false)
   const baseURL = (source.version_url || source.url || '') + 'mappings/'
   const targetSource = fromSource ? "fromConceptSource" : "toConceptSource"
+  const onExpandToggle = sourceName => {
+    const newExpand = !expand
+    setExpand(!expand)
+    if(newExpand && !distribution && !isFetching) {
+      setIsFetching(true)
+      APIService
+        .new()
+        .overrideURL(source.version_url || source.url)
+        .appendToUrl('summary/')
+        .get(null, null, {verbose: true, distribution: fromSource ? 'from_sources_map_type' : 'to_sources_map_type', sources: sourceName})
+        .then(response => {
+          setDistribution(get(response.data?.distribution?.to_sources_map_type, '0.distribution'))
+          setIsFetching(false)
+        })
+    }
+  }
+  const tdStyles = distribution ? {} : {background: 'rgba(224, 224, 224, 0.5)', borderBottom: 'none'}
   return (
     <React.Fragment>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell>
           <a href={'#' + summary.version_url} target='_blank' rel='noreferrer noopener'>
-            {summary.short_code}
+            {summary[0]}
           </a>
         </TableCell>
         <TableCell align='right'>
-          {toNumDisplay(summary.distribution.concepts)}
+          {toNumDisplay(summary[1])}
         </TableCell>
-        <TableCell align='right'>
-          {toNumDisplay(summary.distribution.active)}
+        <TableCell style={{width: '10px', padding: 0, background: distribution ? WHITE : 'rgba(224, 224, 224)', cursor: distribution ? 'inherit' : 'pointer'}}>
         </TableCell>
-        <TableCell align='right'>
-          {toNumDisplay(summary.distribution.total)}
+        <TableCell align='right' style={tdStyles}>
+          {toNumDisplay(distribution?.active)}
+        </TableCell>
+        <TableCell align='right' style={tdStyles}>
+          {toNumDisplay(distribution?.retired)}
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell colSpan={columns} align='left' style={{cursor: 'pointer', padding: 0}} onClick={() => setOpen(!open)}>
+        <TableCell colSpan={2} align='left' style={{cursor: 'pointer', padding: 0, background: distribution ? WHITE : 'rgba(224, 224, 224)'}} onClick={() => onExpandToggle(summary[0])}>
           <Button
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-            startIcon={open ? <UpIcon /> : <DownIcon />}
+            onClick={() => onExpandToggle(summary[0])}
+            startIcon={expand ? <UpIcon /> : <DownIcon />}
             style={{textTransform: 'none', marginLeft: '20px'}}
           >
             MapTypes
           </Button>
         </TableCell>
+        <TableCell style={{width: '10px', padding: 0, background: distribution ? WHITE: 'rgba(224, 224, 224)', cursor: distribution ? 'inherit': 'pointer'}}>
+          {
+            distribution ?
+              null :
+              <IconButton variant='contained' color='primary' size='small' onClick={() => onExpandToggle(summary[0])}>
+                <ArrowRightIcon fontSize='inherit' style={{transform: expand ? 'rotate(225deg)' : 'rotate(45deg)'}} />
+              </IconButton>
+          }
+        </TableCell>
+        <TableCell colSpan={2} align='left' style={{padding: 0, background: distribution ? WHITE : 'rgba(224, 224, 224, 0.5)'}} onClick={() => onExpandToggle(summary[0])}>
+        </TableCell>
       </TableRow>
       {
-        open && (
-          map(summary.distribution.map_types, stats => {
-            //facets={"mapType":{"broader-than":true},"toConceptSource":{"cloneFrom":true}}
+        expand && (
+          map(distribution?.map_types, stats => {
             let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary.short_code}":true}}`
             return (
               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={stats.map_type}>
@@ -81,13 +113,15 @@ const SummaryTable = ({ summary, columns, source, fromSource }) => {
                   <a href={"#" + url}>{stats.map_type}</a>
                 </TableCell>
                 <TableCell align='right'>
-                  {toNumDisplay(stats.concepts)}
+                  {toNumDisplay(stats.total)}
+                </TableCell>
+                <TableCell align='right'>
                 </TableCell>
                 <TableCell align='right'>
                   {toNumDisplay(stats.active)}
                 </TableCell>
                 <TableCell align='right'>
-                  {toNumDisplay(stats.total)}
+                  {toNumDisplay(stats.retired)}
                 </TableCell>
               </TableRow>
             )
@@ -221,32 +255,29 @@ const SelfSummary = ({ summary, source, isVersion }) => {
   )
 }
 
-const MappedSources = ({title, label, source, summary, columns, fromSource, count}) => {
-  const [open, setOpen] = React.useState(false)
-  const [distribution, setDistribution] = React.useState(false)
-  const fetchDistribution = () => {
-    APIService
-      .new()
-      .overrideURL(source.version_url || source.url)
-      .appendToUrl('summary/')
-      .get(null, null, {verbose: true, distribution: fromSource ? 'from_sources_map_type' : 'to_sources_map_type'})
-      .then(response => setDistribution(response.data.distribution.to_sources_map_type))
-  }
-  const onToggle = () => {
-    const newOpen = !open
-    if(newOpen && distribution === false)
-      fetchDistribution()
-    setOpen(newOpen)
-  }
+
+const MappedSourceSummary = ({mappedSource, fromSource, columns, source}) => {
+  return (
+    <React.Fragment key={mappedSource.version_url}>
+      <SummaryTable summary={mappedSource} source={source} fromSource={fromSource} />
+      <TableRow>
+        <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
+      </TableRow>
+    </React.Fragment>
+  )
+}
+
+const MappedSources = ({title, label, source, summary, columns, fromSource, sources}) => {
+  const count = sources?.length
 
   return (
     <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '15px'}}>
-      <Accordion open={open} disabled={count === 0} onChange={onToggle}>
+      <Accordion disabled={count === 0}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {
             summary?.id ?
               <React.Fragment>
-                <b style={{marginRight: '5px'}}>{count.toLocaleString()}</b> {title}
+                <b style={{marginRight: '5px'}}>{sources.length.toLocaleString()}</b> {title}
               </React.Fragment> :
             <span className='flex-vertical-center' style={{width: '100%'}}>
               <Skeleton width={25} height={25} variant="circular" style={{marginRight: '10px'}}/><Skeleton style={{width: '50%'}} height={30} />
@@ -261,54 +292,30 @@ const MappedSources = ({title, label, source, summary, columns, fromSource, coun
                   <span>{label}</span>
                 </TableCell>
                 <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                  Concepts
+                  Total
+                </TableCell>
+                <TableCell align='center' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold', width: '10px'}}>
                 </TableCell>
                 <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                   Active
                 </TableCell>
                 <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                  Total
+                  Retired
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <React.Fragment>
                 {
-                  distribution ?
-                    (
-                      map(distribution, _source => (
-                    <React.Fragment key={_source.version_url}>
-                      <SummaryTable summary={_source} columns={columns} source={source} fromSource={fromSource} />
-                      <TableRow>
-                        <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
-                      </TableRow>
-                    </React.Fragment>
-                      ))
-                    ) :
-                    (
-                      times(count, index => (
-                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          <TableCell>
-                            <Skeleton style={{width: '90%'}} height={25} />
-                          </TableCell>
-                          <TableCell align='right'>
-                            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
-                              <Skeleton variant='circular' width={25} height={25} />
-                            </span>
-                          </TableCell>
-                          <TableCell align='right'>
-                            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
-                              <Skeleton variant='circular' width={25} height={25} />
-                              </span>
-                          </TableCell>
-                          <TableCell align='right'>
-                            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
-                              <Skeleton variant='circular' width={25} height={25} />
-                              </span>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )
+                  map(sources, (mappedSource, index) => (
+                    <MappedSourceSummary
+                      key={index}
+                      mappedSource={mappedSource}
+                      source={source}
+                      fromSource={fromSource}
+                      columns={columns}
+                    />
+                  ))
                 }
               </React.Fragment>
             </TableBody>
@@ -321,7 +328,7 @@ const MappedSources = ({title, label, source, summary, columns, fromSource, coun
 
 const SourceSummary = ({ summary, source }) => {
   const isVersion = source.type === 'Source Version'
-  const columns = 4
+  const columns = 5
   return (
     <div className='col-xs-12' style={{width: '90%', margin: '0 5%'}}>
       <div className='col-xs-12 no-side-padding'>
@@ -333,7 +340,7 @@ const SourceSummary = ({ summary, source }) => {
         source={source}
         columns={columns}
         summary={summary}
-        count={summary?.mappings?.to_concept_source}
+        sources={summary?.mappings?.to_concept_source}
       />
       <MappedSources
         title='Mapped From Sources'
@@ -342,7 +349,7 @@ const SourceSummary = ({ summary, source }) => {
         columns={columns}
         fromSource
         summary={summary}
-        count={summary?.mappings?.from_concept_source}
+        sources={summary?.mappings?.from_concept_source}
       />
     </div>
   )
