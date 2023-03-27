@@ -63,9 +63,7 @@ const SummaryTable = ({ summary, source, fromSource }) => {
     <React.Fragment>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell>
-          <a href={'#' + summary.version_url} target='_blank' rel='noreferrer noopener'>
-            {summary[0]}
-          </a>
+          {summary[0]}
         </TableCell>
         <TableCell align='right'>
           {toNumDisplay(summary[1])}
@@ -106,7 +104,7 @@ const SummaryTable = ({ summary, source, fromSource }) => {
       {
         expand && (
           map(distribution?.map_types, stats => {
-            let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary.short_code}":true}}`
+            let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary[0]}":true}}`
             return (
               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={stats.map_type}>
                 <TableCell style={{paddingLeft: '50px'}}>
