@@ -103,6 +103,23 @@ const SummaryTable = ({ summary, source, fromSource }) => {
       </TableRow>
       {
         expand && (
+          isFetching ?
+            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell style={{paddingLeft: '50px'}}>
+                <Skeleton />
+              </TableCell>
+              <TableCell align='right'>
+                <Skeleton />
+              </TableCell>
+              <TableCell align='right'>
+              </TableCell>
+              <TableCell align='right'>
+                <Skeleton />
+              </TableCell>
+              <TableCell align='right'>
+                <Skeleton />
+              </TableCell>
+            </TableRow> :
           map(distribution?.map_types, stats => {
             let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary[0]}":true}}`
             return (
