@@ -1,3 +1,24 @@
+##### 2.1.77 - Mon Mar 27 06:40:16 2023 +0000
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | added skeleton in distribution
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | correcting links
+##### 2.1.76 - Mon Mar 27 05:14:35 2023 +0000
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | getting Source mapped sources in separate APIs
+- Mapping exists in OCL icon
+- Search | using skeleton
+- FHIR connector fixes for new OCL Core FHIR service
+##### 2.1.75 - Thu Mar 23 09:03:08 2023 +0000
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | removed retired
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | getting Source mapped sources in separate APIs
+##### 2.1.74 - Thu Mar 23 06:06:01 2023 +0000
+- Using Skeleton over Circular Progress to show search results count loading
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | using updated API
+##### 2.1.73 - Wed Mar 22 12:27:24 2023 +0000
+- [OpenConceptLab/ocl_issues#1496](https://github.com/OpenConceptLab/ocl_issues/issues/1496) | transform switch toggle | tooltip consistency
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | including feedbacks | using accoridon and flipped the active/retired bar
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | refactoring summary
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source summary field distribution skeleton
+##### 2.1.72 - Wed Mar 22 11:12:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source summary field distribution skeleton
 ##### 2.1.71 - Wed Mar 22 04:04:47 2023 +0000
 - [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | removed feature toggle
 - Concept Names/Descriptions | correcting vertical spacing/alignment
