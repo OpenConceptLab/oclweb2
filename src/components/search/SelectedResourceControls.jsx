@@ -57,16 +57,18 @@ const SelectedResourceControls = ({
     <span style={{display: 'inline-flex', width: 'max-content'}}>
       {
         shouldShowDownloadOption &&
-        <DownloadButton
-          includeCSV
-          formats={['json']}
-          resource={selectedItems}
-          buttonFunc={
-            attrs =>
-              <Chip icon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs} className='selected-control-chip' label='Download' />
-          }
-          queryParams={{verbose: true, includeInverseMappings: true, includeSummary: true }}
-        />
+          <span>
+            <DownloadButton
+              includeCSV
+              formats={['json']}
+              resource={selectedItems}
+              buttonFunc={
+                attrs =>
+                <Chip icon={<DownloadIcon fontSize='small' />} {...buttonProps} {...attrs} className='selected-control-chip' label='Download' />
+              }
+              queryParams={{verbose: true, includeInverseMappings: true, includeSummary: true }}
+            />
+          </span>
       }
       {
         shouldShowCreateSimilarOption &&

@@ -865,8 +865,8 @@ const ResultsTable = (
                     {
                       selectedCount > 0 &&
                       <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
-                        <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
-                          <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
+                        <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(224, 224, 224, 1)'}}>
+                          <span className='flex-vertical-center'>
                             <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedCount} Selected</span>
                             {
                               !asReference &&
@@ -885,11 +885,11 @@ const ResultsTable = (
                     <TableRow style={theadStyles}>
                       {
                         (isConceptContainer || isValueSet || isConceptMap) &&
-                        <TableCell style={theadStyles} />
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
                       {
                         isSelectable &&
-                        <TableCell style={{maxWidth: '30px', padding: '2px', ...theadStyles}} align="center">
+                          <TableCell style={{maxWidth: '30px', padding: '2px', ...theadStyles, top: selectedCount > 0 ? 40 : 0}} align="center">
                           <Checkbox checked={isAllSelected} indeterminate={isSomeSelected} size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
                         </TableCell>
                       }
@@ -901,7 +901,7 @@ const ResultsTable = (
                               key={column.id}
                               sortDirection={orderBy === column.id ? order : false}
                               align={column.align || 'left'}
-                              style={{color: theadTextColor, ...theadStyles}}>
+                              style={{color: theadTextColor, ...theadStyles, top: selectedCount > 0 ? 40 : 0}}>
                               {
                                 column.tooltip ?
                                 <Tooltip arrow placement='top' title={column.tooltip}>
@@ -927,7 +927,7 @@ const ResultsTable = (
                               }
                             </TableCell>
                           ) : (
-                            <TableCell key={column.id} align={column.align || 'left'} style={{color: theadTextColor, ...theadStyles}}>
+                            <TableCell key={column.id} align={column.align || 'left'} style={{color: theadTextColor, ...theadStyles, top: selectedCount > 0 ? 40 : 0}}>
                               {
                                 column.translation ?
                                   <span>
@@ -958,11 +958,11 @@ const ResultsTable = (
                       }
                       {
                         !isSelectable &&
-                        <TableCell style={theadStyles} />
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
                       {
                         (resourceDefinition.expandible || shouldShowPin) &&
-                        <TableCell style={theadStyles} />
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
                     </TableRow>
                   </TableHead>
