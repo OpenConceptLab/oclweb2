@@ -712,7 +712,7 @@ export const paramsToParentURI = (params, versioned=false) => {
     uri += `/sources/${params.source}`;
   else if(params.collection)
     uri += `/collections/${params.collection}`;
-  if(params.version && !versioned)
+  if(params.version && !versioned && params.version !== 'summary')
     uri += `/${params.version}`;
 
   return uri + '/';

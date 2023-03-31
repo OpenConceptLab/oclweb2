@@ -153,7 +153,7 @@ const SourceHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'summary' &&
-            <SourceSummary summary={sourceVersionSummary} source={source} />
+            <SourceSummary summary={sourceVersionSummary} source={source} includeMappedSources />
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&

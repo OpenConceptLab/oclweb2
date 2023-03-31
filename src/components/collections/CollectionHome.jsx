@@ -15,7 +15,7 @@ import Breadcrumbs from '../sources/Breadcrumbs';
 import { paramsToURI, paramsToParentURI } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
-const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'about']
+const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'summary', 'about']
 
 class CollectionHome extends React.Component {
   static contextType = OperationsContext
@@ -38,13 +38,14 @@ class CollectionHome extends React.Component {
       customConfigs: [],
       selected: null,
       filtersOpen: false,
+      collectionVersionSummary: {}
     }
   }
 
   setPaths = () => {
     const { params } = this.props.match
     this.collectionPath = paramsToParentURI(params, true)
-    this.collectionVersionPath = params.version ? this.collectionPath + params.version + '/' : this.collectionPath + 'HEAD/'
+    this.collectionVersionPath = (params.version && params.version !== 'summary') ? this.collectionPath + params.version + '/' : this.collectionPath + 'HEAD/'
     this.currentPath = paramsToURI(params)
     this.isConceptSelected = Boolean(params.concept)
     this.isMappingSelected = Boolean(params.mapping)
@@ -76,6 +77,8 @@ class CollectionHome extends React.Component {
     const { location } = this.props;
 
     if(location.pathname.indexOf('/about') > -1 && this.shouldShowAboutTab())
+      return 5;
+    if(location.pathname.indexOf('/summary') > -1)
       return 4;
     if(location.pathname.indexOf('/versions') > -1)
       return 3;
@@ -91,7 +94,7 @@ class CollectionHome extends React.Component {
 
   componentDidMount() {
     this.setPaths()
-    this.refreshDataByURL()
+    this.refreshDataByURL(true)
     this.interval = setInterval(this.setContainerWidth, 100)
   }
 
@@ -103,7 +106,7 @@ class CollectionHome extends React.Component {
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.setPaths()
-      this.refreshDataByURL()
+      this.refreshDataByURL(false)
       this.onTabChange(null, this.getDefaultTabIndex())
     }
   }
@@ -113,6 +116,10 @@ class CollectionHome extends React.Component {
 
     return location.pathname.split('/').slice(0, 5).join('/') + '/';
   }
+
+  currentTabConfig = () => get(this.state.selectedConfig, `config.tabs.${this.state.tab}`)
+
+  isSummaryTabSelected = () => get(this.currentTabConfig(), 'type') === 'summary';
 
   getURLFromPath() {
     const { location, match } = this.props;
@@ -141,7 +148,7 @@ class CollectionHome extends React.Component {
     const collectionURL = this.collectionPath
 
     let urls = {collection: collectionURL, version: null, expansion: null}
-    if(match.params.version && !includes(['references', 'versions', 'expansions', 'concepts', 'mappings', 'about', 'details'], match.params.version)) {
+    if(match.params.version && !includes(['references', 'versions', 'expansions', 'concepts', 'mappings', 'about', 'details', 'summary'], match.params.version)) {
       urls.version = collectionURL + match.params.version + '/'
 
       if(match.params.expansion && !includes(['references', 'versions', 'expansions', 'concepts', 'mappings', 'about', 'details'], match.params.expansion))
@@ -174,6 +181,15 @@ class CollectionHome extends React.Component {
     this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
+      if(this.isSummaryTabSelected())
+        this.fetchSelectedCollectionVersionSummary()
+    })
+  }
+
+  fetchSelectedCollectionVersionSummary = () => {
+    this.setState({collectionVersionSummary: {}}, () => {
+      const { collection } = this.state
+      APIService.new().overrideURL(collection.version_url || collection.url).appendToUrl('summary/').get(null, null, {verbose: true}).then(response => this.setState({collectionVersionSummary: response.data}))
     })
   }
 
@@ -195,7 +211,7 @@ class CollectionHome extends React.Component {
     }
   }
 
-  refreshDataByURL() {
+  refreshDataByURL(fetchSummary) {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false, expansion: {}}, () => {
       this.URLs = this.getResourceURLs()
       const url = this.URLs.version ? this.URLs.version : this.URLs.collection
@@ -231,6 +247,8 @@ class CollectionHome extends React.Component {
               const { setParentResource, setParentItem } = this.context
               setParentItem(this.state.collection)
               setParentResource('collection')
+              if(fetchSummary && this.isSummaryTabSelected())
+                this.fetchSelectedCollectionVersionSummary()
             })
           }
         })
@@ -392,6 +410,7 @@ class CollectionHome extends React.Component {
                   isLoadingExpansions={isLoadingExpansions}
                   onSelect={this.onResourceSelect}
                   onFilterDrawerToggle={this.onFilterDrawerToggle}
+                  collectionVersionSummary={this.state.collectionVersionSummary}
                 />
               </div>
             </div>

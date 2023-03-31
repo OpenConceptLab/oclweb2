@@ -193,7 +193,7 @@ const SelfSummaryCell = ({label, value, onClick}) => (
   </TableCell>
 )
 
-const SelfSummary = ({ summary, source, isVersion }) => {
+const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
   const [distribution, setDistribution] = React.useState({})
   const [open, setOpen] = React.useState(false)
   const [anchorRef, setAnchorRef] = React.useState(null)
@@ -203,7 +203,9 @@ const SelfSummary = ({ summary, source, isVersion }) => {
     setAnchorRef(newOpen ? {current: event.currentTarget} : null)
     setDistribution({...distribution, [field]: value})
   }
-  const columns = isVersion ? 2 : 3;
+  let columns = isVersion ? 2 : 3;
+  if(includeReferences)
+    columns += 2
   const width = `${100/columns}%`
   return (
     <React.Fragment>
@@ -223,7 +225,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                   <Bar first={summary?.concepts?.active} second={summary?.concepts?.retired} firstTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} />
                   {
                     summary?.concepts ?
-                      <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
+                      <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
                       <Skeleton />
                   }
                 </span>
@@ -231,7 +233,7 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                   <Bar first={summary?.mappings?.active} second={summary?.mappings?.retired} firstTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} />
                   {
                     summary?.mappings ?
-                      <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
+                      <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
                       <Skeleton />
                   }
                 </span>
@@ -241,10 +243,31 @@ const SelfSummary = ({ summary, source, isVersion }) => {
                       <Bar first={summary?.versions?.total - summary?.versions?.released} second={summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} />
                       {
                         summary?.versions ?
-                          <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
+                          <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
                           <Skeleton />
                       }
                     </span>
+                }
+                {
+                  includeReferences &&
+                    <React.Fragment>
+                    <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                      <Bar first={summary?.references?.include} second={summary?.references?.exclude} firstTooltip={`${toNumDisplay(summary?.references?.include)} Inclusion References`} secondTooltip={`${toNumDisplay(summary?.references?.exclude)} Exclusion References`} />
+                      {
+                        summary?.references ?
+                          <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.references?.include)}</b> Inclusion out of <b>{toNumDisplay(summary?.references?.total)}</b> References</div> :
+                          <Skeleton />
+                      }
+                    </span>
+                      <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                        <Bar first={summary?.references?.concepts} second={summary?.references?.mappings} firstTooltip={`${toNumDisplay(summary?.references?.concepts)} Concept References`} secondTooltip={`${toNumDisplay(summary?.references?.mappings)} Mapping References`} />
+                        {
+                          summary?.references ?
+                            <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.references?.concepts)}</b> Concept & <b>{toNumDisplay(summary?.references?.mappings)}</b> Mappings References</div> :
+                            <Skeleton />
+                        }
+                      </span>
+                      </React.Fragment>
                 }
               </TableCell>
             </TableRow>
@@ -341,31 +364,36 @@ const MappedSources = ({title, label, source, summary, columns, fromSource, sour
   )
 }
 
-const SourceSummary = ({ summary, source }) => {
-  const isVersion = source.type === 'Source Version'
+const SourceSummary = ({ summary, source, includeMappedSources, includeReferences }) => {
+  const isVersion = source.type.includes('Version')
   const columns = 5
   return (
     <div className='col-xs-12' style={{width: '90%', margin: '0 5%'}}>
       <div className='col-xs-12 no-side-padding'>
-        <SelfSummary summary={summary} isVersion={isVersion} source={source} />
+        <SelfSummary summary={summary} isVersion={isVersion} source={source} includeReferences={includeReferences} />
       </div>
-      <MappedSources
-        title='Mapped To Sources'
-        label='Target Source'
-        source={source}
-        columns={columns}
-        summary={summary}
-        sources={summary?.mappings?.to_concept_source}
-      />
-      <MappedSources
-        title='Mapped From Sources'
-        label='From Source'
-        source={source}
-        columns={columns}
-        fromSource
-        summary={summary}
-        sources={summary?.mappings?.from_concept_source}
-      />
+      {
+        includeMappedSources &&
+          <React.Fragment>
+            <MappedSources
+              title='Mapped To Sources'
+              label='Target Source'
+              source={source}
+              columns={columns}
+              summary={summary}
+              sources={summary?.mappings?.to_concept_source || []}
+            />
+            <MappedSources
+              title='Mapped From Sources'
+              label='From Source'
+              source={source}
+              columns={columns}
+              fromSource
+              summary={summary}
+              sources={summary?.mappings?.from_concept_source || []}
+            />
+            </React.Fragment>
+      }
     </div>
   )
 }

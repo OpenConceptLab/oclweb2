@@ -15,7 +15,7 @@ import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 import { paramsToURI, paramsToParentURI } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
-const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
+const TABS = ['details', 'concepts', 'mappings', 'versions', 'summary', 'about']
 
 class SourceHome extends React.Component {
   static contextType = OperationsContext

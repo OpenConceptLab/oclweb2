@@ -14,13 +14,14 @@ import CollectionVersionForm from './CollectionVersionForm';
 import ReferenceForm from './ReferenceForm';
 import ExpansionForm from './ExpansionForm';
 import VersionList from './VersionList';
+import SourceSummary from '../sources/SourceSummary';
 
 const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
     onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion, isLoadingExpansions, onSelect,
-    onFilterDrawerToggle
+    onFilterDrawerToggle, collectionVersionSummary
   } = props;
   const tabConfigs = (aboutTab ? get(selectedConfig, 'config.tabs') : reject((get(selectedConfig, 'config.tabs') || {}), {type: 'about'})) || {};
   const selectedTabConfig = tabConfigs[tab];
@@ -55,6 +56,8 @@ const CollectionHomeTabs = props => {
       href = `#${currentResourceURL}references`
     else if(tabConfig.type === 'versions')
       href = `#${currentResourceURL}versions`
+    else if(tabConfig.type === 'summary')
+      href = `#${currentResourceURL}summary`
     else if(tabConfig.type === 'expansions')
       href = `#${currentResourceURL}expansions`
     else if(tabConfig.href)
@@ -76,7 +79,7 @@ const CollectionHomeTabs = props => {
   }
 
   const width = configFormWidth ? "calc(100% - " + (configFormWidth - 15) + "px)" : '100%';
-  const isInvalidTabConfig = selectedTabConfig && !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references', 'expansions'], selectedTabConfig.type) && !selectedTabConfig.uri;
+  const isInvalidTabConfig = selectedTabConfig && !includes(['concepts', 'mappings', 'about', 'versions', 'text', 'references', 'expansions', 'summary'], selectedTabConfig.type) && !selectedTabConfig.uri;
   return (
     <div className='col-md-12 sub-tab' style={{width: width}}>
       <Tabs className='sub-tab-header col-md-11 no-side-padding' value={tab} onChange={onTabChange} aria-label="collection-home-tabs"  classes={{indicator: 'hidden'}}>
@@ -132,6 +135,10 @@ const CollectionHomeTabs = props => {
           <VersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} onCreateExpansionClick={onCreateExpansionClick} />
         }
         {
+          !isInvalidTabConfig && selectedTabConfig.type === 'summary' &&
+            <SourceSummary summary={collectionVersionSummary} source={collection} includeReferences />
+        }
+        {
           !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
           <div className='col-md-12'>
             {
@@ -144,7 +151,7 @@ const CollectionHomeTabs = props => {
           </div>
         }
         {
-          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions'], selectedTabConfig.type) && !isLoadingExpansions &&
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions', 'summary'], selectedTabConfig.type) && !isLoadingExpansions &&
           <CollectionHomeChildrenList
             isLoadingExpansions={isLoadingExpansions}
             collection={collection}
