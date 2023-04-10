@@ -225,7 +225,7 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
                   <Bar first={summary?.concepts?.active} second={summary?.concepts?.retired} firstTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} />
                   {
                     summary?.concepts ?
-                      <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
+                      <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
                       <Skeleton />
                   }
                 </span>
@@ -233,7 +233,7 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
                   <Bar first={summary?.mappings?.active} second={summary?.mappings?.retired} firstTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} />
                   {
                     summary?.mappings ?
-                      <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
+                      <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
                       <Skeleton />
                   }
                 </span>
@@ -243,7 +243,7 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
                       <Bar first={summary?.versions?.total - summary?.versions?.released} second={summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} />
                       {
                         summary?.versions ?
-                          <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
+                          <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
                           <Skeleton />
                       }
                     </span>
@@ -255,7 +255,7 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
                       <Bar first={summary?.references?.include} second={summary?.references?.exclude} firstTooltip={`${toNumDisplay(summary?.references?.include)} Inclusion References`} secondTooltip={`${toNumDisplay(summary?.references?.exclude)} Exclusion References`} />
                       {
                         summary?.references ?
-                          <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.references?.include)}</b> Inclusion out of <b>{toNumDisplay(summary?.references?.total)}</b> References</div> :
+                          <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.references?.include)}</b> Inclusion out of <b>{toNumDisplay(summary?.references?.total)}</b> References</div> :
                           <Skeleton />
                       }
                     </span>
@@ -263,7 +263,7 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
                         <Bar first={summary?.references?.concepts} second={summary?.references?.mappings} firstTooltip={`${toNumDisplay(summary?.references?.concepts)} Concept References`} secondTooltip={`${toNumDisplay(summary?.references?.mappings)} Mapping References`} />
                         {
                           summary?.references ?
-                            <div className='ellipsis-text-2'><b>{toNumDisplay(summary?.references?.concepts)}</b> Concept & <b>{toNumDisplay(summary?.references?.mappings)}</b> Mappings References</div> :
+                            <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.references?.concepts)}</b> Concept & <b>{toNumDisplay(summary?.references?.mappings)}</b> Mappings References</div> :
                             <Skeleton />
                         }
                       </span>
