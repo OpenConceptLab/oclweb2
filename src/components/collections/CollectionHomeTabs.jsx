@@ -50,21 +50,21 @@ const CollectionHomeTabs = props => {
   const currentResourceURL = isVersionedObject ? collection.url : (expansion.url || collection.version_url)
   const getTABHref = tabConfig => {
     let href = '';
-    if(tabConfig.type === 'about')
+    if(tabConfig?.type === 'about')
       href = `#${currentResourceURL}about`
-    else if(tabConfig.type === 'references')
+    else if(tabConfig?.type === 'references')
       href = `#${currentResourceURL}references`
-    else if(tabConfig.type === 'versions')
+    else if(tabConfig?.type === 'versions')
       href = `#${currentResourceURL}versions`
-    else if(tabConfig.type === 'summary')
+    else if(tabConfig?.type === 'summary')
       href = `#${currentResourceURL}summary`
-    else if(tabConfig.type === 'expansions')
+    else if(tabConfig?.type === 'expansions')
       href = `#${currentResourceURL}expansions`
-    else if(tabConfig.href)
+    else if(tabConfig?.href)
       href = `#${currentResourceURL}${tabConfig.href}`
     else {
-      const urlAttr = tabConfig.type + '_url'
-      href = isEmpty(expansion) ? `#${collection[urlAttr]}` : `#${expansion.url}${tabConfig.type}/`
+      const urlAttr = tabConfig?.type + '_url'
+      href = isEmpty(expansion) ? `#${collection[urlAttr]}` : `#${expansion.url}${tabConfig?.type}/`
     }
     return href + location.search
   }
@@ -127,19 +127,19 @@ const CollectionHomeTabs = props => {
           <div>Invalid Tab Configuration</div>
         }
         {
-          !isInvalidTabConfig && selectedTabConfig.type === 'about' &&
+          !isInvalidTabConfig && selectedTabConfig?.type === 'about' &&
           <About id={collection.id} about={about} />
         }
         {
-          !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
+          !isInvalidTabConfig && selectedTabConfig?.type === 'versions' &&
           <VersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} onCreateExpansionClick={onCreateExpansionClick} />
         }
         {
-          !isInvalidTabConfig && selectedTabConfig.type === 'summary' &&
+          !isInvalidTabConfig && selectedTabConfig?.type === 'summary' &&
             <SourceSummary summary={collectionVersionSummary} source={collection} includeReferences />
         }
         {
-          !isInvalidTabConfig && selectedTabConfig.type === 'text' &&
+          !isInvalidTabConfig && selectedTabConfig?.type === 'text' &&
           <div className='col-md-12'>
             {
               map(selectedTabConfig.fields, field => {
@@ -151,7 +151,7 @@ const CollectionHomeTabs = props => {
           </div>
         }
         {
-          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions', 'summary'], selectedTabConfig.type) && !isLoadingExpansions &&
+          !isInvalidTabConfig && !includes(['about', 'text', 'versions', 'expansions', 'summary'], selectedTabConfig?.type) && !isLoadingExpansions &&
           <CollectionHomeChildrenList
             isLoadingExpansions={isLoadingExpansions}
             collection={collection}
@@ -163,8 +163,8 @@ const CollectionHomeTabs = props => {
             expansions={expansions}
             expansion={expansion}
             currentVersion={currentVersion}
-            resource={selectedTabConfig.type}
-            references={selectedTabConfig.type === 'references'}
+            resource={selectedTabConfig?.type}
+            references={selectedTabConfig?.type === 'references'}
             viewFilters={pickBy(selectedTabConfig.filters, isString)}
             extraControlFilters={pickBy(selectedTabConfig.filters, isObject)}
             viewFields={selectedTabConfig.fields}
