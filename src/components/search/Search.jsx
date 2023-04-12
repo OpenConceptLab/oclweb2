@@ -312,6 +312,7 @@ class Search extends React.Component {
         if(has(this.state, `results.${resource}.facets`)) {
           const newState = {...this.state}
           newState.results[resource].facets = this.state.facets
+          newState.results[resource].facets.loaded = true
           this.setState(newState)
         }
       })
@@ -975,6 +976,7 @@ class Search extends React.Component {
           open={openFacetsDrawer}
           onClose={this.toggleFacetsDrawer}
           filters={get(results[resource], 'facets.fields', {})}
+          loaded={get(results[resource], 'facets.loaded', false)}
           facetOrder={get(FACET_ORDER, resource)}
           onApply={this.onApplyFacets}
           kwargs={get(this.props, 'match.params')}

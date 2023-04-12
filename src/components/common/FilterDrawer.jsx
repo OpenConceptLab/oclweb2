@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Drawer, List, ListItem, ListItemText, ListItemIcon, InputBase, IconButton,
-  Checkbox, Typography, Button, Tooltip, Divider
+  Checkbox, Typography, Button, Tooltip, Divider, CircularProgress
 } from '@mui/material';
 import {
   Clear as ClearIcon,
@@ -16,7 +16,7 @@ import ChipDatePicker from '../common/ChipDatePicker';
 
 const FilterDrawer = props => {
   const [input, setInput] = React.useState('');
-  const { kwargs, open, filters, onClose, onApply, facetOrder, resource, appliedFacets } = props;
+  const { kwargs, open, filters, onClose, onApply, facetOrder, resource, appliedFacets, loaded } = props;
   let blacklisted = ['is_active', 'is_latest_version'];
   const isSourceChild = includes(['concepts', 'mappings'], resource)
   const hasValidKwargs = !isEmpty(kwargs) && isObject(kwargs);
@@ -173,6 +173,8 @@ const FilterDrawer = props => {
             <CancelIcon fontSize='inherit' />
           </IconButton>
         </span>
+        {
+          loaded &&
         <div className="col-md-12" style={{padding: '0 10px', margin: '5px 0', marginBottom: '0px'}}>
           <div className='col-sm-12 no-side-padding' style={{display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px', height: '40px'}}>
             <InputBase
@@ -209,6 +211,9 @@ const FilterDrawer = props => {
             </Tooltip>
           </div>
         </div>
+        }
+        {
+          loaded ?
         <List className="col-md-12 no-side-padding">
           {
             map(getFilters(), (facets, field) => (
@@ -257,7 +262,11 @@ const FilterDrawer = props => {
                 </span>
               </div>
           }
-        </List>
+        </List> :
+          <div className='col-xs-12 flex-vertical-center' style={{padding: '15px', justifyContent: 'center'}}>
+            <CircularProgress />
+            </div>
+        }
       </div>
       <div className='col-md-12 no-side-padding bottom-fixed-center flex-vertical-center' style={{height: '60px', width: '15%', borderRight: '1px solid lightgray', justifyContent: 'center'}}>
         <Button size="small" onClick={onClear} variant='outlined' color='secondary' style={{margin: 'auto 5px'}}>
