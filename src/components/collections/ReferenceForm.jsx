@@ -39,6 +39,7 @@ class ReferenceForm extends React.Component {
       cascadeMappings: false,
       cascadeToConcepts: false,
       cascadeMethod: false,
+      transformReferences: false,
       fields: {
         expressions: [cloneDeep(EXPRESSION_MODEL)],
       },
@@ -135,13 +136,13 @@ class ReferenceForm extends React.Component {
     this.setState({isSubmitting: true}, () => {
       const { cascadeMappings, cascadeToConcepts, cascadeMethod } = this.state
       const { parentURL } = this.props
-      let queryParams = {}
+      let queryParams = this.state.transformReferences ? {transformReferences: 'resourceVersions'} : {}
       if(cascadeToConcepts)
-        queryParams = {cascade: 'sourcetoconcepts'}
+        queryParams.cascade = 'sourcetoconcepts'
       else if(cascadeMappings)
-        queryParams = {cascade: 'sourcemappings'}
+        queryParams.cascade = 'sourcemappings'
       else if(cascadeMethod)
-        queryParams = {cascade: {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}}
+        queryParams.cascade = {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}
 
 
       APIService.new().overrideURL(parentURL).appendToUrl('references/').put(
@@ -333,6 +334,7 @@ class ReferenceForm extends React.Component {
             onClose={() => this.setState({cascadeDialog: false})}
             onAdd={this.submitReferences}
             isAdding={isSubmitting}
+            onTransformReferencesChange={transform => this.setState({transformReferences: transform})}
           />
         }
       </div>
