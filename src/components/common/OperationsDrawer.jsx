@@ -245,7 +245,7 @@ const OperationsDrawer = () => {
   const showVisualizeOption = operation === '$cascade' && response?.data
   const isDisabledVisualize = showVisualizeOption && !response.request.responseURL.includes('view=hierarchy')
 
-  const parentItemURL = parentItem.version_url || parentItem.url
+  const parentItemURL = parentItem?.version_url || parentItem?.url
 
   return (
     <React.Fragment>

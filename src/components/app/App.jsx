@@ -4,7 +4,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { get, isEmpty, forOwn, has } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
-  isDeprecatedBrowser, recordGAPageView
+  isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel
 } from '../../common/utils';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
@@ -52,6 +52,7 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 const App = props => {
   const { openOperations, menuOpen, setMenuOpen, setOpenOperations } = React.useContext(OperationsContext);
   const [openOpenMRSDeprecationDialog, setOpenOpenMRSDeprecationDialog] = React.useState(false)
+  const operationsPanelAccess = canViewOperationsPanel()
 
   // For recent history
   setUpRecentHistory(props.history);
@@ -114,8 +115,8 @@ const App = props => {
     addLogoutListenerForAllTabs()
     recordGAPageView()
     setupHotJar()
-    document.body.addEventListener("keydown", _listenKey)
-    return () => document.body.removeEventListener("keydown", _listenKey)
+    operationsPanelAccess && document.body.addEventListener("keydown", _listenKey)
+    return () => operationsPanelAccess && document.body.removeEventListener("keydown", _listenKey)
   }, [])
 
   const isFHIR = isFHIRServer();

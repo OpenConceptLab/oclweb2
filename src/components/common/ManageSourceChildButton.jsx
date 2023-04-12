@@ -11,7 +11,7 @@ import {
   BuildCircle as OperationsIcon,
 } from '@mui/icons-material';
 import { startCase } from 'lodash';
-import { currentUserHasAccess, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
+import { currentUserHasAccess, copyURL, toFullAPIURL, isAdminUser, canViewOperationsPanel } from '../../common/utils';
 import { ACTION_RED } from '../../common/constants';
 import DownloadButton from './DownloadButton';
 import { OperationsContext } from '../app/LayoutContext';
@@ -24,6 +24,7 @@ const ManageSourceChildButton = ({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const toggleMenu = event => setAnchorEl(anchorEl ? null : event.currentTarget)
   const hasAccess = currentUserHasAccess();
+  const operationsPanelAccess = canViewOperationsPanel()
   const isAdmin = isAdminUser()
   const onCopyClick = () => copyURL(toFullAPIURL(currentURL.replace('#', '')))
   const onClick = (event, action) => {
@@ -112,7 +113,7 @@ const ManageSourceChildButton = ({
             tooltipPlacement='right'
           />
           {
-            instance.concept_class && isAdmin &&
+            instance.concept_class && operationsPanelAccess &&
               <MenuItem onClick={onOperationsClick}>
                 <ListItemIcon style={{minWidth: '28px'}}>
                   <OperationsIcon fontSize="inherit" />

@@ -11,7 +11,7 @@ import {
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
-  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID,
+  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID, OPERATIONS_PANEL_GROUP
 } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
@@ -469,8 +469,19 @@ export const canSwitchServer = () => {
   return Boolean(
     getSelectedServerConfig() ||
     get(user, 'is_superuser') ||
-    !isEmpty(get(user, 'auth_groups'))
+      hasAuthGroup(user, 'server')
   );
+}
+
+const hasAuthGroup = (user, groupName) => Boolean(find(user?.auth_groups, group => group.includes(groupName)))
+
+export const canViewOperationsPanel = () => {
+  const user = getCurrentUser()
+
+  return Boolean(
+    get(user, 'is_staff') ||
+    hasAuthGroup(user, OPERATIONS_PANEL_GROUP)
+  )
 }
 
 export const isFHIRServer = () => get(getAppliedServerConfig(), 'type') === 'fhir';
