@@ -213,9 +213,6 @@ class Search extends React.Component {
       this.setQueryParamsInState()
     if(!isEqual(prevProps.extraControlFilters, this.props.extraControlFilters) && !isURLUpdatedByActionChange)
       this.setQueryParamsInState()
-    if(!isEqual(prevProps.baseURL, this.props.baseURL)) {
-      this.setQueryParamsInState()
-    }
   }
 
   updateSummaryOnResult(resource, summary) {
