@@ -451,7 +451,7 @@ class Search extends React.Component {
             window.location.hash = this.getCurrentLayoutURL()
           this.onSearchResultsLoad(resource, response, resetItems)
           setTimeout(() => this.setState({isURLUpdatedByActionChange: false}), 1000)
-          if(!noHeaders && facets && !fhir && resource !== 'references')
+          if(!noHeaders && facets && !fhir && resource !== 'references' && !this.props.noFilters)
             fetchFacets(_resource, {...queryParams}, baseURL, this.onFacetsLoad)
           if(counts && !this.props.nested)
             fetchCounts(_resource, {...queryParams}, this.onCountsLoad)
