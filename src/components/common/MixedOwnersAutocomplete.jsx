@@ -15,19 +15,19 @@ const MixedOwnersAutocomplete = ({onChange, label, id, required, minCharactersFo
   const [selected, setSelected] = React.useState(undefined)
   const isSearchable = input && input.length >= minLength;
   const loading = Boolean(open && !fetched && isSearchable && isEmpty(owners))
-  const handleInputChange = (event, value) => {
+  const handleInputChange = debounce((event, value) => {
     setInput(value || '')
     setFetched(false)
     if(value && value.length >= minLength)
       fetchOwners(value)
-  }
+  }, 500)
 
   const handleChange = (id, item) => {
     setSelected(item)
     onChange(id, item)
   }
 
-  const fetchOwners = debounce(searchStr => {
+  const fetchOwners = searchStr => {
     const searchQuery = searchStr ? searchStr.replace(' (org)', '').replace(' (user)', '') : searchStr;
     const query = {limit: 1000, q: searchQuery}
     APIService.orgs().get(null, null, query).then(response => {
@@ -44,7 +44,7 @@ const MixedOwnersAutocomplete = ({onChange, label, id, required, minCharactersFo
         setFetched(true)
       })
     })
-  }, 700)
+  }
 
   return (
     <Autocomplete
