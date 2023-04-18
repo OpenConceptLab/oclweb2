@@ -12,7 +12,7 @@ import {
   FileCopy as CopyIcon,
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, filter, find, startCase, isString, isObject, merge, forEach } from 'lodash';
+import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL, urlSearchParamsToObject
@@ -96,8 +96,7 @@ const OperationsDrawer = () => {
   const onFHIRServerChange = event => setSelectedFHIRServerId(event.target.value)
   const fhirServers = getServerConfigsForCurrentUser()
   const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
-  const selectedFHIRServer = getSelectedFHIRServer()
-    const getOperations = () => uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
+  const getOperations = () => uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
   const [byURL, setByURL] = React.useState(false)
   const [visualize, setVisualize] = React.useState(false)
   React.useEffect(
