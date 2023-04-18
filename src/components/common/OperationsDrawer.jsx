@@ -93,7 +93,11 @@ const OperationsDrawer = () => {
   const isSource = parentResource === 'source'
   const fhirResource = isSource ? 'codeSystem' : 'valueSet'
   const fhirResourceDisplay = startCase(fhirResource).replace(' ', '')
-  const operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
+  const onFHIRServerChange = event => setSelectedFHIRServerId(event.target.value)
+  const fhirServers = getServerConfigsForCurrentUser()
+  const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
+  const selectedFHIRServer = getSelectedFHIRServer()
+    const getOperations = () => uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
   const [byURL, setByURL] = React.useState(false)
   const [visualize, setVisualize] = React.useState(false)
   React.useEffect(
@@ -174,12 +178,14 @@ const OperationsDrawer = () => {
     event.preventDefault()
     event.stopPropagation()
     const isFHIROperation = includes(FHIR_OPERATIONS, operation)
+    const service = APIService.new()
+    const selectedFHIRServer = getSelectedFHIRServer()
+    if(selectedFHIRServer)
+      service.URL = selectedFHIRServer.url + (selectedFHIRServer?.info?.baseURI || '')
     if(isFHIROperation) {
-      const selectedFHIRServer = getSelectedFHIRServer()
       if(canonicalURL && selectedFHIRServer) {
-        const service = APIService.new()
         const canonicalURLAttr = operation === '$lookup' ? 'system' : 'url'
-        service.URL = `${selectedFHIRServer.url}${selectedFHIRServer.info.baseURI}${fhirResourceDisplay}/${operation}/?code=${code}&${canonicalURLAttr}=${canonicalURL}`
+        service.URL += `${fhirResourceDisplay}/${operation}/?code=${code}&${canonicalURLAttr}=${canonicalURL}`
         if(version && version.toLowerCase() !== 'head' && !byURL)
           service.URL += `&version=${version}`
         if(operation === '$validate-code') {
@@ -208,7 +214,10 @@ const OperationsDrawer = () => {
       }
     } else {
       let queryParams = operation === '$cascade' ? cascadeParams : {}
-      APIService.new().overrideURL(parentItem.version_url || parentItem.url).appendToUrl(`concepts/${code}/${operation}/`).get(null, null, queryParams).then(
+      service.URL += parentItem.version_url || parentItem.url
+      service.URL += `concepts/${code}/${operation}/`
+      const isCurrentServerSameAsSelected = currentServer.url === selectedFHIRServer.url
+      service.get(isCurrentServerSameAsSelected ? null : false, null, queryParams).then(
         _response => {
           setURL(_response?.request?.responseURL || _response?.config?.url)
           setResponse(_response)
@@ -222,9 +231,6 @@ const OperationsDrawer = () => {
   const onCopyURLClick = () => copyURL(url)
   const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${get(response, 'status', 'null')})`;
   const isError = get(response, 'status') !== 200 && !isFetching
-  const fhirServers = filter(getServerConfigsForCurrentUser(), {type: 'fhir'})
-  const onFHIRServerChange = event => setSelectedFHIRServerId(event.target.value)
-  const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
   const toggleByURL = _byURL => {
     if(_byURL && operation === '$cascade')
       setOperation('')
@@ -354,7 +360,7 @@ const OperationsDrawer = () => {
                     size='small'
                   >
                     {
-                      map(operations, _operation => {
+                      map(getOperations(), _operation => {
                         return <MenuItem size='small' value={_operation} key={_operation} disabled={byURL && _operation === '$cascade'}>{_operation}</MenuItem>
                       })
                     }

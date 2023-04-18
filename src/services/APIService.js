@@ -107,7 +107,7 @@ class APIService {
   };
 
   getHeaders(token, headers) {
-    token = token || currentUserToken();
+    token = token || (token !== false ? currentUserToken() : token);
     const obj = defaults(headers, this.headers);
     if (token) obj['Authorization'] = `Token ${token}`;
     return obj;
