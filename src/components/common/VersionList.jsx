@@ -35,7 +35,6 @@ const VersionList = ({ versions, resource }) => {
   const canSelect = (isConcept || isMapping) && sortedVersions.length > 1;
   const gridClass = canSelect ? 'col-md-11' : 'col-md-12'
   const showCompareOption = (isConcept || isMapping) && selectedList.length === 2;
-  const isAssociated = version => !isEmpty(version.source_versions) || !isEmpty(version.collection_versions)
   const onCompareClick = event => {
     event.stopPropagation()
     event.preventDefault()
@@ -138,7 +137,7 @@ const VersionList = ({ versions, resource }) => {
                     </div>
                   }
                   {
-                    !isAssociated(version) && ((index + 1) < versions.length) &&
+                    (index + 1) < versions.length &&
                     <Divider style={{width: '100%', display: 'inline-block'}} />
                   }
                 </React.Fragment>
