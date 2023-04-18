@@ -102,6 +102,7 @@ const OperationsDrawer = () => {
   const [visualize, setVisualize] = React.useState(false)
   React.useEffect(
     () => {
+      setSelectedFHIRServerId(currentServer.id)
       setItem(operationItem)
       setVersion(get(operationItem, 'parentVersion') || 'HEAD')
       setParentId(getParentId(operationItem))
