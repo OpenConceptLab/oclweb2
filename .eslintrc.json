@@ -208,7 +208,9 @@
           "keydown",
           "rect",
           "Dropdown",
-          "uncheck"
+          "uncheck",
+          "checksum",
+          "checksums"
         ],
         "skipIfMatch": [
           "http://[^s]*",
