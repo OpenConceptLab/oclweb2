@@ -12,7 +12,7 @@ import {
   FileCopy as CopyIcon,
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach, isEqual } from 'lodash';
+import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach, isEqual, without } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL, urlSearchParamsToObject
@@ -96,7 +96,12 @@ const OperationsDrawer = () => {
   const onFHIRServerChange = event => setSelectedFHIRServerId(event.target.value)
   const fhirServers = getServerConfigsForCurrentUser()
   const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
-  const getOperations = () => uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
+  const getOperations = () => {
+    let _operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
+    if(!window.CHECKSUMS_TOGGLE)
+      _operations = without(_operations, '$checksum')
+    return _operations
+  }
   const [byURL, setByURL] = React.useState(false)
   const [visualize, setVisualize] = React.useState(false)
   React.useEffect(
@@ -156,6 +161,7 @@ const OperationsDrawer = () => {
   const [isFetching, setIsFetching] = React.useState(false);
   const [selectedFHIRServerId, setSelectedFHIRServerId] = React.useState(get(fhirServer, 'id', ''))
   const [cascadeParams, setCascadeParams] = React.useState({...DEFAULT_CASCADE_PARAMS})
+  const [jsonStr, setJSONStr] = React.useState('')
   const onOperationChange = event => setOperation(event.target.value)
   const setValuesFromURL = () => {
     const [url, query] = window.location.hash.split('?')
@@ -213,24 +219,44 @@ const OperationsDrawer = () => {
         setURL(null)
       }
     } else {
-      let queryParams = operation === '$cascade' ? cascadeParams : {}
-      service.URL += parentItem.version_url || parentItem.url
-      service.URL += `concepts/${code}/${operation}/`
+      const handleResponse = _response => {
+        setURL(_response?.request?.responseURL || _response?.config?.url)
+        setResponse(_response)
+        setIsFetching(false)
+      }
       const isCurrentServerSameAsSelected = currentServer.url === selectedFHIRServer.url
-      service.get(isCurrentServerSameAsSelected ? null : false, null, queryParams).then(
-        _response => {
-          setURL(_response?.request?.responseURL || _response?.config?.url)
-          setResponse(_response)
+      const isGlobalOperation = ['$checksum'].includes(operation)
+      if(isGlobalOperation) {
+        if(isJSONString(jsonStr)) {
+          service.URL += `/${operation}/`
+          service.post(JSON.parse(jsonStr), isCurrentServerSameAsSelected ? null : false, null, null, false).then(handleResponse)
+        } else {
           setIsFetching(false)
+          alertifyjs.error('Invalid JSON', 5)
         }
-      )
+      } else {
+        let queryParams = operation === '$cascade' ? cascadeParams : {}
+        service.URL += parentItem.version_url || parentItem.url
+        service.URL += `concepts/${code}/${operation}/`
+        service.get(isCurrentServerSameAsSelected ? null : false, null, queryParams).then(handleResponse)
+      }
     }
+  }
+
+  const isJSONString = val => {
+    try {
+      val && JSON.parse(val);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   const onOpenInNewTab = () => window.open(url)
   const onCopyURLClick = () => copyURL(url)
   const is404 = get(response, 'status') === 404 || isEqual(response, {detail: 'Not found.'})
-  const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${is404 ? 404 : get(response, 'status', 'null')})`;
+  const is400 = get(response, 'status') === 400 || response?.error || response?.errors
+  const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${is404 ? 404 : (is400 ? 400 : get(response, 'status', 'null'))})`;
   const isError = get(response, 'status') !== 200 && !isFetching
   const toggleByURL = _byURL => {
     if(_byURL && operation === '$cascade')
@@ -240,8 +266,9 @@ const OperationsDrawer = () => {
 
   const getResponse = () => {
     let data = get(response, 'data') || get(response, 'error')
+    const isError = response?.error
     if(isString(data))
-      return {response: data}
+      return isError ? {error: data} : {response: data}
     if(isObject(data))
       return data
     return response
@@ -299,6 +326,22 @@ const OperationsDrawer = () => {
                 </Select>
               </FormControl>
             </div>
+            <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+              <FormControl fullWidth>
+                <InputLabel>Operation</InputLabel>
+                <Select
+                  value={operation}
+                  label="Operation"
+                  onChange={onOperationChange}
+                >
+                  {
+                    map(getOperations(), _operation => {
+                      return <MenuItem value={_operation} key={_operation} disabled={byURL && _operation === '$cascade'}>{_operation}</MenuItem>
+                    })
+                  }
+                </Select>
+              </FormControl>
+            </div>
             {
               byURL ?
                 <div className='col-xs-12 no-side-padding'>
@@ -331,44 +374,32 @@ const OperationsDrawer = () => {
                         </div>
                         </React.Fragment>
                   }
-                </div> :
-              <div className='col-xs-12 no-side-padding'>
-                <h4 style={{marginBottom: '15px'}}>
-                  {fhirResourceDisplay}
-                </h4>
-                <div className='col-xs-8 no-left-padding'>
-                  <TextField fullWidth value={parentId} label={fhirResourceDisplay} size='small' />
-                </div>
-                <div className='col-xs-4 no-side-padding'>
-                  <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} size='small' />
-                </div>
-              </div>
+                </div> : (
+                  operation !== '$checksum' &&
+                    <div className='col-xs-12 no-side-padding'>
+                      <h4 style={{marginBottom: '10px'}}>
+                        {fhirResourceDisplay}
+                      </h4>
+                      <div className='col-xs-8 no-left-padding'>
+                        <TextField fullWidth value={parentId} label={fhirResourceDisplay} size='small' />
+                      </div>
+                      <div className='col-xs-4 no-side-padding'>
+                        <TextField fullWidth value={version} label='Version' onChange={event => setVersion(event.target.value)} size='small' />
+                      </div>
+                    </div>
+                )
             }
-            <div className='col-xs-12 no-side-padding'>
-              <h4 style={{marginTop: '30px', marginBottom: '15px'}}>
-                Resource & Operation
-              </h4>
-              <div className='col-xs-6 no-left-padding'>
-                <TextField value={code} label='Code' fullWidth onChange={event => setCode(event.target.value)} size='small' />
-              </div>
-              <div className='col-xs-6 no-side-padding'>
-                <FormControl fullWidth>
-                  <InputLabel>Operation</InputLabel>
-                  <Select
-                    value={operation}
-                    label="Operation"
-                    onChange={onOperationChange}
-                    size='small'
-                  >
-                    {
-                      map(getOperations(), _operation => {
-                        return <MenuItem size='small' value={_operation} key={_operation} disabled={byURL && _operation === '$cascade'}>{_operation}</MenuItem>
-                      })
-                    }
-                  </Select>
-                </FormControl>
-              </div>
-            </div>
+            {
+              operation !== '$checksum' &&
+                <div className='col-xs-12 no-side-padding'>
+                  <h4 style={{marginTop: '5px', marginBottom: '10px'}}>
+                    Resource
+                  </h4>
+                  <div className='col-xs-8 no-left-padding'>
+                    <TextField value={code} label='Code' fullWidth onChange={event => setCode(event.target.value)} size='small' />
+                  </div>
+                </div>
+            }
             {
               operation === '$cascade' &&
             <div className='col-xs-12 no-side-padding'>
@@ -377,6 +408,12 @@ const OperationsDrawer = () => {
               </h4>
               <CascadeParametersForm concepts={parentItemURL ? [{url: parentItemURL}] : []} onChange={setCascadeParams} defaultParams={cascadeParams} />
             </div>
+            }
+            {
+              operation === '$checksum' &&
+                <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+                  <TextField error={!isJSONString(jsonStr)} fullWidth label='JSON' multiline minRows={6} maxRows={15} required onChange={event => setJSONStr(event.target.value)} />
+                </div>
             }
             <div className='col-xs-12 no-side-padding' style={{textAlign: 'right', margin: '15px 0'}}>
               <Button onClick={onExecute} variant='contained' disabled={!operation}>Execute</Button>

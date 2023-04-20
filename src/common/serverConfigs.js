@@ -8,9 +8,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -23,9 +25,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -37,9 +41,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -51,9 +57,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -66,9 +74,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -88,9 +98,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -102,9 +114,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
