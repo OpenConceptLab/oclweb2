@@ -12,7 +12,7 @@ import {
   FileCopy as CopyIcon,
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach } from 'lodash';
+import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach, isEqual } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL, urlSearchParamsToObject
@@ -229,7 +229,8 @@ const OperationsDrawer = () => {
 
   const onOpenInNewTab = () => window.open(url)
   const onCopyURLClick = () => copyURL(url)
-  const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${get(response, 'status', 'null')})`;
+  const is404 = get(response, 'status') === 404 || isEqual(response, {detail: 'Not found.'})
+  const responseLabel = isFetching ? 'Response: (fetching...)' : `Response: (status: ${is404 ? 404 : get(response, 'status', 'null')})`;
   const isError = get(response, 'status') !== 200 && !isFetching
   const toggleByURL = _byURL => {
     if(_byURL && operation === '$cascade')
