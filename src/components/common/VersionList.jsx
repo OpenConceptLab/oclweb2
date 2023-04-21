@@ -132,7 +132,7 @@ const VersionList = ({ versions, resource }) => {
                                   <Tooltip title="Checksum of versions's metadata, locales, direct associations and source versions." placement='left'>
                                     <div>
                                       <BetaLabel label='Checksum' />:
-                                      <_Checksum checksum={version.checksums.all} />
+                                      <_Checksum checksum={version.checksums.all || version.checksums.meta} />
                                       <span>
                                         <IconButton size='small' color='primary' onClick={() => setExpandChecksums(!expandChecksums)}>
                                           {expandChecksums ? <UpIcon fontSize='inherit' /> : <DownIcon fontSize='inherit' />}
@@ -148,6 +148,7 @@ const VersionList = ({ versions, resource }) => {
                                         <Checksum title="Checksum of versions's descriptions." label='Descriptions' checksum={version.checksums.descriptions} />
                                         <Checksum title="Checksum of versions's associations." label='Associations' checksum={version.checksums.mappings} />
                                         <Checksum title="Checksum of versions's source versions." label='Source Versions' checksum={version.checksums.repo_versions} />
+                                        <Checksum title="Checksum of everything." label='All' checksum={version.checksums.all} />
                                       </Collapse>
                                   }
                                 </div>
