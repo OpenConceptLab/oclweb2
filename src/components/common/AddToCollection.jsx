@@ -12,7 +12,7 @@ import {
 } from '@mui/icons-material'
 import { map, isEmpty, get, filter, cloneDeep, compact, uniq } from 'lodash';
 import APIService from '../../services/APIService';
-import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
+import { getCurrentUserCollections, getCurrentUser, copyToClipboard } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from '../collections/CollectionForm';
 import AddReferencesResult from './AddReferencesResult';
@@ -129,7 +129,13 @@ class AddToCollection extends React.Component {
           .put(payload.payload, null, null, payload.queryParams)
           .then(response => {
             this.setState({isAdding: false}, () => {
-              if(response.status === 200) {
+              if(response.status === 202) {
+                this.setState({result: false}, () => {
+                  if(response?.data?.task)
+                    copyToClipboard(response.data.task, 'Successfully queued. Task ID copied to your clipboard.', 0)
+                  this.handleDialogClose()
+                })
+              } else if(response.status === 200) {
                 this.setState({result: response.data})
                 alertifyjs.success('Successfully added reference(s)')
                 this.handleDialogClose()
@@ -150,7 +156,7 @@ class AddToCollection extends React.Component {
 
   getFilteredCollections(value) {
     return filter(this.state.allCollections, collection => {
-      const name = collection.short_code + '/' + collection.owner;
+      const name = collection.name + '/' + collection.owner;
       return name.toLowerCase().match(value.trim())
     })
   }

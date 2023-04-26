@@ -7,7 +7,7 @@ import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
@@ -105,12 +105,12 @@ export const copyURL = url => {
   copyToClipboard(url, 'Copied URL to clipboard!');
 }
 
-export const copyToClipboard = (copyText, message) => {
+export const copyToClipboard = (copyText, message, timeout) => {
   if(copyText)
     navigator.clipboard.writeText(copyText);
 
   if(message)
-    alertifyjs.success(message);
+    alertifyjs.success(message, isNumber(timeout) ? timeout : undefined);
 }
 
 export const toParentURI = uri => uri.split('/').splice(0, 5).join('/') + '/';
