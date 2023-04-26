@@ -1,9 +1,9 @@
 import React from 'react';
-import { getLoginURL, isSSOEnabled } from '../../common/utils'
+import { getLoginURL } from '../../common/utils'
 import ErrorUI from './ErrorUI';
 
 const AccessDenied = () => {
-  const loginURL = getLoginURL(isSSOEnabled() ? window.location.origin + '/' + window.location.hash : window.location.hash.replace('#', ''))
+  const loginURL = getLoginURL()
   return (
     <ErrorUI
       header='401'
