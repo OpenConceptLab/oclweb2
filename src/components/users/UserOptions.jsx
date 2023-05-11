@@ -32,7 +32,6 @@ const UserOptions = () => {
   const onHomeClick = event => {
     event.persist();
     handleClose(event);
-    window.location.hash = user.url
   };
   const username = get(user, 'username');
   const displayName = get(user, 'name') || username;
@@ -90,7 +89,7 @@ const UserOptions = () => {
                 }
               </div>
               <ListItemText className='list-item-text-bold-primary' primary={displayName} secondary={user.email} />
-              <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} />
+              <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} href={'#' + user.url} component="a" />
             </ListItemText>
           </ListItem>
           <Divider />
