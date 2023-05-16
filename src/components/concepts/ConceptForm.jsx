@@ -272,8 +272,9 @@ class ConceptForm extends React.Component {
       const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
       onCancel();
       alertifyjs.success(message, 1, () => {
-        if(reloadOnSuccess)
-          window.location.reload()
+        if(reloadOnSuccess) {
+          window.location.hash = `#${response.data.url}`
+        }
       })
     } else { // error
       const genericError = get(response, '__all__')
