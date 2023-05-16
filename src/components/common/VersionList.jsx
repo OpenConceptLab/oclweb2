@@ -54,7 +54,7 @@ const VersionList = ({ versions, resource }) => {
   )
   const isConcept = resource === 'concept';
   const isMapping = resource === 'mapping';
-  const canSelect = (isConcept || isMapping) && sortedVersions.length > 1;
+  const canSelect = (isConcept || isMapping);
   const gridClass = canSelect ? 'col-md-11' : 'col-md-12'
   const showCompareOption = (isConcept || isMapping) && selectedList.length === 2;
   const onCompareClick = event => {
@@ -107,7 +107,7 @@ const VersionList = ({ versions, resource }) => {
                     <div className='col-md-12 flex-vertical-center' style={{padding: '0 3px'}}>
                       {
                         canSelect &&
-                          <div className='col-md-1 no-side-padding'>
+                          <div className='col-md-1 no-side-padding' style={{width: '6.5%'}}>
                             <Checkbox size='small' onChange={event => onSelectChange(event, version.version_url)} />
                           </div>
                       }
