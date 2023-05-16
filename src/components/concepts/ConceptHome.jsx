@@ -456,6 +456,7 @@ class ConceptHome extends React.Component {
                 onAssignSortWeight={canSort ? this.onAssignSortWeight : false}
                 onRemoveMapping={canAct ? this.onRemoveMapping : false}
                 onReactivateMapping={canAct ? this.onReactivateMapping : false}
+                sourceVersionSummary={this.props.sourceVersionSummary}
               />
             </div>
           </React.Fragment>

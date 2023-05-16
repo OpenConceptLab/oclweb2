@@ -94,7 +94,7 @@ class SourceHome extends React.Component {
 
   componentDidMount() {
     this.setPaths()
-    this.refreshDataByURL(true)
+    this.refreshDataByURL()
     this.interval = setInterval(this.setContainerWidth, 100)
   }
 
@@ -106,7 +106,7 @@ class SourceHome extends React.Component {
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.setPaths()
-      this.refreshDataByURL(false)
+      this.refreshDataByURL()
       this.onTabChange(null, this.getDefaultTabIndex())
     }
   }
@@ -173,7 +173,7 @@ class SourceHome extends React.Component {
     })
   }
 
-  refreshDataByURL(fetchSummary) {
+  refreshDataByURL() {
     this.setState({isLoading: true, notFound: false, accessDenied: false, permissionDenied: false}, () => {
       APIService.new()
         .overrideURL(this.sourceVersionPath)
@@ -202,8 +202,7 @@ class SourceHome extends React.Component {
               const { setParentResource, setParentItem } = this.context
               setParentItem(this.state.source)
               setParentResource('source')
-              if(fetchSummary && this.isSummaryTabSelected())
-                this.fetchSelectedSourceVersionSummary()
+              this.fetchSelectedSourceVersionSummary()
             })
           }
         })
@@ -405,6 +404,7 @@ class SourceHome extends React.Component {
                         header={false}
                         source={source}
                         noRedirect
+                        sourceVersionSummary={this.state.sourceVersionSummary}
                       /> :
                     <ConceptHome
                       singleColumn
@@ -418,6 +418,7 @@ class SourceHome extends React.Component {
                       openHierarchy={false}
                       header={false}
                       noRedirect
+                      sourceVersionSummary={this.state.sourceVersionSummary}
                     />
                   }
                 </div>

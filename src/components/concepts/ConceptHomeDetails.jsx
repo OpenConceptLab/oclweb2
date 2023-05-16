@@ -14,7 +14,7 @@ const ACCORDIAN_DETAILS_STYLES = {
   overflowX: 'auto', width: '100%', padding: '0'
 }
 
-const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle, onCreateNewMapping, onRemoveMapping, onReactivateMapping, mappedSources, onUpdateMappingsSorting, onAssignSortWeight, onClearSortWeight }) => {
+const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, source, singleColumn, versions, scoped, sourceVersion, parent, onIncludeRetiredAssociationsToggle, onCreateNewMapping, onRemoveMapping, onReactivateMapping, mappedSources, onUpdateMappingsSorting, onAssignSortWeight, onClearSortWeight, sourceVersionSummary }) => {
   const names = get(concept, 'names', [])
   const descriptions = get(concept, 'descriptions', [])
   let classes = 'col-sm-12 padding-5';
@@ -57,6 +57,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           onReactivateMapping={onReactivateMapping}
           onAssignSortWeight={onAssignSortWeight}
           onClearSortWeight={onClearSortWeight}
+          sourceVersionSummary={sourceVersionSummary}
         />
         {
           scoped === 'collection' ?

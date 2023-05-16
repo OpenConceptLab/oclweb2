@@ -64,7 +64,7 @@ const DEFAULT_CASCADE_FILTERS = {
   returnMapTypes: undefined,
 }
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting, onClearSortWeight, onAssignSortWeight }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting, onClearSortWeight, onAssignSortWeight, sourceVersionSummary }) => {
   const [orderedMappings, setMappings] = React.useState({});
   const [updatedMappings, setUpdatedMappings] = React.useState([]);
   const [mappingForm, setMappingForm] = React.useState(false)
@@ -296,6 +296,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                 isDirect
                                 onSubmit={_onCreateNewMapping}
                                 suggested={suggested}
+                                sourceVersionSummary={sourceVersionSummary}
                               />
                             </TableCell>
                           </TableRow>
