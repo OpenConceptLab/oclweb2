@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@mui/material';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach, isNumber } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach, isNumber, map } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import Breadcrumbs from './Breadcrumbs';
@@ -164,6 +164,16 @@ class SourceHome extends React.Component {
       if(this.isSummaryTabSelected())
         this.fetchSelectedSourceVersionSummary()
     })
+  }
+
+  onCreateNewMapping = mapType => {
+    const usedMapTypes = map(this.state.sourceVersionSummary?.mappings?.map_type, _mapType => _mapType[0].toLowerCase().replace('-', '').replace('_', '').replace(' ', ''))
+    const _mapType = mapType.toLowerCase().replace('-', '').replace('_', '').replace(' ', '')
+    if(!includes(usedMapTypes, _mapType)) {
+      const newState = {...this.state}
+      newState.sourceVersionSummary.mappings.map_type.push([mapType, 1])
+      this.setState(newState)
+    }
   }
 
   fetchSelectedSourceVersionSummary = () => {
@@ -419,6 +429,7 @@ class SourceHome extends React.Component {
                       header={false}
                       noRedirect
                       sourceVersionSummary={this.state.sourceVersionSummary}
+                      onCreateNewMapping={this.onCreateNewMapping}
                     />
                   }
                 </div>
