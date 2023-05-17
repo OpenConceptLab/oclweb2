@@ -28,7 +28,6 @@ class CollectionHome extends React.Component {
       permissionDenied: false,
       isLoading: true,
       isLoadingExpansions: true,
-      isLoadingVersions: true,
       collection: {},
       expansion: {},
       versions: [],
@@ -159,13 +158,11 @@ class CollectionHome extends React.Component {
   }
 
   getVersions() {
-    this.setState({isLoadingVersions: true}, () => {
-      APIService
-        .new()
-        .overrideURL(this.collectionPath + 'versions/')
-        .get(null, null, {verbose: true, includeSummary: true, limit: 1000})
-        .then(response => this.setState({versions: response.data, isLoadingVersions: false}))
-    })
+    APIService
+      .new()
+      .overrideURL(this.collectionPath + 'versions/')
+      .get(null, null, {limit: 1000, brief: true})
+      .then(response => this.setState({versions: response.data}))
   }
 
   getExpansions() {
@@ -341,7 +338,7 @@ class CollectionHome extends React.Component {
     const { openOperations } = this.context;
     const {
       collection, versions, isLoading, tab, selectedConfig, customConfigs,
-      notFound, accessDenied, permissionDenied, isLoadingVersions, expansion, expansions, selected,
+      notFound, accessDenied, permissionDenied, expansion, expansions, selected,
       isLoadingExpansions, filtersOpen
     } = this.state;
     const currentURL = this.getURLFromPath()
@@ -381,13 +378,8 @@ class CollectionHome extends React.Component {
                   collection={collection}
                   isVersionedObject={this.isVersionedObject()}
                   versionedObjectURL={versionedObjectURL}
-                  currentURL={currentURL}
                   config={selectedConfig}
-                  expansion={expansion}
                   tab={tab}
-                  versions={versions}
-                  expansions={expansions}
-                  isLoadingExpansions={isLoadingExpansions}
                 />
                 <CollectionHomeTabs
                   tab={tab}
@@ -406,7 +398,6 @@ class CollectionHome extends React.Component {
                   selectedConfig={selectedConfig}
                   showConfigSelection={this.customConfigFeatureApplicable()}
                   isOCLDefaultConfigSelected={isEqual(selectedConfig, COLLECTION_DEFAULT_CONFIG)}
-                  isLoadingVersions={isLoadingVersions}
                   isLoadingExpansions={isLoadingExpansions}
                   onSelect={this.onResourceSelect}
                   onFilterDrawerToggle={this.onFilterDrawerToggle}

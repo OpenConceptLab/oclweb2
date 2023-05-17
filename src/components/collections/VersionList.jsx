@@ -4,8 +4,9 @@ import {
   Divider, Tooltip, Button, IconButton, CircularProgress, Card, CardContent,
   Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import {
-  map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject, forEach
+  map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject, forEach, uniqBy
 } from 'lodash';
 import {
   Search as SearchIcon, Edit as EditIcon,
@@ -19,7 +20,7 @@ import {
   Functions as SummaryIcon
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
-import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
+import { copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ConceptContainerVersionForm from '../common/ConceptContainerVersionForm';
 import CommonFormDrawer from '../common/CommonFormDrawer';
@@ -55,9 +56,11 @@ const deleteVersion = version => getService(version).delete().then(response => h
 const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
 const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url).delete().then(response => handleExpansionResponse(response, 'Deleted'))
 
-const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) => {
+const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) => {
   const resource = 'collection'
-  const sortedVersions = headFirst(versions)
+  const [pagination, setPagination] = React.useState({})
+  const [versions, setVersions] = React.useState([])
+  const [loadingVersions, setLoadingVersions] = React.useState([])
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
   const [expansions, setExpansions] = React.useState({})
@@ -145,8 +148,8 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
   const isExpansionsLoaded = version => Boolean(!isEmpty(get(expansions, version.uuid)))
   const isExpansionsLoading = version => Boolean(get(loadingExpansions, version.uuid))
 
-  const fetchExpansionsForAllVersions = () => {
-    forEach(versions, version => {
+  const fetchExpansionsForAllVersions = _versions => {
+    forEach(_versions, version => {
       if(version && !isExpansionsLoaded(version) && !isExpansionsLoading(version)) {
         fetchExpansions(version)
       }
@@ -164,12 +167,25 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
     })
   }
 
-  React.useEffect(() => fetchExpansionsForAllVersions(), [versions])
+  const fetchVersions = page => {
+    setLoadingVersions(true)
+    APIService.new().overrideURL(collection.url).appendToUrl('versions/').get(null, null, {limit: 10, includeSummary: true, verbose: true, page: page}).then(response => {
+      setLoadingVersions(false)
+      const _versions = uniqBy([{...collection, id: 'HEAD', version_url: collection.url, version: 'HEAD', uuid: 'HEAD'}, ...versions, ...response.data], 'id')
+      setPagination({page: parseInt(response.headers.page_number), pages: parseInt(response.headers.pages), count: parseInt(response.headers.num_found)})
+      setVersions(_versions)
+      fetchExpansionsForAllVersions(_versions)
+    })
+  }
+
+  const loadMore = () => fetchVersions(pagination.page + 1)
+
+  React.useEffect(fetchVersions, [collection])
 
   return (
     <div className='col-md-12 no-side-padding'>
       {
-        map(sortedVersions, version => {
+        map(versions, version => {
           const isHEAD = version.id.toLowerCase() === 'head';
           const isLoadingExpansions = isExpansionsLoading(version)
           const style = {margin: '5px 0'}
@@ -455,6 +471,15 @@ const VersionList = ({ versions, canEdit, onUpdate, onCreateExpansionClick }) =>
             </DialogActions>
           </Dialog>
       }
+      <div className='col-xs-12' style={{textAlign: 'center', marginTop: '12px'}} onClick={loadMore}>
+        <LoadingButton loading={loadingVersions} variant='contained' disabled={isEmpty(versions) || versions.length >= pagination?.count} style={{textTransform: 'none'}}>
+          <span>
+            <span style={{fontSize: '14px'}}>{`Showing ${versions.length} out of ${pagination.count} versions.`}</span>
+            <br/>
+            <span><b>Load Older Versions?</b></span>
+          </span>
+      </LoadingButton>
+        </div>
     </div>
   );
 }

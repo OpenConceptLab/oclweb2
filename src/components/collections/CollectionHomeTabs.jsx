@@ -20,7 +20,7 @@ const CollectionHomeTabs = props => {
   const {
     tab, collection, versions, expansions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, expansion, isLoadingExpansions, onSelect,
+    onTabChange, isOCLDefaultConfigSelected, expansion, isLoadingExpansions, onSelect,
     onFilterDrawerToggle, collectionVersionSummary
   } = props;
   const tabConfigs = (aboutTab ? get(selectedConfig, 'config.tabs') : reject((get(selectedConfig, 'config.tabs') || {}), {type: 'about'})) || {};
@@ -132,7 +132,7 @@ const CollectionHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig?.type === 'versions' &&
-          <VersionList versions={versions} resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} onCreateExpansionClick={onCreateExpansionClick} />
+            <VersionList resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} onCreateExpansionClick={onCreateExpansionClick} collection={collection} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig?.type === 'summary' &&
@@ -159,7 +159,6 @@ const CollectionHomeTabs = props => {
             location={location}
             versionedObjectURL={selectedTabConfig.uri || versionedObjectURL}
             defaultURI={selectedTabConfig.defaultURI || selectedTabConfig.uri}
-            versions={versions}
             expansions={expansions}
             expansion={expansion}
             currentVersion={currentVersion}
