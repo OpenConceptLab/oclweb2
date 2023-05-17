@@ -471,8 +471,8 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
             </DialogActions>
           </Dialog>
       }
-      <div className='col-xs-12' style={{textAlign: 'center', marginTop: '12px'}} onClick={loadMore}>
-        <LoadingButton loading={loadingVersions} variant='contained' disabled={isEmpty(versions) || versions.length >= pagination?.count} style={{textTransform: 'none'}}>
+      <div className='col-xs-12' style={{textAlign: 'center', marginTop: '12px'}}>
+        <LoadingButton onClick={loadMore} loading={loadingVersions} variant='contained' disabled={isEmpty(versions) || versions.length >= pagination?.count} style={{textTransform: 'none'}}>
           <span>
             <span style={{fontSize: '14px'}}>{`Showing ${versions.length} out of ${pagination.count} versions.`}</span>
             <br/>
