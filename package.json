@@ -39,6 +39,7 @@
     "react-router-dom": "^5.3.4",
     "react-split": "^2.0.14",
     "react-suggestion-box": "^2.0.2",
+    "react-window": "^1.8.9",
     "remark-gfm": "^1.0.0",
     "stacktrace-js": "^2.0.2"
   },
