@@ -353,6 +353,7 @@ class SourceHome extends React.Component {
                   versions={versions}
                   selectedResource={selected}
                   onSplitViewClose={() => this.setState({selected: null, width: false})}
+                  sourceVersionSummary={this.state.sourceVersionSummary}
                 />
               </div>
               <div id='source-container' className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>

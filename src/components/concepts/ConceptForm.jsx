@@ -8,13 +8,15 @@ import {
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
-  arrayToObject, fetchDatatypes, fetchNameTypes,
+  arrayToObject, fetchDatatypes, fetchNameTypes, sortValuesBySourceSummary,
   fetchDescriptionTypes, fetchConceptClasses, recordGAUpsertEvent
 } from '../../common/utils';
 import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
 import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
+import GroupHeader from '../common/GroupHeader';
+import GroupItems from '../common/GroupItems';
 
 const NAME_MODEL = {locale: '', name_type: '', name: '', external_id: '', locale_preferred: false}
 const DESC_MODEL = {locale: '', description_type: '', description: '', external_id: '', locale_preferred: false}
@@ -51,9 +53,9 @@ class ConceptForm extends React.Component {
   }
 
   componentDidMount() {
-    fetchDatatypes(data => this.setState({datatypes: data}))
-    fetchConceptClasses(data => this.setState({conceptClasses: data}))
-    fetchNameTypes(data => this.setState({nameTypes: data}))
+    fetchDatatypes(data => this.setState({datatypes: sortValuesBySourceSummary(data, this.props.sourceVersionSummary, 'concepts.datatype')}))
+    fetchConceptClasses(data => this.setState({conceptClasses: sortValuesBySourceSummary(data, this.props.sourceVersionSummary, 'concepts.concept_class')}))
+    fetchNameTypes(data => this.setState({nameTypes: sortValuesBySourceSummary(data, this.props.sourceVersionSummary, 'concepts.name_type')}))
     fetchDescriptionTypes(data => this.setState({descriptionTypes: data}))
     if(this.props.edit && this.props.concept)
       this.fetchConceptToEdit()
@@ -398,6 +400,13 @@ class ConceptForm extends React.Component {
                   getOptionLabel={option => option.name}
                   fullWidth
                   required
+                  groupBy={option => option.resultType}
+                  renderGroup={params => (
+                    <li style={{listStyle: 'none'}} key={params.group}>
+                      <GroupHeader>{params.group}</GroupHeader>
+                      <GroupItems>{params.children}</GroupItems>
+                    </li>
+                  )}
                   renderInput={
                     params => <TextField
                                 {...params}
@@ -407,12 +416,8 @@ class ConceptForm extends React.Component {
                                 variant="outlined"
                                 fullWidth />
                   }
-                  onChange={(event, item) => {
-                    this.onAutoCompleteChange('fields.concept_class', item)}
-                           }
-                  onInputChange={(event, value) => {
-                    this.setFieldValue('fields.concept_class', value)}
-                                }
+                  onChange={(event, item) => this.onAutoCompleteChange('fields.concept_class', item)}
+                  onInputChange={(event, value) => this.setFieldValue('fields.concept_class', value)}
                 />
               </div>
               <div style={{marginTop: '15px', width: '100%'}}>
@@ -425,6 +430,13 @@ class ConceptForm extends React.Component {
                   getOptionLabel={option => option.name}
                   fullWidth
                   required
+                  groupBy={option => option.resultType}
+                  renderGroup={params => (
+                    <li style={{listStyle: 'none'}} key={params.group}>
+                      <GroupHeader>{params.group}</GroupHeader>
+                      <GroupItems>{params.children}</GroupItems>
+                    </li>
+                  )}
                   renderInput={
                     params => <TextField
                                 {...params}
@@ -523,6 +535,7 @@ class ConceptForm extends React.Component {
                         onCheckboxChange={this.onCheckboxChange}
                         types={nameTypes}
                         onDelete={this.onDeleteNameLocale}
+                        sourceVersionSummary={this.props.sourceVersionSummary}
                       />
                     </div>
                   ))
@@ -549,6 +562,7 @@ class ConceptForm extends React.Component {
                         onCheckboxChange={this.onCheckboxChange}
                         types={descriptionTypes}
                         onDelete={this.onDeleteDescLocale}
+                        sourceVersionSummary={this.props.sourceVersionSummary}
                       />
                     </div>
                   ))

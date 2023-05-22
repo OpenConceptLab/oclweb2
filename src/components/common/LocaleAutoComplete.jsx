@@ -3,8 +3,10 @@ import { Alert, TextField, Box, Divider, Autocomplete, Dialog, DialogContent, Di
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import { Add as AddIcon } from '@mui/icons-material';
 import { get, isEmpty, find, uniqBy, compact, map } from 'lodash'
-import { fetchLocales, getSiteTitle } from '../../common/utils';
+import { fetchLocales, getSiteTitle, sortValuesBySourceSummary } from '../../common/utils';
 import FormTooltip from './FormTooltip';
+import GroupHeader from './GroupHeader';
+import GroupItems from './GroupItems';
 
 const SITE_TITLE = getSiteTitle()
 
@@ -78,7 +80,7 @@ const CustomLocaleDialog = ({ open, onClose, onSave, isMultiple }) => {
   )
 }
 
-const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, placeholder, custom, limit, disabled, value, optionsLimit, ...rest }) => {
+const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, onChange, label, error, size, fullWidth, placeholder, custom, limit, disabled, value, optionsLimit, sourceVersionSummary, ...rest }) => {
   const [locales, setLocales] = React.useState(cachedLocales || [])
   const _fullWidth = !(fullWidth === false)
   const [input, setInput] = React.useState('')
@@ -97,11 +99,12 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
   }, [selected])
 
   const prepareLocales = _locales => {
+    let __locales = _locales
     if(get(selected, 'id') && !find(_locales, {id: selected.id})) {
-      setLocales(uniqBy([..._locales, selected], 'id'))
-    } else {
-      setLocales(_locales)
+      __locales = uniqBy([..._locales, selected], 'id')
     }
+
+    setLocales(sortValuesBySourceSummary(__locales, sourceVersionSummary, 'concepts.locale', true))
   }
 
   const getOptionLabel = option => {
@@ -178,6 +181,13 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
         options={locales}
         getOptionLabel={getOptionLabel}
         onChange={(event, item) => onChange(id || 'localesAutoComplete', item)}
+        groupBy={option => option.resultType}
+        renderGroup={params => (
+          <li style={{listStyle: 'none'}} key={params.group}>
+            <GroupHeader>{params.group}</GroupHeader>
+            <GroupItems>{params.children}</GroupItems>
+          </li>
+        )}
         renderOption={(props, option) => {
           const isCustom = option.id === 'custom'
           const suffix = (option.id.length > 3 && !isCustom) ? option.id : false

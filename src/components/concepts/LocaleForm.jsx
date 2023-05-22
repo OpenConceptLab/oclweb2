@@ -2,13 +2,15 @@ import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import { TextField, Checkbox, IconButton, FormControlLabel } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import { find, get } from 'lodash'
+import { find, get, orderBy, uniqBy } from 'lodash'
 import { ERROR_RED } from '../../common/constants';
 import LocaleAutoComplete from '../common/LocaleAutoComplete';
+import GroupHeader from '../common/GroupHeader';
+import GroupItems from '../common/GroupItems';
 
 const LocaleForm = ({
   localeAttr, index, onTextFieldChange, onAutoCompleteChange, onCheckboxChange, types,
-  onDelete, error, locale
+  onDelete, error, locale, sourceVersionSummary
 }) => {
   const isName = localeAttr === 'fields.names';
   const nameAttr = isName ? 'name' : 'description';
@@ -22,9 +24,9 @@ const LocaleForm = ({
   const borderColor = error ? ERROR_RED : 'lightgray'
   let formattedTypes = types;
   if(localeType && !selectedLocaleType) {
-    const _type = {id: localeType, name: localeType}
+    const _type = {id: localeType, name: localeType, resultType: 'Suggested'}
     selectedLocaleType = _type
-    formattedTypes = [_type, ...types]
+    formattedTypes = uniqBy(orderBy([_type, ...types], ['resultType', 'name'], ['desc', 'asc']), 'id')
   }
 
   const onLocaleChange = (event, item) => {
@@ -46,6 +48,7 @@ const LocaleForm = ({
               id={`${idPrefix}.locale`}
               selected={selectedLocale}
               onChange={onLocaleChange}
+              sourceVersionSummary={sourceVersionSummary}
               required
               label='Locale'
               size='small'
@@ -60,6 +63,13 @@ const LocaleForm = ({
               getOptionLabel={(option) => option.name}
               fullWidth
               required
+              groupBy={option => option.resultType}
+              renderGroup={params => (
+                <li style={{listStyle: 'none'}} key={params.group}>
+                  <GroupHeader>{params.group}</GroupHeader>
+                  <GroupItems>{params.children}</GroupItems>
+                </li>
+              )}
               renderInput={(params) => <TextField {...params} required size='small' label="Type" variant="outlined" fullWidth />}
               onChange={(event, item) => onAutoCompleteChange(`${idPrefix}.${typeAttr}`, item)}
             />

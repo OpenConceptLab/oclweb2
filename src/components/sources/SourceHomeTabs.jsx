@@ -202,7 +202,14 @@ const SourceHomeTabs = props => {
         isOpen={conceptForm}
         onClose={closeConceptForm}
         formComponent={
-          <ConceptForm source={source} copyFrom={selectedChild} onCancel={closeConceptForm} reloadOnSuccess={tab==0} parentURL={versionedObjectURL} />
+          <ConceptForm
+            source={source}
+            copyFrom={selectedChild}
+            onCancel={closeConceptForm}
+            reloadOnSuccess={tab==0}
+            parentURL={versionedObjectURL}
+            sourceVersionSummary={sourceVersionSummary}
+          />
         }
       />
       <CommonFormDrawer
@@ -210,7 +217,15 @@ const SourceHomeTabs = props => {
         isOpen={mappingForm}
         onClose={closeMappingForm}
         formComponent={
-          <MappingForm source={source} copyFrom={selectedChild} onCancel={closeMappingForm} reloadOnSuccess={tab==1} parentURL={versionedObjectURL} selectedConcepts={selectedConcepts} />
+          <MappingForm
+            source={source}
+            copyFrom={selectedChild}
+            onCancel={closeMappingForm}
+            reloadOnSuccess={tab==1}
+            parentURL={versionedObjectURL}
+            selectedConcepts={selectedConcepts}
+            sourceVersionSummary={sourceVersionSummary}
+          />
         }
       />
       <CommonFormDrawer
@@ -218,7 +233,12 @@ const SourceHomeTabs = props => {
         isOpen={versionForm}
         onClose={closeVersionForm}
         formComponent={
-          <SourceVersionForm onCancel={closeVersionForm} reloadOnSuccess={tab==2} parentURL={versionedObjectURL} version={source} />
+          <SourceVersionForm
+            onCancel={closeVersionForm}
+            reloadOnSuccess={tab==2}
+            parentURL={versionedObjectURL}
+            version={source}
+          />
         }
       />
     </div>

@@ -29,7 +29,7 @@ import { OperationsContext } from '../app/LayoutContext';
 
 const Breadcrumbs = ({
   params, selectedResource, container, isVersionedObject, versions, onSplitViewClose,
-  isLoadingExpansions, expansions, expansion
+  isLoadingExpansions, expansions, expansion, sourceVersionSummary
 }) => {
   const { openOperations } = React.useContext(OperationsContext);
   const [conceptForm, setConceptForm] = React.useState(false);
@@ -304,7 +304,14 @@ const Breadcrumbs = ({
             isOpen={conceptForm}
             onClose={() => setConceptForm(false)}
             formComponent={
-              <ConceptForm edit reloadOnSuccess onCancel={() => setConceptForm(false)} concept={selectedResource} parentURL={resourceURL.replace('#', '')} />
+              <ConceptForm
+                edit
+                reloadOnSuccess
+                onCancel={() => setConceptForm(false)}
+                concept={selectedResource}
+                parentURL={resourceURL.replace('#', '')}
+                sourceVersionSummary={sourceVersionSummary}
+              />
             }
           />
       }
@@ -315,7 +322,14 @@ const Breadcrumbs = ({
             isOpen={mappingForm}
             onClose={() => setMappingForm(false)}
             formComponent={
-              <MappingForm edit reloadOnSuccess onCancel={() => setMappingForm(false)} mapping={selectedResource} parentURL={resourceURL.replace('#', '')} />
+              <MappingForm
+                edit
+                reloadOnSuccess
+                onCancel={() => setMappingForm(false)}
+                mapping={selectedResource}
+                parentURL={resourceURL.replace('#', '')}
+                sourceVersionSummary={sourceVersionSummary}
+              />
             }
           />
       }

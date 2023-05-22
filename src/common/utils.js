@@ -7,7 +7,7 @@ import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber,
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
@@ -871,3 +871,32 @@ export const getSiblings = elem => {
 	return siblings;
 
 };
+
+export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale) => {
+  if(isEmpty(data) || !summary)
+    return data
+  let _data = data.map(d => {
+    d.resultType = 'Ordered'
+    return d
+  })
+  const summaryValues = get(summary, summaryField)
+  if(summaryValues) {
+    const usedValues = map(summaryValues, value => value[0])
+    usedValues.forEach(used => {
+      const _used = find(_data, _d => {
+        const id = _d.id.toLowerCase().replace('-', '').replace('_', '').replace(' ', '')
+        const _used = used.toLowerCase().replace('-', '').replace('_', '').replace(' ', '')
+        return _used === id
+      })
+      if(_used)
+        _used.resultType = 'Suggested'
+    })
+  }
+  let values = orderBy(_data, ['resultType', 'name'], ['desc', 'asc'])
+
+  if(isLocale) {
+    values = uniqBy([{...find(values, {id: summary.default_locale}), resultType: 'Suggested'}, ...orderBy(filter(values, val => summary.supported_locales.includes(val.id)).map(val => ({...val, resultType: 'Suggested'})), ['name'], ['asc']), ...values], 'id')
+  }
+
+  return values
+}
