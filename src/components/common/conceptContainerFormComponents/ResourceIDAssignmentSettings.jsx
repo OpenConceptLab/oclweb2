@@ -78,7 +78,6 @@ const ResourceIDAssignmentSettings = props => {
                 defaultValue={defaultValue}
                 value={value}
                 onChange={event => onChange(fieldID, event.target.value || '', setter)}
-                disabled={props.edit}
               >
                 <MenuItem value='None'>
                   <ListItemText primary="Enter Manually" secondary={<span style={STYLE}>The ID must be entered manually each time you create a new concept.</span>} />
@@ -108,7 +107,6 @@ const ResourceIDAssignmentSettings = props => {
                 type='number'
                 label={startFromConfig.label}
                 inputProps={{min: 1, step: 1}}
-                disabled={props.edit}
               />
               <FormTooltip title={startFromConfig.tooltip} style={{marginLeft: '10px'}} />
             </div>
