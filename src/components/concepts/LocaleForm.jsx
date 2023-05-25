@@ -62,7 +62,6 @@ const LocaleForm = ({
               options={formattedTypes}
               getOptionLabel={(option) => option.name}
               fullWidth
-              required
               groupBy={option => option.resultType}
               renderGroup={params => (
                 <li style={{listStyle: 'none'}} key={params.group}>
@@ -70,7 +69,7 @@ const LocaleForm = ({
                   <GroupItems>{params.children}</GroupItems>
                 </li>
               )}
-              renderInput={(params) => <TextField {...params} required size='small' label="Type" variant="outlined" fullWidth />}
+              renderInput={(params) => <TextField {...params} size='small' label="Type" variant="outlined" fullWidth />}
               onChange={(event, item) => onAutoCompleteChange(`${idPrefix}.${typeAttr}`, item)}
             />
           </div>

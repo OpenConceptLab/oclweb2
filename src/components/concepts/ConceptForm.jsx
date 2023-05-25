@@ -296,7 +296,6 @@ class ConceptForm extends React.Component {
   cleanLocales(locales) {
     return filter(locales, locale => {
       return locale.locale &&
-        (get(locale, 'name_type') || get(locale, 'description_type')) &&
         (get(locale, 'name') || get(locale, 'description'))
     })
   }
