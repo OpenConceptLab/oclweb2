@@ -9,7 +9,7 @@ import {
 import APIService from '../../services/APIService';
 import {
   arrayToObject, fetchDatatypes, fetchNameTypes, sortValuesBySourceSummary,
-  fetchDescriptionTypes, fetchConceptClasses, recordGAUpsertEvent
+  fetchDescriptionTypes, fetchConceptClasses, recordGAUpsertEvent, toParentURI
 } from '../../common/utils';
 import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
@@ -63,6 +63,14 @@ class ConceptForm extends React.Component {
       this.fetchConceptToCreate()
     if(!this.props.edit)
       this.setState({parent: this.props.source})
+    else
+      this.fetchParent()
+  }
+
+  fetchParent = () => {
+    if(!this.props.source && this.props.edit && this.props.concept) {
+      APIService.new().overrideURL(toParentURI(this.props.concept.url)).get().then(response => this.setState({parent: response.data}))
+    }
   }
 
   fetchConceptToCreate() {
@@ -535,6 +543,7 @@ class ConceptForm extends React.Component {
                         types={nameTypes}
                         onDelete={this.onDeleteNameLocale}
                         sourceVersionSummary={this.props.sourceVersionSummary}
+                        source={this.state.parent}
                       />
                     </div>
                   ))
@@ -562,6 +571,7 @@ class ConceptForm extends React.Component {
                         types={descriptionTypes}
                         onDelete={this.onDeleteDescLocale}
                         sourceVersionSummary={this.props.sourceVersionSummary}
+                        source={this.state.parent}
                       />
                     </div>
                   ))

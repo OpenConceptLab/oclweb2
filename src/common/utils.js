@@ -895,7 +895,7 @@ export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale)
   let values = orderBy(_data, ['resultType', 'name'], ['desc', 'asc'])
 
   if(isLocale) {
-    values = uniqBy([{...find(values, {id: summary.default_locale}), resultType: 'Suggested'}, ...orderBy(filter(values, val => summary.supported_locales.includes(val.id)).map(val => ({...val, resultType: 'Suggested'})), ['name'], ['asc']), ...values], 'id')
+    values = uniqBy([{...find(values, {id: summary.default_locale}), resultType: 'Suggested'}, ...orderBy(filter(values, val => (summary.supported_locales || []).includes(val.id)).map(val => ({...val, resultType: 'Suggested'})), ['name'], ['asc']), ...values], 'id')
   }
 
   return values

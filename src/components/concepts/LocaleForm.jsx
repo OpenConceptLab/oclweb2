@@ -2,7 +2,7 @@ import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import { TextField, Checkbox, IconButton, FormControlLabel } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import { find, get, orderBy, uniqBy } from 'lodash'
+import { find, get, orderBy, uniqBy, isString } from 'lodash'
 import { ERROR_RED } from '../../common/constants';
 import LocaleAutoComplete from '../common/LocaleAutoComplete';
 import GroupHeader from '../common/GroupHeader';
@@ -10,7 +10,7 @@ import GroupItems from '../common/GroupItems';
 
 const LocaleForm = ({
   localeAttr, index, onTextFieldChange, onAutoCompleteChange, onCheckboxChange, types,
-  onDelete, error, locale, sourceVersionSummary
+  onDelete, error, locale, sourceVersionSummary, source
 }) => {
   const isName = localeAttr === 'fields.names';
   const nameAttr = isName ? 'name' : 'description';
@@ -39,6 +39,9 @@ const LocaleForm = ({
       setSelectedLocale({id: locale.locale, name: locale.locale})
   }, [locale])
 
+
+  const isOpenMRSValidationSchema = source?.custom_validation_schema?.toLowerCase() === 'openmrs'
+
   return (
     <div className='col-md-12' style={{border: `1px solid ${borderColor}`, borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
       <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
@@ -56,11 +59,13 @@ const LocaleForm = ({
           </div>
           <div className="col-md-6 no-left-padding">
             <Autocomplete
+              freeSolo={!isOpenMRSValidationSchema}
+              autoSelect={!isOpenMRSValidationSchema}
               openOnFocus
               value={selectedLocaleType}
               id={`${idPrefix}.${typeAttr}`}
               options={formattedTypes}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => isString(option) ? option : option.name}
               fullWidth
               groupBy={option => option.resultType}
               renderGroup={params => (
@@ -70,7 +75,7 @@ const LocaleForm = ({
                 </li>
               )}
               renderInput={(params) => <TextField {...params} size='small' label="Type" variant="outlined" fullWidth />}
-              onChange={(event, item) => onAutoCompleteChange(`${idPrefix}.${typeAttr}`, item)}
+              onChange={(event, item) => onAutoCompleteChange(`${idPrefix}.${typeAttr}`, isOpenMRSValidationSchema ? item : isString(item) ? {id: item} : item)}
             />
           </div>
           <div className="col-md-6 no-left-padding" style={{marginTop: '15px'}}>
