@@ -104,7 +104,7 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
       __locales = uniqBy([..._locales, selected], 'id')
     }
 
-    setLocales(sortValuesBySourceSummary(__locales, sourceVersionSummary, 'concepts.locale', true))
+    setLocales(sortValuesBySourceSummary(compact(__locales), sourceVersionSummary, 'concepts.locale', true))
   }
 
   const getOptionLabel = option => {

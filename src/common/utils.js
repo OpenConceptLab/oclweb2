@@ -873,9 +873,10 @@ export const getSiblings = elem => {
 };
 
 export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale) => {
-  if(isEmpty(data) || !summary)
+  let values = compact(data)
+  if(isEmpty(values) || !summary)
     return data
-  let _data = data.map(d => {
+  let _data = values.map(d => {
     d.resultType = 'Ordered'
     return d
   })
@@ -884,8 +885,8 @@ export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale)
     const usedValues = map(summaryValues, value => value[0])
     usedValues.forEach(used => {
       const _used = find(_data, _d => {
-        const id = _d.id.toLowerCase().replace('-', '').replace('_', '').replace(' ', '')
-        const _used = used.toLowerCase().replace('-', '').replace('_', '').replace(' ', '')
+        const id = _d?.id?.toLowerCase()?.replace('-', '')?.replace('_', '')?.replace(' ', '')
+        const _used = used?.toLowerCase()?.replace('-', '')?.replace('_', '')?.replace(' ', '')
         return _used === id
       })
       if(_used)
