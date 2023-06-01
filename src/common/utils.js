@@ -873,10 +873,9 @@ export const getSiblings = elem => {
 };
 
 export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale) => {
-  let values = compact(data)
-  if(isEmpty(values) || !summary)
+  if(isEmpty(compact(data)) || !summary)
     return data
-  let _data = values.map(d => {
+  let _data = compact(data).map(d => {
     d.resultType = 'Ordered'
     return d
   })
