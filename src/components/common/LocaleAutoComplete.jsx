@@ -190,10 +190,10 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
         )}
         renderOption={(props, option) => {
           const isCustom = option.id === 'custom'
-          const suffix = (option.id.length > 3 && !isCustom) ? option.id : false
+          const suffix = ((option?.id?.length || 0) > 3 && !isCustom) ? option?.id || '' : false
           const boxProps = isCustom ? {...props, onClick: onCustomAddOptionClick} : props
           return (
-            <React.Fragment key={option.id + option.name}>
+            <React.Fragment key={option?.id || '' + option?.name || ''}>
               <Box component='li' {...boxProps}>
                 {
                   isCustom ?
@@ -205,10 +205,10 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
                     </span> :
                   <span style={{width: '100%', display: 'flex'}}>
                     <span style={{minWidth: '10%', marginRight: '10px'}} className='form-text-gray'>
-                      {option.locale}
+                      {option?.locale}
                     </span>
                     <span style={{minWidth: suffix ? '75%' : '85%'}}>
-                      {option.name}
+                      {option?.name}
                     </span>
                     {
                       suffix &&
