@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation, Trans } from 'react-i18next'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import { last } from 'lodash';
 import { RED } from '../../common/constants';
 
 const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedResources, associationRelation, summaryContent}) => {
+  const { t } = useTranslation()
   const resourceEntity = resource.type
   const resourceType = resourceEntity.toLowerCase()
   const resourceId = resource.short_code || resource.id
@@ -17,30 +19,30 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedRe
   }
   const associations = (associatedResources || ['versions', 'concepts', 'mappings'])
   let associationsLabel = associations.slice(0, -1).join(', ') + ' and ' + last(associations)
-  const relationship = associationRelation || 'associated'
+  const relationship = associationRelation || t('common.associated')
   return (
     <React.Fragment>
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>
-          {`Delete ${resourceEntity}: ${resourceId}`}
+          {`${t('common.delete')} ${resourceEntity}: ${resourceId}`}
         </DialogTitle>
         <DialogContent>
           <MuiAlert variant="filled" severity="warning" style={{marginBottom: '10px'}}>
-            Unexpected bad things will happen if you don’t read this!
+            {t('concept_container.delete.generic_error')}
           </MuiAlert>
           <p>
-            {`Are you sure you want to permanently delete this ${resourceType} `}
-            <b>{resourceId}</b>?
+            {t('concept_container.delete.confirmation_title', {resourceType: resourceType})} <b>{resourceId}</b>?
           </p>
           { summaryContent || '' }
           <p>
-            This action <b>cannot</b> be undone!
-            {
-              ` This will delete the entire ${resourceType} and all of its ${relationship} ${associationsLabel} (if any).`
-            }
+            <Trans key='concept_container.delete.message'>
+              This action <strong>cannot</strong> be undone!. This will delete the entire {{resourceType}} and all of its {{relationship}} {{associationsLabel}} (if any).
+            </Trans>
           </p>
           <p>
-            Please type <b>{resourceId}</b> to confirm.
+            <Trans i18nKey="concept_container.delete.confirmation_message">
+              Please type <strong>{{resourceId}}</strong> to confirm.
+            </Trans>
           </p>
           <div className='col-md-12 no-side-padding'>
             <TextField
@@ -55,7 +57,7 @@ const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedRe
             style={{color: RED, fontWeight: 'bold', opacity: opacity}}
             variant='outlined'
             onClick={onSubmit}>
-            {`I understand the consequences, delete this ${resourceType}`}
+            {t('concept_container.delete.confirmation_button_label', {resourceType: resourceType})}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import alertifyjs from 'alertifyjs';
 import {
   TextField, Button, IconButton, FormControlLabel, Checkbox
@@ -122,12 +123,11 @@ class UserForm extends React.Component {
   }
 
   handleSubmitResponse(response) {
-    const { edit, reloadOnSuccess, onCancel, loggedIn } = this.props
+    const { edit, reloadOnSuccess, onCancel, loggedIn, t } = this.props
     if(response.status === 201 || response.status === 200) { // success
       if(loggedIn) this.updateCachedUserInfo(response.data)
-      const verb = edit ? 'updated' : 'created'
-      const successMsg = `Successfully ${verb} user`;
-      const message = reloadOnSuccess ? successMsg + '. Reloading..' : successMsg;
+      const successMsg = edit ? t('user.home.profile.update_success_message') : t('user.home.profile.create_success_message');
+      const message = reloadOnSuccess ? successMsg + `. t('common.reloading')...` : successMsg;
       onCancel();
       alertifyjs.success(message, 1, () => {
         if(reloadOnSuccess)
@@ -140,7 +140,7 @@ class UserForm extends React.Component {
       } else {
         this.setState(
           {fieldErrors: response || {}},
-          () => alertifyjs.error('Please fill mandatory fields.')
+          () => alertifyjs.error(t('common.fill_mandatory_fields'))
         )
       }
     }
@@ -155,8 +155,11 @@ class UserForm extends React.Component {
 
   render() {
     const { fields, fieldErrors } = this.state;
-    const { onCancel, edit } = this.props;
-    const header = edit ? `Edit User: ${fields.username}` : 'New User';
+    const { onCancel, edit, t } = this.props;
+    const userTranslation = t('resources.user')
+    const editTranslation = t('common.edit')
+    const newTranslation = t('common.new')
+    const header = edit ? `${editTranslation} ${userTranslation}: ${fields.username}` : `${newTranslation} ${userTranslation}`;
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>
@@ -170,7 +173,7 @@ class UserForm extends React.Component {
                 <TextField
                   error={Boolean(fieldErrors.username)}
                   id="fields.username"
-                  label="Username"
+                  label={t('user.auth.username')}
                   variant="outlined"
                   fullWidth
                   onChange={this.onTextFieldChange}
@@ -183,7 +186,7 @@ class UserForm extends React.Component {
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <TextField
                 id="fields.first_name"
-                label="First Name"
+                label={t('user.home.profile.first_name')}
                 variant="outlined"
                 fullWidth
                 onChange={this.onTextFieldChange}
@@ -194,7 +197,7 @@ class UserForm extends React.Component {
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <TextField
                 id="fields.last_name"
-                label="Last Name"
+                label={t('user.home.profile.last_name')}
                 variant="outlined"
                 fullWidth
                 onChange={this.onTextFieldChange}
@@ -205,7 +208,7 @@ class UserForm extends React.Component {
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <TextField
                 id="fields.email"
-                label="Email"
+                label={t('common.email')}
                 variant="outlined"
                 fullWidth
                 onChange={this.onTextFieldChange}
@@ -217,7 +220,7 @@ class UserForm extends React.Component {
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <TextField
                 id="fields.company"
-                label="Company"
+                label={t('common.company')}
                 variant="outlined"
                 fullWidth
                 onChange={this.onTextFieldChange}
@@ -227,7 +230,7 @@ class UserForm extends React.Component {
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <TextField
                 id="fields.location"
-                label="Location"
+                label={t('common.location')}
                 variant="outlined"
                 fullWidth
                 onChange={this.onTextFieldChange}
@@ -252,7 +255,7 @@ class UserForm extends React.Component {
             }
             <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
               <div className='col-md-8'>
-                <h3>Custom Attributes</h3>
+                <h3>{t('common.custom_attributes')}</h3>
               </div>
               <div className='col-md-4' style={{textAlign: 'right'}}>
                 <IconButton color='primary' onClick={this.onAddExtras} size="large">
@@ -274,10 +277,10 @@ class UserForm extends React.Component {
             </div>
             <div className='col-md-12' style={{textAlign: 'center', margin: '15px 0'}}>
               <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
-                {edit ? 'Update' : 'Create'}
+                {edit ? t('common.update') : t('common.create')}
               </Button>
               <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
-                Cancel
+                {t('common.cancel')}
               </Button>
             </div>
           </form>
@@ -287,4 +290,4 @@ class UserForm extends React.Component {
   }
 }
 
-export default UserForm;
+export default withTranslation('translations')(UserForm);
