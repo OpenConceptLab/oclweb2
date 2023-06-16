@@ -171,7 +171,6 @@ class UserHome extends React.Component {
                   canDelete={canActOnPins}
                   onOrderUpdate={this.updatePinOrder}
                 />
-
                 <UserHomeTabs
                   {...this.state}
                   {...this.props}

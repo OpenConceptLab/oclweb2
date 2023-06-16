@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Divider, CircularProgress, IconButton, Tooltip, Chip } from '@mui/material';
 import {
   Person as PersonIcon,
@@ -26,6 +27,7 @@ import UserForm from './UserForm';
 import UserManagement from './UserManagement';
 
 const UserHomeDetails = ({ user, isLoading, apiToken }) => {
+  const { t } = useTranslation()
   const [logoURL, setLogoURL] = React.useState(user.logo_url)
   const [uploading, setUploading] = React.useState(false);
   const [editForm, setEditForm] = React.useState(false);
@@ -87,37 +89,37 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
                 <React.Fragment>
                   {
                     user.is_superuser &&
-                      <Tooltip title='OCL Super Admin'>
+                      <Tooltip title={t('user.home.profile.tooltip.superuser')}>
                         <AdminIcon color='success' />
                       </Tooltip>
                   }
                   {
                     user.is_staff && !user.is_superuser &&
-                      <Tooltip title='OCL Admin'>
+                      <Tooltip title={t('user.home.profile.tooltip.staff')}>
                         <AdminIcon color='success' />
                       </Tooltip>
                   }
                   {
                     user.status === 'deactivated' && !user.is_staff && !user.is_superuser &&
-                      <Tooltip title='Deactivated'>
+                      <Tooltip title={t('user.home.profile.tooltip.deactivated')}>
                         <UserDisabledIcon color='error' style={{width: '20px'}} />
                       </Tooltip>
                   }
                   {
                     user.status === 'unverified' && !user.is_staff && !user.is_superuser &&
-                      <Tooltip title='Unverified'>
+                      <Tooltip title={t('user.home.profile.tooltip.unverified')}>
                         <UnverifiedIcon color='warning' style={{width: '20px'}} />
                       </Tooltip>
                   }
                   {
                     user.status === 'verified' && !user.is_staff && !user.is_superuser &&
-                      <Tooltip title='Verified'>
+                      <Tooltip title={t('user.home.profile.tooltip.verified')}>
                         <VerifiedIcon color='success' style={{width: '20px'}} />
                       </Tooltip>
                   }
                   {
                     user.status === 'verification_pending' && !user.is_staff && !user.is_superuser &&
-                      <Tooltip title='Verification Pending'>
+                      <Tooltip title={t('user.home.profile.tooltip.verification_pending')}>
                         <VerificationPendingIcon color='warning' style={{width: '20px'}} />
                       </Tooltip>
                   }
@@ -131,7 +133,7 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
                   className='underline-text'
                   icon={<EditIcon fontSize='small' style={{width: '14px'}} />}
                   size='small'
-                  label="Edit Profile"
+                  label={t('user.home.profile.edit')}
                   style={{border: 'none'}}
                   variant='outlined'
                   color='primary'
@@ -143,7 +145,7 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
           {
             user.company &&
               <div style={{marginTop: '5px'}}>
-                <Tooltip title='Company' arrow placement='right'>
+                <Tooltip title={t('common.company')} arrow placement='right'>
                   <span className='flex-vertical-center' placement='right'>
                     <span style={{marginRight: '5px'}}><CompanyIcon fontSize='small' style={{marginTop: '4px'}} /></span>
                     <span>{user.company}</span>
@@ -154,7 +156,7 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
           {
             user.location &&
               <div>
-                <Tooltip title='Location' arrow placement='right'>
+                <Tooltip title={t('common.location')} arrow placement='right'>
                   <span className='flex-vertical-center'>
                     <span style={{marginRight: '5px'}}><LocationIcon fontSize='small' style={{marginTop: '4px'}} /></span>
                     <span>{user.location}</span>
@@ -165,7 +167,7 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
           {
             user.website &&
               <div>
-                <Tooltip title='Website' arrow placement='right'>
+                <Tooltip title={t('common.website')} arrow placement='right'>
                   <span className='flex-vertical-center'>
                     <span style={{marginRight: '5px'}}><WebsiteIcon fontSize='small' style={{marginTop: '4px', transform: 'rotate(-30deg)'}} /></span>
                     <span>{formatWebsiteLink(user.website)}</span>
@@ -182,7 +184,7 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
             </Tooltip>
           </div>
           <div>
-            <Tooltip title='Date Joined' arrow placement='right'>
+            <Tooltip title={t('user.home.profile.date_joined')} arrow placement='right'>
               <span className='flex-vertical-center'>
                 <span style={{marginRight: '5px'}}><DateJoinedIcon fontSize='small' style={{marginTop: '4px'}} /></span>
                 <span>{formatDate(user.created_on)}</span>
@@ -194,8 +196,8 @@ const UserHomeDetails = ({ user, isLoading, apiToken }) => {
               <React.Fragment>
                 <Divider style={{width: '100%', margin: '5px 0'}} />
                 <p>
-                  <strong>API Token</strong>
-                  <Tooltip arrow title="Click to copy Token" placement='right'>
+                  <strong>{t('user.home.profile.api_token')}</strong>
+                  <Tooltip arrow title={t('user.home.profile.tooltip.copy_token')} placement='right'>
                     <IconButton style={{marginLeft: '10px'}} size="small" onClick={() => copyToClipboard(apiToken, 'Token copied to clipboard!')}>
                       <CopyIcon fontSize="small" />
                     </IconButton>

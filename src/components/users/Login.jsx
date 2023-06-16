@@ -13,6 +13,7 @@ import {
   refreshCurrentUserCache, getAppliedServerConfig, isSSOEnabled, getLoginURL
 } from '../../common/utils';
 import VerifyEmailMessage from './VerifyEmailMessage';
+import { withTranslation } from 'react-i18next';
 
 class Login extends React.Component {
   constructor(props) {
@@ -87,10 +88,11 @@ class Login extends React.Component {
 
   handleClickShowPassword = () => this.setState({showPassword: !this.state.showPassword})
 
-  getTitle = () => `Sign In - ${get(getAppliedServerConfig(), 'name', 'OCL')}`
+  getTitle = () => `${this.props.t('user.auth.sign_in')} - ${get(getAppliedServerConfig(), 'name', 'OCL')}`
 
   render() {
     const { serverError, verificationMsg, email, showPassword } = this.state;
+    const { t } = this.props
     return (isSSOEnabled() ?
       <p>Redirecting...</p> :
       <div className='col-md-12' style={{marginTop: '25px'}}>
@@ -115,7 +117,7 @@ class Login extends React.Component {
                       <TextField
                         required
                         id="username"
-                        label="Username"
+                        label={t('user.auth.username')}
                         variant="outlined"
                         onChange={this.onFieldChange}
                         fullWidth
@@ -132,7 +134,7 @@ class Login extends React.Component {
                       <TextField
                         required
                         id="password"
-                        label="Password"
+                        label={t('user.auth.password')}
                         variant="outlined"
                         type={showPassword ? 'text' : 'password'}
                         onChange={this.onFieldChange}
@@ -146,7 +148,6 @@ class Login extends React.Component {
                           endAdornment:(
                             <InputAdornment position="end">
                               <IconButton
-                                aria-label="Toggle password visibility"
                                 onClick={this.handleClickShowPassword}
                                 size="large">
                                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
@@ -157,12 +158,12 @@ class Login extends React.Component {
                       />
                     </div>
                     <div className='col-md-12 no-side-padding' style={{marginTop: '20px', textAlign: 'center', marginBottom: '20px'}}>
-                      <Button onClick={this.handleSubmit} type='submit' color='primary' variant='contained'>Sign In</Button>
+                      <Button onClick={this.handleSubmit} type='submit' color='primary' variant='contained'>{t('user.auth.sign_in')}</Button>
                     </div>
                     <div className='col-md-12 no-side-padding flex-vertical-center' style={{justifyContent: 'center'}}>
-                      <Link to="/accounts/signup">Sign Up</Link>
+                      <Link to="/accounts/signup">{t('user.auth.sign_up')}</Link>
                       <Divider orientation="vertical" style={{height: '16px', margin: '0 10px'}}/>
-                      <Link to="/accounts/password/reset">Forgot Password?</Link>
+                      <Link to="/accounts/password/reset">{t('user.auth.forgot_password')}</Link>
                     </div>
                   </form>
                 </div>
@@ -176,4 +177,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withTranslation('translations')(Login);

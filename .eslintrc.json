@@ -210,7 +210,10 @@
           "Dropdown",
           "uncheck",
           "checksum",
-          "checksums"
+          "checksums",
+          "lang",
+          "Espa",
+          "unmark"
         ],
         "skipIfMatch": [
           "http://[^s]*",

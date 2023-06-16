@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { TextField, IconButton } from '@mui/material';
 import { get, isObject } from 'lodash';
 import { jsonifySafe } from '../../common/utils';
 
 const ExtrasForm = ({ extra, index, onChange, onDelete }) => {
+  const { t } = useTranslation()
   const value = get(extra, 'value', '');
 
   return (
@@ -13,8 +15,8 @@ const ExtrasForm = ({ extra, index, onChange, onDelete }) => {
         <div className='col-xs-5 no-left-padding'>
           <TextField
             id={`extras.${index}.key`}
-            label='Attribute name'
-            placeholder='Custom-name'
+            label={t('common.attribute_name')}
+            placeholder={t('common.attribute_name_placeholder')}
             variant="outlined"
             fullWidth
             onChange={event => onChange(index, event.target.value, '__')}
@@ -25,7 +27,7 @@ const ExtrasForm = ({ extra, index, onChange, onDelete }) => {
         <div className='col-xs-6 no-side-padding'>
           <TextField
             id={`extras.${index}.value`}
-            label='Value'
+            label={t('common.value')}
             variant="outlined"
             fullWidth
             onChange={event => onChange(index, '__', jsonifySafe(event.target.value))}
