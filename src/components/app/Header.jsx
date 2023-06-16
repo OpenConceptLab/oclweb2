@@ -36,7 +36,6 @@ import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 /* import Feedback from '../common/Feedback'; */
 import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
-import Languages from './Languages';
 
 const drawerWidth = 250;
 
@@ -220,7 +219,6 @@ const Header = props => {
             {
               authenticated ?
                 <span style={{marginLeft: '20px'}}>
-                  <Languages />
                   <RecentHistory />
                   <Favorites />
                   {

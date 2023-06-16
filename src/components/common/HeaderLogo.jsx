@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Button, IconButton } from '@mui/material'
 import { Edit as EditIcon, CloudUpload as UploadIcon } from '@mui/icons-material';
 import { last } from 'lodash';
@@ -7,7 +6,6 @@ import { currentUserHasAccess } from '../../common/utils';
 import ImageUploader from './ImageUploader';
 
 const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink, className }) => {
-  const { t } = useTranslation()
   const hasAccess = currentUserHasAccess();
   const [base64, setBase64] = React.useState(null);
   const [open, setOpen] = React.useState(false);
@@ -41,7 +39,7 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink, classNam
         }
         {
           hasAccess &&
-            <Tooltip arrow title={logoURL ? t('common.logo.tooltip.edit') : t('common.logo.tooltip.add')}>
+          <Tooltip arrow title={logoURL ? 'Edit Logo' : 'Upload Logo'}>
             <IconButton
               onClick={() => setOpen(true)}
               className='logo-edit-button'
@@ -57,13 +55,13 @@ const HeaderLogo = ({ logoURL, onUpload, defaultIcon, isCircle, shrink, classNam
         }
       </div>
       <Dialog onClose={() => setOpen(false)} open={open} fullWidth>
-        <DialogTitle>{logoURL ? t('common.logo.dialog.title.edit') : t('common.logo.dialog.title.add')}</DialogTitle>
+        <DialogTitle>{logoURL ? 'Edit Logo' : 'Upload Logo'}</DialogTitle>
         <DialogContent>
           <ImageUploader onUpload={onLogoUpload} defaultImg={logoURL} defaultName={getExistingLogoName()} isCircle={isCircle} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>
-            {t('common.close')}
+            Close
           </Button>
         </DialogActions>
       </Dialog>

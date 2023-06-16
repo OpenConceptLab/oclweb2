@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, TextField } from '@mui/material';
 import { get } from 'lodash';
 import ReactCrop from 'react-image-crop';
@@ -57,7 +56,6 @@ const pixelRatio = window.devicePixelRatio || 1;
  *  */
 
 const ImageUploader = props => {
-  const { t } = useTranslation()
   const [fileName, setFileName] = useState(props.defaultName);
   const [upImg, setUpImg] = useState(props.defaultImg);
   const imgRef = useRef(null);
@@ -135,7 +133,7 @@ const ImageUploader = props => {
           disabled={!get(completedCrop, 'width') || !get(completedCrop, 'height')}
           onClick={uploadImage}
         >
-          {t('common.upload')}
+          Upload
         </Button>
       </div>
       <div style={{marginTop: '10px'}}>

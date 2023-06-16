@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'
 import {
   CheckCircle as CorrectIcon, Cancel as WrongIcon
 } from '@mui/icons-material';
@@ -28,22 +27,21 @@ const PasswordValidatorIndicator = ({password, strength, minStrength, minStrengt
   const hasNumber = Boolean(password && password.match(new RegExp(/[0-9]/g)))
   const hasAlphabet = Boolean(password && password.match(new RegExp(/[a-zA-Z]/g)))
   const isMinStrength = strength >= minStrength
-  const { t } = useTranslation()
 
   return (
     <React.Fragment>
       <div className='col-md-12 no-side-padding' style={{fontSize: '12px'}}>
         {
-          Indicator(hasMinLength, t('user.auth.password_length_error'))
+          Indicator(hasMinLength, 'Must be 8 or more characters.')
         }
         {
-          Indicator(hasNumber, t('user.auth.password_number_error'))
+          Indicator(hasNumber, 'Must have at least one number (0-9).')
         }
         {
-          Indicator(hasAlphabet, t('user.auth.password_alpha_error'))
+          Indicator(hasAlphabet, 'Must have at least one letter (a-z, A-Z).')
         }
         {
-          minStrength && Indicator(isMinStrength, t('user.auth.password_strength_error', {strength: minStrengthLabel}))
+          minStrength && Indicator(isMinStrength, `Must be of ${minStrengthLabel} strength.`)
         }
       </div>
     </React.Fragment>

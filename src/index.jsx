@@ -12,7 +12,7 @@ import App from './components/app/App';
 import LayoutContext from './components/app/LayoutContext';
 import './index.scss';
 import { BLUE, WHITE, BLACK } from './common/constants';
-import './i18n/config';
+
 
 alertifyjs.defaults = {
   ...alertifyjs.defaults,

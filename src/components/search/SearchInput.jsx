@@ -8,7 +8,6 @@ import {
 import { InputBase, Divider, IconButton, Tooltip } from '@mui/material';
 import { get } from 'lodash';
 import { isAtGlobalSearch, getSiteTitle } from '../../common/utils';
-import { withTranslation } from 'react-i18next';
 
 class SearchInput extends React.Component {
   constructor(props){
@@ -126,13 +125,13 @@ class SearchInput extends React.Component {
 
   render() {
     const { input, exactMatch, siteTitle } = this.state
-    const { searchInputPlaceholder, nested, noExactMatch, t } = this.props
+    const { searchInputPlaceholder, nested, noExactMatch } = this.props
     const marginBottom = (isAtGlobalSearch() || nested) ? '5px' : '0px';
     return (
       <div className='col-xs-12 no-side-padding' style={{marginBottom: marginBottom, display: 'flex', alignItems: 'center', border: '1px solid darkgray', borderRadius: '4px'}}>
         <InputBase
           style={{flex: 1, marginLeft: '10px'}}
-          placeholder={searchInputPlaceholder || `${t('search.label')} ${siteTitle}`}
+          placeholder={searchInputPlaceholder || `Search ${siteTitle}`}
           inputProps={{ 'aria-label': 'search ocl' }}
           value={input || ''}
           fullWidth
@@ -142,7 +141,7 @@ class SearchInput extends React.Component {
         />
         {
           input &&
-            <Tooltip arrow title={t('common.clear')}>
+          <Tooltip arrow title='Clear'>
             <IconButton
               type="submit"
               style={{padding: '10px'}}
@@ -153,7 +152,7 @@ class SearchInput extends React.Component {
             </IconButton>
           </Tooltip>
         }
-        <Tooltip arrow title={t('search.label')}>
+        <Tooltip arrow title='Search'>
           <IconButton
             type="submit"
             style={{padding: '10px'}}
@@ -167,7 +166,7 @@ class SearchInput extends React.Component {
           !noExactMatch &&
           <React.Fragment>
             <Divider style={{height: '28px', margin: '4px'}} orientation="vertical" />
-            <Tooltip arrow title={t('search.exact_match')}>
+            <Tooltip arrow title='Exact Match'>
               <IconButton
                 color={exactMatch === 'on' ? "primary" : "default"}
                 style={{padding: '10px'}}
@@ -184,4 +183,4 @@ class SearchInput extends React.Component {
   }
 }
 
-export default withTranslation('translations')(SearchInput);
+export default SearchInput;

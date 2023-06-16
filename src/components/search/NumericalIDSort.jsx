@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'
 import { Tooltip, Chip } from '@mui/material';
 import {
   ArrowDownward as ArrowDownwardIcon,
@@ -10,7 +9,6 @@ import { get } from 'lodash';
 const SORT_ICON_STYLES = {width: '14px', height: '14px'};
 
 const NumericalIDSort = ({ selected, onSelect, size }) => {
-  const { t } = useTranslation()
   const isSelected = !selected || selected.sortDesc === 'numeric_id' || selected.sortAsc === 'numeric_id';
   const isDesc = get(selected, 'sortDesc') === 'numeric_id';
   const onClick = () => {
@@ -21,7 +19,7 @@ const NumericalIDSort = ({ selected, onSelect, size }) => {
   };
   return (
     <span>
-      <Tooltip arrow title={t('search.tooltip.numerical_sort')}>
+      <Tooltip arrow title='Sort By ID Numerically'>
         <Chip
           icon={
             isDesc ?
@@ -30,7 +28,7 @@ const NumericalIDSort = ({ selected, onSelect, size }) => {
           }
           variant="outlined"
           color={isSelected ? "primary" : "secondary"}
-          label={t('search.numerical_sort')}
+          label="Numerical ID"
           onClick={onClick}
           size={size || 'medium'}
         />
