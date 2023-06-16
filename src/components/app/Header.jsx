@@ -24,7 +24,7 @@ import {
 import { map, isEmpty, get } from 'lodash';
 import {
   isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv,
-  getSiteTitle, getLoginURL, isAdminUser
+  getSiteTitle, getLoginURL
 } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
@@ -220,7 +220,7 @@ const Header = props => {
             {
               authenticated ?
                 <span style={{marginLeft: '20px'}}>
-                  {isAdminUser() && <Languages />}
+                  <Languages />
                   <RecentHistory />
                   <Favorites />
                   {
