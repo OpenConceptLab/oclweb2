@@ -6,6 +6,7 @@ const { ProvidePlugin, DefinePlugin, IgnorePlugin } = require('webpack');
 
 module.exports = (env) => {
   const isProduction = env.NODE_ENV === 'production';
+  const sourceMaps = (env.SOURCE_MAPS === 'true' || env.SOURCE_MAPS === true);
   return {
     mode: env.NODE_ENV,
     module: {
@@ -93,7 +94,7 @@ module.exports = (env) => {
         index: 'index.html',
       },
     },
-    devtool: env.NODE_ENV == 'production' ? "source-map" : undefined,
+    devtool: (isProduction && sourceMaps) ? "source-map" : undefined,
     plugins: [
       new HtmlWebpackPlugin({
         template: './public/index.html',
@@ -117,6 +118,7 @@ module.exports = (env) => {
         'process.env.LOGIN_REDIRECT_URL': JSON.stringify(env.LOGIN_REDIRECT_URL),
         'process.env.OIDC_RP_CLIENT_ID': JSON.stringify(env.OIDC_RP_CLIENT_ID),
         'process.env.OIDC_RP_CLIENT_SECRET': JSON.stringify(env.OIDC_RP_CLIENT_SECRET),
+        'process.env.SOURCE_MAPS': sourceMaps,
       }),
       new IgnorePlugin({ resourceRegExp: /moment\/locale\// })
     ],

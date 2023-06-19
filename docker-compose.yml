@@ -7,6 +7,7 @@ services:
       context: .
       args:
         NODE_ENV: production
+        SOURCE_MAPS: true
     ports:
       - "4000:4000"
     restart: on-failure
@@ -16,6 +17,7 @@ services:
       - WEB_PORT=4000
       - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}
       - GA_ACCOUNT_ID=${GA_ACCOUNT_ID-UA-000000-01}
+      - SOURCE_MAPS=${SOURCE_MAPS-false}
       - ERRBIT_URL
       - ERRBIT_KEY
       - HOTJAR_ID

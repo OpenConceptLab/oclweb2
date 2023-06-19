@@ -8,6 +8,7 @@ services:
       target: build
       args:
         NODE_ENV: development
+        SOURCE_MAPS: false
     ports:
       - "4000:4000"
       - "4001:35729"
