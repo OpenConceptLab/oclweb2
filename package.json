@@ -70,14 +70,14 @@
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-react": "<7.11.2",
     "eslint-plugin-spellcheck": "0.0.20",
-    "html-webpack-plugin": "^5.5.1",
+    "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "1.6.0",
     "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
     "react-is": "^16.13.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
-    "webpack": "^5.82.1",
+    "webpack": "^5.86.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.3"
   }
