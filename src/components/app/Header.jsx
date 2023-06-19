@@ -33,7 +33,6 @@ import UserOptions from '../users/UserOptions';
 import Favorites from './Favorites';
 import RecentHistory from './RecentHistory';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
-/* import Feedback from '../common/Feedback'; */
 import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 import Languages from './Languages';
