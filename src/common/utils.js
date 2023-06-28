@@ -1,7 +1,7 @@
 /*eslint no-process-env: 0*/
 import 'core-js/features/url-search-params';
 import React from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
@@ -591,14 +591,14 @@ export const getOpenMRSURL = () => {
 export const recordGAPageView = () => {
   /*eslint no-undef: 0*/
   ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
-  ReactGA.pageview(window.location.pathname + window.location.hash);
+  ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.hash });
 }
 
 export const recordGAAction = (category, action, label) => {
   /*eslint no-undef: 0*/
   if(category && action) {
     ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
-    ReactGA.event({category: category, action: action, label: label || action});
+    ReactGA.event({category: category, action: action, label: label || action, transport: "xhr"});
   }
 }
 
