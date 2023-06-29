@@ -36,6 +36,7 @@ import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 import Languages from './Languages';
+import { OperationsContext } from './LayoutContext';
 
 const drawerWidth = 250;
 
@@ -125,6 +126,7 @@ const NestedMenuContainer = ({ open, toggleState, anchorRef, handleClose, toggle
 
 const Header = props => {
   const theme = useTheme();
+  const { toggles } = React.useContext(OperationsContext)
   const [open, setOpen] = React.useState(false);
   const communityAnchorRef = React.useRef(null);
   const toolsAnchorRef = React.useRef(null);
@@ -179,7 +181,6 @@ const Header = props => {
     return logo
   }
 
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -219,7 +220,10 @@ const Header = props => {
             {
               authenticated ?
                 <span style={{marginLeft: '20px'}}>
-                  {isAdminUser() && <Languages />}
+                  {
+                    toggles?.LOCALIZATION_TOGGLE && isAdminUser() &&
+                      <Languages />
+                  }
                   <RecentHistory />
                   <Favorites />
                   {

@@ -1,7 +1,7 @@
 /*eslint no-process-env: 0*/
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { get, isEmpty, forOwn, has } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
   isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel
@@ -50,7 +50,7 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 )
 
 const App = props => {
-  const { openOperations, menuOpen, setMenuOpen, setOpenOperations } = React.useContext(OperationsContext);
+  const { openOperations, menuOpen, setMenuOpen, setOpenOperations, setToggles } = React.useContext(OperationsContext);
   const [openOpenMRSDeprecationDialog, setOpenOpenMRSDeprecationDialog] = React.useState(false)
   const operationsPanelAccess = canViewOperationsPanel()
 
@@ -91,13 +91,8 @@ const App = props => {
   const fetchToggles = async () => {
     return new Promise(resolve => {
       APIService.toggles().get().then(response => {
-        if (!isEmpty(response.data)) {
-          forOwn(response.data, (value, key) => {
-            if (!has(window, key) || window[key] !== value) {
-              window[key] = value;
-            }
-          });
-        }
+        if (!isEmpty(response.data))
+          setToggles(response.data)
         resolve();
       });
     });

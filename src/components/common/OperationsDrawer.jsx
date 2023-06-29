@@ -86,7 +86,7 @@ const useStyles = makeStyles(theme => ({
 
 const OperationsDrawer = () => {
   const classes = useStyles();
-  const { setOpenOperations, operationItem, parentResource, parentItem } = React.useContext(OperationsContext);
+  const { setOpenOperations, operationItem, parentResource, parentItem, toggles } = React.useContext(OperationsContext);
   const currentServer = getAppliedServerConfig()
   const fhirServer = getFHIRServerConfigFromCurrentContext()
   let containerResource = parentResource || 'source'
@@ -98,7 +98,7 @@ const OperationsDrawer = () => {
   const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
   const getOperations = () => {
     let _operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
-    if(!window.CHECKSUMS_TOGGLE)
+    if(!toggles?.CHECKSUMS_TOGGLE)
       _operations = without(_operations, '$checksum')
     return _operations
   }
