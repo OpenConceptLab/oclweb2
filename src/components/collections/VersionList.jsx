@@ -2,9 +2,8 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   Divider, Tooltip, Button, IconButton, CircularProgress, Card, CardContent,
-  Dialog, DialogTitle, DialogContent, DialogActions
+  Dialog, DialogTitle, DialogContent, DialogActions, TablePagination
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import {
   map, isEmpty, startCase, get, includes, merge, orderBy, last, find, reject, forEach, uniqBy
 } from 'lodash';
@@ -56,11 +55,13 @@ const deleteVersion = version => getService(version).delete().then(response => h
 const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
 const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url).delete().then(response => handleExpansionResponse(response, 'Deleted'))
 
+const PAGE_SIZE = 5
+
 const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) => {
   const resource = 'collection'
   const [pagination, setPagination] = React.useState({})
+  const [pageSize, setPageSize] = React.useState(PAGE_SIZE)
   const [versions, setVersions] = React.useState([])
-  const [loadingVersions, setLoadingVersions] = React.useState([])
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
   const [expansions, setExpansions] = React.useState({})
@@ -167,18 +168,21 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
     })
   }
 
-  const fetchVersions = page => {
-    setLoadingVersions(true)
-    APIService.new().overrideURL(collection.url).appendToUrl('versions/').get(null, null, {limit: 10, includeSummary: true, verbose: true, page: page}).then(response => {
-      setLoadingVersions(false)
-      const _versions = uniqBy([{...collection, id: 'HEAD', version_url: collection.url, version: 'HEAD', uuid: 'HEAD'}, ...versions, ...response.data], 'id')
+  const fetchVersions = (page, _pageSize) => {
+    APIService.new().overrideURL(collection.url).appendToUrl('versions/').get(null, null, {limit: _pageSize || pageSize, includeSummary: true, verbose: true, page: page}).then(response => {
+      const _versions = uniqBy([{...collection, id: 'HEAD', version_url: collection.url, version: 'HEAD', uuid: 'HEAD'}, ...response.data], 'id')
       setPagination({page: parseInt(response.headers.page_number), pages: parseInt(response.headers.pages), count: parseInt(response.headers.num_found)})
       setVersions(_versions)
       fetchExpansionsForAllVersions(_versions)
     })
   }
 
-  const loadMore = () => fetchVersions(pagination.page + 1)
+  const loadMore = (event, newPage) => fetchVersions(newPage + 1)
+  const onRowsPerPageChange = event => {
+    const _pageSize = parseInt(event.target.value, 10)
+    setPageSize(_pageSize);
+    fetchVersions(0, _pageSize);
+  }
 
   React.useEffect(fetchVersions, [collection])
 
@@ -471,15 +475,20 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
             </DialogActions>
           </Dialog>
       }
-      <div className='col-xs-12' style={{textAlign: 'center', marginTop: '12px'}}>
-        <LoadingButton onClick={loadMore} loading={loadingVersions} variant='contained' disabled={isEmpty(versions) || versions.length >= pagination?.count} style={{textTransform: 'none'}}>
-          <span>
-            <span style={{fontSize: '14px'}}>{`Showing ${versions.length} out of ${pagination.count} versions.`}</span>
-            <br/>
-            <span><b>Load Older Versions?</b></span>
-          </span>
-      </LoadingButton>
-        </div>
+      {
+      pagination?.count &&
+          <div className='col-xs-12' style={{textAlign: 'center', marginTop: '12px'}}>
+            <TablePagination
+              component="div"
+              count={pagination.count}
+              page={pagination.page - 1}
+              onPageChange={loadMore}
+              rowsPerPage={pageSize}
+              rowsPerPageOptions={[5, 10, 15, 20, 25]}
+              onRowsPerPageChange={onRowsPerPageChange}
+            />
+          </div>
+      }
     </div>
   );
 }
