@@ -222,7 +222,7 @@ class ConceptContainerVersionForm extends React.Component {
               <div className='col-md-12' style={{width: '100%', marginTop: '15px'}}>
                 <FormControlLabel
                   control={<Checkbox checked={Boolean(fields.autoexpand)} onChange={this.onCheckboxChange} name="fields.autoexpand" />}
-                  label="Auto Expand"
+                  label="Auto-Expand"
                   disabled={edit}
                 />
               </div>

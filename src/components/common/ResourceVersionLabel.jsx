@@ -53,7 +53,7 @@ const ResourceVersionLabel = props => {
       {
         props.includeExpansionIcon && props.autoexpand &&
         <span style={{marginLeft: '10px', display: 'inline-flex', verticalAlign: 'middle'}}>
-          <Tooltip arrow title='Auto Expanded' placement='right'>
+          <Tooltip arrow title='Auto-Expand' placement='right'>
             <ExpansionIcon style={{color: GREEN}}/>
           </Tooltip>
         </span>

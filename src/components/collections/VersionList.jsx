@@ -202,7 +202,7 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                     {
                       version.autoexpand &&
                         <span style={{paddingTop: '5px'}}>
-                          <Tooltip arrow title='Auto Expanded' placement='right'>
+                          <Tooltip arrow title='Auto-Expand' placement='right'>
                             <ExpansionIcon style={{color: GREEN, marginLeft: '15px', width: '16px'}} />
                           </Tooltip>
                         </span>
@@ -340,7 +340,7 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                                   {
                                     isAuto &&
                                       <span style={{paddingTop: '5px'}}>
-                                        <Tooltip arrow title='Auto Generated Expansion' placement='right'>
+                                        <Tooltip arrow title='Auto-Expand' placement='right'>
                                           <AutoIcon style={{marginLeft: '10px', width: '16px'}} />
                                         </Tooltip>
                                       </span>
