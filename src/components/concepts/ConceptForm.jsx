@@ -30,6 +30,7 @@ class ConceptForm extends React.Component {
       manualMnemonic: false,
       manualExternalId: false,
       parent: null,
+      usedExtras: [],
       fields: {
         id: '',
         concept_class: '',
@@ -53,6 +54,7 @@ class ConceptForm extends React.Component {
   }
 
   componentDidMount() {
+    this.fetchExtrasUsed()
     fetchDatatypes(data => this.setState({datatypes: sortValuesBySourceSummary(data, this.props.sourceVersionSummary, 'concepts.datatype')}))
     fetchConceptClasses(data => this.setState({conceptClasses: sortValuesBySourceSummary(data, this.props.sourceVersionSummary, 'concepts.concept_class')}))
     fetchNameTypes(data => this.setState({nameTypes: sortValuesBySourceSummary(data, this.props.sourceVersionSummary, 'concepts.name_type')}))
@@ -65,6 +67,18 @@ class ConceptForm extends React.Component {
       this.setState({parent: this.props.source})
     else
       this.fetchParent()
+  }
+
+
+  fetchExtrasUsed = () => {
+    let URL;
+    if(this.props.source)
+      URL = this.props.source.url
+    else if(this.props.concept)
+      URL = toParentURI(this.props.concept.url)
+
+    if(URL)
+      APIService.new().overrideURL(URL).appendToUrl('summary/').get(null, null, {verbose: true, distribution: 'concepts_extras'}).then(response => this.setState({usedExtras: response.data?.distribution?.concepts_extras || []}))
   }
 
   fetchParent = () => {
@@ -594,6 +608,7 @@ class ConceptForm extends React.Component {
                         index={index}
                         onChange={this.onExtrasChange}
                         onDelete={this.onDeleteExtras}
+                        usedExtras={this.state.usedExtras}
                       />
                     </div>
                   ))
