@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess, recordGAAction } from '../../common/utils'
+import { toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -51,6 +51,8 @@ class ConceptHome extends React.Component {
     if(prevProps.location.pathname !== this.props.location.pathname && !this.state.isUpdatingFromHierarchy) {
       this.refreshDataByURL()
     }
+
+    this.highlightFromSearch()
   }
 
   getConceptURLFromPath() {
@@ -127,6 +129,8 @@ class ConceptHome extends React.Component {
         })
     })
   }
+
+  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.concept, meta: this.props.searchMeta}]), 100)
 
   fetchParent() {
     const { concept } = this.state

@@ -13,6 +13,7 @@ const ToConceptLabel = props => {
   const hasLink = props.to_concept_url && !props.noRedirect;
   const existsInOCL = Boolean(props.to_concept_url)
   const labelComponent = <ResourceLabel
+                           searchable
                            resource='concept'
                            owner={props.to_source_owner}
                            parent={props.to_source_name}

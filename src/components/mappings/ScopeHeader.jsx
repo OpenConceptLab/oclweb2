@@ -104,7 +104,7 @@ const ScopeHeader = ({
               <Link to={resourceURL} className="no-anchor-styles">
                 <React.Fragment>
                   <span style={{color: BLUE}}>
-                    <b>{mapping.id}</b>
+                    <b className='searchable'>{mapping.id}</b>
                   </span>
                   <span style={{marginLeft: '5px', color: BLACK}}>
                     <b>{mapping.map_type}</b>
@@ -137,7 +137,7 @@ const ScopeHeader = ({
               From:
             </span>
             <span>
-              <FromConceptLabel {...mapping} />
+              <FromConceptLabel {...mapping} searchable />
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center'>
@@ -145,7 +145,7 @@ const ScopeHeader = ({
               To:
             </span>
             <span>
-              <ToConceptLabel {...mapping} />
+              <ToConceptLabel {...mapping} searchable />
             </span>
           </div>
           <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '5px'}}>
@@ -168,7 +168,7 @@ const ScopeHeader = ({
           {
             mapping.external_id &&
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '-6px'}}>
-              <ExternalIdLabel externalId={mapping.external_id} iconSize='medium' />
+              <ExternalIdLabel externalId={mapping.external_id} iconSize='medium' searchable />
             </div>
           }
         </div>

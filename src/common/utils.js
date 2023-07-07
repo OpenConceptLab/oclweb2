@@ -7,7 +7,7 @@ import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber,
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber, uniq, flatten, pickBy
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
@@ -899,4 +899,53 @@ export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale)
   }
 
   return values
+}
+
+
+const extractTextBetweenEmTags = str => {
+  const regex = /<em>(.*?)<\/em>/g;
+  const matches = [];
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    matches.push(match[1]);
+  }
+  return matches;
+}
+
+const getHighlightedTexts = items => {
+  return uniq(
+    flatten(
+      map(
+        flatten(
+          flatten(
+            flatten(
+              map(
+                items,
+                i => values(
+                  pickBy(
+                    i?.meta?.search_highlight,
+                    (value, key) => !key.startsWith('_')
+                  )
+                )
+              )
+            )
+          )
+        ),
+        val => extractTextBetweenEmTags(val)
+      )
+    )
+  )
+}
+
+
+export const highlightTexts = (items, texts) => {
+  const markInstance = new Mark(document.querySelectorAll('.searchable'))
+  const _texts = texts || getHighlightedTexts(items)
+  const options = {
+    element: "span",
+    className: "highlight-search-results",
+    separateWordSearch: false
+  }
+  markInstance.unmark(options);
+  markInstance.mark(_texts, options);
 }

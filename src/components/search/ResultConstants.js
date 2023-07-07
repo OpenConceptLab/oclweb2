@@ -20,12 +20,13 @@ import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
 import ConceptDisplayName from '../concepts/ConceptDisplayName';
 
+
 export const ALL_COLUMNS = {
   concepts: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
-    {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small'},
-    {id: 'name', label: 'Display Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
+    {id: 'id', label: 'ID', value: 'id', sortOn: 'id_lowercase', className: 'small searchable'},
+    {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium searchable', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
@@ -33,16 +34,16 @@ export const ALL_COLUMNS = {
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},
-    {id: 'id', label: 'ID', value: 'id', sortOn: 'id', className: 'small', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.id}</span>},
-    {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
+    {id: 'id', label: 'ID', value: 'id', sortOn: 'id_lowercase', className: 'small searchable', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.id}</span>},
+    {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
     {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.map_type}</span>},
-    {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium'},
+    {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
     {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
   ],
   sources: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
-    {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
+    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable'},
+    {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'source_type', label: 'Type', value: 'source_type', sortOn: 'source_type'},
     {id: 'uuid', label: 'UUID', value: 'uuid', sortable: false},
     {id: 'full_name', label: 'Full Name', value: 'full_name', sortOn: 'full_name', sortBy: 'asc'},
@@ -51,7 +52,7 @@ export const ALL_COLUMNS = {
     {id: 'default_locale', label: 'Default Locale', value: 'default_locale', sortable: false},
     {id: 'website', label: 'Website', value: 'website', sortable: false, formatter: formatWebsiteLink},
     {id: 'external_id', label: 'External ID', value: 'external_id', sortable: false},
-    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLink},
+    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLink, className: 'searchable'},
     {id: 'publisher', label: 'Publisher', value: 'publisher', sortable: false},
     {id: 'purpose', label: 'Purpose', value: 'purpose', sortable: false},
     {id: 'copyright', label: 'Copyright', value: 'copyright', sortable: false},
@@ -60,8 +61,8 @@ export const ALL_COLUMNS = {
   ],
   collections: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'id', label: 'ID', value: 'short_code', sortOn: 'mnemonic'},
-    {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
+    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable'},
+    {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},
     {id: 'full_name', label: 'Full Name', value: 'full_name', sortOn: 'full_name', sortBy: 'asc'},
     {id: 'uuid', label: 'UUID', value: 'uuid', sortable: false},
@@ -70,20 +71,20 @@ export const ALL_COLUMNS = {
     {id: 'default_locale', label: 'Default Locale', value: 'default_locale', sortable: false},
     {id: 'website', label: 'Website', value: 'website', sortable: false, formatter: formatWebsiteLink},
     {id: 'external_id', label: 'External ID', value: 'external_id', sortable: false},
-    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLink},
+    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLink, className: 'searchable'},
     {id: 'publisher', label: 'Publisher', value: 'publisher', sortable: false},
     {id: 'purpose', label: 'Purpose', value: 'purpose', sortable: false},
     {id: 'copyright', label: 'Copyright', value: 'copyright', sortable: false},
     {id: 'revision_date', label: 'Revision Date', value: 'revision_date', sortable: false, formatter: formatDate},
   ],
   organizations: [
-    {id: 'id', label: 'ID', value: 'id', sortOn: 'mnemonic', renderer: org => <OwnerChip ownerType='Organization' owner={org.id} className='owner-chip-no-border' />},
-    {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
+    {id: 'id', label: 'ID', value: 'id', sortOn: '_mnemonic', renderer: org => <OwnerChip ownerType='Organization' owner={org.id} className='owner-chip-no-border' />, className: 'searchable'},
+    {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'createdOn', label: 'Created On', value: 'created_on', formatter: formatDate, sortOn: 'created_on'},
   ],
   users: [
-    {id: 'username', label: 'Username', value: 'username', sortOn: 'username', renderer: user => <OwnerChip ownerType='user' owner={user.username} className='owner-chip-no-border' />, sortBy: 'asc'},
-    {id: 'name', label: 'Name', value: 'name', sortOn: 'name', sortBy: 'asc'},
+    {id: 'username', label: 'Username', value: 'username', sortOn: '_username', renderer: user => <OwnerChip ownerType='user' owner={user.username} className='owner-chip-no-border' />, sortBy: 'asc', className: 'searchable'},
+    {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'date_joined', label: 'Joined On', value: 'date_joined', formatter: formatDate, sortOn: 'date_joined'},
     {id: 'email', label: 'Email', value: 'email', sortable: false},
     {id: 'company', label: 'Company', value: 'company'},
@@ -125,6 +126,16 @@ export const ALL_COLUMNS = {
     {id: 'publisher', label: 'Publisher', value: 'resource.publisher', sortOn: 'publisher', sortBy: 'asc'},
   ]
 };
+
+
+export const HIGHLIGHT_ICON_WHITELISTED_FILEDS = {
+  concepts: ['external_id', 'same_as_map_codes', 'other_map_codes'],
+  mappings: ['external_id'],
+  sources: ['external_id'],
+  collections: ['external_id'],
+  organizations: ['external_id'],
+  users: ['external_id'],
+}
 
 const TAG_ICON_STYLES = {width: '12px', marginRight: '2px', marginTop: '2px'}
 export const CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS = [

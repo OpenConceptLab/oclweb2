@@ -27,7 +27,7 @@ const ExternalIdLabel = props => {
         }}
         />
       </span>
-      <span>External ID: {props.externalId}</span>
+      <span>External ID: <span className={props.searchable ? 'searchable' : ''}>{props.externalId}</span></span>
     </div>
   )
 }

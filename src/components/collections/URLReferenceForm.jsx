@@ -20,7 +20,6 @@ const PROPERTIES = [
   {id: 'locale', name: 'locale'},
   {id: 'external_id', name: 'external_id'},
   {id: 'q', name: 'q'},
-  {id: 'exact_match', name: 'exactMatch'},
 ]
 
 const ValuesetForm = ({ valueset, onUpdate, onRemove }) => {

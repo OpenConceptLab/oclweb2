@@ -1,4 +1,5 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
@@ -14,11 +15,12 @@ import {
   Lock as PrivateIcon,
   Warning as WarningIcon,
   PriorityHigh as PriorityIcon,
+  QuestionMark as HighlightIcon
 } from '@mui/icons-material'
 import { TablePagination } from '@mui/material';
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact, flatten, last, isArray, times
+  isFunction, compact, flatten, last, isArray, times, every
 } from 'lodash';
 import {
   BLUE, WHITE, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -32,7 +34,7 @@ import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
 import MappingOptions from '../mappings/MappingOptions';
-import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS } from './ResultConstants'
+import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS, HIGHLIGHT_ICON_WHITELISTED_FILEDS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
 import FhirContainerResource from '../fhir/ContainerResource';
 
@@ -571,6 +573,18 @@ const ExpandibleRow = props => {
     window.location.hash = _url
   }
 
+  const onHighlightClick = event => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const message = `This matched with ${map(keys(item.meta.search_highlight), key => startCase(key)).join(', ')}.`
+
+    alertifyjs.alert('Why this matched?', message, () => {})
+  }
+
+  const hasSearchMeta = (isConceptContainer || isSourceChild) && has(item, 'meta.search_highlight')
+  const shouldShowHighlightIcon = hasSearchMeta && every(keys(item?.meta.search_highlight), key => includes(get(HIGHLIGHT_ICON_WHITELISTED_FILEDS, resource), key))
+
   return (
     <React.Fragment>
       <TableRow
@@ -661,10 +675,21 @@ const ExpandibleRow = props => {
             {
               showPin &&
               <IconButton aria-label="expand row" size="small" onClick={onPinClick}>
-                {<PinIcon fontSize="small" pinned={pinned ? pinned.toString() : undefined} />}
+                <PinIcon fontSize="small" pinned={pinned ? pinned.toString() : undefined} />
               </IconButton>
             }
           </TableCell>
+        }
+        {
+          hasSearchMeta &&
+            <TableCell align='right' style={{width: '50px'}}>
+              {
+                shouldShowHighlightIcon &&
+                  <IconButton size="small" onClick={onHighlightClick}>
+                    <HighlightIcon fontSize="inherit" />
+                  </IconButton>
+              }
+            </TableCell>
         }
       </TableRow>
       {
@@ -787,8 +812,8 @@ const ResultsTable = (
   const updateSelected = (id, selected) => {
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
+    const lastSelected = find(results.items, {uuid: last(newList)})
     if(includes(['concepts', 'mappings'], resource)) {
-      const lastSelected = find(results.items, {uuid: last(newList)})
       if(onSelectChange)
         onSelectChange(map(filter(results.items, item => includes(newList, item.uuid)), 'version_url'))
       if(onSelect)
@@ -828,9 +853,12 @@ const ResultsTable = (
   let columns = essentialColumns ?
                 reject(resourceDefinition.columns, c => c.essential === false) :
                 resourceDefinition.columns;
-
+  const hasSearchMeta = (isConceptContainer || isSourceChild) && get(results, 'items.0.meta.search_highlight')
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
-  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
+  let columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
+  if(hasSearchMeta)
+    columnsCount += 1
+
   const selectionRowColumnsCount = get(selectedList, 'length', 0) > 0 ? columnsCount - 2 : columnsCount;
 
   const onDetailsToggle = item => {
@@ -964,12 +992,16 @@ const ResultsTable = (
                         (resourceDefinition.expandible || shouldShowPin) &&
                           <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
+                      {
+                        hasSearchMeta &&
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
+                      }
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {
                       isLoading ? (
-                        times(10, rowIndex => (
+                        times(columnsCount, rowIndex => (
                           <TableRow key={rowIndex}>
                             {
                               times(selectionRowColumnsCount, columnIndex => (

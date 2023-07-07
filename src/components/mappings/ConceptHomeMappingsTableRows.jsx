@@ -23,6 +23,7 @@ const ORDER_BY = ['_sort_weight', 'cascade_target_source_name', 'cascade_target_
 const order = (mappings, is_default) => orderBy(mappings, is_default ? DEFAULT_ORDER_BY : ORDER_BY)
 
 const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping, onSortEnd, onClearSortWeight, onAssignSortWeight }) => {
+  const searchable = !isIndirect
   const [oMappings, setMappings] = React.useState([])
   const [form, setForm] = React.useState(false)
   const [addNewMapType, setAddNewMapType] = React.useState('')
@@ -264,7 +265,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                         />
                                         </Tooltip>
                                     </span>
-                                    <span className={mapping.retired ? 'retired' : ''}>
+                                    <span className={mapping.retired ? (searchable ? 'retired searchable' : 'searchable') : searchable ? 'searchable' : ''}>
                                       { mapping[conceptCodeAttr] }
                                     </span>
                                   </span>

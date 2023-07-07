@@ -91,7 +91,7 @@ span.resource-label {
     flex-direction: row;
     align-items: center;
     vertical-align: middle;
-    span {
+    > span {
         padding: 0 2px;
     }
     &.resource-id {
@@ -1204,4 +1204,7 @@ tr.droppable-disabled {
     td {
         cursor: no-drop !important;
     }
+}
+.highlight-search-results {
+    font-weight: bold;
 }

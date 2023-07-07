@@ -94,10 +94,10 @@ const ScopeHeader = ({
               <Link to={resourceURL} className="no-anchor-styles">
                 <React.Fragment>
                   <span style={{color: BLUE}}>
-                    <b>{concept.id}</b>
+                    <b className='searchable'>{concept.id}</b>
                   </span>
                   <span style={{marginLeft: '5px', color: BLACK}}>
-                    <b>{concept.display_name}</b>
+                    <b className='searchable'>{concept.display_name}</b>
                   </span>
                 </React.Fragment>
               </Link>
@@ -157,7 +157,7 @@ const ScopeHeader = ({
             {
               concept.external_id &&
               <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '-6px'}}>
-                <ExternalIdLabel externalId={concept.external_id} iconSize='medium' />
+                <ExternalIdLabel externalId={concept.external_id} iconSize='medium' searchable />
               </div>
             }
           </div>

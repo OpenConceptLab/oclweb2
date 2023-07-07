@@ -10,7 +10,7 @@ import {
 import { Share as ShareIcon, AccountTreeOutlined as HierarchyIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
 import APIService from '../../services/APIService'
-import { formatDate, copyURL, toRelativeURL, getParamsFromObject } from '../../common/utils';
+import { formatDate, copyURL, toRelativeURL, getParamsFromObject, highlightTexts } from '../../common/utils';
 import {
   BLUE, GREEN, WHITE, DEFAULT_LIMIT, TABLE_LAYOUT_ID, LIST_LAYOUT_ID
 } from '../../common/constants';
@@ -60,7 +60,6 @@ class Search extends React.Component {
       page: 1,
       updatedSince: false,
       searchStr: '',
-      exactMatch: 'off',
       resource: 'concepts',
       isLoading: false,
       sortParams: DEFAULT_SORT_PARAMS,
@@ -191,7 +190,6 @@ class Search extends React.Component {
       resource: this.formatResourceType(queryParams.get('type') || this.props.resource || 'concepts'),
       isLoading: true,
       searchStr: queryParams.get('q') || '',
-      exactMatch: queryParams.get('exactMatch') || 'off',
       viewFilters: this.props.viewFilters || {},
       userFilters: userFilters,
       fhirParams: this.props.fhirParams || {},
@@ -297,12 +295,16 @@ class Search extends React.Component {
       }, () => {
         if(includes(['sources', 'collections'], resource))
           this.loadSummary(resource)
+        this.highlight()
       })
     } else if (get(response, 'detail'))
       this.setState({isLoading: false}, () => alertifyjs.error(response.detail, 0))
     else
       this.setState({isLoading: false}, () => {throw response})
   }
+
+
+  highlight = item => highlightTexts(item?.id ? [item] : this.state.results[this.state.resource].items)
 
   onFacetsLoad = (response, resource) => {
     if(response.status === 200) {
@@ -333,9 +335,7 @@ class Search extends React.Component {
     }
   }
 
-  onSearch = (value, exactMatch) => {
-    this.fetchNewResults({searchStr: value, page: 1, exactMatch: exactMatch}, true, true, true)
-  }
+  onSearch = value => this.fetchNewResults({searchStr: value, page: 1}, true, true, true)
 
   onFhirSearch = params => this.setState(
     {fhirParams: {...params, _sort: this.state.fhirParams._sort || '_id'}},
@@ -405,14 +405,14 @@ class Search extends React.Component {
 
     this.setState(newState, () => {
       const {
-        resource, searchStr, page, exactMatch, sortParams, updatedSince, limit,
+        resource, searchStr, page, sortParams, updatedSince, limit,
         fhirParams, staticParams
       } = this.state;
       const { configQueryParams, noQuery, noHeaders, fhir, hapi, paginationParams, onHierarchyToggle, hierarchy } = this.props;
       let queryParams = {};
       if(!noQuery) {
         queryParams = {
-          q: searchStr || '', page: page, exact_match: exactMatch, limit: limit,
+          q: searchStr || '', page: page, limit: limit, includeSearchMeta: true,
           verbose: includes(['sources', 'collections', 'organizations', 'users', 'references'], resource),
           ...this.getFacetQueryParam(),
         };
@@ -472,8 +472,6 @@ class Search extends React.Component {
       }
       if(!queryParams.get('q'))
         queryParams.delete('q')
-      if(queryParams.get('exact_match') === 'off')
-        queryParams.delete('exact_match')
 
       const _string = queryParams.toString()
       if(_string)
@@ -603,7 +601,6 @@ class Search extends React.Component {
     url += `&isTable=${this.state.isTable}`
     url += `&isList=${this.state.isList}`
     url += `&page=${this.state.page}`
-    url += `&exactMatch=${this.state.exactMatch || 'off'}`
     if(!this.props.nested)
       url += `&type=${this.state.resource || 'concepts'}`
     if(this.state.limit !== DEFAULT_LIMIT)
@@ -1002,6 +999,7 @@ class Search extends React.Component {
                     global
                     scoped
                     singleColumn
+                    searchMeta={selectedItem.meta}
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 concept={selectedItem}
@@ -1013,6 +1011,7 @@ class Search extends React.Component {
                     scoped
                     singleColumn
                     noRedirect
+                    searchMeta={selectedItem.meta}
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 mapping={selectedItem}

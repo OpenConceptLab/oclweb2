@@ -66,7 +66,6 @@
   "search": {
     "label": "Buscar",
     "input_placeholder": "Buscar {{owner}} {{resource}}...",
-    "exact_match": "Coincidencia exacta",
     "filters": "Filtros",
     "numerical_sort": "ID numérico",
     "best_match": "Mejor coincidencia",

@@ -12,6 +12,7 @@ const FromConceptLabel = props => {
   const conceptName = props.from_concept_name || props.from_concept_name_resolved || get(props, 'from_concept.display_name')
   const existsInOCL = Boolean(props.from_concept_url)
   const labelComponent = <ResourceLabel
+                           searchable
                            resource='concept'
                            owner={props.from_source_owner}
                            parent={props.from_source_name}

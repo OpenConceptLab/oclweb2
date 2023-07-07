@@ -425,6 +425,7 @@ class CollectionHome extends React.Component {
                         parent={collection}
                         parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                         mapping={selected}
+                        searchMeta={selected.meta}
                         _location={this.props.location}
                         _match={this.props.match}
                         location={{pathname: selected.version_url || selected.url}}
@@ -438,6 +439,7 @@ class CollectionHome extends React.Component {
                       parent={collection}
                       parentURL={get(expansion, 'url') || collection.url || collection.version_url}
                       concept={selected}
+                      searchMeta={selected.meta}
                       _location={this.props.location}
                       _match={this.props.match}
                       location={{pathname: selected.version_url || selected.url}}

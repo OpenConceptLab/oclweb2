@@ -28,6 +28,7 @@ const ConceptHomeDetails = ({ concept, isLoadingMappings, isLoadingCollections, 
           locales={names}
           source={source}
           label='Names & Synonyms'
+          searchable
         />
         <HomeLocales
           concept={concept}

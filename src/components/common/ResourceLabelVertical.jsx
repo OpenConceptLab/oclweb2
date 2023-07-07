@@ -48,7 +48,7 @@ const ResourceLabelVertical = props => {
             <span className=''>{props.parentURL}</span>
           }
           <span className='separator-small'>{SEPARATOR}</span>
-          <span style={{maxWidth: '100%', fontWeight: 'bold'}}>{props.id || props.name}</span>
+          <span style={{maxWidth: '100%'}}>{props.id || props.name}</span>
         </div>
         <div style={nameTextStyles} className={'col-md-12 ' + resource + '-bg'}>
           <span>{props.name}</span>

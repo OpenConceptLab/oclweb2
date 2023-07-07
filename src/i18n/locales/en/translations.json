@@ -66,7 +66,6 @@
   "search": {
     "label": "Search",
     "input_placeholder": "Search {{owner}} {{resource}}...",
-    "exact_match": "Exact Match",
     "filters": "Filters",
     "numerical_sort": "Numerical ID",
     "best_match": "Best Match",
