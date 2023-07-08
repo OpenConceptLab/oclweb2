@@ -130,7 +130,7 @@ class ConceptHome extends React.Component {
     })
   }
 
-  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.concept, meta: this.props.searchMeta}]), 100)
+  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.concept, search_meta: this.props.searchMeta}]), 100)
 
   fetchParent() {
     const { concept } = this.state

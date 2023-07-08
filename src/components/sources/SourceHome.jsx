@@ -408,7 +408,7 @@ class SourceHome extends React.Component {
                         singleColumn
                         scoped
                         mapping={selected}
-                        searchMeta={selected.meta}
+                        searchMeta={selected.search_meta}
                         _location={this.props.location}
                         _match={this.props.match}
                         location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
@@ -422,7 +422,7 @@ class SourceHome extends React.Component {
                       singleColumn
                       scoped
                       concept={selected}
-                      searchMeta={selected.meta}
+                      searchMeta={selected.search_meta}
                       parent={source}
                       _location={this.props.location}
                       _match={this.props.match}

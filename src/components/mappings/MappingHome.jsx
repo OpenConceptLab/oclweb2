@@ -85,7 +85,7 @@ class MappingHome extends React.Component {
     })
   }
 
-  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.mapping, meta: this.props.searchMeta}]), 100)
+  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.mapping, search_meta: this.props.searchMeta}]), 100)
 
   getVersions() {
     APIService.new()

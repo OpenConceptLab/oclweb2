@@ -577,13 +577,13 @@ const ExpandibleRow = props => {
     event.stopPropagation();
     event.preventDefault();
 
-    const message = `This matched with ${map(keys(item.meta.search_highlight), key => startCase(key)).join(', ')}.`
+    const message = `This matched with ${map(keys(item.search_meta.search_highlight), key => startCase(key)).join(', ')}.`
 
     alertifyjs.alert('Why this matched?', message, () => {})
   }
 
-  const hasSearchMeta = (isConceptContainer || isSourceChild) && has(item, 'meta.search_highlight')
-  const shouldShowHighlightIcon = hasSearchMeta && every(keys(item?.meta.search_highlight), key => includes(get(HIGHLIGHT_ICON_WHITELISTED_FILEDS, resource), key))
+  const hasSearchMeta = (isConceptContainer || isSourceChild) && has(item, 'search_meta.search_highlight')
+  const shouldShowHighlightIcon = hasSearchMeta && every(keys(item?.search_meta.search_highlight), key => includes(get(HIGHLIGHT_ICON_WHITELISTED_FILEDS, resource), key))
 
   return (
     <React.Fragment>
@@ -853,7 +853,7 @@ const ResultsTable = (
   let columns = essentialColumns ?
                 reject(resourceDefinition.columns, c => c.essential === false) :
                 resourceDefinition.columns;
-  const hasSearchMeta = (isConceptContainer || isSourceChild) && get(results, 'items.0.meta.search_highlight')
+  const hasSearchMeta = (isConceptContainer || isSourceChild) && get(results, 'items.0.search_meta.search_highlight')
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
   let columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
   if(hasSearchMeta)

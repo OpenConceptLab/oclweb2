@@ -999,7 +999,7 @@ class Search extends React.Component {
                     global
                     scoped
                     singleColumn
-                    searchMeta={selectedItem.meta}
+                    searchMeta={selectedItem.search_meta}
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 concept={selectedItem}
@@ -1011,7 +1011,7 @@ class Search extends React.Component {
                     scoped
                     singleColumn
                     noRedirect
-                    searchMeta={selectedItem.meta}
+                    searchMeta={selectedItem.search_meta}
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 mapping={selectedItem}

@@ -923,7 +923,7 @@ const getHighlightedTexts = items => {
                 items,
                 i => values(
                   pickBy(
-                    i?.meta?.search_highlight,
+                    i?.search_meta?.search_highlight,
                     (value, key) => !key.startsWith('_')
                   )
                 )

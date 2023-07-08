@@ -2,7 +2,7 @@ import React from 'react';
 
 const ConceptDisplayName = ({ concept, style }) => {
   let synonymPrefix = ''
-  const highlights = concept?.meta?.search_highlight
+  const highlights = concept?.search_meta?.search_highlight
   const synonymHighlight = highlights?.synonyms
   const nameHighlight = highlights?.name
   if(!nameHighlight?.length && synonymHighlight?.length)
