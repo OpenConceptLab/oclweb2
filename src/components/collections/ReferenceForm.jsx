@@ -287,6 +287,7 @@ class ReferenceForm extends React.Component {
                 byGlobal &&
                 <Search
                   {...this.props}
+                  staticParams={{excludeWildcard: true, excludeFuzzy: true}}
                   noFilters
                   nested
                   asReference
