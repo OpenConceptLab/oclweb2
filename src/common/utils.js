@@ -946,6 +946,5 @@ export const highlightTexts = (items, texts) => {
     className: "highlight-search-results",
     separateWordSearch: false
   }
-  markInstance.unmark(options);
   markInstance.mark(_texts, options);
 }
