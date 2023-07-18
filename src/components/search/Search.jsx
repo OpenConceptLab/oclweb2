@@ -304,7 +304,7 @@ class Search extends React.Component {
   }
 
 
-  highlight = item => highlightTexts(item?.id ? [item] : this.state.results[this.state.resource].items)
+  highlight = item => highlightTexts(item?.id ? [item] : this.state.results[this.state.resource].items, null, true)
 
   onFacetsLoad = (response, resource) => {
     if(response.status === 200) {

@@ -938,7 +938,7 @@ const getHighlightedTexts = items => {
 }
 
 
-export const highlightTexts = (items, texts) => {
+export const highlightTexts = (items, texts, unmark=false) => {
   const markInstance = new Mark(document.querySelectorAll('.searchable'))
   const _texts = texts || getHighlightedTexts(items)
   const options = {
@@ -946,5 +946,7 @@ export const highlightTexts = (items, texts) => {
     className: "highlight-search-results",
     separateWordSearch: false
   }
+  if(unmark)
+    markInstance.unmark(options)
   markInstance.mark(_texts, options);
 }
