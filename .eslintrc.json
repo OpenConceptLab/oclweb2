@@ -214,7 +214,8 @@
           "checksums",
           "lang",
           "Espa",
-          "unmark"
+          "unmark",
+          "wildcard"
         ],
         "skipIfMatch": [
           "http://[^s]*",
