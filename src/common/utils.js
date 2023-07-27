@@ -908,6 +908,8 @@ const extractTextBetweenEmTags = str => {
   let match;
   while ((match = regex.exec(str)) !== null) {
     matches.push(match[1]);
+    if(match[1] && match[1].includes('_'))
+      matches.push(match[1].replace('_', '-'))
   }
   return matches;
 }
