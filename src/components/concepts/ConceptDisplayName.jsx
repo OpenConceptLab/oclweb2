@@ -14,16 +14,16 @@ const ConceptDisplayName = ({ concept, style }) => {
           synonymPrefix &&
             <span>
               <span dangerouslySetInnerHTML={{__html: synonymPrefix}} />
-              <span> ==> </span>
-              </span>
+              <span style={{margin: '0 5px'}}>&rarr;</span>
+            </span>
         }
         {concept.display_name}
       </span>
       {
         concept.display_locale &&
-        <span className='gray-italics-small' style={{marginLeft: '5px'}}>
-          [{concept.display_locale}]
-        </span>
+          <span className='gray-italics-small' style={{marginLeft: '5px'}}>
+            [{concept.display_locale}]
+          </span>
       }
     </span>
   )
