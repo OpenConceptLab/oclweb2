@@ -1,5 +1,4 @@
 import React from 'react';
-import alertifyjs from 'alertifyjs';
 import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
@@ -15,12 +14,12 @@ import {
   Lock as PrivateIcon,
   Warning as WarningIcon,
   PriorityHigh as PriorityIcon,
-  QuestionMark as HighlightIcon
+  InfoOutlined as HighlightIcon
 } from '@mui/icons-material'
 import { TablePagination } from '@mui/material';
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact, flatten, last, isArray, times, every
+  isFunction, compact, flatten, last, isArray, times, every, forEach
 } from 'lodash';
 import {
   BLUE, WHITE, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -37,6 +36,7 @@ import MappingOptions from '../mappings/MappingOptions';
 import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS, HIGHLIGHT_ICON_WHITELISTED_FILEDS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
 import FhirContainerResource from '../fhir/ContainerResource';
+import { HtmlToolTipClone as HtmlToolTipNormalRaw } from '../common/HtmlToolTipRaw'
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -573,17 +573,23 @@ const ExpandibleRow = props => {
     window.location.hash = _url
   }
 
-  const onHighlightClick = event => {
-    event.stopPropagation();
-    event.preventDefault();
-
-    const message = `This matched with ${map(keys(item.search_meta.search_highlight), key => startCase(key)).join(', ')}.`
-
-    alertifyjs.alert('Why this matched?', message, () => {})
+  const getHighlightText = () => {
+    let texts = []
+    forEach(item?.search_meta?.search_highlight, (values, key) => {
+      let _text = ''
+      if(['same_as_map_codes', 'other_map_codes'].includes(key))
+        _text += startCase(key.replace('map_codes', '')) + ' Map Code'
+      else
+        _text += startCase(key)
+      _text += ': ' + map(values, value => value.replace('<em>', '<b>').replace('</em>', '</b>')).join(', ')
+      texts.push(_text)
+    })
+    return texts.join('<br />')
   }
 
   const hasSearchMeta = (isConceptContainer || isSourceChild) && has(item, 'search_meta.search_highlight')
   const shouldShowHighlightIcon = hasSearchMeta && every(keys(item?.search_meta.search_highlight), key => includes(get(HIGHLIGHT_ICON_WHITELISTED_FILEDS, resource), key))
+  const highlightedText = getHighlightText()
 
   return (
     <React.Fragment>
@@ -685,9 +691,17 @@ const ExpandibleRow = props => {
             <TableCell align='right' style={{width: '50px'}}>
               {
                 shouldShowHighlightIcon &&
-                  <IconButton size="small" onClick={onHighlightClick}>
-                    <HighlightIcon fontSize="inherit" />
-                  </IconButton>
+                  <HtmlToolTipNormalRaw
+                    title={
+                      <div>
+                        <div>This matched with:</div>
+                        <br />
+                        <div dangerouslySetInnerHTML={{__html: highlightedText}} />
+                        </div>
+                    }
+                    placement='left'>
+                    <HighlightIcon style={{color: 'rgba(0, 0, 0, 0.6)'}} />
+                </HtmlToolTipNormalRaw>
               }
             </TableCell>
         }
