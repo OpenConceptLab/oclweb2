@@ -193,7 +193,7 @@ const ConfigurationForm = props => {
                   <SelectItemText
                     icon={<PrivateIcon fontSize="small" />}
                     primaryText="Private"
-                    secondaryText={`No one can view the content in this ${props.resource}`}
+                    secondaryText={`Only users with access can view the content in this ${props.resource}`}
                   />
                 </MenuItem>
               </Select>

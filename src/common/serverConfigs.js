@@ -8,9 +8,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -23,9 +25,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -37,9 +41,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -51,9 +57,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -66,9 +74,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -80,7 +90,6 @@ export const SERVER_CONFIGS = [
     info: {
       site: {
         title: 'WHO',
-        hideOpenMRSApp: true,
         logoURL: 'https://www.who.int/images/default-source/infographics/who-emblem.png?sfvrsn=877bb56a_2',
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
@@ -89,9 +98,11 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
     }
   },
@@ -103,48 +114,18 @@ export const SERVER_CONFIGS = [
     operations: {
       source: [
         '$cascade',
+        '$checksum'
       ],
       collection: [
         '$cascade',
+        '$checksum'
       ],
-    }
-  },
-  {
-    id: 6,
-    name: 'FHIR QA',
-    type: 'fhir',
-    url: 'https://fhir.qa.openconceptlab.org',
-    hapi: false,
-    info: {
-      pageSize: 10,
-      baseURI: '/fhir/',
-      type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
-      org: {
-        id: 'FHIR',
-        name: "Fast Healthcare Interoperability Resources",
-        logo_url: '/fhir.svg'
-      },
-      site: {
-        title: 'FHIR',
-        hideOpenMRSApp: true,
-        logoURL: '/fhir.svg',
-        noLeftMenu: true,
-        footerText: 'FHIR Server Powered by Open Concept Lab'
-      },
-    },
-    operations: {
-      codeSystem: [
-        '$lookup',
-        '$validate-code',
-      ],
-      valueSet: [
-        '$validate-code',
-      ]
     }
   },
   {
     id: 7,
     name: 'FHIR Staging',
+    beta: true,
     type: 'fhir',
     url: 'https://fhir.staging.openconceptlab.org',
     hapi: false,
@@ -241,7 +222,6 @@ export const SERVER_CONFIGS = [
       noConceptMap: true,
       site: {
         title: 'WHO',
-        hideOpenMRSApp: true,
         logoURL: 'https://www.who.int/images/default-source/infographics/who-emblem.png?sfvrsn=877bb56a_2',
         noLeftMenu: true,
         footerText: 'Powered by Open Concept Lab'
@@ -259,9 +239,10 @@ export const SERVER_CONFIGS = [
   },
   {
     id: 13,
-    name: 'FHIR QA (beta)',
+    name: 'FHIR QA',
+    beta: true,
     type: 'fhir',
-    url: 'https://api.qa.openconceptlab.org',
+    url: 'https://fhir.qa.openconceptlab.org',
     hapi: false,
     info: {
       pageSize: 10,
@@ -274,7 +255,6 @@ export const SERVER_CONFIGS = [
       },
       site: {
         title: 'FHIR',
-        hideOpenMRSApp: true,
         logoURL: '/fhir.svg',
         noLeftMenu: true,
         footerText: 'FHIR Server Powered by Open Concept Lab'

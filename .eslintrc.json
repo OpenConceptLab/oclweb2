@@ -43,6 +43,7 @@
     "import/no-named-as-default": 0,
     "react/prefer-stateless-function": 0,
     "no-process-env": "error",
+    "react/no-unescaped-entities": 0,
     "react/jsx-filename-extension": [
       1,
       {
@@ -208,9 +209,13 @@
           "keydown",
           "rect",
           "Dropdown",
+          "uncheck",
+          "checksum",
+          "checksums",
           "lang",
           "Espa",
-          "unmark"
+          "unmark",
+          "wildcard"
         ],
         "skipIfMatch": [
           "http://[^s]*",

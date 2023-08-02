@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   TableContainer, Table, TableHead, TableBody, TableCell, TableRow,
   Collapse, IconButton, Box, Paper, Tabs, Tab, Checkbox, TableSortLabel, Tooltip,
-  CircularProgress, FormControlLabel, Switch
+  FormControlLabel, Switch, Skeleton
 } from '@mui/material';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -14,11 +14,12 @@ import {
   Lock as PrivateIcon,
   Warning as WarningIcon,
   PriorityHigh as PriorityIcon,
+  InfoOutlined as HighlightIcon
 } from '@mui/icons-material'
 import { TablePagination } from '@mui/material';
 import {
   map, startCase, get, without, uniq, includes, find, keys, values, isEmpty, filter, reject, has,
-  isFunction, compact, flatten, last, isArray
+  isFunction, compact, flatten, last, isArray, times, every, forEach
 } from 'lodash';
 import {
   BLUE, WHITE, COLOR_ROW_SELECTED, ORANGE, GREEN, EMPTY_VALUE
@@ -32,9 +33,10 @@ import AllMappingsTables from '../mappings/AllMappingsTables';
 import APIService from '../../services/APIService';
 import PinIcon from '../common/PinIcon';
 import MappingOptions from '../mappings/MappingOptions';
-import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS } from './ResultConstants'
+import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS, HIGHLIGHT_ICON_WHITELISTED_FILEDS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
 import FhirContainerResource from '../fhir/ContainerResource';
+import { HtmlToolTipClone as HtmlToolTipNormalRaw } from '../common/HtmlToolTipRaw'
 
 const RESOURCE_DEFINITIONS = {
   references: {
@@ -469,7 +471,10 @@ const ExpandibleRow = props => {
 
   const getOCLFHIRResourceURL = item => {
     const identifiers = flatten([get(item, 'resource.identifier', [])])
-    return '/' + compact(get(find(identifiers, ident => get(ident, 'system', '').match('fhir.')), 'value', '').split('/')).splice(0, 4).join('/')
+    let ident = find(identifiers, ident => get(ident, 'system', '').match('fhir.'))
+    if(!ident)
+      ident = find(identifiers, ident => get(ident, 'system', '').match('api.'))
+    return '/' + compact(get(ident, 'value', '').split('/')).splice(0, 4).join('/')
   };
 
   const fetchVersions = () => {
@@ -568,6 +573,24 @@ const ExpandibleRow = props => {
     window.location.hash = _url
   }
 
+  const getHighlightText = () => {
+    let texts = []
+    forEach(item?.search_meta?.search_highlight, (values, key) => {
+      let _text = ''
+      if(['same_as_map_codes', 'other_map_codes'].includes(key))
+        _text += startCase(key.replace('map_codes', '')) + ' Map Code'
+      else
+        _text += startCase(key)
+      _text += ': ' + map(values, value => value.replace('<em>', '<b>').replace('</em>', '</b>')).join(', ')
+      texts.push(_text)
+    })
+    return texts.join('<br />')
+  }
+
+  const hasSearchMeta = (isConceptContainer || isSourceChild) && has(item, 'search_meta.search_highlight')
+  const shouldShowHighlightIcon = hasSearchMeta && every(keys(item?.search_meta.search_highlight), key => includes(get(HIGHLIGHT_ICON_WHITELISTED_FILEDS, resource), key))
+  const highlightedText = getHighlightText()
+
   return (
     <React.Fragment>
       <TableRow
@@ -633,12 +656,12 @@ const ExpandibleRow = props => {
           <TableCell align='right' style={{width: '120px', padding: '2px', paddingRight: '10px'}}>
             {
               resourceDefinition.tagWaitAttribute && !has(item, resourceDefinition.tagWaitAttribute) ?
-              <CircularProgress style={{width: '20px', height: '20px'}} /> :
-              map(tags, tag => tag.text ? getTag(tag, item, hapi) : (
-                <Link key={tag.id} to='' onClick={event => navigateTo(event, item, isFunction(tag.hrefAttr) ? tag.hrefAttr : get(item, tag.hrefAttr))}>
-                  {getTag(tag, item, hapi)}
-                </Link>
-              ))
+                map(tags, tag => <span key={tag.id} style={{display: 'flex', justifyContent: 'flex-end', margin: '2px 0', marginRight: '10px'}}><Skeleton variant='circular' height={20} width={20} /></span>) :
+                map(tags, tag => tag.text ? getTag(tag, item, hapi) : (
+                  <Link key={tag.id} to='' onClick={event => navigateTo(event, item, isFunction(tag.hrefAttr) ? tag.hrefAttr : get(item, tag.hrefAttr))}>
+                    {getTag(tag, item, hapi)}
+                  </Link>
+                ))
             }
           </TableCell>
         }
@@ -658,10 +681,29 @@ const ExpandibleRow = props => {
             {
               showPin &&
               <IconButton aria-label="expand row" size="small" onClick={onPinClick}>
-                {<PinIcon fontSize="small" pinned={pinned ? pinned.toString() : undefined} />}
+                <PinIcon fontSize="small" pinned={pinned ? pinned.toString() : undefined} />
               </IconButton>
             }
           </TableCell>
+        }
+        {
+          hasSearchMeta &&
+            <TableCell align='right' style={{width: '50px'}}>
+              {
+                shouldShowHighlightIcon &&
+                  <HtmlToolTipNormalRaw
+                    title={
+                      <div>
+                        <div>This matched with:</div>
+                        <br />
+                        <div dangerouslySetInnerHTML={{__html: highlightedText}} />
+                        </div>
+                    }
+                    placement='left'>
+                    <HighlightIcon style={{color: 'rgba(0, 0, 0, 0.6)'}} />
+                </HtmlToolTipNormalRaw>
+              }
+            </TableCell>
         }
       </TableRow>
       {
@@ -784,8 +826,8 @@ const ResultsTable = (
   const updateSelected = (id, selected) => {
     const newList = selected ? uniq([...selectedList, id]) : without(selectedList, id)
     setSelectedList(newList)
+    const lastSelected = find(results.items, {uuid: last(newList)})
     if(includes(['concepts', 'mappings'], resource)) {
-      const lastSelected = find(results.items, {uuid: last(newList)})
       if(onSelectChange)
         onSelectChange(map(filter(results.items, item => includes(newList, item.uuid)), 'version_url'))
       if(onSelect)
@@ -825,9 +867,12 @@ const ResultsTable = (
   let columns = essentialColumns ?
                 reject(resourceDefinition.columns, c => c.essential === false) :
                 resourceDefinition.columns;
-
+  const hasSearchMeta = (isConceptContainer || isSourceChild) && get(results, 'items.0.search_meta.search_highlight')
   columns = isEmpty(viewFields) ? columns : filterColumnsFromViewFields()
-  const columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
+  let columnsCount = get(columns, 'length', 1) + ((resourceDefinition.expandible || shouldShowPin) ? 2 : 1) + ((isConceptContainer || isValueSet || isConceptMap) ? 1 : 0);
+  if(hasSearchMeta)
+    columnsCount += 1
+
   const selectionRowColumnsCount = get(selectedList, 'length', 0) > 0 ? columnsCount - 2 : columnsCount;
 
   const onDetailsToggle = item => {
@@ -862,8 +907,8 @@ const ResultsTable = (
                     {
                       selectedCount > 0 &&
                       <TableRow colSpan={selectionRowColumnsCount} style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
-                        <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(0, 0, 0, 0.09)'}}>
-                          <span className='flex-vertical-center' style={{paddingTop: '3px'}}>
+                        <TableCell colSpan={columnsCount} align='left' style={{backgroundColor: 'rgba(224, 224, 224, 1)'}}>
+                          <span className='flex-vertical-center'>
                             <span style={{margin: '0px 10px', whiteSpace: 'pre'}}>{selectedCount} Selected</span>
                             {
                               !asReference &&
@@ -882,11 +927,11 @@ const ResultsTable = (
                     <TableRow style={theadStyles}>
                       {
                         (isConceptContainer || isValueSet || isConceptMap) &&
-                        <TableCell style={theadStyles} />
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
                       {
                         isSelectable &&
-                        <TableCell style={{maxWidth: '30px', padding: '2px', ...theadStyles}} align="center">
+                          <TableCell style={{maxWidth: '30px', padding: '2px', ...theadStyles, top: selectedCount > 0 ? 40 : 0}} align="center">
                           <Checkbox checked={isAllSelected} indeterminate={isSomeSelected} size='small' style={{color: theadTextColor, padding: '0px'}} onChange={onAllSelect} />
                         </TableCell>
                       }
@@ -898,7 +943,7 @@ const ResultsTable = (
                               key={column.id}
                               sortDirection={orderBy === column.id ? order : false}
                               align={column.align || 'left'}
-                              style={{color: theadTextColor, ...theadStyles}}>
+                              style={{color: theadTextColor, ...theadStyles, top: selectedCount > 0 ? 40 : 0}}>
                               {
                                 column.tooltip ?
                                 <Tooltip arrow placement='top' title={column.tooltip}>
@@ -924,7 +969,7 @@ const ResultsTable = (
                               }
                             </TableCell>
                           ) : (
-                            <TableCell key={column.id} align={column.align || 'left'} style={{color: theadTextColor, ...theadStyles}}>
+                            <TableCell key={column.id} align={column.align || 'left'} style={{color: theadTextColor, ...theadStyles, top: selectedCount > 0 ? 40 : 0}}>
                               {
                                 column.translation ?
                                   <span>
@@ -955,22 +1000,33 @@ const ResultsTable = (
                       }
                       {
                         !isSelectable &&
-                        <TableCell style={theadStyles} />
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
                       {
                         (resourceDefinition.expandible || shouldShowPin) &&
-                        <TableCell style={theadStyles} />
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
+                      }
+                      {
+                        hasSearchMeta &&
+                          <TableCell style={{...theadStyles, top: selectedCount > 0 ? 40 : 0}} />
                       }
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {
-                      isLoading ?
-                      <TableRow colSpan={selectionRowColumnsCount}>
-                        <TableCell colSpan={columnsCount} align='center'>
-                          <CircularProgress color="primary" disableShrink />
-                        </TableCell>
-                      </TableRow> : (
+                      isLoading ? (
+                        times(columnsCount, rowIndex => (
+                          <TableRow key={rowIndex}>
+                            {
+                              times(selectionRowColumnsCount, columnIndex => (
+                                <TableCell key={columnIndex} align='center' style={{paddingTop: '10px', paddingBottom: '10px'}}>
+                                    <Skeleton height={35} />
+                                </TableCell>
+                              ))
+                            }
+                          </TableRow>
+                        ))
+                      ) : (
                       map(results.items, (item, index) => (
                       <ExpandibleRow
                         key={item.uuid || item.id || index}

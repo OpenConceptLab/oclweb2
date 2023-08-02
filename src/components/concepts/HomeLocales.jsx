@@ -46,7 +46,7 @@ const groupLocales = (locales, source) => {
 }
 
 
-const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }) => {
+const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription, searchable }) => {
   const count = locales.length;
   const groupedLocales = groupLocales(locales, source)
 
@@ -84,6 +84,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                     locale={locale}
                     localizedTexts={localizedTexts}
                     isDescription={isDescription}
+                    searchable={searchable}
                   />
                 ))
               }
@@ -95,6 +96,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                     locale={locale}
                     localizedTexts={localizedTexts}
                     isDescription={isDescription}
+                    searchable={searchable}
                   />
                 ))
               }
@@ -106,6 +108,7 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription }
                     locale={locale}
                     localizedTexts={localizedTexts}
                     isDescription={isDescription}
+                    searchable={searchable}
                   />
                 ))
               }

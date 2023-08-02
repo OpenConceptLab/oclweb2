@@ -1,11 +1,11 @@
 import React from 'react';
-import { CircularProgress, Tabs, Tab, AppBar, } from '@mui/material';
+import { Tabs, Tab, AppBar, Skeleton } from '@mui/material';
 import {
   LocalOffer as LocalOfferIcon, Link as LinkIcon, List as ListIcon,
   Loyalty as LoyaltyIcon, AccountBalance as HomeIcon, Person as PersonIcon,
 } from '@mui/icons-material'
 import { get, startCase, invert } from 'lodash';
-import { BLUE, WHITE, GREEN, ORANGE, DARKGRAY } from '../../common/constants';
+import { BLUE, WHITE, GREEN, ORANGE } from '../../common/constants';
 import { isLoggedIn } from '../../common/utils';
 
 const HEIGHT = '50px'
@@ -63,11 +63,11 @@ const ResourceTabs = props => {
     const isLoading = props.results[resource].isLoadingCount
     const index = RESOURCES[resource] || 0;
     return (
-      <span>
+      <span className='flex-vertical-center'>
         <span>{startCase(resource)}</span>
         {
           isLoading ?
-            inProgress(index, color) :
+            <Skeleton width={50} height={30} style={{marginLeft: '10px', borderRadius: '10px'}} /> :
             <span className="resource-count-bubble" style={index === value ? {backgroundColor: color, color: WHITE} : {}}>
               {get(props.results, `${resource}.total`, 0).toLocaleString()}
             </span>
@@ -75,10 +75,6 @@ const ResourceTabs = props => {
       </span>
     );
   }
-
-  const inProgress = (index, color) => (
-    <CircularProgress style={{marginLeft: '10px', width: '14px', height: '14px', color: index === value ? color : DARKGRAY}} />
-  );
 
   return (
     <div style={{width: '100%'}}>

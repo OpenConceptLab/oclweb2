@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import {LinearProgress, Typography, Box} from '@mui/material';
 
@@ -17,14 +16,6 @@ const LinearProgressWithLabel = props => {
     </Box>
   );
 }
-
-LinearProgressWithLabel.propTypes = {
-  /**
-   * The value of the progress indicator for the determinate and buffer variants.
-   * Value between 0 and 100.
-   */
-  value: PropTypes.number.isRequired,
-};
 
 const useStyles = makeStyles({
   root: {

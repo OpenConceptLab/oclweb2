@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess, recordGAAction } from '../../common/utils'
+import { toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -51,6 +51,8 @@ class ConceptHome extends React.Component {
     if(prevProps.location.pathname !== this.props.location.pathname && !this.state.isUpdatingFromHierarchy) {
       this.refreshDataByURL()
     }
+
+    this.highlightFromSearch()
   }
 
   getConceptURLFromPath() {
@@ -127,6 +129,8 @@ class ConceptHome extends React.Component {
         })
     })
   }
+
+  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.concept, search_meta: this.props.searchMeta}]), 100)
 
   fetchParent() {
     const { concept } = this.state
@@ -302,6 +306,8 @@ class ConceptHome extends React.Component {
     const refetchMappedSources = !find(this.state.mappedSources, {url: targetSourceURL})
     APIService.new().overrideURL(URL).post(payload).then(response => {
       if(response.status === 201) {
+        if(this.props.onCreateNewMapping)
+          this.props.onCreateNewMapping(response.data?.map_type)
         if(refetchMappedSources)
           this.fetchParentMappedSources()
         alertifyjs.success('Success')
@@ -344,6 +350,21 @@ class ConceptHome extends React.Component {
   onUpdateMappingsSorting = mappings => {
     Promise.all(map(mappings, mapping => APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: mapping._sort_weight, comment: 'Updated Sort Weight'}))).then(() => {
       alertifyjs.success('Mappings successfully updated.')
+      this.getMappings(true)
+    })
+  }
+
+  onClearSortWeight = mapping => {
+    APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: null, comment: 'Cleared Sort Weight'}).then(() => {
+      alertifyjs.success('Mappings successfully updated.')
+      this.getMappings(true)
+    })
+  }
+
+  onAssignSortWeight = (mapping, sort_weight) => {
+    APIService.new().overrideURL(mapping.url).put({id: mapping.id, sort_weight: sort_weight, comment: 'Assigned Sort Weight'}).then(() => {
+      alertifyjs.success('Mappings successfully updated.')
+      this.getMappings(true)
     })
   }
 
@@ -361,7 +382,7 @@ class ConceptHome extends React.Component {
   }
 
   isVersionedObject() {
-    return !this.props.match.params.conceptVersion;
+    return this.props.global || !this.props.match.params.conceptVersion || this.state.concept?.type === 'Concept'
   }
 
   onConceptClick = concept => {
@@ -400,6 +421,7 @@ class ConceptHome extends React.Component {
     const detailsMargin = this.getContentMarginTop()
     const hasAccess = currentUserHasAccess()
     const canAct = Boolean(hasAccess && isVersionedObject && this.props.scoped != 'collection')
+    const canSort = canAct
     const conceptDetails = (
       <div style={isLoading ? {textAlign: 'center', marginTop: '40px'} : {}}>
         { isLoading && <CircularProgress color='primary' /> }
@@ -435,9 +457,12 @@ class ConceptHome extends React.Component {
                 parent={this.props.parent}
                 onIncludeRetiredAssociationsToggle={this.onIncludeRetiredAssociationsToggle}
                 onCreateNewMapping={canAct ? this.onCreateNewMapping : false}
-                onUpdateMappingsSorting={canAct ? this.onUpdateMappingsSorting : false}
+                onUpdateMappingsSorting={canSort ? this.onUpdateMappingsSorting : false}
+                onClearSortWeight={canSort ? this.onClearSortWeight : false}
+                onAssignSortWeight={canSort ? this.onAssignSortWeight : false}
                 onRemoveMapping={canAct ? this.onRemoveMapping : false}
                 onReactivateMapping={canAct ? this.onReactivateMapping : false}
+                sourceVersionSummary={this.props.sourceVersionSummary}
               />
             </div>
           </React.Fragment>

@@ -9,7 +9,7 @@ import { get, map, orderBy } from 'lodash';
 import ExternalIdLabel from '../common/ExternalIdLabel';
 import { toFullAPIURL, copyURL } from '../../common/utils';
 
-const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
+const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription, searchable}) => {
   const typeAttr = isDescription ? 'description_type' : 'name_type'
   const nameAttr = isDescription ? 'description' : 'name'
   const urlAttr = isDescription ? 'descriptions' : 'names'
@@ -19,7 +19,7 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
   return (
     <React.Fragment key={locale}>
       <TableRow hover>
-        <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingLeft: '15px', width: '50px', paddingTop: '5px'}}>
+        <TableCell align='left' rowSpan={count + 1} style={{paddingRight: '5px', verticalAlign: 'top', paddingLeft: '15px', width: '50px', paddingTop: '8px'}}>
           <div className='gray-italics-small flex-vertical-center'>
             {`[${locale}]`}
           </div>
@@ -38,7 +38,7 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription}) => {
                 style={{maxWidth: '200px'}}>
                 <div className='col-md-12 no-side-padding'>
                   <div className='col-md-12 no-side-padding flex-vertical-center'>
-                    <span style={{marginRight: '10px', whiteSpace: 'pre-wrap'}}>{ get(localizedText, nameAttr) }</span>
+                    <span className={searchable ? 'searchable' : ''} style={{marginRight: '10px', whiteSpace: 'pre-wrap'}}>{ get(localizedText, nameAttr) }</span>
                     {
                       type &&
                       <span style={{marginRight: '5px'}}>

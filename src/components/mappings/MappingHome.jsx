@@ -2,7 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@mui/material';
 import { get, isObject, has } from 'lodash';
 import APIService from '../../services/APIService';
-import { recordGAAction } from '../../common/utils'
+import { recordGAAction, highlightTexts } from '../../common/utils'
 import ScopeHeader from './ScopeHeader'
 import MappingHomeDetails from './MappingHomeDetails';
 import NotFound from '../common/NotFound';
@@ -32,6 +32,8 @@ class MappingHome extends React.Component {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.refreshDataByURL()
     }
+
+    this.highlightFromSearch()
   }
 
   getMappingURLFromPath() {
@@ -83,6 +85,8 @@ class MappingHome extends React.Component {
     })
   }
 
+  highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.mapping, search_meta: this.props.searchMeta}]), 100)
+
   getVersions() {
     APIService.new()
               .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
@@ -104,7 +108,7 @@ class MappingHome extends React.Component {
   }
 
   isVersionedObject() {
-    return !this.props.match.params.mappingVersion;
+    return this.props.global || !this.props.match.params.mappingVersion || this.state.mapping?.type === 'Mapping';
   }
 
   getContentMarginTop = () => `${get(document.querySelector('header.resource-header.home-header'), 'offsetHeight') || 95}px`;

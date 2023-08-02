@@ -15,6 +15,7 @@ const RESOURCES = [
   { name: 'feedback', relations: [] },
   { name: 'version', relations: [] },
   { name: 'locales', relations: [] },
+  { name: 'toggles', relations: [] },
   { name: 'new', relations: [] },
 ];
 
@@ -106,7 +107,7 @@ class APIService {
   };
 
   getHeaders(token, headers) {
-    token = token || currentUserToken();
+    token = token || (token !== false ? currentUserToken() : token);
     const obj = defaults(headers, this.headers);
     if (token) obj['Authorization'] = `Token ${token}`;
     return obj;

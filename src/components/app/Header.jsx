@@ -24,7 +24,7 @@ import {
 import { map, isEmpty, get } from 'lodash';
 import {
   isLoggedIn, isServerSwitched, canSwitchServer, getAppliedServerConfig, getEnv,
-  getSiteTitle, getLoginURL
+  getSiteTitle, getLoginURL, isAdminUser
 } from '../../common/utils';
 import { WHITE, BLACK } from '../../common/constants';
 import SearchInput from '../search/SearchInput';
@@ -33,10 +33,10 @@ import UserOptions from '../users/UserOptions';
 import Favorites from './Favorites';
 import RecentHistory from './RecentHistory';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
-/* import Feedback from '../common/Feedback'; */
 import AppsMenu from '../common/AppsMenu';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 import Languages from './Languages';
+import { OperationsContext } from './LayoutContext';
 
 const drawerWidth = 250;
 
@@ -126,6 +126,7 @@ const NestedMenuContainer = ({ open, toggleState, anchorRef, handleClose, toggle
 
 const Header = props => {
   const theme = useTheme();
+  const { toggles } = React.useContext(OperationsContext)
   const [open, setOpen] = React.useState(false);
   const communityAnchorRef = React.useRef(null);
   const toolsAnchorRef = React.useRef(null);
@@ -168,10 +169,9 @@ const Header = props => {
   const env = getEnv()
   const isProduction = env === 'production';
   const hideLeftNav = get(siteConfiguration, 'noLeftMenu', false)
-  const hideOpenMRSApp = get(siteConfiguration, 'hideOpenMRSApp', false)
   const hideTermBrowserApp = get(siteConfiguration, 'hideTermBrowserApp', false)
   const hideImportApp = get(siteConfiguration, 'hideImportApp', false)
-  const hideAppsMenu = hideOpenMRSApp && hideImportApp && hideTermBrowserApp;
+  const hideAppsMenu = hideImportApp && hideTermBrowserApp;
   const getLogo = () => {
     let logo = getSiteTitle()
     if(get(siteConfiguration, 'logoText'))
@@ -180,7 +180,6 @@ const Header = props => {
       logo = (<img src={siteConfiguration.logoURL} style={{width: '50px', height: '50px', marginTop: '-10px'}} />);
     return logo
   }
-
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -218,33 +217,33 @@ const Header = props => {
               canSwitchServer() && isServerSwitched() &&
                 <ServerConfigsChip />
             }
+            {
+              authenticated ?
                 <span style={{marginLeft: '20px'}}>
-                  <Languages />
                   {
-                    authenticated ?
-                      <React.Fragment>
-                        <RecentHistory />
-                        <Favorites />
-                        {
-                          !hideAppsMenu &&
-                            <AppsMenu
-                              hideOpenMRSApp={hideOpenMRSApp}
-                              hideTermBrowserApp={hideTermBrowserApp}
-                              hideImportApp={hideImportApp}
-                            />
-                        }
-                        <UserOptions />
-                      </React.Fragment> :
-                    (
-                      !isFHIRServer &&
-                        <React.Fragment>
-                          <Button className='primary-btn' href={getLoginURL()} color='primary' variant='contained' style={{marginLeft: '10px'}}>
-                            Sign In
-                          </Button>
-                        </React.Fragment>
-                    )
+                    toggles?.LOCALIZATION_TOGGLE && isAdminUser() &&
+                      <Languages />
                   }
-                </span>
+                  <RecentHistory />
+                  <Favorites />
+                  {
+                    !hideAppsMenu &&
+                      <AppsMenu
+                        hideTermBrowserApp={hideTermBrowserApp}
+                        hideImportApp={hideImportApp}
+                      />
+                  }
+                  <UserOptions />
+                </span> :
+              (
+                !isFHIRServer &&
+                  <span style={{marginLeft: '20px'}}>
+                    <Button className='primary-btn' href={getLoginURL()} color='primary' variant='contained'>
+                      Sign In
+                    </Button>
+                  </span>
+              )
+            }
           </div>
         </Toolbar>
       </AppBar>
@@ -332,7 +331,7 @@ const Header = props => {
                                 >
                                   {nestedOption.icon}
                                 </ListItemIcon>
-                                <ListItemText primary={nestedOption.label} />
+                                <ListItemText primary={nestedOption.label} secondary={nestedOption.deprecated ? 'deprecated' : undefined} style={nestedOption.deprecated ? {fontStyle: 'italic'} : {}} />
                               </ListItemButton>
                             ))
                           }

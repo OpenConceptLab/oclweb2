@@ -35,7 +35,7 @@ const Concept = props => {
     <div className='col-sm-12' style={merge({paddingTop: '10px', paddingLeft: 0, paddingRight: 0}, get(props, 'style', {}))}>
       <span onClick={navigateTo} style={{cursor: 'pointer'}}>
         <ResourceLabel
-          id={props.display_name} name={props.id} noSeparator
+          id={props.display_name} name={props.id}
           icon={<LocalOfferIcon fontSize='small' style={{width: '10pt', color: DARKGRAY}}/>}
           owner={props.owner} parent={props.source}
         />

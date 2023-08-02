@@ -4,7 +4,7 @@ import {
   InputLabel
 } from '@mui/material';
 import { Close as CloseIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
-import { merge, includes, some, compact } from 'lodash'
+import { merge, includes, some, compact, isNaN } from 'lodash'
 import FormTooltip from '../FormTooltip';
 import CommonAccordion from '../CommonAccordion';
 import TabCountLabel from '../TabCountLabel';
@@ -21,9 +21,17 @@ const ResourceIDAssignmentSettings = props => {
   const [autoIDMappingIDStartFrom, setAutoIDMappingIDStartFrom] = React.useState(1)
   const [autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom] = React.useState(1)
   const [autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom] = React.useState(1)
-  const onChange = (id, value, setter) => {
+  const onChange = (id, value, setter, isNum) => {
     setter(value)
-    props.onChange(toState({[id]: toValue(value)}))
+    let _val = value
+    if(isNum) {
+      _val = parseInt(value)
+      if(isNaN(_val))
+        _val = null
+    } else
+      _val = toValue(value)
+
+    props.onChange(toState({[id]: _val}))
   }
   const toValue = value => includes(['uuid', 'sequential'], value) ? value : null
   const toState = newValue => merge({
@@ -78,7 +86,6 @@ const ResourceIDAssignmentSettings = props => {
                 defaultValue={defaultValue}
                 value={value}
                 onChange={event => onChange(fieldID, event.target.value || '', setter)}
-                disabled={props.edit}
               >
                 <MenuItem value='None'>
                   <ListItemText primary="Enter Manually" secondary={<span style={STYLE}>The ID must be entered manually each time you create a new concept.</span>} />
@@ -104,11 +111,10 @@ const ResourceIDAssignmentSettings = props => {
                 style={{width: '50%'}}
                 size='small'
                 value={startFromValue}
-                onChange={event => onChange(startFromID, event.target.value || '', startFromSetter)}
+                onChange={event => onChange(startFromID, event.target.value || '', startFromSetter, true)}
                 type='number'
                 label={startFromConfig.label}
                 inputProps={{min: 1, step: 1}}
-                disabled={props.edit}
               />
               <FormTooltip title={startFromConfig.tooltip} style={{marginLeft: '10px'}} />
             </div>

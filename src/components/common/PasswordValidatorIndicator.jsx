@@ -29,6 +29,7 @@ const PasswordValidatorIndicator = ({password, strength, minStrength, minStrengt
   const hasNumber = Boolean(password && password.match(new RegExp(/[0-9]/g)))
   const hasAlphabet = Boolean(password && password.match(new RegExp(/[a-zA-Z]/g)))
   const isMinStrength = strength >= minStrength
+  const { t } = useTranslation()
 
   return (
     <React.Fragment>

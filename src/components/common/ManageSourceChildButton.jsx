@@ -11,10 +11,11 @@ import {
   BuildCircle as OperationsIcon,
 } from '@mui/icons-material';
 import { startCase } from 'lodash';
-import { currentUserHasAccess, copyURL, toFullAPIURL, isAdminUser } from '../../common/utils';
+import { currentUserHasAccess, copyURL, toFullAPIURL, canViewOperationsPanel } from '../../common/utils';
 import { ACTION_RED } from '../../common/constants';
 import DownloadButton from './DownloadButton';
 import { OperationsContext } from '../app/LayoutContext';
+import BetaLabel from './BetaLabel';
 
 const ManageSourceChildButton = ({
   instance, currentURL, isVersionedObject, onEditClick, onRetire, onUnretire, mappings, resource, conceptCompareURL
@@ -23,7 +24,7 @@ const ManageSourceChildButton = ({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const toggleMenu = event => setAnchorEl(anchorEl ? null : event.currentTarget)
   const hasAccess = currentUserHasAccess();
-  const isAdmin = isAdminUser()
+  const operationsPanelAccess = canViewOperationsPanel()
   const onCopyClick = () => copyURL(toFullAPIURL(currentURL.replace('#', '')))
   const onClick = (event, action) => {
     setAnchorEl(null)
@@ -111,13 +112,13 @@ const ManageSourceChildButton = ({
             tooltipPlacement='right'
           />
           {
-            instance.concept_class && isAdmin &&
+            instance.concept_class && operationsPanelAccess &&
               <MenuItem onClick={onOperationsClick}>
                 <ListItemIcon style={{minWidth: '28px'}}>
                   <OperationsIcon fontSize="inherit" />
                 </ListItemIcon>
                 <ListItemText>
-                  Operations
+                  <BetaLabel label="Operations" />
                 </ListItemText>
               </MenuItem>
           }

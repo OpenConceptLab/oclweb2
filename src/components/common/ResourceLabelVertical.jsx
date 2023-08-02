@@ -3,18 +3,16 @@ import { includes } from 'lodash';
 import {
   ChevronRight as SeparatorIcon,
 } from '@mui/icons-material';
-import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
-import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
 
 const SEPARATOR = (<SeparatorIcon />)
 const ResourceLabelVertical = props => {
-  const { resource, existsInOCL } = props;
+  const { resource } = props;
   const isSourceChild = includes(['concept', 'mapping'], resource);
   const parentTextStyles = {
     width: '100%',
     fontSize: '10px',
     background: '#eee',
-    padding: '0 5px',
+    padding: '2px 5px',
     textAlign: 'center',
     borderRadius: '2px',
     overflowX: 'auto',
@@ -50,20 +48,11 @@ const ResourceLabelVertical = props => {
             <span className=''>{props.parentURL}</span>
           }
           <span className='separator-small'>{SEPARATOR}</span>
-          <span style={{maxWidth: '100%', fontWeight: 'bold'}}>{props.id || props.name}</span>
+          <span style={{maxWidth: '100%'}}>{props.id || props.name}</span>
         </div>
         <div style={nameTextStyles} className={'col-md-12 ' + resource + '-bg'}>
           <span>{props.name}</span>
         </div>
-      </div>
-      <div className='no-left-padding flex-vertical-center' style={{width: '5%', justifyContent: 'flex-end'}}>
-        {
-          isSourceChild && (
-            existsInOCL ?
-            <ExistsInOCLIcon containerStyles={{marginLeft: '5px'}} /> :
-            <DoesnotExistsInOCLIcon containerStyles={{marginLeft: '5px'}} />
-          )
-        }
       </div>
     </div>
   )

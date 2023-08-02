@@ -22,6 +22,18 @@ const HtmlToolTipRaw = withStyles(theme => ({
 
 export default HtmlToolTipRaw;
 
+
+export const HtmlToolTipClone = withStyles(theme => ({
+  tooltip: {
+    maxWidth: 255,
+    fontSize: theme.typography.pxToRem(12),
+    left: '-5px',
+    display: 'flex',
+    alignItems: 'center',
+  },
+}))(Tooltip);
+
+
 export const HtmlToolTipNormalRaw = withStyles(theme => ({
   tooltip: {
     backgroundColor: '#FFF',

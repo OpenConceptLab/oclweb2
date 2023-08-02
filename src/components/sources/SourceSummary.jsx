@@ -1,108 +1,142 @@
 import React from 'react';
-import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Collapse, Button, Divider, List, ListItem, CircularProgress, Chip } from '@mui/material'
+import { Table, TableHead, TableCell, TableBody, TableRow, TableContainer, Paper, Tooltip, Button, List, ListItem, Skeleton, Accordion, AccordionSummary, AccordionDetails, IconButton } from '@mui/material'
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { map, max, isEmpty, get, isNull, camelCase } from 'lodash';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { map, max, isNull, camelCase, isNumber, isArray, startCase, get } from 'lodash';
+import APIService from '../../services/APIService';
 import { TOMATO_RED, BLUE, WHITE } from '../../common/constants';
 import { toNumDisplay } from '../../common/utils';
-import APIService from '../../services/APIService';
 import PopperGrow from '../common/PopperGrow';
 
 
-const FieldDistribution = ({distribution, field, source}) => {
+const FieldDistribution = ({distribution, field, source, humanize}) => {
   let baseURL = source.version_url || source.url
   baseURL += field.includes('map_type') ? 'mappings/' : 'concepts/'
+  const isNameType = field === 'type'
+  let _field = isNameType ? 'nameTypes' : camelCase(field)
 
-  return distribution ?
-    (
-      <List dense>
-        {
-          map(distribution, state => {
-            const isNameType = field === 'type'
-            let _field = isNameType ? 'nameTypes' : camelCase(field)
-            let value = isNameType ? (state[field] ? state[field] : 'None') : (state[field] || '').toLowerCase()
-            let url = baseURL + `?facets={"${_field}":{"${value}":true}}`
-            return (
-              <ListItem key={state[field]} secondaryAction={toNumDisplay(state.count)}>
-                <a href={"#" + url}>{isNull(state[field]) ? <i>None</i> : state[field]}</a>
-              </ListItem>
-            )
-          })
-        }
-      </List>
-    ) : (
-      <div style={{textAlign: 'center', padding: '10px'}}>
-        <CircularProgress />
-      </div>
-    )
+  return (
+    <List dense>
+      {
+        map(distribution, state => {
+          let value = state[0]
+          //let value = isNameType ? (state[field] ? state[field] : 'None') : (state[field] || '').toLowerCase()
+          let url = baseURL + `?facets={"${_field}":{"${value}":true}}`
+          return (
+            <ListItem key={value} secondaryAction={toNumDisplay(state[1])}>
+              <a href={"#" + url}>{isNull(value) ? <i>None</i> : (humanize ? startCase(value) : value)}</a>
+            </ListItem>
+          )
+        })
+      }
+    </List>
+  )
 }
 
 
-const SummaryTable = ({ summary, retired, columns, source, fromSource }) => {
-  const [open, setOpen] = React.useState(false)
+const SummaryTable = ({ summary, source, fromSource }) => {
+  const [expand, setExpand] = React.useState(false)
+  const [distribution, setDistribution] = React.useState(false)
+  const [isFetching, setIsFetching] = React.useState(false)
   const baseURL = (source.version_url || source.url || '') + 'mappings/'
   const targetSource = fromSource ? "fromConceptSource" : "toConceptSource"
+  const onExpandToggle = sourceName => {
+    const newExpand = !expand
+    setExpand(!expand)
+    if(newExpand && !distribution && !isFetching) {
+      setIsFetching(true)
+      APIService
+        .new()
+        .overrideURL(source.version_url || source.url)
+        .appendToUrl('summary/')
+        .get(null, null, {verbose: true, distribution: fromSource ? 'from_sources_map_type' : 'to_sources_map_type', sources: sourceName})
+        .then(response => {
+          setDistribution(get(response.data?.distribution?.to_sources_map_type, '0.distribution'))
+          setIsFetching(false)
+        })
+    }
+  }
+  const tdStyles = distribution ? {} : {background: 'rgba(224, 224, 224, 0.5)', borderBottom: 'none'}
   return (
     <React.Fragment>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell>
-          <a href={'#' + summary.version_url} target='_blank' rel='noreferrer noopener'>
-            {summary.short_code}
-          </a>
+          {summary[0]}
         </TableCell>
         <TableCell align='right'>
-          {toNumDisplay(summary.distribution.concepts)}
+          {toNumDisplay(summary[1])}
         </TableCell>
-        {
-          retired &&
-            <TableCell align='right'>
-              {toNumDisplay(summary.distribution.retired)}
-            </TableCell>
-        }
-        <TableCell align='right'>
-          {toNumDisplay(summary.distribution.active)}
+        <TableCell style={{width: '10px', padding: 0, background: distribution ? WHITE : 'rgba(224, 224, 224)', cursor: distribution ? 'inherit' : 'pointer'}}>
         </TableCell>
-        <TableCell align='right'>
-          {toNumDisplay(summary.distribution.total)}
+        <TableCell align='right' style={tdStyles}>
+          {toNumDisplay(distribution?.active)}
+        </TableCell>
+        <TableCell align='right' style={tdStyles}>
+          {toNumDisplay(distribution?.retired)}
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell colSpan={columns} align='left' style={{cursor: 'pointer', padding: 0}} onClick={() => setOpen(!open)}>
+        <TableCell colSpan={2} align='left' style={{cursor: 'pointer', padding: 0, background: distribution ? WHITE : 'rgba(224, 224, 224)'}} onClick={() => onExpandToggle(summary[0])}>
           <Button
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-            startIcon={open ? <UpIcon /> : <DownIcon />}
+            onClick={() => onExpandToggle(summary[0])}
+            startIcon={expand ? <UpIcon /> : <DownIcon />}
             style={{textTransform: 'none', marginLeft: '20px'}}
           >
             MapTypes
           </Button>
         </TableCell>
+        <TableCell style={{width: '10px', padding: 0, background: distribution ? WHITE: 'rgba(224, 224, 224)', cursor: distribution ? 'inherit': 'pointer'}}>
+          {
+            distribution ?
+              null :
+              <IconButton variant='contained' color='primary' size='small' onClick={() => onExpandToggle(summary[0])}>
+                <ArrowRightIcon fontSize='inherit' style={{transform: expand ? 'rotate(225deg)' : 'rotate(45deg)'}} />
+              </IconButton>
+          }
+        </TableCell>
+        <TableCell colSpan={2} align='left' style={{padding: 0, background: distribution ? WHITE : 'rgba(224, 224, 224, 0.5)'}} onClick={() => onExpandToggle(summary[0])}>
+        </TableCell>
       </TableRow>
       {
-        open && (
-          map(summary.distribution.map_types, stats => {
-            //facets={"mapType":{"broader-than":true},"toConceptSource":{"cloneFrom":true}}
-            let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary.short_code}":true}}`
+        expand && (
+          isFetching ?
+            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell style={{paddingLeft: '50px'}}>
+                <Skeleton />
+              </TableCell>
+              <TableCell align='right'>
+                <Skeleton />
+              </TableCell>
+              <TableCell align='right'>
+              </TableCell>
+              <TableCell align='right'>
+                <Skeleton />
+              </TableCell>
+              <TableCell align='right'>
+                <Skeleton />
+              </TableCell>
+            </TableRow> :
+          map(distribution?.map_types, stats => {
+            let url = baseURL + `?facets={"mapType":{"${stats.map_type.toLowerCase()}":true},"${targetSource}":{"${summary[0]}":true}}`
             return (
               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={stats.map_type}>
                 <TableCell style={{paddingLeft: '50px'}}>
                   <a href={"#" + url}>{stats.map_type}</a>
                 </TableCell>
                 <TableCell align='right'>
-                  {toNumDisplay(stats.concepts)}
+                  {toNumDisplay(stats.total)}
                 </TableCell>
-                {
-                  retired &&
-                    <TableCell align='right'>
-                      {toNumDisplay(stats.retired)}
-                    </TableCell>
-                }
+                <TableCell align='right'>
+                </TableCell>
                 <TableCell align='right'>
                   {toNumDisplay(stats.active)}
                 </TableCell>
                 <TableCell align='right'>
-                  {toNumDisplay(stats.total)}
+                  {toNumDisplay(stats.retired)}
                 </TableCell>
               </TableRow>
             )
@@ -121,12 +155,12 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
   const firstWidth = (_first/_total) * 100
   const secondWidth = (_second/_total) * 100
   const fullBorderRadius = '100px';
-  return (
+  return isNumber(second) ? (
     <span className='flex-vertical-center' style={{width: 'calc(100% + 2px)', backgroundColor: 'rgba(0, 0, 0, 0.03)', height: '10px', borderRadius: fullBorderRadius}}>
       {
         firstWidth ?
           <Tooltip title={firstTooltip}>
-            <span style={{width: `${max([firstWidth, 1])}%`, backgroundColor: TOMATO_RED, borderRadius: firstWidth === 100 ? fullBorderRadius : '100px 0 0 100px', height: '10px'}} />
+            <span style={{width: `${max([firstWidth, 1])}%`, backgroundColor: BLUE, borderRadius: firstWidth === 100 ? fullBorderRadius : '100px 0 0 100px', height: '10px'}} />
           </Tooltip> : null
       }
       {
@@ -136,29 +170,42 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
       {
         secondWidth ?
           <Tooltip title={secondTooltip}>
-            <span style={{width: `${max([secondWidth, 1])}%`, backgroundColor: BLUE, borderRadius: secondWidth === 100 ? fullBorderRadius :  '0 100px 100px 0', height: '10px'}} />
+            <span style={{width: `${max([secondWidth, 1])}%`, backgroundColor: TOMATO_RED, borderRadius: secondWidth === 100 ? fullBorderRadius :  '0 100px 100px 0', height: '10px'}} />
           </Tooltip> : null
       }
     </span>
-  )
+  ) : <Skeleton />
 }
 
-const SelfSummary = ({ summary, source, isVersion }) => {
+
+const SelfSummaryCell = ({label, value, onClick}) => (
+  <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+    <Button variant='text' onClick={onClick} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}} disabled={value === 0}>
+      <p style={{margin: 0, display: 'flex', alignItem: 'center', justifyContent: 'center'}}>
+        {
+          isArray(value) ? <b>{toNumDisplay(value.length)}</b> : <Skeleton width={20} height={20} variant="circular" />
+        }
+      </p>
+      <p style={{margin: 0}}>
+        {isArray(value) ? label : <Skeleton /> }
+      </p>
+    </Button>
+  </TableCell>
+)
+
+const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
   const [distribution, setDistribution] = React.useState({})
   const [open, setOpen] = React.useState(false)
   const [anchorRef, setAnchorRef] = React.useState(null)
-  const getFieldDistribution = field => {
-    if(field && !distribution[field])
-      APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true, distribution: field}).then(response => setDistribution({...distribution, [field]: get(response.data, `distribution.${field}`)}))
-  }
-
-  const toggle = (event, field) => {
+  const toggle = (event, field, value) => {
     const newOpen = (!field || open === field) ? false : field
     setOpen(newOpen)
     setAnchorRef(newOpen ? {current: event.currentTarget} : null)
-    getFieldDistribution(field)
+    setDistribution({...distribution, [field]: value})
   }
-  const columns = isVersion ? 2 : 3;
+  let columns = isVersion ? 2 : 3;
+  if(includeReferences)
+    columns += 2
   const width = `${100/columns}%`
   return (
     <React.Fragment>
@@ -175,80 +222,68 @@ const SelfSummary = ({ summary, source, isVersion }) => {
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell align='left' colSpan={5}>
                 <span style={{padding: '20px', width: width, display: 'inline-block' }}>
-                  <Bar first={summary?.concepts?.retired} second={summary?.concepts?.active} firstTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} />
-                  <div><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div>
+                  <Bar first={summary?.concepts?.active} second={summary?.concepts?.retired} firstTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} />
+                  {
+                    summary?.concepts ?
+                      <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.concepts?.active)}</b> Active out of <b>{toNumDisplay((summary?.concepts?.active || 0) + (summary?.concepts?.retired || 0))}</b> Concepts</div> :
+                      <Skeleton />
+                  }
                 </span>
                 <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                  <Bar first={summary?.mappings?.retired} second={summary?.mappings?.active} firstTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} />
-                  <div><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div>
+                  <Bar first={summary?.mappings?.active} second={summary?.mappings?.retired} firstTooltip={`${toNumDisplay(summary?.mappings?.active)} Active Mappings`} secondTooltip={`${toNumDisplay(summary?.mappings?.retired)} Retired Mappings`} />
+                  {
+                    summary?.mappings ?
+                      <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.mappings?.active)}</b> Active out of <b>{toNumDisplay((summary?.mappings?.active || 0) + (summary?.mappings?.retired || 0))}</b> Mappings</div> :
+                      <Skeleton />
+                  }
                 </span>
                 {
                   !isVersion &&
                     <span style={{padding: '20px', width: width, display: 'inline-block'}}>
-                      <Bar first={summary?.versions?.released} second={summary?.versions?.total - summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} />
-                      <div><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div>
+                      <Bar first={summary?.versions?.total - summary?.versions?.released} second={summary?.versions?.released} firstTooltip={`${toNumDisplay(summary?.versions?.total - summary?.versions?.released)} Remaining Versions`} secondTooltip={`${toNumDisplay(summary?.versions?.released)} Released Versions`} />
+                      {
+                        summary?.versions ?
+                          <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.versions?.released)}</b> Released out of <b>{toNumDisplay(summary?.versions?.total)}</b> Versions</div> :
+                          <Skeleton />
+                      }
                     </span>
+                }
+                {
+                  includeReferences &&
+                    <React.Fragment>
+                    <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                      <Bar first={summary?.references?.include} second={summary?.references?.exclude} firstTooltip={`${toNumDisplay(summary?.references?.include)} Inclusion References`} secondTooltip={`${toNumDisplay(summary?.references?.exclude)} Exclusion References`} />
+                      {
+                        summary?.references ?
+                          <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.references?.include)}</b> Inclusion out of <b>{toNumDisplay(summary?.references?.total)}</b> References</div> :
+                          <Skeleton />
+                      }
+                    </span>
+                      <span style={{padding: '20px', width: width, display: 'inline-block'}}>
+                        <Bar first={summary?.references?.concepts} second={summary?.references?.mappings} firstTooltip={`${toNumDisplay(summary?.references?.concepts)} Concept References`} secondTooltip={`${toNumDisplay(summary?.references?.mappings)} Mapping References`} />
+                        {
+                          summary?.references ?
+                            <div className='ellipsis-text-2' style={{minHeight: '40px'}}><b>{toNumDisplay(summary?.references?.concepts)}</b> Concept & <b>{toNumDisplay(summary?.references?.mappings)}</b> Mappings References</div> :
+                            <Skeleton />
+                        }
+                      </span>
+                      </React.Fragment>
                 }
               </TableCell>
             </TableRow>
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'concept_class')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.concepts?.concept_class)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Concept Classes
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'datatype')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.concepts?.datatype)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Datatype
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'map_type')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.mappings?.map_types)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    MapTypes
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'name_locale')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.locales?.locales)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Languages
-                  </p>
-                </Button>
-              </TableCell>
-              <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
-                <Button variant='text' onClick={event => toggle(event, 'name_type')} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}}>
-                  <p style={{margin: 0}}>
-                    <b>{toNumDisplay(summary?.locales?.names)}</b>
-                  </p>
-                  <p style={{margin: 0}}>
-                    Name Types
-                  </p>
-                </Button>
-              </TableCell>
+              <SelfSummaryCell value={summary?.concepts?.concept_class} label='Concept Classes' onClick={event => toggle(event, 'concept_class', summary?.concepts?.concept_class)} />
+              <SelfSummaryCell value={summary?.concepts?.datatype} label='Datatype' onClick={event => toggle(event, 'datatype', summary?.concepts?.datatype)} />
+              <SelfSummaryCell value={summary?.mappings?.map_type} label='MapTypes' onClick={event => toggle(event, 'map_type', summary?.mappings?.map_type)} />
+              <SelfSummaryCell value={summary?.concepts?.locale} label='Languages' onClick={event => toggle(event, 'locale', summary?.concepts?.locale)} />
+              <SelfSummaryCell value={summary?.concepts?.name_type} label='Name Types' onClick={event => toggle(event, 'name_type', summary?.concepts?.name_type)} />
             </TableRow>
           </TableBody>
           {
             Boolean(open) &&
               <PopperGrow open={Boolean(open)} anchorRef={anchorRef} handleClose={toggle}>
                 <div style={{maxHeight: '250px', overflow: 'auto'}}>
-                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} />
+                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} humanize={!['name_type', 'locale'].includes(open)}/>
                 </div>
               </PopperGrow>
           }
@@ -258,124 +293,107 @@ const SelfSummary = ({ summary, source, isVersion }) => {
   )
 }
 
-const RetiredChip = ({ retired, onClick }) => (
-  <Chip size='small' label='Include Retired' color={retired ? 'error' : 'default'} variant={retired ? 'contained' : 'outlined'} onClick={onClick} style={{marginLeft: '20px'}} />
-)
 
-const SourceSummary = ({ summary, source }) => {
-  const isVersion = source.type === 'Source Version'
-  const [openFromSources, setOpenFromSources] = React.useState(false)
-  const [openToSources, setOpenToSources] = React.useState(false)
-  const [retired, setRetired] = React.useState(false)
-  const fromSources = isEmpty(summary?.from_sources) ? [] : summary.from_sources
-  const toSources = isEmpty(summary?.to_sources) ? [] : summary.to_sources
-  const columns = retired ? 5 : 4
+const MappedSourceSummary = ({mappedSource, fromSource, columns, source}) => {
+  return (
+    <React.Fragment key={mappedSource.version_url}>
+      <SummaryTable summary={mappedSource} source={source} fromSource={fromSource} />
+      <TableRow>
+        <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
+      </TableRow>
+    </React.Fragment>
+  )
+}
+
+const MappedSources = ({title, label, source, summary, columns, fromSource, sources}) => {
+  const count = sources?.length
+
+  return (
+    <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '15px'}}>
+      <Accordion disabled={count === 0}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          {
+            summary?.id ?
+              <React.Fragment>
+                <b style={{marginRight: '5px'}}>{sources.length.toLocaleString()}</b> {title}
+              </React.Fragment> :
+            <span className='flex-vertical-center' style={{width: '100%'}}>
+              <Skeleton width={25} height={25} variant="circular" style={{marginRight: '10px'}}/><Skeleton style={{width: '50%'}} height={30} />
+            </span>
+          }
+        </AccordionSummary>
+        <AccordionDetails>
+          <Table size='small'>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  <span>{label}</span>
+                </TableCell>
+                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  Total
+                </TableCell>
+                <TableCell align='center' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold', width: '10px'}}>
+                </TableCell>
+                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  Active
+                </TableCell>
+                <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+                  Retired
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <React.Fragment>
+                {
+                  map(sources, (mappedSource, index) => (
+                    <MappedSourceSummary
+                      key={index}
+                      mappedSource={mappedSource}
+                      source={source}
+                      fromSource={fromSource}
+                      columns={columns}
+                    />
+                  ))
+                }
+              </React.Fragment>
+            </TableBody>
+          </Table>
+        </AccordionDetails>
+      </Accordion>
+    </div>
+  )
+}
+
+const SourceSummary = ({ summary, source, includeMappedSources, includeReferences }) => {
+  const isVersion = source.type.includes('Version')
+  const columns = 5
   return (
     <div className='col-xs-12' style={{width: '90%', margin: '0 5%'}}>
       <div className='col-xs-12 no-side-padding'>
-        <SelfSummary summary={summary} isVersion={isVersion} source={source} />
+        <SelfSummary summary={summary} isVersion={isVersion} source={source} includeReferences={includeReferences} />
       </div>
-      <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
-        <div onClick={() => setOpenToSources(!openToSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
-          <Divider style={{width: '40%'}} />
-          <span style={{width: '20%', textAlign: 'center'}}>
-            <b>{toSources.length.toLocaleString()}</b> Mapped To Sources
-          </span>
-          <Divider style={{width: '40%'}} />
-        </div>
-        <Collapse in={Boolean(toSources.length && openToSources)} timeout="auto" unmountOnExit>
-          <TableContainer component={Paper} style={{margin: '15px 0'}}>
-            <Table size='small'>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    <span>Target Source</span>
-                    <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
-                  </TableCell>
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Concepts
-                  </TableCell>
-                  {
-                    retired &&
-                      <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                        Retired
-                      </TableCell>
-                  }
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Active
-                  </TableCell>
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Total
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <React.Fragment>
-                  {
-                    map(toSources, _source => (
-                      <React.Fragment key={_source.version_url}>
-                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} />
-                        <TableRow>
-                          <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
-                        </TableRow>
-                      </React.Fragment>
-                    ))
-                  }
-                </React.Fragment>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Collapse>
-      </div>
-      <div className='col-xs-12 no-side-padding' style={{width: '80%', margin: '0 10%', marginTop: '25px'}}>
-        <div onClick={() => setOpenFromSources(!openFromSources)} className='col-xs-12 no-side-padding flex-vertical-center divider-highlight-hover' style={{justifyContent: 'center', cursor: 'pointer'}}>
-          <Divider style={{width: '40%'}} />
-          <span style={{width: '20%', textAlign: 'center'}}>
-            <b>{fromSources.length.toLocaleString()}</b> Mapped From Sources
-          </span>
-          <Divider style={{width: '40%'}} />
-        </div>
-        <Collapse in={Boolean(fromSources.length && openFromSources)} timeout="auto" unmountOnExit>
-          <TableContainer component={Paper} style={{margin: '15px 0'}}>
-            <Table size='small'>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    <span>From Source</span>
-                    <RetiredChip retired={retired} onClick={() => setRetired(!retired)} />
-                  </TableCell>
-                  {
-                    retired &&
-                      <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                        Retired
-                      </TableCell>
-                  }
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Active
-                  </TableCell>
-                  <TableCell align='right' style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
-                    Total
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <React.Fragment>
-                  {
-                    map(fromSources, _source => (
-                      <React.Fragment key={_source.version_url}>
-                        <SummaryTable summary={_source} retired={retired} columns={columns} source={source} fromSource={true} />
-                        <TableRow>
-                          <TableCell colSpan={columns} style={{backgroundColor: 'rgb(224, 224, 224)'}} />
-                        </TableRow>
-                      </React.Fragment>
-                    ))
-                  }
-                </React.Fragment>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Collapse>
-      </div>
+      {
+        includeMappedSources &&
+          <React.Fragment>
+            <MappedSources
+              title='Mapped To Sources'
+              label='Target Source'
+              source={source}
+              columns={columns}
+              summary={summary}
+              sources={summary?.mappings?.to_concept_source || []}
+            />
+            <MappedSources
+              title='Mapped From Sources'
+              label='From Source'
+              source={source}
+              columns={columns}
+              fromSource
+              summary={summary}
+              sources={summary?.mappings?.from_concept_source || []}
+            />
+            </React.Fragment>
+      }
     </div>
   )
 }

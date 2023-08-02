@@ -1,9 +1,9 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Button, Popper, MenuList, Grow, Paper, ClickAwayListener, Tooltip,
+  Button, Tooltip,
   CircularProgress, Dialog, DialogActions, DialogContent,
-  TextField, InputAdornment, Chip, Divider
+  TextField, InputAdornment, Chip, Divider, List
 } from '@mui/material'
 import {
   ArrowDropDown as ArrowDropDownIcon,
@@ -12,7 +12,7 @@ import {
 } from '@mui/icons-material'
 import { map, isEmpty, get, filter, cloneDeep, compact, uniq } from 'lodash';
 import APIService from '../../services/APIService';
-import { getCurrentUserCollections, getCurrentUser } from '../../common/utils';
+import { getCurrentUserCollections, getCurrentUser, copyToClipboard } from '../../common/utils';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import CollectionForm from '../collections/CollectionForm';
 import AddReferencesResult from './AddReferencesResult';
@@ -20,6 +20,7 @@ import ReferenceCascadeDialog from './ReferenceCascadeDialog';
 import MappingReferenceAddOptionsDialog from './MappingReferenceAddOptionsDialog';
 import DialogTitleWithCloseButton from './DialogTitleWithCloseButton';
 import CollectionListItem from './CollectionListItem';
+import PopperGrow from './PopperGrow';
 
 const NEW_COLLECTION = {id: '__new__', name: 'Create New Collection'}
 
@@ -42,6 +43,7 @@ class AddToCollection extends React.Component {
       addMappings: true,
       addToConcepts: false,
       addFromConcepts: false,
+      transformReferences: false,
     }
     this.anchorRef = React.createRef(null);
   }
@@ -88,7 +90,7 @@ class AddToCollection extends React.Component {
     const { references } = this.props
     const isMapping = Boolean(get(references, '0.map_type'))
     let expressions = map(references, 'url')
-    let queryParams = {}
+    let queryParams = this.state.transformReferences ? {transformReferences: 'resourceVersions'} : {}
     let cascadePayload = {}
     if(isMapping) {
       if(addMappings)
@@ -101,12 +103,11 @@ class AddToCollection extends React.Component {
     } else {
       expressions = map(references, 'url')
       if(cascadeToConcepts)
-        queryParams = {cascade: 'sourcetoconcepts'}
+        queryParams = {...queryParams, cascade: 'sourcetoconcepts'}
       else if(cascadeMappings)
-        queryParams = {cascade: 'sourcemappings'}
+        queryParams = {...queryParams, cascade: 'sourcemappings'}
       else if(cascadeMethod) {
         cascadePayload = {method: 'sourcetoconcepts', cascade_levels: '*', map_types: 'Q-AND-A,CONCEPT-SET', return_map_types: '*'}
-        queryParams = {transformReferences: 'resourceVersions'}
       }
     }
     let payload = {payload: {data: {expressions: expressions}}, queryParams: queryParams}
@@ -128,7 +129,13 @@ class AddToCollection extends React.Component {
           .put(payload.payload, null, null, payload.queryParams)
           .then(response => {
             this.setState({isAdding: false}, () => {
-              if(response.status === 200) {
+              if(response.status === 202) {
+                this.setState({result: false}, () => {
+                  if(response?.data?.task)
+                    copyToClipboard(response.data.task, 'Successfully queued. Task ID copied to your clipboard.', 0)
+                  this.handleDialogClose()
+                })
+              } else if(response.status === 200) {
                 this.setState({result: response.data})
                 alertifyjs.success('Successfully added reference(s)')
                 this.handleDialogClose()
@@ -149,7 +156,7 @@ class AddToCollection extends React.Component {
 
   getFilteredCollections(value) {
     return filter(this.state.allCollections, collection => {
-      const name = collection.short_code + '/' + collection.owner;
+      const name = collection.name + '/' + collection.owner;
       return name.toLowerCase().match(value.trim())
     })
   }
@@ -194,73 +201,61 @@ class AddToCollection extends React.Component {
     return (
       <React.Fragment>
         {button}
-        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1300}}>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                zIndex: '1300'
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={this.handleClose}>
+        <PopperGrow open={open} anchorRef={this.anchorRef} handleClose={this.handleClose} minWidth='450px'>
+          <div>
+            {
+              noOverallCollections ?
+                <p style={{padding: '20px'}}>
+                  You do not have any collections.
+                  <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
+                    Create New Collection?
+                  </a>
+                </p> :
+                <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '300px', overflow: 'auto'}}>
+                  <TextField
+                    id='collection-search-input'
+                    placeholder='Search Collection...'
+                    variant='outlined'
+                    size='small'
+                    style={{padding: '10px', width: '100%'}}
+                    autoFocus
+                    onChange={this.onSearchValueChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SearchIcon />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
                   {
-                    noOverallCollections ?
-                      <p style={{padding: '20px'}}>
-                        You do not have any collections.
-                        <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
-                          Create New Collection?
-                        </a>
-                      </p> :
-                      <MenuList variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '100%', overflow: 'auto'}}>
-                        <TextField
-                          id='collection-search-input'
-                          placeholder='Search Collection...'
-                          variant='outlined'
-                          size='small'
-                          style={{padding: '10px', width: '100%'}}
-                          autoFocus
-                          onChange={this.onSearchValueChange}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <SearchIcon />
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                        {
-                          isLoading ?
-                            <div style={{textAlign: 'center'}}>
-                              <CircularProgress />
-                            </div> : (
-                              noSearchResults ?
-                                <p style={{padding: '0 20px'}}>
-                                  No Matches.
-                                  <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
-                                    Create New Collection?
-                                  </a>
-                                </p> :
-                                map(_collections, (collection, index) => (
-                                  <React.Fragment key={index}>
-                                    <CollectionListItem
-                                      option={collection}
-                                      listItemProps={{onClick: event => this.handleMenuItemClick(event, collection)}}
-                                      style={{cursor: 'pointer'}}
-                                    />
-                                    <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
-                                  </React.Fragment>
-                                ))
-                            )
-                        }
-                      </MenuList>
+                    isLoading ?
+                      <div style={{textAlign: 'center'}}>
+                        <CircularProgress />
+                      </div> : (
+                        noSearchResults ?
+                          <p style={{padding: '0 20px'}}>
+                            No Matches.
+                            <a style={{cursor: 'pointer', marginLeft: '2px'}} onClick={this.toggleCollectionForm}>
+                              Create New Collection?
+                            </a>
+                          </p> :
+                          map(_collections, (collection, index) => (
+                            <React.Fragment key={index}>
+                              <CollectionListItem
+                                option={collection}
+                                listItemProps={{onClick: event => this.handleMenuItemClick(event, collection)}}
+                                style={{cursor: 'pointer'}}
+                              />
+                              <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
+                            </React.Fragment>
+                          ))
+                      )
                   }
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+                </List>
+            }
+          </div>
+        </PopperGrow>
         <Dialog open={openDialog} onClose={this.handleDialogClose}>
           <DialogTitleWithCloseButton onClose={this.handleDialogClose}>
             Add References to Collection
@@ -280,6 +275,7 @@ class AddToCollection extends React.Component {
                 cascadeMappingsFunc={() => this.getPayload(false, true, false)}
                 cascadeToConceptsFunc={() => this.getPayload(true, false, false)}
                 cascadeOpenMRSFunc={() => this.getPayload(false, false, true)}
+                onTransformReferencesChange={transform => this.setState({transformReferences: transform})}
               />
             )
           }

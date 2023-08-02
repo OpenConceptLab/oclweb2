@@ -3,7 +3,7 @@ import { getLoginURL } from '../../common/utils'
 import ErrorUI from './ErrorUI';
 
 const AccessDenied = () => {
-  const loginURL = getLoginURL(window.location.hash.replace('#', ''))
+  const loginURL = getLoginURL()
   return (
     <ErrorUI
       header='401'

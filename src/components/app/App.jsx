@@ -1,10 +1,10 @@
 /*eslint no-process-env: 0*/
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
-  isDeprecatedBrowser, recordGAPageView
+  isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel
 } from '../../common/utils';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
@@ -36,6 +36,8 @@ import { hotjar } from 'react-hotjar';
 import { OperationsContext } from './LayoutContext';
 import DeprecatedBrowser from './DeprecatedBrowser';
 import OIDLoginCallback from '../users/OIDLoginCallback';
+import APIService from '../../services/APIService';
+import OpenMRSDeprecationDialog from '../common/OpenMRSDeprecationDialog';
 
 
 const SITE_TITLE = getSiteTitle()
@@ -48,7 +50,9 @@ const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
 )
 
 const App = props => {
-  const { openOperations, menuOpen, setMenuOpen, setOpenOperations } = React.useContext(OperationsContext);
+  const { openOperations, menuOpen, setMenuOpen, setOpenOperations, setToggles } = React.useContext(OperationsContext);
+  const [openOpenMRSDeprecationDialog, setOpenOpenMRSDeprecationDialog] = React.useState(false)
+  const operationsPanelAccess = canViewOperationsPanel()
 
   // For recent history
   setUpRecentHistory(props.history);
@@ -84,12 +88,30 @@ const App = props => {
     }
   };
 
+  const fetchToggles = async () => {
+    return new Promise(resolve => {
+      APIService.toggles().get().then(response => {
+        if (!isEmpty(response.data))
+          setToggles(response.data)
+        resolve();
+      });
+    });
+  }
+
+  const setUpOpenMRSDeprecationDialog = () => {
+    const isRedirectedFromDM = window.location.href.includes('?origin=openmrs')
+    setOpenOpenMRSDeprecationDialog(isRedirectedFromDM)
+  }
+
   React.useEffect(() => {
+    setUpOpenMRSDeprecationDialog()
+    if(!isFHIRServer())
+      fetchToggles()
     addLogoutListenerForAllTabs()
     recordGAPageView()
     setupHotJar()
-    document.body.addEventListener("keydown", _listenKey)
-    return () => document.body.removeEventListener("keydown", _listenKey)
+    operationsPanelAccess && document.body.addEventListener("keydown", _listenKey)
+    return () => operationsPanelAccess && document.body.removeEventListener("keydown", _listenKey)
   }, [])
 
   const isFHIR = isFHIRServer();
@@ -116,6 +138,10 @@ const App = props => {
 
   return (
     <div>
+      {
+        openOpenMRSDeprecationDialog &&
+          <OpenMRSDeprecationDialog isOpen={openOpenMRSDeprecationDialog} />
+      }
       {
         isDeprecatedBrowser() && deprecatedBrowser &&
           <DeprecatedBrowser open onClose={() => setDeprecatedBrowser(false)} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  Button, Popper, List, Grow, Paper, ClickAwayListener, Tooltip,
+  Button, List, Tooltip,
   CircularProgress, Dialog,
   TextField, InputAdornment, Chip, Divider
 } from '@mui/material'
@@ -20,6 +20,7 @@ import SourceListItem from './SourceListItem';
 import CloneToSourceDialogContent from './CloneToSourceDialogContent';
 import CloneToSourceResultPreview from './CloneToSourceResultPreview';
 import BetaLabel from './BetaLabel'
+import PopperGrow from './PopperGrow'
 
 class CloneToSource extends React.Component {
   constructor(props) {
@@ -206,67 +207,55 @@ class CloneToSource extends React.Component {
     return (
       <React.Fragment>
         {button}
-        <Popper open={open} anchorEl={this.anchorRef.current} transition style={{zIndex: 1300}}>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                zIndex: '1300'
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={this.handleClose}>
-                  {
-                    <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '100%', overflow: 'auto'}}>
-                      <TextField
-                        id='source-search-input'
-                        placeholder='Select Source to clone into...'
-                        variant='outlined'
-                        size='small'
-                        style={{padding: '10px', width: '100%'}}
-                        autoFocus
-                        onChange={this.onSearchValueChange}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <SearchIcon />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                      {
-                        isLoading ?
-                          <div style={{textAlign: 'center'}}>
-                            <CircularProgress />
-                          </div> : (
-                            noSearchResults ?
-                              <p style={{padding: '0 20px'}}>
-                                No Matches.
-                              </p> :
-                            <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '300px', overflow: 'auto'}}>
-                              {
-                                map(_sources, (source, index) => (
-                                  <React.Fragment key={index}>
-                                    <SourceListItem
-                                      option={source}
-                                      listItemProps={{onClick: event => this.handleMenuItemClick(event, source)}}
-                                      style={{cursor: 'pointer'}}
-                                    />
-                                    <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
-                                  </React.Fragment>
-                                ))
-                              }
-                            </List>
-                          )
-                      }
-                    </List>
-                  }
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+        <PopperGrow open={open} anchorRef={this.anchorRef} handleClose={this.handleClose} minWidth='450px'>
+          <div>
+            {
+              <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '100%', overflow: 'auto'}}>
+                <TextField
+                  id='source-search-input'
+                  placeholder='Select Source to clone into...'
+                  variant='outlined'
+                  size='small'
+                  style={{padding: '10px', width: '100%'}}
+                  autoFocus
+                  onChange={this.onSearchValueChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+                {
+                  isLoading ?
+                    <div style={{textAlign: 'center'}}>
+                      <CircularProgress />
+                    </div> : (
+                      noSearchResults ?
+                        <p style={{padding: '0 20px'}}>
+                          No Matches.
+                        </p> :
+                      <List variant='menu' id="split-button-menu" style={{maxWidth: '500px', maxHeight: '300px', overflow: 'auto'}}>
+                        {
+                          map(_sources, (source, index) => (
+                            <React.Fragment key={index}>
+                              <SourceListItem
+                                option={source}
+                                listItemProps={{onClick: event => this.handleMenuItemClick(event, source)}}
+                                style={{cursor: 'pointer'}}
+                              />
+                              <Divider variant="inset" component="li" style={{listStyle: 'none'}} />
+                            </React.Fragment>
+                          ))
+                        }
+                      </List>
+                    )
+                }
+              </List>
+            }
+          </div>
+        </PopperGrow>
         <Dialog open={openDialog} onClose={this.handleDialogClose} scroll='paper' fullWidth maxWidth='md' disableEscapeKeyDown={isAdding}>
           <DialogTitleWithCloseButton disabled={isAdding} onClose={previewConcept ? null : this.handleDialogClose}>
             {
@@ -303,7 +292,7 @@ class CloneToSource extends React.Component {
         </Dialog>
       </React.Fragment>
     )
-}
+  }
 }
 
 export default CloneToSource;

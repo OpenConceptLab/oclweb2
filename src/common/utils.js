@@ -1,17 +1,17 @@
 /*eslint no-process-env: 0*/
 import 'core-js/features/url-search-params';
 import React from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber, uniq, flatten, pickBy
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
-  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID,
+  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID, OPERATIONS_PANEL_GROUP
 } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
@@ -105,19 +105,19 @@ export const copyURL = url => {
   copyToClipboard(url, 'Copied URL to clipboard!');
 }
 
-export const copyToClipboard = (copyText, message) => {
+export const copyToClipboard = (copyText, message, timeout) => {
   if(copyText)
     navigator.clipboard.writeText(copyText);
 
   if(message)
-    alertifyjs.success(message);
+    alertifyjs.success(message, isNumber(timeout) ? timeout : undefined);
 }
 
 export const toParentURI = uri => uri.split('/').splice(0, 5).join('/') + '/';
 
 export const toOwnerURI = uri => uri.split('/').splice(0, 3).join('/') + '/';
 
-export const headFirst = versions => compact([find(versions, {version: 'HEAD'}), ...reject(versions, {version: 'HEAD'})]);
+export const headFirst = versions => compact([find(versions, version => (version.version || version.id) === 'HEAD'), ...reject(versions, version => (version.version || version.id) === 'HEAD')]);
 
 export const currentUserToken = () => localStorage.token;
 
@@ -469,8 +469,19 @@ export const canSwitchServer = () => {
   return Boolean(
     getSelectedServerConfig() ||
     get(user, 'is_superuser') ||
-    !isEmpty(get(user, 'auth_groups'))
+      hasAuthGroup(user, 'server')
   );
+}
+
+const hasAuthGroup = (user, groupName) => Boolean(find(user?.auth_groups, group => group.includes(groupName)))
+
+export const canViewOperationsPanel = () => {
+  const user = getCurrentUser()
+
+  return Boolean(
+    get(user, 'is_staff') ||
+    hasAuthGroup(user, OPERATIONS_PANEL_GROUP)
+  )
 }
 
 export const isFHIRServer = () => get(getAppliedServerConfig(), 'type') === 'fhir';
@@ -580,14 +591,14 @@ export const getOpenMRSURL = () => {
 export const recordGAPageView = () => {
   /*eslint no-undef: 0*/
   ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
-  ReactGA.pageview(window.location.pathname + window.location.hash);
+  ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.hash });
 }
 
 export const recordGAAction = (category, action, label) => {
   /*eslint no-undef: 0*/
   if(category && action) {
     ReactGA.initialize(window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID);
-    ReactGA.event({category: category, action: action, label: label || action});
+    ReactGA.event({category: category, action: action, label: label || action, transport: "xhr"});
   }
 }
 
@@ -670,7 +681,7 @@ export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title
 
 export const getRandomColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`;
 
-export const logoutUser = (alert = true, redirectToLogin) => {
+export const logoutUser = (alert = true, redirectToLogin, forced) => {
   const clearTokens = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('id_token');
@@ -689,7 +700,11 @@ export const logoutUser = (alert = true, redirectToLogin) => {
       window.location.reload();
     }
   }
-  const logoutURL = getSSOLogoutURL()
+  let redirectURL;
+  if(forced) {
+    redirectURL = window.location.origin + '/#/accounts/login?next=' + (window.location.origin + '/'+ window.location.hash)
+  }
+  const logoutURL = getSSOLogoutURL(redirectURL)
   if(logoutURL) {
     clearTokens()
     window.location = logoutURL
@@ -708,7 +723,7 @@ export const paramsToParentURI = (params, versioned=false) => {
     uri += `/sources/${params.source}`;
   else if(params.collection)
     uri += `/collections/${params.collection}`;
-  if(params.version && !versioned)
+  if(params.version && !versioned && params.version !== 'summary')
     uri += `/${params.version}`;
 
   return uri + '/';
@@ -806,21 +821,25 @@ export const isSSOEnabled = () => {
 }
 
 export const getLoginURL = returnTo => {
-  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  let redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+
+  redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
+
   if(isSSOEnabled())
     return `${getAPIURL()}/users/login/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
   let url = '/#/accounts/login'
   if(returnTo)
     url += `?returnTo=${returnTo}`
+
   return url
 }
 
-export const getSSOLogoutURL = () => {
-  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+export const getSSOLogoutURL = returnTo => {
+  const redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const idToken = localStorage.id_token
   if(redirectURL && idToken)
-    return `${getAPIURL()}/users/logout/?&post_logout_redirect_uri=${redirectURL}&id_token_hint=${idToken}`
+    return `${getAPIURL()}/users/logout/?id_token_hint=${idToken}&post_logout_redirect_uri=${redirectURL}`
 }
 
 
@@ -852,3 +871,84 @@ export const getSiblings = elem => {
 	return siblings;
 
 };
+
+export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale) => {
+  if(isEmpty(compact(data)) || !summary)
+    return data
+  let _data = compact(data).map(d => {
+    d.resultType = 'Ordered'
+    return d
+  })
+  const summaryValues = get(summary, summaryField)
+  if(summaryValues) {
+    const usedValues = map(summaryValues, value => value[0])
+    usedValues.forEach(used => {
+      const _used = find(_data, _d => {
+        const id = _d?.id?.toLowerCase()?.replace('-', '')?.replace('_', '')?.replace(' ', '')
+        const _used = used?.toLowerCase()?.replace('-', '')?.replace('_', '')?.replace(' ', '')
+        return _used === id
+      })
+      if(_used)
+        _used.resultType = 'Suggested'
+    })
+  }
+  let values = orderBy(_data, ['resultType', 'name'], ['desc', 'asc'])
+
+  if(isLocale) {
+    values = uniqBy([{...find(values, {id: summary.default_locale}), resultType: 'Suggested'}, ...orderBy(filter(values, val => (summary.supported_locales || []).includes(val.id)).map(val => ({...val, resultType: 'Suggested'})), ['name'], ['asc']), ...values], 'id')
+  }
+
+  return values
+}
+
+
+const extractTextBetweenEmTags = str => {
+  const regex = /<em>(.*?)<\/em>/g;
+  const matches = [];
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    matches.push(match[1]);
+    if(match[1] && match[1].includes('_'))
+      matches.push(match[1].replace('_', '-'))
+  }
+  return matches;
+}
+
+const getHighlightedTexts = items => {
+  return uniq(
+    flatten(
+      map(
+        flatten(
+          flatten(
+            flatten(
+              map(
+                items,
+                i => values(
+                  pickBy(
+                    i?.search_meta?.search_highlight,
+                    (value, key) => !key.startsWith('_')
+                  )
+                )
+              )
+            )
+          )
+        ),
+        val => extractTextBetweenEmTags(val)
+      )
+    )
+  )
+}
+
+
+export const highlightTexts = (items, texts, unmark=false) => {
+  const markInstance = new Mark(document.querySelectorAll('.searchable'))
+  const _texts = texts || getHighlightedTexts(items)
+  const options = {
+    element: "span",
+    className: "highlight-search-results",
+    separateWordSearch: false
+  }
+  if(unmark)
+    markInstance.unmark(options)
+  markInstance.mark(_texts, options);
+}

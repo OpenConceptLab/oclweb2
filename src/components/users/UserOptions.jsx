@@ -32,18 +32,19 @@ const UserOptions = () => {
   const onHomeClick = event => {
     event.persist();
     handleClose(event);
-    window.location.hash = user.url
   };
   const username = get(user, 'username');
   const displayName = get(user, 'name') || username;
   const serverConfig = getAppliedServerConfig();
   const checkIfStillAuthenticated = () => {
+    if((document.getElementById('openmrs-deprecation-dialog')))
+      return
     APIService.version().get(null, null, null, true).then(res => {
-      if(get(res, 'response.status') === 401) {
+      if(get(res, 'response.status') === 401 ) {
         if(!alertifyForLogout) {
           alertifyForLogout = true
           clearInterval(intervalId)
-          alertifyjs.error('Your token has been expired. You are logged out, please re-login.', 2, () => logoutUser(false, false))
+          alertifyjs.error('Your token has been expired. You are logged out, please re-login.', 2, () => logoutUser(false, false, true))
         }
       }
     })
@@ -51,7 +52,7 @@ const UserOptions = () => {
 
   React.useEffect(() => {
     if(isLoggedIn() && isSSOEnabled())
-      intervalId = setInterval(checkIfStillAuthenticated, 2000)
+      intervalId = setInterval(checkIfStillAuthenticated, 10000)
   }, [])
 
   return (
@@ -88,7 +89,7 @@ const UserOptions = () => {
                 }
               </div>
               <ListItemText className='list-item-text-bold-primary' primary={displayName} secondary={user.email} />
-              <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} />
+              <Chip className='manage-account-chip' label={<span style={{fontWeight: 'bold'}}>My Profile</span>} onClick={onHomeClick} href={'#' + user.url} component="a" />
             </ListItemText>
           </ListItem>
           <Divider />

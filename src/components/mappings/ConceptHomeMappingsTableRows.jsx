@@ -1,22 +1,29 @@
 import React from 'react';
 import {
-  TableRow, TableCell, Chip, Tooltip, Table, TableBody
+  TableRow, TableCell, Chip, Tooltip, Table, TableBody, Badge
 } from '@mui/material';
 import {
   DragIndicator as DragIcon,
   ImportExport as SortIcon,
+  ArrowUpward as UpIcon,
+  ArrowDownward as DownIcon,
+  WarningAmber as WarningIcon,
+  LocalOffer as LocalOfferIcon
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { map, get, forEach, orderBy, filter, find, isNumber } from 'lodash';
-import ExistsInOCLIcon from '../common/ExistsInOCLIcon';
-import DoesnotExistsInOCLIcon from '../common/DoesnotExistsInOCLIcon';
+import { map, get, forEach, orderBy, filter, find, isNumber, has, isEmpty, some, maxBy } from 'lodash';
 import MappingOptions from './MappingOptions';
 import { getSiteTitle, toParentURI, getSiblings } from '../../common/utils';
 import MappingInlineForm from './MappingInlineForm';
 
 const SITE_TITLE = getSiteTitle()
+const DEFAULT_ORDER_BY = ['sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name']
+const ORDER_BY = ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name']
 
-const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping, onSortEnd }) => {
+const order = (mappings, is_default) => orderBy(mappings, is_default ? DEFAULT_ORDER_BY : ORDER_BY)
+
+const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, isSelf, onCreateNewMapping, suggested, onRemoveMapping, onReactivateMapping, onSortEnd, onClearSortWeight, onAssignSortWeight }) => {
+  const searchable = !isIndirect
   const [oMappings, setMappings] = React.useState([])
   const [form, setForm] = React.useState(false)
   const [addNewMapType, setAddNewMapType] = React.useState('')
@@ -39,6 +46,8 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
   }
 
   const getOrderedMappings = () => {
+    if(find(mappings, _mapping => has(_mapping, '_sort_weight')) && !some(mappings, _mapping => _mapping._sort_weight === undefined))
+      return order(mappings)
     const parentURL = toParentURI(concept.url || concept.version_url)
     const sameParentMappings = []
     const differentParentMappings = []
@@ -48,12 +57,21 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       else
         differentParentMappings.push(mapping)
     })
-    let _mappings = orderBy([...sameParentMappings, ...differentParentMappings], ['sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
-    return orderBy(map(_mappings, (mapping, index) => {
-      mapping._sort_weight = mapping._sort_weight || mapping.sort_weight || index
-      mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight || index
+    const allMappings = [...sameParentMappings, ...differentParentMappings]
+    let _mappings = order(allMappings, true)
+    let prevMapping;
+    return order(map(_mappings, (mapping, index) => {
+      mapping._sort_weight = mapping._sort_weight || mapping.sort_weight
+      mapping._initial_assigned_sort_weight = mapping._initial_assigned_sort_weight || mapping.sort_weight
+      if(!isNumber(mapping._sort_weight)) {
+        const newWeight = isNumber(prevMapping?._sort_weight) ? prevMapping._sort_weight + 1 : index
+        mapping._sort_weight = newWeight
+        mapping._initial_assigned_sort_weight = newWeight
+      }
+      mapping._original_position = mapping._original_position || index
+      prevMapping = mapping
       return mapping
-    }), ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
+    }))
   }
 
   const onAddNewClick = mapType => {
@@ -88,21 +106,13 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     const beforeObjects = newMappings.slice(0, to);
     const afterObjects = newMappings.slice(to);
     newMappings = [...beforeObjects, mapping, ...afterObjects]
+    newMappings = forEach(newMappings, (_mapping, index) => {
+      _mapping._sort_weight = index
+    })
 
-    let prevMappingFromTargetPosition = newMappings[to-1]
-    let nextMappingFromTargetPosition = newMappings[to+1]
-    const prevMappingWeight = prevMappingFromTargetPosition?._sort_weight || 0
-    const nextMappingWeight = nextMappingFromTargetPosition?._sort_weight || prevMappingWeight + 1
-
-    mapping._sort_weight = getRandomDecimal(prevMappingWeight, nextMappingWeight)
-    if(prevMappingFromTargetPosition?._sort_weight >= mapping._sort_weight)
-      prevMappingFromTargetPosition._sort_weight = formatNumber(mapping._sort_weight - 0.0001)
-    if(nextMappingFromTargetPosition?._sort_weight <= mapping._sort_weight)
-      nextMappingFromTargetPosition._sort_weight = formatNumber(mapping._sort_weight + 0.0001)
-
-    const _mappings = orderBy(newMappings, ['_sort_weight', 'cascade_target_source_name', 'cascade_target_concept_name'])
-    onSortEnd(filter(_mappings, mapping => mapping._sort_weight !== mapping._initial_assigned_sort_weight))
+    const _mappings = order(newMappings)
     setMappings(_mappings)
+    return _mappings
   }
 
   const onDragEnd = result => {
@@ -113,8 +123,13 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
       return;
     }
 
-    if(result.source.index !== result.destination.index)
-      reorderMappings(result.source.index, result.destination.index)
+    if(result.source.index !== result.destination.index) {
+      const newMappings = reorderMappings(result.source.index, result.destination.index)
+      if(find(newMappings, mapping => mapping.sort_weight !== mapping._sort_weight && mapping._sort_weight !== mapping._initial_assigned_sort_weight))
+        onSortEnd(newMappings)
+      else
+        onSortEnd([])
+    }
   }
 
 
@@ -132,37 +147,61 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
     }
   }
 
-  React.useEffect(() => setMappings(getOrderedMappings()), [mappings])
+  React.useEffect(() => isEmpty(oMappings) && setMappings(getOrderedMappings()), [mappings])
 
-  const hasAnyCustomSortMapping = oMappings.length > 1 && Boolean(find(oMappings, mapping => isNumber(mapping.sort_weight)))
+  const mappingsWithSortWeightCount = oMappings.length > 1 ? filter(oMappings, mapping => isNumber(mapping.sort_weight)).length : 0
+  const allMappingsHaveSortWeight = oMappings.length === mappingsWithSortWeightCount
+  const isAnyUpdatedButUnsaved = find(oMappings, mapping => mapping._sort_weight !== mapping._initial_assigned_sort_weight)
+
+  const getBadgeProps = (mapping, index) => {
+    const isUpdated = mapping._sort_weight !== mapping._initial_assigned_sort_weight
+    const isMovedUp = Boolean(isUpdated && index < mapping._original_position)
+    const isMovedDown = Boolean(isUpdated && index > mapping._original_position)
+    const badgeIcon = isMovedUp ? <UpIcon style={{fontSize: '10px'}} color='success' /> : (isMovedDown ? <DownIcon style={{fontSize: '10px'}} color='error' /> : 0)
+    let badgeProps = {anchorOrigin: {horizontal: 'left', vertical: 'top'}}
+    if(isMovedDown || isMovedUp)
+      badgeProps = {...badgeProps, badgeContent: badgeIcon, style: {background: 'transparent'}}
+
+    return badgeProps
+  }
+
+  const tooltipTitle = isIndirect ? undefined : (allMappingsHaveSortWeight ? 'Custom sorting has been applied' : (mappingsWithSortWeightCount ? `Custom sorting has been applied to ${mappingsWithSortWeightCount} mappings.` : undefined))
+
+  const _onAssignSortWeight = mapping => {
+    let maxSortWeight = maxBy(oMappings, 'sort_weight')?.sort_weight
+    maxSortWeight = isNumber(maxSortWeight) ? maxSortWeight + 1 : 0
+    onAssignSortWeight(mapping, maxSortWeight)
+  }
 
   return (
     <React.Fragment>
       <TableRow id={mapType}>
         <TableCell rowSpan={form ? 2 : 1} align='left' style={{paddingRight: '5px', verticalAlign: 'top', paddingTop: '7px', width: '10%'}}>
           <span className='flex-vertical-center'>
-          <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
-            <Chip
-              size='small'
-              variant='outlined'
-              color='default'
-              label={
-                <span>
-                  <span>{mapType}</span>
-                  {isIndirect && <sup>-1</sup>}
-                  {isSelf && <sup>∞</sup>}
-                </span>
-              }
-              style={{border: 'none'}}
-            />
-          </Tooltip>
-          {
-            hasAnyCustomSortMapping &&
-              <Tooltip title='Custom sorting has been applied'>
-                  <SortIcon fontSize="small" style={{color: 'rgba(0, 0, 0, 0.54)'}} />
-              </Tooltip>
-          }
-            </span>
+            <Tooltip placement='left' title={isIndirect ? 'Inverse Mappings' : (isSelf ? 'Self Mapping' : 'Direct Mappings')}>
+              <Chip
+                size='small'
+                variant='outlined'
+                color='default'
+                label={
+                  <span>
+                    <span>{mapType}</span>
+                    {isIndirect && <sup>-1</sup>}
+                    {isSelf && <sup>∞</sup>}
+                  </span>
+                }
+                style={{border: 'none'}}
+              />
+            </Tooltip>
+            {
+              tooltipTitle &&
+                <Tooltip title={tooltipTitle}>
+                  <Badge color="warning" badgeContent={allMappingsHaveSortWeight ? undefined : mappingsWithSortWeightCount}>
+                    <SortIcon fontSize="small" style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+                  </Badge>
+                </Tooltip>
+            }
+          </span>
         </TableCell>
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           <Droppable droppableId="droppable">
@@ -170,6 +209,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
               <TableCell
                 {...provided.droppableProps}
                 ref={provided.innerRef}
+                style={{paddingLeft: '0px'}}
                 colSpan={4}>
                 {
                   map(oMappings, (mapping, index) => {
@@ -185,6 +225,7 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                     const canSort = Boolean(onSortEnd) && oMappings.length > 1
                     const cursor = (targetURL || canSort) ? 'pointer' : 'not-allowed'
                     const isLast = index == oMappings.length - 1
+                    const badgeProps = getBadgeProps(mapping, index)
                     return (
                       <Draggable key={mapping.url} draggableId={mapping.url} index={index} isDragDisabled={!canSort}>
                         {(provided) => (
@@ -197,33 +238,45 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                             <TableBody>
                               <TableRow
                                 hover key={mapping.url} onClick={event => onDefaultClick(event, targetURL)} style={{cursor: cursor}} className={targetURL ? 'underline-text' : ''}>
-                                <TableCell align='left' className='ellipsis-text' style={{width: '27%', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', backgroundColor: bgColor}}>
+                                <TableCell align='left' className='ellipsis-text' style={{width: '30%', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', backgroundColor: bgColor}}>
                                   <span className='flex-vertical-center' style={{paddingTop: '7px'}}>
                                     {
                                       canSort &&
                                         <span className='flex-vertical-center' style={{marginRight: '4px'}} {...provided.dragHandleProps}>
-                                          <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+                                          <Badge {...badgeProps}>
+                                            <DragIcon fontSize='small' style={{color: 'rgba(0, 0, 0, 0.54)'}} />
+                                          </Badge>
+                                        </span>
+                                    }
+                                    {
+                                      Boolean(canSort && !isNumber(mapping.sort_weight) && !isUpdated && mappingsWithSortWeightCount) &&
+                                        <span className='flex-vertical-center' style={{marginRight: '4px'}}>
+                                          <Tooltip title='Mapping has no sort weight applied'>
+                                            <WarningIcon fontSize='small' />
+                                          </Tooltip>
                                         </span>
                                     }
                                     <span className='flex-vertical-center' style={{marginRight: '4px'}}>
-                                      {
-                                        targetURL ?
-                                          <ExistsInOCLIcon title={title} /> :
-                                        <DoesnotExistsInOCLIcon title={title} />
-                                      }
+                                      <Tooltip title={title}>
+                                        <LocalOfferIcon
+                                          color={targetURL ? 'primary': 'warning'}
+                                          fontSize='small'
+                                          style={{width: '12pt'}}
+                                        />
+                                        </Tooltip>
                                     </span>
-                                    <span className={mapping.retired ? 'retired' : ''}>
+                                    <span className={mapping.retired ? (searchable ? 'retired searchable' : 'searchable') : searchable ? 'searchable' : ''}>
                                       { mapping[conceptCodeAttr] }
                                     </span>
                                   </span>
                                 </TableCell>
-                                <TableCell align='left' style={{borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '30%', backgroundColor: bgColor}}>
+                                <TableCell align='left' style={{borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '35%', backgroundColor: bgColor}}>
                                   { getConceptName(mapping, conceptCodeName) }
                                 </TableCell>
                                 <TableCell align='left' style={{borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '20%', backgroundColor: bgColor}}>
                                   {get(mapping, sourceAttr)}
                                 </TableCell>
-                                <TableCell align='right' style={{paddingRight: '5px', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '5%', backgroundColor: bgColor}}>
+                                <TableCell align='right' style={{padding: '0px', borderBottom: isLast ? 'none' : '1px solid rgba(224, 224, 224, 1)', width: '5%', backgroundColor: bgColor}}>
                                   <MappingOptions
                                     mapping={mapping}
                                     concept={concept}
@@ -232,6 +285,10 @@ const ConceptHomeMappingsTableRows = ({ concept, mappings, mapType, isIndirect, 
                                     onReactivate={onReactivateClick}
                                     showNewMappingOption={canAct}
                                     isIndirect={isIndirect}
+                                    canSort={canSort}
+                                    onClearSortWeight={onClearSortWeight}
+                                    onAssignSortWeight={_onAssignSortWeight}
+                                    disabled={isAnyUpdatedButUnsaved}
                                   />
                                 </TableCell>
                               </TableRow>

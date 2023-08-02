@@ -1,20 +1,21 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Button, ButtonGroup, MenuList, MenuItem, Tooltip } from '@mui/material';
+import { FixedSizeList } from 'react-window';
+import { Button, ButtonGroup, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
 import {
   AccountTreeRounded as VersionIcon,
   ArrowDropDown as DownIcon,
   NewReleases as ReleaseIcon,
   BrightnessAuto as AutoIcon
 } from '@mui/icons-material';
-import { startCase, isEmpty, merge } from 'lodash';
+import { merge } from 'lodash';
 import { headFirst } from '../../common/utils';
-import { WHITE, RED, BLACK, GREEN, DARKGRAY } from '../../common/constants';
+import { WHITE, RED, BLACK, GREEN } from '../../common/constants';
 import PopperGrow from './PopperGrow';
 
 const HEAD = 'HEAD';
 
-const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) => {
+const VersionSelectorButton = ({selected, versions, style, ...rest}) => {
   const location = useLocation()
   const [open, setOpen] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState(selected)
@@ -24,18 +25,18 @@ const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) =
     minWidth: '30px',
   };
   const versionButtonStyle = selectedVersion.retired ?
-                             {
-                               ...commonButtonStyle,
-                               borderRight: WHITE,
-                               background: 'lightgray',
-                               color: RED,
-                               textDecoration: 'line-through',
-                               textDecorationColor: BLACK,
-                               textTransform: 'none'
-                             } :
-                             {
-                               ...commonButtonStyle,
-                             };
+        {
+          ...commonButtonStyle,
+          borderRight: WHITE,
+          background: 'lightgray',
+          color: RED,
+          textDecoration: 'line-through',
+          textDecorationColor: BLACK,
+          textTransform: 'none'
+        } :
+        {
+          ...commonButtonStyle,
+        };
   const handleToggle = () => setOpen(prevOpen => !prevOpen)
   const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -58,11 +59,13 @@ const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) =
   React.useEffect(() => setSelectedVersion(selected), [selected])
 
   const getButtonGroupProps = () => {
-    if(selectedVersion.version === HEAD) {
+    if((selectedVersion.version || selectedVersion.id) === HEAD)
       return {variant: 'outlined', className: 'btn-group-concept-container-hover-appear'}
-    }
+
     return {variant: 'contained', className: 'btn-group-concept-container'}
   }
+
+  const orderedVersions = headFirst(versions)
 
   return (
     <React.Fragment>
@@ -72,50 +75,47 @@ const VersionSelectorButton = ({selected, versions, resource, style, ...rest}) =
           startIcon={<VersionIcon fontSize='inherit' />}
           onClick={handleToggle}
         >
-          {selectedVersion.version}
+          {selectedVersion.version || selectedVersion.id}
           <DownIcon style={{marginLeft: '2px'}} />
         </Button>
       </ButtonGroup>
       <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="150px">
-        <MenuList id="split-button-menu" style={{paddingTop: '0px'}}>
-          <p style={{margin: 0, padding: '5px 10px', borderBottom: `1px solid ${DARKGRAY}`}}>
-            <b>{`${startCase(resource)} Versions`}</b>
-          </p>
+        <FixedSizeList
+          height={300}
+          itemSize={46}
+          itemCount={versions.length}
+          overscanCount={5}
+        >
           {
-
-            isEmpty(versions) ?
-            <MenuItem disabled>No versions found</MenuItem> :
-            headFirst(versions).map(version => (
-              <MenuItem
-                key={version.version}
-                selected={version.version === selectedVersion.version}
-                onClick={() => handleMenuItemClick(version)}
+            ({ index, style }) => {
+              const version = orderedVersions[index]
+              const versionId = version.version || version.id
+              return (
+                <ListItem
+                  style={style}
+                  key={index}
+                  selected={versionId === (selectedVersion.version || selectedVersion.id)}
+                  disablePadding
+                  component="div"
                 >
-                <span className='flex-vertical-center'>
-                  <span style={version.version === 'HEAD' ? {color: 'gray', fontStyle: 'italic'} : {}}>
-                    {version.version}
-                  </span>
-                  {
-                    version.released &&
-                    <Tooltip title='Released'>
-                      <span className='flex-vertical-center' style={{marginLeft: '5px'}}>
-                        <ReleaseIcon fontSize='inherit' color='primary' />
-                      </span>
-                    </Tooltip>
-                  }
-                  {
-                    (version.autoexpand || version.autoexpand_head) &&
-                    <Tooltip title='Auto Expanded'>
-                      <span className='flex-vertical-center' style={{marginLeft: '5px'}}>
-                        <AutoIcon fontSize='inherit' style={{color: GREEN}} />
-                      </span>
-                    </Tooltip>
-                  }
-                </span>
-              </MenuItem>
-            ))
+                  <ListItemButton onClick={() => handleMenuItemClick(version)}>
+                    <ListItemIcon style={{}}>
+                    {
+                      version.released &&
+                        <ReleaseIcon fontSize='inherit' color='primary' style={{margin: '0 2px'}} />
+                    }
+                    {
+                      (version.autoexpand || version.autoexpand_head) &&
+                        <AutoIcon fontSize='inherit' style={{color: GREEN, margin: '0 2px'}} />
+                    }
+                  </ListItemIcon>
+                    <ListItemText primary={versionId} />
+                    </ListItemButton>
+                </ListItem>
+              )
+            }
           }
-        </MenuList>
+        </FixedSizeList>
       </PopperGrow>
     </React.Fragment>
   )

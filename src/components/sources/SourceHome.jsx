@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@mui/material';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach, isNumber } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach, isNumber, map } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import Breadcrumbs from './Breadcrumbs';
@@ -15,7 +15,7 @@ import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 import { paramsToURI, paramsToParentURI } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
-const TABS = ['details', 'concepts', 'mappings', 'versions', 'about']
+const TABS = ['details', 'concepts', 'mappings', 'versions', 'summary', 'about']
 
 class SourceHome extends React.Component {
   static contextType = OperationsContext
@@ -154,6 +154,8 @@ class SourceHome extends React.Component {
   }
 
   onTabChange = (event, value) => {
+    if(this.state.tab === value)
+      return
     this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
@@ -162,6 +164,16 @@ class SourceHome extends React.Component {
       if(this.isSummaryTabSelected())
         this.fetchSelectedSourceVersionSummary()
     })
+  }
+
+  onCreateNewMapping = mapType => {
+    const usedMapTypes = map(this.state.sourceVersionSummary?.mappings?.map_type, _mapType => _mapType[0].toLowerCase().replace('-', '').replace('_', '').replace(' ', ''))
+    const _mapType = mapType.toLowerCase().replace('-', '').replace('_', '').replace(' ', '')
+    if(!includes(usedMapTypes, _mapType)) {
+      const newState = {...this.state}
+      newState.sourceVersionSummary.mappings.map_type.push([mapType, 1])
+      this.setState(newState)
+    }
   }
 
   fetchSelectedSourceVersionSummary = () => {
@@ -197,12 +209,10 @@ class SourceHome extends React.Component {
             }, () => {
               this.setTab()
               this.getVersions()
-
               const { setParentResource, setParentItem } = this.context
               setParentItem(this.state.source)
               setParentResource('source')
-              if(this.isSummaryTabSelected())
-                this.fetchSelectedSourceVersionSummary()
+              this.fetchSelectedSourceVersionSummary()
             })
           }
         })
@@ -343,6 +353,7 @@ class SourceHome extends React.Component {
                   versions={versions}
                   selectedResource={selected}
                   onSplitViewClose={() => this.setState({selected: null, width: false})}
+                  sourceVersionSummary={this.state.sourceVersionSummary}
                 />
               </div>
               <div id='source-container' className='col-xs-12 home-container no-side-padding' style={{width: this.getContainerWidth(), marginTop: '60px'}}>
@@ -397,6 +408,7 @@ class SourceHome extends React.Component {
                         singleColumn
                         scoped
                         mapping={selected}
+                        searchMeta={selected.search_meta}
                         _location={this.props.location}
                         _match={this.props.match}
                         location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
@@ -404,11 +416,13 @@ class SourceHome extends React.Component {
                         header={false}
                         source={source}
                         noRedirect
+                        sourceVersionSummary={this.state.sourceVersionSummary}
                       /> :
                     <ConceptHome
                       singleColumn
                       scoped
                       concept={selected}
+                      searchMeta={selected.search_meta}
                       parent={source}
                       _location={this.props.location}
                       _match={this.props.match}
@@ -417,6 +431,8 @@ class SourceHome extends React.Component {
                       openHierarchy={false}
                       header={false}
                       noRedirect
+                      sourceVersionSummary={this.state.sourceVersionSummary}
+                      onCreateNewMapping={this.onCreateNewMapping}
                     />
                   }
                 </div>

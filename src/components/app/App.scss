@@ -91,7 +91,7 @@ span.resource-label {
     flex-direction: row;
     align-items: center;
     vertical-align: middle;
-    span {
+    > span {
         padding: 0 2px;
     }
     &.resource-id {
@@ -827,6 +827,7 @@ div.not-found {
     justify-content: center;
     height: 100%;
     min-height: 500px;
+    flex-direction: column;
     hr {
         height: 50px;
         background-color: rgba(0, 0, 0, 0.4);
@@ -970,15 +971,20 @@ div.divider-highlight-hover:hover {
 }
 .app-menu {
     .app-container {
+        display: flex;
+        a {
+            width: 50%;
+        }
         .app:hover {
             background-color: rgba(0, 0, 0, 0.03);
         }
         .app {
-            border-radius: 5px;
             padding: 10px;
-            margin: 0 6px;
-            width: 120px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
             &.selected, &.selected:hover {
                 background-color: rgba(51, 115, 170, 0.25);
             }
@@ -1198,4 +1204,7 @@ tr.droppable-disabled {
     td {
         cursor: no-drop !important;
     }
+}
+.highlight-search-results {
+    font-weight: bold;
 }

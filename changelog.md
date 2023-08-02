@@ -1,3 +1,118 @@
+##### 2.1.77 - Mon Mar 27 06:40:16 2023 +0000
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | added skeleton in distribution
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | correcting links
+##### 2.1.76 - Mon Mar 27 05:14:35 2023 +0000
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | getting Source mapped sources in separate APIs
+- Mapping exists in OCL icon
+- Search | using skeleton
+- FHIR connector fixes for new OCL Core FHIR service
+##### 2.1.75 - Thu Mar 23 09:03:08 2023 +0000
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | removed retired
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | getting Source mapped sources in separate APIs
+##### 2.1.74 - Thu Mar 23 06:06:01 2023 +0000
+- Using Skeleton over Circular Progress to show search results count loading
+- [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | using updated API
+##### 2.1.73 - Wed Mar 22 12:27:24 2023 +0000
+- [OpenConceptLab/ocl_issues#1496](https://github.com/OpenConceptLab/ocl_issues/issues/1496) | transform switch toggle | tooltip consistency
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | including feedbacks | using accoridon and flipped the active/retired bar
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | refactoring summary
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source summary field distribution skeleton
+##### 2.1.72 - Wed Mar 22 11:12:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source summary field distribution skeleton
+##### 2.1.71 - Wed Mar 22 04:04:47 2023 +0000
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | removed feature toggle
+- Concept Names/Descriptions | correcting vertical spacing/alignment
+- [OpenConceptLab/ocl_issues#1496](https://github.com/OpenConceptLab/ocl_issues/issues/1496) | transform references switch behind advanced settings button
+- [OpenConceptLab/ocl_issues#1496](https://github.com/OpenConceptLab/ocl_issues/issues/1496) | transform references switch
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Added skeleton
+- ErrorBoundary | formatting UI
+- ErrorBoundary | setting error first and then converting error for logging
+##### 2.1.70 - Thu Mar 16 06:25:09 2023 +0000
+- [OpenConceptLab/ocl_issues#1518](https://github.com/OpenConceptLab/ocl_issues/issues/1518) | redirect to TB from OpenMRS DM to not redirect to login if the popup is present
+##### 2.1.69 - Thu Mar 16 02:49:07 2023 +0000
+- Add To Collection/Clone To Source | added min width and not truncating text
+##### 2.1.68 - Wed Mar 15 04:24:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1518](https://github.com/OpenConceptLab/ocl_issues/issues/1518) | OpenMRS redirect
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | assign/clear sort weight options
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | sorting algo to apply sort_weight on all always
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | showing warning only if one of the mapping has sort_weight
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | added sorted icon
+- [OpenConceptLab/ocl_issues#1518](https://github.com/OpenConceptLab/ocl_issues/issues/1518) | OpenMRS deprecation dialog
+##### 2.1.67 - Tue Mar 14 04:20:55 2023 +0000
+- [OpenConceptLab/ocl_issues#1519](https://github.com/OpenConceptLab/ocl_issues/issues/1519) | Org overview members to redirect to members tab
+##### 2.1.66 - Mon Mar 13 08:49:34 2023 +0000
+- [OpenConceptLab/ocl_issues#1514](https://github.com/OpenConceptLab/ocl_issues/issues/1514) | OpenMRS left panel option | added deprecated
+- [OpenConceptLab/ocl_issues#1514](https://github.com/OpenConceptLab/ocl_issues/issues/1514) | styling apps menu
+- [OpenConceptLab/ocl_issues#1514](https://github.com/OpenConceptLab/ocl_issues/issues/1514) | removed OpenMRS from apps
+- Concept/Mapping header | adjusting margins
+##### 2.1.65 - Fri Mar 10 03:53:25 2023 +0000
+- [OpenConceptLab/ocl_issues#1510](https://github.com/OpenConceptLab/ocl_issues/issues/1510) | added feature toggle on mapping sorting
+##### 2.1.64 - Fri Mar 10 02:32:56 2023 +0000
+- Add to collection popper height fixed
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | fixing on save handler
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | fixing ordering bugs | showing badges for change in positions
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | refactoring | extract order by
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | changed sorting algo
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | added indicators for sort_weight moved
+##### 2.1.63 - Fri Mar 3 03:43:39 2023 +0000
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | fixing summary redundant call
+##### 2.1.62 - Thu Mar 2 03:16:40 2023 +0000
+- [OpenConceptLab/ocl_issues#1502](https://github.com/OpenConceptLab/ocl_issues/issues/1502) | allowing actions from global search
+- [OpenConceptLab/ocl_issues#1480](https://github.com/OpenConceptLab/ocl_issues/issues/1480) | on SSO token expiry redirect to login and redirect back to same location
+- [OpenConceptLab/ocl_issues#1403](https://github.com/OpenConceptLab/ocl_issues/issues/1403) | Mapping Options Action Menu styles
+##### 2.1.61 - Tue Feb 28 02:44:01 2023 +0000
+- Minor styling change
+- Minor styling change
+- [OpenConceptLab/ocl_issues#1489](https://github.com/OpenConceptLab/ocl_issues/issues/1489) | Beta superscript on Opertions option
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | advance settings changes | added headers
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | advance settings changes | remove placeholders
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | advance settings changes | cascade params to have drop down from source map types
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | fixing permissions
+- Errbit | fixing source header logo
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | sticky footer
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | droppable area highlight and cursor changes
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | drag area is only icon
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | indirect mappings are not sortable
+- [OpenConceptLab/ocl_issues#1483](https://github.com/OpenConceptLab/ocl_issues/issues/1483) | Home profile text overflow fix
+- [OpenConceptLab/ocl_issues#1458](https://github.com/OpenConceptLab/ocl_issues/issues/1458) | Sorting Associations
+- [OpenConceptLab/ocl_issues#1481](https://github.com/OpenConceptLab/ocl_issues/issues/1481) | Updated Footer
+##### 2.1.60 - Wed Feb 15 10:22:08 2023 +0000
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | concept clone | not showing close button in preview
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | concept clone | fixing preview results after clone
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | concept clone | indicating if source and destination are same
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | concept clone result and preview on right with icons
+##### 2.1.59 - Mon Feb 13 12:16:40 2023 +0000
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source version summary | fixing for null
+- [OpenConceptLab/ocl_issues#1476](https://github.com/OpenConceptLab/ocl_issues/issues/1476) | search for retired results is only for concept and mappings
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source version summary | added links
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source version summary | added none display for null name type
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source version summary | source header label change
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source version summary | retired toggle
+##### 2.1.58 - Fri Feb 10 10:03:49 2023 +0000
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | added beta superscript
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Highlighting clickable cells
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Summary | field distributions
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | fixing source link
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Repo version selector to stay on the same tab
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | incorporating updated API
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source Version summary | not showing versions in it
+- [OpenConceptLab/ocl_issues#1467](https://github.com/OpenConceptLab/ocl_issues/issues/1467) | Source summary view
+##### 2.1.57 - Tue Feb 7 05:22:30 2023 +0000
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | Concept Row view | added owner and parent
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | concept clone result preview
+- Search Results | load the results of current tab first before loading counts of other
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | fixing visualization concept selection
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | fixing hierarchy
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | added beta text
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | clone concepts to source control
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | Hierarchy | can get parent url from concept
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | Dialog title with close icon can be disabled
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | AddToCollection popper to have correct z-index
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | SourceList Item | can override styles from outside
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | Reference cascade | using generic APIPreview component
+- [OpenConceptLab/ocl_issues#1465](https://github.com/OpenConceptLab/ocl_issues/issues/1465) | Generic APIPreview component
+- [OpenConceptLab/ocl_issues#1453](https://github.com/OpenConceptLab/ocl_issues/issues/1453) | refactoring AddToCollection to use CollectionListItem
+- [OpenConceptLab/ocl_issues#1453](https://github.com/OpenConceptLab/ocl_issues/issues/1453) | refactoring SourceSearchAutocomplete and extracted SouceLisItem
 ##### 2.1.55 - Wed Jan 18 07:28:02 2023 +0000
 - [OpenConceptLab/ocl_issues#1459](https://github.com/OpenConceptLab/ocl_issues/issues/1459) | fixing visualize button
 - correcting concept version url

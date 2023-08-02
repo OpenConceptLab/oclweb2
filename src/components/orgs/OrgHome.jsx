@@ -106,6 +106,8 @@ class OrgHome extends React.Component {
       this.refreshDataByURL()
       this.getPins()
     }
+    if(this.props.location.pathname !== prevProps.location.pathname)
+      this.setTab()
   }
 
   getURLFromPath() {

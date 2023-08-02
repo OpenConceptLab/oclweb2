@@ -27,15 +27,19 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
     <!-- ENV config -->
     <script src="./env-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mark.js"></script>
     <script>
      if(window.location.pathname.startsWith('/search')) {
        window.location = '/#/search/' + window.location.search;
      }
      if(window.location.hash.startsWith('#/state=')) {
-       window.location = '/#/oidc/login/' + window.location.hash.replace('#/', '?');
+       window.location = '/#/oidc/login/' + window.location.hash.replace('#/', '?') + '&next=' + window.location.pathname;
      }
      if(window.location.hash.startsWith('#state=')) {
-       window.location = '/#/oidc/login/' + window.location.hash.replace('#', '?');
+       window.location = '/#/oidc/login/' + window.location.hash.replace('#', '?') + '&next=' + window.location.pathname;
+     }
+     if((window.location.search || '').includes('origin=openmrs')) {
+       window.location = '/#/search/?origin=openmrs&type=organizations'
      }
     </script>
     <title></title>

@@ -56,7 +56,7 @@ const CONFIG = {
       tooltip: "A unique identifier for your Collection in URL format. It will allow you to leverage OCL's powerful collection management features using this Collection."
     },
     autoexpandHEAD: {
-      label: 'Auto Expand HEAD',
+      label: 'Auto-Expand HEAD',
       tooltip: "If enabled, updates to your collection's references will automatically be evaluated and reflected in your collection's HEAD version using the collection's default settings. Disable this to have full control over when and how your references are evaluated."
     },
     website: {

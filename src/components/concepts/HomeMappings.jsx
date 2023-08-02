@@ -64,7 +64,7 @@ const DEFAULT_CASCADE_FILTERS = {
   returnMapTypes: undefined,
 }
 
-const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting }) => {
+const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, parent, onIncludeRetiredToggle, onCreateNewMapping, mappedSources, onRemoveMapping, onReactivateMapping, onUpdateMappingsSorting, onClearSortWeight, onAssignSortWeight, sourceVersionSummary }) => {
   const [orderedMappings, setMappings] = React.useState({});
   const [updatedMappings, setUpdatedMappings] = React.useState([]);
   const [mappingForm, setMappingForm] = React.useState(false)
@@ -121,7 +121,9 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
 
   const suggested = compact([{...source, suggestionType: 'Current Source'}, ...map(mappedSources, _source => ({..._source, suggestionType: 'Mapped Source'}))])
 
-  const onSortEnd = onCreateNewMapping ? _mappings => setUpdatedMappings(uniqBy([...updatedMappings, ..._mappings], 'version_url')) : false
+  const onSortEnd = onUpdateMappingsSorting ? (updated) => {
+    setUpdatedMappings(uniqBy(updated, 'version_url'))
+  } : false
 
   const onSortCancel = () => {
     setUpdatedMappings([])
@@ -130,16 +132,6 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
 
   const onSortSave = () => {
     onUpdateMappingsSorting(updatedMappings)
-    const newMappings = {...orderedMappings}
-    forEach(newMappings, data => {
-      forEach([...data.direct, ...data.indirect, ...data.self], mapping => {
-        const _mapping = find(updatedMappings, {version_url: mapping.version_url})
-        mapping.sort_weight = _mapping?._sort_weight || mapping.sort_weight
-        mapping._sort_weight = undefined
-        mapping._initial_assigned_sort_weight = undefined
-      })
-    })
-    setMappings(newMappings)
     setUpdatedMappings([])
   }
 
@@ -220,6 +212,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
+                                    onAssignSortWeight={onAssignSortWeight}
+                                    onClearSortWeight={onClearSortWeight}
                                     suggested={suggested}
                                     onSortEnd={onSortEnd}
                                   />
@@ -259,6 +253,8 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                     onCreateNewMapping={_onCreateNewMapping}
                                     onRemoveMapping={onRemoveMapping}
                                     onReactivateMapping={onReactivateMapping}
+                                    onAssignSortWeight={onAssignSortWeight}
+                                    onClearSortWeight={onClearSortWeight}
                                     suggested={suggested}
                                     onSortEnd={onSortEnd}
                                   />
@@ -300,6 +296,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
                                 isDirect
                                 onSubmit={_onCreateNewMapping}
                                 suggested={suggested}
+                                sourceVersionSummary={sourceVersionSummary}
                               />
                             </TableCell>
                           </TableRow>

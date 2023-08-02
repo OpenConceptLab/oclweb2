@@ -3,25 +3,10 @@ import { TextField, CircularProgress, Divider } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { get, debounce, map } from 'lodash'
 import APIService from '../../services/APIService';
-import { styled } from '@mui/system';
 import AutocompleteLoading from './AutocompleteLoading';
 import SourceListItem from './SourceListItem';
-
-
-const GroupHeader = styled('div')({
-  position: 'sticky',
-  top: '-8px',
-  padding: '4px 16px',
-  zIndex: 1000,
-  backgroundColor: '#f5f5f5',
-  fontSize: '12px',
-  color: 'rgba(0, 0, 0, 0.6)',
-  borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
-});
-
-const GroupItems = styled('ul')({
-  padding: 0,
-});
+import GroupHeader from './GroupHeader'
+import GroupItems from './GroupItems'
 
 
 const SourceSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, suggested}) => {

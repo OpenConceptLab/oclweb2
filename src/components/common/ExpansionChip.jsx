@@ -7,8 +7,8 @@ import { Tooltip, Chip } from '@mui/material';
 import { ERROR_RED } from '../../common/constants';
 
 const ExpansionChip = ({ expanded }) => {
-  const label = 'Auto Expanded';
-  const title = expanded ? 'Auto Expanded' : 'Not expanded automatically'
+  const label = 'Auto-Expand';
+  const title = expanded ? 'Auto-Expand' : 'Not expanded automatically'
   return (
     <Tooltip arrow title={title} placement="top">
       <Chip

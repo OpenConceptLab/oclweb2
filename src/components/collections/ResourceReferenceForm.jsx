@@ -133,6 +133,7 @@ class ResourceReferenceForm extends React.Component {
               <Search
                 {...this.props}
                 resource='concepts'
+                staticParams={{excludeWildcard: true, excludeFuzzy: true}}
                 asReference
                 nested
                 essentialColumns
@@ -150,6 +151,7 @@ class ResourceReferenceForm extends React.Component {
               <Search
                 {...this.props}
                 resource='mappings'
+                staticParams={{excludeWildcard: true, excludeFuzzy: true}}
                 asReference
                 nested
                 essentialColumns

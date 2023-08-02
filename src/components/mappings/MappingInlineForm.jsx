@@ -1,17 +1,20 @@
 import React from 'react';
 import { TextField, Button, Autocomplete } from '@mui/material';
-import { fetchMapTypes } from '../../common/utils';
+import { fetchMapTypes, sortValuesBySourceSummary } from '../../common/utils';
 import SourceSearchAutocomplete from '../common/SourceSearchAutocomplete';
 import ConceptSearchAutocomplete from '../common/ConceptSearchAutocomplete';
 import FormTooltip from '../common/FormTooltip';
+import GroupHeader from '../common/GroupHeader';
+import GroupItems from '../common/GroupItems';
 
-const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect, suggested}) => {
+const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect, suggested, sourceVersionSummary}) => {
   const [mapTypes, setMapTypes] = React.useState([])
   const [mapType, setMapType] = React.useState(defaultMapType ? {id: defaultMapType, name: defaultMapType} : '')
   const [source, setSource] = React.useState('')
   const [targetConcept, setTargetConcept] = React.useState('')
 
-  React.useEffect(() => !defaultMapType && fetchMapTypes(data => setMapTypes(data)), [])
+  React.useEffect(() => !defaultMapType && fetchMapTypes(data => setMapTypes(sortValuesBySourceSummary(data, sourceVersionSummary, 'mappings.map_type'))), [])
+  React.useEffect(() => setMapTypes(sortValuesBySourceSummary(mapTypes, sourceVersionSummary, 'mappings.map_type')), [sourceVersionSummary])
 
   const onSourceChange = (id, item) => {
     setSource(item || '')
@@ -55,6 +58,13 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
               id="mapType"
               size='small'
               options={mapTypes}
+              groupBy={option => option.resultType}
+              renderGroup={params => (
+                <li style={{listStyle: 'none'}} key={params.group}>
+                  <GroupHeader>{params.group}</GroupHeader>
+                  <GroupItems>{params.children}</GroupItems>
+                </li>
+              )}
               getOptionLabel={option => option.name || ''}
               fullWidth
               required={!defaultMapType}
