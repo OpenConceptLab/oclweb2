@@ -11,7 +11,7 @@ import {
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
-  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID, OPERATIONS_PANEL_GROUP
+  OPENMRS_URL, DEFAULT_FHIR_SERVER_FOR_LOCAL_ID, OPERATIONS_PANEL_GROUP, SEARCH_RELEASED_GROUP
 } from './constants';
 import APIService from '../services/APIService';
 import { SERVER_CONFIGS } from './serverConfigs';
@@ -130,6 +130,11 @@ export const getCurrentUser = () => {
 
   return null;
 };
+
+export const shouldShowLatestRepoSearch = () => {
+  const user = getCurrentUser()
+  return user?.is_staff || hasAuthGroup(user, SEARCH_RELEASED_GROUP)
+}
 
 export const getCurrentUserOrgs = () => get(getCurrentUser(), 'subscribed_orgs');
 

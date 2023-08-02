@@ -11,7 +11,7 @@ import {
 } from '@mui/icons-material'
 import { get, find, isEmpty, flatten, compact } from 'lodash';
 import {
-  formatDate, formatWebsiteLink, formatDateTime
+  formatDate, formatWebsiteLink, formatDateTime, shouldShowLatestRepoSearch
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import ReferenceTranslation from '../common/ReferenceTranslation';
@@ -20,17 +20,25 @@ import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
 import ConceptDisplayName from '../concepts/ConceptDisplayName';
 
+const onVersionClick = (event, resource) => {
+  event.stopPropagation()
+  event.preventDefault()
+  window.location.hash = '#' + resource.owner_url + 'sources/' + resource.source + '/' + resource?.latest_source_version 
+}
+
 
 export const ALL_COLUMNS = {
-  concepts: [
+  concepts: () => ([
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id_lowercase', className: 'small searchable'},
     {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium searchable', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
-    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
-  ],
+    shouldShowLatestRepoSearch() ?
+      {id: 'latest_source_version', label: 'Source Version', value: 'latest_source_version', renderer: concept => (<a onClick={onVersionClick} href={'#' + concept.owner_url + 'sources/' + concept.source + '/' + concept?.latest_source_version } target='_blank' rel='noopener noreferrer'>{concept?.latest_source_version}</a>)} :
+    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'}
+  ]),
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} className='owner-chip-no-border' />, essential: false},
     {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},

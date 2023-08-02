@@ -38,30 +38,33 @@ import SelectedResourceControls from './SelectedResourceControls';
 import FhirContainerResource from '../fhir/ContainerResource';
 import { HtmlToolTipClone as HtmlToolTipNormalRaw } from '../common/HtmlToolTipRaw'
 
+
+const getColumns = definition => isFunction(definition) ? definition() : definition
+
 const RESOURCE_DEFINITIONS = {
   references: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.references.slice(0, 3),
+    columns: getColumns(ALL_COLUMNS.references).slice(0, 3),
   },
   concepts: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.concepts.slice(0, 7),
+    columns: getColumns(ALL_COLUMNS.concepts).slice(0, 7),
     tabs: ['Mappings', 'Synonyms', 'Descriptions', 'History',],
     expandible: false,
   },
   mappings: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.mappings.slice(0, 7),
+    columns: getColumns(ALL_COLUMNS.mappings).slice(0, 7),
     tabs: ['History',],
     expandible: false,
   },
   sources: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.sources.slice(0, 4),
+    columns: getColumns(ALL_COLUMNS.sources).slice(0, 4),
     tagWaitAttribute: 'summary',
     tags: TAGS.sources,
     tabs: ['Versions',],
@@ -71,7 +74,7 @@ const RESOURCE_DEFINITIONS = {
   collections: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.collections.slice(0, 4),
+    columns: getColumns(ALL_COLUMNS.collections).slice(0, 4),
     tagWaitAttribute: 'summary',
     tags: TAGS.collections,
     tabs: ['Versions'],
@@ -81,7 +84,7 @@ const RESOURCE_DEFINITIONS = {
   organizations: {
     headBgColor: ORANGE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.organizations.slice(0, 3),
+    columns: getColumns(ALL_COLUMNS.organizations).slice(0, 3),
     tags: TAGS.organizations,
     expandible: false,
     pinnable: true,
@@ -89,14 +92,14 @@ const RESOURCE_DEFINITIONS = {
   users: {
     headBgColor: ORANGE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.users.slice(0, 3),
+    columns: getColumns(ALL_COLUMNS.users).slice(0, 3),
     tags: TAGS.users,
     expandible: false,
   },
   CodeSystem: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.CodeSystem,
+    columns: getColumns(ALL_COLUMNS.CodeSystem),
     tagWaitAttribute: 'resource',
     tags: TAGS.CodeSystem,
     expandible: true,
@@ -105,7 +108,7 @@ const RESOURCE_DEFINITIONS = {
   ValueSet: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.ValueSet,
+    columns: getColumns(ALL_COLUMNS.ValueSet),
     tagWaitAttribute: 'resource',
     tags: TAGS.ValueSet,
     getTags: hapi => hapi ? TAGS.ValueSet : null,
@@ -115,7 +118,7 @@ const RESOURCE_DEFINITIONS = {
   ConceptMap: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.ConceptMap,
+    columns: getColumns(ALL_COLUMNS.ConceptMap),
     tagWaitAttribute: 'resource',
     expandible: true,
     tabs: ['Details', 'Versions', 'Copyright'],
@@ -857,7 +860,7 @@ const ResultsTable = (
     const result = map(viewFields, fieldConfig => {
       const attr = keys(fieldConfig)[0]
       const label = fieldConfig[attr];
-      const column = find(ALL_COLUMNS[resource], {value: attr})
+      const column = find(getColumns(ALL_COLUMNS[resource]), {value: attr})
       return column ? {...column, label: label} : {label: label, id: attr, value: attr, sortable: false}
     })
     return result
