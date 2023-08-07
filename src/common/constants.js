@@ -38,13 +38,11 @@ export const OCL_SERVERS_GROUP = 'ocl_servers';
 export const OCL_FHIR_SERVERS_GROUP = 'ocl_fhir_servers';
 export const HAPI_FHIR_SERVERS_GROUP = 'hapi_fhir_servers';
 export const OPERATIONS_PANEL_GROUP = 'operations_panel';
-export const SEARCH_RELEASED_GROUP = 'search_released';
 export const AUTH_GROUPS = [
   {id: OCL_SERVERS_GROUP, name: 'OCL Servers'},
   {id: OCL_FHIR_SERVERS_GROUP, name: 'OCL FHIR Servers'},
   {id: HAPI_FHIR_SERVERS_GROUP, name: 'HAPI FHIR Servers'},
   {id: OPERATIONS_PANEL_GROUP, name: 'Operations Panel'},
-  {id: SEARCH_RELEASED_GROUP, name: 'Search Released'},
 ];
 export const ROUTE_ID_PATTERN = "[a-zA-Z0-9\-\.\_\@]+";
 export const TABLE_LAYOUT_ID = 'table';
