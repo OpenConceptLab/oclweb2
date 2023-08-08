@@ -47,7 +47,7 @@ const CollectionHomeTabs = props => {
     setExpansionForm(true)
   }
 
-  const currentResourceURL = isVersionedObject ? collection.url : (expansion.url || collection.version_url)
+  const currentResourceURL = isVersionedObject ? collection?.url : (expansion?.url || collection?.version_url)
   const getTABHref = tabConfig => {
     let href = '';
     if(tabConfig?.type === 'about')

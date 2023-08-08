@@ -65,7 +65,7 @@ const SourceHomeTabs = props => {
   const closeMappingForm = () => closeDrawer(() => setMappingForm(false))
   const closeConceptForm = () => closeDrawer(() => setConceptForm(false))
   const closeVersionForm = () => closeDrawer(() => setVersionForm(false))
-  const currentResourceURL = isVersionedObject ? source.url : source.version_url
+  const currentResourceURL = isVersionedObject ? source?.url : source?.version_url
   const getTABHref = tabConfig => {
     let href = '';
     if(tabConfig.type === 'about')
