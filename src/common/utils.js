@@ -4,6 +4,7 @@ import React from 'react';
 import ReactGA from 'react-ga4';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
+import { Tooltip } from '@mui/material';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
@@ -41,6 +42,30 @@ export const formatWebsiteLink = (value, style, text) => {
         style={merge({maxWidth: '100px'}, (style || {}))}>
         {text || value.trim()}
       </a>
+    );
+  }
+  return '';
+}
+
+export const formatWebsiteLinkTruncated = (value, style, text) => {
+  if(value && value.trim()) {
+    let href = value.trim();
+    if(!href.startsWith('http://') && !href.startsWith('https://'))
+      href = 'https://' + href;
+
+    const label = text || value.trim()
+
+    return (
+      <Tooltip title={label}>
+        <a
+          target='_blank'
+          rel="noopener noreferrer"
+          href={href}
+          className="ellipsis-text"
+          style={merge({maxWidth: '250px', display: 'block'}, (style || {}))}>
+          {label}
+        </a>
+      </Tooltip>
     );
   }
   return '';
