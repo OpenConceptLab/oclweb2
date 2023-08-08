@@ -7,9 +7,9 @@ import { RED } from '../../common/constants';
 
 const ConceptContainerDelete = ({open, resource, onClose, onDelete, associatedResources, associationRelation, summaryContent}) => {
   const { t } = useTranslation()
-  const resourceEntity = resource.type
-  const resourceType = resourceEntity.toLowerCase()
-  const resourceId = resource.short_code || resource.id
+  const resourceEntity = resource?.type
+  const resourceType = resourceEntity?.toLowerCase()
+  const resourceId = resource?.short_code || resource?.id
   const [input, setInput] = React.useState('');
   const canDelete = input === resourceId
   const opacity = canDelete ? 1 : 0.5;
