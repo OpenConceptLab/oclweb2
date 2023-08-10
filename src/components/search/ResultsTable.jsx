@@ -61,7 +61,7 @@ const RESOURCE_DEFINITIONS = {
   sources: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.sources.slice(0, 5),
+    columns: ALL_COLUMNS.sources.slice(0, 4),
     tagWaitAttribute: 'summary',
     tags: TAGS.sources,
     tabs: ['Versions',],
@@ -71,7 +71,7 @@ const RESOURCE_DEFINITIONS = {
   collections: {
     headBgColor: GREEN,
     headTextColor: WHITE,
-    columns: ALL_COLUMNS.collections.slice(0, 6),
+    columns: ALL_COLUMNS.collections.slice(0, 5),
     tagWaitAttribute: 'summary',
     tags: TAGS.collections,
     tabs: ['Versions'],

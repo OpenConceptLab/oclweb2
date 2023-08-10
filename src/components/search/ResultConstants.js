@@ -42,7 +42,7 @@ export const ALL_COLUMNS = {
   ],
   sources: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable'},
+    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable', renderer: source => <span><div>{source.short_code}</div><div style={{fontSize: '11px'}}>{formatWebsiteLinkTruncated(source.canonical_url)}</div></span>},
     {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'source_type', label: 'Type', value: 'source_type', sortOn: 'source_type'},
     {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLinkTruncated, className: 'searchable'},
@@ -61,7 +61,7 @@ export const ALL_COLUMNS = {
   ],
   collections: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable'},
+    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable', renderer: coll => <span><div>{coll.short_code}</div><div style={{fontSize: '11px'}}>{formatWebsiteLinkTruncated(coll.canonical_url)}</div></span>},
     {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},
     {id: 'full_name', label: 'Full Name', value: 'full_name', sortOn: 'full_name', sortBy: 'asc'},

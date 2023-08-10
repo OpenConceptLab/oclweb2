@@ -62,7 +62,7 @@ export const formatWebsiteLinkTruncated = (value, style, text) => {
           rel="noopener noreferrer"
           href={href}
           className="ellipsis-text"
-          style={merge({maxWidth: '250px', display: 'block'}, (style || {}))}>
+          style={merge({width: 'auto', display: 'inline-block'}, (style || {}))}>
           {label}
         </a>
       </Tooltip>
