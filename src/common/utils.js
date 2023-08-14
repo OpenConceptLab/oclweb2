@@ -4,6 +4,7 @@ import React from 'react';
 import ReactGA from 'react-ga4';
 import alertifyjs from 'alertifyjs';
 import moment from 'moment';
+import { Tooltip } from '@mui/material';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
@@ -41,6 +42,30 @@ export const formatWebsiteLink = (value, style, text) => {
         style={merge({maxWidth: '100px'}, (style || {}))}>
         {text || value.trim()}
       </a>
+    );
+  }
+  return '';
+}
+
+export const formatWebsiteLinkTruncated = (value, style, text) => {
+  if(value && value.trim()) {
+    let href = value.trim();
+    if(!href.startsWith('http://') && !href.startsWith('https://'))
+      href = 'https://' + href;
+
+    const label = text || value.trim()
+
+    return (
+      <Tooltip title={label}>
+        <a
+          target='_blank'
+          rel="noopener noreferrer"
+          href={href}
+          className="ellipsis-text"
+          style={merge({width: 'auto', display: 'inline-block'}, (style || {}))}>
+          {label}
+        </a>
+      </Tooltip>
     );
   }
   return '';
@@ -880,6 +905,7 @@ export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale)
     return d
   })
   const summaryValues = get(summary, summaryField)
+  let suggested = []
   if(summaryValues) {
     const usedValues = map(summaryValues, value => value[0])
     usedValues.forEach(used => {
@@ -888,14 +914,27 @@ export const sortValuesBySourceSummary = (data, summary, summaryField, isLocale)
         const _used = used?.toLowerCase()?.replace('-', '')?.replace('_', '')?.replace(' ', '')
         return _used === id
       })
-      if(_used)
-        _used.resultType = 'Suggested'
+      if(_used) {
+        suggested.push({..._used, resultType: 'Suggested'})
+        _data = reject(_data, {id: _used?.id})
+      }
     })
   }
-  let values = orderBy(_data, ['resultType', 'name'], ['desc', 'asc'])
+
+  let values = [...suggested, ...orderBy(_data, 'name', 'asc')]
 
   if(isLocale) {
-    values = uniqBy([{...find(values, {id: summary.default_locale}), resultType: 'Suggested'}, ...orderBy(filter(values, val => (summary.supported_locales || []).includes(val.id)).map(val => ({...val, resultType: 'Suggested'})), ['name'], ['asc']), ...values], 'id')
+    values = uniqBy(
+      [
+        {...find(values, {id: summary.default_locale}), resultType: 'Suggested'},
+        ...filter(
+            values,
+            val => (summary.supported_locales || []).includes(val.id)
+        ).map(val => ({...val, resultType: 'Suggested'})),
+        ...values
+      ],
+      'id'
+    )
   }
 
   return values

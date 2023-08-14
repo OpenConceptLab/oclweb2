@@ -156,6 +156,8 @@ class ReferenceForm extends React.Component {
   handleSubmitResponse(response) {
     if(response.status === 200) { // success
       this.setState({result: response.data})
+    } else if (response.status === 202) {
+      alertifyjs.success('The request is in the queue and will be processed soon.', 10)
     } else { // error
       const genericError = get(response, '__all__')
       if(genericError) {

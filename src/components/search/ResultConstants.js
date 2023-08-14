@@ -11,7 +11,7 @@ import {
 } from '@mui/icons-material'
 import { get, find, isEmpty, flatten, compact } from 'lodash';
 import {
-  formatDate, formatWebsiteLink, formatDateTime
+  formatDate, formatWebsiteLink, formatDateTime, formatWebsiteLinkTruncated
 } from '../../common/utils';
 import ReferenceChip from '../common/ReferenceChip';
 import ReferenceTranslation from '../common/ReferenceTranslation';
@@ -48,9 +48,10 @@ export const ALL_COLUMNS = {
   ],
   sources: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable'},
+    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable', renderer: source => <span><div>{source.short_code}</div><div style={{fontSize: '11px'}}>{formatWebsiteLinkTruncated(source.canonical_url)}</div></span>},
     {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'source_type', label: 'Type', value: 'source_type', sortOn: 'source_type'},
+    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLinkTruncated, className: 'searchable'},
     {id: 'uuid', label: 'UUID', value: 'uuid', sortable: false},
     {id: 'full_name', label: 'Full Name', value: 'full_name', sortOn: 'full_name', sortBy: 'asc'},
     {id: 'description', label: 'Description', value: 'description', sortable: false},
@@ -58,7 +59,6 @@ export const ALL_COLUMNS = {
     {id: 'default_locale', label: 'Default Locale', value: 'default_locale', sortable: false},
     {id: 'website', label: 'Website', value: 'website', sortable: false, formatter: formatWebsiteLink},
     {id: 'external_id', label: 'External ID', value: 'external_id', sortable: false},
-    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLink, className: 'searchable'},
     {id: 'publisher', label: 'Publisher', value: 'publisher', sortable: false},
     {id: 'purpose', label: 'Purpose', value: 'purpose', sortable: false},
     {id: 'copyright', label: 'Copyright', value: 'copyright', sortable: false},
@@ -67,17 +67,17 @@ export const ALL_COLUMNS = {
   ],
   collections: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: coll => <OwnerChip ownerType={coll.owner_type} owner={coll.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable'},
+    {id: 'id', label: 'ID', value: 'short_code', sortOn: '_mnemonic', className: 'searchable', renderer: coll => <span><div>{coll.short_code}</div><div style={{fontSize: '11px'}}>{formatWebsiteLinkTruncated(coll.canonical_url)}</div></span>},
     {id: 'name', label: 'Name', value: 'name', sortOn: '_name', sortBy: 'asc', className: 'searchable'},
     {id: 'collectionType', label: 'Type', value: 'collection_type', sortOn: 'collection_type'},
     {id: 'full_name', label: 'Full Name', value: 'full_name', sortOn: 'full_name', sortBy: 'asc'},
+    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLinkTruncated, className: 'searchable'},
     {id: 'uuid', label: 'UUID', value: 'uuid', sortable: false},
     {id: 'description', label: 'Description', value: 'description', sortable: false},
     {id: 'public_access', label: 'Public Access', value: 'public_access', sortable: false},
     {id: 'default_locale', label: 'Default Locale', value: 'default_locale', sortable: false},
     {id: 'website', label: 'Website', value: 'website', sortable: false, formatter: formatWebsiteLink},
     {id: 'external_id', label: 'External ID', value: 'external_id', sortable: false},
-    {id: 'canonical_url', label: 'Canonical URL', value: 'canonical_url', sortable: false, formatter: formatWebsiteLink, className: 'searchable'},
     {id: 'publisher', label: 'Publisher', value: 'publisher', sortable: false},
     {id: 'purpose', label: 'Purpose', value: 'purpose', sortable: false},
     {id: 'copyright', label: 'Copyright', value: 'copyright', sortable: false},
