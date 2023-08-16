@@ -79,7 +79,7 @@ const VersionSelectorButton = ({selected, versions, style, ...rest}) => {
           <DownIcon style={{marginLeft: '2px'}} />
         </Button>
       </ButtonGroup>
-      <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="150px">
+      <PopperGrow open={open} anchorRef={anchorRef} handleClose={handleClose} minWidth="200px">
         <FixedSizeList
           height={300}
           itemSize={46}

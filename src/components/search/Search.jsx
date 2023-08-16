@@ -1003,7 +1003,7 @@ class Search extends React.Component {
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 concept={selectedItem}
-                                location={{pathname: selectedItem.url}}
+                                location={{pathname: selectedItem.version_url}}
                                 match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/') || !selectedItem.is_latest_version) ? selectedItem.version : null }}}
                   /> :
                   <MappingHome
@@ -1015,7 +1015,7 @@ class Search extends React.Component {
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 mapping={selectedItem}
-                                location={{pathname: selectedItem.url}}
+                                location={{pathname: selectedItem.version_url}}
                                 match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/') || !selectedItem.is_latest_version) ? selectedItem.version : null}}}
                   />
                 }
