@@ -23,7 +23,7 @@ import ConceptDisplayName from '../concepts/ConceptDisplayName';
 const onVersionClick = (event, resource) => {
   event.stopPropagation()
   event.preventDefault()
-  window.location.hash = '#' + resource.owner_url + 'sources/' + resource.source + '/' + resource?.latest_source_version 
+  window.location.hash = '#' + resource.owner_url + 'sources/' + resource.source + '/' + resource?.latest_source_version
 }
 
 
@@ -35,7 +35,7 @@ export const ALL_COLUMNS = {
     {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium searchable', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
-    {id: 'latest_source_version', label: 'Source Version', value: 'latest_source_version', renderer: concept => (<a onClick={onVersionClick} href={'#' + concept.owner_url + 'sources/' + concept.source + '/' + concept?.latest_source_version } target='_blank' rel='noopener noreferrer'>{concept?.latest_source_version}</a>)}
+    {id: 'latest_source_version', label: 'Source Version', value: 'latest_source_version', renderer: concept => (<a onClick={onVersionClick} href={'#' + concept.owner_url + 'sources/' + concept.source + '/' + concept?.latest_source_version } target='_blank' rel='noopener noreferrer'>{concept?.latest_source_version}</a>), essential: false}
   ],
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} className='owner-chip-no-border' />, essential: false},
@@ -44,7 +44,7 @@ export const ALL_COLUMNS = {
     {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
     {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.map_type}</span>},
     {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
-    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
+    {id: 'latest_source_version', label: 'Source Version', value: 'latest_source_version', renderer: mapping => (<a onClick={onVersionClick} href={'#' + mapping.owner_url + 'sources/' + mapping?.source + '/' + mapping?.latest_source_version } target='_blank' rel='noopener noreferrer'>{mapping?.latest_source_version}</a>), essential: false}
   ],
   sources: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
