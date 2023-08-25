@@ -19,6 +19,7 @@ import OwnerChip from '../common/OwnerChip';
 import ToConceptLabelVertical from '../mappings/ToConceptLabelVertical';
 import FromConceptLabelVertical from '../mappings/FromConceptLabelVertical';
 import ConceptDisplayName from '../concepts/ConceptDisplayName';
+import RepoVersionLabel from '../common/RepoVersionLabel';
 
 const onVersionClick = (event, resource) => {
   event.stopPropagation()
@@ -30,21 +31,19 @@ const onVersionClick = (event, resource) => {
 export const ALL_COLUMNS = {
   concepts: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: concept => <OwnerChip ownerType={concept.owner_type} owner={concept.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false},
+    {id: 'parent', label: 'Source Version', value: 'source', sortOn: 'source', essential: false, renderer: concept => <div><span>{concept.source}</span><span style={{marginLeft: '5px'}}><RepoVersionLabel version={concept?.latest_source_version} href={'#' + concept.owner_url + 'sources/' + concept.source + '/' + concept?.latest_source_version} onClick={event => onVersionClick(event, concept)} size='small' /></span></div>},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id_lowercase', className: 'small searchable'},
     {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium searchable', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
-    {id: 'latest_source_version', label: 'Source Version', value: 'latest_source_version', renderer: concept => (<a onClick={onVersionClick} href={'#' + concept.owner_url + 'sources/' + concept.source + '/' + concept?.latest_source_version } target='_blank' rel='noopener noreferrer'>{concept?.latest_source_version}</a>), essential: false}
   ],
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} className='owner-chip-no-border' />, essential: false},
-    {id: 'parent', label: 'Source', value: 'source', sortOn: 'source', essential: false, className: 'xsmall'},
+    {id: 'parent', label: 'Source Version', value: 'source', sortOn: 'source', essential: false, className: 'xsmall', renderer: mapping => <div><span>{mapping.source}</span><span style={{marginLeft: '5px'}}><RepoVersionLabel version={mapping?.latest_source_version} href={'#' + mapping.owner_url + 'sources/' + mapping.source + '/' + mapping.latest_source_version} onClick={event => onVersionClick(event, mapping)} size='small' /></span></div>},
     {id: 'id', label: 'ID', value: 'id', sortOn: 'id_lowercase', className: 'small searchable', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.id}</span>},
     {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
     {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.map_type}</span>},
     {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
-    {id: 'latest_source_version', label: 'Source Version', value: 'latest_source_version', renderer: mapping => (<a onClick={onVersionClick} href={'#' + mapping.owner_url + 'sources/' + mapping?.source + '/' + mapping?.latest_source_version } target='_blank' rel='noopener noreferrer'>{mapping?.latest_source_version}</a>), essential: false}
   ],
   sources: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
