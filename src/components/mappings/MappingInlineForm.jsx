@@ -134,7 +134,6 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
             <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
               <TextField
                 onChange={event => setTargetConceptName(event.target.value || '')}
-                required
                 size='small'
                 fullWidth
                 label='Name'
