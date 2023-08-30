@@ -316,7 +316,7 @@ class ConceptHome extends React.Component {
           cascade_target_concept_code: isDirect ? response.data?.to_concept_code : response.data?.from_concept_code,
           cascade_target_concept_url: isDirect ? response.data?.to_concept_url : response.data?.from_concept_url,
           cascade_target_source_owner: isDirect ? response.data?.to_source_owner : response.data?.from_source_owner,
-          cascade_target_source_name: isDirect ? response.data?.from_source_name : response.data?.to_source_name,
+          cascade_target_source_name: isDirect ? response.data?.to_source_name : response.data?.from_source_name,
           cascade_target_concept_name: isDirect ? payload?.to_concept_name : payload?.from_concept_name,
         }
         if(isDirect)
