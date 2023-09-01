@@ -50,7 +50,7 @@ const SubTexts = ({ option }) => {
 }
 
 
-const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, parentURI, disabled, value}) => {
+const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharactersForSearch, size, parentURI, disabled, value, freeSolo, onInputChange}) => {
   const minLength = minCharactersForSearch || 1;
   const [input, setInput] = React.useState('')
   const [open, setOpen] = React.useState(false)
@@ -64,6 +64,8 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
       fetchConcepts(value)
     else
       setLoading(false)
+    if(freeSolo && onInputChange)
+      onInputChange(id, value || '')
   }, 300)
 
   const handleChange = (event, id, item) => {
@@ -94,6 +96,7 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
 
   return (
     <Autocomplete
+      freeSolo={freeSolo}
       disabled={disabled}
       filterOptions={x => x}
       openOnFocus

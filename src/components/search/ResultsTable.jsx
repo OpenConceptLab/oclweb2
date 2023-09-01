@@ -813,6 +813,25 @@ const ResultsTable = (
                        isSourceChild;
 
   const hasZeroActiveButSomeRetiredResults = () => isSourceChild && results?.total === 0 && Boolean(retiredResults())
+  const getIncludeRetiredFacetURL = () => {
+    let url = window.location.hash.replace('#/', '/')
+    const queryString = get(url.split('?'), '1')
+    if(queryString) {
+      const queryParams = new URLSearchParams(queryString)
+      const existingFacets = queryParams.get('facets')
+      if(existingFacets) {
+        try {
+          let facets = JSON.parse(existingFacets)
+          facets.retired = {"true": true}
+          queryParams.set('facets', JSON.stringify(facets))
+          return url.split('?')[0] + '?' + queryParams.toString()
+        } catch {
+          //pass
+        }
+      }
+    }
+    return url + '&facets={"retired":{"true":true}}'
+  }
 
   const retiredResults = () => {
     const retired = results.facets?.fields?.retired
@@ -1086,7 +1105,7 @@ const ResultsTable = (
               hasZeroActiveButSomeRetiredResults() ?
                 <span>
                   We found 0 {startCase(resource)}. Would you like to view
-                  <Link to={window.location.hash.replace('#/', '/') + '&facets={"retired":{"true":true}}'} style={{marginLeft: '3px'}}>
+                  <Link to={getIncludeRetiredFacetURL()} style={{marginLeft: '3px'}}>
                     {`${retiredResults()} Retired ${startCase(resource)}?`}
                   </Link>
                   </span> :

@@ -1,3 +1,105 @@
+##### 2.1.99 - Mon Aug 21 06:05:57 2023 +0000
+- [OpenConceptLab/ocl_issues#1575](https://github.com/OpenConceptLab/ocl_issues/issues/1575) | quick add mapping with unknown concept
+##### 2.1.98 - Thu Aug 10 10:50:18 2023 +0000
+- [OpenConceptLab/ocl_issues#1644](https://github.com/OpenConceptLab/ocl_issues/issues/1644) | Repo List | Canonical URL is part of ID
+##### 2.1.97 - Thu Aug 10 05:04:29 2023 +0000
+- [OpenConceptLab/ocl_issues#1648](https://github.com/OpenConceptLab/ocl_issues/issues/1648) | sorting suggestions by weight from repo summary | others sorted alphabatically
+##### 2.1.96 - Wed Aug 9 03:31:16 2023 +0000
+- [OpenConceptLab/ocl_issues#1646](https://github.com/OpenConceptLab/ocl_issues/issues/1646) | Collection References add | handling 202 response
+- [OpenConceptLab/ocl_issues#1644](https://github.com/OpenConceptLab/ocl_issues/issues/1644) | added Canonical URL in Source/Collection listings
+- Fixing source/collection delete
+- Fixing source/collection version form close
+##### 2.1.95 - Thu Aug 3 02:51:40 2023 +0000
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | highlight info in tooltip
+##### 2.1.94 - Sat Jul 29 00:59:28 2023 +0000
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | highlighting in - and _
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | Concept Name | using html arrow indicator for local
+- eslint-spell-checker | Allowing wildcard as a word
+- [OpenConceptLab/ocl_issues#1501](https://github.com/OpenConceptLab/ocl_issues/issues/1501) | Accepting zip format in importers
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | unmarking results after new search
+- Checking version after every 10 sec to check logout
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | reference | concept/mapping search to exclude fuzzy and wildcard results
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | not unmarking
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | meta to search_meta
+##### 2.1.93 - Sat Jul 8 02:57:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1583](https://github.com/OpenConceptLab/ocl_issues/issues/1583) | Search updates
+- [OpenConceptLab/ocl_issues#1598](https://github.com/OpenConceptLab/ocl_issues/issues/1598) | concept extra key to show existing used extras
+##### 2.1.92 - Thu Jul 6 02:24:55 2023 +0000
+- [OpenConceptLab/ocl_issues#1579](https://github.com/OpenConceptLab/ocl_issues/issues/1579) | collection versions pagination to use table pagination component
+- [OpenConceptLab/ocl_issues#1536](https://github.com/OpenConceptLab/ocl_issues/issues/1536) | correcting Auto-Expand texts
+- [OpenConceptLab/ocl_issues#1535](https://github.com/OpenConceptLab/ocl_issues/issues/1535) | Private Source/Collection description
+##### 2.1.91 - Thu Jun 29 06:05:24 2023 +0000
+- [OpenConceptLab/ocl_issues#1471](https://github.com/OpenConceptLab/ocl_issues/issues/1471) | added toggle
+##### 2.1.90 - Wed Jun 28 03:01:27 2023 +0000
+- [OpenConceptLab/ocl_issues#1600](https://github.com/OpenConceptLab/ocl_issues/issues/1600) | using GA4
+- webpack build | limiting to 1.5GB memory
+- Revert "sourcemaps off on CI"
+- Revert "sourcemaps off by default"
+- sourcemaps off by default
+- sourcemaps off on CI
+- Revert "testing build on CI without sourcemap"
+- testing build on CI without sourcemap
+- Removed prop types
+- Removed Feedback component
+- Revert "Revert "OpenConceptLab/ocl_issues#1471 | only for admins""
+- Revert "Revert "OpenConceptLab/ocl_issues#1471 | English language bundle and language switch""
+- Revert "OpenConceptLab/ocl_issues#1471 | English language bundle and language switch"
+- Revert "OpenConceptLab/ocl_issues#1471 | only for admins"
+- [OpenConceptLab/ocl_issues#1471](https://github.com/OpenConceptLab/ocl_issues/issues/1471) | only for admins
+- [OpenConceptLab/ocl_issues#1471](https://github.com/OpenConceptLab/ocl_issues/issues/1471) | English language bundle and language switch
+##### 2.1.89 - Thu Jun 8 02:44:24 2023 +0000
+- [OpenConceptLab/ocl_issues#1549](https://github.com/OpenConceptLab/ocl_issues/issues/1549) | fixing source autoid edit to sequential start from
+##### 2.1.88 - Thu Jun 1 09:19:47 2023 +0000
+- Locale Auto complete | fixing errbit
+##### 2.1.87 - Thu Jun 1 08:49:55 2023 +0000
+- Concept mappings | hiding sort for inverse mappings
+- Fixing locale auto complete
+- Fixing locale auto complete
+- [OpenConceptLab/ocl_issues#1589](https://github.com/OpenConceptLab/ocl_issues/issues/1589) | concept locale type can be free text for non-OpenMRS schema
+- [OpenConceptLab/ocl_issues#1589](https://github.com/OpenConceptLab/ocl_issues/issues/1589) | concept locale type is not required
+##### 2.1.86 - Wed May 24 01:52:18 2023 +0000
+- [OpenConceptLab/ocl_issues#1584](https://github.com/OpenConceptLab/ocl_issues/issues/1584) | Concept form drop downs to group/order-by source's summary
+- [OpenConceptLab/ocl_issues#1549](https://github.com/OpenConceptLab/ocl_issues/issues/1549) | Source Auto id attributes editable
+##### 2.1.85 - Thu May 18 03:13:38 2023 +0000
+- [OpenConceptLab/ocl_issues#1579](https://github.com/OpenConceptLab/ocl_issues/issues/1579) | pagination in collection versions tab | version selector dropdown to use react-window for performant rendering
+- [OpenConceptLab/ocl_issues#1579](https://github.com/OpenConceptLab/ocl_issues/issues/1579) | added react-window for dom virtualization
+- [OpenConceptLab/ocl_issues#1577](https://github.com/OpenConceptLab/ocl_issues/issues/1577) | Quick Add Mapping | persisting Map Type
+- Concept/Mapping version list | fixing margins
+- [OpenConceptLab/ocl_issues#1576](https://github.com/OpenConceptLab/ocl_issues/issues/1576) | Concept create/update should take to concept home with split screen open
+- [OpenConceptLab/ocl_issues#1577](https://github.com/OpenConceptLab/ocl_issues/issues/1577) | Quick Add Mapping | ordering map type using source summary and alphabetical
+- My Profile hyperlink
+##### 2.1.84 - Tue May 9 02:22:08 2023 +0000
+- [OpenConceptLab/ocl_issues#1560](https://github.com/OpenConceptLab/ocl_issues/issues/1560) | fixing access denied signin button
+- [OpenConceptLab/ocl_issues#1560](https://github.com/OpenConceptLab/ocl_issues/issues/1560) | fixing access denied signin button
+- [OpenConceptLab/ocl_issues#1561](https://github.com/OpenConceptLab/ocl_issues/issues/1561) | Collection references add success | handling async response
+##### 2.1.83 - Tue Apr 25 02:09:11 2023 +0000
+- [OpenConceptLab/ocl_issues#1213](https://github.com/OpenConceptLab/ocl_issues/issues/1213) | showing meta checksum if all are not computed yet
+- [OpenConceptLab/ocl_issues#1213](https://github.com/OpenConceptLab/ocl_issues/issues/1213) |  operation in Operations Panel
+- [OpenConceptLab/ocl_issues#1213](https://github.com/OpenConceptLab/ocl_issues/issues/1213) | Opertions Panel | representing 404 correctly
+- [OpenConceptLab/ocl_issues#1213](https://github.com/OpenConceptLab/ocl_issues/issues/1213) | Concept/Mapping Versions | showing checksums
+- Operations Panel | Removed unused import/constant
+- Concept/Mapping VersionList | added divider always
+##### 2.1.82 - Tue Apr 18 02:45:28 2023 +0000
+- Operations Panel | selected current server by default
+- Operations Panel | Showing all servers in selection
+- Collection Add References | by resources | correcting Concept label with separator
+- Collection Add References | by resources | fixing redundant resources call
+- Collection Add References | by resources | stopping redundant calls
+- Collection Add References | global search | not fetching facets
+##### 2.1.81 - Wed Apr 12 10:21:37 2023 +0000
+- [OpenConceptLab/ocl_issues#1540](https://github.com/OpenConceptLab/ocl_issues/issues/1540) | removed unused import
+- [OpenConceptLab/ocl_issues#1543](https://github.com/OpenConceptLab/ocl_issues/issues/1543) | Add references form to have transform references settings
+- Errbit | fixing collections tab configs
+- Errbit | Login fix
+- [OpenConceptLab/ocl_issues#1540](https://github.com/OpenConceptLab/ocl_issues/issues/1540) | operations panel access based on auth group
+- [OpenConceptLab/ocl_issues#1542](https://github.com/OpenConceptLab/ocl_issues/issues/1542) | facets drawer | added loader
+##### 2.1.80 - Tue Apr 11 09:25:48 2023 +0000
+- [OpenConceptLab/ocl_issues#1495](https://github.com/OpenConceptLab/ocl_issues/issues/1495) | summary | added min height
+##### 2.1.79 - Mon Apr 10 06:34:13 2023 +0000
+- [OpenConceptLab/ocl_issues#1534](https://github.com/OpenConceptLab/ocl_issues/issues/1534) | fixing versioned object check
+- [OpenConceptLab/ocl_issues#1495](https://github.com/OpenConceptLab/ocl_issues/issues/1495) | collection summary
+##### 2.1.78 - Fri Mar 31 02:56:08 2023 +0000
+- [OpenConceptLab/ocl_issues#1530](https://github.com/OpenConceptLab/ocl_issues/issues/1530) | table selection control row is sticky now
 ##### 2.1.77 - Mon Mar 27 06:40:16 2023 +0000
 - [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | added skeleton in distribution
 - [OpenConceptLab/ocl_issues#1524](https://github.com/OpenConceptLab/ocl_issues/issues/1524) | correcting links

@@ -305,7 +305,7 @@ class ConceptHome extends React.Component {
     recordGAAction('Mapping Inline', 'create_mapping', 'Created Mapping from Concept Details using Quick Actions')
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
-    const targetSourceURL = toParentURI(targetConcept.url)
+    const targetSourceURL = payload?.to_source_url || payload?.from_source_url || toParentURI(targetConcept.url)
     const refetchMappedSources = !find(this.state.mappedSources, {url: targetSourceURL})
     APIService.new().overrideURL(URL).post(payload).then(response => {
       if(response.status === 201) {
@@ -316,11 +316,11 @@ class ConceptHome extends React.Component {
         alertifyjs.success('Success')
         let newMapping = {
           ...response.data,
-          cascade_target_concept_code: targetConcept.id,
-          cascade_target_concept_url: targetConcept.url,
-          cascade_target_source_owner: targetConcept.owner,
-          cascade_target_source_name: targetConcept.source,
-          cascade_target_concept_name: targetConcept.display_name,
+          cascade_target_concept_code: isDirect ? response.data?.to_concept_code : response.data?.from_concept_code,
+          cascade_target_concept_url: isDirect ? response.data?.to_concept_url : response.data?.from_concept_url,
+          cascade_target_source_owner: isDirect ? response.data?.to_source_owner : response.data?.from_source_owner,
+          cascade_target_source_name: isDirect ? response.data?.to_source_name : response.data?.from_source_name,
+          cascade_target_concept_name: isDirect ? payload?.to_concept_name : payload?.from_concept_name,
         }
         if(isDirect)
           this.setState({

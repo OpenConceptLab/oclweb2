@@ -692,7 +692,10 @@ class Search extends React.Component {
       this.props.onFilterDrawerToggle()
   })
 
-  onApplyFacets = (filters, updatedSince) => this.setState({appliedFacets: filters, updatedSince: updatedSince}, () => this.fetchNewResults(null, false, true, true, false))
+  onApplyFacets = (filters, updatedSince) => {
+    const refetchFacets = isEmpty(filters) && !isEmpty(this.state.appliedFacets)
+    this.setState({appliedFacets: filters, updatedSince: updatedSince}, () => this.fetchNewResults(null, false, true, true, refetchFacets))
+  }
 
   onApplyUserFilters = (id, value) => {
     let newFilters = {...this.state.userFilters}

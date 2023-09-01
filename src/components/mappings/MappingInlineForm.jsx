@@ -12,6 +12,8 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
   const [mapType, setMapType] = React.useState(defaultMapType ? {id: defaultMapType, name: defaultMapType} : '')
   const [source, setSource] = React.useState('')
   const [targetConcept, setTargetConcept] = React.useState('')
+  const [targetConceptCode, setTargetConceptCode] = React.useState('')
+  const [targetConceptName, setTargetConceptName] = React.useState('')
 
   React.useEffect(() => !defaultMapType && fetchMapTypes(data => setMapTypes(sortValuesBySourceSummary(data, sourceVersionSummary, 'mappings.map_type'))), [])
   React.useEffect(() => setMapTypes(sortValuesBySourceSummary(mapTypes, sourceVersionSummary, 'mappings.map_type')), [sourceVersionSummary])
@@ -22,11 +24,33 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
   }
 
   const onConceptChange = (id, item) => setTargetConcept(item || '')
+  const onConceptCodeChange = (id, val) => setTargetConceptCode(val || '')
+  const shouldShowTargetConceptName = () => Boolean(targetConcept?.url ? targetConcept.id !== targetConceptCode : targetConceptCode)
 
   const getPayload = () => {
-    if(isDirect)
-      return {from_concept_url: concept.url, map_type: mapType.id, to_concept_url: targetConcept.url}
-    return {to_concept_url: concept.url, map_type: mapType.id, from_concept_url: targetConcept.url}
+    let payload = {}
+    const unknownConcept = shouldShowTargetConceptName()
+    if(isDirect) {
+      payload = {from_concept_url: concept.url, map_type: mapType.id}
+      if(unknownConcept) {
+        payload['to_source_url'] = source.url
+        payload['to_concept_code'] = targetConceptCode
+        payload['to_concept_name'] = targetConceptName
+      } else {
+        payload['to_concept_url'] = targetConcept?.url
+      }
+    } else {
+      payload = {to_concept_url: concept.url, map_type: mapType.id}
+      if(unknownConcept) {
+        payload['from_source_url'] = source.url
+        payload['from_concept_code'] = targetConceptCode
+        payload['from_concept_name'] = targetConceptName
+      } else {
+        payload['from_concept_url'] = targetConcept?.url
+      }
+    }
+
+    return payload
   }
 
   const _onSubmit = () => {
@@ -60,7 +84,7 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
               options={mapTypes}
               groupBy={option => option.resultType}
               renderGroup={params => (
-                <li style={{listStyle: 'none'}} key={params.group}>
+                <li style={{listStyle: 'none'}} key={params.group || 'none'}>
                   <GroupHeader>{params.group}</GroupHeader>
                   <GroupItems>{params.children}</GroupItems>
                 </li>
@@ -96,13 +120,27 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
       <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
         <ConceptSearchAutocomplete
           onChange={onConceptChange}
+          onInputChange={onConceptCodeChange}
           parentURI={source.url}
           required
           size='small'
           disabled={!source}
           value={targetConcept}
+          freeSolo
         />
       </div>
+        {
+          shouldShowTargetConceptName() &&
+            <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+              <TextField
+                onChange={event => setTargetConceptName(event.target.value || '')}
+                size='small'
+                fullWidth
+                label='Name'
+              />
+            </div>
+
+        }
       <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
         <Button color='primary' size='small' variant='contained' style={{marginRight: '16px'}} onClick={_onSubmit}>
           Save
