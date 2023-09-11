@@ -11,9 +11,9 @@ import { toNumDisplay } from '../../common/utils';
 import PopperGrow from '../common/PopperGrow';
 
 
-const FieldDistribution = ({distribution, field, source, humanize}) => {
+const FieldDistribution = ({distribution, field, source, humanize, resourceType}) => {
   let baseURL = source.version_url || source.url
-  baseURL += field.includes('map_type') ? 'mappings/' : 'concepts/'
+  baseURL += `${resourceType}/`
   const isNameType = field === 'type'
   let _field = isNameType ? 'nameTypes' : camelCase(field)
 
@@ -179,7 +179,7 @@ const Bar = ({first, second, firstTooltip, secondTooltip}) => {
 
 
 const SelfSummaryCell = ({label, value, onClick}) => (
-  <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: '20%', padding: 0}}>
+  <TableCell align='center' style={{borderRight: '1px solid rgba(224, 224, 224, 1)', width: 'calc(100% / 7)', padding: 0}}>
     <Button variant='text' onClick={onClick} style={{textTransform: 'none', display: 'inline', width: '100%', height: '100%'}} disabled={value === 0}>
       <p style={{margin: 0, display: 'flex', alignItem: 'center', justifyContent: 'center'}}>
         {
@@ -196,10 +196,12 @@ const SelfSummaryCell = ({label, value, onClick}) => (
 const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
   const [distribution, setDistribution] = React.useState({})
   const [open, setOpen] = React.useState(false)
+  const [resourceType, setResourceType] = React.useState(null)
   const [anchorRef, setAnchorRef] = React.useState(null)
-  const toggle = (event, field, value) => {
+  const toggle = (event, field, value, resource) => {
     const newOpen = (!field || open === field) ? false : field
     setOpen(newOpen)
+    setResourceType(resource)
     setAnchorRef(newOpen ? {current: event.currentTarget} : null)
     setDistribution({...distribution, [field]: value})
   }
@@ -213,14 +215,14 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell colSpan={5} style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+              <TableCell colSpan={7} style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                 Overview
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell align='left' colSpan={5}>
+              <TableCell align='left' colSpan={7}>
                 <span style={{padding: '20px', width: width, display: 'inline-block' }}>
                   <Bar first={summary?.concepts?.active} second={summary?.concepts?.retired} firstTooltip={`${toNumDisplay(summary?.concepts?.active)} Active Concepts`} secondTooltip={`${toNumDisplay(summary?.concepts?.retired)} Retired Concepts`} />
                   {
@@ -272,18 +274,20 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
               </TableCell>
             </TableRow>
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <SelfSummaryCell value={summary?.concepts?.concept_class} label='Concept Classes' onClick={event => toggle(event, 'concept_class', summary?.concepts?.concept_class)} />
-              <SelfSummaryCell value={summary?.concepts?.datatype} label='Datatype' onClick={event => toggle(event, 'datatype', summary?.concepts?.datatype)} />
-              <SelfSummaryCell value={summary?.mappings?.map_type} label='MapTypes' onClick={event => toggle(event, 'map_type', summary?.mappings?.map_type)} />
-              <SelfSummaryCell value={summary?.concepts?.locale} label='Languages' onClick={event => toggle(event, 'locale', summary?.concepts?.locale)} />
-              <SelfSummaryCell value={summary?.concepts?.name_type} label='Name Types' onClick={event => toggle(event, 'name_type', summary?.concepts?.name_type)} />
+              <SelfSummaryCell value={summary?.concepts?.concept_class} label='Concept Classes' onClick={event => toggle(event, 'concept_class', summary?.concepts?.concept_class, 'concepts')} />
+              <SelfSummaryCell value={summary?.concepts?.datatype} label='Datatype' onClick={event => toggle(event, 'datatype', summary?.concepts?.datatype, 'concepts')} />
+              <SelfSummaryCell value={summary?.mappings?.map_type} label='MapTypes' onClick={event => toggle(event, 'map_type', summary?.mappings?.map_type, 'mappings')} />
+              <SelfSummaryCell value={summary?.concepts?.locale} label='Languages' onClick={event => toggle(event, 'locale', summary?.concepts?.locale, 'concepts')} />
+              <SelfSummaryCell value={summary?.concepts?.name_type} label='Name Types' onClick={event => toggle(event, 'name_type', summary?.concepts?.name_type, 'concepts')} />
+              <SelfSummaryCell value={summary?.concepts?.contributors} label='Concept Contributors' onClick={event => toggle(event, 'updated_by', summary?.concepts?.contributors, 'concepts')} />
+              <SelfSummaryCell value={summary?.mappings?.contributors} label='Mapping Contributors' onClick={event => toggle(event, 'updated_by', summary?.mappings?.contributors, 'mappings')} />
             </TableRow>
           </TableBody>
           {
             Boolean(open) &&
               <PopperGrow open={Boolean(open)} anchorRef={anchorRef} handleClose={toggle}>
                 <div style={{maxHeight: '250px', overflow: 'auto'}}>
-                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} humanize={!['name_type', 'locale'].includes(open)}/>
+                  <FieldDistribution distribution={distribution[open]} field={open.replace('name_', '')} source={source} humanize={!['name_type', 'locale'].includes(open)} resourceType={resourceType}/>
                 </div>
               </PopperGrow>
           }

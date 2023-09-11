@@ -29,7 +29,8 @@ export const ALL_COLUMNS = {
     {id: 'name', label: 'Name', value: 'display_name', sortOn: '_name', renderer: concept => (<ConceptDisplayName concept={concept} />), className: 'medium searchable', sortBy: 'asc', tooltip: 'The display name is the preferred name for a source’s default locale.'},
     {id: 'class', label: 'Class', value: 'concept_class', sortOn: 'concept_class'},
     {id: 'datatype', label: 'Datatype', value: 'datatype', sortOn: 'datatype'},
-    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update'},
+    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_updated_on', formatter: formatDate, sortOn: 'last_update'},
+    {id: 'updatedBy', label: 'UpdatedBy', value: 'version_updated_by'},
   ],
   mappings: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: mapping => <OwnerChip ownerType={mapping.owner_type} owner={mapping.owner} className='owner-chip-no-border' />, essential: false},
@@ -38,7 +39,8 @@ export const ALL_COLUMNS = {
     {id: 'from', label: 'From Concept', renderer: mapping => <FromConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
     {id: 'mapType', label: 'Type', value: 'map_type', sortOn: 'map_type', className: 'xxsmall', renderer: mapping => <span className={mapping.retired ? 'retired' : ''}>{mapping.map_type}</span>},
     {id: 'to', label: 'To Concept', renderer: mapping => <ToConceptLabelVertical {...mapping} noRedirect />, className: 'medium searchable'},
-    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_created_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
+    {id: 'updatedOn', label: 'UpdatedOn', value: 'version_updated_on', formatter: formatDate, sortOn: 'last_update', className: 'xxsmall'},
+    {id: 'updatedBy', label: 'UpdatedBy', value: 'version_updated_by'},
   ],
   sources: [
     {id: 'owner', label: 'Owner', value: 'owner', sortOn: 'owner', renderer: source => <OwnerChip ownerType={source.owner_type} owner={source.owner} className='owner-chip-no-border' />, essential: false},
@@ -256,12 +258,12 @@ export const TAGS = {
   ValueSet: [...VALUE_SET_TAGS]
 }
 export const FACET_ORDER = {
-  concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership', 'nameTypes', 'descriptionTypes'],
+  concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership', 'nameTypes', 'descriptionTypes', 'updatedBy'],
   mappings: [
     'owner', 'ownerType', 'source', 'mapType',
     'fromConceptOwner', 'fromConceptOwnerType', 'fromConceptSource', 'fromConcept',
     'toConceptOwner', 'toConceptOwnerType', 'toConceptSource', 'toConcept',
-    'retired', 'collection_membership',
+    'retired', 'collection_membership', 'updatedBy'
   ]
 }
 
