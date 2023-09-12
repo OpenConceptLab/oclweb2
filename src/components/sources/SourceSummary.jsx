@@ -209,18 +209,18 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
   if(includeReferences)
     columns += 2
   const width = `${100/columns}%`
-  let distibutionTypes = 5
+  let distributionTypes = 5
   if(summary?.concepts?.contributors)
-    distibutionTypes +=1
+    distributionTypes +=1
   if(summary?.mappings?.contributors)
-    distibutionTypes +=1
+    distributionTypes +=1
   return (
     <React.Fragment>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell colSpan={distibutionTypes} style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
+              <TableCell colSpan={distributionTypes} style={{backgroundColor: 'rgb(224, 224, 224)', fontWeight: 'bold'}}>
                 Overview
               </TableCell>
             </TableRow>
@@ -285,11 +285,11 @@ const SelfSummary = ({ summary, source, isVersion, includeReferences }) => {
               <SelfSummaryCell value={summary?.concepts?.locale} label='Languages' onClick={event => toggle(event, 'locale', summary?.concepts?.locale, 'concepts')} />
               <SelfSummaryCell value={summary?.concepts?.name_type} label='Name Types' onClick={event => toggle(event, 'name_type', summary?.concepts?.name_type, 'concepts')} />
               {
-                distibutionTypes > 5 &&
+                distributionTypes > 5 &&
                   <SelfSummaryCell value={summary?.concepts?.contributors} label='Concept Contributors' onClick={event => toggle(event, 'updated_by', summary?.concepts?.contributors, 'concepts')} />
               }
               {
-                distibutionTypes > 6 &&
+                distributionTypes > 6 &&
                   <SelfSummaryCell value={summary?.mappings?.contributors} label='Mapping Contributors' onClick={event => toggle(event, 'updated_by', summary?.mappings?.contributors, 'mappings')} />
               }
             </TableRow>
