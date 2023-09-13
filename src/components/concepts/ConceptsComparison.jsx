@@ -1,5 +1,5 @@
 import React from 'react'
-import { cloneDeep, get, map, isEmpty, sortBy, filter, reject, uniqBy, includes, has, keys, values, intersectionWith } from 'lodash';
+import { cloneDeep, get, map, isEmpty, sortBy, filter, reject, uniqBy, includes, has, keys, values, intersectionWith, orderBy } from 'lodash';
 import Comparison from '../common/Comparison'
 import APIService from '../../services/APIService';
 import { toObjectArray, toParentURI, formatDate } from '../../common/utils';
@@ -115,13 +115,19 @@ export default function ConceptsComparison() {
     ], 'locale')
   }
 
-  const sortMappings = (state) => {
-    if(!isEmpty(get(state.lhs, 'mappings')) && !isEmpty(get(state.rhs, 'mappings'))) {
+  const formatData = state => {
       const newState = {...state};
+    if(!isEmpty(get(state.lhs, 'mappings')) && !isEmpty(get(state.rhs, 'mappings'))) {
       newState.lhs.mappings = uniqBy([...intersectionWith(newState.lhs.mappings, newState.rhs.mappings, (m1, m2) => m1.id === m2.id), ...newState.lhs.mappings], 'id')
       newState.rhs.mappings = uniqBy([...intersectionWith(newState.rhs.mappings, newState.lhs.mappings, (m1, m2) => m1.id === m2.id), ...newState.rhs.mappings], 'id')
-      return newState
     }
+    if(!isEmpty(get(state.lhs, 'names'))) {
+      newState.lhs.names = orderBy(newState.lhs.names, ['name_type', 'name'], ['asc', 'asc'])
+    }
+    if(!isEmpty(get(state.rhs, 'names'))) {
+      newState.rhs.names = orderBy(newState.rhs.names, ['name_type', 'name'], ['asc', 'asc'])
+    }
+    return newState
   }
 
   const getHeaderSubAttributeValues = (concept, isVersion) => {
@@ -200,7 +206,7 @@ export default function ConceptsComparison() {
   return <Comparison
            fetcher={fetcher}
            search={location.search}
-           postFetch={sortMappings}
+           postFetch={formatData}
            getHeaderSubAttributeValues={getHeaderSubAttributeValues}
            getAttributeValue={getAttributeValue}
            getListAttributeValue={getListAttributeValue}
