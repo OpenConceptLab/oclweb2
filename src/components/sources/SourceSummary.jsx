@@ -24,9 +24,10 @@ const FieldDistribution = ({distribution, field, source, humanize, resourceType}
           let value = state[0]
           //let value = isNameType ? (state[field] ? state[field] : 'None') : (state[field] || '').toLowerCase()
           let url = baseURL + `?facets={"${_field}":{"${value}":true}}`
+          let label = humanize ? (value === 'n/a' ? value.toUpperCase() : startCase(value)) : value
           return (
             <ListItem key={value} secondaryAction={toNumDisplay(state[1])}>
-              <a href={"#" + url}>{isNull(value) ? <i>None</i> : (humanize ? startCase(value) : value)}</a>
+              <a href={"#" + url}>{isNull(value) ? <i>None</i> : label}</a>
             </ListItem>
           )
         })
