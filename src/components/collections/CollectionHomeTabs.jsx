@@ -62,7 +62,7 @@ const CollectionHomeTabs = props => {
       href = `#${currentResourceURL}expansions`
     else if(tabConfig?.href)
       href = `#${currentResourceURL}${tabConfig.href}`
-    else {
+    else if(collection?.id || expansion?.url) {
       const urlAttr = tabConfig?.type + '_url'
       href = isEmpty(expansion) ? `#${collection[urlAttr]}` : `#${expansion.url}${tabConfig?.type}/`
     }

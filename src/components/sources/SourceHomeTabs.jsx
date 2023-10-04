@@ -76,7 +76,7 @@ const SourceHomeTabs = props => {
       href = `#${currentResourceURL}summary`
     else if(tabConfig.href)
       href = `#${currentResourceURL}${tabConfig.href}`
-    else {
+    else if(source?.id) {
       const urlAttr = tabConfig.type + '_url'
       href = `#${source[urlAttr]}`
     }
