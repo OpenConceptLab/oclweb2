@@ -160,6 +160,16 @@ export const SOURCE_DEFAULT_CONFIG = {
           value: "canonical_url",
           type: "url",
         },
+        {
+          label: "Standard Checksum",
+          value: "checksums.standard",
+          type: "text",
+        },
+        {
+          label: "Smart Checksum",
+          value: "checksums.smart",
+          type: "text",
+        },
       ],
       invisibleAttributes: [
         {
@@ -311,6 +321,16 @@ export const COLLECTION_DEFAULT_CONFIG = {
           label: "Canonical URL",
           value: "canonical_url",
           type: "url",
+        },
+        {
+          label: "Standard Checksum",
+          value: "checksums.standard",
+          type: "text",
+        },
+        {
+          label: "Smart Checksum",
+          value: "checksums.smart",
+          type: "text",
         },
       ],
       invisibleAttributes: [

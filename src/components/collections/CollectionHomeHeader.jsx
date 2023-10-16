@@ -119,7 +119,7 @@ const CollectionHomeHeader = ({
                 map(getVisibleAttributes(), (attr, index) => {
                   if (attr.value === "supported_locales" || attr.value === "default_locale")
                     return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...collection} />} gridClass="col-xs-12" type="component" />;
-                  return <HeaderAttribute key={attr.label + index} label={attr.label} value={collection[attr.value]} type={attr.type} gridClass="col-xs-12"/>;
+                  return <HeaderAttribute key={attr.label + index} label={attr.label} value={get(collection, attr.value)} type={attr.type} gridClass="col-xs-12"/>;
                 })
               }
               <HeaderAttribute label="Custom Attributes" value={<CustomAttributesPopup attributes={collection.extras} />} gridClass="col-xs-12" />
