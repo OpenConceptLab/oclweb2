@@ -129,10 +129,10 @@ const VersionList = ({ versions, resource }) => {
                             {
                               version?.checksums &&
                                 <div className='col-md-12 no-side-padding gray-italics-small' style={{marginTop: '-5px', marginBottom: '10px'}}>
-                                  <Tooltip title="Checksum of versions's metadata, locales, direct associations and source versions." placement='left'>
+                                  <Tooltip title="Standard Checksum of Version" placement='left'>
                                     <div>
                                       <BetaLabel label='Checksum' />:
-                                      <_Checksum checksum={version.checksums.all || version.checksums.meta} />
+                                      <_Checksum checksum={version.checksums.standard} />
                                       <span>
                                         <IconButton size='small' color='primary' onClick={() => setExpandChecksums(!expandChecksums)}>
                                           {expandChecksums ? <UpIcon fontSize='inherit' /> : <DownIcon fontSize='inherit' />}
@@ -143,12 +143,8 @@ const VersionList = ({ versions, resource }) => {
                                   {
                                     expandChecksums &&
                                       <Collapse in={expandChecksums} style={{marginTop: '-5px', background: 'rgba(0, 0, 0, 0.1)', padding: '5px 5px 3px', borderRadius: '2px'}}>
-                                        <Checksum title="Checksum of versions's metadata." label='Metadata' checksum={version.checksums.meta} />
-                                        <Checksum title="Checksum of versions's names." label='Names' checksum={version.checksums.names} />
-                                        <Checksum title="Checksum of versions's descriptions." label='Descriptions' checksum={version.checksums.descriptions} />
-                                        <Checksum title="Checksum of versions's associations." label='Associations' checksum={version.checksums.mappings} />
-                                        <Checksum title="Checksum of versions's source versions." label='Source Versions' checksum={version.checksums.repo_versions} />
-                                        <Checksum title="Checksum of everything." label='All' checksum={version.checksums.all} />
+                                        <Checksum title="Standard Checksum" label='Standard' checksum={version.checksums.standard} />
+                                        <Checksum title="Smart Checksum" label='Smart' checksum={version.checksums.smart} />
                                       </Collapse>
                                   }
                                 </div>
