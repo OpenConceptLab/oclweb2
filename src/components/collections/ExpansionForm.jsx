@@ -77,7 +77,7 @@ class ExpansionForm extends React.Component {
     super(props);
     this.state = {
       versions: get(props, 'versions'),
-      selectedVersion: get(props, 'version'),
+      selectedVersion: get(props, 'version') || props?.id,
       fields: {
         mnemonic: '',
         canonical_url: '',
@@ -181,7 +181,8 @@ class ExpansionForm extends React.Component {
 
       this.alert = alertifyjs.warning('Starting Expansion Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
-      const url = selectedVersion.version === 'HEAD' ? selectedVersion.url + selectedVersion.version + '/' : selectedVersion.version_url
+      let _version = selectedVersion?.version || selectedVersion?.id
+      const url = _version === 'HEAD' ? selectedVersion.url + _version + '/' : selectedVersion.version_url
       APIService.new().overrideURL(url).appendToUrl('expansions/').post(fields).then(response => this.handleSubmitResponse(response))
     }
   }
@@ -220,7 +221,8 @@ class ExpansionForm extends React.Component {
     const { fields, fieldErrors, selectedVersion, versions, helperTexts } = this.state;
     const { onCancel } = this.props;
     const idLabel = fields.id ? fields.id : 'expansion-id';
-    const versionLabel = `${selectedVersion.short_code} / ${selectedVersion.version} / [${idLabel}]`;
+    const _version = selectedVersion?.version || selectedVersion?.id
+    const versionLabel = `${selectedVersion.short_code} / ${_version} / [${idLabel}]`;
     const header = `New Expansion: ${versionLabel}`;
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
@@ -248,11 +250,11 @@ class ExpansionForm extends React.Component {
               <Autocomplete
                 openOnFocus
                 disableClearable
-                isOptionEqualToValue={(option, value) => option.version === get(value, 'version')}
+                isOptionEqualToValue={(option, value) => (option?.id === value?.id) || (option?.version && option?.version === value?.version)}
                 value={selectedVersion}
                 id="selectedVersion"
                 options={versions}
-                getOptionLabel={option => option.version}
+                getOptionLabel={option => option.version || option.id}
                 fullWidth
                 required
                 renderInput={
