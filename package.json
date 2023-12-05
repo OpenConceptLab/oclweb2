@@ -39,7 +39,7 @@
     "react-quill": "^1.3.5",
     "react-router-dom": "^5.3.4",
     "react-split": "^2.0.14",
-    "react-window": "^1.8.9",
+    "react-window": "^1.8.10",
     "remark-gfm": "^1.0.0",
     "stacktrace-js": "^2.0.2"
   },
@@ -49,13 +49,13 @@
     "eslint": "./node_modules/.bin/eslint ./src"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
+    "@babel/core": "^7.23.5",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-env": "^7.23.5",
     "@babel/preset-react": "^7.23.3",
-    "@babel/runtime": "^7.23.2",
+    "@babel/runtime": "^7.23.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.3.0",
     "copy-webpack-plugin": "^4.6.0",
