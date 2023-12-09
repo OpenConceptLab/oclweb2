@@ -258,6 +258,16 @@ export const SOURCE_DEFAULT_CONFIG = {
           type: "text",
         },
         {
+          label: "AutoID Concept Name External ID",
+          value: "autoid_concept_name_external_id",
+          type: "text",
+        },
+        {
+          label: "AutoID Concept Description External ID",
+          value: "autoid_concept_description_external_id",
+          type: "text",
+        },
+        {
           label: "AutoID Mapping ID",
           value: "autoid_mapping_mnemonic",
           type: "text",

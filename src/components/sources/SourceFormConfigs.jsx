@@ -133,6 +133,16 @@ const CONFIG = {
         label: 'Concept External IDs',
         tooltip: 'This determines if an external ID is automatically assigned to new concepts. External IDs are optional but can be useful for IDs from other systems.'
       },
+      conceptNameExternalID: {
+        label: 'Concept Name External IDs',
+        tooltip: 'This determines if an external ID is automatically assigned to new concept names. External IDs are optional but can be useful for IDs from other systems.',
+        uuidOnly: true
+      },
+      conceptDescriptionExternalID: {
+        label: 'Concept Description External IDs',
+        tooltip: 'This determines if an external ID is automatically assigned to new concept descriptions. External IDs are optional but can be useful for IDs from other systems.',
+        uuidOnly: true
+      },
       mappingID: {
         label: 'Mapping IDs',
         tooltip: 'This determines if an ID is automatically assigned to new mappings.'

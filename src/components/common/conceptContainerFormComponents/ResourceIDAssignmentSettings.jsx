@@ -21,6 +21,8 @@ const ResourceIDAssignmentSettings = props => {
   const [autoIDMappingIDStartFrom, setAutoIDMappingIDStartFrom] = React.useState(1)
   const [autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom] = React.useState(1)
   const [autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom] = React.useState(1)
+  const [autoIDConceptNameExternalID, setAutoIDConceptNameExternalID] = React.useState('None')
+  const [autoIDConceptDescriptionExternalID, setAutoIDConceptDescriptionExternalID] = React.useState('None')
   const onChange = (id, value, setter, isNum) => {
     setter(value)
     let _val = value
@@ -43,6 +45,8 @@ const ResourceIDAssignmentSettings = props => {
     autoid_mapping_mnemonic_start_from: parseInt(autoIDMappingIDStartFrom),
     autoid_mapping_external_id: toValue(autoIDMappingExternalID),
     autoid_mapping_external_id_start_from: parseInt(autoIDMappingExternalIDStartFrom),
+    autoid_concept_name_external_id: toValue(autoIDConceptNameExternalID),
+    autoid_concept_description_external_id: toValue(autoIDConceptDescriptionExternalID),
   }, newValue)
   const setFieldsForEdit = () => {
     setAutoIDConceptID(props.repo.autoid_concept_mnemonic || 'None')
@@ -53,19 +57,22 @@ const ResourceIDAssignmentSettings = props => {
     setAutoIDMappingIDStartFrom(props.repo.autoid_mapping_mnemonic_start_from || 1)
     setAutoIDMappingExternalID(props.repo.autoid_concept_external_id || 'None')
     setAutoIDMappingExternalIDStartFrom(props.repo.autoid_mapping_external_id_start_from || 1)
+    setAutoIDConceptNameExternalID(props.repo.autoid_concept_name_external_id || 'None')
+    setAutoIDConceptDescriptionExternalID(props.repo.autoid_concept_description_external_id || 'None')
   }
-  const count = compact([toValue(autoIDConceptID), toValue(autoIDConceptExternalID), toValue(autoIDMappingID), toValue(autoIDMappingExternalID)]).length
+  const count = compact([
+    toValue(autoIDConceptID), toValue(autoIDConceptExternalID),
+    toValue(autoIDConceptNameExternalID), toValue(autoIDConceptDescriptionExternalID),
+    toValue(autoIDMappingID), toValue(autoIDMappingExternalID),
+  ]).length
 
   React.useEffect(() => props.edit && setFieldsForEdit(), [])
 
   const Template = (id, config, value, setter, defaultValue, startFromValue, startFromSetter, startFromConfig, helperText) => {
-    const isExternalID = id.includes('External')
+    const isExternalID = id.includes('external')
     const isConceptID = id.includes('concept')
-    const autoIdFieldID = isConceptID ? 'autoid_concept_mnemonic' : 'autoid_mapping_mnemonic'
-    const autoExternalIDFieldID = isConceptID ? 'autoid_concept_external_id' : 'autoid_mapping_external_id'
     const autoIdStartFromFieldID = isConceptID ? 'autoid_concept_mnemonic_start_from' : 'autoid_mapping_mnemonic_start_from'
     const autoIdExternalIDStartFromFieldID = isConceptID ? 'autoid_concept_external_id_start_from' : 'autoid_mapping_external_id_start_from'
-    const fieldID = isExternalID ? autoExternalIDFieldID : autoIdFieldID
     const startFromID = isExternalID ? autoIdExternalIDStartFromFieldID : autoIdStartFromFieldID
     const STYLE = {
       fontSize: '12px',
@@ -85,7 +92,7 @@ const ResourceIDAssignmentSettings = props => {
                 label={config.label}
                 defaultValue={defaultValue}
                 value={value}
-                onChange={event => onChange(fieldID, event.target.value || '', setter)}
+                onChange={event => onChange(id, event.target.value || '', setter)}
               >
                 <MenuItem value='None'>
                   <ListItemText primary="Enter Manually" secondary={<span style={STYLE}>The ID must be entered manually each time you create a new concept.</span>} />
@@ -93,9 +100,12 @@ const ResourceIDAssignmentSettings = props => {
                 <MenuItem value='uuid'>
                   <ListItemText primary="UUID" secondary={<span style={STYLE}>The ID is is auto-assigned in the UUID format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</span>} />
                 </MenuItem>
-                <MenuItem value='sequential'>
-                  <ListItemText primary="Sequential" secondary={<span style={STYLE}>The ID is auto-assigned in a numeric format, increasing by 1 for each new resource. You can pick what number to start with.</span>} />
-                </MenuItem>
+                {
+                  !config.uuidOnly &&
+                    <MenuItem value='sequential'>
+                      <ListItemText primary="Sequential" secondary={<span style={STYLE}>The ID is auto-assigned in a numeric format, increasing by 1 for each new resource. You can pick what number to start with.</span>} />
+                    </MenuItem>
+                }
               </Select>
               <FormHelperText>
                 {helperText}
@@ -159,10 +169,10 @@ const ResourceIDAssignmentSettings = props => {
           </div>
 
           {
-            Template('conceptID', configs.conceptID, autoIDConceptID, setAutoIDConceptID, 'None', autoIDConceptIDStartFrom, setAutoIDConceptIDStartFrom, configs.conceptIDStartFrom)
+            Template('autoid_concept_mnemonic', configs.conceptID, autoIDConceptID, setAutoIDConceptID, 'None', autoIDConceptIDStartFrom, setAutoIDConceptIDStartFrom, configs.conceptIDStartFrom)
           }
           {
-            Template('mappingID', configs.mappingID, autoIDMappingID, setAutoIDMappingID, 'sequential', autoIDMappingIDStartFrom, setAutoIDMappingIDStartFrom, configs.mappingIDStartFrom)
+            Template('autoid_mapping_mnemonic', configs.mappingID, autoIDMappingID, setAutoIDMappingID, 'sequential', autoIDMappingIDStartFrom, setAutoIDMappingIDStartFrom, configs.mappingIDStartFrom)
           }
         </div>
         <div className='col-xs-12 no-side-padding'>
@@ -170,10 +180,16 @@ const ResourceIDAssignmentSettings = props => {
             External IDs
           </div>
           {
-            Template('conceptExternalID', configs.conceptExternalID, autoIDConceptExternalID, setAutoIDConceptExternalID, 'None', autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom, configs.conceptExternalIDStartFrom)
+            Template('autoid_concept_external_id', configs.conceptExternalID, autoIDConceptExternalID, setAutoIDConceptExternalID, 'None', autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom, configs.conceptExternalIDStartFrom)
           }
           {
-            Template('mappingExternalID', configs.mappingExternalID, autoIDMappingExternalID, setAutoIDMappingExternalID, 'None', autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom, configs.mappingExternalIDStartFrom)
+            Template('autoid_concept_name_external_id', configs.conceptNameExternalID, autoIDConceptNameExternalID, setAutoIDConceptNameExternalID, 'None')
+          }
+          {
+            Template('autoid_concept_description_external_id', configs.conceptDescriptionExternalID, autoIDConceptDescriptionExternalID, setAutoIDConceptDescriptionExternalID, 'None')
+          }
+          {
+            Template('autoid_mapping_external_id', configs.mappingExternalID, autoIDMappingExternalID, setAutoIDMappingExternalID, 'None', autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom, configs.mappingExternalIDStartFrom)
           }
         </div>
       </React.Fragment>
