@@ -183,13 +183,13 @@ const ResourceIDAssignmentSettings = props => {
             Template('autoid_concept_external_id', configs.conceptExternalID, autoIDConceptExternalID, setAutoIDConceptExternalID, 'None', autoIDConceptExternalIDStartFrom, setAutoIDConceptExternalIDStartFrom, configs.conceptExternalIDStartFrom)
           }
           {
+            Template('autoid_mapping_external_id', configs.mappingExternalID, autoIDMappingExternalID, setAutoIDMappingExternalID, 'None', autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom, configs.mappingExternalIDStartFrom)
+          }
+          {
             Template('autoid_concept_name_external_id', configs.conceptNameExternalID, autoIDConceptNameExternalID, setAutoIDConceptNameExternalID, 'None')
           }
           {
             Template('autoid_concept_description_external_id', configs.conceptDescriptionExternalID, autoIDConceptDescriptionExternalID, setAutoIDConceptDescriptionExternalID, 'None')
-          }
-          {
-            Template('autoid_mapping_external_id', configs.mappingExternalID, autoIDMappingExternalID, setAutoIDMappingExternalID, 'None', autoIDMappingExternalIDStartFrom, setAutoIDMappingExternalIDStartFrom, configs.mappingExternalIDStartFrom)
           }
         </div>
       </React.Fragment>
