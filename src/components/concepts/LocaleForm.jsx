@@ -10,7 +10,7 @@ import GroupItems from '../common/GroupItems';
 
 const LocaleForm = ({
   localeAttr, index, onTextFieldChange, onAutoCompleteChange, onCheckboxChange, types,
-  onDelete, error, locale, sourceVersionSummary, source
+  onDelete, error, locale, sourceVersionSummary, source, edit
 }) => {
   const isName = localeAttr === 'fields.names';
   const nameAttr = isName ? 'name' : 'description';
@@ -19,6 +19,8 @@ const LocaleForm = ({
   const [selectedLocale, setSelectedLocale] = React.useState(
     locale.locale ? {id: locale.locale, name: locale.locale} : null
   )
+  const autoIDConfigField = isName ? 'autoid_concept_name_external_id' : 'autoid_concept_description_external_id';
+  const [manualExternalID, setManualExternalID] = React.useState(source?.id ? !source[autoIDConfigField] : true)
   let selectedLocaleType = localeType ? find(types, {id: locale[typeAttr]}) : null;
   const idPrefix = `${localeAttr}.${index}`;
   const borderColor = error ? ERROR_RED : 'lightgray'
@@ -40,7 +42,20 @@ const LocaleForm = ({
   }, [locale])
 
 
-  const isOpenMRSValidationSchema = source?.custom_validation_schema?.toLowerCase() === 'openmrs'
+  const isOpenMRSValidationSchema = source?.custom_validation_schema?.toLowerCase() === 'openmrs';
+  const ANCHOR_UNDERLINE_STYLES = {textDecoration: 'underline', cursor: 'pointer'}
+  const toggleManualExternalId = () => {
+    const newVal = !manualExternalID
+    if(!newVal)
+      onTextFieldChange({target: {id: `${idPrefix}.${nameAttr}`, value: ''}})
+    setManualExternalID(newVal)
+  }
+
+  const shouldEnterManualExternalId = !manualExternalID && (edit ? !locale?.external_id : false)
+
+  React.useEffect(() => {
+    source?.id && setManualExternalID(!source[autoIDConfigField])
+  }, [source])
 
   return (
     <div className='col-md-12' style={{border: `1px solid ${borderColor}`, borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
@@ -90,16 +105,22 @@ const LocaleForm = ({
               value={get(locale, nameAttr, '') || ''}
             />
           </div>
-          <div className="col-md-6 no-left-padding" style={{marginTop: '15px'}}>
-            <TextField
-              id={`${idPrefix}.external_id`}
-              label="External ID"
-              variant="outlined"
-              fullWidth
-              onChange={onTextFieldChange}
-              size='small'
-              value={get(locale, 'external_id', '') || ''}
-            />
+          <div className="col-md-6 no-left-padding" style={{marginTop: shouldEnterManualExternalId ? '5px' : '15px'}}>
+            {
+              shouldEnterManualExternalId ?
+                <span style={{fontWeight: '500', padding: '10px 5px', display: 'inline-block'}}>
+                  External ID will be auto-assigned (<a style={ANCHOR_UNDERLINE_STYLES} onClick={toggleManualExternalId}>click here</a> to override with manual entry)
+                </span> :
+              <TextField
+                id={`${idPrefix}.external_id`}
+                label="External ID"
+                variant="outlined"
+                fullWidth
+                onChange={onTextFieldChange}
+                size='small'
+                value={get(locale, 'external_id', '') || ''}
+              />
+            }
           </div>
         </div>
         <div className='col-md-2 no-side-padding' style={{textAlign: 'right'}}>
@@ -108,8 +129,8 @@ const LocaleForm = ({
               control={
                 <Checkbox
                   checked={get(locale, 'locale_preferred', false)}
-                          name="preferred"
-                          onChange={event => onCheckboxChange(`${idPrefix}.locale_preferred`, event.target.checked)}
+                  name="preferred"
+                  onChange={event => onCheckboxChange(`${idPrefix}.locale_preferred`, event.target.checked)}
                 />
               }
               label="Preferred"
