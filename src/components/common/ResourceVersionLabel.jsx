@@ -9,6 +9,7 @@ import ReleasedChip from './ReleasedChip';
 import RetiredChip from './RetiredChip';
 import ProcessingChip from './ProcessingChip';
 import ExpansionChip from './ExpansionChip';
+import AccessChip from './AccessChip';
 import { GREEN } from '../../common/constants';
 
 const SEPARATOR = (<SeparatorIcon />)
@@ -26,6 +27,12 @@ const ResourceVersionLabel = props => {
         <span className='separator-small'>{SEPARATOR}</span>
         <span className='resource-name'>[{props.version}]</span>
       </span>
+      {
+        props.showAccess && props.public_access &&
+          <span style={{marginLeft: '10px'}}>
+            <AccessChip size='small' publicAccess={props.public_access} />
+          </span>
+      }
       {
         props.released &&
         <span style={{marginLeft: '10px'}}>
