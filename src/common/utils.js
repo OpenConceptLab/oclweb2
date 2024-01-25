@@ -980,14 +980,18 @@ const getHighlightedTexts = items => {
 
 
 export const highlightTexts = (items, texts, unmark=false) => {
-  const markInstance = new Mark(document.querySelectorAll('.searchable'))
-  const _texts = texts || getHighlightedTexts(items)
-  const options = {
-    element: "span",
-    className: "highlight-search-results",
-    separateWordSearch: false
+  try {
+    const markInstance = new Mark(document.querySelectorAll('.searchable'))
+    const _texts = texts || getHighlightedTexts(items)
+    const options = {
+      element: "span",
+      className: "highlight-search-results",
+      separateWordSearch: false
+    }
+    if(unmark)
+      markInstance.unmark(options)
+    markInstance.mark(_texts, options);
+  } catch {
+    //pass
   }
-  if(unmark)
-    markInstance.unmark(options)
-  markInstance.mark(_texts, options);
 }
