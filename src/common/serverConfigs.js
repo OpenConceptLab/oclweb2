@@ -271,4 +271,48 @@ export const SERVER_CONFIGS = [
       ]
     }
   },
+  {
+    id: 14,
+    name: 'OCL TEST WHO',
+    type: 'ocl',
+    url: 'https://api.test.who.openconceptlab.org',
+    fhirServerId: 15,
+    operations: {
+      source: [
+        '$cascade',
+        '$checksum'
+      ],
+      collection: [
+        '$cascade',
+        '$checksum'
+      ],
+    }
+  },
+  {
+    id: 15,
+    name: 'FHIR TEST WHO',
+    beta: true,
+    type: 'fhir',
+    url: 'https://fhir.test.who.openconceptlab.org',
+    hapi: false,
+    info: {
+      pageSize: 10,
+      baseURI: '/fhir/',
+      type: 'HAPI FHIR 5.0.0 REST Server (FHIR Server; FHIR 4.0.1/R4)',
+      org: {
+        id: 'FHIR',
+        name: "Fast Healthcare Interoperability Resources",
+        logo_url: '/fhir.svg'
+      }
+    },
+    operations: {
+      codeSystem: [
+        '$lookup',
+        '$validate-code',
+      ],
+      valueSet: [
+        '$validate-code',
+      ]
+    }
+  }
 ]
