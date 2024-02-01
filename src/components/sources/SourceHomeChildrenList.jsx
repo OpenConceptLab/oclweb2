@@ -31,7 +31,7 @@ class SourceHomeChildrenList extends React.Component {
         parentResource='source'
         baseURL={this.getURL()}
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
-        searchInputPlaceholder={`Search ${source.name} ${resource}...`}
+        searchInputPlaceholder={`Search ${source?.name} ${resource}...`}
       />
     )
   }
