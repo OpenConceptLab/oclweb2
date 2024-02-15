@@ -48,7 +48,7 @@ const COMMUNITY_OPTIONS = [
   },
   {
     label: 'Technical Roadmap',
-    href: SITE_URL + 'technical-roadmap/',
+    href: SITE_URL + '2024-ocl-community-roadmap/',
     icon: <MapIcon />
   },
   {
