@@ -31,14 +31,17 @@ class CollectionHomeChildrenList extends React.Component {
   getURL() {
     const { selectedVersion } = this.state;
     const { versionedObjectURL, resource, expansion, expansions } = this.props;
-    const expansionURL = get(expansion, 'url')
-    let url = versionedObjectURL
+    let url = this.props.collectionURLs.version || this.props.collectionURLs.collection || versionedObjectURL
 
     if(resource === 'references') {
-      if(selectedVersion)
-        return url + selectedVersion + '/' + resource + '/'
-      return url + resource + '/'
+      if(this.props.collectionURLs?.collection)
+        url = this.props.collectionURLs.version || this.props.collectionURLs.collection
+      else if(selectedVersion)
+        url += selectedVersion + '/'
+      url += resource + '/'
+      return url
     }
+    let expansionURL = this.props.collectionURLs?.expansion
 
     if(expansionURL)
       return `${expansionURL}${resource}/`

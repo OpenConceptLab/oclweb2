@@ -402,6 +402,7 @@ class CollectionHome extends React.Component {
                   onSelect={this.onResourceSelect}
                   onFilterDrawerToggle={this.onFilterDrawerToggle}
                   collectionVersionSummary={this.state.collectionVersionSummary}
+                  collectionURLs={this.getResourceURLs()}
                 />
               </div>
             </div>
