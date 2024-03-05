@@ -153,7 +153,8 @@ const ConceptSearchAutocomplete = ({onChange, label, id, required, minCharacters
               <ListItemText
                 primary={
                   <Typography
-                    sx={{ maxWidth: 'calc(100% - 90px)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    className='ellipsis-text-2'
+                    sx={{ maxWidth: 'calc(100% - 5px)' }}>
                     <span>{option.display_name}</span>
                     {
                       option.display_locale &&

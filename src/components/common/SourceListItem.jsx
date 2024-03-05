@@ -57,7 +57,7 @@ const SourceListItem = ({ option, listItemProps, style }) => {
       <ListItemText
         primary={
           <Typography
-            sx={{ maxWidth: 'calc(100% - 90px)' }}>
+            sx={{ maxWidth: 'calc(100% - 20px)' }}>
             {option.name}
           </Typography>
         }
