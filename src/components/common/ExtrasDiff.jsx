@@ -6,6 +6,18 @@ import {
   isNumber, isArray
 } from 'lodash';
 
+const diffStyle = {
+  variables: {
+    light: {
+      wordRemovedBackground: '#ffe294',
+      removedBackground: '#fffbdd',
+      addedBackground: '#fffbdd',
+      wordAddedBackground: '#ffe294'
+    }
+  }
+}
+
+
 const ExtrasDiff = ({lhs, rhs}) => {
   const lhsKeys = keys(lhs)
   const rhsKeys = keys(rhs)
@@ -50,6 +62,7 @@ const ExtrasDiff = ({lhs, rhs}) => {
                 hasDiff ?
                 <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
                   <ReactDiffViewer
+                    styles={diffStyle}
                     oldValue={lhsValue}
                     newValue={rhsValue}
                     showDiffOnly={false}

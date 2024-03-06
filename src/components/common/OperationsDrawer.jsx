@@ -148,6 +148,13 @@ const OperationsDrawer = () => {
     return get(_item || item, 'source') || ''
   }
   const getItemCode = _item => get(_item || item, 'id') || ''
+  const getItemType = _item => {
+    let _type = _item?.type || 'Concept'
+    _type = _type.toLowerCase()
+    if(_type && !_type.includes('version') && !['organization', 'org', 'user'].includes(_type))
+      _type += '_version'
+    return _type
+  }
   const [item, setItem] = React.useState(operationItem)
   const [parentId, setParentId] = React.useState(getParentId)
   const [canonicalURL, setCanonicalURL] = React.useState(get(operationItem, 'canonical_url') || '')
@@ -162,6 +169,8 @@ const OperationsDrawer = () => {
   const [selectedFHIRServerId, setSelectedFHIRServerId] = React.useState(get(fhirServer, 'id', ''))
   const [cascadeParams, setCascadeParams] = React.useState({...DEFAULT_CASCADE_PARAMS})
   const [jsonStr, setJSONStr] = React.useState('')
+  const [checksumType, setChecksumType] = React.useState('standard')
+  const [checksumResource, setChecksumResource] = React.useState(getItemType)
   const onOperationChange = event => setOperation(event.target.value)
   const setValuesFromURL = () => {
     const [url, query] = window.location.hash.split('?')
@@ -226,10 +235,14 @@ const OperationsDrawer = () => {
       }
       const isCurrentServerSameAsSelected = currentServer.url === selectedFHIRServer.url
       const isGlobalOperation = ['$checksum'].includes(operation)
+      const isChecksum = operation === '$checksum'
       if(isGlobalOperation) {
+        let payload = JSON.parse(jsonStr)
         if(isJSONString(jsonStr)) {
           service.URL += `/${operation}/`
-          service.post(JSON.parse(jsonStr), isCurrentServerSameAsSelected ? null : false, null, null, false).then(handleResponse)
+          if(isChecksum)
+            service.URL += `${checksumType}/?resource=${checksumResource}`
+          service.post(payload, isCurrentServerSameAsSelected ? null : false, null, null, false).then(handleResponse)
         } else {
           setIsFetching(false)
           alertifyjs.error('Invalid JSON', 5)
@@ -411,9 +424,44 @@ const OperationsDrawer = () => {
             }
             {
               operation === '$checksum' &&
-                <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
-                  <TextField error={!isJSONString(jsonStr)} fullWidth label='JSON' multiline minRows={6} maxRows={15} required onChange={event => setJSONStr(event.target.value)} />
-                </div>
+                <React.Fragment>
+                  <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px'}}>
+                    <FormControl fullWidth>
+                    <InputLabel>Checksum Type</InputLabel>
+                    <Select
+                      labelId="checksum-resource-type-label"
+                      value={checksumType}
+                      label="Checksum Type"
+                      onChange={event => setChecksumType(event.target.value)}
+                    >
+                      {
+                        ['standard', 'smart'].map(_checksumType => (
+                          <MenuItem key={_checksumType} value={_checksumType}>{startCase(_checksumType)}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                      </FormControl>
+                  </div>
+                  <div className='col-xs-12 no-side-padding flex-vertical-center' style={{marginTop: '15px', justifyContent: 'space-evenly'}}>
+                    <FormControl fullWidth>
+                      <InputLabel>Checksum Resource</InputLabel>
+                    <Select
+                      value={checksumResource}
+                      label="Checksum Resource"
+                      onChange={event => setChecksumResource(event.target.value)}
+                    >
+                      {
+                        ['concept_version', 'mapping_version', 'source_version', 'collection_version', 'org', 'user'].map(_resource => (
+                          <MenuItem key={_resource} value={_resource}>{startCase(_resource)}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                      </FormControl>
+                  </div>
+                  <div className='col-xs-12 no-side-padding' style={{marginTop: '15px'}}>
+                    <TextField error={!isJSONString(jsonStr)} fullWidth label='JSON' multiline minRows={6} maxRows={15} required onChange={event => setJSONStr(event.target.value)} />
+                  </div>
+                </React.Fragment>
             }
             <div className='col-xs-12 no-side-padding' style={{textAlign: 'right', margin: '15px 0'}}>
               <Button onClick={onExecute} variant='contained' disabled={!operation}>Execute</Button>

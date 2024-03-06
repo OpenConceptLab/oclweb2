@@ -140,7 +140,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                             {
                               fhir ?
                               <ResourceVersionLabel {...version} short_code={version.id} /> :
-                              <ResourceVersionLabel {...version} />
+                              <ResourceVersionLabel {...version} showAccess />
                             }
                           </div>
                           <div className='col-md-12'>

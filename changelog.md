@@ -1,3 +1,15 @@
+##### 2.1.102 - Sat Oct 7 00:24:03 2023 +0000
+- Fixing errbit | source/collection tab href
+- [OpenConceptLab/ocl_issues#1673](https://github.com/OpenConceptLab/ocl_issues/issues/1673) | Source Summary to format n/a better
+- [OpenConceptLab/ocl_issues#1659](https://github.com/OpenConceptLab/ocl_issues/issues/1659) | Comparison view | changing color of highlight from red/green to yellow
+- [OpenConceptLab/ocl_issues#1659](https://github.com/OpenConceptLab/ocl_issues/issues/1659) | showing contributors summary when its available
+- [OpenConceptLab/ocl_issues#1661](https://github.com/OpenConceptLab/ocl_issues/issues/1661) | check if token is still valid on page load for SSO
+- [OpenConceptLab/ocl_issues#1659](https://github.com/OpenConceptLab/ocl_issues/issues/1659) | added updated by
+##### 2.1.100 - Tue Aug 29 03:43:02 2023 +0000
+- [OpenConceptLab/ocl_issues#1575](https://github.com/OpenConceptLab/ocl_issues/issues/1575) | Mapping Inline form | name is not mandatory
+- fixing URL for retired search results suggestion
+- refetching facets on clear only if anything was applied
+- refetching facets on clear filters
 ##### 2.1.99 - Mon Aug 21 06:05:57 2023 +0000
 - [OpenConceptLab/ocl_issues#1575](https://github.com/OpenConceptLab/ocl_issues/issues/1575) | quick add mapping with unknown concept
 ##### 2.1.98 - Thu Aug 10 10:50:18 2023 +0000

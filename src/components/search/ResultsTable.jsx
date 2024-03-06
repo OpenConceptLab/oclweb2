@@ -50,14 +50,14 @@ const RESOURCE_DEFINITIONS = {
   concepts: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: getColumns(ALL_COLUMNS.concepts).slice(0, 7),
+    columns: ALL_COLUMNS.concepts.slice(0, 8),
     tabs: ['Mappings', 'Synonyms', 'Descriptions', 'History',],
     expandible: false,
   },
   mappings: {
     headBgColor: BLUE,
     headTextColor: WHITE,
-    columns: getColumns(ALL_COLUMNS.mappings).slice(0, 7),
+    columns: ALL_COLUMNS.mappings.slice(0, 8),
     tabs: ['History',],
     expandible: false,
   },

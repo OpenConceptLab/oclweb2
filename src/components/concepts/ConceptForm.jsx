@@ -558,6 +558,7 @@ class ConceptForm extends React.Component {
                         onDelete={this.onDeleteNameLocale}
                         sourceVersionSummary={this.props.sourceVersionSummary}
                         source={this.state.parent}
+                        edit={edit}
                       />
                     </div>
                   ))
@@ -586,6 +587,7 @@ class ConceptForm extends React.Component {
                         onDelete={this.onDeleteDescLocale}
                         sourceVersionSummary={this.props.sourceVersionSummary}
                         source={this.state.parent}
+                        edit={edit}
                       />
                     </div>
                   ))

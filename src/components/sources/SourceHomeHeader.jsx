@@ -42,12 +42,10 @@ const SourceHomeHeader = ({
           setLogoURL(get(response, 'data.logo_url', logoURL))
       })
   }
-  const getDefaultHiddenAttributes = () => {
-    return filter(DEFAULT_VISIBLE_ATTRIBUTES, (attr) => {
-      return !map(get(config, 'config.header.visibleAttributes'),(attr) => attr.value).includes(attr.value)
-    }
-                 )
-  }
+  const getDefaultHiddenAttributes = () => filter(
+    DEFAULT_VISIBLE_ATTRIBUTES,
+    attr => !map(get(config, 'config.header.visibleAttributes'), attr => attr.value).includes(attr.value)
+  )
   const getVisibleAttributes = () => {
     if (get(config, 'config.header.visibleAttributes') === 'object'){
       return get(config, 'config.header.visibleAttributes')
@@ -124,7 +122,7 @@ const SourceHomeHeader = ({
                 map(getVisibleAttributes(), (attr, index) => {
                   if (attr.value === "supported_locales" || attr.value === "default_locale")
                     return <HeaderAttribute key={attr.label + index} label="Supported Locales" value={<SupportedLocales {...source} />} gridClass="col-xs-12" type="component" />;
-                  return <HeaderAttribute key={attr.label + index} label={attr.label} value={source[attr.value]} type={attr.type} gridClass="col-xs-12"/>;
+                  return <HeaderAttribute key={attr.label + index} label={attr.label} value={get(source, attr.value)} type={attr.type} gridClass="col-xs-12"/>;
                 })
               }
               <HeaderAttribute label="Custom Attributes" value={!isEmpty(source.extras) && <CustomAttributesPopup attributes={source.extras} />} gridClass="col-xs-12" />

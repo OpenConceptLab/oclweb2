@@ -18,10 +18,22 @@ import {
   memorySizeOf, formatByteSize
 } from '../../common/utils';
 import {
-  DIFF_BG_RED,
+  DIFF_BG_HIGHLIGHT,
 } from '../../common/constants';
 import ComparisonAttributes from './ComparisonAttributes';
 import ExtrasDiff from '../common/ExtrasDiff';
+
+
+const diffStyle = {
+  variables: {
+    light: {
+      wordRemovedBackground: '#ffe294',
+      removedBackground: '#fffbdd',
+      addedBackground: '#fffbdd',
+      wordAddedBackground: '#ffe294'
+    }
+  }
+}
 
 class Comparison extends React.Component {
   constructor(props) {
@@ -224,6 +236,7 @@ class Comparison extends React.Component {
                     _isDiff ?
                     <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
                       <ReactDiffViewer
+                        styles={diffStyle}
                         oldValue={_lhsValCleaned}
                         newValue={_rhsValCleaned}
                         showDiffOnly={false}
@@ -252,6 +265,7 @@ class Comparison extends React.Component {
                 isDiff ?
                 <TableCell colSpan='10' style={{width: '90%'}} className='diff-row'>
                   <ReactDiffViewer
+                    styles={diffStyle}
                     oldValue={lhsValue}
                     newValue={rhsValue}
                     showDiffOnly={false}
@@ -318,7 +332,7 @@ class Comparison extends React.Component {
                         const lhsCount = lhsRawValue.length;
                         const rhsCount = rhsRawValue.length;
                         const hasKids = Boolean(lhsCount || rhsCount);
-                        const styles = isDiff ? {background: DIFF_BG_RED} : {};
+                        const styles = isDiff ? {background: DIFF_BG_HIGHLIGHT} : {};
                         const isExpanded = !config.collapsed || !hasKids;
                         const isExtras = attr === 'extras';
                         let lhsSize, rhsSize;
