@@ -27,9 +27,9 @@ const Tasks = ({ tasks, isLoading, error, onRevoke, onDownload }) => {
         map(
           tasks,
           task => <Task
-                    key={task.task}
+                    key={task.id || task.task}
                     task={task}
-                    open={task.task == open}
+                    open={(task?.id || task.task) == open}
                     onOpen={taskId => setOpen(taskId)}
                     onClose={() => setOpen(null)}
                     onRevoke={onRevoke}
