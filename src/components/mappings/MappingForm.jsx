@@ -62,12 +62,15 @@ class MappingForm extends React.Component {
     const { mapping, edit, copyFrom } = this.props;
     const instance = edit ? mapping : copyFrom
     const attrs = [
-      'id', 'map_type', 'external_id',
+      'id', 'map_type',
       'from_concept_url', 'from_concept_name',
       'from_source_url', 'from_source_version',
       'to_concept_url', 'to_concept_name',
       'to_source_url', 'to_source_version', 'sort_weight'
     ]
+    if(!copyFrom?.id) {
+      attrs.push('external_id')
+    }
     const newState = {...this.state}
     attrs.forEach(attr => set(newState.fields, attr, get(instance, attr, '') || ''))
     newState.fields.to_concept_code = instance.to_concept_code ? decodeURIComponent(instance.to_concept_code) : instance.to_concept_code

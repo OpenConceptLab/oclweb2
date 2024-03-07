@@ -30,7 +30,7 @@ class CollectionHomeChildrenList extends React.Component {
 
   getURL() {
     const { selectedVersion } = this.state;
-    const { versionedObjectURL, resource, expansion, expansions } = this.props;
+    const { versionedObjectURL, resource, expansions } = this.props;
     let url = this.props.collectionURLs.version || this.props.collectionURLs.collection || versionedObjectURL
 
     if(resource === 'references') {

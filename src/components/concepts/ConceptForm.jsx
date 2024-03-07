@@ -98,7 +98,7 @@ class ConceptForm extends React.Component {
   }
 
   setFieldsForEdit(data) {
-    const { edit } = this.props;
+    const { edit, copyFrom } = this.props;
     const instance = data
     const newState = {...this.state}
     if(edit)
@@ -108,9 +108,15 @@ class ConceptForm extends React.Component {
     newState.selected_concept_class = {id: instance.concept_class, name: instance.concept_class}
     newState.selected_datatype = {id: instance.datatype, name: instance.datatype}
     newState.fields.datatype = instance.datatype
-    newState.fields.external_id = instance.external_id || ''
-    newState.fields.names = isEmpty(instance.names) ? newState.fields.names : map(instance.names, name => pick(name, ['locale', 'name_type', 'locale_preferred', 'external_id', 'name']))
-    newState.fields.descriptions = isEmpty(instance.descriptions) ? newState.fields.descriptions : map(instance.descriptions, desc => pick(desc, ['locale', 'description_type', 'locale_preferred', 'external_id', 'description']))
+    newState.fields.external_id = copyFrom?.id ? '' : (instance.external_id || '')
+    let nameLocaleFields = ['locale', 'name_type', 'locale_preferred', 'name']
+    let descriptionLocaleFields = ['locale', 'description_type', 'locale_preferred', 'description']
+    if(!copyFrom?.id) {
+      nameLocaleFields.push('external_id')
+      descriptionLocaleFields.push('external_id')
+    }
+    newState.fields.names = isEmpty(instance.names) ? newState.fields.names : map(instance.names, name => pick(name, nameLocaleFields))
+    newState.fields.descriptions = isEmpty(instance.descriptions) ? newState.fields.descriptions : map(instance.descriptions, desc => pick(desc, descriptionLocaleFields))
     newState.fields.extras = isEmpty(instance.extras) ? newState.fields.extras : map(instance.extras, (v, k) => ({key: k, value: v}))
     newState.fields.parent_concept_urls = instance.parent_concept_urls || []
     this.setState(newState);
