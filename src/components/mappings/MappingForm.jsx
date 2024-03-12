@@ -247,9 +247,12 @@ class MappingForm extends React.Component {
           window.location.reload()
       })
     } else { // error
-      const genericError = get(response, '__all__')
+      const genericError = response?.__all__ || response?.data?.__all__
       if(genericError) {
-        alertifyjs.error(genericError.join('<br />'))
+        if(response?.status === 208)
+          alertifyjs.warning(genericError[0])
+        else
+          alertifyjs.error(genericError.join('<br />'))
       } else {
         this.setState(
           {fieldErrors: response || {}},
