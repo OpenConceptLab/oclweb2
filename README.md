@@ -1,5 +1,5 @@
 # oclweb2
-Overhauled OCL Web Authoring Interface v2
+OCL TermBrowser v2, an open-source ReactJS-based web client for terminology management
 
 ### Run Dev
 1. docker-compose up -d
