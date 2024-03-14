@@ -135,6 +135,15 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     setUpdatedMappings([])
   }
 
+  const onAddNewMappingButtonClick = () => {
+    setMappingForm(true)
+    setTimeout(() => {
+      const el = document.querySelector('form#mapping-inline-form div')
+      if(el)
+        el.scrollIntoViewIfNeeded()
+    }, 200)
+  }
+
   return (
     <React.Fragment>
       <Accordion expanded style={{borderRadius: 'unset'}}>
@@ -312,7 +321,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
           {
             onCreateNewMapping && !mappingForm && isEmpty(updatedMappings) &&
               <div className='col-xs-12' style={{padding: '0 5px'}}>
-                <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={() => setMappingForm(true)}>
+                <Button endIcon={<AddIcon fontSize='inherit'/>} size='small' style={{fontWeight: 600}} onClick={onAddNewMappingButtonClick}>
                   Add New Mapping
                 </Button>
               </div>

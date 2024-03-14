@@ -62,7 +62,7 @@ const MappingInlineForm = ({defaultMapType, concept, onClose, onSubmit, isDirect
   }
 
   return (
-    <form id='mapping-inline-form'>
+    <form id='mapping-inline-form' style={{display: 'inline-block'}}>
       <div className='col-xs-12' style={{marginBottom: '15px', padding: defaultMapType ? '0 8px 0 0' : '0 8px'}}>
         <h3 style={{margin: '15px 0 0 0', display: 'flex'}}>
           Add a mapping
