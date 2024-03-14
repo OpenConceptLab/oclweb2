@@ -580,7 +580,7 @@ class MappingForm extends React.Component {
                 edit &&
                   <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                     <div className='col-md-12'>
-                      <h3 style={fieldErrors.comment && isEmpty(fields.comment) ? {color: ERROR_RED} : {}}>Update Comment</h3>
+                      <h3>Update Comment</h3>
                     </div>
                     <div className='col-md-12 no-side-padding'>
                       <TextField
