@@ -497,20 +497,6 @@ class ConceptForm extends React.Component {
                   />
                 }
               </div>
-              {
-                edit &&
-                  <div style={{marginTop: '15px', width: '100%'}}>
-                    <TextField
-                      id="fields.comment"
-                      label="Update Comment"
-                      variant="outlined"
-                      fullWidth
-                      onChange={this.onTextFieldChange}
-                      value={fields.comment}
-                      required
-                    />
-                  </div>
-              }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <div className='col-md-8'>
                   <h3>Parent Concept URLs</h3>
@@ -625,6 +611,25 @@ class ConceptForm extends React.Component {
                   ))
                 }
               </div>
+              {
+                edit &&
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                    <div className='col-md-12'>
+                      <h3 style={fieldErrors.comment && isEmpty(fields.comment) ? {color: ERROR_RED} : {}}>Update Comment</h3>
+                    </div>
+                    <div className='col-md-12 no-side-padding'>
+                      <TextField
+                        id="fields.comment"
+                        label="Update Comment"
+                        variant="outlined"
+                        fullWidth
+                        onChange={this.onTextFieldChange}
+                        value={fields.comment}
+                        required
+                      />
+                    </div>
+                  </div>
+              }
               <div className='col-md-12' style={{textAlign: 'center', margin: '20px 0'}}>
                 <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
                   {edit ? 'Update' : 'Create'}

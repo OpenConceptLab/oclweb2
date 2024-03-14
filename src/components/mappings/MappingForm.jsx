@@ -419,20 +419,6 @@ class MappingForm extends React.Component {
                   inputProps={{ pattern: "[0-9.]+" }}
                 />
               </div>
-              {
-                edit &&
-                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
-                    <TextField
-                      id="fields.comment"
-                      label="Update Comment"
-                      variant="outlined"
-                      fullWidth
-                      onChange={this.onTextFieldChange}
-                      value={fields.comment}
-                      required
-                    />
-                  </div>
-              }
               <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
                 <h3 className='divider'>
                   <span className='text'>From Concept</span>
@@ -590,6 +576,26 @@ class MappingForm extends React.Component {
                   ))
                 }
               </div>
+              {
+                edit &&
+                  <div className='col-md-12 no-side-padding' style={{marginTop: '15px', width: '100%'}}>
+                    <div className='col-md-12'>
+                      <h3 style={fieldErrors.comment && isEmpty(fields.comment) ? {color: ERROR_RED} : {}}>Update Comment</h3>
+                    </div>
+                    <div className='col-md-12 no-side-padding'>
+                      <TextField
+                        id="fields.comment"
+                        label="Update Comment"
+                        variant="outlined"
+                        fullWidth
+                        onChange={this.onTextFieldChange}
+                        value={fields.comment}
+                        required
+                      />
+                    </div>
+                  </div>
+              }
+
               <div className='col-md-12' style={{textAlign: 'center', margin: '20px 0'}}>
                 <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
                   {edit ? 'Update' : 'Create'}
