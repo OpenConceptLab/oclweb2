@@ -140,7 +140,7 @@ const HomeMappings = ({ source, concept, isLoadingMappings, sourceVersion, paren
     setTimeout(() => {
       const el = document.querySelector('form#mapping-inline-form div')
       if(el)
-        el.scrollIntoViewIfNeeded()
+        el.scrollIntoView(false)
     }, 200)
   }
 
