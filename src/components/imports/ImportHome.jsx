@@ -73,6 +73,7 @@ class ImportHome extends React.Component {
             const newState = {...this.state}
             const existingTask = find(this.state.tasks, {id: task.id})
             existingTask.summary = data.summary
+            existingTask.runtime = data.runtime
             this.setState(newState)
           }
         } else {
