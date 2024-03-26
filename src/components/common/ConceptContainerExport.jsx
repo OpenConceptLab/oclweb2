@@ -29,9 +29,9 @@ class ConceptContainerExport extends React.Component {
       isCheckingExportExists: false,
       hasExistingExport: false,
       isProcessing: false,
-      exportURL: null,
       serverError: false,
       errorDetails: null,
+      downloaded: false,
     }
   }
 
@@ -58,18 +58,36 @@ class ConceptContainerExport extends React.Component {
 
   checkExportExists() {
     this.setState({isCheckingExportExists: true, serverError: false, errorDetails: false}, () => {
-      this.getExportService().get(null, null, {noRedirect: true}, true).then(response => {
+      this.getExportService().getBlob().then(response => {
         this.setState({isCheckingExportExists: false}, () => {
           if(get(response, 'status') === 204) {
-            this.setState({hasExistingExport: false, isProcessing: false, exportURL: null})
+            this.setState({hasExistingExport: false, isProcessing: false, downloaded: false})
             return
           }
           if(get(response, 'status') === 208) {
-            this.setState({isProcessing: true, hasExistingExport: false, exportURL: null})
+            this.setState({isProcessing: true, hasExistingExport: false, downloaded: false})
             return
           }
           if(get(response, 'status') === 200) {
-            this.setState({hasExistingExport: true, isProcessing: false, exportURL: get(response, 'data.url'), serverError: false, errorDetails: null})
+            const contentDisposition = response.headers['content-disposition'];
+            const filename = contentDisposition.split(';')[1].split('=')[1].trim().replace(/"/g, '');
+
+            // Create a Blob object from the response data
+            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+            // Create a URL for the Blob object
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a link element and initiate the download
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename); // Set the filename
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up
+            window.URL.revokeObjectURL(url);
+            this.setState({hasExistingExport: true, isProcessing: false, serverError: false, errorDetails: null, downloaded: true})
             return
           }
 
@@ -142,8 +160,8 @@ class ConceptContainerExport extends React.Component {
 
   render() {
     const {
-      anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport, exportURL,
-      serverError, errorDetails, options
+      anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport,
+      serverError, errorDetails, options, downloaded
     } = this.state;
     const { title, disabled, size, resource } = this.props;
     return (
@@ -191,13 +209,13 @@ class ConceptContainerExport extends React.Component {
                 </Alert>
               }
               {
-                hasExistingExport && exportURL &&
+                hasExistingExport && downloaded &&
                 <Alert variant="filled" severity="success" style={{margin: '5px 0'}}>
-                  Please <a href={exportURL} target='_blank' rel="noopener noreferrer"><b>Click here</b></a> to download the export.
+                  Downloaded Export.
                 </Alert>
               }
               {
-                !isProcessing && !hasExistingExport && !isCheckingExportExists && !exportURL &&
+                !isProcessing && !hasExistingExport && !isCheckingExportExists && !downloaded &&
                 <React.Fragment>
                   <Alert variant="filled" severity="warning" style={{margin: '5px 0'}}>
                     {`There is no export cached for this ${resource} version`}

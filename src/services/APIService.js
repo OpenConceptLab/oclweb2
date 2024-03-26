@@ -60,6 +60,10 @@ class APIService {
     return this.sendRequest('GET', null, token, headers, query, raw);
   }
 
+  getBlob(token, headers = {}, query) {
+    return this.sendRequest('GET', null, token, headers, query, true, true);
+  }
+
   post(data, token, headers = {}, query, raw=false) {
     return this.sendRequest('POST', data, token, headers, query, raw);
   }
@@ -72,8 +76,8 @@ class APIService {
     return this.sendRequest('DELETE', data, token, headers, query, raw);
   }
 
-  sendRequest(method, data, token, headers, query, raw=false) {
-    const request = this.getRequest(method, data, token, headers, query);
+  sendRequest(method, data, token, headers, query, raw=false, blob=false) {
+    const request = this.getRequest(method, data, token, headers, query, blob);
     return axios(request)
       .then(response => response || null)
       .catch(error => {
@@ -84,14 +88,17 @@ class APIService {
       });
   }
 
-  getRequest(method, data, token, headers, query) {
-    return {
+  getRequest(method, data, token, headers, query, blob=false) {
+    const request = {
       url: this.URL,
       method,
       headers: headers === false ? {} : this.getHeaders(token, headers),
       params: this.getQueryParams(query),
       data,
     };
+    if(blob)
+      request.responseType = 'blob'
+    return request
   }
 
   request(method, data, token, config) {
