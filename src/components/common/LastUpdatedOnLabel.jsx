@@ -1,8 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import {Event as EventIcon} from '@mui/icons-material'
+import Divider from '@mui/material/Divider'
 import { merge } from 'lodash';
 import { DATE_FORMAT } from '../../common/constants'
+import { formatTimeTaken } from '../../common/utils';
 
 const STYLES = {
   medium: {
@@ -29,6 +31,15 @@ const LastUpdatedOnLabel = props => {
       <span>
         {mainLabel} on {moment(props.date).format(DATE_FORMAT)} {byLabel}
       </span>
+      {
+        Boolean(props.timeTaken) &&
+          <React.Fragment>
+            <Divider orientation='vertical' style={{margin: '3px 6px 0 6px', height: '10px'}} />
+          <span>
+            {props.timeTakenLabel} {formatTimeTaken(props.timeTaken)}
+        </span>
+        </React.Fragment>
+      }
     </div>
   )
 }

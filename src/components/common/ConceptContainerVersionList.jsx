@@ -151,6 +151,9 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                               by={version.created_by}
                               date={fhir ? version.date : version.created_on}
                               label={fhir ? 'Released' : 'Created'}
+                              timeTakenLabel='Export Time'
+                              timeTaken={version?.extras?.__export_time || false}
+                              containerStyle={{display: 'flex'}}
                             />
                           </div>
                         </div>

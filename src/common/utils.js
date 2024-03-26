@@ -995,3 +995,18 @@ export const highlightTexts = (items, texts, unmark=false) => {
     //pass
   }
 }
+
+export const formatTimeTaken = seconds => {
+  let duration = moment.duration(seconds, 'seconds');
+  let minutes = duration.minutes();
+  let hours = duration.hours();
+  let formattedTime;
+
+  if (hours > 0) {
+    formattedTime = `${hours}.${minutes.toString().padStart(2, '0')} hours`;
+  } else {
+    formattedTime = `${minutes}.${duration.seconds().toString().padStart(2, '0')} minutes`;
+  }
+
+  return formattedTime;
+}
