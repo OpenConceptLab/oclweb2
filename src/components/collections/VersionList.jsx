@@ -217,6 +217,8 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                       by={version.created_by}
                       date={version.created_on}
                       label='Created'
+                      timeTakenLabel='Export Time'
+                      timeTaken={version?.extras?.__export_time || false}
                     />
                   </span>
                   <div className='col-md-12 no-side-padding' style={{marginTop: '-5px'}}>
