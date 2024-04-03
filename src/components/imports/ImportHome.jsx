@@ -30,7 +30,7 @@ class ImportHome extends React.Component {
             const data = get(res, 'data')
             if(isArray(data))
               this.setState({tasks: orderBy(data, 'details.received', 'desc'), isLoadingImports: false}, () => {
-                this.queryStartedTasks(filter(this.state.tasks, task => includes(['STARTED', 'RECEIVED'], task.state)))
+                this.queryStartedTasks(filter(this.state.tasks, task => includes(['STARTED', 'RECEIVED', 'PENDING'], task.state)))
               })
             else
               this.setState({importListError: res, isLoadingImports: false})
@@ -50,7 +50,7 @@ class ImportHome extends React.Component {
 
   updateTaskStatus(task, newStatus) {
     const newState = {...this.state}
-    const existingTask = find(newState.tasks, {task: task.task})
+    const existingTask = find(newState.tasks, {task: task.id})
     existingTask.state = newStatus
     if(existingTask.details)
       existingTask.details.state = newStatus
@@ -59,24 +59,25 @@ class ImportHome extends React.Component {
 
   fetchStartedTaskUpdates(task) {
     return setInterval(() => {
-      this.service.get(null, null, {task: task.task}).then(res => {
+      this.service.get(null, null, {task: task.id}).then(res => {
         const data = get(res, 'data')
         if(data) {
           if(task.state === 'RECEIVED' && data.state === 'REVOKED') {
-            this.stopPoll(task.task)
+            this.stopPoll(task.id)
             this.updateTaskStatus(task, 'REVOKED')
           }
           else if(data.state !== task.state) {
-            this.stopPoll(task.task)
+            this.stopPoll(task.id)
             this.fetchImports()
-          } else if (data.details) {
+          } else if (data?.id && data?.summary) {
             const newState = {...this.state}
-            const existingTask = find(this.state.tasks, {task: task.task})
-            existingTask.result = data.details
+            const existingTask = find(this.state.tasks, {id: task.id})
+            existingTask.summary = data.summary
+            existingTask.runtime = data.runtime
             this.setState(newState)
           }
         } else {
-          this.stopPoll(task.task)
+          this.stopPoll(task.id)
           this.fetchImports()
         }
       })
@@ -85,7 +86,7 @@ class ImportHome extends React.Component {
 
   queryStartedTasks(startedTasks) {
     forEach(startedTasks, task => {
-      const newInterval = {id: task.task, interval: this.fetchStartedTaskUpdates(task)}
+      const newInterval = {id: task.id, interval: this.fetchStartedTaskUpdates(task)}
       this.setState({intervals: [...this.state.intervals, newInterval]})
     })
   }

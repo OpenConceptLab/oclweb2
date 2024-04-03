@@ -134,11 +134,14 @@ class ConceptHome extends React.Component {
 
   fetchParent() {
     const { concept } = this.state
+    let URL = toParentURI(concept?.url)
+    if(URL && concept?.latest_source_version)
+      URL += concept.latest_source_version + '/'
 
-    if(get(concept, 'url'))
+    if(URL)
       APIService
       .new()
-      .overrideURL(toParentURI(concept.url))
+      .overrideURL(URL)
       .get(null, null, {includeSummary: true})
       .then(response => this.setState({source: response.data}, () => {
         const { setParentResource, setParentItem, parentItem } = this.context

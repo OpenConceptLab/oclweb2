@@ -43,7 +43,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
   const getTasks = () => {
     let tasks = searchedTasks()
     if(date)
-      tasks = filter(tasks, task => moment((task.details.started || task.details.received) * 1000).isSame(date, 'day'))
+      tasks = filter(tasks, task => moment(task.started_at || task.created_at || ((task.details.started || task.details.received) * 1000)).isSame(date, 'day'))
     if(!isEmpty(statuses))
       tasks = filter(tasks, task => includes(statuses, task.state.toLowerCase()))
     if(!isEmpty(queues))
@@ -55,8 +55,8 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
   const getTasksCountByDate = () => {
     const results = {}
     forEach(tasks, task => {
-      const date = task.details.started || task.details.received
-      const fDate = moment(date * 1000).format('DD-MM-YYYY')
+      const date = task.started_at || task.created_at || ((task.details.started || task.details.received) * 1000)
+      const fDate = moment(date).format('DD-MM-YYYY')
       if(!results[fDate])
         results[fDate] = 0
       results[fDate] += 1;
@@ -85,7 +85,7 @@ const ExistingImports = ({isLoading, onRefresh, onRevoke, onDownload, tasks, err
   const toggleQueueFilter = queue => setQueueFilter(
     includes(queues, queue) ? without(queues, queue) : [...queues, queue]
   )
-  const getQueueName = task => task.task.split('~')[1]
+  const getQueueName = task => task.queue || task.task.split('~')[1]
   const getStatusCount = status => filter(tasks, {state: status.toUpperCase()}).length
   const getQueueCount = queue => filter(tasks, task => getQueueName(task) === queue).length
   const appliedStatusQueueFilterCount = statuses.length + queues.length;

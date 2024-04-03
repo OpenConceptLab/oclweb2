@@ -8,7 +8,7 @@ import RightIcon from '@mui/icons-material/KeyboardArrowRight';
 import DownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   map, get, includes, find, keys, isEmpty, reject,
-  last, isArray, uniqBy
+  last, isArray, uniqBy, isFunction
 } from 'lodash';
 import APIService from '../../services/APIService';
 import {
@@ -18,10 +18,12 @@ import { ALL_COLUMNS } from './ResultConstants'
 import SelectedResourceControls from './SelectedResourceControls';
 
 
+const getColumns = definition => isFunction(definition) ? definition() : definition
+
 const CONCEPTS_DEFINITION = {
   headBgColor: BLUE,
   headTextColor: WHITE,
-  columns: ALL_COLUMNS.concepts.slice(0, 7),
+  columns: getColumns(ALL_COLUMNS.concepts).slice(0, 7),
 };
 
 const getValue = (item, column) => {
@@ -148,7 +150,6 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
   )
 }
 
-
 const ConceptHierarchyResultsTable = ({
   results, onPageChange, onSelect, onSelectChange, viewFields,
   onCreateSimilarClick, onCreateMappingClick
@@ -175,7 +176,7 @@ const ConceptHierarchyResultsTable = ({
     const result = map(viewFields, fieldConfig => {
       const attr = keys(fieldConfig)[0]
       const label = fieldConfig[attr];
-      const column = find(ALL_COLUMNS.concepts, {value: attr})
+      const column = find(getColumns(ALL_COLUMNS.concepts), {value: attr})
       return column ? {...column, label: label} : {label: label, id: attr, value: attr, sortable: false}
     })
     return result

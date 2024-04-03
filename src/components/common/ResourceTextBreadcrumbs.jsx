@@ -11,7 +11,7 @@ const ResourceTextBreadcrumbs = ({ resource, style, includeSelf }) => {
     <div className='col-xs-12 no-side-padding flex-vertical-center' style={style}>
       <ResourceTextButton href={`#${toOwnerURI(resource.url)}`} resource={resource?.owner_type?.toLowerCase()} id={resource.owner} color={ORANGE} />
       <span className='separator-small' style={{padding: '0'}}><SeparatorIcon /></span>
-      <ResourceTextButton href={`#${toParentURI(resource.url)}`} resource='source' id={resource.source} color={GREEN} />
+      <ResourceTextButton href={`#${toParentURI(resource.url) + (resource?.latest_source_version ? resource.latest_source_version + '/' : '')}`} resource='source' id={resource.source} color={GREEN} />
       {
         includeSelf &&
         <React.Fragment>
