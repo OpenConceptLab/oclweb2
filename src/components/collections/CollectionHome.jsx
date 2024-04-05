@@ -354,7 +354,7 @@ class CollectionHome extends React.Component {
         { accessDenied && <AccessDenied /> }
         { permissionDenied && <PermissionDenied /> }
         {
-          !isLoading && !hasError &&
+          !isLoading && !hasError && collection?.id &&
             <div className='col-xs-12 no-side-padding' style={filtersOpen ? {marginLeft: '12%', width: '88%'} : {}}>
               <div className='col-xs-12 no-side-padding' style={{zIndex: 1201, position: 'fixed', width: filtersOpen ? '88%' : '100%'}}>
                 <Breadcrumbs
