@@ -47,7 +47,7 @@ class CollectionHomeChildrenList extends React.Component {
       return `${expansionURL}${resource}/`
 
     if(isEmpty(expansions)) {
-      if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion))
+      if(selectedVersion && !includes(['HEAD', 'concepts', 'mappings', 'about', 'versions', 'references'], selectedVersion) && !url.endsWith(`${selectedVersion}/`))
         url += `${selectedVersion}/`
       url += `${resource}/`
       return url
