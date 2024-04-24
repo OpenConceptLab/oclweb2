@@ -141,19 +141,20 @@ const ReferenceCascadeDialog = ({ references, collectionName, onCascadeChange, o
                           label={
                             <span className='flex-vertical-center'>
                               <span style={{marginRight: '5px', fontSize: '14px'}}>
-                                Transform to static references
+                                Transform to extensional references
                               </span>
                               <HtmlToolTipRaw
                                 placement='right'
                                 title={
                                   <span>
-                                  <span>
-                                    Transforming to static references means that after concepts and mappings are added to your collection, they will not change even if they are updated at the source.
+                                    <span>
+                                      Using this checkbox will instruct OCL to create separate references for each individual concept or mapping (i.e. "extensional" or "one-to-one" references).
                                   </span>
                                     <br />
                                     <br />
                                     <span>
-                                      Uncheck this box to allow dynamic references, which may help you to keep your collection up to date in the future. See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer" style={{color: 'inherit', textDecoration: 'underline', fontWeight: 'bold'}}>YouTube video</a> for details.
+                                      Uncheck this box to instruct OCL to create fewer references that can represent multiple concepts and mappings (i.e. "intentional" or "one-to-many" references).
+                                      See this <a href="https://www.youtube.com/watch?v=bl2IilO0Fec&list=PLbjKElEpop-Ubhm5Xz4sQ7u7ugune_CXF&index=2" target="_blank" rel="noopener noreferrer" style={{color: 'inherit', textDecoration: 'underline', fontWeight: 'bold'}}>YouTube video</a> for details.
                                     </span>
                                   </span>
                                 }

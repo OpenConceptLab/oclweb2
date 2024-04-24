@@ -136,7 +136,7 @@ class ReferenceForm extends React.Component {
     this.setState({isSubmitting: true}, () => {
       const { cascadeMappings, cascadeToConcepts, cascadeMethod } = this.state
       const { parentURL } = this.props
-      let queryParams = this.state.transformReferences ? {transformReferences: 'resourceVersions'} : {}
+      let queryParams = this.state.transformReferences ? {transformReferences: 'extensional'} : {}
       if(cascadeToConcepts)
         queryParams.cascade = 'sourcetoconcepts'
       else if(cascadeMappings)

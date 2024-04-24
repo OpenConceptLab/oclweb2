@@ -90,7 +90,7 @@ class AddToCollection extends React.Component {
     const { references } = this.props
     const isMapping = Boolean(get(references, '0.map_type'))
     let expressions = map(references, 'url')
-    let queryParams = this.state.transformReferences ? {transformReferences: 'resourceVersions'} : {}
+    let queryParams = this.state.transformReferences ? {transformReferences: 'extensional'} : {}
     let cascadePayload = {}
     if(isMapping) {
       if(addMappings)
