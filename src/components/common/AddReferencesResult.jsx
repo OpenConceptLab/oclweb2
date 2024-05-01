@@ -6,20 +6,62 @@ import {
 } from '@mui/material'
 import { FmdBad as NoneIcon } from '@mui/icons-material'
 import { filter, map, get, isEmpty } from 'lodash';
+import { toFullAPIURL} from '../../common/utils'
 
-const ReferencesResult = ({references, severity, title, messageKey}) => (
+const ReferencesResult = ({references, severity, title, success}) => (
   <div className='col-md-12 no-side-padding'>
     <MuiAlert variant="filled" severity={severity} style={{marginTop: '5px'}}>
       {title}
     </MuiAlert>
     {
       map(references, (reference, index) => {
-        const message = get(reference, messageKey);
+        let message;
+        let conflictingConceptName, conflictingConceptURL, conflictingConceptID, conflictingName, conflictingNameURL, conflictingReference;
+        if(success)
+          message = reference?.message
+        else {
+          const error = get(reference, `message.${reference.expression}.errors.0`)
+          message = error?.description
+          conflictingReference = get(error, `conflicting_references.0`)
+          conflictingConceptName = error?.conflicting_concept_name
+          conflictingConceptID = error?.conflicting_concept_id
+          conflictingConceptURL = error?.conflicting_concept_url
+          conflictingName = error?.conflicting_name
+          conflictingNameURL = error?.conflicting_name_url
+        }
         return (
           <React.Fragment key={index}>
             <div style={{padding: '5px', background: 'rgba(0, 0, 0, 0.05)'}}>
               <span style={{marginRight: '5px'}}><b>{reference.expression}:</b></span>
-              {message && <span>{message}</span>}
+              {
+                message &&
+                  <span>{message}</span>
+              }
+              {
+                conflictingConceptName && conflictingConceptURL &&
+                  <span style={{marginLeft: '5px'}}>
+                    Conflicting with Concept <a href={`#${conflictingConceptURL}`} rel='noreferrer noopener' target='_blank'>{conflictingConceptID}:{conflictingConceptName}</a>
+                    {
+                      conflictingNameURL && conflictingName &&
+                        <span style={{marginLeft: '5px'}}>
+                          name <a href={toFullAPIURL(conflictingNameURL)} rel='noreferrer noopener' target='_blank'>{conflictingName}</a>
+                        </span>
+                    }
+                    {
+                      conflictingReference &&
+                        <span style={{marginLeft: '5px'}}>
+                          from existing <a href={toFullAPIURL(conflictingReference)} rel='noreferrer noopener' target='_blank'>reference</a>
+                        </span>
+                    }
+                    .
+                  </span>
+              }
+              {
+                !conflictingNameURL && conflictingReference &&
+                  <span style={{marginLeft: '5px'}}>
+                    Conflicting with the existing <a href={toFullAPIURL(conflictingReference)} rel='noreferrer noopener' target='_blank'>reference</a>
+                  </span>
+              }
             </div>
             <Divider />
           </React.Fragment>
@@ -45,7 +87,7 @@ const AddReferencesResult = ({ result, open, onClose, title }) => {
               references={added}
               severity='success'
               title={`${added.length} Reference(s) successfully added.`}
-              messageKey='message'
+              success
             />
           }
           {
@@ -54,7 +96,6 @@ const AddReferencesResult = ({ result, open, onClose, title }) => {
               references={notAdded}
               severity='warning'
               title={`${notAdded.length} Reference(s) listed below could not be added.`}
-              messageKey='message.0'
             />
           }
           {
