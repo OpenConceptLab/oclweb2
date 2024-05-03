@@ -20,6 +20,7 @@ const ReferencesResult = ({references, severity, title, success, defaultExpanded
       <AccordionDetails sx={{p: 0, maxHeight: '500px', overflow: 'auto'}}>
         {
           map(references, (reference, index) => {
+            let expression = reference.expression
             let message;
             let conflictingConceptName, conflictingConceptURL, conflictingConceptID, conflictingName, conflictingNameURL, conflictingReference;
             if(success)
@@ -30,7 +31,11 @@ const ReferencesResult = ({references, severity, title, success, defaultExpanded
               if(errors?.length == 1)
                 error = get(errors, '0.errors.0')
               else {
-                const errorKey = find(keys(reference.message), expression => dropVersion(expression) == dropVersion(reference.expression))
+                const expressions = keys(reference.message)
+                let errorKey = find(expressions, exp => dropVersion(exp) == dropVersion(expression))
+                if(!errorKey)
+                  errorKey = expressions[0]
+
                 if(errorKey)
                   error = get(reference.message, `${errorKey}.errors.0`)
               }
@@ -45,7 +50,7 @@ const ReferencesResult = ({references, severity, title, success, defaultExpanded
             return (
               <React.Fragment key={index}>
                 <div style={{padding: '5px', background: 'rgba(0, 0, 0, 0.05)'}}>
-                  <span style={{marginRight: '5px'}}><b>{reference.expression}:</b></span>
+                  <span style={{marginRight: '5px'}}><b>{expression}:</b></span>
                   {
                     message &&
                       <span>{message}</span>
