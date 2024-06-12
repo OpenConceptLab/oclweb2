@@ -442,17 +442,21 @@ class Search extends React.Component {
         baseURL,
         null,
         response => {
-          this.searchURL = this.convertToExpressionURL(response.request.responseURL)
-          if(this.props.onSearchResponse)
-            this.props.onSearchResponse(response, this.searchURL)
-          if(updateURL && !fhir)
-            window.location.hash = this.getCurrentLayoutURL()
-          this.onSearchResultsLoad(resource, response, resetItems)
-          setTimeout(() => this.setState({isURLUpdatedByActionChange: false}), 1000)
-          if(!noHeaders && facets && !fhir && resource !== 'references' && !this.props.noFilters)
-            fetchFacets(_resource, {...queryParams}, baseURL, this.onFacetsLoad)
-          if(counts && !this.props.nested)
-            fetchCounts(_resource, {...queryParams}, this.onCountsLoad)
+          if(response?.detail) {
+            this.setState({isLoading: false}, () => alertifyjs.error(response.detail, 5))
+          } else {
+            this.searchURL = this.convertToExpressionURL(response.request.responseURL)
+            if(this.props.onSearchResponse)
+              this.props.onSearchResponse(response, this.searchURL)
+            if(updateURL && !fhir)
+              window.location.hash = this.getCurrentLayoutURL()
+            this.onSearchResultsLoad(resource, response, resetItems)
+            setTimeout(() => this.setState({isURLUpdatedByActionChange: false}), 1000)
+            if(!noHeaders && facets && !fhir && resource !== 'references' && !this.props.noFilters)
+              fetchFacets(_resource, {...queryParams}, baseURL, this.onFacetsLoad)
+            if(counts && !this.props.nested)
+              fetchCounts(_resource, {...queryParams}, this.onCountsLoad)
+          }
         }
       )
     })
