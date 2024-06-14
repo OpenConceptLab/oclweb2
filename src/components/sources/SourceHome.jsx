@@ -177,10 +177,12 @@ class SourceHome extends React.Component {
   }
 
   fetchSelectedSourceVersionSummary = () => {
-    this.setState({sourceVersionSummary: {}}, () => {
-      const { source } = this.state
-      APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true}).then(response => this.setState({sourceVersionSummary: response.data}))
-    })
+    const { source } = this.state
+    if(source?.id) {
+      this.setState({sourceVersionSummary: {}}, () => {
+        APIService.new().overrideURL(source.version_url || source.url).appendToUrl('summary/').get(null, null, {verbose: true}).then(response => this.setState({sourceVersionSummary: response.data}))
+      })
+    }
   }
 
   refreshDataByURL() {
