@@ -234,7 +234,7 @@ class CollectionHome extends React.Component {
               selectedConfig: defaultCustomConfig || COLLECTION_DEFAULT_CONFIG,
               customConfigs: customConfigs,
             }, () => {
-              const expansionURL = this.URLs.expansion || collection.expansion_url
+              const expansionURL = this.URLs.expansion || collection?.expansion_url
               if(expansionURL)
                 this.fetchExpansion(expansionURL)
               this.setTab()
