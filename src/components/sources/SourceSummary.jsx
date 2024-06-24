@@ -48,13 +48,14 @@ const SummaryTable = ({ summary, source, fromSource }) => {
     setExpand(!expand)
     if(newExpand && !distribution && !isFetching) {
       setIsFetching(true)
+      const distribution = fromSource ? 'from_sources_map_type' : 'to_sources_map_type'
       APIService
         .new()
         .overrideURL(source.version_url || source.url)
         .appendToUrl('summary/')
-        .get(null, null, {verbose: true, distribution: fromSource ? 'from_sources_map_type' : 'to_sources_map_type', sources: sourceName})
+        .get(null, null, {verbose: true, distribution: distribution, sources: sourceName})
         .then(response => {
-          setDistribution(get(response.data?.distribution?.to_sources_map_type, '0.distribution'))
+          setDistribution(get(response.data?.distribution, `${distribution}.0.distribution`))
           setIsFetching(false)
         })
     }
