@@ -216,6 +216,7 @@ class ConceptHome extends React.Component {
           null,
           null,
           {
+            uri: this.state.concept?.source_url,
             cascadeLevels: 1,
             method: 'sourceToConcepts',
             view: 'hierarchy',
@@ -237,13 +238,14 @@ class ConceptHome extends React.Component {
     if(this.props.scoped === 'collection' && this.props.parentURL)
       url = `${this.props.parentURL}concepts/${encodeURIComponent(this.state.concept.id)}/`
 
-    const _fetch = () => APIService.new()
-      .overrideURL(encodeURI(url))
-      .appendToUrl('$cascade/')
-      .get(null, null, {cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true, includeRetired: this.state.includeRetiredAssociations})
-      .then(response => {
-        this.setState({reverseMappings: get(response.data, 'entry.entries', []), isLoadingMappings: false})
-      })
+    const _fetch = () => APIService
+          .new()
+          .overrideURL(encodeURI(url))
+          .appendToUrl('$cascade/')
+          .get(null, null, {uri: this.state.concept?.source_url, cascadeLevels: 1, method: 'sourceToConcepts', view: 'hierarchy', reverse: true, includeRetired: this.state.includeRetiredAssociations})
+          .then(response => {
+            this.setState({reverseMappings: get(response.data, 'entry.entries', []), isLoadingMappings: false})
+          })
 
     inverseOnly ? this.setState({isLoadingMappings: true}, _fetch) : _fetch()
 
