@@ -117,7 +117,7 @@ class CloneToSource extends React.Component {
     else if(previewConcept && isEmpty(previewResults[previewConcept.url])) {
       let _params = {view: 'flat', listing: true}
       if(!isCloned)
-        _params = {...params, omitIfExistsIn: selectedSource?.url, includeSelf: false, ..._params}
+        _params = {...params, omitIfExistsIn: selectedSource?.url, includeSelf: false, uri: previewConcept?.source_url || selectedSource?.uri || previewConcept?.uri, ..._params}
       APIService.new().overrideURL(previewConcept.url).appendToUrl('$cascade/').get(null, null, _params).then(response => {
         this.setState({previewResults: {[previewConcept.url]: response.data}}, () => {
           this.setState({previewConcept: isCloned ? {...previewConcept, previewBundle: response.data} : find(this.getReferences(), {url: previewConcept.url})})

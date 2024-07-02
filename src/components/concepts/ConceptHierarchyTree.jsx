@@ -73,7 +73,7 @@ class ConceptHierarchyTree extends React.Component {
     .new()
     .overrideURL(URL)
     .appendToUrl('$cascade/')
-    .get(null, null, merge({view: 'hierarchy'}, (this.props.filters || {})))
+      .get(null, null, merge({view: 'hierarchy', uri: source?.url || concept?.source_url || concept?.url}, (this.props.filters || {})))
       .then(response => callback(response.data.entry));
   }
 
