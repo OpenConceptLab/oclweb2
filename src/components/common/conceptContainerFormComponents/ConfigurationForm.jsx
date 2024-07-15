@@ -140,7 +140,7 @@ const ConfigurationForm = props => {
                 id="customValidationSchema"
                 defaultValue="None"
                 value={customValidationSchema}
-                onChange={event => onChange('custom_validation_schema', event.target.value, setCustomValidationSchema, event.target.value === 'None' ? null : event.target.value)}
+                onChange={event => onChange('custom_validation_schema', event.target.value, setCustomValidationSchema, event.target.value)}
               >
                 <MenuItem value="None">
                   <SelectItemText
