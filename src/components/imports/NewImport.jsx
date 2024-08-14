@@ -16,6 +16,7 @@ import { formatWebsiteLink } from '../../common/utils';
 import JSONIcon from '../common/JSONIcon';
 import FileUploader from '../common/FileUploader';
 import { getSiteTitle } from '../../common/utils';
+import OwnerSelection from "../common/OwnerSelection";
 
 const SITE_TITLE = getSiteTitle()
 
@@ -29,6 +30,9 @@ class NewImport extends React.Component {
       workers: 2,
       file: null,
       fileURL: '',
+      owner: {type: 'User'},
+      npmPackageName: '',
+      npmPackageVersion: '',
       json: '',
       type: 'upload',
       update_if_exists: true,
@@ -56,11 +60,13 @@ class NewImport extends React.Component {
   setFieldValue = (id, value) => this.setState({[id]: value})
 
   canUpload() {
-    const { type, fileURL, json, file } = this.state
+    const { type, fileURL, npmPackageName, npmPackageVersion, json, file } = this.state
     if(type === 'upload')
       return Boolean(file)
     if(type === 'url')
       return Boolean(fileURL)
+    if(type === 'npm')
+      return Boolean(npmPackageName) && Boolean(npmPackageVersion)
     if(type === 'json')
       return Boolean(json)
 
@@ -68,7 +74,7 @@ class NewImport extends React.Component {
   }
 
   getPayload() {
-    const { type, fileURL, json, file, workers, hierarchy } = this.state
+    const { type, fileURL, npmPackageName, npmPackageVersion, owner, json, file, workers, hierarchy } = this.state
     const eligibleWorkers = hierarchy ? 1 : workers
     if(type === 'upload'){
       const formData = new FormData()
@@ -88,10 +94,27 @@ class NewImport extends React.Component {
       formData.append('data', json)
       return formData
     }
+    if(type === 'npm') {
+      const formData = new FormData()
+      formData.append('file_url', 'https://packages.simplifier.net/' + npmPackageName + '/' +
+          npmPackageVersion)
+      formData.append('import_type', 'npm')
+      formData.append('owner_type', owner.type)
+      if(owner.type === 'User') {
+        formData.append('owner', owner.username)
+      } else {
+        formData.append('owner', owner.id)
+      }
+
+      return formData
+    }
   }
 
   getService() {
-    const service = APIService.new().overrideURL('/importers/bulk-import-parallel-inline/')
+    let service = APIService.new().overrideURL('/importers/bulk-import-parallel-inline/')
+    if (this.state.type === 'npm') {
+      service = APIService.new().overrideURL('/importers/bulk-import/')
+    }
     if(this.state.queue)
       service.appendToUrl(`${this.state.queue}/`)
     return service
@@ -126,10 +149,12 @@ class NewImport extends React.Component {
   }
 
   render() {
-    const { type, queue, fileURL, json, update_if_exists, isUploading, hierarchy } = this.state;
+    const { type, queue, fileURL, npmPackageName, npmPackageVersion, owner,
+      json, update_if_exists, isUploading, hierarchy } = this.state;
     const isUpload = type === 'upload';
     const isURL = type === 'url';
     const isJSON = type === 'json';
+    const isNPM = type === 'npm';
     const canUpload = this.canUpload();
 
     return (
@@ -143,6 +168,7 @@ class NewImport extends React.Component {
               { this.getButton('upload', <UploadIcon />, 'Upload JSON/CSV/ZIP File') }
               { this.getButton('json', <JSONIcon />, 'Submit JSON Data') }
               { this.getButton('url', <URLIcon />, 'Paste JSON/CSV/ZIP File URL') }
+              { this.getButton('npm', <div>NPM</div>, 'NPM package import')}
             </ButtonGroup>
           </span>
         </h3>
@@ -167,26 +193,34 @@ class NewImport extends React.Component {
                 Imports that share the same queue ID are processed in sequence
               </FormHelperText>
             </div>
-            <div className='col-md-6 no-side-padding'>
-              <FormControlLabel
-                control={<Checkbox checked={update_if_exists} onChange={event => this.setFieldValue('update_if_exists', event.target.checked)} name='update_if_exists' />}
-                label="Update Existing"
-              />
-              <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
-                Update if existing concept/mapping found
-              </FormHelperText>
-            </div>
-            <div className='col-md-6 no-side-padding'>
-              <div className='col-md-12 no-side-padding'>
-                <FormControlLabel
-                  control={<Checkbox checked={hierarchy} onChange={event => this.setFieldValue('hierarchy', event.target.checked)} name='hierarchy' />}
-                  label="Hierarchy"
-                />
-                <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
-                  Important to check this if the import file has hierarchy
-                </FormHelperText>
-              </div>
-            </div>
+            {!isNPM &&
+                <div className='col-md-6 no-side-padding'>
+                  <FormControlLabel
+                      control={<Checkbox checked={update_if_exists}
+                                         onChange={event => this.setFieldValue('update_if_exists', event.target.checked)}
+                                         name='update_if_exists'/>}
+                      label="Update Existing"
+                  />
+                  <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
+                    Update if existing concept/mapping found
+                  </FormHelperText>
+                </div>
+            }
+            {!isNPM &&
+                <div className='col-md-6 no-side-padding'>
+                  <div className='col-md-12 no-side-padding'>
+                    <FormControlLabel
+                        control={<Checkbox checked={hierarchy}
+                                           onChange={event => this.setFieldValue('hierarchy', event.target.checked)}
+                                           name='hierarchy'/>}
+                        label="Hierarchy"
+                    />
+                    <FormHelperText style={{marginTop: '-5px', marginLeft: '2px'}}>
+                      Important to check this if the import file has hierarchy
+                    </FormHelperText>
+                  </div>
+                </div>
+            }
             <div className='col-md-12 no-side-padding' style={{margin: '10px 0'}}>
               {
                 isUpload &&
@@ -210,6 +244,46 @@ class NewImport extends React.Component {
                   value={fileURL}
                   onChange={event => this.setFieldValue('fileURL', event.target.value)}
                 />
+              }
+              {
+                isNPM && <div>
+                  <div className='col-md-12 no-side-padding'>
+                    <OwnerSelection
+                      onChange={newOwner => this.setFieldValue('owner', newOwner)}
+                      disabled={false} />
+                    <FormHelperText style={{marginLeft: '2px'}}>
+                      Determines the namespace where the imported resources should be created
+                    </FormHelperText>
+                  </div>
+                  <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginBottom: '10px', marginTop: '10px'}}>
+                    <div className='col-md-12 no-left-padding'>
+                      <TextField
+                        fullWidth
+                        size='small'
+                        id='npmPackageName'
+                        type='text'
+                        required
+                        variant='outlined'
+                        label='NPM package name'
+                        value={npmPackageName}
+                        onChange={event => this.setFieldValue('npmPackageName', event.target.value)}
+                      />
+                    </div>
+                    <div className='col-md-12 no-side-padding'>
+                      <TextField
+                        fullWidth
+                        size='small'
+                        id='npmPackageVersion'
+                        type='text'
+                        required
+                        variant='outlined'
+                        label='NPM package version'
+                        value={npmPackageVersion}
+                        onChange={event => this.setFieldValue('npmPackageVersion', event.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
               }
               {
                 isJSON &&
