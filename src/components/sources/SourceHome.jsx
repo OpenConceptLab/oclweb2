@@ -12,7 +12,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
-import { paramsToURI, paramsToParentURI } from '../../common/utils';
+import { paramsToURI, paramsToParentURI, isLoggedIn } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'summary', 'about']
@@ -116,7 +116,7 @@ class SourceHome extends React.Component {
       APIService
         .new()
         .overrideURL(this.sourcePath + 'versions/')
-        .get(null, null, {verbose: true, limit: 1000})
+        .get(null, null, {verbose: true, limit: 1000, includeStates: isLoggedIn()})
         .then(response => {
           this.setState({versions: response.data, isLoadingVersions: false}, () => {
             if(this.isVersionTabSelected())

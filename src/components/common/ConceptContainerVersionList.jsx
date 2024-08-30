@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
-  IconButton, CircularProgress
+  IconButton, CircularProgress, Chip
 } from '@mui/material';
 import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
@@ -27,6 +27,33 @@ const ACCORDIAN_HEADING_STYLES = {
 }
 const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '300px', overflow: 'auto', display: 'inline-block', width: '100%'
+}
+
+
+const StateChip = ({label, state}) => {
+  const getColorByTaskState = state => {
+    if(state === 'SUCCESS')
+      return 'success'
+    if(state === 'REVOKED')
+      return 'default'
+    if (state === 'FAILED')
+      return 'error'
+    if (['RECEIVED', 'STARTED'].includes(state))
+      return 'warning'
+    return 'info'
+  }
+
+  return state ? (
+        <Tooltip title={state}>
+          <Chip
+            variant='outlined'
+            sx={{fontSize: '10px', marginRight: '4px'}}
+            size='small'
+            label={label}
+            color={getColorByTaskState(state)}
+          />
+        </Tooltip>
+  ) : null
 }
 
 const getTag = (tag, item) => {
@@ -110,6 +137,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     })
   }
 
+
   return (
     <div className='col-md-12'>
       <div className='col-md-8 no-left-padding'>
@@ -156,6 +184,16 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                               containerStyle={{display: 'flex'}}
                             />
                           </div>
+                          {
+                            !isEmpty(version.states) &&
+                              <div className='col-md-12'>
+                                <StateChip label='Seeded Concepts' state={version.states.seeded_concepts} />
+                                <StateChip label='Seeded Mappings' state={version.states.seeded_mappings} />
+                                <StateChip label='Indexed Concepts' state={version.states.indexed_concepts} />
+                                <StateChip label='Indexed Mappings' state={version.states.indexed_mappings} />
+                                <StateChip label='Export' state={version.states.exported} />
+                              </div>
+                          }
                         </div>
                         <div className='col-md-3 no-right-padding version-button-controls-container'>
                           {
