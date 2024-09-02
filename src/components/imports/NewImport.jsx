@@ -149,7 +149,7 @@ class NewImport extends React.Component {
   }
 
   render() {
-    const { type, queue, fileURL, npmPackageName, npmPackageVersion, owner,
+    const { type, queue, fileURL, npmPackageName, npmPackageVersion,
       json, update_if_exists, isUploading, hierarchy } = this.state;
     const isUpload = type === 'upload';
     const isURL = type === 'url';
