@@ -30,7 +30,7 @@ const ACCORDIAN_DETAILS_STYLES = {
 }
 
 
-const StateChip = ({label, state}) => {
+export const StateChip = ({label, state}) => {
   const getColorByTaskState = state => {
     if(state === 'SUCCESS')
       return 'success'
@@ -47,7 +47,7 @@ const StateChip = ({label, state}) => {
         <Tooltip title={state}>
           <Chip
             variant='outlined'
-            sx={{fontSize: '10px', marginRight: '4px'}}
+            sx={{fontSize: '10px', marginRight: '4px', margin: '1px 4px 1px 0'}}
             size='small'
             label={label}
             color={getColorByTaskState(state)}

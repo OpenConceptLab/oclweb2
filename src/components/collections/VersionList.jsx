@@ -26,6 +26,7 @@ import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptContainerExport from '../common/ConceptContainerExport';
 import { GREEN } from '../../common/constants';
 import SourceChildVersionAssociationWithContainer from '../common/SourceChildVersionAssociationWithContainer';
+import { StateChip } from '../common/ConceptContainerVersionList'
 
 const onCopyClick = url => copyURL(toFullAPIURL(url));
 const handleResponse = (response, resource, action, successCallback) => {
@@ -169,7 +170,7 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
   }
 
   const fetchVersions = (page, _pageSize) => {
-    APIService.new().overrideURL(collection.url).appendToUrl('versions/').get(null, null, {limit: _pageSize || pageSize, includeSummary: true, verbose: true, page: page}).then(response => {
+    APIService.new().overrideURL(collection.url).appendToUrl('versions/').get(null, null, {limit: _pageSize || pageSize, includeSummary: true, verbose: true, page: page, includeStates: true}).then(response => {
       const _versions = uniqBy([{...collection, id: 'HEAD', version_url: collection.url, version: 'HEAD', uuid: 'HEAD'}, ...response.data], 'id')
       setPagination({page: parseInt(response.headers.page_number), pages: parseInt(response.headers.pages), count: parseInt(response.headers.num_found)})
       setVersions(_versions)
@@ -296,6 +297,16 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                       </IconButton>
                     </Tooltip>
                   </div>
+                  {
+                    !isEmpty(version.states) &&
+                      <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
+                        <StateChip label='Seeded Concepts' state={version.states.seeded_concepts} />
+                        <StateChip label='Seeded Mappings' state={version.states.seeded_mappings} />
+                        <StateChip label='Indexed Concepts' state={version.states.indexed_concepts} />
+                        <StateChip label='Indexed Mappings' state={version.states.indexed_mappings} />
+                        <StateChip label='Export' state={version.states.exported} />
+                      </div>
+                  }
                 </div>
                 <div className='col-md-9' style={{padding: '2px 5px'}}>
                   {
