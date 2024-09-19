@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress } from '@mui/material';
-import { includes, isEmpty, get, findIndex, isEqual, find, isObject, omit, forEach, isNumber, map } from 'lodash';
+import { includes, isEmpty, get, findIndex, isEqual, find, isObject, isNumber, map } from 'lodash';
 import APIService from '../../services/APIService';
 import SourceHomeHeader from './SourceHomeHeader';
 import Breadcrumbs from './Breadcrumbs';
@@ -116,39 +116,9 @@ class SourceHome extends React.Component {
       APIService
         .new()
         .overrideURL(this.sourcePath + 'versions/')
-        .get(null, null, {verbose: true, limit: 1000, includeStates: isLoggedIn()})
+        .get(null, null, {verbose: true, limit: 1000, includeStates: isLoggedIn(), includeSummary: true})
         .then(response => {
-          this.setState({versions: response.data, isLoadingVersions: false}, () => {
-            if(this.isVersionTabSelected())
-              this.fetchVersionsSummary()
-          })
-        })
-    })
-  }
-
-  setHEADSummary() {
-    if(this.state.source.summary) {
-      const newState = {...this.state}
-      const head = find(newState.versions, {id: 'HEAD'})
-      if(head) {
-        head.summary = this.state.source.summary
-        this.setState(newState)
-      }
-
-    }
-  }
-
-  fetchVersionsSummary() {
-    forEach(this.state.versions, version => {
-      if(version.id === 'HEAD') {
-        this.fetchSummary()
-      }
-      else
-        APIService.new().overrideURL(version.version_url).appendToUrl('summary/').get().then(response => {
-          const newState = {...this.state}
-          const _version = find(newState.versions, {uuid: version.uuid})
-          _version.summary = omit(response.data, ['id', 'uuid'])
-          this.setState(newState)
+          this.setState({versions: response.data, isLoadingVersions: false})
         })
     })
   }
@@ -159,8 +129,6 @@ class SourceHome extends React.Component {
     this.setState({tab: value, selected: null, width: false}, () => {
       if(isEmpty(this.state.versions))
         this.getVersions()
-      if(this.isVersionTabSelected())
-        this.fetchVersionsSummary()
       if(this.isSummaryTabSelected())
         this.fetchSelectedSourceVersionSummary()
     })
@@ -220,16 +188,6 @@ class SourceHome extends React.Component {
         })
 
     })
-  }
-
-  fetchSummary() {
-    APIService.new()
-      .overrideURL(this.sourcePath)
-      .appendToUrl('summary/')
-      .get()
-      .then(response => this.setState({
-        source: {...this.state.source, summary: omit(response.data, ['id', 'uuid'])}
-      }, this.setHEADSummary))
   }
 
   onConfigChange = config => this.setState({selectedConfig: config}, () => {
