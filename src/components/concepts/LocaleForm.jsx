@@ -56,6 +56,9 @@ const LocaleForm = ({
   React.useEffect(() => {
     source?.id && setManualExternalID(!source[autoIDConfigField])
   }, [source])
+  React.useEffect(() => {
+    setSelectedLocale(locale?.locale ? {id: locale.locale, name: locale.locale} : null)
+  }, [locale?.locale])
 
   return (
     <div className='col-md-12' style={{border: `1px solid ${borderColor}`, borderRadius: '4px', paddingBottom: '15px', width: '100%'}}>
