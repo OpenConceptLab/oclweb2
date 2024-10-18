@@ -311,6 +311,7 @@ export const arrayToCSV = objArray => {
 
   return array.reduce((str, next) => {
     delete next.search_meta;
+    delete next.checksums;
     str += `${Object.values(next).map(value => isObject(value) ? `"${JSON.stringify(value)}"` : `"${value}"`).join(",")}` + '\r\n';
     return str;
   }, str);
