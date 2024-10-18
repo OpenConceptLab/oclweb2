@@ -1,3 +1,109 @@
+##### 2.1.133 - Thu Sep 19 04:20:42 2024 +0000
+- [OpenConceptLab/ocl_issues#1931](https://github.com/OpenConceptLab/ocl_issues/issues/1931) | getting versions summary with versions
+- [OpenConceptLab/ocl_issues#1930](https://github.com/OpenConceptLab/ocl_issues/issues/1930) | fixing locale delete
+##### 2.1.132 - Wed Sep 4 02:54:23 2024 +0000
+- Fixing eslint | unused const
+- [OpenConceptLab/ocl_issues#1884](https://github.com/OpenConceptLab/ocl_issues/issues/1884) | new version for collection to show tasks statuses
+##### 2.1.131 - Fri Aug 30 06:40:41 2024 +0000
+- [OpenConceptLab/ocl_issues#1884](https://github.com/OpenConceptLab/ocl_issues/issues/1884) | added states in source versions tab
+- [OpenConceptLab/ocl_issues#1791](https://github.com/OpenConceptLab/ocl_issues/issues/1791) Add support for importing NPM packages
+##### 2.1.130 - Wed Jul 17 06:25:22 2024 +0000
+- [OpenConceptLab/ocl_issues#1829](https://github.com/OpenConceptLab/ocl_issues/issues/1829) | Fixing custom validation schema change
+##### 2.1.129 - Tue Jul 2 10:09:21 2024 +0000
+- [OpenConceptLab/ocl_issues#1860](https://github.com/OpenConceptLab/ocl_issues/issues/1860) | cascade to have uri
+##### 2.1.128 - Tue Jul 2 06:23:52 2024 +0000
+- [OpenConceptLab/ocl_issues#1860](https://github.com/OpenConceptLab/ocl_issues/issues/1860) | expansion conflicting concepts resolution using uri param
+##### 2.1.126 - Mon Jun 24 02:56:36 2024 +0000
+- [OpenConceptLab/ocl_issues#1845](https://github.com/OpenConceptLab/ocl_issues/issues/1845) | fixing empty exclude references call
+##### 2.1.125 - Mon Jun 17 11:43:42 2024 +0000
+- Errbit | accessing collection member when collection is not there
+##### 2.1.124 - Fri Jun 14 09:00:46 2024 +0000
+- Fixing error in source summary get
+##### 2.1.123 - Wed Jun 12 09:30:06 2024 +0000
+- [OpenConceptLab/ocl_issues#1849](https://github.com/OpenConceptLab/ocl_issues/issues/1849) | handle too long input for search
+##### 2.1.122 - Fri May 3 10:56:49 2024 +0000
+- [OpenConceptLab/ocl_issues#1825](https://github.com/OpenConceptLab/ocl_issues/issues/1825) | reference result corrections
+##### 2.1.121 - Thu May 2 11:46:14 2024 +0000
+- [OpenConceptLab/ocl_issues#1825](https://github.com/OpenConceptLab/ocl_issues/issues/1825) | reference result corrections
+- [OpenConceptLab/ocl_issues#1825](https://github.com/OpenConceptLab/ocl_issues/issues/1825) | reference errors are more description with conflicting concept/name/reference
+##### 2.1.120 - Wed Apr 24 05:37:25 2024 +0000
+- [OpenConceptLab/ocl_issues#1824](https://github.com/OpenConceptLab/ocl_issues/issues/1824) | Reference transform extensional
+##### 2.1.119 - Tue Apr 23 02:59:09 2024 +0000
+- [OpenConceptLab/ocl_issues#1826](https://github.com/OpenConceptLab/ocl_issues/issues/1826) | fixing collection version URL
+##### 2.1.118 - Fri Apr 5 07:50:23 2024 +0000
+- Errbit | lazy loaded source/collection
+##### 2.1.117 - Wed Apr 3 06:48:09 2024 +0000
+- not using latest search
+- Merge branch 'dev'
+- [OpenConceptLab/ocl_issues#1779](https://github.com/OpenConceptLab/ocl_issues/issues/1779) | exports download via streaming
+- [OpenConceptLab/ocl_issues#1777](https://github.com/OpenConceptLab/ocl_issues/issues/1777) | updating runtime
+- [OpenConceptLab/ocl_issues#1777](https://github.com/OpenConceptLab/ocl_issues/issues/1777) | adapting to new api response
+- removed unused var | merge conflicts
+- Merge branch 'master' into dev
+- [OpenConceptLab/ocl_issues#1635](https://github.com/OpenConceptLab/ocl_issues/issues/1635) | repo version indicator
+- [OpenConceptLab/ocl_issues#1635](https://github.com/OpenConceptLab/ocl_issues/issues/1635) | Search columns to have source version in global search only
+- [OpenConceptLab/ocl_issues#1635](https://github.com/OpenConceptLab/ocl_issues/issues/1635) | using latest_source_version for redirection
+- Merge branch 'master' into dev
+- [OpenConceptLab/ocl_issues#1635](https://github.com/OpenConceptLab/ocl_issues/issues/1635) | removed auth group check
+- package updates
+- [OpenConceptLab/ocl_issues#1635](https://github.com/OpenConceptLab/ocl_issues/issues/1635) | search with latest released repo version
+- Merge branch 'master' into dev
+- [OpenConceptLab/ocl_issues#1471](https://github.com/OpenConceptLab/ocl_issues/issues/1471) | fixing translations
+- Removed dead code
+- [OpenConceptLab/ocl_issues#1471](https://github.com/OpenConceptLab/ocl_issues/issues/1471) | initial translations for english bundle
+- updated package
+- [OpenConceptLab/ocl_issues#1471](https://github.com/OpenConceptLab/ocl_issues/issues/1471) | initial translations for english bundle
+- Merge branch 'master' into dev
+- Merge branch 'master' into dev
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | removed oidc realm env var
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | removed redundant query params
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | removed oidc server url | using OCL API to get redirects for login/logout
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | added client id and client secret in env vars | using client creds in exchange token call
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | updated readme for dev setup with keycloak
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | separating keycloak docker-compose file
+- Merge branch 'master' into dev
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | API Token to copy is django token
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | logout to not use API
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | auto logout on token expiry if SSO is enabled
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | auto logout on token expiry
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | removed user management when SSO is enabled
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | Keycloak env var default values
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | extract env vars
+- [OpenConceptLab/ocl_issues#1338](https://github.com/OpenConceptLab/ocl_issues/issues/1338) | login/logout from OIDC
+##### 2.1.116 - Wed Mar 27 12:45:35 2024 +0000
+- [OpenConceptLab/ocl_issues#1806](https://github.com/OpenConceptLab/ocl_issues/issues/1806) | showing Collection version export time in minutes/hours
+##### 2.1.115 - Wed Mar 27 03:32:51 2024 +0000
+- [OpenConceptLab/ocl_issues#1806](https://github.com/OpenConceptLab/ocl_issues/issues/1806) | showing version export time in minutes/hours
+##### 2.1.113 - Mon Mar 18 03:20:57 2024 +0000
+- [OpenConceptLab/ocl_issues#1807](https://github.com/OpenConceptLab/ocl_issues/issues/1807) | using FF supported api for scroll
+- [OpenConceptLab/ocl_issues#1807](https://github.com/OpenConceptLab/ocl_issues/issues/1807) | scrolling inline mapping form
+- [OpenConceptLab/ocl_issues#1808](https://github.com/OpenConceptLab/ocl_issues/issues/1808) | Concept/Mapping update comment field at the bottom
+- [OpenConceptLab/ocl_issues#1808](https://github.com/OpenConceptLab/ocl_issues/issues/1808) | Concept/Mapping update comment field at the bottom
+- Update README.md
+- [OpenConceptLab/ocl_issues#1746](https://github.com/OpenConceptLab/ocl_issues/issues/1746) | Concept/Mapping update | handling 208 unchanged
+##### 2.1.112 - Thu Mar 7 04:33:19 2024 +0000
+- [OpenConceptLab/ocl_issues#1790](https://github.com/OpenConceptLab/ocl_issues/issues/1790) | create similar to not copy ids
+##### 2.1.111 - Wed Mar 6 03:30:59 2024 +0000
+- [OpenConceptLab/ocl_issues#1787](https://github.com/OpenConceptLab/ocl_issues/issues/1787) | concept search autocomplete to use full width and wrap text to two lines max
+- Fixing expansion url navigation
+- [OpenConceptLab/ocl_issues#1762](https://github.com/OpenConceptLab/ocl_issues/issues/1762) | updated roadmap link
+- Fixing errbit
+- server list | who test env config
+- Errbit | highlight text fix if mark lib is not loaded yet
+- [OpenConceptLab/ocl_issues#1731](https://github.com/OpenConceptLab/ocl_issues/issues/1731) | Repo version list access chip
+- [OpenConceptLab/ocl_issues#1683](https://github.com/OpenConceptLab/ocl_issues/issues/1683) | Concept locale auto external ID indicator
+- [OpenConceptLab/ocl_issues#1683](https://github.com/OpenConceptLab/ocl_issues/issues/1683) | ordering source autoID external id fields
+- [OpenConceptLab/ocl_issues#1683](https://github.com/OpenConceptLab/ocl_issues/issues/1683) | Source Concept Name/Description External ID auto assignment
+- [OpenConceptLab/ocl_issues#1670](https://github.com/OpenConceptLab/ocl_issues/issues/1670) | fixing expansion form
+- [OpenConceptLab/ocl_issues#1674](https://github.com/OpenConceptLab/ocl_issues/issues/1674) | checksum in operations panel
+- [OpenConceptLab/ocl_issues#1674](https://github.com/OpenConceptLab/ocl_issues/issues/1674) | standard and smart checksums for source/collections
+- [OpenConceptLab/ocl_issues#1674](https://github.com/OpenConceptLab/ocl_issues/issues/1674) | standard and smart checksums for concepts/mappings
+- Fixing errbit | source/collection tab href
+- [OpenConceptLab/ocl_issues#1673](https://github.com/OpenConceptLab/ocl_issues/issues/1673) | Source Summary to format n/a better
+- [OpenConceptLab/ocl_issues#1659](https://github.com/OpenConceptLab/ocl_issues/issues/1659) | Comparison view | changing color of highlight from red/green to yellow
+- [OpenConceptLab/ocl_issues#1659](https://github.com/OpenConceptLab/ocl_issues/issues/1659) | showing contributors summary when its available
+- [OpenConceptLab/ocl_issues#1661](https://github.com/OpenConceptLab/ocl_issues/issues/1661) | check if token is still valid on page load for SSO
+- [OpenConceptLab/ocl_issues#1659](https://github.com/OpenConceptLab/ocl_issues/issues/1659) | added updated by
 ##### 2.1.102 - Sat Oct 7 00:24:03 2023 +0000
 - Fixing errbit | source/collection tab href
 - [OpenConceptLab/ocl_issues#1673](https://github.com/OpenConceptLab/ocl_issues/issues/1673) | Source Summary to format n/a better
