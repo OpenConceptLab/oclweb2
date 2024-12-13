@@ -66,7 +66,7 @@ class NewImport extends React.Component {
     if(type === 'url')
       return Boolean(fileURL)
     if(type === 'npm')
-      return Boolean(npmPackageName) && Boolean(npmPackageVersion)
+      return (Boolean(npmPackageName) && Boolean(npmPackageVersion)) || Boolean(file)
     if(type === 'json')
       return Boolean(json)
 
@@ -96,8 +96,12 @@ class NewImport extends React.Component {
     }
     if(type === 'npm') {
       const formData = new FormData()
-      formData.append('file_url', 'https://packages.simplifier.net/' + npmPackageName + '/' +
-          npmPackageVersion)
+      if (file) {
+        formData.append('file', file)
+      } else {
+        formData.append('file_url', 'https://packages.simplifier.net/' + npmPackageName + '/' +
+            npmPackageVersion)
+      }
       formData.append('import_type', 'npm')
       formData.append('owner_type', owner.type)
       if(owner.type === 'User') {
@@ -247,43 +251,55 @@ class NewImport extends React.Component {
               }
               {
                 isNPM && <div>
-                  <div className='col-md-12 no-side-padding'>
-                    <OwnerSelection
-                      onChange={newOwner => this.setFieldValue('owner', newOwner)}
-                      disabled={false} />
-                    <FormHelperText style={{marginLeft: '2px'}}>
-                      Determines the namespace where the imported resources should be created
-                    </FormHelperText>
-                  </div>
-                  <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginBottom: '10px', marginTop: '10px'}}>
-                    <div className='col-md-12 no-left-padding'>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        id='npmPackageName'
-                        type='text'
-                        required
-                        variant='outlined'
-                        label='NPM package name'
-                        value={npmPackageName}
-                        onChange={event => this.setFieldValue('npmPackageName', event.target.value)}
-                      />
+                    <div className='col-md-12 no-side-padding'>
+                      <OwnerSelection
+                        onChange={newOwner => this.setFieldValue('owner', newOwner)}
+                        disabled={false} />
+                      <FormHelperText style={{marginLeft: '2px'}}>
+                        Determines the namespace where the imported resources should be created
+                      </FormHelperText>
+                    </div>
+                    <div className='col-md-12 no-side-padding' style={{marginTop: '10px'}}>
+                      Provide NPM package name and version to be fetched from <a href="https://registry.fhir.org/">FHIR package registry</a>:
+                    </div>
+                    <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginLeft: '10px', marginBottom: '10px', marginTop: '10px'}}>
+                      <div className='col-md-6 no-left-padding'>
+                        <TextField
+                          fullWidth
+                          size='small'
+                          id='npmPackageName'
+                          type='text'
+                          variant='outlined'
+                          label='NPM package name'
+                          value={npmPackageName}
+                          onChange={event => this.setFieldValue('npmPackageName', event.target.value)}
+                        />
+                      </div>
+                      <div className='col-md-6 no-side-padding'>
+                        <TextField
+                          fullWidth
+                          size='small'
+                          id='npmPackageVersion'
+                          type='text'
+                          variant='outlined'
+                          label='NPM package version'
+                          value={npmPackageVersion}
+                          onChange={event => this.setFieldValue('npmPackageVersion', event.target.value)}
+                        />
+                      </div>
                     </div>
                     <div className='col-md-12 no-side-padding'>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        id='npmPackageVersion'
-                        type='text'
-                        required
-                        variant='outlined'
-                        label='NPM package version'
-                        value={npmPackageVersion}
-                        onChange={event => this.setFieldValue('npmPackageVersion', event.target.value)}
+                      Or upload a package file:
+                    </div>
+                    <div className='col-md-12 no-side-padding' style={{marginLeft: '10px', marginBottom: '10px'}}>
+                      <FileUploader
+                          uploadButton={false}
+                          onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
+                          onLoading={() => this.setFieldValue('file', null)}
+                          accept='application/zip, text/zip, .zip, application/gzip, application/tar+gzip, .tar.gz, .tgz'
                       />
                     </div>
                   </div>
-                </div>
               }
               {
                 isJSON &&
