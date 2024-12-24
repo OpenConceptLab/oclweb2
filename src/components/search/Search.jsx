@@ -179,13 +179,15 @@ class Search extends React.Component {
       set(appliedFacets, 'includeRetired.true', includeRetired)
     }
 
+    const resetPage = this.state.searchStr && queryParams.get('q') && queryParams.get('q') !== this.state.searchStr
+
     this.setState({
       updatedSince: this.getLayoutAttrValue('updatedSince'),
       isTable: this.getLayoutAttrValue('isTable', 'bool'),
       isList: this.getLayoutAttrValue('isList', 'bool'),
       isInfinite: this.getLayoutAttrValue('isInfinite', 'bool'),
       limit: this.getLayoutAttrValue('limit', 'int'),
-      page: this.getLayoutAttrValue('page', 'int'),
+      page: resetPage ? 1 : this.getLayoutAttrValue('page', 'int'),
       sortParams: this.getLayoutAttrValue('sortParams', 'obj') || DEFAULT_SORT_PARAMS,
       resource: this.formatResourceType(queryParams.get('type') || this.props.resource || 'concepts'),
       isLoading: true,
@@ -195,7 +197,7 @@ class Search extends React.Component {
       fhirParams: this.props.fhirParams || {},
       staticParams: this.props.staticParams || {},
       appliedFacets: appliedFacets
-    }, () => this.fetchNewResults(null, true, false))
+    }, () => this.fetchNewResults(null, true, false, Boolean(resetPage)))
   }
 
   componentDidUpdate(prevProps) {
