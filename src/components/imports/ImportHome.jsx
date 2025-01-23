@@ -40,12 +40,12 @@ class ImportHome extends React.Component {
   }
 
   stopPoll(taskId) {
-    clearInterval(get(find(this.state.intervals, {id: taskId}), 'interval'))
+    clearTimeout(get(find(this.state.intervals, {id: taskId}), 'interval'))
     this.setState({intervals: reject(this.state.intervals, {id: taskId})})
   }
 
   stopAllPolling() {
-    forEach(this.state.intervals, interval => clearInterval(interval.interval))
+    forEach(this.state.intervals, interval => clearTimeout(interval.interval))
   }
 
   updateTaskStatus(task, newStatus) {
@@ -58,7 +58,7 @@ class ImportHome extends React.Component {
   }
 
   fetchStartedTaskUpdates(task) {
-    return setInterval(() => {
+    return setTimeout(() => {
       this.service.get(null, null, {task: task.id}).then(res => {
         const data = get(res, 'data')
         if(data) {
@@ -75,6 +75,7 @@ class ImportHome extends React.Component {
             existingTask.summary = data.summary
             existingTask.runtime = data.runtime
             this.setState(newState)
+            this.fetchStartedTaskUpdates(task)
           }
         } else {
           this.stopPoll(task.id)
