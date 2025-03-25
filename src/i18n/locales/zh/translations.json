@@ -1,0 +1,177 @@
+{
+  "common": {
+    "admin": "管理员",
+    "company": "公司",
+    "location": "位置",
+    "website": "网站",
+    "email": "电子邮件",
+    "upload": "上传",
+    "close": "关闭",
+    "clear": "清除",
+    "cancel": "取消",
+    "submit": "提交",
+    "update": "更新",
+    "updated": "已更新",
+    "created": "已创建",
+    "create": "创建",
+    "delete": "删除",
+    "save": "保存",
+    "add": "添加",
+    "activate": "启用",
+    "deactivate": "禁用",
+    "not_found": "未找到",
+    "bad_token": "无效令牌",
+    "please": "请",
+    "good": "良好",
+    "associated": "相关联的",
+    "hierarchy": "层级结构",
+    "share": "分享",
+    "edit": "编辑",
+    "new": "新建",
+    "reloading": "重新加载中",
+    "custom_attributes": "自定义属性",
+    "attribute_name": "属性名称",
+    "attribute_name_placeholder": "自定义名称",
+    "value": "取值",
+    "fill_mandatory_fields": "请填写必填字段。",
+    "logo": {
+      "tooltip": {
+        "add": "上传徽标",
+        "edit": "编辑徽标"
+      },
+      "dialog": {
+        "title": {
+          "add": "上传徽标",
+          "edit": "编辑徽标"
+        }
+      }
+    }
+  },
+  "resources": {
+    "org": "组织机构",
+    "orgs": "组织机构",
+    "organization": "组织机构",
+    "organizations": "组织机构",
+    "source": "来源",
+    "sources": "来源",
+    "collection": "集合",
+    "collections": "集合",
+    "concept": "概念",
+    "concepts": "概念",
+    "mapping": "映射关系",
+    "mappings": "映射关系",
+    "user": "用户",
+    "users": "用户"
+  },
+  "search": {
+    "label": "搜索",
+    "input_placeholder": "搜索 {{owner}} {{resource}}...",
+    "filters": "筛选项",
+    "numerical_sort": "数字型 ID",
+    "best_match": "最佳匹配",
+    "id": "ID",
+    "numeric_id": "ID (数字型)",
+    "copy_expression": "复制表达式",
+    "tooltip": {
+      "numerical_sort": "按 ID 数字排序"
+    }
+  },
+  "user": {
+    "this_user_own": "此用户拥有",
+    "tabs": {
+      "sources": "用户来源",
+      "collections": "用户集合",
+      "orgs": "组织机构成员资格"
+    },
+    "auth": {
+      "sign_in": "登录",
+      "sign_up": "注册",
+      "forgot_password": "忘记密码",
+      "username": "用户名",
+      "password": "密码",
+      "confirm_password": "确认密码",
+      "password_reset_link_invalid": "密码重置链接无效，可能是因为它已被使用。",
+      "reset_again": "再次重置",
+      "change_password": "更改密码",
+      "forgot_password_mismatch_error": "新密码与确认密码必须相符。",
+      "password_length_error": "必须至少包含 8 个字符。",
+      "password_number_error": "必须至少包含一个数字 （0-9）。",
+      "password_alpha_error": "必须至少包含一个字母 （a-z， A-Z）。",
+      "password_strength_error": "安全强度必须至少为 {{strength}} 。"
+    },
+    "home": {
+      "profile": {
+        "first_name": "名字",
+        "last_name": "姓氏",
+        "edit": "编辑个人资料",
+        "date_joined": "加入日期",
+        "api_token": "API 令牌",
+        "create_success_message": "已成功创建用户",
+        "update_success_message": "已成功更新用户",
+        "tooltip": {
+          "superuser": "OCL 超级管理员",
+          "staff": "OCL 管理员",
+          "deactivated": "已禁用",
+          "unverified": "未经验证",
+          "verified": "已验证",
+          "verification_pending": "待验证",
+          "copy_token": "单击复制 API 令牌"
+        }
+      },
+      "management": {
+        "title": "仅限于管理员",
+        "header": "用户管理",
+        "remove_admin_privileges": "移除管理权限",
+        "make_admin": "设为管理员",
+        "username_confirmation_message": "键入此用户的用户名以确认此项操作。",
+        "username_incorrect_message": "用户名不正确。",
+        "generic_error": "发生了异常情况！正在重新加载以刷新用户状态。",
+        "mark_verified": {
+          "label": "已验证",
+          "title": "标记已验证的 {{userLabel}}",
+          "body": "此项操作会将用户标记为“已验证”并使其能够登录。键入此用户的用户名以确认此项操作。",
+          "success": "已成功地将该用户标记为“已验证”。正在重新加载..."
+        },
+        "activate": {
+          "label": "已启用",
+          "message": "此项操作会将用户标记为“有效”和“已验证”，从而使其能够登录",
+          "success": "已成功地启用该用户。正在重新加载..."
+        },
+        "deactivate": {
+          "message": "此项操作将会标记 is_active=False，从而禁止该用户的登录",
+          "success": "已成功地禁用该用户。正在重新加载..."
+        },
+        "mark_admin": {
+          "message": "此项操作会将该用户设为 OCL 管理员（但并非超级用户）。",
+          "success": "已成功切换用户状态。正在重新加载..."
+        },
+        "unmark_admin": {
+          "message": "此项操作将会移除该用户的全部管理员权限。"
+        },
+        "hard_delete": {
+          "label": "硬删除",
+          "success": "已成功删除该用户。正在重新加载..."
+        },
+        "reset_password": {
+          "label": "重置密码",
+          "success": "已成功地重置了用户密码。正在重新加载..."
+        },
+        "tooltip": {
+          "mark_verified": "将该用户标记为“已验证”。这将使其能够利用自己的密码来登录。",
+          "activate": "{{activate_or_deactivate}} 该用户。",
+          "reset_password": "重置该用户的密码。",
+          "hard_delete": "删除该用户"
+        }
+      }
+    }
+  },
+  "concept_container": {
+    "delete": {
+      "generic_error": "如果您没有阅读这些信息，就会发生意想不到的异常情况！",
+      "message": "<1>无法</1> 撤销此项操作！此项操作将会删除整个的 {{resourceType}} 及其全部的 {{relationship}} {{associationsLabel}} （如果有的话）。",
+      "confirmation_title": "是否确实要永久删除这一 {{resourceType}}",
+      "confirmation_message": "请键入 <1>{{resourceId}}</1> 来确认操作。",
+      "confirmation_button_label": "我明白这些后果，请删除这一 {{resourceType}}"
+    }
+  }
+}
