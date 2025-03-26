@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './locales/en/translations.json'
 import es from './locales/es/translations.json'
+import zh from './locales/zh/translations.json'
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'en',
@@ -12,12 +13,15 @@ i18n.use(initReactI18next).init({
     },
     es: {
       translations: es
+    },
+    zh: {
+      translations: zh
     }
   },
   ns: ['translations'],
   defaultNS: 'translations'
 });
 
-i18n.languages = ['en', 'es'];
+i18n.languages = ['en', 'es', 'zh'];
 
 export default i18n;
