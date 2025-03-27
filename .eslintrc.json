@@ -215,7 +215,8 @@
           "lang",
           "Espa",
           "unmark",
-          "wildcard"
+          "wildcard",
+          "signin"
         ],
         "skipIfMatch": [
           "http://[^s]*",

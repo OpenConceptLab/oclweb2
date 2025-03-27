@@ -38,6 +38,8 @@ import DeprecatedBrowser from './DeprecatedBrowser';
 import OIDLoginCallback from '../users/OIDLoginCallback';
 import APIService from '../../services/APIService';
 import OpenMRSDeprecationDialog from '../common/OpenMRSDeprecationDialog';
+import SigninRedirect from './SigninRedirect'
+import SignupRedirect from './SignupRedirect'
 
 
 const SITE_TITLE = getSiteTitle()
@@ -156,6 +158,8 @@ const App = props => {
             <Switch>
               <Route exact path="/oidc/login" component={OIDLoginCallback} />
               <Route exact path="/" component={isFHIR ? Fhir : RootView} />
+              <Route path="/signin" component={SigninRedirect} />
+              <Route path="/signup" component={SignupRedirect} />
               <Route path="/search" component={isFHIR ? Fhir : Search} />
               <AuthenticationRequiredRoute path="/imports" component={ImportHome} />
 
