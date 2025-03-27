@@ -862,6 +862,21 @@ export const getLoginURL = returnTo => {
   return url
 }
 
+export const getRegisterURL = returnTo => {
+  let redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+
+  redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
+
+  if(isSSOEnabled())
+    return `${getAPIURL()}/users/signup/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
+  let url = '/#/accounts/signup'
+  if(returnTo)
+    url += `?returnTo=${returnTo}`
+
+  return url
+}
+
 export const getSSOLogoutURL = returnTo => {
   const redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const idToken = localStorage.id_token
