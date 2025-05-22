@@ -59,7 +59,7 @@ const ConceptHierarchyRow = ({ mapType, concepts, source }) => {
                 { get(concept, 'display_name') }
               </TableCell>
               <TableCell align='left' style={{width: '20%'}}>
-                {get(source, 'id')}
+                {get(source, 'short_code') || get(source, 'id')}
               </TableCell>
               <TableCell />
             </TableRow>
