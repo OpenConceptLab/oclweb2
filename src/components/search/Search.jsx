@@ -419,7 +419,7 @@ class Search extends React.Component {
           ...this.getFacetQueryParam(),
         };
         if(onHierarchyToggle && resource === 'concepts') {
-          queryParams['onlyParentLess'] = hierarchy
+          queryParams['onlyHierarchyRoot'] = hierarchy
         }
         if(updatedSince)
           queryParams['updatedSince'] = updatedSince
