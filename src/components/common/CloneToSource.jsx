@@ -131,7 +131,7 @@ class CloneToSource extends React.Component {
     const payload = this.getPayload()
     if(isEmpty(payload?.expressions)) {
       alertifyjs.error('No expressions to add')
-    } else {
+    } else if(selectedSource?.url) {
       this.setState({isAdding: true}, () => {
         this._sourceName = this.getSourceName()
         APIService.new().overrideURL(selectedSource.url)

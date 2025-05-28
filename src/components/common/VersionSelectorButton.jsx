@@ -83,7 +83,7 @@ const VersionSelectorButton = ({selected, versions, style, ...rest}) => {
         <FixedSizeList
           height={300}
           itemSize={46}
-          itemCount={versions.length}
+          itemCount={versions?.length || 0}
           overscanCount={5}
         >
           {

@@ -8,7 +8,7 @@ import {
 
 const NewResourceButton = ({resources, onClick, color}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const toggleAnchorEl = event => setAnchorEl(prev => prev ? null : event.currentTarget)
+  const toggleAnchorEl = event => setAnchorEl(prev => prev ? null : event?.currentTarget)
 
   const onItemClick = resource => {
     onClick(resource)

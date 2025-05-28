@@ -1012,8 +1012,8 @@ class Search extends React.Component {
                     showActions={isInsideConfiguredOrg}
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 concept={selectedItem}
-                                location={{pathname: selectedItem.version_url}}
-                                match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/') || !selectedItem.is_latest_version) ? selectedItem.version : null }}}
+                                location={{pathname: selectedItem?.version_url}}
+                                match={{params: {conceptVersion: (selectedItem.uuid !== selectedItem?.versioned_object_id?.toString() || window.location.hash.includes('/collections/') || !selectedItem?.is_latest_version) ? selectedItem?.version : null }}}
                   /> :
                   <MappingHome
                     global
@@ -1025,7 +1025,7 @@ class Search extends React.Component {
                                 onClose={isInsideConfiguredOrg ? this.onCloseDetails : null}
                                 mapping={selectedItem}
                                 location={{pathname: selectedItem.version_url}}
-                                match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem.versioned_object_id.toString() || window.location.hash.includes('/collections/') || !selectedItem.is_latest_version) ? selectedItem.version : null}}}
+                                match={{params: {mappingVersion: (selectedItem.uuid !== selectedItem?.versioned_object_id?.toString() || window.location.hash.includes('/collections/') || !selectedItem?.is_latest_version) ? selectedItem?.version : null}}}
                   />
                 }
               </div>
