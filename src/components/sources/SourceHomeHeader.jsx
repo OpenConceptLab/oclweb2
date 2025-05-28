@@ -67,7 +67,7 @@ const SourceHomeHeader = ({
 
     return reject(attributes, attr => visibleAttributeKeys.includes(attr.value))
   }
-  const hasManyHiddenAttributes = nonEmptyCount(source, map(getHiddenAttributes(),(attr) => attr.value)) >= 4;
+  const hasManyHiddenAttributes = source.properties?.length > 0 || source.filters?.length > 0 || nonEmptyCount(source, map(getHiddenAttributes(),(attr) => attr.value)) >= 4;
 
 
   React.useEffect(

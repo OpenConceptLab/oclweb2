@@ -160,6 +160,8 @@ export const SOURCE_DEFAULT_CONFIG = {
           value: "canonical_url",
           type: "url",
         },
+      ],
+      invisibleAttributes: [
         {
           label: "Standard Checksum",
           value: "checksums.standard",
@@ -170,8 +172,6 @@ export const SOURCE_DEFAULT_CONFIG = {
           value: "checksums.smart",
           type: "text",
         },
-      ],
-      invisibleAttributes: [
         {
           label: "Publisher",
           value: "publisher",
@@ -277,6 +277,16 @@ export const SOURCE_DEFAULT_CONFIG = {
           value: "autoid_mapping_external_id",
           type: "text",
         },
+        {
+          label: "Properties",
+          value: "properties",
+          type: "json"
+        },
+        {
+          label: "Filters",
+          value: "filters",
+          type: "json"
+        }
       ],
     },
     tabs: [
