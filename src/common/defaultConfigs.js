@@ -280,12 +280,12 @@ export const SOURCE_DEFAULT_CONFIG = {
         {
           label: "Properties",
           value: "properties",
-          type: "json"
+          type: "table"
         },
         {
           label: "Filters",
           value: "filters",
-          type: "json"
+          type: "table"
         }
       ],
     },
