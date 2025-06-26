@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty, includes, isString, map, keys, flatten, uniq } from 'lodash';
+import { isEmpty, includes, isString, map, keys, flatten, uniq, isBoolean } from 'lodash';
 import { formatDate, formatWebsiteLink } from '../../common/utils';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -56,7 +56,7 @@ const HeaderAttribute = ({label, value, gridClass, type, color}) => {
                              columns.map(col => (
                                <TableCell key={col}>
                                  <span style={{display: 'inline-block', maxWidth: '350px', wordBreak: 'break-all'}}>
-                                   {val[col] || null}
+                                   {isBoolean(val[col]) ? val[col].toString() : val[col] || null}
                                  </span>
                                </TableCell>
                              ))
