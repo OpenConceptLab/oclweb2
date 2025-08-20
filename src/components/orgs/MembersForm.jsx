@@ -1,14 +1,17 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
-import { Autocomplete, Alert } from '@mui/material';
+import { Autocomplete, Alert, CircularProgress } from '@mui/material';
 import { Button, TextField } from '@mui/material';
-import { reject, get, map, includes, forEach, compact } from 'lodash';
+import { reject, get, map, includes, forEach, compact, debounce } from 'lodash';
 import APIService from '../../services/APIService';
 
 class MembersForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      input: '',
+      open: false,
+      fetched: false,
       users: [],
       selectedMembers: [],
       members: [],
@@ -20,7 +23,6 @@ class MembersForm extends React.Component {
 
   componentDidMount() {
     this.fetchMembers();
-    this.fetchUsers();
   }
 
   fetchMembers() {
@@ -30,11 +32,19 @@ class MembersForm extends React.Component {
     )
   }
 
-  fetchUsers() {
-    APIService.users().get(null, null, {limit: 1000}).then(
+  fetchUsersAsync = searchStr => {
+    APIService.users().get(null, null, {q: searchStr}).then(
       response => this.setState({users: response.data})
     )
   }
+
+  handleInputChange = debounce((event, value) => {
+    this.setState({input: value || '', fetched: false}, () => {
+      if(value && value.length >= 2)
+        this.fetchUsersAsync(value)
+    })
+  }, 500)
+
 
   onMultiAutoCompleteChange = (event, items) => {
     this.setState({selectedMembers: items, members: map(items, 'username')})
@@ -122,9 +132,11 @@ class MembersForm extends React.Component {
 
   render() {
     const { onCancel } = this.props
-    const { users, selectedMembers } = this.state;
+    const { users, selectedMembers, open, fetched, input } = this.state;
     const membersToCreate = this.getMembersToCreate()
     const membersToDelete = this.getMembersToDelete();
+    const isSearchable = input && input.length >= 2;
+    const loading = Boolean(open && !fetched && isSearchable && !users?.length)
     return (
       <div className='col-md-12' style={{marginBottom: '30px'}}>
         <div className='col-md-12 no-side-padding'>
@@ -136,21 +148,38 @@ class MembersForm extends React.Component {
               className='multi-auto-select'
               multiple
               openOnFocus
-              filterSelectedOptions
+              blurOnSelect
+              open={open}
+              onOpen={() => this.setState({open: true})}
+              onClose={() => this.setState({open: false})}
               isOptionEqualToValue={(option, value) => option.username === get(value, 'username')}
               value={selectedMembers}
               options={users}
+              loading={loading}
+              loadingText={loading ? 'Loading...' : `Type atleast 2 characters to search`}
+              noOptionsText={(isSearchable && !loading) ? "No results" : 'Start typing...'}
               getOptionLabel={this.getMemberDisplayName}
+              onInputChange={this.handleInputChange}
               fullWidth
               required
               renderInput={
                 params => <TextField
                             {...params}
                             label="Organization Members"
-                                   variant="outlined"
-                                   id='org-members-input'
-                                   fullWidth
-                />
+                            variant="outlined"
+                            id='org-members-input'
+                            fullWidth
+                            InputProps={{
+                              ...params.InputProps,
+                              endAdornment: (
+                                <React.Fragment>
+                                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                  {params.InputProps.endAdornment}
+                                </React.Fragment>
+                              ),
+                            }}
+
+                          />
               }
               onChange={this.onMultiAutoCompleteChange}
             />
