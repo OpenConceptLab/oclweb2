@@ -150,6 +150,14 @@ const FilterDrawer = props => {
     setSearchStr(null)
   }
 
+  const getFilterName = field => {
+    if(field.startsWith('properties__')) {
+      const parts = field.split('__')
+      return `Property: ${startCase(parts[1])}`
+    }
+    return startCase(field)
+  }
+
   const formattedName = (field, name) => {
     if(includes(['locale', 'version'], field))
       return name
@@ -219,7 +227,7 @@ const FilterDrawer = props => {
             map(getFilters(), (facets, field) => (
               <div key={field}>
                 <Typography style={{padding: '0 10px 0', fontWeight: 'bold', fontSize: '14px'}}>
-                  {startCase(field)}
+                  {getFilterName(field)}
                 </Typography>
                 {
                   map(facets, facet => {

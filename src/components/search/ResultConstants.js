@@ -257,7 +257,7 @@ export const TAGS = {
   ValueSet: [...VALUE_SET_TAGS]
 }
 export const FACET_ORDER = {
-  concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership', 'nameTypes', 'descriptionTypes', 'updatedBy'],
+  //concepts: ['owner', 'ownerType', 'source', 'conceptClass', 'datatype', 'locale', 'retired', 'collection_membership', 'nameTypes', 'descriptionTypes', 'updatedBy'],
   mappings: [
     'owner', 'ownerType', 'source', 'mapType',
     'fromConceptOwner', 'fromConceptOwnerType', 'fromConceptSource', 'fromConcept',
