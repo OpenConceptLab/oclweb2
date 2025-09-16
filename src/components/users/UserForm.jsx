@@ -95,7 +95,7 @@ class UserForm extends React.Component {
     this.setState(newState)
   }
 
-  canEditAuthGroups = () => this.state.isAdminUser && !this.state.isUserEditingSelf
+  canEditAuthGroups = () => this.state.isAdminUser
 
   onSubmit = event => {
     event.preventDefault();
