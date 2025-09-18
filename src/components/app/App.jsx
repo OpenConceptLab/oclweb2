@@ -165,447 +165,447 @@ const App = props => {
 
               { /* Concept Home */ }
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)/$cascade"
+                path="/users/:user/sources/:source/concepts/:concept/:conceptVersion/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)/$cascade"
+                path="/orgs/:org/sources/:source/concepts/:concept/:conceptVersion/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/concepts/:concept/:conceptVersion"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/concepts/:concept/:conceptVersion"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/$cascade"
+                path="/users/:user/sources/:source/concepts/:concept/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/$cascade"
+                path="/orgs/:org/sources/:source/concepts/:concept/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/users/:user/sources/:source/concepts/:concept"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/orgs/:org/sources/:source/concepts/:concept"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/users/:user/sources/:source/:version/concepts/:concept"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/orgs/:org/sources/:source/:version/concepts/:concept"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/$cascade"
+                path="/users/:user/sources/:source/:version/concepts/:concept/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/$cascade"
+                path="/orgs/:org/sources/:source/:version/concepts/:concept/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/:version/concepts/:concept/:conceptVersion"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/:version/concepts/:concept/:conceptVersion"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)/$cascade"
+                path="/users/:user/sources/:source/:version/concepts/:concept/:conceptVersion/$cascade"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion([a-zA-Z0-9\-\.\_\@]+)/$cascade"
+                path="/orgs/:org/sources/:source/:version/concepts/:concept/:conceptVersion/$cascade"
                 component={SourceHome}
               />
 
               { /* Mapping Home */ }
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)/:mappingVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/mappings/:mapping/:mappingVersion"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)/:mappingVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/mappings/:mapping/:mappingVersion"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)/:mappingVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/:version/mappings/:mapping/:mappingVersion"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)/:mappingVersion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/:version/mappings/:mapping/:mappingVersion"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/mappings/:mapping"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/mappings/:mapping"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/:version/mappings/:mapping"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/:version/mappings/:mapping"
                 component={SourceHome}
               />
 
               { /* Source Home */ }
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/orgs/:org/sources/:source/:version/concepts"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/users/:user/sources/:source/:version/concepts"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/orgs/:org/sources/:source/concepts"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/users/:user/sources/:source/concepts"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/orgs/:org/sources/:source/:version/mappings"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/users/:user/sources/:source/:version/mappings"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/orgs/:org/sources/:source/mappings"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/users/:user/sources/:source/mappings"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/summary"
+                path="/orgs/:org/sources/:source/:version/summary"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/versions"
+                path="/orgs/:org/sources/:source/:version/versions"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/summary"
+                path="/users/:user/sources/:source/:version/summary"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/versions"
+                path="/users/:user/sources/:source/:version/versions"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/about"
+                path="/orgs/:org/sources/:source/about"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/about"
+                path="/users/:user/sources/:source/about"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/versions"
+                path="/orgs/:org/sources/:source/versions"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/summary"
+                path="/orgs/:org/sources/:source/summary"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/versions"
+                path="/users/:user/sources/:source/versions"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/summary"
+                path="/users/:user/sources/:source/summary"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source/:version"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source/:version"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/about"
+                path="/orgs/:org/sources/:source/:version/about"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/about"
+                path="/users/:user/sources/:source/:version/about"
                 component={SourceHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/sources/:source"
                 component={SourceHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/sources/:source([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/sources/:source"
                 component={SourceHome}
               />
 
               { /* Collection Home */ }
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/orgs/:org/collections/:collection/:version/concepts/:concept"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion"
+                path="/orgs/:org/collections/:collection/:version/concepts/:concept/:conceptVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping"
+                path="/orgs/:org/collections/:collection/:version/mappings/:mapping"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping/:mappingVersion"
+                path="/orgs/:org/collections/:collection/:version/mappings/:mapping/:mappingVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/users/:user/collections/:collection/:version/concepts/:concept"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion"
+                path="/users/:user/collections/:collection/:version/concepts/:concept/:conceptVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping"
+                path="/users/:user/collections/:collection/:version/mappings/:mapping"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping/:mappingVersion"
+                path="/users/:user/collections/:collection/:version/mappings/:mapping/:mappingVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/orgs/:org/collections/:collection/:version/mappings"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/orgs/:org/collections/:collection/:version/concepts"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/references"
+                path="/orgs/:org/collections/:collection/:version/references"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/users/:user/collections/:collection/:version/mappings"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/users/:user/collections/:collection/:version/concepts"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/references"
+                path="/users/:user/collections/:collection/:version/references"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion/concepts/:concept/:conceptVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping/:mappingVersion"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion/mappings/:mapping/:mappingVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion/concepts/:concept"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion/mappings/:mapping"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion/concepts"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion/mappings"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion/concepts/:concept/:conceptVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping/:mappingVersion"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion/mappings/:mapping/:mappingVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion/concepts/:concept"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion/mappings/:mapping"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion/concepts"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion/mappings"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/collections/:collection/:version/expansions/:expansion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)/expansions/:expansion([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/collections/:collection/:version/expansions/:expansion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/orgs/:org/collections/:collection/concepts/:concept"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion"
+                path="/orgs/:org/collections/:collection/concepts/:concept/:conceptVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping"
+                path="/orgs/:org/collections/:collection/mappings/:mapping"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping/:mappingVersion"
+                path="/orgs/:org/collections/:collection/mappings/:mapping/:mappingVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept"
+                path="/users/:user/collections/:collection/concepts/:concept"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts/:concept/:conceptVersion"
+                path="/users/:user/collections/:collection/concepts/:concept/:conceptVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping"
+                path="/users/:user/collections/:collection/mappings/:mapping"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings/:mapping/:mappingVersion"
+                path="/users/:user/collections/:collection/mappings/:mapping/:mappingVersion"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/orgs/:org/collections/:collection/mappings"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/orgs/:org/collections/:collection/concepts"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/references"
+                path="/orgs/:org/collections/:collection/references"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/about"
+                path="/orgs/:org/collections/:collection/about"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/versions"
+                path="/orgs/:org/collections/:collection/versions"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/about"
+                path="/users/:user/collections/:collection/about"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/versions"
+                path="/users/:user/collections/:collection/versions"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/mappings"
+                path="/users/:user/collections/:collection/mappings"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/concepts"
+                path="/users/:user/collections/:collection/concepts"
                 component={CollectionHome}
               />
               <Route
                 exact
-                path="/users/:user/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/references"
+                path="/users/:user/collections/:collection/references"
                 component={CollectionHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/collections/:collection/:version"
                 component={CollectionHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)/:version([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/collections/:collection/:version"
                 component={CollectionHome}
               />
               <Route
-                path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)"
+                path="/orgs/:org/collections/:collection"
                 component={CollectionHome}
               />
               <Route
-                path="/users/:user([a-zA-Z0-9\-\.\_\@]+)/collections/:collection([a-zA-Z0-9\-\.\_\@]+)"
+                path="/users/:user/collections/:collection"
                 component={CollectionHome}
               />
 
@@ -622,50 +622,50 @@ const App = props => {
               />
 
               {/* Organization Home */}
-              <Route path="/orgs/:org([a-zA-Z0-9\-\.\_\@]+)" component={OrgHome} />
+              <Route path="/orgs/:org" component={OrgHome} />
 
               {/* User Home */}
-              <Route path="/users/:user([a-zA-Z0-9\-\.\_\@]+)" component={UserHome} />
+              <Route path="/users/:user" component={UserHome} />
               <Route exact path="/accounts/login" component={Login} />
               <Route exact path="/accounts/signup" component={Signup} />
               <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />
-              <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_\@]+)/password/reset/:token([a-zA-Z0-9\-\.\_\@]+)" component={ForgotPasswordForm} />
-              <Route exact path="/accounts/:user([a-zA-Z0-9\-\.\_\@]+)/verify/:token([a-zA-Z0-9\-\.\_\@]+)" component={EmailVerification} />
+              <Route exact path="/accounts/:user/password/reset/:token" component={ForgotPasswordForm} />
+              <Route exact path="/accounts/:user/verify/:token" component={EmailVerification} />
 
               {/* FHIR */}
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/code" component={ContainerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/about" component={ContainerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/versions" component={ContainerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/code" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/about" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/versions" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)" component={ContainerHome} />
-              <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/versions" component={ContainerHome} />
-              <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/about" component={ContainerHome} />
-              <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)/code" component={ContainerHome} />
-              <Route path="/fhir/CodeSystem/:id([a-zA-Z0-9\-\.\_\@]+)" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/CodeSystem/:id/code" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/CodeSystem/:id/about" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/CodeSystem/:id/versions" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/CodeSystem/:id" component={ContainerHome} />
+              <Route path="/fhir/users/:user/CodeSystem/:id/code" component={ContainerHome} />
+              <Route path="/fhir/users/:user/CodeSystem/:id/about" component={ContainerHome} />
+              <Route path="/fhir/users/:user/CodeSystem/:id/versions" component={ContainerHome} />
+              <Route path="/fhir/users/:user/CodeSystem/:id" component={ContainerHome} />
+              <Route path="/fhir/CodeSystem/:id/versions" component={ContainerHome} />
+              <Route path="/fhir/CodeSystem/:id/about" component={ContainerHome} />
+              <Route path="/fhir/CodeSystem/:id/code" component={ContainerHome} />
+              <Route path="/fhir/CodeSystem/:id" component={ContainerHome} />
 
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/code" component={ContainerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/about" component={ContainerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/versions" component={ContainerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/code" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/about" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/versions" component={ContainerHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)" component={ContainerHome} />
-              <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/versions" component={ContainerHome} />
-              <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/about" component={ContainerHome} />
-              <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)/code" component={ContainerHome} />
-              <Route path="/fhir/ValueSet/:id([a-zA-Z0-9\-\.\_\@]+)" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/ValueSet/:id/code" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/ValueSet/:id/about" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/ValueSet/:id/versions" component={ContainerHome} />
+              <Route path="/fhir/orgs/:org/ValueSet/:id" component={ContainerHome} />
+              <Route path="/fhir/users/:user/ValueSet/:id/code" component={ContainerHome} />
+              <Route path="/fhir/users/:user/ValueSet/:id/about" component={ContainerHome} />
+              <Route path="/fhir/users/:user/ValueSet/:id/versions" component={ContainerHome} />
+              <Route path="/fhir/users/:user/ValueSet/:id" component={ContainerHome} />
+              <Route path="/fhir/ValueSet/:id/versions" component={ContainerHome} />
+              <Route path="/fhir/ValueSet/:id/about" component={ContainerHome} />
+              <Route path="/fhir/ValueSet/:id/code" component={ContainerHome} />
+              <Route path="/fhir/ValueSet/:id" component={ContainerHome} />
 
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_\@]+)/ConceptMap/:id([a-zA-Z0-9\-\.\_\@]+)" component={ConceptMapHome} />
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_\@]+)/ConceptMap/:id([a-zA-Z0-9\-\.\_\@]+)" component={ConceptMapHome} />
-              <Route path="/fhir/ConceptMap/:id([a-zA-Z0-9\-\.\_\@]+)" component={ConceptMapHome} />
+              <Route path="/fhir/orgs/:org/ConceptMap/:id" component={ConceptMapHome} />
+              <Route path="/fhir/users/:user/ConceptMap/:id" component={ConceptMapHome} />
+              <Route path="/fhir/ConceptMap/:id" component={ConceptMapHome} />
 
 
-              <Route path="/fhir/users/:user([a-zA-Z0-9\-\.\_]+)" component={OwnerHome} />
-              <Route path="/fhir/orgs/:org([a-zA-Z0-9\-\.\_]+)" component={OwnerHome} />
+              <Route path="/fhir/users/:user" component={OwnerHome} />
+              <Route path="/fhir/orgs/:org" component={OwnerHome} />
               <Route path="/fhir" component={Fhir} />
               <Route component={NotFound} />
             </Switch>

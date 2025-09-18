@@ -33,7 +33,6 @@ export const COLLECTION_TYPES = [
   'Subset',
 ];
 /*eslint no-useless-escape: 0*/
-export const SOURCE_CHILD_URI_REGEX = /\/(orgs|users)\/([a-zA-Z0-9\-\.\_\@]+)\/(sources|collections)\/([a-zA-Z0-9\-\.\_\@]+)\/(concepts|mappings)\/([a-zA-Z0-9\-\.\_\@]+)?\/?([a-zA-Z0-9\-\.\_\@]+)?\/?/;
 export const OCL_SERVERS_GROUP = 'ocl_servers';
 export const OCL_FHIR_SERVERS_GROUP = 'ocl_fhir_servers';
 export const HAPI_FHIR_SERVERS_GROUP = 'hapi_fhir_servers';
