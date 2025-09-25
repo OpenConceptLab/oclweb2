@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next';
 import alertifyjs from 'alertifyjs';
 import {
   get, set, cloneDeep, merge, forEach, includes, keys, pickBy, size, isEmpty, has, find, isEqual,
-  map, omit, isString, values, omitBy, isNumber, filter
+  map, omit, isString, values, omitBy, isNumber, filter, isBoolean
 } from 'lodash';
 import { Share as ShareIcon, AccountTreeOutlined as HierarchyIcon } from '@mui/icons-material'
 import { CircularProgress, Chip, Tooltip } from '@mui/material';
@@ -156,10 +156,14 @@ class Search extends React.Component {
     const applied = {}
     forEach(filters, (value, field) => {
       applied[field] = {}
-      forEach(value.split(','), val => applied[field][val] = true)
+      if(isBoolean(value)) {
+        applied[field][value.toString()] = true
+      } else
+        forEach(value.split(','), val => applied[field][val] = true)
     })
     return applied
   }
+
 
 
   setQueryParamsInState() {
