@@ -4,7 +4,8 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { get, isEmpty } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
-  isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel
+  isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel, isRedirectingToLoginViaReferrer,
+  isSSOEnabled, getLoginURL, isMapperURL, isV3URL
 } from '../../common/utils';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
@@ -40,6 +41,7 @@ import APIService from '../../services/APIService';
 import OpenMRSDeprecationDialog from '../common/OpenMRSDeprecationDialog';
 import SigninRedirect from './SigninRedirect'
 import SignupRedirect from './SignupRedirect'
+import CheckAuth from './CheckAuth'
 
 
 const SITE_TITLE = getSiteTitle()
@@ -47,7 +49,7 @@ const SITE_TITLE = getSiteTitle()
 const AuthenticationRequiredRoute = ({component: Component, ...rest}) => (
   <Route
     {...rest}
-    render={props => isLoggedIn() ? <Component {...props} /> : <AccessDenied />}
+    render={props => isLoggedIn() ? <Component {...props} /> : isRedirectingToLoginViaReferrer(props.location) ? <CheckAuth /> : <AccessDenied />}
   />
 )
 
@@ -105,7 +107,27 @@ const App = props => {
     setOpenOpenMRSDeprecationDialog(isRedirectedFromDM)
   }
 
+  const forceLoginUser = () => {
+    if(!isSSOEnabled()) {
+      window.location.href = getLoginURL(window.location.origin + '/#' + pathname)
+    }
+
+    const { search, hash, pathname } = props.location
+    const queryParams = new URLSearchParams(search)
+    const referrer = queryParams.get('referrer')
+    if(isLoggedIn()) {
+      window.location.hash = '#'  + pathname
+    } else if(referrer && (isMapperURL(referrer) || isV3URL(referrer)) && !isLoggedIn()) {
+      const parts = hash.split('?')
+      let params = new URLSearchParams(parts[1])
+      if(params.get('auth') === 'true') {
+        window.location.href = getLoginURL(window.location.origin + '/#' + pathname)
+      }
+    }
+  }
+
   React.useEffect(() => {
+    forceLoginUser()
     setUpOpenMRSDeprecationDialog()
     if(!isFHIRServer())
       fetchToggles()
@@ -625,7 +647,7 @@ const App = props => {
               <Route path="/orgs/:org" component={OrgHome} />
 
               {/* User Home */}
-              <Route path="/users/:user" component={UserHome} />
+              <AuthenticationRequiredRoute path="/users/:user" component={UserHome} />
               <Route exact path="/accounts/login" component={Login} />
               <Route exact path="/accounts/signup" component={Signup} />
               <Route exact path="/accounts/password/reset" component={ForgotPasswordRequest} />

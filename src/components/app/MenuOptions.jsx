@@ -17,7 +17,9 @@ import {
   Map as MapIcon,
   QuestionAnswer as ContactIcon
 } from '@mui/icons-material';
+import MapperIcon from '@mui/icons-material/MotionPhotosAutoOutlined';
 import OpenMRSLogo from '../common/OpenMRSLogo';
+import { toMapperURL } from '../../common/utils'
 
 export const SITE_URL = 'https://openconceptlab.org/';
 const COMMUNITY_OPTIONS = [
@@ -58,6 +60,11 @@ const COMMUNITY_OPTIONS = [
   },
 ];
 const TOOLS_OPTIONS = [
+  {
+    label: 'Mapper',
+    href: toMapperURL(),
+    icon: <MapperIcon />
+  },
   {
     label: 'TermBrowser',
     href: SITE_URL + 'termbrowser/',

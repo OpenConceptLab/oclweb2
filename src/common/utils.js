@@ -848,13 +848,17 @@ export const isSSOEnabled = () => {
 }
 
 export const getLoginURL = returnTo => {
-  let redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  let redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
 
   redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
 
-  if(isSSOEnabled())
+  if(isSSOEnabled()) {
+    if(returnTo && returnTo.includes('/#/') && returnTo.split('/#/')[1])
+      redirectURL = returnTo.replace('/#/', '/')
     return `${getAPIURL()}/users/login/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
+
+  }
   let url = '/#/accounts/login'
   if(returnTo)
     url += `?returnTo=${returnTo}`
@@ -1026,4 +1030,54 @@ export const formatTimeTaken = seconds => {
   }
 
   return formattedTime;
+}
+
+export const toMapperURL = path => {
+  let url = 'https://map.openconceptlab.org'
+  if(window.location.host?.includes('localhost'))
+    url = 'http://localhost:4004'
+  if(['app.v3.qa.openconceptlab.org', 'app.v3.demo.openconceptlab.org'].includes(window.location.host))
+    url = 'https://map.qa.openconceptlab.org'
+  if(window.location.host.match('app.v3.*.openconceptlab.org'))
+    url = window.location.origin.replace('//app.v3.', '//map.')
+
+  let referrerParams = `referrer=${window.location.href}`
+  if(isLoggedIn())
+    referrerParams += '?auth=true'
+
+
+  return `${url}/#${path || '/'}?${referrerParams}`
+}
+
+export const isMapperURL = url => {
+  if(!url)
+    return false
+  if(url.startsWith('http://localhost:4004'))
+    return true
+  if(!url.includes('.openconceptlab.org'))
+    return false
+  if(url.startsWith('https://map.'))
+    return true
+  return false
+}
+
+export const isV3URL = url => {
+  if(!url)
+    return false
+  if(url.startsWith('http://localhost:4002'))
+    return true
+  if(!url.includes('.openconceptlab.org'))
+    return false
+  if(url.startsWith('https://app.v3.'))
+    return true
+  return false
+}
+
+export const isRedirectingToLoginViaReferrer = location => {
+  const { search, hash } = location
+  const queryParams = new URLSearchParams(search)
+  const referrer = queryParams.get('referrer')
+  const parts = hash.split('?')
+  let params = new URLSearchParams(parts[1])
+  return referrer && (isMapperURL(referrer) || isV3URL(referrer)) && params.get('auth') === 'true'
 }
