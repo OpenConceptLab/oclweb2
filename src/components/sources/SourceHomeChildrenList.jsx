@@ -32,6 +32,9 @@ class SourceHomeChildrenList extends React.Component {
         baseURL={this.getURL()}
         fixedFilters={merge({isTable: true, limit: 25}, (fixedFilters || {}))}
         searchInputPlaceholder={`Search ${source?.name} ${resource}...`}
+        repoDefaultFilters={(resource === 'concepts') ? source?.meta?.display?.default_filter : {}}
+        properties={(resource === 'concepts') ? source?.meta?.display?.concept_summary_properties : []}
+        propertyFilters={(resource === 'concepts') ? source?.filters : []}
       />
     )
   }

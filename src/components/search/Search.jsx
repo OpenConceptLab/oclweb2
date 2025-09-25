@@ -152,6 +152,16 @@ class Search extends React.Component {
     return resource || 'concepts'
   }
 
+  getAppliedFacetFromQueryParam = filters => {
+    const applied = {}
+    forEach(filters, (value, field) => {
+      applied[field] = {}
+      forEach(value.split(','), val => applied[field][val] = true)
+    })
+    return applied
+  }
+
+
   setQueryParamsInState() {
     const queryParams = new URLSearchParams(get(this.props, 'location.search'))
     let userFilters = this.props.userFilters || {};
@@ -171,6 +181,8 @@ class Search extends React.Component {
       } catch {
         appliedFacets = {}
       }
+    if(this.props.resource === 'concepts')
+      appliedFacets = {...appliedFacets, ...this.getAppliedFacetFromQueryParam(this.props.repoDefaultFilters)}
 
     const includeRetired = this.getLayoutAttrValue('includeRetired', 'bool') || (appliedFacets.retired?.false && appliedFacets.retired?.true)
     if(includeRetired) {
@@ -989,6 +1001,8 @@ class Search extends React.Component {
           updatedSinceText={this.getUpdatedSinceText()}
           updatedSince={this.state.updatedSince}
           onUpdateSinceChange={this.onDateChange}
+          repoDefaultFilters={this.props.resource === 'concepts' ? this.getAppliedFacetFromQueryParam(this.props.repoDefaultFilters || {}) : {}}
+          propertyFilters={this.props.propertyFilters}
         />
         {
           selectedItem &&
