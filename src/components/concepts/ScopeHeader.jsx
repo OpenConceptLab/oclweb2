@@ -74,38 +74,38 @@ const ScopeHeader = ({
         <div className="col-xs-12 no-side-padding">
           {
             (global || scoped === 'collection') && concept &&
-            <div className="col-xs-11 no-side-padding">
-              <ResourceTextBreadcrumbs style={{marginBottom: '5px', marginLeft: '5px'}} resource={concept} />
-            </div>
+              <div className="col-xs-11 no-side-padding">
+                <ResourceTextBreadcrumbs style={{marginBottom: '5px', marginLeft: '5px'}} resource={concept} />
+              </div>
           }
           {
             onClose &&
-            <span className='col-xs-1 no-side-padding' style={{display: 'block', textAlign: 'right', position: 'fixed', right: '10px', marginTop: '2px'}}>
-              <IconButton size='small' color='secondary' onClick={onClose}>
-                <CancelIcon fontSize='inherit' />
-              </IconButton>
-            </span>
+              <span className='col-xs-1 no-side-padding' style={{display: 'block', textAlign: 'right', position: 'fixed', right: '10px', marginTop: '2px'}}>
+                <IconButton size='small' color='secondary' onClick={onClose}>
+                  <CancelIcon fontSize='inherit' />
+                </IconButton>
+              </span>
           }
         </div>
-        <ConceptIcon shrink={false} style={{marginTop: '-10px', marginLeft: '5px'}} />
+        <ConceptIcon shrink={false} style={{marginTop: '-10px'}} />
         <div className='col-xs-11 no-side-padding'>
-          <div className='col-xs-12 no-side-padding' style={{fontSize: '20px'}}>
+          <div className='col-xs-12 no-side-padding' style={{fontSize: '20px', display: 'flex', alignItems: 'baseline'}}>
             <Tooltip title="Navigate to this Concept under its Source" arrow placement="left">
               <Link to={resourceURL} className="no-anchor-styles">
-                <React.Fragment>
+                <span style={{display: 'flex', alignItems: 'baseline'}}>
                   <span style={{color: BLUE}}>
                     <b className='searchable'>{concept.id}</b>
                   </span>
-                  <span style={{marginLeft: '5px', color: BLACK}}>
+                  <span style={{marginLeft: '5px', color: BLACK, maxWidth: '430px'}}>
                     <b className='searchable'>{concept.display_name}</b>
+                    {
+                      concept.retired &&
+                        <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
+                    }
                   </span>
-                </React.Fragment>
+                </span>
               </Link>
             </Tooltip>
-            {
-              concept.retired &&
-              <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
-            }
             {
               showActions &&
               <span style={{marginLeft: '15px'}}>
