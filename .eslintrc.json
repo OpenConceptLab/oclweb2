@@ -216,7 +216,10 @@
           "Espa",
           "unmark",
           "wildcard",
-          "signin"
+          "signin",
+          "localhost",
+          "gzip",
+          "tgz"
         ],
         "skipIfMatch": [
           "http://[^s]*",
