@@ -464,18 +464,36 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                 <pre style={{marginTop: 0}}>{JSON.stringify(openExpansionDialog.parameters, undefined, 2)}</pre>
               </div>
               <Divider />
+
+              <h3 className='flex-vertical-center' style={{margin: '8px 0'}}>
+                Resolved Repo Versions
+                <Tooltip arrow title='The set of repository versions that were used in the evaluation of this expansion.'>
+                  <InfoIcon color='primary' style={{marginLeft: '10px'}} fontSize='small' />
+                </Tooltip>
+              </h3>
+
               <div>
-                <h3 className='flex-vertical-center'>
-                  Resolved Repo Versions
-                  <Tooltip arrow title='The set of repository versions that were used in the evaluation of this expansion.'>
-                    <InfoIcon color='primary' style={{marginLeft: '10px'}} fontSize='small' />
-                  </Tooltip>
-                </h3>
+        <h4 className='flex-vertical-center' style={{margin: '8px 0'}}>
+                  {`Explicit Repo Versions:  ${[...openExpansionDialog.explicit_source_versions, ...openExpansionDialog.explicit_collection_versions]?.length?.toLocaleString()}`}
+                </h4>
                 <div className='col-xs-11 no-side-padding'>
                   <SourceChildVersionAssociationWithContainer
                     associatedWith={{
-                      source: map(openExpansionDialog.resolved_source_versions, 'version_url'),
-                      collection: map(openExpansionDialog.resolved_collection_versions, 'version_url')
+                      source: map(openExpansionDialog.explicit_source_versions, 'version_url'),
+                      collection: map(openExpansionDialog.explicit_collection_versions, 'version_url')
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <h4 className='flex-vertical-center' style={{margin: '8px 0'}}>
+                  {`Evaluated Repo Versions:  ${[...openExpansionDialog.evaluated_source_versions, ...openExpansionDialog.evaluated_collection_versions]?.length?.toLocaleString()}`}
+                </h4>
+                <div className='col-xs-11 no-side-padding'>
+                  <SourceChildVersionAssociationWithContainer
+                    associatedWith={{
+                      source: map(openExpansionDialog.evaluated_source_versions, 'version_url'),
+                      collection: map(openExpansionDialog.evaluated_collection_versions, 'version_url')
                     }}
                   />
                 </div>
