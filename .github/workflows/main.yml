@@ -1,12 +1,247 @@
-name: CI
+name: Build
 
-on: [push]
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  AWS_REGION: "us-east-2"                     # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: "oclweb2"                   # set this to your Amazon ECR repository name
+  ECS_SERVICE_QA: "qa-web"                      # set this to your Amazon ECS service name
+  ECS_CLUSTER_QA: "ocl-qa-demo"                  # set this to your Amazon ECS cluster name
+  ECS_SERVICE_STAGING: "staging-web"                      # set this to your Amazon ECS service name
+  ECS_CLUSTER_STAGING_PRODUCTION: "ocl-staging-production"                  # set this to your Amazon ECS cluster name
+  ECS_SERVICE_PRODUCTION: "production-web"                      # set this to your Amazon ECS service name
+
 
 jobs:
   eslint:
+    name: Eslint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: stefanoeb/eslint-action@1.0.2
+    - uses: actions/checkout@v3
+    - name: Run linting rules
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
+    - run: npm ci
+    - run: ./node_modules/eslint/bin/eslint.js --ext .jsx,.js src/
+
+  build:
+    needs: [eslint]
+    name: Build and push image
+    runs-on: ubuntu-latest
+
+    #permissions:
+    #  packages: write
+    #  contents: read
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Get npm version
+      id: package-version
+      uses: martinbeentjes/npm-get-version-action@v1.3.1
+    - name: Add GITHUB_SHA_SHORT env property with commit short sha
+      run: echo "GITHUB_SHA_SHORT=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+    - name: Log in to Docker Hub
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    #- name: Log in to the Container registry
+    #  uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+    #  with:
+    #    registry: ghcr.io
+    #    username: ${{ github.actor }}
+    #    password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      with:
+        context: .
+        push: true
+        tags: openconceptlab/oclweb2:nightly, openconceptlab/oclweb2:${{ steps.package-version.outputs.current-version}}-${{env.GITHUB_SHA_SHORT}}
+        build-args: SOURCE_COMMIT=${{env.GITHUB_SHA_SHORT}}
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    name: Release draft
+    environment: rc
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get npm version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Add GITHUB_SHA_SHORT env property with commit short sha
+        run: echo "GITHUB_SHA_SHORT=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Tag and release
+        uses: avakar/tag-and-release@v1
         with:
-          files: src/
+          tag_name: ${{ steps.package-version.outputs.current-version}}-${{env.GITHUB_SHA_SHORT}}
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-qa:
+    needs: [release]
+    name: Deploy to QA
+    runs-on: ubuntu-latest
+    environment: qa
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get npm version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Add GITHUB_SHA_SHORT env property with commit short sha
+        run: echo "GITHUB_SHA_SHORT=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Push image to Amazon ECR
+        id: push-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ steps.package-version.outputs.current-version}}-${{env.GITHUB_SHA_SHORT}}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker pull openconceptlab/oclweb2:$IMAGE_TAG
+          docker tag openconceptlab/oclweb2:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag openconceptlab/oclweb2:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:qa
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:qa
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition $ECS_SERVICE_QA --query taskDefinition > task-definition.json
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: "task-definition.json"
+          container-name: ${{ env.ECS_SERVICE_QA }}
+          image: ${{ steps.push-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_QA }}
+          cluster: ${{ env.ECS_CLUSTER_QA }}
+  deploy-staging:
+    needs: [deploy-qa]
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get npm version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Add GITHUB_SHA_SHORT env property with commit short sha
+        run: echo "GITHUB_SHA_SHORT=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Push image to Amazon ECR
+        id: push-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ steps.package-version.outputs.current-version}}-${{env.GITHUB_SHA_SHORT}}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker pull openconceptlab/oclweb2:$IMAGE_TAG
+          docker tag openconceptlab/oclweb2:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:staging
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:staging
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition $ECS_SERVICE_STAGING --query taskDefinition > task-definition.json
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: "task-definition.json"
+          container-name: ${{ env.ECS_SERVICE_STAGING }}
+          image: ${{ steps.push-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_STAGING }}
+          cluster: ${{ env.ECS_CLUSTER_STAGING_PRODUCTION }}
+  deploy-production:
+    needs: [deploy-staging]
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get npm version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Add GITHUB_SHA_SHORT env property with commit short sha
+        run: echo "GITHUB_SHA_SHORT=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Push image to Amazon ECR
+        id: push-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ steps.package-version.outputs.current-version}}-${{env.GITHUB_SHA_SHORT}}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker pull openconceptlab/oclweb2:$IMAGE_TAG
+          docker tag openconceptlab/oclweb2:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:production
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:production
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition $ECS_SERVICE_PRODUCTION --query taskDefinition > task-definition.json
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: "task-definition.json"
+          container-name: ${{ env.ECS_SERVICE_PRODUCTION }}
+          image: ${{ steps.push-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_PRODUCTION }}
+          cluster: ${{ env.ECS_CLUSTER_STAGING_PRODUCTION }}
