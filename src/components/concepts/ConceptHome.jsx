@@ -157,10 +157,10 @@ class ConceptHome extends React.Component {
 
   fetchParentMappedSources() {
     return; // this is an expensive operation for now
-    const { source } = this.state
-    if(source?.url) {
-      APIService.new().overrideURL(source.url).appendToUrl('mapped-sources/').get(null, null, {includeSummary: true}).then(response => this.setState({mappedSources: response.data}))
-    }
+    // const { source } = this.state
+    // if(source?.url) {
+    //   APIService.new().overrideURL(source.url).appendToUrl('mapped-sources/').get(null, null, {includeSummary: true}).then(response => this.setState({mappedSources: response.data}))
+    // }
   }
 
   getHierarchy = () => this.setState({isLoadingHierarchy: true}, () => {
