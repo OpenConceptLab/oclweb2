@@ -219,7 +219,8 @@
           "signin",
           "localhost",
           "gzip",
-          "tgz"
+          "tgz",
+          "vectorized"
         ],
         "skipIfMatch": [
           "http://[^s]*",

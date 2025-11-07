@@ -9,6 +9,7 @@ import ReleasedChip from './ReleasedChip';
 import RetiredChip from './RetiredChip';
 import ProcessingChip from './ProcessingChip';
 import ExpansionChip from './ExpansionChip';
+import VersionVectorizedChip from './VersionVectorizedChip'
 import AccessChip from './AccessChip';
 import { GREEN } from '../../common/constants';
 
@@ -38,6 +39,12 @@ const ResourceVersionLabel = props => {
         <span style={{marginLeft: '10px'}}>
           <ReleasedChip size='small' />
         </span>
+      }
+      {
+        props.match_algorithms?.includes('llm') &&
+          <span style={{marginLeft: '10px'}}>
+            <VersionVectorizedChip size='small' />
+          </span>
       }
       {
         props.retired &&
