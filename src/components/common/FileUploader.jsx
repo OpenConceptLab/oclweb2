@@ -15,28 +15,21 @@ const FileUploader = ({ maxFiles, accept, uploadButton, onUpload, onLoading, max
 
   const onDrop = acceptedFiles => {
     setCanUpload(false);
-    if(onLoading)
-      onLoading()
+    if (onLoading) onLoading();
 
-    const formData = new FormData();
-    for (const file of acceptedFiles) formData.append('file', file);
+    // Fake progress animation (0 → 100)
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct += 10;
+      setProgress(pct);
 
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = event => {
-      const percentage = parseInt((event.loaded / event.total) * 100);
-      setProgress(percentage)
-      if(percentage === 100)
-        onUpload(acceptedFiles[0])
-    };
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState !== 4) return;
-      if (xhr.status === 200) {
+      if (pct >= 100) {
+        clearInterval(interval);
         setCanUpload(true);
+        onUpload(acceptedFiles[0]);
       }
-    };
-    xhr.open('POST', 'https://httpbin.org/post', true);
-    xhr.send(formData);
-  }
+    }, 80);
+  };
 
   const {
     acceptedFiles, fileRejections, getRootProps, getInputProps
