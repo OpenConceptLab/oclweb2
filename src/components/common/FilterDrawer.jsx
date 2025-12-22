@@ -161,13 +161,13 @@ const FilterDrawer = props => {
   const formattedName = (field, name) => {
     if(includes(['locale', 'version'], field))
       return name
-    if(includes(['owner', 'source', 'collection', 'collection_membership'], field))
+    if(name && includes(['owner', 'source', 'collection', 'collection_membership'], field))
       return name.replaceAll('_', '-').toUpperCase()
     if(name) {
-      name = name.trim()
+      name = name?.trim()
       if(name === 'n/a')
-        return name.toUpperCase()
-      return startCase(name)
+        return name?.toUpperCase()
+      return startCase(name || 'None')
     }
     return 'None';
   }
