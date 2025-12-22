@@ -16,7 +16,8 @@ import {
   CheckCircle as DefaultIcon, BrightnessAuto as AutoIcon,
   MenuOpen as ViewParametersIcon,
   Info as InfoIcon,
-  Functions as SummaryIcon
+  Functions as SummaryIcon,
+  WarningAmber as WarningIcon
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { copyURL, toFullAPIURL } from '../../common/utils';
@@ -361,6 +362,15 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                                           <AutoIcon style={{marginLeft: '10px', width: '16px'}} />
                                         </Tooltip>
                                       </span>
+                                  }
+                                  {
+                                    expansion?.extras?.__legacy_expansion ?
+                                      <span style={{paddingTop: '5px'}}>
+                                        <Tooltip arrow title="Legacy Expansion: This expansion was created using OCL's legacy expansion logic. While you may still use this expansion, it is recommended that you recreate it using OCL's new expansion logic, which has better version handling and improves consistency and reproducibility across implementations." placement='right'>
+                                          <WarningIcon color='warning' style={{marginLeft: '10px', width: '16px'}} />
+                                        </Tooltip>
+                                      </span>
+                                      : null
                                   }
                                 </div>
                                 <span>
