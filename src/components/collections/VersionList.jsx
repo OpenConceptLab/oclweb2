@@ -17,7 +17,8 @@ import {
   MenuOpen as ViewParametersIcon,
   Info as InfoIcon,
   Functions as SummaryIcon,
-  WarningAmber as WarningIcon
+  WarningAmber as WarningIcon,
+  NoteAdd as AddSimilarIcon,
 } from '@mui/icons-material';
 import APIService from '../../services/APIService';
 import { copyURL, toFullAPIURL } from '../../common/utils';
@@ -59,7 +60,7 @@ const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url)
 
 const PAGE_SIZE = 5
 
-const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) => {
+const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimilarExpansionClick, collection }) => {
   const resource = 'collection'
   const [pagination, setPagination] = React.useState({})
   const [pageSize, setPageSize] = React.useState(PAGE_SIZE)
@@ -431,6 +432,11 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, collection }) 
                                 <Tooltip arrow title='View Expansion Parameters'>
                                   <IconButton onClick={() => setOpenExpansionDialog(expansion)} size="medium">
                                     <ViewParametersIcon fontSize='inherit' />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip arrow title="Create Similar Expansion: The new expansion will be created with OCL's new expansion logic, which has better version handling and improved consistency and reproducibility across servers.">
+                                  <IconButton onClick={() => onCreateSimilarExpansionClick(version, expansion)} size="medium">
+                                    <AddSimilarIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
                               </div>

@@ -33,6 +33,8 @@ const CollectionHomeTabs = props => {
   const [expansionForm, setExpansionForm] = React.useState(false);
   const [configFormWidth, setConfigFormWidth] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
+  const [selectedExpansion, setSelectedExpansion] = React.useState(null)
+
   const onNewClick = resource => {
     if(resource === 'version')
       setVersionForm(true)
@@ -44,6 +46,12 @@ const CollectionHomeTabs = props => {
 
   const onCreateExpansionClick = version => {
     setSelectedVersion(version)
+    setExpansionForm(true)
+  }
+
+  const onCreateSimilarExpansionClick = (version, expansion) => {
+    setSelectedVersion(version)
+    setSelectedExpansion(expansion)
     setExpansionForm(true)
   }
 
@@ -132,7 +140,7 @@ const CollectionHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig?.type === 'versions' &&
-            <VersionList resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} onCreateExpansionClick={onCreateExpansionClick} collection={collection} />
+            <VersionList resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} onCreateExpansionClick={onCreateExpansionClick} onCreateSimilarExpansionClick={onCreateSimilarExpansionClick} collection={collection} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig?.type === 'summary' &&
@@ -196,7 +204,7 @@ const CollectionHomeTabs = props => {
         isOpen={expansionForm}
         onClose={() => setExpansionForm(false)}
         formComponent={
-          <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==3} version={selectedVersion || collection} versions={versions} />
+          <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==3} version={selectedVersion || collection} versions={versions} copyFrom={selectedExpansion} />
         }
       />
     </div>

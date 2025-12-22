@@ -103,6 +103,16 @@ class ExpansionForm extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const { copyFrom } = this.props
+    if(copyFrom?.id) {
+      const newState = {...this.state}
+      newState.fields.canonical_url = copyFrom.canonical_url || ''
+      newState.fields.parameters = copyFrom.parameters
+      this.setState(newState)
+    }
+  }
+
   onTextFieldChange = event => this.setFieldValue(event.target.id, event.target.value)
 
   onCheckboxChange = event => this.setFieldValue(event.target.name, event.target.checked)
@@ -385,7 +395,7 @@ class ExpansionForm extends React.Component {
               <Button style={{margin: '0 10px'}} color='primary' variant='outlined' type='submit' onClick={this.onSubmit}>
                 Create
               </Button>
-              <Button style={{margin: '0 10px'}} variant='outlined' onClick={onCancel}>
+              <Button style={{margin: '0 10px'}} variant='outlined' color='default' onClick={onCancel}>
                 Cancel
               </Button>
             </div>
