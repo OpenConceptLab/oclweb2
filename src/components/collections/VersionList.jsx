@@ -20,6 +20,8 @@ import {
   WarningAmber as WarningIcon,
   NoteAdd as AddSimilarIcon,
 } from '@mui/icons-material';
+import ProcessingIcon from '@mui/icons-material/HourglassTop';
+import EvaluateIcon from '@mui/icons-material/Functions';
 import APIService from '../../services/APIService';
 import { copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
@@ -60,7 +62,7 @@ const deleteExpansion = expansion => APIService.new().overrideURL(expansion.url)
 
 const PAGE_SIZE = 5
 
-const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimilarExpansionClick, collection }) => {
+const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimilarExpansionClick, onEvaluateExpansionClick, collection }) => {
   const resource = 'collection'
   const [pagination, setPagination] = React.useState({})
   const [pageSize, setPageSize] = React.useState(PAGE_SIZE)
@@ -373,6 +375,15 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                       </span>
                                       : null
                                   }
+                                  {
+                                    expansion?.is_processing ?
+                                      <span style={{paddingTop: '5px'}}>
+                                        <Tooltip arrow title="Processing" placement='right'>
+                                          <ProcessingIcon color='warning' style={{marginLeft: '10px', width: '16px'}} />
+                                        </Tooltip>
+                                      </span>
+                                    : null
+                                  }
                                 </div>
                                 <span>
                                   <LastUpdatedOnLabel
@@ -395,7 +406,7 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                 </div>
                               </div>
                               <Divider orientation='vertical' style={{height: '50px'}}/>
-                              <div className='col-md-4' style={{textAlign: 'center'}}>
+                              <div className='col-md-4'>
                                 <Tooltip arrow title={isDefault ? 'Default Expansion' : 'Mark this expansion as default'}>
                                   <span>
                                     <IconButton
@@ -439,6 +450,15 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                     <AddSimilarIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
+                                {
+                                  expansion?.is_processing ? null :
+                                    <Tooltip arrow title="Rebuild Expansion: Re-evaluates all references for this expansion using the same parameters">
+                                      <IconButton onClick={() => onEvaluateExpansionClick(version, expansion)} size="medium">
+                                        <EvaluateIcon fontSize='inherit' />
+                                      </IconButton>
+                                    </Tooltip>
+
+                                }
                               </div>
                             </CardContent>
                           </Card>

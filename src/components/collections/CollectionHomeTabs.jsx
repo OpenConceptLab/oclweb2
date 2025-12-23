@@ -1,6 +1,8 @@
 import React from 'react';
+import alertifyjs from 'alertifyjs'
 import { get, reject, includes, map, pickBy, isString, isObject, isEmpty } from 'lodash';
 import { Tabs, Tab } from '@mui/material';
+import APIService from '../../services/APIService'
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
 import CollectionHomeChildrenList from './CollectionHomeChildrenList';
@@ -53,6 +55,19 @@ const CollectionHomeTabs = props => {
     setSelectedVersion(version)
     setSelectedExpansion(expansion)
     setExpansionForm(true)
+  }
+
+  const onEvaluateExpansionClick = (version, expansion) => {
+    alertifyjs.confirm(
+      `Re-evaluate Expansion: ${version.id}/${expansion.id}`,
+      'Are you sure you want to re-evaluate this expansion?',
+      () => {
+        APIService.new().overrideURL(expansion.url + 're-evaluate/').post().then(() => {
+          alertifyjs.success('Expansion re-evaluation accepted')
+        })
+      },
+      () => {}
+    )
   }
 
   const currentResourceURL = isVersionedObject ? collection?.url : (expansion?.url || collection?.version_url)
@@ -140,7 +155,7 @@ const CollectionHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig?.type === 'versions' &&
-            <VersionList resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} onCreateExpansionClick={onCreateExpansionClick} onCreateSimilarExpansionClick={onCreateSimilarExpansionClick} collection={collection} />
+            <VersionList resource='collection' canEdit={hasAccess} onUpdate={onVersionUpdate} onCreateExpansionClick={onCreateExpansionClick} onCreateSimilarExpansionClick={onCreateSimilarExpansionClick} onEvaluateExpansionClick={onEvaluateExpansionClick} collection={collection} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig?.type === 'summary' &&
