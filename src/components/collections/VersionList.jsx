@@ -341,6 +341,8 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                         if(isDefault) {
                           cardStyle.borderColor = GREEN
                         }
+                        const explicitRepoVersions = [...expansion?.explicit_source_versions, ...expansion?.explicit_collection_versions]
+                        const evaluatedRepoVersions = [...expansion?.evaluated_source_versions, ...expansion?.evaluated_collection_versions]
                         return (
                           <Card key={expansion.id} variant="outlined" style={cardStyle}>
                             <CardContent style={{display: 'flex', padding: '0px 10px', alignItems: 'center'}}>
@@ -394,15 +396,49 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                 </span>
                               </div>
                               <Divider orientation='vertical' style={{height: '50px'}}/>
-                              <div className='col-md-3 no-side-padding' style={{display: 'flex'}}>
-                                <div className='col-md-6 flex-column-center'>
-                                  <div className='col-md-12 no-side-padding gray-italics'>Concepts</div>
+                              <div className='col-md-6 no-side-padding' style={{display: 'flex'}}>
+                                <div className='col-md-2 flex-column-center'>
+                                  <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Concepts</div>
                                   <div className='col-md-12 no-side-padding'>{expansion.summary.active_concepts}</div>
                                 </div>
                                 <Divider orientation='vertical' style={{height: '50px'}}/>
-                                <div className='col-md-6 flex-column-center'>
-                                  <div className='col-md-12 no-side-padding gray-italics'>Mappings</div>
+                                <div className='col-md-2 flex-column-center'>
+                                  <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Mappings</div>
                                   <div className='col-md-12 no-side-padding'>{expansion.summary.active_mappings}</div>
+                                </div>
+                                <Divider orientation='vertical' style={{height: '50px'}}/>
+                                <div className='col-md-8 flex-column-center' style={{textAlign: 'left'}}>
+                                  <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Resolved Repo Versions</div>
+                                  <div className='col-md-12 no-side-padding'>
+                                    {
+                                      explicitRepoVersions?.length > 0 ?
+                                        <React.Fragment>
+                                          <p style={{margin: '4px 0 0 0', fontSize: '11px'}}>Explicit:</p>
+                                        {
+                                          explicitRepoVersions.map(repoVersion => (
+                                            <a rel="noopener noreferrer" target='_blank' key={repoVersion.version_url} href={`#${repoVersion.version_url}`}>
+                                                     {`${repoVersion.owner} / ${repoVersion.short_code}:${repoVersion.version}`}
+                                            </a>
+                                          ))
+                                        }
+                                        </React.Fragment> :
+                                      null
+                                    }
+                                    {
+                                      evaluatedRepoVersions?.length > 0 ?
+                                        <React.Fragment>
+                                          <p style={{margin: '4px 0 0 0', fontSize: '11px'}}>Auto-resolved:</p>
+                                          {
+                                            evaluatedRepoVersions.map(repoVersion => (
+                                              <a rel="noopener noreferrer" target='_blank' key={repoVersion.version_url} href={`#${repoVersion.version_url}`}>
+                                                {`${repoVersion.owner} / ${repoVersion.short_code}:${repoVersion.version}`}
+                                              </a>
+                                            ))
+                                          }
+                                        </React.Fragment> :
+                                      null
+                                    }
+                                  </div>
                                 </div>
                               </div>
                               <Divider orientation='vertical' style={{height: '50px'}}/>
