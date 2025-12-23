@@ -416,7 +416,7 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                           <p style={{margin: '4px 0 0 0', fontSize: '11px'}}>Explicit:</p>
                                         {
                                           explicitRepoVersions.map(repoVersion => (
-                                            <a rel="noopener noreferrer" target='_blank' key={repoVersion.version_url} href={`#${repoVersion.version_url}`}>
+                                            <a style={{width: '100%', display: 'inline-block'}} rel="noopener noreferrer" target='_blank' key={repoVersion.version_url} href={`#${repoVersion.version_url}`}>
                                                      {`${repoVersion.owner} / ${repoVersion.short_code}:${repoVersion.version}`}
                                             </a>
                                           ))
@@ -430,7 +430,7 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                           <p style={{margin: '4px 0 0 0', fontSize: '11px'}}>Auto-resolved:</p>
                                           {
                                             evaluatedRepoVersions.map(repoVersion => (
-                                              <a rel="noopener noreferrer" target='_blank' key={repoVersion.version_url} href={`#${repoVersion.version_url}`}>
+                                              <a style={{width: '100%', display: 'inline-block'}} rel="noopener noreferrer" target='_blank' key={repoVersion.version_url} href={`#${repoVersion.version_url}`}>
                                                 {`${repoVersion.owner} / ${repoVersion.short_code}:${repoVersion.version}`}
                                               </a>
                                             ))
