@@ -11,7 +11,7 @@
     "@mui/icons-material": "5.16.11",
     "@mui/lab": "5.0.0-alpha.174",
     "@mui/material": "5.16.11",
-    "@mui/styles": "5.16.11",
+    "@mui/styles": "5.18.0",
     "@mui/x-date-pickers": "^5.0.20",
     "alertifyjs": "^1.14.0",
     "axios": "^0.21.4",
