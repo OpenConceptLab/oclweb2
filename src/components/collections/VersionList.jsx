@@ -396,19 +396,21 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                 </span>
                               </div>
                               <Divider orientation='vertical' style={{height: '50px'}}/>
-                              <div className='col-md-6 no-side-padding' style={{display: 'flex'}}>
-                                <div className='col-md-2 flex-column-center'>
-                                  <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Concepts</div>
-                                  <div className='col-md-12 no-side-padding'>{expansion.summary.active_concepts}</div>
-                                </div>
-                                <Divider orientation='vertical' style={{height: '50px'}}/>
-                                <div className='col-md-2 flex-column-center'>
-                                  <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Mappings</div>
-                                  <div className='col-md-12 no-side-padding'>{expansion.summary.active_mappings}</div>
-                                </div>
-                                <Divider orientation='vertical' style={{height: '50px'}}/>
-                                <div className='col-md-8 flex-column-center' style={{textAlign: 'left'}}>
-                                  <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Resolved Repo Versions</div>
+                              <div className='col-md-1 flex-column-center'>
+                                <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Concepts</div>
+                                <div className='col-md-12 no-side-padding'>{expansion.summary.active_concepts}</div>
+                              </div>
+                              <Divider orientation='vertical' style={{height: '50px'}}/>
+                              <div className='col-md-1 flex-column-center'>
+                                <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Mappings</div>
+                                <div className='col-md-12 no-side-padding'>{expansion.summary.active_mappings}</div>
+                              </div>
+                              <Divider orientation='vertical' style={{height: '50px'}}/>
+                                <div className='col-md-4 flex-column-center' style={{textAlign: 'left'}}>
+                                  {
+                                    Boolean(explicitRepoVersions?.length > 0 || evaluatedRepoVersions?.length > 0) &&
+                                      <div className='col-md-12 no-side-padding gray-italics' style={{fontSize: '11px'}}>Resolved Repo Versions</div>
+                                  }
                                   <div className='col-md-12 no-side-padding'>
                                     {
                                       explicitRepoVersions?.length > 0 ?
@@ -440,9 +442,13 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                     }
                                   </div>
                                 </div>
-                              </div>
                               <Divider orientation='vertical' style={{height: '50px'}}/>
                               <div className='col-md-4'>
+                                <Tooltip arrow title='Explore Expansion'>
+                                  <IconButton href={`#${expansion.url}`} color='primary' size="medium">
+                                    <SearchIcon fontSize='inherit' />
+                                  </IconButton>
+                                </Tooltip>
                                 <Tooltip arrow title={isDefault ? 'Default Expansion' : 'Mark this expansion as default'}>
                                   <span>
                                     <IconButton
@@ -452,24 +458,6 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                       <DefaultIcon fontSize='inherit' />
                                     </IconButton>
                                   </span>
-                                </Tooltip>
-                                {
-                                  canEdit &&
-                                    <Tooltip arrow title='Delete Expansion'>
-                                      <span>
-                                        <IconButton
-                                          disabled={expansion.retired || isDefault}
-                                          onClick={() => onDeleteExpansionClick(expansion)}
-                                          size="medium">
-                                          <DeleteIcon fontSize='inherit' />
-                                        </IconButton>
-                                      </span>
-                                    </Tooltip>
-                                }
-                                <Tooltip arrow title='Explore Expansion'>
-                                  <IconButton href={`#${expansion.url}`} color='primary' size="medium">
-                                    <SearchIcon fontSize='inherit' />
-                                  </IconButton>
                                 </Tooltip>
                                 <Tooltip arrow title='Copy URL'>
                                   <IconButton onClick={() => onCopyClick(expansion.url)} size="medium">
@@ -481,19 +469,31 @@ const VersionList = ({ canEdit, onUpdate, onCreateExpansionClick, onCreateSimila
                                     <ViewParametersIcon fontSize='inherit' />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip arrow title="Create Similar Expansion: The new expansion will be created with OCL's new expansion logic, which has better version handling and improved consistency and reproducibility across servers.">
-                                  <IconButton onClick={() => onCreateSimilarExpansionClick(version, expansion)} size="medium">
-                                    <AddSimilarIcon fontSize='inherit' />
-                                  </IconButton>
-                                </Tooltip>
                                 {
-                                  expansion?.is_processing ? null :
-                                    <Tooltip arrow title="Rebuild Expansion: Re-evaluates all references for this expansion using the same parameters">
-                                      <IconButton onClick={() => onEvaluateExpansionClick(version, expansion)} size="medium">
-                                        <EvaluateIcon fontSize='inherit' />
-                                      </IconButton>
-                                    </Tooltip>
-
+                                  canEdit &&
+                                    <>
+                                      <Tooltip arrow title="Create Similar Expansion: The new expansion will be created with OCL's new expansion logic, which has better version handling and improved consistency and reproducibility across servers.">
+                                        <IconButton onClick={() => onCreateSimilarExpansionClick(version, expansion)} size="medium">
+                                          <AddSimilarIcon fontSize='inherit' />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip arrow title="Rebuild Expansion: Re-evaluates all references for this expansion using the same parameters">
+                                        <IconButton onClick={() => onEvaluateExpansionClick(version, expansion)} size="medium" disabled={Boolean(expansion?.is_processing)}>
+                                          <EvaluateIcon fontSize='inherit' />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip arrow title='Delete Expansion'>
+                                        <span>
+                                          <IconButton
+                                            color='error'
+                                            disabled={expansion.retired || isDefault}
+                                            onClick={() => onDeleteExpansionClick(expansion)}
+                                            size="medium">
+                                            <DeleteIcon fontSize='inherit' />
+                                          </IconButton>
+                                        </span>
+                                      </Tooltip>
+                                    </>
                                 }
                               </div>
                             </CardContent>
