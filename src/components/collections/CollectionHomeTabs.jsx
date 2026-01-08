@@ -1,7 +1,15 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs'
 import { get, reject, includes, map, pickBy, isString, isObject, isEmpty } from 'lodash';
-import { Tabs, Tab } from '@mui/material';
+import {
+  Tabs,
+  Tab,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button
+} from '@mui/material';
 import APIService from '../../services/APIService'
 import { GREEN } from '../../common/constants';
 import { currentUserHasAccess } from '../../common/utils';
@@ -36,6 +44,7 @@ const CollectionHomeTabs = props => {
   const [configFormWidth, setConfigFormWidth] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
   const [selectedExpansion, setSelectedExpansion] = React.useState(null)
+  const [openRebuildExpansion, setOpenRebuildExpansion] = React.useState(false)
 
   const onNewClick = resource => {
     if(resource === 'version')
@@ -52,22 +61,21 @@ const CollectionHomeTabs = props => {
   }
 
   const onCreateSimilarExpansionClick = (version, expansion) => {
+    setOpenRebuildExpansion(false)
     setSelectedVersion(version)
     setSelectedExpansion(expansion)
     setExpansionForm(true)
   }
 
   const onEvaluateExpansionClick = (version, expansion) => {
-    alertifyjs.confirm(
-      `Re-evaluate Expansion: ${version.id}/${expansion.id}`,
-      'Are you sure you want to re-evaluate this expansion?',
-      () => {
-        APIService.new().overrideURL(expansion.url + 're-evaluate/').post().then(() => {
-          alertifyjs.success('Expansion re-evaluation accepted')
-        })
-      },
-      () => {}
-    )
+    setOpenRebuildExpansion(expansion)
+  }
+
+  const onEvaluateExpansion = expansion => {
+    setOpenRebuildExpansion(false)
+    APIService.new().overrideURL(expansion.url + 're-evaluate/').post().then(() => {
+      alertifyjs.success('Expansion re-evaluation accepted')
+    })
   }
 
   const currentResourceURL = isVersionedObject ? collection?.url : (expansion?.url || collection?.version_url)
@@ -222,6 +230,30 @@ const CollectionHomeTabs = props => {
           <ExpansionForm onCancel={() => setExpansionForm(false)} reloadOnSuccess={tab==3} version={selectedVersion || collection} versions={versions} copyFrom={selectedExpansion} />
         }
       />
+
+      {openRebuildExpansion?.id ? (
+        <Dialog open onClose={() => setOpenRebuildExpansion(false)}>
+          <DialogTitle>Rebuild Expansion</DialogTitle>
+          <DialogContent>
+            This will re-evaluate all references in this collection version. This cannot be undone. Alternatively, you can create a new expansion with the same parameters for comparison.
+            <br/>
+            <br/>
+            How do you want to proceed?
+          </DialogContent>
+          <DialogActions>
+            <Button variant='contained' sx={{textTransform: 'none'}} onClick={() => onCreateSimilarExpansionClick(openRebuildExpansion)} color="primary">
+              Create Similar
+            </Button>
+            <Button variant='contained' sx={{textTransform: 'none'}} onClick={() => onEvaluateExpansion(openRebuildExpansion)} color="error">
+              Rebuild
+            </Button>
+            <Button variant='outlined' sx={{textTransform: 'none'}} onClick={() => setOpenRebuildExpansion(false)} color="default">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : null}
+
     </div>
   );
 }

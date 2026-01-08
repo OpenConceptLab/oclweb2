@@ -37,10 +37,11 @@ import {
   reject,
   forEach,
   uniqBy,
-  isFunction
+  isFunction,
+  keys,
+  pick
 } from 'lodash';
 import {
-  Search as SearchIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Block as RetireIcon,
@@ -50,7 +51,6 @@ import {
   FileCopy as CopyIcon,
   CheckCircle as DefaultIcon,
   BrightnessAuto as AutoIcon,
-  MenuOpen as ViewParametersIcon,
   Info as InfoIcon,
   Functions as SummaryIcon,
   WarningAmber as WarningIcon,
@@ -341,7 +341,7 @@ const VersionList = ({
         <VersionIcon sx={{ mr: 1, width: 16 }} />
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <b>{version.version}</b>
+            <a href={'#' + (version.version_url || version.url)}><b>{version.version}</b></a>
             {version.autoexpand ? (
               <Tooltip arrow title="Auto-Expand" placement="right">
                 <ExpansionIcon sx={{ color: GREEN, ml: 2, width: 16 }} />
@@ -433,15 +433,8 @@ const VersionList = ({
     }
 
     items.push({
-      key: 'explore',
-      label: 'Explore Version',
-      icon: <SearchIcon fontSize="small" />,
-      href: `#${version.concepts_url}`,
-    });
-
-    items.push({
       key: 'copy',
-      label: 'Copy URL',
+      label: 'Copy API URL',
       icon: <CopyIcon fontSize="small" />,
       onClick: () => onCopyClick(version.version_url),
     });
@@ -470,7 +463,7 @@ const VersionList = ({
         <ExpansionIcon sx={{ mr: 1, width: 16, mt: '2px' }} />
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-            <b>{expansion.mnemonic}</b>
+            <a href={'#' + expansion.url}><b>{expansion.mnemonic}</b></a>
 
             {isDefault ? (
               <Tooltip arrow title="Default Expansion" placement="right">
@@ -510,15 +503,20 @@ const VersionList = ({
   };
 
   const renderExpansionParametersCell = expansion => {
-    const params = expansion?.parameters || {};
+    let params = expansion?.parameters || {};
+    let _keys = keys(params)
+    let viewMore = _keys.length > 3
+    if(viewMore)
+      params = pick(params, ['system-version', 'exclude-system', 'check-system-version'])
     return (
-      <Box>
-        <ul>
+      <>
+        <ul style={{margin: 0, padding: 0}}>
           {map(params, (value, key) => {
             return (<li key={key}>{key}: {value}</li>)
           })}
         </ul>
-      </Box>
+        {viewMore ? <a style={{fontSize: '12px', cursor: 'pointer'}} onClick={() => setOpenExpansionDialog(expansion)}>view more</a> : null}
+        </>
     );
   };
 
@@ -598,13 +596,6 @@ const VersionList = ({
     const items = [];
 
     items.push({
-      key: 'explore',
-      label: 'Explore Expansion',
-      icon: <SearchIcon fontSize="small" />,
-      href: `#${expansion.url}`,
-    });
-
-    items.push({
       key: 'default',
       label: isDefault ? 'Default Expansion' : 'Mark as Default',
       icon: <DefaultIcon fontSize="small" />,
@@ -614,16 +605,9 @@ const VersionList = ({
 
     items.push({
       key: 'copy',
-      label: 'Copy URL',
+      label: 'Copy API URL',
       icon: <CopyIcon fontSize="small" />,
       onClick: () => onCopyClick(expansion.url),
-    });
-
-    items.push({
-      key: 'params',
-      label: 'View Expansion Parameters',
-      icon: <ViewParametersIcon fontSize="small" />,
-      onClick: () => setOpenExpansionDialog(expansion),
     });
 
     if (canEdit) {
