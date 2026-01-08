@@ -2,7 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   IconButton, MenuItem, Menu, Tooltip, CircularProgress, Button,
-  Dialog, DialogActions, DialogContent, DialogTitle,
+  Dialog, DialogActions, DialogContent, DialogTitle, Box
 } from '@mui/material';
 import {
   GetApp as DownloadIcon,
@@ -163,13 +163,24 @@ class ConceptContainerExport extends React.Component {
       anchorEl, open, isCheckingExportExists, isProcessing, hasExistingExport,
       serverError, errorDetails, options, downloaded
     } = this.state;
-    const { title, disabled, size, resource } = this.props;
+    const { title, disabled, size, resource, variant } = this.props;
     return (
       <React.Fragment>
         <Tooltip arrow title={title}>
-          <IconButton onClick={this.toggleAnchorEl} size={size || 'small'} disabled={disabled || false}>
-            <DownloadIcon fontSize='inherit' />
-          </IconButton>
+          {
+            variant === 'menuItem' ?
+              <MenuItem
+                disabled={Boolean(disabled || false)}
+                onClick={this.toggleAnchorEl}
+                component='li'
+              >
+                <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}><DownloadIcon fontSize='small' /></Box>
+                Export Version/Resources
+              </MenuItem> :
+            <IconButton onClick={this.toggleAnchorEl} size={size || 'small'} disabled={disabled || false}>
+              <DownloadIcon fontSize='inherit' />
+            </IconButton>
+          }
         </Tooltip>
         {
           Boolean(anchorEl) &&
