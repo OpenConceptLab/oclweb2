@@ -13,10 +13,10 @@ import APIService from '../../services/APIService';
 import { downloadFromURL, isLoggedIn, isAdminUser } from '../../common/utils';
 import { WHITE } from '../../common/constants';
 
-const DOWNLOAD_OPTIONS = [
-  {id: 'concepts', label: 'Concepts CSV'},
-  {id: 'mappings', label: 'Mappings CSV'},
-]
+// const DOWNLOAD_OPTIONS = [
+//   {id: 'concepts', label: 'Concepts CSV'},
+//   {id: 'mappings', label: 'Mappings CSV'},
+// ]
 const EXPORT_OPTION = {id: 'export', label: 'Export Version'}
 
 class ConceptContainerExport extends React.Component {
@@ -24,7 +24,7 @@ class ConceptContainerExport extends React.Component {
     super(props)
     this.state = {
       anchorEl: null,
-      options: [...DOWNLOAD_OPTIONS],
+      options: [],
       open: false,
       isCheckingExportExists: false,
       hasExistingExport: false,
@@ -164,20 +164,20 @@ class ConceptContainerExport extends React.Component {
       serverError, errorDetails, options, downloaded
     } = this.state;
     const { title, disabled, size, resource, variant } = this.props;
-    return (
+    return options.length === 0 ? null : (
       <React.Fragment>
         <Tooltip arrow title={title}>
           {
             variant === 'menuItem' ?
               <MenuItem
                 disabled={Boolean(disabled || false)}
-                onClick={this.toggleAnchorEl}
+                onClick={() => this.handleMenuItemClick(options[0].id)}
                 component='li'
               >
                 <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}><DownloadIcon fontSize='small' /></Box>
-                Export Version/Resources
+                Export Version
               </MenuItem> :
-            <IconButton onClick={this.toggleAnchorEl} size={size || 'small'} disabled={disabled || false}>
+            <IconButton onClick={() => this.handleMenuItemClick(options[0].id)} size={size || 'small'} disabled={disabled || false}>
               <DownloadIcon fontSize='inherit' />
             </IconButton>
           }
