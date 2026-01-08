@@ -39,7 +39,8 @@ import {
   uniqBy,
   isFunction,
   keys,
-  pick
+  pick,
+  isBoolean
 } from 'lodash';
 import {
   Edit as EditIcon,
@@ -507,12 +508,15 @@ const VersionList = ({
     let _keys = keys(params)
     let viewMore = _keys.length > 3
     if(viewMore)
-      params = pick(params, ['system-version', 'exclude-system', 'check-system-version'])
+      params = pick(params, _keys.slice(0, 3))
     return (
       <>
         <ul style={{margin: 0, padding: 0}}>
           {map(params, (value, key) => {
-            return (<li key={key}>{key}: {value}</li>)
+            let val = value
+            if(isBoolean(val))
+              val = val.toString()
+            return (<li key={key}>{key}: {val}</li>)
           })}
         </ul>
         {viewMore ? <a style={{fontSize: '12px', cursor: 'pointer'}} onClick={() => setOpenExpansionDialog(expansion)}>view more</a> : null}

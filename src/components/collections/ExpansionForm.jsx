@@ -91,7 +91,7 @@ class ExpansionForm extends React.Component {
           activeOnly: false,
           includeDesignations: true,
           includeDefinition: false,
-          excludeNested: false,
+          excludeNested: true,
           excludeNotForUI: true,
           excludePostCoordinated: true,
           "check-system-version": "",
