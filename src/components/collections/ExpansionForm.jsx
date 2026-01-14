@@ -4,7 +4,8 @@ import { Info as InfoIcon } from '@mui/icons-material';
 import { TextField, Button, FormControlLabel, Checkbox, Tooltip } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import {
-  set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString, uniq
+  set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map, isNumber, isString, uniq,
+  has, forEach
 } from 'lodash';
 import APIService from '../../services/APIService';
 import { recordGAUpsertEvent } from '../../common/utils';
@@ -108,7 +109,10 @@ class ExpansionForm extends React.Component {
     if(copyFrom?.id) {
       const newState = {...this.state}
       newState.fields.canonical_url = copyFrom.canonical_url || ''
-      newState.fields.parameters = copyFrom.parameters
+      forEach(newState.fields.parameters, (value, key) => {
+        if(has(copyFrom.parameters, key))
+          newState.fields.parameters[key] = copyFrom.parameters[key]
+      })
       this.setState(newState)
     }
   }
