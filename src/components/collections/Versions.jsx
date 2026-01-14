@@ -345,7 +345,17 @@ const VersionList = ({
             <a href={'#' + (version.version_url || version.url)}><b>{version.version}</b></a>
             {version.autoexpand ? (
               <Tooltip arrow title="Auto-Expand" placement="right">
-                <ExpansionIcon sx={{ color: GREEN, ml: 2, width: 16 }} />
+                <ExpansionIcon sx={{ color: GREEN, ml: 1, width: 16 }} />
+              </Tooltip>
+            ) : null}
+            {version.released ? (
+              <Tooltip arrow title="Released" placement="right">
+                <ReleaseIcon color='primary' sx={{ ml: 1, width: 16 }} />
+              </Tooltip>
+            ) : null}
+            {version.is_processing ? (
+              <Tooltip arrow title="Processing" placement="right">
+                <ProcessingIcon color='warning' sx={{ ml: 1, width: 16 }} />
               </Tooltip>
             ) : null}
           </Box>
@@ -377,7 +387,7 @@ const VersionList = ({
             tags.map(tag => {
               return (
                 <span key={tag.id} style={{...tag.style}}>
-                  <a href={isFunction(tag.hrefAttr) ? tag.hrefAttr(version) : get(version, tag.hrefAttr)} style={{display: 'flex', alignItems: 'center', fontSize: '12px'}}>
+                  <a href={'#' + (isFunction(tag.hrefAttr) ? tag.hrefAttr(version) : get(version, tag.hrefAttr))} style={{display: 'flex', alignItems: 'center', fontSize: '12px'}}>
                     {tag.icon}
                     <span style={{marginLeft: '4px', marginTop: '2px'}}>
                       {get(version, tag.value)?.toLocaleString() || '-'}

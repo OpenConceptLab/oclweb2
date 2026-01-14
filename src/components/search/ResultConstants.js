@@ -220,7 +220,7 @@ export const TAGS = {
       value: 'summary.active_references',
       label: 'References',
       icon: <i className="icon-link" style={{ fontSize: "small", ...TAG_ICON_STYLES }} />,
-      hrefAttr: (item) => item.version_url || item.url + 'references/',
+      hrefAttr: (item) => (item.version_url || item.url) + 'references/',
       style: {marginTop: '8px', marginBottom: '5px'}
     },
     {
