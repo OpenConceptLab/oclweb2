@@ -4,7 +4,7 @@ ARG NODE_ENV=production
 ARG NODE_OPTIONS=--max_old_space_size=700
 ENV NPM_CONFIG_LOGLEVEL warn
 ENV WEB_PORT=${WEB_PORT:-4000}
-ENV API_URL=${API_URL:-http://127.0.0.1:8000}
+ENV API_URL=${API_URL:-https://api.openconceptlab.org}
 ENV RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY:-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}
 ENV GA_ACCOUNT_ID=${GA_ACCOUNT_ID:-UA-000000-01}
 ENV ERRBIT_URL=${ERRBIT_URL}
@@ -31,6 +31,8 @@ ADD start.sh /app/
 RUN chmod +x start.sh
 
 ADD set_build_version.sh /app/
+# Normalize line endings for Windows checkouts
+RUN sed -i 's/\r$//' set_build_version.sh
 RUN chmod +X set_build_version.sh
 
 ARG SOURCE_COMMIT

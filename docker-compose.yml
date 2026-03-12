@@ -11,7 +11,7 @@ services:
       - "4000:4000"
     restart: on-failure
     environment:
-      - API_URL=${API_URL-http://127.0.0.1:8000}
+      - API_URL=${API_URL-https://api.openconceptlab.org}
       - NODE_ENV=${NODE_ENV-development}
       - WEB_PORT=4000
       - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}
