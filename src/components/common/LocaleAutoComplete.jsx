@@ -144,6 +144,13 @@ const LocaleAutoComplete = ({ cachedLocales, id, selected, multiple, required, o
   const defaultFilterOptions = createFilterOptions();
   const filterOptions = (options, state) => {
     let result = defaultFilterOptions(options, state)
+    if(state.inputValue) {
+      const inputLower = state.inputValue.toLowerCase().trim()
+      result = [
+        ...result.filter(opt => opt.id?.toLowerCase() === inputLower),
+        ...result.filter(opt => opt.id?.toLowerCase() !== inputLower)
+      ]
+    }
     if(optionsLimit) {
       let _limit = optionsLimit
       if(custom)
