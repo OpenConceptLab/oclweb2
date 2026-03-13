@@ -213,7 +213,7 @@ const Header = props => {
             }
           </div>
           <div style={{textAlign: 'center', padding: '0 8px'}}>
-            <span style={{background: '#e53935', color: '#fff', fontSize: '11px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '4px', letterSpacing: '1px'}}>LOCAL DEV</span>
+            <span style={{background: '#e53935', color: '#fff', fontSize: '11px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '4px', letterSpacing: '1px', whiteSpace: 'nowrap'}}>LOCAL DEV</span>
           </div>
           <div className='col-sm-4 col-xs-6 pull-right no-side-padding'style={{textAlign: 'right'}}>
             {
