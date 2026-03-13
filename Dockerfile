@@ -28,6 +28,7 @@ ADD src /app/src/
 ADD public /app/public/
 
 ADD start.sh /app/
+RUN sed -i 's/\r$//' start.sh
 RUN chmod +x start.sh
 
 ADD set_build_version.sh /app/

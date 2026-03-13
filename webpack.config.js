@@ -89,6 +89,9 @@ module.exports = (env) => {
     devServer: {
       contentBase: path.resolve(__dirname, 'public'),
       disableHostCheck: true,
+      watchOptions: {
+        poll: 1000,
+      },
       historyApiFallback: {
         index: 'index.html',
       },
