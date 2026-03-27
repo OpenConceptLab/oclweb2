@@ -117,6 +117,7 @@ class APIService {
     token = token || (token !== false ? currentUserToken() : token);
     const obj = defaults(headers, this.headers);
     if (token) obj['Authorization'] = `Token ${token}`;
+    obj['X-OCL-CLIENT'] = 'oclweb2/2.1.151';
     return obj;
   }
 
