@@ -937,6 +937,7 @@ class Search extends React.Component {
                     onCreateMappingClick={onCreateMappingClick}
                     viewFields={viewFields}
                     onSelect={onSelect}
+                    baseURL={this.prepareBaseURL()}
                   /> : (
                     isTable ?
                     <ResultsTable
