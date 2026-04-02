@@ -29,12 +29,17 @@ class MappingHome extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname) {
-      this.refreshDataByURL()
-    }
-
+  const currentPath = this.props.location.pathname
+  const prevPath = prevProps.location.pathname
+  
+  if (prevPath !== currentPath) {
+    this.refreshDataByURL()
+  }
+  
+  if (prevProps.searchMeta !== this.props.searchMeta) {
     this.highlightFromSearch()
   }
+}
 
   getMappingURLFromPath() {
     const { location, match, scoped, parentURL, mapping } = this.props;
