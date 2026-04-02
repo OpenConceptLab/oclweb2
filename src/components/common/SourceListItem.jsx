@@ -63,7 +63,7 @@ const SourceListItem = ({ option, listItemProps, style }) => {
         }
         secondary={
           (
-            isNumber(option.summary.active_concepts) ?
+            isNumber(option?.summary?.active_concepts) ?
               <span className='flex-vertical-center'>
                 <Typography
                   sx={{ display: 'inline', color: 'rgba(0, 0, 0, 0.6)', fontSize: '14px' }}
@@ -75,7 +75,7 @@ const SourceListItem = ({ option, listItemProps, style }) => {
                 { option.suggestionType && <SubText text={option.suggestionType} divider /> }
               </span> :
             (
-              option.suggestionType ? <SubText text={option.suggestionType} /> : ''
+              option?.suggestionType ? <SubText text={option.suggestionType} /> : ''
             )
           )
         }
