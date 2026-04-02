@@ -37,7 +37,18 @@ const getValue = (item, column) => {
   return value
 }
 
-const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChange, selectedList, level }) => {
+const getVersionedChildrenURL = (item, baseURL) => {
+  if(!baseURL)
+    return item.url + 'children/'
+  // baseURL is like /users/foo/sources/Bar/1.0/concepts/
+  // item.url is like /users/foo/sources/Bar/concepts/FOOD_001/
+  // We need: /users/foo/sources/Bar/1.0/concepts/FOOD_001/children/
+  const conceptsSuffix = item.url.replace(/^.*\/concepts\//, 'concepts/').replace(/\/$/, '')
+  const sourcePrefix = baseURL.replace(/concepts\/.*$/, '')
+  return sourcePrefix + conceptsSuffix + '/children/'
+}
+
+const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChange, selectedList, level, baseURL }) => {
   const [open, setOpen] = React.useState(false);
   const [children, setChildren] = React.useState([]);
   const [selected, setSelected] = React.useState(isSelected);
@@ -77,7 +88,8 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
 
   const fetchChildren = () => {
     if(!fetched) {
-      APIService.new().overrideURL(item.url).appendToUrl('children/').get().then(response => {
+      const childrenURL = getVersionedChildrenURL(item, baseURL)
+      APIService.new().overrideURL(childrenURL).get().then(response => {
         setChildren(response.data || [])
         setFetched(true)
       })
@@ -136,6 +148,7 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
                           containerOnSelectChange={containerOnSelectChange}
                           columns={columns}
                           level={level + 1}
+                          baseURL={baseURL}
                         />
                       ))
                     )
@@ -152,7 +165,7 @@ const Row = ({ item, columns, isSelected, onSelectChange, containerOnSelectChang
 
 const ConceptHierarchyResultsTable = ({
   results, onPageChange, onSelect, onSelectChange, viewFields,
-  onCreateSimilarClick, onCreateMappingClick
+  onCreateSimilarClick, onCreateMappingClick, baseURL
 }) => {
   const [selectedList, setSelectedList] = React.useState([]);
   const resourceDefinition = CONCEPTS_DEFINITION;
@@ -236,6 +249,7 @@ const ConceptHierarchyResultsTable = ({
                         containerOnSelectChange={onSelectChange}
                         columns={columns}
                         level={0}
+                        baseURL={baseURL}
                       />
                     ))
                   }
