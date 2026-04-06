@@ -56,51 +56,97 @@ class ConceptContainerExport extends React.Component {
     return APIService.new().overrideURL(url).appendToUrl('export/')
   }
 
+
   checkExportExists() {
-    this.setState({isCheckingExportExists: true, serverError: false, errorDetails: false}, () => {
-      this.getExportService().getBlob().then(response => {
-        this.setState({isCheckingExportExists: false}, () => {
-          if(get(response, 'status') === 204) {
-            this.setState({hasExistingExport: false, isProcessing: false, downloaded: false})
-            return
-          }
-          if(get(response, 'status') === 208) {
-            this.setState({isProcessing: true, hasExistingExport: false, downloaded: false})
-            return
-          }
-          if(get(response, 'status') === 200) {
-            const contentDisposition = response.headers['content-disposition'];
-            const filename = contentDisposition.split(';')[1].split('=')[1].trim().replace(/"/g, '');
+    this.setState(
+      { isCheckingExportExists: true, serverError: false, errorDetails: null },
+      async () => {
+        try {
+          const response = await this.getExportService().getBlob();
 
-            // Create a Blob object from the response data
-            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+          this.setState({ isCheckingExportExists: false }, () => {
+            const status = get(response, 'status');
 
-            // Create a URL for the Blob object
-            const url = window.URL.createObjectURL(blob);
+            if (status === 204) {
+              this.setState({
+                hasExistingExport: false,
+                isProcessing: false,
+                downloaded: false,
+              });
+              return;
+            }
 
-            // Create a link element and initiate the download
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', filename); // Set the filename
-            document.body.appendChild(link);
-            link.click();
+            if (status === 208) {
+              this.setState({
+                isProcessing: true,
+                hasExistingExport: false,
+                downloaded: false,
+              });
+              return;
+            }
 
-            // Clean up
-            window.URL.revokeObjectURL(url);
-            this.setState({hasExistingExport: true, isProcessing: false, serverError: false, errorDetails: null, downloaded: true})
-            return
-          }
+            if (status === 200) {
+              const contentDisposition = get(response, 'headers.content-disposition', '');
+              let filename = 'export.zip';
 
-          //Error
-          const res = get(response, 'response')
-          const status = get(res, 'status')
-          if(status === 500) {
-            this.setState({serverError: true, errorDetails: get(res, 'data')})
-            return
-          }
-        })
-      })
-    })
+              const filenameMatch =
+                    contentDisposition.match(/filename\*=UTF-8''([^;]+)/i) ||
+                    contentDisposition.match(/filename="?([^"]+)"?/i);
+
+              if (filenameMatch && filenameMatch[1]) {
+                filename = decodeURIComponent(filenameMatch[1].replace(/"/g, '').trim());
+              }
+
+              const contentType =
+                    get(response, 'headers.content-type') ||
+                    get(response, 'data.type') ||
+                    'application/zip';
+
+              const blob =
+                    response.data instanceof Blob
+                    ? response.data
+                    : new Blob([response.data], { type: contentType });
+
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', filename);
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+
+              setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+              }, 1000);
+
+              this.setState({
+                hasExistingExport: true,
+                isProcessing: false,
+                serverError: false,
+                errorDetails: null,
+                downloaded: true,
+              });
+              return;
+            }
+
+            this.setState({
+              serverError: true,
+              errorDetails: response,
+              downloaded: false,
+            });
+          });
+        } catch (error) {
+          const status = get(error, 'response.status');
+
+          this.setState({
+            isCheckingExportExists: false,
+            downloaded: false,
+            serverError: status === 500,
+            errorDetails: get(error, 'response.data') || error,
+          });
+        }
+      }
+    );
   }
 
   toggleAnchorEl = event => this.setState({
