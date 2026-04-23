@@ -19,6 +19,47 @@ import { WHITE } from '../../common/constants';
 // ]
 const EXPORT_OPTION = {id: 'export', label: 'Export Version'}
 
+const getFilenameFromContentDisposition = contentDisposition => {
+  if (!contentDisposition) return null;
+
+  const filenameMatch =
+        contentDisposition.match(/filename\*=UTF-8''([^;]+)/i) ||
+        contentDisposition.match(/filename="?([^";]+)"?/i);
+
+  if (filenameMatch && filenameMatch[1]) {
+    return decodeURIComponent(filenameMatch[1].replace(/"/g, '').trim());
+  }
+
+  return null;
+}
+
+const getFilenameFromURL = url => {
+  if (!url) return null;
+
+  try {
+    const parsedURL = new URL(url);
+    const responseContentDisposition = parsedURL.searchParams.get('response-content-disposition');
+    const filenameFromContentDisposition = getFilenameFromContentDisposition(responseContentDisposition);
+
+    if (filenameFromContentDisposition) return filenameFromContentDisposition;
+
+    const filename = parsedURL.pathname.split('/').filter(Boolean).pop();
+    return filename ? decodeURIComponent(filename) : null;
+  } catch (e) {
+    const filename = url.split('?')[0].split('/').filter(Boolean).pop();
+    return filename ? decodeURIComponent(filename) : null;
+  }
+}
+
+const getExportFilename = response => {
+  const contentDisposition = get(response, 'headers.content-disposition', '');
+
+  return getFilenameFromContentDisposition(contentDisposition) ||
+         getFilenameFromURL(get(response, 'headers.location')) ||
+         getFilenameFromURL(get(response, 'request.responseURL')) ||
+         'export.zip';
+}
+
 class ConceptContainerExport extends React.Component {
   constructor(props) {
     super(props)
@@ -86,16 +127,7 @@ class ConceptContainerExport extends React.Component {
             }
 
             if (status === 200) {
-              const contentDisposition = get(response, 'headers.content-disposition', '');
-              let filename = 'export.zip';
-
-              const filenameMatch =
-                    contentDisposition.match(/filename\*=UTF-8''([^;]+)/i) ||
-                    contentDisposition.match(/filename="?([^"]+)"?/i);
-
-              if (filenameMatch && filenameMatch[1]) {
-                filename = decodeURIComponent(filenameMatch[1].replace(/"/g, '').trim());
-              }
+              const filename = getExportFilename(response);
 
               const contentType =
                     get(response, 'headers.content-type') ||
