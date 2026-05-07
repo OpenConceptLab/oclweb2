@@ -100,6 +100,7 @@ const updateVersion = (version, data, verb, successCallback) => getService(versi
 const getVersionURI = version => get(version, 'uri') || get(version, 'version_url') || get(version, 'url');
 const getPreviousVersionURI = version => get(version, 'previous_version_url');
 const isHeadVersion = version => (get(version, 'id') || get(version, 'version') || '').toLowerCase() === 'head';
+const normalizeURI = uri => (uri || '').replace(/\/+$/, '/');
 const getVersionLabelFromURL = url => {
   const parts = (url || '').split('/').filter(Boolean)
   return parts[parts.length - 1] || url
@@ -171,7 +172,12 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     if(resource !== 'source' || fhir || isHeadVersion(version))
       return null
 
-    return getPreviousVersionURI(version)
+    const previousVersionURL = getPreviousVersionURI(version)
+    const unversionedSourceURL = get(version, 'url')
+    if(!previousVersionURL || normalizeURI(previousVersionURL) === normalizeURI(unversionedSourceURL))
+      return null
+
+    return previousVersionURL
   }
 
   const onChangelogClick = version => {
@@ -240,7 +246,10 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
       clearTimeout(changelogLoadingTimer.current)
     setChangelogDialog(false)
     setIsChangelogFullScreen(false)
+    setIsChangelogLoading(false)
     setShowChangelogLoadingMessage(false)
+    setChangelogMarkdown('')
+    setChangelogError('')
   }
 
 
