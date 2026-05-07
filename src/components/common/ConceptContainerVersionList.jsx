@@ -1,9 +1,11 @@
+/* eslint-disable spellcheck/spell-checker */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import alertifyjs from 'alertifyjs';
 import {
   Accordion, AccordionSummary, AccordionDetails, Typography, Divider, Tooltip,
-  IconButton, CircularProgress, Chip
+  IconButton, CircularProgress, Chip, Dialog, DialogActions, DialogContent,
+  DialogTitle, Button, Box
 } from '@mui/material';
 import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
 import {
@@ -12,6 +14,9 @@ import {
   NewReleases as ReleaseIcon, FileCopy as CopyIcon,
   Functions as SummaryIcon
 } from '@mui/icons-material';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import APIService from '../../services/APIService';
 import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
@@ -20,6 +25,7 @@ import ConceptContainerTip from './ConceptContainerTip';
 import ConceptContainerVersionForm from './ConceptContainerVersionForm';
 import CommonFormDrawer from './CommonFormDrawer';
 import ConceptContainerExport from './ConceptContainerExport';
+import ChangelogMarkdown from './ChangelogMarkdown';
 import { CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS } from '../search/ResultConstants';
 
 const ACCORDIAN_HEADING_STYLES = {
@@ -91,11 +97,33 @@ const handleResponse = (response, resource, action, successCallback) => {
 const getService = version => APIService.new().overrideURL(version.version_url)
 const deleteVersion = version => getService(version).delete().then(response => handleResponse(response, version.type, 'Deleted'))
 const updateVersion = (version, data, verb, successCallback) => getService(version).put(data).then(response => handleResponse(response, version.type, verb, updatedVersion => successCallback(merge(version, updatedVersion))))
+const getVersionURI = version => get(version, 'uri') || get(version, 'version_url') || get(version, 'url');
+const getPreviousVersionURI = version => get(version, 'previous_version_url');
+const isHeadVersion = version => (get(version, 'id') || get(version, 'version') || '').toLowerCase() === 'head';
+const getVersionLabelFromURL = url => {
+  const parts = (url || '').split('/').filter(Boolean)
+  return parts[parts.length - 1] || url
+}
 
 const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fhir, isLoading }) => {
   const sortedVersions = headFirst(versions);
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
+  const [changelogDialog, setChangelogDialog] = React.useState(false);
+  const [changelogVersion, setChangelogVersion] = React.useState();
+  const [previousChangelogVersionURL, setPreviousChangelogVersionURL] = React.useState();
+  const [changelogMarkdown, setChangelogMarkdown] = React.useState('');
+  const [isChangelogLoading, setIsChangelogLoading] = React.useState(false);
+  const [changelogError, setChangelogError] = React.useState('');
+  const [isChangelogFullScreen, setIsChangelogFullScreen] = React.useState(false);
+  const [showChangelogLoadingMessage, setShowChangelogLoadingMessage] = React.useState(false);
+  const changelogLoadingTimer = React.useRef(null);
+
+  React.useEffect(() => () => {
+    if(changelogLoadingTimer.current)
+      clearTimeout(changelogLoadingTimer.current)
+  }, [])
+
   const onEditClick = version => {
     setSelectedVersion(version)
     setVersionForm(true)
@@ -137,6 +165,68 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     })
   }
 
+  const getChangelogPreviousVersionURL = version => {
+    if(resource !== 'source' || fhir || isHeadVersion(version))
+      return null
+
+    return getPreviousVersionURI(version)
+  }
+
+  const onChangelogClick = version => {
+    const previousVersionURL = getChangelogPreviousVersionURL(version)
+    if(!previousVersionURL)
+      return
+
+    if(changelogLoadingTimer.current)
+      clearTimeout(changelogLoadingTimer.current)
+
+    setChangelogDialog(true)
+    setChangelogVersion(version)
+    setPreviousChangelogVersionURL(previousVersionURL)
+    setChangelogMarkdown('')
+    setChangelogError('')
+    setIsChangelogLoading(true)
+    setShowChangelogLoadingMessage(false)
+    changelogLoadingTimer.current = setTimeout(() => setShowChangelogLoadingMessage(true), 10000)
+
+    APIService.new()
+      .overrideURL('/sources/$changelog/')
+      .post(
+        {
+          version1: previousVersionURL,
+          version2: getVersionURI(version),
+          verbosity: 4
+        },
+        null,
+        null,
+        {inline: true, output: 'markdown', verbosity: 4}
+      )
+      .then(response => {
+        const markdown = get(response, 'data.markdown') || get(response, 'markdown')
+
+        if(markdown) {
+          setChangelogMarkdown(markdown)
+          setChangelogError('')
+        } else {
+          setChangelogError(get(response, 'detail') || get(response, 'error') || 'Could not load changelog.')
+        }
+      })
+      .catch(() => setChangelogError('Could not load changelog.'))
+      .finally(() => {
+        if(changelogLoadingTimer.current)
+          clearTimeout(changelogLoadingTimer.current)
+        setIsChangelogLoading(false)
+      })
+  }
+
+  const onChangelogClose = () => {
+    if(changelogLoadingTimer.current)
+      clearTimeout(changelogLoadingTimer.current)
+    setChangelogDialog(false)
+    setIsChangelogFullScreen(false)
+    setShowChangelogLoadingMessage(false)
+  }
+
 
   return (
     <div className='col-md-12'>
@@ -159,7 +249,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                 isEmpty(sortedVersions) ?
                 None() :
                 map(sortedVersions, (version, index) => {
-                  const isHEAD = version.id.toLowerCase() === 'head';
+                  const isHEAD = isHeadVersion(version);
                   return (
                     <div className='col-md-12 no-side-padding' key={index}>
                       <div className='col-md-12 no-side-padding flex-vertical-center' style={{margin: '10px 0'}}>
@@ -256,6 +346,14 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                             {
                               !fhir &&
                               <React.Fragment>
+                                {
+                                  getChangelogPreviousVersionURL(version) &&
+                                  <Tooltip arrow title='Changelog'>
+                                    <IconButton onClick={() => onChangelogClick(version)} size='small'>
+                                      <NewspaperIcon fontSize='inherit' />
+                                    </IconButton>
+                                  </Tooltip>
+                                }
                                 <Tooltip arrow title='Explore Version'>
                                   <IconButton href={`#${version.concepts_url}`} color='primary' size='small'>
                                     <SearchIcon fontSize='inherit' />
@@ -293,6 +391,47 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
           <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={onUpdate} resource={resource} />
         }
       />
+      <Dialog open={changelogDialog} onClose={onChangelogClose} maxWidth='lg' fullWidth fullScreen={isChangelogFullScreen}>
+        <DialogTitle>
+          <Box className='flex-vertical-center' sx={{justifyContent: 'space-between'}}>
+            <span>
+              {`Changelog: ${getVersionLabelFromURL(previousChangelogVersionURL)} -> ${get(changelogVersion, 'version') || get(changelogVersion, 'id')}`}
+            </span>
+            <Tooltip arrow title={isChangelogFullScreen ? 'Exit Fullscreen' : 'Fullscreen'}>
+              <IconButton onClick={() => setIsChangelogFullScreen(!isChangelogFullScreen)} size='small'>
+                {isChangelogFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </DialogTitle>
+        <DialogContent dividers sx={{height: isChangelogFullScreen ? 'calc(100vh - 132px)' : '70vh', overflow: 'auto'}}>
+          {
+            isChangelogLoading &&
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '240px'}}>
+              <CircularProgress color='primary' />
+              {
+                showChangelogLoadingMessage &&
+                <Box sx={{mt: 2, maxWidth: '520px', textAlign: 'center', color: 'text.secondary'}}>
+                  If the source is large, processing may take a while. Please wait patiently.
+                </Box>
+              }
+            </Box>
+          }
+          {
+            !isChangelogLoading && changelogError &&
+            <Box sx={{color: 'error.main', p: 2}}>
+              {changelogError}
+            </Box>
+          }
+          {
+            !isChangelogLoading && !changelogError && changelogMarkdown &&
+            <ChangelogMarkdown markdown={changelogMarkdown} />
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onChangelogClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
