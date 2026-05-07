@@ -232,7 +232,7 @@ class NewImport extends React.Component {
                   uploadButton={false}
                   onUpload={uploadedFile => this.setFieldValue('file', uploadedFile)}
                   onLoading={() => this.setFieldValue('file', null)}
-                  accept='application/json, application/JSON, .csv, text/comma-separated-values, text/csv, application/csv, application/zip, text/zip, .zip'
+                  accept='application/json, application/JSON, .jsonl, .ndjson, .csv, text/comma-separated-values, text/csv, application/csv, application/zip, text/zip, .zip'
                 />
               }
               {
@@ -244,7 +244,7 @@ class NewImport extends React.Component {
                   type='url'
                   required
                   variant='outlined'
-                  label='JSON/CSV/ZIP File URL'
+                  label='JSON/JSONL/NDJSON/CSV/ZIP File URL'
                   value={fileURL}
                   onChange={event => this.setFieldValue('fileURL', event.target.value)}
                 />
