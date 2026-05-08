@@ -223,7 +223,9 @@
           "vectorized",
           "vectorization",
           "llm",
-          "reproducibility"
+          "reproducibility",
+          "ndjson",
+          "jsonl"
         ],
         "skipIfMatch": [
           "http://[^s]*",
