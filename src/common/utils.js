@@ -316,7 +316,7 @@ export const arrayToCSV = objArray => {
     return '';
 
   const sanitizeValue = value => {
-    const normalizedValue = isObject(value) ? JSON.stringify(value) : `${value ?? ''}`;
+    const normalizedValue = isObject(value) ? JSON.stringify(value) : `${value === null || value === undefined ? '' : value}`;
     return `"${normalizedValue.replace(/"/g, '""')}"`;
   };
 
