@@ -295,7 +295,9 @@ export const fetchDescriptionTypes = callback => {
 
 export const downloadObject = (obj, format, filename) => {
   const data = new Blob([obj], {type: format});
-  downloadFromURL(window.URL.createObjectURL(data), filename);
+  const url = window.URL.createObjectURL(data);
+  downloadFromURL(url, filename);
+  window.setTimeout(() => window.URL.revokeObjectURL(url), 0);
 }
 
 export const downloadFromURL = (url, filename) => {
@@ -307,13 +309,24 @@ export const downloadFromURL = (url, filename) => {
 
 export const arrayToCSV = objArray => {
   const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
-  let str = `${Object.keys(array[0]).map(value => `"${value}"`).join(",")}` + '\r\n';
+  const excludedColumns = ['search_meta', 'checksums'];
+  const rows = isArray(array) ? array : [];
 
-  return array.reduce((str, next) => {
-    delete next.search_meta;
-    delete next.checksums;
-    str += `${Object.values(next).map(value => isObject(value) ? `"${JSON.stringify(value)}"` : `"${value}"`).join(",")}` + '\r\n';
-    return str;
+  if(isEmpty(rows))
+    return '';
+
+  const sanitizeValue = value => {
+    const normalizedValue = isObject(value) ? JSON.stringify(value) : `${value ?? ''}`;
+    return `"${normalizedValue.replace(/"/g, '""')}"`;
+  };
+
+  const sanitizedRows = map(rows, row => pickBy(row, (value, key) => !includes(excludedColumns, key)));
+  const headers = uniq(flatten(map(sanitizedRows, keys)));
+  let str = `${map(headers, sanitizeValue).join(",")}\r\n`;
+
+  return sanitizedRows.reduce((csv, row) => {
+    csv += `${map(headers, header => sanitizeValue(row[header])).join(",")}\r\n`;
+    return csv;
   }, str);
 }
 
