@@ -12,7 +12,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import Breadcrumbs from '../sources/Breadcrumbs';
-import { paramsToURI, paramsToParentURI } from '../../common/utils';
+import { fetchAllVersions, paramsToURI, paramsToParentURI } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'summary', 'about']
@@ -157,23 +157,9 @@ class CollectionHome extends React.Component {
     return urls
   }
 
-  getVersions(page = 1, accumulatedVersions = []) {
-    APIService
-      .new()
-      .overrideURL(this.collectionPath + 'versions/')
-      .get(null, null, {limit: 1000, page: page, brief: true})
-      .then(response => {
-        const newVersions = response.data || []
-        const allVersions = [...accumulatedVersions, ...newVersions]
-        const { next, pages, page_number } = response.headers || {}
-        const hasNext = next || (parseInt(page_number) < parseInt(pages))
-
-        if (hasNext) {
-          this.getVersions(page + 1, allVersions)
-        } else {
-          this.setState({versions: allVersions})
-        }
-      })
+  getVersions() {
+    fetchAllVersions(this.collectionPath + 'versions/', {brief: true})
+      .then(versions => this.setState({versions: versions}))
   }
 
   getExpansions() {

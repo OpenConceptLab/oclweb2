@@ -149,6 +149,7 @@ const SourceHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
+          // TODO update class component to functional component and replace fetchAllVersions with useVersions hook.
           <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
         }
         {

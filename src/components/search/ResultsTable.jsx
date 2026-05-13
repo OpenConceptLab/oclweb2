@@ -27,6 +27,7 @@ import {
 import {
   formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
   getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser, currentUserHasAccess, getAppliedServerConfig,
+  fetchAllVersions,
 } from '../../common/utils';
 import ReleasedChip from '../common/ReleasedChip';
 import AllMappingsTables from '../mappings/AllMappingsTables';
@@ -480,7 +481,7 @@ const ExpandibleRow = props => {
     return '/' + compact(get(ident, 'value', '').split('/')).splice(0, 4).join('/')
   };
 
-  const fetchVersions = (page = 1, accumulated = []) => {
+  const fetchVersions = () => {
     if(fhir) {
       if(hapi) {
         const baseURI = get(getAppliedServerConfig(), 'info.baseURI')
@@ -502,22 +503,8 @@ const ExpandibleRow = props => {
       }
     } else {
       if(item.url) {
-        APIService.new().overrideURL(item.url)
-                  .appendToUrl('versions/')
-                  .get(null, null, {limit: 1000, page: page})
-                  .then(response => {
-                    if(response.status === 200) {
-                      const allVersions = [...accumulated, ...response.data]
-                      const { next, pages, page_number } = response.headers || {}
-                      const hasNext = next || (parseInt(page_number) < parseInt(pages))
-
-                      if (hasNext) {
-                        fetchVersions(page + 1, allVersions)
-                      } else {
-                        setVersions(allVersions)
-                      }
-                    }
-                  })
+        fetchAllVersions(item.url + 'versions/')
+          .then(versions => setVersions(versions))
       }
     }
   }

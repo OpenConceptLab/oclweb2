@@ -12,7 +12,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import { SOURCE_DEFAULT_CONFIG } from "../../common/defaultConfigs"
-import { paramsToURI, paramsToParentURI, isLoggedIn } from '../../common/utils';
+import { fetchAllVersions, paramsToURI, paramsToParentURI, isLoggedIn } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'versions', 'summary', 'about']
@@ -111,23 +111,13 @@ class SourceHome extends React.Component {
     }
   }
 
-  getVersions(page = 1, accumulatedVersions = []) {
+  getVersions() {
     this.setState({isLoadingVersions: true}, () => {
-      APIService
-        .new()
-        .overrideURL(this.sourcePath + 'versions/')
-        .get(null, null, {verbose: true, limit: 1000, page: page, includeStates: isLoggedIn(), includeSummary: true})
-        .then(response => {
-          const newVersions = response.data || []
-          const allVersions = [...accumulatedVersions, ...newVersions]
-          const lastVersion = newVersions[newVersions.length - 1]
-
-          if (lastVersion && lastVersion.previous_version_url) {
-            this.getVersions(page + 1, allVersions)
-          } else {
-            this.setState({versions: allVersions, isLoadingVersions: false})
-          }
-        })
+      fetchAllVersions(
+        this.sourcePath + 'versions/',
+        {verbose: true, includeStates: isLoggedIn(), includeSummary: true}
+      )
+        .then(versions => this.setState({versions: versions, isLoadingVersions: false}))
         .catch(() => this.setState({isLoadingVersions: false}))
     })
   }

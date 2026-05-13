@@ -144,6 +144,39 @@ export const toOwnerURI = uri => uri ? uri.split('/').splice(0, 3).join('/') + '
 
 export const headFirst = versions => compact([find(versions, version => (version.version || version.id) === 'HEAD'), ...reject(versions, version => (version.version || version.id) === 'HEAD')]);
 
+export const hasNextVersionsPage = (response, versions) => {
+  const { next, pages, page_number } = response.headers || {};
+  const pageNumber = parseInt(page_number);
+  const pageCount = parseInt(pages);
+  const hasPaginationHeaders = next || (!isNaN(pageNumber) && !isNaN(pageCount));
+
+  if(hasPaginationHeaders)
+    return Boolean(next) || pageNumber < pageCount;
+
+  const lastVersion = last(versions || []);
+  return Boolean(lastVersion && lastVersion.previous_version_url);
+}
+
+export const fetchAllVersions = (url, query = {}) => {
+  const fetchPage = (page = 1, accumulatedVersions = []) => (
+    APIService
+      .new()
+      .overrideURL(url)
+      .get(null, null, {...query, limit: get(query, 'limit', 1000), page: page})
+      .then(response => {
+        const newVersions = response.data || [];
+        const allVersions = [...accumulatedVersions, ...newVersions];
+
+        if(hasNextVersionsPage(response, newVersions))
+          return fetchPage(page + 1, allVersions);
+
+        return allVersions;
+      })
+  );
+
+  return fetchPage();
+}
+
 export const currentUserToken = () => localStorage.token;
 
 export const isLoggedIn = () => Boolean(currentUserToken());

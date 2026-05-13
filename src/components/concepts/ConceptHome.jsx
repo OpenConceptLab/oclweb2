@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
+import { fetchAllVersions, toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -195,21 +195,11 @@ class ConceptHome extends React.Component {
                                                       .get()
                                                       .then(response => callback(response.data))
 
-  getVersions(page = 1, accumulatedVersions = []) {
-    APIService.new()
-              .overrideURL(encodeURI(this.getVersionedObjectURLFromPath()) + 'versions/')
-              .get(null, null, {limit: 1000, page: page, includeCollectionVersions: true, includeSourceVersions: true})
-              .then(response => {
-                const newVersions = response.data || []
-                const allVersions = [...accumulatedVersions, ...newVersions]
-                const lastVersion = newVersions[newVersions.length - 1]
-
-                if (lastVersion && lastVersion.previous_version_url) {
-                  this.getVersions(page + 1, allVersions)
-                } else {
-                  this.setState({versions: allVersions})
-                }
-              })
+  getVersions() {
+    fetchAllVersions(
+      encodeURI(this.getVersionedObjectURLFromPath()) + 'versions/',
+      {includeCollectionVersions: true, includeSourceVersions: true}
+    ).then(versions => this.setState({versions: versions}))
   }
 
   getMappings = directOnly => {

@@ -6,6 +6,7 @@ import MixedOwnersAutocomplete from '../common/MixedOwnersAutocomplete';
 import ConceptContainersAutocomplete from '../common/ConceptContainersAutocomplete';
 import APIService from '../../services/APIService';
 import Search from '../search/Search';
+import { fetchAllVersions } from '../../common/utils';
 
 class ResourceReferenceForm extends React.Component {
   constructor(props) {
@@ -75,26 +76,12 @@ class ResourceReferenceForm extends React.Component {
     }
   }
 
-  fetchVersions(page = 1, accumulatedVersions = []) {
+  fetchVersions() {
     const { source, collection } = this.state;
     const container = source || collection;
     if(container) {
-      APIService.new()
-                .overrideURL(container.url)
-                .appendToUrl('versions/')
-                .get(null, null, {limit: 1000, page: page})
-                .then(response => {
-                  const newVersions = response.data || []
-                  const allVersions = [...accumulatedVersions, ...newVersions]
-                  const { next, pages, page_number } = response.headers || {}
-                  const hasNext = next || (parseInt(page_number) < parseInt(pages))
-
-                  if (hasNext) {
-                    this.fetchVersions(page + 1, allVersions)
-                  } else {
-                    this.setState({versions: allVersions})
-                  }
-                })
+      fetchAllVersions(container.url + 'versions/')
+        .then(versions => this.setState({versions: versions}))
     }
   }
 
