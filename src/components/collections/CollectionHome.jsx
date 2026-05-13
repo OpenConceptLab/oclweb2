@@ -12,7 +12,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import Breadcrumbs from '../sources/Breadcrumbs';
-import { paramsToURI, paramsToParentURI } from '../../common/utils';
+import { fetchAllVersions, paramsToURI, paramsToParentURI } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'summary', 'about']
@@ -158,11 +158,8 @@ class CollectionHome extends React.Component {
   }
 
   getVersions() {
-    APIService
-      .new()
-      .overrideURL(this.collectionPath + 'versions/')
-      .get(null, null, {limit: 1000, brief: true})
-      .then(response => this.setState({versions: response.data}))
+    fetchAllVersions(this.collectionPath + 'versions/', {brief: true})
+      .then(versions => this.setState({versions: versions}))
   }
 
   getExpansions() {

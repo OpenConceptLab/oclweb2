@@ -4,7 +4,7 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
+import { fetchAllVersions, toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -196,12 +196,10 @@ class ConceptHome extends React.Component {
                                                       .then(response => callback(response.data))
 
   getVersions() {
-    APIService.new()
-              .overrideURL(encodeURI(this.getVersionedObjectURLFromPath()) + 'versions/')
-              .get(null, null, {includeCollectionVersions: true, includeSourceVersions: true})
-              .then(response => {
-                this.setState({versions: response.data})
-              })
+    fetchAllVersions(
+      encodeURI(this.getVersionedObjectURLFromPath()) + 'versions/',
+      {includeCollectionVersions: true, includeSourceVersions: true}
+    ).then(versions => this.setState({versions: versions}))
   }
 
   getMappings = directOnly => {

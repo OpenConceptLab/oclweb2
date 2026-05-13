@@ -27,6 +27,7 @@ import {
 import {
   formatDateTime, headFirst, isLoggedIn, defaultCreatePin, defaultDeletePin,
   getCurrentUserUsername, isCurrentUserMemberOf, isAdminUser, currentUserHasAccess, getAppliedServerConfig,
+  fetchAllVersions,
 } from '../../common/utils';
 import ReleasedChip from '../common/ReleasedChip';
 import AllMappingsTables from '../mappings/AllMappingsTables';
@@ -502,13 +503,8 @@ const ExpandibleRow = props => {
       }
     } else {
       if(item.url) {
-        APIService.new().overrideURL(item.url)
-                  .appendToUrl('versions/')
-                  .get()
-                  .then(response => {
-                    if(response.status === 200)
-                      setVersions(response.data)
-                  })
+        fetchAllVersions(item.url + 'versions/')
+          .then(versions => setVersions(versions))
       }
     }
   }

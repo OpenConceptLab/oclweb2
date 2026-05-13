@@ -6,6 +6,7 @@ import MixedOwnersAutocomplete from '../common/MixedOwnersAutocomplete';
 import ConceptContainersAutocomplete from '../common/ConceptContainersAutocomplete';
 import APIService from '../../services/APIService';
 import Search from '../search/Search';
+import { fetchAllVersions } from '../../common/utils';
 
 class ResourceReferenceForm extends React.Component {
   constructor(props) {
@@ -79,7 +80,8 @@ class ResourceReferenceForm extends React.Component {
     const { source, collection } = this.state;
     const container = source || collection;
     if(container) {
-      APIService.new().overrideURL(container.url).appendToUrl('versions/').get().then(response => this.setState({versions: response.data}))
+      fetchAllVersions(container.url + 'versions/')
+        .then(versions => this.setState({versions: versions}))
     }
   }
 

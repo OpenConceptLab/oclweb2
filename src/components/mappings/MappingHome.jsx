@@ -2,7 +2,7 @@ import React from 'react';
 import { CircularProgress } from '@mui/material';
 import { get, isObject, has } from 'lodash';
 import APIService from '../../services/APIService';
-import { recordGAAction, highlightTexts } from '../../common/utils'
+import { fetchAllVersions, recordGAAction, highlightTexts } from '../../common/utils'
 import ScopeHeader from './ScopeHeader'
 import MappingHomeDetails from './MappingHomeDetails';
 import NotFound from '../common/NotFound';
@@ -93,12 +93,10 @@ class MappingHome extends React.Component {
   highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.mapping, search_meta: this.props.searchMeta}]), 100)
 
   getVersions() {
-    APIService.new()
-              .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get(null, null, {includeCollectionVersions: true, includeSourceVersions: true})
-              .then(response => {
-                this.setState({versions: response.data})
-              })
+    fetchAllVersions(
+      this.getVersionedObjectURLFromPath() + 'versions/',
+      {includeCollectionVersions: true, includeSourceVersions: true}
+    ).then(versions => this.setState({versions: versions}))
   }
 
   getCollectionVersions() {
