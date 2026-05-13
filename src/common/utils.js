@@ -157,6 +157,14 @@ export const hasNextVersionsPage = (response, versions) => {
   return Boolean(lastVersion && lastVersion.previous_version_url);
 }
 
+export const validateVersionsPageResponse = response => {
+  const status = get(response, 'status');
+  const data = get(response, 'data');
+
+  if(status < 200 || status >= 300 || !isArray(data))
+    throw new Error('Failed to fetch versions page.');
+}
+
 export const fetchAllVersions = (url, query = {}) => {
   const fetchPage = (page = 1, accumulatedVersions = []) => (
     APIService
@@ -164,6 +172,8 @@ export const fetchAllVersions = (url, query = {}) => {
       .overrideURL(url)
       .get(null, null, {...query, limit: get(query, 'limit', 1000), page: page})
       .then(response => {
+        validateVersionsPageResponse(response);
+
         const newVersions = response.data || [];
         const allVersions = [...accumulatedVersions, ...newVersions];
 
