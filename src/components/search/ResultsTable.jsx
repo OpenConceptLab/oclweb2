@@ -480,7 +480,7 @@ const ExpandibleRow = props => {
     return '/' + compact(get(ident, 'value', '').split('/')).splice(0, 4).join('/')
   };
 
-  const fetchVersions = () => {
+  const fetchVersions = (page = 1, accumulated = []) => {
     if(fhir) {
       if(hapi) {
         const baseURI = get(getAppliedServerConfig(), 'info.baseURI')
@@ -504,10 +504,19 @@ const ExpandibleRow = props => {
       if(item.url) {
         APIService.new().overrideURL(item.url)
                   .appendToUrl('versions/')
-                  .get()
+                  .get(null, null, {limit: 1000, page: page})
                   .then(response => {
-                    if(response.status === 200)
-                      setVersions(response.data)
+                    if(response.status === 200) {
+                      const allVersions = [...accumulated, ...response.data]
+                      const { next, pages, page_number } = response.headers || {}
+                      const hasNext = next || (parseInt(page_number) < parseInt(pages))
+
+                      if (hasNext) {
+                        fetchVersions(page + 1, allVersions)
+                      } else {
+                        setVersions(allVersions)
+                      }
+                    }
                   })
       }
     }

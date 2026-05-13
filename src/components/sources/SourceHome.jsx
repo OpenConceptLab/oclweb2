@@ -111,15 +111,24 @@ class SourceHome extends React.Component {
     }
   }
 
-  getVersions() {
+  getVersions(page = 1, accumulatedVersions = []) {
     this.setState({isLoadingVersions: true}, () => {
       APIService
         .new()
         .overrideURL(this.sourcePath + 'versions/')
-        .get(null, null, {verbose: true, limit: 1000, includeStates: isLoggedIn(), includeSummary: true})
+        .get(null, null, {verbose: true, limit: 1000, page: page, includeStates: isLoggedIn(), includeSummary: true})
         .then(response => {
-          this.setState({versions: response.data, isLoadingVersions: false})
+          const newVersions = response.data || []
+          const allVersions = [...accumulatedVersions, ...newVersions]
+          const lastVersion = newVersions[newVersions.length - 1]
+
+          if (lastVersion && lastVersion.previous_version_url) {
+            this.getVersions(page + 1, allVersions)
+          } else {
+            this.setState({versions: allVersions, isLoadingVersions: false})
+          }
         })
+        .catch(() => this.setState({isLoadingVersions: false}))
     })
   }
 

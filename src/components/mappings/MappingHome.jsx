@@ -92,12 +92,20 @@ class MappingHome extends React.Component {
 
   highlightFromSearch = () => this.props.searchMeta && setTimeout(() => highlightTexts([{...this.state.mapping, search_meta: this.props.searchMeta}]), 100)
 
-  getVersions() {
+  getVersions(page = 1, accumulatedVersions = []) {
     APIService.new()
               .overrideURL(this.getVersionedObjectURLFromPath() + 'versions/')
-              .get(null, null, {includeCollectionVersions: true, includeSourceVersions: true})
+              .get(null, null, {limit: 1000, page: page, includeCollectionVersions: true, includeSourceVersions: true})
               .then(response => {
-                this.setState({versions: response.data})
+                const newVersions = response.data || []
+                const allVersions = [...accumulatedVersions, ...newVersions]
+                const lastVersion = newVersions[newVersions.length - 1]
+
+                if (lastVersion && lastVersion.previous_version_url) {
+                  this.getVersions(page + 1, allVersions)
+                } else {
+                  this.setState({versions: allVersions})
+                }
               })
   }
 

@@ -157,12 +157,23 @@ class CollectionHome extends React.Component {
     return urls
   }
 
-  getVersions() {
+  getVersions(page = 1, accumulatedVersions = []) {
     APIService
       .new()
       .overrideURL(this.collectionPath + 'versions/')
-      .get(null, null, {limit: 1000, brief: true})
-      .then(response => this.setState({versions: response.data}))
+      .get(null, null, {limit: 1000, page: page, brief: true})
+      .then(response => {
+        const newVersions = response.data || []
+        const allVersions = [...accumulatedVersions, ...newVersions]
+        const { next, pages, page_number } = response.headers || {}
+        const hasNext = next || (parseInt(page_number) < parseInt(pages))
+
+        if (hasNext) {
+          this.getVersions(page + 1, allVersions)
+        } else {
+          this.setState({versions: allVersions})
+        }
+      })
   }
 
   getExpansions() {

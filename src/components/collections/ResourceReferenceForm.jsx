@@ -75,11 +75,26 @@ class ResourceReferenceForm extends React.Component {
     }
   }
 
-  fetchVersions() {
+  fetchVersions(page = 1, accumulatedVersions = []) {
     const { source, collection } = this.state;
     const container = source || collection;
     if(container) {
-      APIService.new().overrideURL(container.url).appendToUrl('versions/').get().then(response => this.setState({versions: response.data}))
+      APIService.new()
+                .overrideURL(container.url)
+                .appendToUrl('versions/')
+                .get(null, null, {limit: 1000, page: page})
+                .then(response => {
+                  const newVersions = response.data || []
+                  const allVersions = [...accumulatedVersions, ...newVersions]
+                  const { next, pages, page_number } = response.headers || {}
+                  const hasNext = next || (parseInt(page_number) < parseInt(pages))
+
+                  if (hasNext) {
+                    this.fetchVersions(page + 1, allVersions)
+                  } else {
+                    this.setState({versions: allVersions})
+                  }
+                })
     }
   }
 
