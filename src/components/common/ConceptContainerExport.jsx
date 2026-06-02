@@ -10,7 +10,7 @@ import {
 import Alert from '@mui/material/Alert';
 import { get, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { downloadFromURL, isLoggedIn, isAdminUser } from '../../common/utils';
+import { downloadFromURL, isLoggedIn, isAdminUser, formatErrorForDisplay } from '../../common/utils';
 import { WHITE } from '../../common/constants';
 
 // const DOWNLOAD_OPTIONS = [
@@ -163,7 +163,7 @@ class ConceptContainerExport extends React.Component {
 
             this.setState({
               serverError: true,
-              errorDetails: response,
+              errorDetails: formatErrorForDisplay(response),
               downloaded: false,
             });
           });
@@ -174,7 +174,7 @@ class ConceptContainerExport extends React.Component {
             isCheckingExportExists: false,
             downloaded: false,
             serverError: status === 500,
-            errorDetails: get(error, 'response.data') || error,
+            errorDetails: formatErrorForDisplay(get(error, 'response.data') || error),
           });
         }
       }

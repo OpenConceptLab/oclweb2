@@ -1,7 +1,8 @@
 import React from 'react';
 import './Tasks.scss';
 import { CircularProgress } from '@mui/material';
-import { get, map, isEmpty } from 'lodash';
+import { map, isEmpty } from 'lodash';
+import { formatErrorForDisplay } from '../../common/utils';
 import Task from './Task'
 
 const Tasks = ({ tasks, isLoading, error, onRevoke, onDownload }) => {
@@ -18,7 +19,7 @@ const Tasks = ({ tasks, isLoading, error, onRevoke, onDownload }) => {
       {
         error &&
         <div className='failure' style={{padding: '10px'}}>
-          { get(error, 'detail') || get(error, 'exception') || error }
+          { formatErrorForDisplay(error) }
         </div>
       }
       {

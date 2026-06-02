@@ -18,7 +18,7 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import APIService from '../../services/APIService';
-import { headFirst, copyURL, toFullAPIURL } from '../../common/utils';
+import { headFirst, copyURL, toFullAPIURL, formatErrorForDisplay } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import ResourceVersionLabel from './ResourceVersionLabel';
 import ConceptContainerTip from './ConceptContainerTip';
@@ -157,7 +157,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
   const onComputeSummaryClick = version => {
     APIService.new().overrideURL(version.version_url).appendToUrl('summary/').put().then(response => {
       if(response.detail || response.error)
-        alertifyjs.error(response.detail || response.error, 5)
+        alertifyjs.error(formatErrorForDisplay(response.detail || response.error), 5)
       else if(response.status === 202)
         alertifyjs.success('The request is in queue. It may take few minutes to update the summary depending on the size of repository. Please revisit in few minutes.', 10)
       else
@@ -208,7 +208,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
           setChangelogMarkdown(markdown)
           setChangelogError('')
         } else {
-          setChangelogError(get(response, 'detail') || get(response, 'error') || 'Could not load changelog.')
+          setChangelogError(formatErrorForDisplay(get(response, 'detail') || get(response, 'error'), 'Could not load changelog.'))
         }
       })
       .catch(() => setChangelogError('Could not load changelog.'))

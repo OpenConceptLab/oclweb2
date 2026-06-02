@@ -189,6 +189,39 @@ export const fetchAllVersions = (url, query = {}) => {
 
 export const currentUserToken = () => localStorage.token;
 
+export const formatErrorForDisplay = (error, fallback = 'Something bad happened.') => {
+  if(!error)
+    return fallback;
+
+  if(error instanceof Error)
+    return error.message || error.toString() || fallback;
+
+  if(isString(error))
+    return error;
+
+  const detail = get(error, 'detail') || get(error, 'message') || get(error, 'error') || get(error, 'exception');
+
+  if(detail instanceof Error)
+    return detail.message || detail.toString() || fallback;
+
+  if(isString(detail))
+    return detail;
+
+  if(isArray(detail))
+    return detail.join('\n');
+
+  if(isObject(detail))
+    return JSON.stringify(detail, null, 2);
+
+  if(isArray(error))
+    return error.join('\n');
+
+  if(isObject(error))
+    return JSON.stringify(error, null, 2);
+
+  return String(error);
+}
+
 export const isLoggedIn = () => Boolean(currentUserToken());
 
 export const getCurrentUser = () => {
