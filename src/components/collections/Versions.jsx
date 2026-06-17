@@ -64,11 +64,12 @@ import ProcessingIcon from '@mui/icons-material/HourglassTop';
 import EvaluateIcon from '@mui/icons-material/Functions';
 
 import APIService from '../../services/APIService';
-import { copyURL, toFullAPIURL } from '../../common/utils';
+import { copyURL, toFullAPIURL, isLoggedIn } from '../../common/utils';
 import LastUpdatedOnLabel from '../common/LastUpdatedOnLabel';
 import ConceptContainerVersionForm from '../common/ConceptContainerVersionForm';
 import CommonFormDrawer from '../common/CommonFormDrawer';
 import ConceptContainerExport from '../common/ConceptContainerExport';
+import RepoExternalExports from '../common/RepoExternalExports';
 import { GREEN } from '../../common/constants';
 import SourceChildVersionAssociationWithContainer from '../common/SourceChildVersionAssociationWithContainer';
 import { StateChip } from '../common/ConceptContainerVersionList';
@@ -306,7 +307,7 @@ const VersionList = ({
     APIService.new()
       .overrideURL(collection.url)
       .appendToUrl('versions/')
-      .get(null, null, { limit: _pageSize || pageSize, includeSummary: true, verbose: true, page: page, includeStates: true })
+      .get(null, null, { limit: _pageSize || pageSize, includeSummary: true, verbose: true, page: page, includeStates: true, includeExternalExports: isLoggedIn() })
       .then(response => {
         const _versions = uniqBy([{ ...collection, id: 'HEAD', version_url: collection.url, version: 'HEAD', uuid: 'HEAD' }, ...response.data], 'id');
         setPagination({
@@ -459,6 +460,19 @@ const VersionList = ({
                    version={version}
                    resource="collection"
                    variant='menuItem'
+                 />
+    });
+
+    items.push({
+      key: 'external-export',
+      label: 'External Exports',
+      component: <RepoExternalExports
+                   isHEAD={version.id.toLowerCase() === 'head'}
+                   version={version}
+                   resource="collection"
+                   canEdit={canEdit}
+                   variant='menuItem'
+                   onChange={onUpdate}
                  />
     });
 

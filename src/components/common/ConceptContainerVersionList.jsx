@@ -25,6 +25,7 @@ import ConceptContainerTip from './ConceptContainerTip';
 import ConceptContainerVersionForm from './ConceptContainerVersionForm';
 import CommonFormDrawer from './CommonFormDrawer';
 import ConceptContainerExport from './ConceptContainerExport';
+import RepoExternalExports from './RepoExternalExports';
 import ChangelogMarkdown from './ChangelogMarkdown';
 import { CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS } from '../search/ResultConstants';
 
@@ -333,6 +334,16 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                                 title={`Export ${startCase(resource)} Version: ${version.short_code} / ${version.id}`}
                                 version={version}
                                 resource={resource}
+                              />
+                            }
+                            {
+                              version && !fhir &&
+                              <RepoExternalExports
+                                isHEAD={isHEAD}
+                                version={version}
+                                resource={resource}
+                                canEdit={canEdit}
+                                onChange={onUpdate}
                               />
                             }
                             {
