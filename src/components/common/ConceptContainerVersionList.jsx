@@ -100,6 +100,7 @@ const updateVersion = (version, data, verb, successCallback) => getService(versi
 const getVersionURI = version => get(version, 'uri') || get(version, 'version_url') || get(version, 'url');
 const getPreviousVersionURI = version => get(version, 'previous_version_url');
 const isHeadVersion = version => (get(version, 'id') || get(version, 'version') || '').toLowerCase() === 'head';
+const normalizeURI = uri => (uri || '').replace(/\/+$/, '/');
 const getVersionLabelFromURL = url => {
   const parts = (url || '').split('/').filter(Boolean)
   return parts[parts.length - 1] || url
@@ -118,8 +119,10 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
   const [isChangelogFullScreen, setIsChangelogFullScreen] = React.useState(false);
   const [showChangelogLoadingMessage, setShowChangelogLoadingMessage] = React.useState(false);
   const changelogLoadingTimer = React.useRef(null);
+  const changelogRequestId = React.useRef(0);
 
   React.useEffect(() => () => {
+    changelogRequestId.current += 1
     if(changelogLoadingTimer.current)
       clearTimeout(changelogLoadingTimer.current)
   }, [])
@@ -169,7 +172,12 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     if(resource !== 'source' || fhir || isHeadVersion(version))
       return null
 
-    return getPreviousVersionURI(version)
+    const previousVersionURL = getPreviousVersionURI(version)
+    const unversionedSourceURL = get(version, 'url')
+    if(!previousVersionURL || normalizeURI(previousVersionURL) === normalizeURI(unversionedSourceURL))
+      return null
+
+    return previousVersionURL
   }
 
   const onChangelogClick = version => {
@@ -179,6 +187,10 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
 
     if(changelogLoadingTimer.current)
       clearTimeout(changelogLoadingTimer.current)
+
+    const requestId = changelogRequestId.current + 1
+    changelogRequestId.current = requestId
+    const isActiveChangelogRequest = () => requestId === changelogRequestId.current
 
     setChangelogDialog(true)
     setChangelogVersion(version)
@@ -202,6 +214,9 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
         {inline: true, output: 'markdown', verbosity: 4}
       )
       .then(response => {
+        if(!isActiveChangelogRequest())
+          return
+
         const markdown = get(response, 'data.markdown') || get(response, 'markdown')
 
         if(markdown) {
@@ -211,8 +226,14 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
           setChangelogError(formatErrorForDisplay(get(response, 'detail') || get(response, 'error'), 'Could not load changelog.'))
         }
       })
-      .catch(() => setChangelogError('Could not load changelog.'))
+      .catch(() => {
+        if(isActiveChangelogRequest())
+          setChangelogError('Could not load changelog.')
+      })
       .finally(() => {
+        if(!isActiveChangelogRequest())
+          return
+
         if(changelogLoadingTimer.current)
           clearTimeout(changelogLoadingTimer.current)
         setIsChangelogLoading(false)
@@ -220,11 +241,15 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
   }
 
   const onChangelogClose = () => {
+    changelogRequestId.current += 1
     if(changelogLoadingTimer.current)
       clearTimeout(changelogLoadingTimer.current)
     setChangelogDialog(false)
     setIsChangelogFullScreen(false)
+    setIsChangelogLoading(false)
     setShowChangelogLoadingMessage(false)
+    setChangelogMarkdown('')
+    setChangelogError('')
   }
 
 
