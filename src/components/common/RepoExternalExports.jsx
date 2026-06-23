@@ -40,11 +40,6 @@ const getExtension = file => {
   return parts.length > 1 ? parts.pop().toLowerCase() : '';
 }
 
-const getFilenameFromURL = url => {
-  const parts = (url || '').split('/').filter(Boolean);
-  return parts[parts.length - 1] || 'external-export';
-}
-
 const getExportURL = (version, externalExport) => get(externalExport, 'url') || `${version.version_url}export/${externalExport.key}/`;
 const getExternalExportRelativeURL = (version, key) => `${version.version_url}export/${key || '<key>'}/`;
 
@@ -150,7 +145,7 @@ const RepoExternalExports = ({ version, resource, canEdit, isHEAD, onChange, var
       .getBlob()
       .then(response => {
         if(get(response, 'status') === 200)
-          downloadBlobResponse(response, getFilenameFromURL(externalExport.file_path) || key);
+          downloadBlobResponse(response, externalExport.filename || key);
         else
           alertifyjs.error(formatErrorForDisplay(response, 'Could not download external export.'), 5);
       })
