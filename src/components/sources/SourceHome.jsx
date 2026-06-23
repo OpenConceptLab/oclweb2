@@ -115,7 +115,7 @@ class SourceHome extends React.Component {
     this.setState({isLoadingVersions: true}, () => {
       fetchAllVersions(
         this.sourcePath + 'versions/',
-        {verbose: true, includeStates: isLoggedIn(), includeSummary: true}
+        {verbose: true, includeStates: isLoggedIn(), includeSummary: true, includeExternalExports: isLoggedIn()}
       )
         .then(versions => this.setState({versions: versions, isLoadingVersions: false}))
         .catch(() => this.setState({isLoadingVersions: false}))

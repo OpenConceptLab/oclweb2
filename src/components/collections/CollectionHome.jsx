@@ -12,7 +12,7 @@ import ConceptHome from '../concepts/ConceptHome';
 import MappingHome from '../mappings/MappingHome';
 import ResponsiveDrawer from '../common/ResponsiveDrawer';
 import Breadcrumbs from '../sources/Breadcrumbs';
-import { fetchAllVersions, paramsToURI, paramsToParentURI } from '../../common/utils';
+import { fetchAllVersions, paramsToURI, paramsToParentURI, isLoggedIn } from '../../common/utils';
 import { OperationsContext } from '../app/LayoutContext';
 
 const TABS = ['details', 'concepts', 'mappings', 'references', 'versions', 'summary', 'about']
@@ -158,7 +158,7 @@ class CollectionHome extends React.Component {
   }
 
   getVersions() {
-    fetchAllVersions(this.collectionPath + 'versions/', {brief: true})
+    fetchAllVersions(this.collectionPath + 'versions/', {brief: true, includeExternalExports: isLoggedIn()})
       .then(versions => this.setState({versions: versions}))
   }
 
