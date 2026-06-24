@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Accordion, AccordionSummary, AccordionDetails,
-  Table, TableBody, Tooltip
+  Table, TableBody, Tooltip, Chip
 } from '@mui/material';
 import {
   InfoOutlined as InfoIcon
@@ -47,8 +47,11 @@ const groupLocales = (locales, source) => {
 
 
 const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription, searchable }) => {
-  const count = locales.length;
-  const groupedLocales = groupLocales(locales, source)
+  const [includeRetired, setIncludeRetired] = useState(false)
+  const hasRetired = locales.some(locale => locale.retired)
+  const visibleLocales = includeRetired ? locales : locales.filter(locale => !locale.retired)
+  const count = visibleLocales.length;
+  const groupedLocales = groupLocales(visibleLocales, source)
 
   return (
     <Accordion expanded style={{borderRadius: 'unset'}}>
@@ -60,19 +63,36 @@ const HomeLocales = ({ concept, label, locales, source, tooltip, isDescription, 
       >
         <span className='flex-vertical-center' style={{width: '100%', justifyContent: 'space-between'}}>
           <TabCountLabel label={label} count={count} style={ACCORDIAN_HEADING_STYLES} />
-          {
-            tooltip &&
-            <span className='flex-vertical-center' style={{marginLeft: '10px'}}>
-              <Tooltip title={tooltip}>
-                <InfoIcon fontSize='small' color='action' />
-              </Tooltip>
-            </span>
-          }
+          <span className='flex-vertical-center'>
+            {
+              hasRetired &&
+              <span style={{marginRight: tooltip ? '10px' : 0}}>
+                <Tooltip title={includeRetired ? 'Exclude Retired' : 'Include Retired'} placement='top'>
+                  <Chip
+                    variant={includeRetired ? 'contained' : 'outlined'}
+                    style={{textTransform: 'none'}}
+                    onClick={() => setIncludeRetired(!includeRetired)}
+                    size='small'
+                    color='primary'
+                    label={includeRetired ? 'Exclude Retired' : 'Include Retired'}
+                  />
+                </Tooltip>
+              </span>
+            }
+            {
+              tooltip &&
+              <span className='flex-vertical-center'>
+                <Tooltip title={tooltip}>
+                  <InfoIcon fontSize='small' color='action' />
+                </Tooltip>
+              </span>
+            }
+          </span>
         </span>
       </AccordionSummary>
       <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
         {
-          isEmpty(locales) ?
+          isEmpty(visibleLocales) ?
           None() :
           <Table size="small" aria-label="concept-home-mappings" className='nested-mappings'>
             <TableBody>
