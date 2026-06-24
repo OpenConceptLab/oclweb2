@@ -38,7 +38,12 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription, searc
                 style={{maxWidth: '200px'}}>
                 <div className='col-md-12 no-side-padding'>
                   <div className='col-md-12 no-side-padding flex-vertical-center'>
-                    <span className={searchable ? 'searchable' : ''} style={{marginRight: '10px', whiteSpace: 'pre-wrap'}}>{ get(localizedText, nameAttr) }</span>
+                    <span
+                      className={`${searchable ? 'searchable ' : ''}${localizedText.retired ? 'retired' : ''}`}
+                      style={{marginRight: '10px', whiteSpace: 'pre-wrap'}}
+                    >
+                      { get(localizedText, nameAttr) }
+                    </span>
                     {
                       type &&
                       <span style={{marginRight: '5px'}}>
