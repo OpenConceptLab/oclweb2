@@ -3,7 +3,7 @@ import {
   TableRow, TableCell, Tooltip, Chip, IconButton
 } from '@mui/material';
 import {
-  Flag as FlagIcon, FileCopy as CopyIcon
+  Flag as FlagIcon, FileCopy as CopyIcon, InfoOutlined as InfoIcon
 } from '@mui/icons-material'
 import { get, map, orderBy } from 'lodash';
 import ExternalIdLabel from '../common/ExternalIdLabel';
@@ -44,6 +44,14 @@ const LocalizedTextRow = ({concept, locale, localizedTexts, isDescription, searc
                     >
                       { get(localizedText, nameAttr) }
                     </span>
+                    {
+                      localizedText.retired && localizedText.retire_reason &&
+                      <span className='flex-vertical-center' style={{marginRight: '5px'}}>
+                        <Tooltip arrow title={<><strong>Retire reason</strong>: {localizedText.retire_reason}</>} placement='top-start'>
+                          <InfoIcon fontSize='inherit' color='action' />
+                        </Tooltip>
+                      </span>
+                    }
                     {
                       type &&
                       <span style={{marginRight: '5px'}}>
