@@ -8,7 +8,8 @@ import { Tooltip } from '@mui/material';
 import {
   filter, difference, compact, find, reject, intersectionBy, size, keys, omitBy, isEmpty,
   get, includes, map, isArray, values, pick, sortBy, zipObject, orderBy, isObject, merge,
-  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber, uniq, flatten, pickBy
+  uniqBy, cloneDeep, isEqual, without, capitalize, last, nth, startCase, isNumber, uniq, flatten, pickBy,
+  isString
 } from 'lodash';
 import {
   DATE_FORMAT, DATETIME_FORMAT, OCL_SERVERS_GROUP, OCL_FHIR_SERVERS_GROUP, HAPI_FHIR_SERVERS_GROUP,
