@@ -227,8 +227,14 @@ export const isLoggedIn = () => Boolean(currentUserToken());
 
 export const getCurrentUser = () => {
   const data = localStorage.user;
-  if(data)
-    return JSON.parse(data);
+  if(data) {
+    try {
+      return JSON.parse(data);
+    } catch (err) {
+      // localStorage may hold a poisoned value like the string "undefined"
+      localStorage.removeItem('user');
+    }
+  }
 
   return null;
 };
@@ -410,13 +416,17 @@ export const arrayToCSV = objArray => {
 export const refreshCurrentUserCache = callback => {
   APIService.user().get(null, null, {includeSubscribedOrgs: true, includeAuthGroups: true}).then(response => {
     if(response.status === 200) {
-      localStorage.setItem('user', JSON.stringify(response.data));
+      if(isObject(response.data))
+        localStorage.setItem('user', JSON.stringify(response.data));
       if(callback) callback(response);
     }
   });
 }
 
-export const replaceCurrentUserCacheWith = data => localStorage.setItem('user', JSON.stringify(data));
+export const replaceCurrentUserCacheWith = data => {
+  if(isObject(data))
+    localStorage.setItem('user', JSON.stringify(data));
+};
 
 export const formatByteSize = bytes => {
   if(bytes < 1024) return bytes + " bytes";

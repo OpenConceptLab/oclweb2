@@ -109,7 +109,8 @@ class UserHome extends React.Component {
               this.setState({isLoading: false}, () => {throw response})
             else
               this.setState({ user: response.data, isLoading: false }, () => {
-                if(getCurrentUserUsername() === get(response, 'data.username'))
+                const username = get(response, 'data.username')
+                if(username && getCurrentUserUsername() === username)
                   replaceCurrentUserCacheWith(response.data)
               })
           }))
