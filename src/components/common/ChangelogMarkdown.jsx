@@ -16,11 +16,24 @@ const slugifyHeading = text => text.toLowerCase().trim().replace(/[^\w\s-]/g, ''
 const normalizeChangelogMarkdown = markdown => {
   const headings = []
   let pendingAnchor = null
+  let inContents = false
   const markdownWithInlineAnchors = (markdown || '').replace(
     /<a\s+id=["']([^"']+)["']><\/a>(\[[^\]]+\]\([^)]+\))/gi,
     (_, id, link) => link.replace(/\)$/, ` "anchor:${id}")`)
   )
   const normalizedMarkdown = markdownWithInlineAnchors.split('\n').filter(line => {
+    // Drop the inline "## Contents" block (through its closing "---"); it is
+    // rendered as a sticky sidebar instead.
+    if(inContents) {
+      if(line.trim() === '---')
+        inContents = false
+      return false
+    }
+    if(/^##\s+Contents\s*$/.test(line.trim())) {
+      inContents = true
+      return false
+    }
+
     const anchorMatch = line.trim().match(/^<a\s+id=["']([^"']+)["']><\/a>$/i)
     if(anchorMatch) {
       pendingAnchor = anchorMatch[1]
@@ -29,7 +42,8 @@ const normalizeChangelogMarkdown = markdown => {
 
     const headingMatch = line.match(/^(#{1,6})\s+(.+)$/)
     if(headingMatch) {
-      headings.push({level: headingMatch[1].length, id: pendingAnchor})
+      const text = headingMatch[2].trim()
+      headings.push({level: headingMatch[1].length, id: pendingAnchor || slugifyHeading(text), text})
       pendingAnchor = null
     }
 
@@ -39,8 +53,15 @@ const normalizeChangelogMarkdown = markdown => {
   return {markdown: normalizedMarkdown, headings}
 }
 
+const scrollToId = id => {
+  const target = document.getElementById(id)
+  if(target)
+    target.scrollIntoView({behavior: 'smooth', block: 'start'})
+}
+
 const ChangelogMarkdown = ({markdown}) => {
   const {markdown: normalizedMarkdown, headings} = React.useMemo(() => normalizeChangelogMarkdown(markdown), [markdown])
+  const tocEntries = headings.filter(heading => heading.level === 2 || heading.level === 3)
   let headingIndex = 0
   const renderHeading = level => props => {
     const children = props.children
@@ -68,11 +89,10 @@ const ChangelogMarkdown = ({markdown}) => {
           href={href}
           {...rest}
           onClick={event => {
-            const target = document.getElementById(href.slice(1))
-            if(target) {
-              event.preventDefault()
-              target.scrollIntoView({behavior: 'smooth', block: 'start'})
-            }
+            // Always prevent default: with HashRouter, letting the browser
+            // follow "#anchor" replaces the route hash and lands on a 404.
+            event.preventDefault()
+            scrollToId(href.slice(1))
           }}
         >
           {children}
@@ -87,22 +107,57 @@ const ChangelogMarkdown = ({markdown}) => {
   }
 
   return (
-    <div className='col-md-12 no-side-padding custom-markdown'>
-      <ReactMarkdown
-        escapeHtml={false}
-        remarkPlugins={[gfm]}
-        components={{
-          a: renderLink,
-          h1: renderHeading(1),
-          h2: renderHeading(2),
-          h3: renderHeading(3),
-          h4: renderHeading(4),
-          h5: renderHeading(5),
-          h6: renderHeading(6)
-        }}
-      >
-        {normalizedMarkdown}
-      </ReactMarkdown>
+    <div className='col-md-12 no-side-padding custom-markdown' style={{display: 'flex', alignItems: 'flex-start'}}>
+      {
+        tocEntries.length > 0 &&
+        <nav
+          style={{
+            position: 'sticky',
+            top: 0,
+            flex: '0 0 220px',
+            maxHeight: '75vh',
+            overflowY: 'auto',
+            paddingRight: '16px',
+            marginRight: '16px',
+            borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+            fontSize: '14px',
+          }}
+        >
+          <div style={{fontWeight: 600, marginBottom: '8px'}}>Contents</div>
+          {
+            tocEntries.map((heading, index) => (
+              <div key={index} style={{paddingLeft: heading.level === 3 ? '16px' : 0, margin: '4px 0'}}>
+                <a
+                  href={`#${heading.id}`}
+                  onClick={event => {
+                    event.preventDefault()
+                    scrollToId(heading.id)
+                  }}
+                >
+                  {heading.text}
+                </a>
+              </div>
+            ))
+          }
+        </nav>
+      }
+      <div style={{flex: 1, minWidth: 0}}>
+        <ReactMarkdown
+          escapeHtml={false}
+          remarkPlugins={[gfm]}
+          components={{
+            a: renderLink,
+            h1: renderHeading(1),
+            h2: renderHeading(2),
+            h3: renderHeading(3),
+            h4: renderHeading(4),
+            h5: renderHeading(5),
+            h6: renderHeading(6)
+          }}
+        >
+          {normalizedMarkdown}
+        </ReactMarkdown>
+      </div>
     </div>
   )
 }
