@@ -5,7 +5,7 @@ import { get, isEmpty } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
   isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel, isRedirectingToLoginViaReferrer,
-  isSSOEnabled, getLoginURL, isMapperURL, isV3URL
+  isSSOEnabled, getLoginURL, isOtherOCLClientURL
 } from '../../common/utils';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
@@ -117,7 +117,7 @@ const App = props => {
     const referrer = queryParams.get('referrer')
     if(isLoggedIn()) {
       window.location.hash = '#'  + pathname
-    } else if(referrer && (isMapperURL(referrer) || isV3URL(referrer)) && !isLoggedIn()) {
+    } else if(isOtherOCLClientURL(referrer) && !isLoggedIn()) {
       const parts = hash.split('?')
       let params = new URLSearchParams(parts[1])
       if(params.get('auth') === 'true') {
