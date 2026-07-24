@@ -1,7 +1,7 @@
 import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
-  includes, compact, isEmpty, get, merge, forEach, flatten, uniq, map, max, keys, filter
+  includes, compact, isEmpty, get, merge, forEach, flatten, uniq, map, max, keys, filter, some
 } from 'lodash';
 import {
   Dialog, DialogContent, DialogTitle, Divider, CircularProgress,
@@ -67,34 +67,43 @@ class CollectionHomeChildrenList extends React.Component {
     const conceptURLs = getURLs('Concept')
     const mappingURLs = getURLs('Mapping')
 
-    this.deleteReferences(referenceIds, false)
+    const requests = []
+    if(!isEmpty(referenceIds))
+      requests.push(this.deleteReferences(referenceIds, false))
     if(!isEmpty(conceptURLs) || !isEmpty(mappingURLs))
-      this.excludeReferences({concepts: conceptURLs, mappings: mappingURLs, exclude: true})
+      requests.push(this.excludeReferences({concepts: conceptURLs, mappings: mappingURLs, exclude: true}))
+
+    Promise.all(requests).then(this.onExecuteComplete)
   }
 
-  excludeReferences = data => {
-    APIService
-      .new()
-      .overrideURL(this.props.versionedObjectURL)
-      .appendToUrl('references/').put({data: data}).then(() => {
-        this.setState(
-          {describeDelete: false},
-          () => alertifyjs.success(`Successfully executed`, 1, () => window.location.reload())
-        )
-      })
+  onExecuteComplete = responses => {
+    const statuses = map(responses, response => get(response, 'status'))
+    this.setState({describeDelete: false}, () => {
+      if(some(statuses, status => !includes([200, 202, 204], status)))
+        alertifyjs.error('Failed!')
+      else if(includes(statuses, 202))
+        alertifyjs.success('The request is in the queue and will be processed soon.', 10, () => window.location.reload())
+      else
+        alertifyjs.success(`Successfully executed`, 1, () => window.location.reload())
+    })
   }
+
+  excludeReferences = data => APIService
+    .new()
+    .overrideURL(this.props.versionedObjectURL)
+    .appendToUrl('references/').put({data: data})
 
   deleteReferences = (referenceIds, alert = true) => {
-    if(!isEmpty(referenceIds)) {
-      APIService.new().overrideURL(this.props.versionedObjectURL).appendToUrl('references/').delete({ids: referenceIds}).then(response => {
-        if(alert) {
-          if(get(response, 'status') === 204)
-            alertifyjs.success(`Successfully delete references`, 1, () => window.location.reload())
-          else if(alert)
-            alertifyjs.error('Failed!')
-        }
+    const request = APIService.new().overrideURL(this.props.versionedObjectURL).appendToUrl('references/').delete({ids: referenceIds})
+    if(alert) {
+      request.then(response => {
+        if(get(response, 'status') === 204)
+          alertifyjs.success(`Successfully delete references`, 1, () => window.location.reload())
+        else
+          alertifyjs.error('Failed!')
       })
     }
+    return request
   }
 
   onReferencesDelete = items => {
@@ -256,7 +265,7 @@ class CollectionHomeChildrenList extends React.Component {
                             <FormControl style={{width: '100%'}}>
                               <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
-                                name="reference-action"
+                                name={`reference-action-${resource.uuid}`}
                                 onChange={(event, value) => this.onActionChange(event, resource, value)}
                                 defaultValue={recommendedOption}
                               >
