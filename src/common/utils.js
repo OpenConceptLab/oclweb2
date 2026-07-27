@@ -1195,6 +1195,6 @@ export const isRedirectingToLoginViaReferrer = location => {
   const queryParams = new URLSearchParams(search)
   const referrer = queryParams.get('referrer')
   const parts = hash ? hash.split('?') : referrer?.split('?')
-  let params = new URLSearchParams(parts[1])
+  let params = params?.length > 0 ? new URLSearchParams(parts[1]) : {}
   return isOtherOCLClientURL(referrer) && params.get('auth') === 'true'
 }
