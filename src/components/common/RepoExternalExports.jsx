@@ -90,7 +90,12 @@ const RepoExternalExports = ({ version, resource, canEdit, isHEAD, onChange, var
       onChange({...version, external_exports: nextExports});
   }
 
-  const onFileChange = event => setFile(get(event, 'target.files.0') || null);
+  const onFileChange = event => {
+    const file = get(event, 'target.files.0') || null
+    setFile(file)
+    if(file?.name && !name)
+      setName(file?.name)
+  };
 
   const validate = () => {
     const key = toKey(name);
