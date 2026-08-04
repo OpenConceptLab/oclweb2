@@ -12,7 +12,7 @@ import {
   FileCopy as CopyIcon,
   QueryStats as HierarchyIcon,
 } from '@mui/icons-material';
-import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach, isEqual, without } from 'lodash';
+import { get, map, includes, uniq, find, startCase, isString, isObject, merge, forEach, isEqual } from 'lodash';
 import { OperationsContext } from '../app/LayoutContext';
 import {
   getFHIRServerConfigFromCurrentContext, getAppliedServerConfig, getServerConfigsForCurrentUser, copyURL, urlSearchParamsToObject
@@ -86,7 +86,7 @@ const useStyles = makeStyles(theme => ({
 
 const OperationsDrawer = () => {
   const classes = useStyles();
-  const { setOpenOperations, operationItem, parentResource, parentItem, toggles } = React.useContext(OperationsContext);
+  const { setOpenOperations, operationItem, parentResource, parentItem } = React.useContext(OperationsContext);
   const currentServer = getAppliedServerConfig()
   const fhirServer = getFHIRServerConfigFromCurrentContext()
   let containerResource = parentResource || 'source'
@@ -97,10 +97,7 @@ const OperationsDrawer = () => {
   const fhirServers = getServerConfigsForCurrentUser()
   const getSelectedFHIRServer = () => find(fhirServers, {id: selectedFHIRServerId})
   const getOperations = () => {
-    let _operations = uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
-    if(!toggles?.CHECKSUMS_TOGGLE)
-      _operations = without(_operations, '$checksum')
-    return _operations
+    return uniq([...get(fhirServer, `operations.${fhirResource}`, []), ...get(getSelectedFHIRServer(), `operations.${fhirResource}`, []), ...get(currentServer, `operations.${containerResource}`, [])])
   }
   const [byURL, setByURL] = React.useState(false)
   const [visualize, setVisualize] = React.useState(false)
