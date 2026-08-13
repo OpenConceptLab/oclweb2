@@ -20,7 +20,7 @@ const SourceHomeTabs = props => {
   const {
     tab, source, versions, match, location, versionedObjectURL, currentVersion,
     aboutTab, onVersionUpdate, selectedConfig, customConfigs, onConfigChange, showConfigSelection,
-    onTabChange, isOCLDefaultConfigSelected, isLoadingVersions, onSelect, hierarchy, onHierarchyToggle,
+    onTabChange, isOCLDefaultConfigSelected, onSelect, hierarchy, onHierarchyToggle,
     onFilterDrawerToggle, sourceVersionSummary
   } = props;
   const tabConfigs = (aboutTab ? get(selectedConfig, 'config.tabs') : reject((get(selectedConfig, 'config.tabs') || {}), {type: 'about'})) || {};
@@ -149,8 +149,7 @@ const SourceHomeTabs = props => {
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'versions' &&
-          // TODO update class component to functional component and replace fetchAllVersions with useVersions hook.
-          <ConceptContainerVersionList versions={versions} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} isLoading={isLoadingVersions} />
+          <ConceptContainerVersionList url={`${versionedObjectURL}versions/`} resource='source' canEdit={hasAccess} onUpdate={onVersionUpdate} />
         }
         {
           !isInvalidTabConfig && selectedTabConfig.type === 'summary' &&

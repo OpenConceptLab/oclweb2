@@ -7,7 +7,7 @@ import {
   IconButton, CircularProgress, Chip, Dialog, DialogActions, DialogContent,
   DialogTitle, Button, Box
 } from '@mui/material';
-import { map, isEmpty, startCase, get, includes, merge } from 'lodash';
+import { map, isEmpty, startCase, get, includes, merge, uniqBy } from 'lodash';
 import {
   Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
@@ -18,7 +18,7 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import APIService from '../../services/APIService';
-import { headFirst, copyURL, toFullAPIURL, formatErrorForDisplay } from '../../common/utils';
+import { headFirst, copyURL, toFullAPIURL, formatErrorForDisplay, isLoggedIn } from '../../common/utils';
 import LastUpdatedOnLabel from './LastUpdatedOnLabel';
 import ResourceVersionLabel from './ResourceVersionLabel';
 import ConceptContainerTip from './ConceptContainerTip';
@@ -35,6 +35,7 @@ const ACCORDIAN_HEADING_STYLES = {
 const ACCORDIAN_DETAILS_STYLES = {
   maxHeight: '700px', overflow: 'auto', display: 'inline-block', width: '100%'
 }
+const VERSIONS_PAGE_SIZE = 10;
 
 
 export const StateChip = ({label, state}) => {
@@ -107,7 +108,19 @@ const getVersionLabelFromURL = url => {
   return parts[parts.length - 1] || url
 }
 
-const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fhir, isLoading }) => {
+const ConceptContainerVersionList = ({ versions: versionsProp, url, resource, canEdit, onUpdate, fhir, isLoading: isLoadingProp }) => {
+  const isPaginated = Boolean(url);
+  const headURL = isPaginated ? url.replace(/versions\/?$/, '') : null;
+  const [paginatedVersions, setPaginatedVersions] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [numFound, setNumFound] = React.useState(0);
+  const [isLoadingFirstPage, setIsLoadingFirstPage] = React.useState(isPaginated);
+  const [isLoadingMore, setIsLoadingMore] = React.useState(false);
+  const versionsRequestId = React.useRef(0);
+
+  const versions = isPaginated ? paginatedVersions : versionsProp;
+  const isLoading = isPaginated ? isLoadingFirstPage : isLoadingProp;
+  const hasMoreVersions = isPaginated && versions.length < numFound;
   const sortedVersions = headFirst(versions);
   const [versionForm, setVersionForm] = React.useState(false);
   const [selectedVersion, setSelectedVersion] = React.useState();
@@ -121,6 +134,63 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
   const [showChangelogLoadingMessage, setShowChangelogLoadingMessage] = React.useState(false);
   const changelogLoadingTimer = React.useRef(null);
   const changelogRequestId = React.useRef(0);
+
+  const fetchVersionsPage = (pageNum, append) => {
+    const requestId = versionsRequestId.current + 1
+    versionsRequestId.current = requestId
+    const isActiveVersionsRequest = () => requestId === versionsRequestId.current
+    if(append)
+      setIsLoadingMore(true)
+    else
+      setIsLoadingFirstPage(true)
+
+    const commonQuery = {
+      verbose: true,
+      includeStates: isLoggedIn(),
+      includeSummary: true,
+      includeExternalExports: isLoggedIn(),
+    }
+    const pageRequest = APIService.new().overrideURL(url).get(null, null, {...commonQuery, limit: VERSIONS_PAGE_SIZE, page: pageNum})
+    // HEAD (the versionless, current state of the container) always sorts last in the
+    // versions list since it's the earliest-created entry -- fetch it directly so it can
+    // always be pinned first instead of waiting for the last page of "Load more".
+    const headRequest = append ? Promise.resolve(null) : APIService.new().overrideURL(headURL).get(null, null, commonQuery)
+
+    return Promise.all([pageRequest, headRequest]).then(([response, headResponse]) => {
+      if(!isActiveVersionsRequest())
+        return
+      const newVersions = response.data || []
+      const headVersion = get(headResponse, 'data') ? {...headResponse.data, id: 'HEAD'} : null
+      setNumFound(parseInt(get(response, 'headers.num_found'), 10) || 0)
+      setPaginatedVersions(prevVersions => {
+        const baseVersions = append ? prevVersions : (headVersion ? [headVersion] : [])
+        return uniqBy([...baseVersions, ...newVersions], 'id')
+      })
+      setPage(pageNum)
+    }).finally(() => {
+      if(!isActiveVersionsRequest())
+        return
+      if(append)
+        setIsLoadingMore(false)
+      else
+        setIsLoadingFirstPage(false)
+    })
+  }
+
+  React.useEffect(() => {
+    if(isPaginated)
+      fetchVersionsPage(1, false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url])
+
+  const onLoadMoreClick = () => fetchVersionsPage(page + 1, true)
+
+  const handleLocalUpdate = updatedVersion => {
+    if(isPaginated)
+      setPaginatedVersions(prevVersions => map(prevVersions, version => version.uuid === updatedVersion.uuid ? merge({...version}, updatedVersion) : version))
+    if(onUpdate)
+      onUpdate(updatedVersion)
+  }
 
   React.useEffect(() => () => {
     changelogRequestId.current += 1
@@ -155,7 +225,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
     const title = `Update ${startCase(resource)} Version : ${version.short_code} [${version.id}]`;
     const message = `Are you sure you want to ${label} this ${resource} version ${version.id}?`
 
-    handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, onUpdate))
+    handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, handleLocalUpdate))
   }
 
   const onComputeSummaryClick = version => {
@@ -263,7 +333,13 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
             expandIcon={<span />}
             aria-controls="panel1a-content"
           >
-            <Typography style={ACCORDIAN_HEADING_STYLES}>{`${startCase(resource)} Version History`}</Typography>
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+              <Typography style={ACCORDIAN_HEADING_STYLES}>{`${startCase(resource)} Version History`}</Typography>
+              {
+                isPaginated &&
+                  <Typography variant='body2' color='textSecondary'>{`showing ${versions.length} of ${numFound}`}</Typography>
+              }
+            </Box>
           </AccordionSummary>
           <AccordionDetails style={ACCORDIAN_DETAILS_STYLES}>
             {
@@ -413,6 +489,14 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
                 })
               )
             }
+            {
+              !isLoading && hasMoreVersions &&
+                <div style={{width: '100%', textAlign: 'center', margin: '15px 0'}}>
+                  <Button sx={{textTransform: 'none'}} variant='outlined' size='small' color='primary' onClick={onLoadMoreClick} disabled={isLoadingMore}>
+                    { isLoadingMore ? <CircularProgress size={20} color='inherit' /> : 'Load more' }
+                  </Button>
+                </div>
+            }
           </AccordionDetails>
         </Accordion>
       </div>
@@ -424,7 +508,7 @@ const ConceptContainerVersionList = ({ versions, resource, canEdit, onUpdate, fh
         isOpen={versionForm}
         onClose={onEditCancel}
         formComponent={
-          <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={onUpdate} resource={resource} />
+          <ConceptContainerVersionForm onCancel={onEditCancel} edit parentURL={get(selectedVersion, 'version_url')} version={selectedVersion} onSubmit={handleLocalUpdate} resource={resource} />
         }
       />
       <Dialog open={changelogDialog} onClose={onChangelogClose} maxWidth='lg' fullWidth fullScreen={isChangelogFullScreen}>
