@@ -1,19 +1,36 @@
 import React from 'react';
 
+const renderHighlightedText = text => {
+  let highlighting = false
+  const nodes = []
+  text.split(/(<em>|<\/em>)/).forEach(part => {
+    if(part === '<em>') {
+      highlighting = true
+    } else if(part === '</em>') {
+      highlighting = false
+    } else if(part) {
+      nodes.push(
+        highlighting ?
+          <b className='searchable' key={nodes.length}>{part}</b> :
+          <React.Fragment key={nodes.length}>{part}</React.Fragment>
+      )
+    }
+  })
+  return nodes
+}
+
 const ConceptDisplayName = ({ concept, style }) => {
-  let synonymPrefix = ''
   const highlights = concept?.search_meta?.search_highlight
   const synonymHighlight = highlights?.synonyms
   const nameHighlight = highlights?.name
-  if(!nameHighlight?.length && synonymHighlight?.length)
-    synonymPrefix = synonymHighlight[0].replace('<em>', "<b className='searchable'>").replace('</em>', '</b>')
+  const synonymPrefix = (!nameHighlight?.length && synonymHighlight?.length) ? synonymHighlight[0] : ''
   return (
     <span style={style || {}}>
       <span className={concept.retired ? 'retired': ''}>
         {
           synonymPrefix &&
             <span>
-              <span dangerouslySetInnerHTML={{__html: synonymPrefix}} />
+              <span>{renderHighlightedText(synonymPrefix)}</span>
               <span style={{margin: '0 5px'}}>&rarr;</span>
             </span>
         }
