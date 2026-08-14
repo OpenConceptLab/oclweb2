@@ -17,13 +17,12 @@ const ChipDatePicker = props => {
       props.onChange(date);
   }
 
-  const renderDay = (date, selectedDate, DayComponentProps) => {
+  const renderDay = (date, selectedDates, DayComponentProps) => {
     if(!badgedDates || isEmpty(badgedDates))
       return <PickersDay {...DayComponentProps} />;
-    const fSelectedDate = selectedDate.format('DD-MM-YYYY')
     const fDate = date.format('DD-MM-YYYY')
     const count = get(badgedDates, fDate)
-    if(count && fDate !== fSelectedDate) {
+    if(count && !DayComponentProps.selected) {
       return (
         <Tooltip title={`${count} imports`} arrow>
           <Badge badgeContent={count} color="primary" variant="dot" overlap="circular">
