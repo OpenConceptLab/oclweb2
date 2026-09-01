@@ -22,7 +22,6 @@ class OIDLoginCallback extends React.Component {
   exchangeCodeForToken = () => {
     const queryParams = new URLSearchParams(this.props.location.search)
     const code = queryParams.get('code')
-    const idToken = queryParams.get('id_token')
     const next = queryParams.get('next')
     const state = queryParams.get('state')
     if(code) {
@@ -40,7 +39,7 @@ class OIDLoginCallback extends React.Component {
           if(res.data?.access_token) {
             localStorage.removeItem('server_configs')
             localStorage.setItem('token', res.data.access_token)
-            localStorage.setItem('id_token', idToken)
+            localStorage.setItem('id_token', res.data.id_token)
             this.cacheUserData()
           } else {
             alertifyjs.error(res.data)
