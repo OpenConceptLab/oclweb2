@@ -80,7 +80,6 @@ const HomeHeader = ({
       if(image) {
         styles['backgroundImage'] = `url(${image})`;
         styles['backgroundSize'] = 'cover';
-        styles['backgroundAttachment'] = 'fixed';
       } else if(backgroundColor) {
         styles['backgroundColor'] = backgroundColor
       }
@@ -88,7 +87,6 @@ const HomeHeader = ({
       if(get(shrunkHeaderBackgroundStyles, 'image')) {
         styles['backgroundImage'] = `url(${shrunkHeaderBackgroundStyles['image']})`;
         styles['backgroundSize'] = 'cover';
-        styles['backgroundAttachment'] = 'fixed';
       } else if (get(shrunkHeaderBackgroundStyles, 'backgroundColor'))
         styles['backgroundColor'] = shrunkHeaderBackgroundStyles['backgroundColor']
     }
