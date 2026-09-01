@@ -3,7 +3,7 @@ import { getRegisterURL } from '../../common/utils'
 
 const SignupRedirect = () => {
   useEffect(() => {
-    window.location.href = getRegisterURL();
+    getRegisterURL().then(url => { window.location.href = url });
   }, []);
 
   return <h4>Redirecting...</h4>;

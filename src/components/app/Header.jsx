@@ -238,7 +238,7 @@ const Header = props => {
               (
                 !isFHIRServer &&
                   <span style={{marginLeft: '20px'}}>
-                    <Button className='primary-btn' href={getLoginURL()} color='primary' variant='contained'>
+                    <Button className='primary-btn' href='#' onClick={e => { e.preventDefault(); getLoginURL().then(url => { window.location.href = url }) }} color='primary' variant='contained'>
                       Sign In
                     </Button>
                   </span>

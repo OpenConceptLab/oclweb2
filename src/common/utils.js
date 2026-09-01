@@ -942,12 +942,62 @@ export const isDeprecatedBrowser = () => isIE() || isOpera();
 export const isSSOEnabled = () => {
   const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
-  const oidClientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
 
-  return Boolean(redirectURL && oidClientID && oidClientSecret)
+  return Boolean(redirectURL && oidClientID)
 }
 
-export const getLoginURL = returnTo => {
+const PKCE_CODE_VERIFIER_KEY = 'pkce_code_verifier'
+const OAUTH_STATE_KEY = 'oauth_state'
+
+const base64UrlEncode = buffer => {
+  const bytes = new Uint8Array(buffer)
+  let str = ''
+  for(let i = 0; i < bytes.byteLength; i++)
+    str += String.fromCharCode(bytes[i])
+  return window.btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+}
+
+const generateSecureRandomString = (length = 64) => {
+  const array = new Uint8Array(length)
+  window.crypto.getRandomValues(array)
+  return base64UrlEncode(array.buffer)
+}
+
+const generateCodeChallenge = async codeVerifier => {
+  const data = new TextEncoder().encode(codeVerifier)
+  const digest = await window.crypto.subtle.digest('SHA-256', data)
+  return base64UrlEncode(digest)
+}
+
+// Generates a fresh PKCE code_verifier for this login attempt, stashes it in sessionStorage
+// (tab-scoped, cleared on tab close) so OIDLoginCallback can read it back for the token exchange,
+// and returns the derived S256 code_challenge to send to Keycloak.
+const preparePKCECodeChallenge = async () => {
+  const codeVerifier = generateSecureRandomString(64)
+  sessionStorage.setItem(PKCE_CODE_VERIFIER_KEY, codeVerifier)
+  return generateCodeChallenge(codeVerifier)
+}
+
+const prepareOAuthState = () => {
+  const state = generateSecureRandomString(32)
+  sessionStorage.setItem(OAUTH_STATE_KEY, state)
+  return state
+}
+
+export const consumeStoredPKCECodeVerifier = () => {
+  const codeVerifier = sessionStorage.getItem(PKCE_CODE_VERIFIER_KEY)
+  sessionStorage.removeItem(PKCE_CODE_VERIFIER_KEY)
+  return codeVerifier
+}
+
+// Returns true when there's nothing to validate (flows like reset-password never sent a state).
+export const consumeAndValidateOAuthState = returnedState => {
+  const storedState = sessionStorage.getItem(OAUTH_STATE_KEY)
+  sessionStorage.removeItem(OAUTH_STATE_KEY)
+  return !returnedState || returnedState === storedState
+}
+
+export const getLoginURL = async returnTo => {
   let redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
 
@@ -956,7 +1006,10 @@ export const getLoginURL = returnTo => {
   if(isSSOEnabled()) {
     if(returnTo && returnTo.includes('/#/') && returnTo.split('/#/')[1])
       redirectURL = returnTo.replace('/#/', '/')
-    return `${getAPIURL()}/users/login/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
+    const codeChallenge = await preparePKCECodeChallenge()
+    const state = prepareOAuthState()
+    const nonce = generateSecureRandomString(32)
+    return `${getAPIURL()}/users/login/?client_id=${oidClientID}&state=${state}&nonce=${nonce}&redirect_uri=${redirectURL}&code_challenge=${codeChallenge}&code_challenge_method=S256`
 
   }
   let url = '/#/accounts/login'
@@ -966,14 +1019,18 @@ export const getLoginURL = returnTo => {
   return url
 }
 
-export const getRegisterURL = returnTo => {
+export const getRegisterURL = async returnTo => {
   let redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
   const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
 
   redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
 
-  if(isSSOEnabled())
-    return `${getAPIURL()}/users/signup/?client_id=${oidClientID}&state=fj8o3n7bdy1op5&nonce=13sfaed52le09&redirect_uri=${redirectURL}`
+  if(isSSOEnabled()) {
+    const codeChallenge = await preparePKCECodeChallenge()
+    const state = prepareOAuthState()
+    const nonce = generateSecureRandomString(32)
+    return `${getAPIURL()}/users/signup/?client_id=${oidClientID}&state=${state}&nonce=${nonce}&redirect_uri=${redirectURL}&code_challenge=${codeChallenge}&code_challenge_method=S256`
+  }
   let url = '/#/accounts/signup'
   if(returnTo)
     url += `?returnTo=${returnTo}`

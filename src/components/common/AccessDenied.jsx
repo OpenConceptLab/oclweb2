@@ -3,7 +3,12 @@ import { getLoginURL } from '../../common/utils'
 import ErrorUI from './ErrorUI';
 
 const AccessDenied = () => {
-  const loginURL = getLoginURL()
+  const [loginURL, setLoginURL] = React.useState('')
+
+  React.useEffect(() => {
+    getLoginURL().then(setLoginURL)
+  }, [])
+
   return (
     <ErrorUI
       header='401'

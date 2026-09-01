@@ -3,7 +3,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import { get } from 'lodash';
 import {
-  refreshCurrentUserCache
+  refreshCurrentUserCache, consumeStoredPKCECodeVerifier, consumeAndValidateOAuthState
 } from '../../common/utils';
 import APIService from '../../services/APIService'
 
@@ -24,14 +24,19 @@ class OIDLoginCallback extends React.Component {
     const code = queryParams.get('code')
     const idToken = queryParams.get('id_token')
     const next = queryParams.get('next')
+    const state = queryParams.get('state')
     if(code) {
       /*eslint no-undef: 0*/
+      if(!consumeAndValidateOAuthState(state)) {
+        alertifyjs.error('Sign-in failed. Please try again.')
+        return
+      }
       this.setState({next: next && next !== '/' ? next : null }, () => {
         const redirectURL = this.state.next ? window.location.origin + this.state.next : (window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL)
-        const clientSecret = window.OIDC_RP_CLIENT_SECRET || process.env.OIDC_RP_CLIENT_SECRET
         const clientId = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+        const codeVerifier = consumeStoredPKCECodeVerifier()
 
-        APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, client_secret: clientSecret}).then(res => {
+        APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, code_verifier: codeVerifier}).then(res => {
           if(res.data?.access_token) {
             localStorage.removeItem('server_configs')
             localStorage.setItem('token', res.data.access_token)

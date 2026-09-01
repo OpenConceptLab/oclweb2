@@ -31,7 +31,7 @@ class Login extends React.Component {
   componentDidMount() {
     if(isSSOEnabled()) {
       const queryString = new URLSearchParams(window.location.hash.split('?')[1])
-      window.location = getLoginURL((queryString.get('next') || '').replace('#', ''))
+      getLoginURL((queryString.get('next') || '').replace('#', '')).then(url => { window.location = url })
     }
   }
 

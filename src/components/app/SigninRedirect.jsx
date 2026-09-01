@@ -3,7 +3,7 @@ import { getLoginURL } from '../../common/utils'
 
 const SigninRedirect = () => {
   useEffect(() => {
-    window.location.href = getLoginURL();
+    getLoginURL().then(url => { window.location.href = url });
   }, []);
 
   return <h4>Redirecting...</h4>;

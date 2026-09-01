@@ -109,7 +109,7 @@ const App = props => {
 
   const forceLoginUser = () => {
     if(!isSSOEnabled()) {
-      window.location.href = getLoginURL(window.location.origin + '/#' + pathname)
+      getLoginURL(window.location.origin + '/#' + pathname).then(url => { window.location.href = url })
     }
 
     const { search, hash, pathname } = props.location
@@ -121,7 +121,7 @@ const App = props => {
       const parts = hash ? hash.split('?') : referrer.split('?')
       let params = new URLSearchParams(parts[1])
       if(params.get('auth') === 'true') {
-        window.location.href = getLoginURL(window.location.origin + '/#' + pathname)
+        getLoginURL(window.location.origin + '/#' + pathname).then(url => { window.location.href = url })
       }
     }
   }
