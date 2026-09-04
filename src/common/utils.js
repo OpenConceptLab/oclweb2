@@ -1207,23 +1207,9 @@ export const toMapperURL = path => {
   return `${url}/#${path || '/'}?${referrerParams}`
 }
 
-/*
- * v2 (classic TermBrowser) and v3 share a near identical URL structure, so moving a user
- * across is a host swap rather than a route map. Where v2 has a surface v3 has not built
- * (e.g. a repo About or Summary tab), toV3Path walks up to the nearest ancestor both sides
- * do have -- repo home -> owner home -> app home. That keeps the surfaces nobody has
- * enumerated yet safe by construction, rather than landing the user on a dead page.
- */
-
-// repo tabs that resolve on both v2 and v3 at the same path. About and Summary are
-// deliberately absent: v3 routes both but neither renders, so they fall back instead.
 const V3_SHARED_REPO_TABS = ['concepts', 'mappings', 'references', 'versions']
-// every segment v2 may put directly after a repo. Anything outside this list in that
-// position is a repo version, which both sides serve.
 const V3_RESERVED_REPO_SEGMENTS = [...V3_SHARED_REPO_TABS, 'about', 'summary', 'expansions', 'edit']
-// root level paths that resolve on both v2 and v3 at the same path
 const V3_SHARED_ROOT_PATHS = ['/search', '/imports', '/concepts/compare', '/mappings/compare']
-// owner level surfaces verified to resolve on both sides
 const V3_SHARED_OWNER_PATHS = {users: ['settings'], orgs: ['edit']}
 
 const V3_ROUTE_ID_REGEX = /^[a-zA-Z0-9._@-]+$/
@@ -1252,16 +1238,12 @@ export const toV3Path = path => {
   if(segments.length === 3 && V3_SHARED_OWNER_PATHS[ownerType].includes(segments[2]))
     return fullPath
 
-  // anything else hanging off an owner is v2 only, so the owner home is the nearest
-  // shared ancestor
   if(!['sources', 'collections'].includes(repoType) || !isV3RouteId(repo))
     return ownerHome
 
   let repoHome = `${ownerHome}/${repoType}/${repo}`
   let rest = segments.slice(4)
 
-  // an optional repo version sits between the repo and its tab. A reserved segment in that
-  // position is a v2 route rather than a version, so it is not carried across.
   if(rest.length > 0 && !V3_RESERVED_REPO_SEGMENTS.includes(rest[0])) {
     if(!isV3RouteId(rest[0]))
       return repoHome
@@ -1272,15 +1254,11 @@ export const toV3Path = path => {
   if(rest.length === 0)
     return repoHome
 
-  // a tab v3 does not render (About, Summary) or a v2 only shape (expansions) falls back
-  // to the repo home
   if(!V3_SHARED_REPO_TABS.includes(rest[0]))
     return repoHome
 
   const tabPath = `${repoHome}/${rest[0]}`
 
-  // v3 carries a single resource id under a tab. v2 trailing segments such as a concept
-  // version or $cascade have no v3 equivalent and are dropped.
   return isV3RouteId(rest[1]) ? `${tabPath}/${rest[1]}` : tabPath
 }
 
