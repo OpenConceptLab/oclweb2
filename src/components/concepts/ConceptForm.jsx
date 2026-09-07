@@ -89,12 +89,12 @@ class ConceptForm extends React.Component {
 
   fetchConceptToCreate() {
     const { copyFrom } = this.props;
-    APIService.new().overrideURL(copyFrom.url).get().then(response => this.setFieldsForEdit(response.data))
+    APIService.new().overrideURL(copyFrom.url).get(null, null, {includeParentConceptURLs: true}).then(response => this.setFieldsForEdit(response.data))
   }
 
   fetchConceptToEdit() {
     const { concept } = this.props;
-    APIService.new().overrideURL(concept.url).get().then(response => this.setFieldsForEdit(response.data))
+    APIService.new().overrideURL(concept.url).get(null, null, {includeParentConceptURLs: true}).then(response => this.setFieldsForEdit(response.data))
   }
 
   setFieldsForEdit(data) {
