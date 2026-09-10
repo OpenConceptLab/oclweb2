@@ -1207,6 +1207,75 @@ export const toMapperURL = path => {
   return `${url}/#${path || '/'}?${referrerParams}`
 }
 
+const V3_SHARED_REPO_TABS = ['concepts', 'mappings', 'references', 'versions']
+const V3_RESERVED_REPO_SEGMENTS = [...V3_SHARED_REPO_TABS, 'about', 'summary', 'expansions', 'edit']
+const V3_SHARED_ROOT_PATHS = ['/search', '/imports', '/concepts/compare', '/mappings/compare']
+const V3_SHARED_OWNER_PATHS = {users: ['settings'], orgs: ['edit']}
+
+const V3_ROUTE_ID_REGEX = /^[a-zA-Z0-9._@-]+$/
+const isV3RouteId = segment => Boolean(segment) && V3_ROUTE_ID_REGEX.test(segment)
+
+export const toV3Path = path => {
+  const segments = (path || '').split('?')[0].split('/').filter(Boolean)
+
+  if(segments.length === 0)
+    return '/'
+
+  const fullPath = '/' + segments.join('/')
+  if(V3_SHARED_ROOT_PATHS.includes(fullPath))
+    return fullPath
+
+  const [ownerType, owner, repoType, repo] = segments
+
+  if(!['users', 'orgs'].includes(ownerType) || !isV3RouteId(owner))
+    return '/'
+
+  const ownerHome = `/${ownerType}/${owner}`
+
+  if(segments.length === 2)
+    return ownerHome
+
+  if(segments.length === 3 && V3_SHARED_OWNER_PATHS[ownerType].includes(segments[2]))
+    return fullPath
+
+  if(!['sources', 'collections'].includes(repoType) || !isV3RouteId(repo))
+    return ownerHome
+
+  let repoHome = `${ownerHome}/${repoType}/${repo}`
+  let rest = segments.slice(4)
+
+  if(rest.length > 0 && !V3_RESERVED_REPO_SEGMENTS.includes(rest[0])) {
+    if(!isV3RouteId(rest[0]))
+      return repoHome
+    repoHome = `${repoHome}/${rest[0]}`
+    rest = rest.slice(1)
+  }
+
+  if(rest.length === 0)
+    return repoHome
+
+  if(!V3_SHARED_REPO_TABS.includes(rest[0]))
+    return repoHome
+
+  const tabPath = `${repoHome}/${rest[0]}`
+
+  return isV3RouteId(rest[1]) ? `${tabPath}/${rest[1]}` : tabPath
+}
+
+export const toV3URL = path => {
+  let url = 'https://app.v3.openconceptlab.org'
+  if(window.location.host?.includes('localhost'))
+    url = 'http://localhost:4002'
+  if(window.location.host.match('app.*.openconceptlab.org'))
+    url = window.location.origin.replace('//app.', '//app.v3.')
+
+  let referrerParams = `referrer=${window.location.href}`
+  if(isLoggedIn())
+    referrerParams += '?auth=true'
+
+  return `${url}/#${toV3Path(path)}?${referrerParams}`
+}
+
 export const isMapperURL = url => {
   if(!url)
     return false

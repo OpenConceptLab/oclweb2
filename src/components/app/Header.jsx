@@ -34,6 +34,7 @@ import Favorites from './Favorites';
 import RecentHistory from './RecentHistory';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 import AppsMenu from '../common/AppsMenu';
+import TryNewTermBrowser from '../common/TryNewTermBrowser';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 import Languages from './Languages';
 import { OperationsContext } from './LayoutContext';
@@ -205,17 +206,21 @@ const Header = props => {
               {getLogo()}
             </a>
           </Typography>
-          <div className="col-sm-8 col-xs-6">
+          <div className="col-sm-7 col-xs-6">
             {
               props.fhir ?
                 <SearchByAttributeInput {...props} /> :
               <SearchInput {...props} />
             }
           </div>
-          <div className='col-sm-4 col-xs-6 pull-right no-side-padding'style={{textAlign: 'right'}}>
+          <div className='col-sm-5 col-xs-6 pull-right no-side-padding'style={{textAlign: 'right'}}>
             {
               canSwitchServer() && isServerSwitched() &&
                 <ServerConfigsChip />
+            }
+            {
+              !isFHIRServer &&
+                <TryNewTermBrowser />
             }
             {
               authenticated ?
