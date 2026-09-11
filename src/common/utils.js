@@ -1208,6 +1208,7 @@ export const toMapperURL = path => {
 }
 
 const V3_SHARED_REPO_TABS = ['concepts', 'mappings', 'references', 'versions']
+const V3_EXPANSION_SCOPED_TABS = ['concepts', 'mappings']
 const V3_RESERVED_REPO_SEGMENTS = [...V3_SHARED_REPO_TABS, 'about', 'summary', 'expansions', 'edit']
 const V3_SHARED_ROOT_PATHS = ['/search', '/imports', '/concepts/compare', '/mappings/compare']
 const V3_SHARED_OWNER_PATHS = {users: ['settings'], orgs: ['edit']}
@@ -1251,13 +1252,19 @@ export const toV3Path = path => {
     rest = rest.slice(1)
   }
 
+  let expansionPath = ''
+  if(rest[0] === 'expansions' && isV3RouteId(rest[1])) {
+    expansionPath = `/expansions/${rest[1]}`
+    rest = rest.slice(2)
+  }
+
   if(rest.length === 0)
-    return repoHome
+    return expansionPath ? `${repoHome}${expansionPath}/concepts` : repoHome
 
   if(!V3_SHARED_REPO_TABS.includes(rest[0]))
     return repoHome
 
-  const tabPath = `${repoHome}/${rest[0]}`
+  const tabPath = `${repoHome}${V3_EXPANSION_SCOPED_TABS.includes(rest[0]) ? expansionPath : ''}/${rest[0]}`
 
   return isV3RouteId(rest[1]) ? `${tabPath}/${rest[1]}` : tabPath
 }
