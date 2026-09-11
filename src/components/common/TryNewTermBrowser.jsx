@@ -11,7 +11,7 @@ const TryNewTermBrowser = () => {
   const href = toV3URL(location.pathname + (location.search || ''));
 
   return (
-    <Tooltip arrow title='View this in TBv3'>
+    <Tooltip arrow title='View in TBv3'>
       <Chip
         size='medium'
         variant='outlined'
@@ -19,7 +19,7 @@ const TryNewTermBrowser = () => {
         component='a'
         href={href}
         icon={<NewOCLLogo sx={{fill: 'currentColor', width: '26px'}} />}
-        label='View this in TBv3'
+        label='View in TBv3'
         sx={{
           paddingLeft: '4px',
           verticalAlign: 'middle',
