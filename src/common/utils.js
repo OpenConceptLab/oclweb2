@@ -1194,10 +1194,10 @@ export const toMapperURL = path => {
   let url = 'https://map.openconceptlab.org'
   if(window.location.host?.includes('localhost'))
     url = 'http://localhost:4004'
-  if(['app.v3.qa.openconceptlab.org', 'app.v3.demo.openconceptlab.org'].includes(window.location.host))
+  if(['app.qa.openconceptlab.org', 'app.demo.openconceptlab.org'].includes(window.location.host))
     url = 'https://map.qa.openconceptlab.org'
-  if(window.location.host.match('app.v3.*.openconceptlab.org'))
-    url = window.location.origin.replace('//app.v3.', '//map.')
+  if(window.location.host.match('app.*.openconceptlab.org'))
+    url = window.location.origin.replace('//app.', '//map.')
 
   let referrerParams = `referrer=${window.location.href}`
   if(isLoggedIn())
