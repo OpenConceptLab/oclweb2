@@ -1,3 +1,6 @@
+import packageJson from '../../package.json';
+
+export const OCL_CLIENT = `oclweb2/${packageJson.version}`;
 export const WHITE = '#FFF';
 export const BLACK = '#000';
 export const BLUE = 'rgb(51, 115, 170)';

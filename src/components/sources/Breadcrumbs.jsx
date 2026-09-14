@@ -7,9 +7,10 @@ import {
 } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { isEmpty, get, startCase } from 'lodash';
-import { currentUserHasAccess, recordGAAction } from '../../common/utils';
+import { currentUserHasAccess } from '../../common/utils';
 import { WHITE, ORANGE, GREEN, BLUE } from '../../common/constants';
 import APIService from '../../services/APIService';
+import GAService from '../../services/GAService';
 import OwnerButton from '../common/OwnerButton';
 import SourceButton from '../common/SourceButton';
 import CollectionButton from '../common/CollectionButton';
@@ -107,7 +108,7 @@ const Breadcrumbs = ({
 
   const retire = comment => {
     const resourceLabel = startCase(resourceType)
-    recordGAAction(resourceLabel, `retired_${resourceType}`, `Retired ${resourceLabel}`)
+    GAService.recordEvent(`retired_${resourceType}`, { event_category: resourceLabel, event_label: `Retired ${resourceLabel}` })
     APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${resourceLabel} Retired`, 1, () => window.location.reload())
@@ -118,7 +119,7 @@ const Breadcrumbs = ({
 
   const unretire = comment => {
     const resourceLabel = startCase(resourceType)
-    recordGAAction(resourceLabel, `unretired_${resourceType}`, `Reactivated ${resourceLabel}`)
+    GAService.recordEvent(`unretired_${resourceType}`, { event_category: resourceLabel, event_label: `Reactivated ${resourceLabel}` })
     APIService.new().overrideURL(resourceEncodedURL.replace('#', '')).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204)
         alertifyjs.success(`${resourceLabel} Unretired`, 1, () => window.location.reload())

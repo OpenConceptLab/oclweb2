@@ -4,7 +4,7 @@ import moment from 'moment';
 import { TextField, Button, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { set, get, cloneDeep, isEmpty, pickBy, startCase, isBoolean, isObject, values, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { recordGAUpsertEvent } from '../../common/utils';
+import GAService from '../../services/GAService';
 
 
 class ConceptContainerVersionForm extends React.Component {
@@ -65,7 +65,7 @@ class ConceptContainerVersionForm extends React.Component {
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
       const isCollectionVersion = (resource || resourceType) === 'collection'
-      recordGAUpsertEvent(isCollectionVersion ? `Collection Version` : 'Source Version', edit)
+      GAService.recordUpsertEvent(isCollectionVersion ? `Collection Version` : 'Source Version', edit)
       this.alert = alertifyjs.warning('Starting Version Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)
 

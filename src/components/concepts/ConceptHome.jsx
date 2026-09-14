@@ -4,7 +4,8 @@ import Split from 'react-split'
 import { CircularProgress } from '@mui/material';
 import { get, isObject, isBoolean, has, flatten, values, isArray, find, map } from 'lodash';
 import APIService from '../../services/APIService';
-import { fetchAllVersions, toParentURI, currentUserHasAccess, recordGAAction, highlightTexts } from '../../common/utils'
+import GAService from '../../services/GAService';
+import { fetchAllVersions, toParentURI, currentUserHasAccess, highlightTexts } from '../../common/utils'
 import NotFound from '../common/NotFound';
 import AccessDenied from '../common/AccessDenied';
 import PermissionDenied from '../common/PermissionDenied';
@@ -102,7 +103,7 @@ class ConceptHome extends React.Component {
         .overrideURL(URL)
         .get(null, null, {includeReferences: this.props.scoped === 'collection'})
         .then(response => {
-          recordGAAction('Concept', 'split_view', `Concept - ${URL}`)
+          GAService.recordEvent('split_view', { event_category: 'Concept', event_label: `Concept - ${URL}` })
           if(get(response, 'detail') === "Not found.")
             this.setState({isLoading: false, concept: {}, notFound: true, accessDenied: false, permissionDenied: false})
           else if(get(response, 'detail') === "Authentication credentials were not provided.")
@@ -279,7 +280,7 @@ class ConceptHome extends React.Component {
   }
 
   retireMapping = (mapping, comment, isDirect) => {
-    recordGAAction('Mapping Inline', 'retired_mapping', 'Retried Mapping from Concept Details using Quick Actions')
+    GAService.recordEvent('retired_mapping', { event_category: 'Mapping Inline', event_label: 'Retried Mapping from Concept Details using Quick Actions' })
     APIService.new().overrideURL(mapping.url).delete({comment: comment}).then(response => {
       if(get(response, 'status') === 204) {
         isDirect ? this.getMappings(true) : this.getInverseMappings(true)
@@ -291,7 +292,7 @@ class ConceptHome extends React.Component {
   }
 
   unretireMapping = (mapping, comment, isDirect) => {
-    recordGAAction('Mapping Inline', 'unretired_mapping', 'Reactivated retired Mapping from Concept Details using Quick Actions')
+    GAService.recordEvent('unretired_mapping', { event_category: 'Mapping Inline', event_label: 'Reactivated retired Mapping from Concept Details using Quick Actions' })
     APIService.new().overrideURL(mapping.url).appendToUrl('reactivate/').put({comment: comment}).then(response => {
       if(get(response, 'status') === 204) {
         isDirect ? this.getMappings(true) : this.getInverseMappings(true)
@@ -303,7 +304,7 @@ class ConceptHome extends React.Component {
   }
 
   onCreateNewMapping = (payload, targetConcept, isDirect, successCallback) => {
-    recordGAAction('Mapping Inline', 'create_mapping', 'Created Mapping from Concept Details using Quick Actions')
+    GAService.recordEvent('create_mapping', { event_category: 'Mapping Inline', event_label: 'Created Mapping from Concept Details using Quick Actions' })
     const { concept, mappings, reverseMappings } = this.state
     const URL = `${concept.owner_url}sources/${concept.source}/mappings/`
     const targetSourceURL = payload?.to_source_url || payload?.from_source_url || toParentURI(targetConcept.url)

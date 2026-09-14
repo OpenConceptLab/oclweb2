@@ -2,7 +2,8 @@ import React from 'react';
 import { CircularProgress } from '@mui/material';
 import { get, isObject, has } from 'lodash';
 import APIService from '../../services/APIService';
-import { fetchAllVersions, recordGAAction, highlightTexts } from '../../common/utils'
+import GAService from '../../services/GAService';
+import { fetchAllVersions, highlightTexts } from '../../common/utils'
 import ScopeHeader from './ScopeHeader'
 import MappingHomeDetails from './MappingHomeDetails';
 import NotFound from '../common/NotFound';
@@ -69,7 +70,7 @@ class MappingHome extends React.Component {
         .overrideURL(URL)
         .get(null, null, {includeReferences: this.props.scoped === 'collection'})
         .then(response => {
-          recordGAAction('Mapping', 'split_view', `Mapping - ${URL}`)
+          GAService.recordEvent('split_view', { event_category: 'Mapping', event_label: `Mapping - ${URL}` })
           if(get(response, 'detail') === "Not found.")
             this.setState({isLoading: false, mapping: {}, notFound: true, accessDenied: false, permissionDenied: false})
           else if(get(response, 'detail') === "Authentication credentials were not provided.")

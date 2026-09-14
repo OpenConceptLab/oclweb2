@@ -9,7 +9,8 @@ import {
   set, get, isEmpty, cloneDeep, merge, map, pullAt, isEqual, uniq, without, includes,
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, isAdminUser, getCurrentUserUsername, recordGAUpsertEvent } from '../../common/utils';
+import GAService from '../../services/GAService';
+import { arrayToObject, isAdminUser, getCurrentUserUsername } from '../../common/utils';
 import { AUTH_GROUPS } from '../../common/constants';
 import ExtrasForm from '../common/ExtrasForm';
 const EXTRAS_MODEL = {key: '', value: ''}
@@ -108,7 +109,7 @@ class UserForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(isFormValid) {
-      recordGAUpsertEvent('User', edit)
+      GAService.recordUpsertEvent('User', edit)
 
       fields.extras = arrayToObject(fields.extras)
       if(!this.canEditAuthGroups() || (edit && isEqual(user.auth_groups, fields.auth_groups)))
