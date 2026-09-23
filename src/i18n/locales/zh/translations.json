@@ -173,5 +173,11 @@
       "confirmation_message": "请键入 <1>{{resourceId}}</1> 来确认操作。",
       "confirmation_button_label": "我明白这些后果，请删除这一 {{resourceType}}"
     }
+  },
+  "announcement": {
+    "title": "试用全新 OCL TermBrowser v3，现已开放公开预览！",
+    "text": "您的内容已在其中，并可随时切换回来。",
+    "link_label": "了解更多",
+    "dismiss": "关闭"
   }
 }
