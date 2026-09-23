@@ -6,7 +6,8 @@ import {
   set, get, cloneDeep, isEmpty, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, toFullURL, refreshCurrentUserCache, recordGAUpsertEvent } from '../../common/utils';
+import GAService from '../../services/GAService';
+import { arrayToObject, toFullURL, refreshCurrentUserCache } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
 import RTEditor from '../common/RTEditor';
 
@@ -85,7 +86,7 @@ class OrgForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(isFormValid) {
-      recordGAUpsertEvent('Organization', edit)
+      GAService.recordUpsertEvent('Organization', edit)
       fields.extras = arrayToObject(fields.extras)
       if(edit) {
         APIService.orgs(fields.id).put(fields).then(response => this.handleSubmitResponse(response))

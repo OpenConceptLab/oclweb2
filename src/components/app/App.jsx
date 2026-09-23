@@ -4,9 +4,10 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { get, isEmpty } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
-  isDeprecatedBrowser, recordGAPageView, canViewOperationsPanel, isRedirectingToLoginViaReferrer,
+  isDeprecatedBrowser, canViewOperationsPanel, isRedirectingToLoginViaReferrer,
   isSSOEnabled, getLoginURL, isOtherOCLClientURL
 } from '../../common/utils';
+import GAService from '../../services/GAService';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
 import CollectionHome from '../collections/CollectionHome';
@@ -132,7 +133,7 @@ const App = props => {
     if(!isFHIRServer())
       fetchToggles()
     addLogoutListenerForAllTabs()
-    recordGAPageView()
+    GAService.recordPageView()
     setupHotJar()
     operationsPanelAccess && document.body.addEventListener("keydown", _listenKey)
     return () => operationsPanelAccess && document.body.removeEventListener("keydown", _listenKey)

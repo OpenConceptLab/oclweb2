@@ -2,7 +2,7 @@
 import axios from 'axios';
 import {get, omit, isPlainObject, isString, defaults } from 'lodash';
 import { currentUserToken, getAPIURL } from '../common/utils';
-import packageJson from '../../package.json';
+import { OCL_CLIENT } from '../common/constants';
 
 
 const APIServiceProvider = {};
@@ -119,7 +119,7 @@ class APIService {
     token = token || (token !== false ? currentUserToken() : token);
     const obj = defaults(headers, this.headers);
     if (token) obj['Authorization'] = `Token ${token}`;
-    obj['X-OCL-CLIENT'] = `oclweb2/${packageJson.version}`;
+    obj['X-OCL-CLIENT'] = OCL_CLIENT;
     return obj;
   }
 

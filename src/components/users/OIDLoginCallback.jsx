@@ -6,6 +6,7 @@ import {
   refreshCurrentUserCache, consumeStoredPKCECodeVerifier, consumeAndValidateOAuthState
 } from '../../common/utils';
 import APIService from '../../services/APIService'
+import GAService from '../../services/GAService'
 
 
 class OIDLoginCallback extends React.Component {
@@ -37,11 +38,13 @@ class OIDLoginCallback extends React.Component {
 
         APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, code_verifier: codeVerifier}).then(res => {
           if(res.data?.access_token) {
+            GAService.recordSignupComplete()
             localStorage.removeItem('server_configs')
             localStorage.setItem('token', res.data.access_token)
             localStorage.setItem('id_token', res.data.id_token)
             this.cacheUserData()
           } else {
+            GAService.clearSignupFlow()
             alertifyjs.error(res.data)
           }
         })

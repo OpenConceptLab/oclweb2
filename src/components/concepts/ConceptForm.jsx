@@ -7,9 +7,10 @@ import {
   set, get, map, cloneDeep, pullAt, filter, isEmpty, pick, isObject, values, startCase,
 } from 'lodash';
 import APIService from '../../services/APIService';
+import GAService from '../../services/GAService';
 import {
   arrayToObject, fetchDatatypes, fetchNameTypes, sortValuesBySourceSummary,
-  fetchDescriptionTypes, fetchConceptClasses, recordGAUpsertEvent, toParentURI
+  fetchDescriptionTypes, fetchConceptClasses, toParentURI
 } from '../../common/utils';
 import { ERROR_RED } from '../../common/constants';
 import LocaleForm from './LocaleForm';
@@ -279,7 +280,7 @@ class ConceptForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
-      recordGAUpsertEvent('Concept', edit)
+      GAService.recordUpsertEvent('Concept', edit)
       if(edit)
         fields.update_comment = fields.comment
       fields.extras = arrayToObject(fields.extras)

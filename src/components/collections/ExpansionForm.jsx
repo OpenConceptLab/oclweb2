@@ -8,7 +8,7 @@ import {
   has, forEach
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { recordGAUpsertEvent } from '../../common/utils';
+import GAService from '../../services/GAService';
 import BetaLabel from '../common/BetaLabel';
 
 const DEFAULT_TOOLTIP = 'This parameter is not yet supported.'
@@ -191,7 +191,7 @@ class ExpansionForm extends React.Component {
     form.reportValidity()
     const isFormValid = form.checkValidity()
     if(selectedVersion && isFormValid) {
-      recordGAUpsertEvent('Expansion', false)
+      GAService.recordUpsertEvent('Expansion', false)
 
       this.alert = alertifyjs.warning('Starting Expansion Creation. This might take few seconds.', 0)
       fields = pickBy(fields, value => value)

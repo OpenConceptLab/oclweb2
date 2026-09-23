@@ -10,7 +10,8 @@ import {
   set, get, cloneDeep, isEmpty, pickBy, pullAt, map
 } from 'lodash';
 import APIService from '../../services/APIService';
-import { arrayToObject, fetchMapTypes, recordGAUpsertEvent } from '../../common/utils';
+import GAService from '../../services/GAService';
+import { arrayToObject, fetchMapTypes } from '../../common/utils';
 import ExtrasForm from '../common/ExtrasForm';
 import OwnerParentSelection from '../common/OwnerParentSelection';
 
@@ -221,7 +222,7 @@ class MappingForm extends React.Component {
 
     const isFormValid = form.checkValidity()
     if(parentURL && isFormValid) {
-      recordGAUpsertEvent('Mapping', edit)
+      GAService.recordUpsertEvent('Mapping', edit)
       fields.extras = arrayToObject(fields.extras)
       if(edit)
         fields.update_comment = fields.comment
