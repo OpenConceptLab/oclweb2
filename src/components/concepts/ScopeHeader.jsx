@@ -94,12 +94,12 @@ const ScopeHeader = ({
               <Link to={resourceURL} className="no-anchor-styles">
                 <span style={{display: 'flex', alignItems: 'baseline'}}>
                   <span style={{color: BLUE}}>
-                    <b className='searchable'>{concept.id}</b>
+                    <b className='searchable'>{concept?.id}</b>
                   </span>
                   <span style={{marginLeft: '5px', color: BLACK, maxWidth: '430px'}}>
-                    <b className='searchable'>{concept.display_name}</b>
+                    <b className='searchable'>{concept?.display_name}</b>
                     {
-                      concept.retired &&
+                      concept?.retired &&
                         <Chip className='retired-red' style={{marginLeft: '10px'}} size='small' label='Retired' />
                     }
                   </span>
@@ -128,36 +128,36 @@ const ScopeHeader = ({
                 Class:
               </span>
               <span>
-                {concept.concept_class}
+                {concept?.concept_class}
               </span>
               <span className='italic' style={{marginLeft: '15px', marginRight: '5px', color: '#707070'}}>
                 Datatype:
               </span>
               <span>
-                {concept.datatype}
+                {concept?.datatype}
               </span>
             </div>
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '2px'}}>
                 <LastUpdatedOnLabel
                   label='Created'
-                  date={concept.created_on}
-                  by={concept.created_by}
+                  date={concept?.created_on}
+                  by={concept?.created_by}
                   iconSize='medium'
                   noContainerClass
                 />
             </div>
             <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '-6px'}}>
               <LastUpdatedOnLabel
-                date={concept.updated_on}
-                by={concept.updated_by}
+                date={concept?.updated_on}
+                by={concept?.updated_by}
                 iconSize='medium'
                 noContainerClass
               />
             </div>
             {
-              concept.external_id &&
+              concept?.external_id &&
               <div className='col-md-12 no-side-padding flex-vertical-center' style={{marginTop: '-6px'}}>
-                <ExternalIdLabel externalId={concept.external_id} iconSize='medium' searchable />
+                <ExternalIdLabel externalId={concept?.external_id} iconSize='medium' searchable />
               </div>
             }
           </div>
