@@ -364,7 +364,7 @@ const ExpandibleRow = props => {
   const isSourceChild = includes(['concepts', 'mappings'], resource)
   const isValueSet = resource === 'ValueSet';
   const isConceptMap = resource === 'ConceptMap';
-  const isPublic = includes(['view', 'edit'], get(item, 'public_access', '').toLowerCase()) && isConceptContainer;
+  const isPublic = get(item, 'public_access', '').toLowerCase() === 'view' && isConceptContainer;
   const pinId = get(find(pins, {resource_uri: item.url}), 'id');
   const tags = resourceDefinition.getTags ? resourceDefinition.getTags(hapi) : resourceDefinition.tags;
 

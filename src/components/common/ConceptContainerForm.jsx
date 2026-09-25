@@ -550,7 +550,6 @@ class ConceptContainerForm extends React.Component {
                   >
                     <MenuItem value='None'>None</MenuItem>
                     <MenuItem value='View'>View</MenuItem>
-                    <MenuItem value='Edit'>Edit</MenuItem>
                   </Select>
                 </FormControl>
               </div>

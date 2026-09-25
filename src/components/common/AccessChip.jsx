@@ -4,11 +4,11 @@ import {
   Lock as PrivateIcon,
 } from '@mui/icons-material';
 import { Tooltip, Chip } from '@mui/material';
-import { startCase, includes } from 'lodash';
+import { startCase } from 'lodash';
 
 const AccessChip = props => {
   const publicAccess = props.public_access || props.publicAccess || '';
-  const isPublic = includes(['view', 'edit'], publicAccess.toLowerCase())
+  const isPublic = publicAccess.toLowerCase() === 'view'
   const label = isPublic ? 'Public' : 'Private';
   const title = isPublic ? `Public Access: ${startCase(publicAccess)}` : 'Private';
   return (
