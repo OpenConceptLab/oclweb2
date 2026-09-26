@@ -596,7 +596,7 @@ div.login-paper {
     width: 15%;
 }
 .custom-drawer {
-    top: 65px;
+    top: calc(65px + var(--announcement-height, 0px));
     height: auto;
     bottom: 0;
     &.large {
