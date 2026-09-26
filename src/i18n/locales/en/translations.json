@@ -174,5 +174,11 @@
       "confirmation_message": "Please type <1>{{resourceId}}</1> to confirm.",
       "confirmation_button_label": "I understand the consequences, delete this {{resourceType}}"
     }
+  },
+  "announcement": {
+    "title": "Try the new OCL TermBrowser v3, now in public preview!",
+    "text": "Your content is already there, and you can switch back any time.",
+    "link_label": "Learn more",
+    "dismiss": "Dismiss"
   }
 }

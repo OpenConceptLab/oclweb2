@@ -35,6 +35,7 @@ import RecentHistory from './RecentHistory';
 import { OPTIONS, SITE_URL } from './MenuOptions.jsx';
 import AppsMenu from '../common/AppsMenu';
 import TryNewTermBrowser from '../common/TryNewTermBrowser';
+import AnnouncementBanner from './AnnouncementBanner';
 import ServerConfigsChip from '../common/ServerConfigsChip';
 import Languages from './Languages';
 import { OperationsContext } from './LayoutContext';
@@ -352,6 +353,7 @@ const Header = props => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <DrawerHeader />
+        <AnnouncementBanner />
         { props.children }
       </Box>
     </Box>
