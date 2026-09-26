@@ -8,7 +8,7 @@ import { startCase } from 'lodash';
 
 const AccessChip = props => {
   const publicAccess = props.public_access || props.publicAccess || '';
-  const isPublic = publicAccess.toLowerCase() === 'view'
+  const isPublic = ['view', 'edit'].includes(publicAccess.toLowerCase())
   const label = isPublic ? 'Public' : 'Private';
   const title = isPublic ? `Public Access: ${startCase(publicAccess)}` : 'Private';
   return (
