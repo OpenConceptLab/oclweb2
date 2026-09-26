@@ -12,14 +12,14 @@ const useStyles = makeStyles(theme => ({
   drawer: {
     flexShrink: 0
   },
-  toolbar: theme.mixins.toolbar,
+  toolbar: {...theme.mixins.toolbar, marginTop: 'var(--announcement-height, 0px)'},
   dragger: {
     width: "8px",
     cursor: "ew-resize",
     padding: "4px 0 0",
     borderTop: "1px solid #ddd",
     position: "fixed",
-    top: '64px',
+    top: 'calc(64px + var(--announcement-height, 0px))',
     bottom: 0,
     zIndex: 100,
     backgroundColor: "#f1f1f1",

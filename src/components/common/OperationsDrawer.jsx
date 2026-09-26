@@ -301,7 +301,7 @@ const OperationsDrawer = () => {
         classes={{paper: classes.drawerPaper,}}
         onClose={() => setOpenOperations(false)}
       >
-        <Toolbar />
+        <Toolbar sx={{ marginTop: 'var(--announcement-height, 0px)' }} />
         <div className={classes.drawerContainer}>
           <div style={{justifyContent: 'space-between', display: 'flex', alignItems: 'center'}}>
             <h3><BetaLabel label="Operations" /></h3>
