@@ -1013,7 +1013,7 @@ class Search extends React.Component {
           selectedItem &&
           <ResponsiveDrawer
             width={openOperations ? '28.5%' : '38.5%'}
-            paperStyle={{background: '#f1f1f1', marginTop: isInsideConfiguredOrg ? '60px' : '120px', right: openOperations ? '350px' : 0}}
+            paperStyle={{background: '#f1f1f1', marginTop: `calc(${isInsideConfiguredOrg ? '60px' : '120px'} + var(--announcement-height, 0px))`, right: openOperations ? '350px' : 0}}
             variant='persistent'
             isOpen
             noToolbar

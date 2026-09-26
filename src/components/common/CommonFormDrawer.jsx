@@ -23,7 +23,7 @@ const CommonFormDrawer = ({ isOpen, onClose, formComponent, size, ...rest }) => 
 
   return (
     <Drawer anchor='right' open={open} onClose={onDrawerClose} classes={{paper: className}} ModalProps={{disableEscapeKeyDown: true}} {...rest}>
-      <span style={{position: 'fixed', right: '10px', top: '75px', zIndex: '2000', background: WHITE}}>
+      <span style={{position: 'fixed', right: '10px', top: 'calc(75px + var(--announcement-height, 0px))', zIndex: '2000', background: WHITE}}>
         <IconButton onClick={onDrawerClose} color='secondary'>
           <CancelIcon />
         </IconButton>

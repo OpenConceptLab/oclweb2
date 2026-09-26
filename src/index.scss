@@ -2,6 +2,10 @@ html {
     font-size: 16px;
     position: relative;
     min-height: 100%;
+    // AnnouncementBanner is fixed above the app bar and sets
+    // --announcement-height while it shows. Anything fixed to the top of the
+    // viewport adds var(--announcement-height, 0px) to its top, as the app bar
+    // and the left menu do.
 }
 
 html, body {

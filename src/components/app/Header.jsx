@@ -81,7 +81,15 @@ const AppBar = styled(MuiAppBar, {
   borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: 'none',
   zIndex: 1300,
+  // below the announcement banner, while it shows
+  top: 'var(--announcement-height, 0px)',
 }));
+
+// The left menu starts below the announcement banner too.
+const belowBanner = {
+  top: 'var(--announcement-height, 0px)',
+  height: 'calc(100% - var(--announcement-height, 0px))',
+};
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -91,11 +99,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     boxSizing: 'border-box',
     ...(open && {
       ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
+      '& .MuiDrawer-paper': {...openedMixin(theme), ...belowBanner},
     }),
     ...(!open && {
       ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
+      '& .MuiDrawer-paper': {...closedMixin(theme), ...belowBanner},
     }),
   }),
 );
@@ -186,6 +194,7 @@ const Header = props => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
+      <AnnouncementBanner />
       <AppBar position="fixed" open={open}>
         <Toolbar>
           {
@@ -352,8 +361,7 @@ const Header = props => {
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
-        <DrawerHeader />
-        <AnnouncementBanner />
+        <DrawerHeader sx={{ marginTop: 'var(--announcement-height, 0px)' }} />
         { props.children }
       </Box>
     </Box>
