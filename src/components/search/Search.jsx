@@ -817,6 +817,8 @@ class Search extends React.Component {
       selectedItem, limit
     } = this.state;
     const isInsideConfiguredOrg = isEqual(keys(this.props.match.params), ['org'])
+    // Where the details drawer starts: below the app bar and the results header, and the announcement banner.
+    const detailsDrawerTop = `${isInsideConfiguredOrg ? '60px' : '120px'} + var(--announcement-height, 0px)`
     const resourceResults = get(results, resource, {});
     const isUnderUserHome = nested && parentResource === 'user';
     const shouldShowNewResourceComponent = isUnderUserHome && newResourceComponent;
@@ -1013,7 +1015,7 @@ class Search extends React.Component {
           selectedItem &&
           <ResponsiveDrawer
             width={openOperations ? '28.5%' : '38.5%'}
-            paperStyle={{background: '#f1f1f1', marginTop: `calc(${isInsideConfiguredOrg ? '60px' : '120px'} + var(--announcement-height, 0px))`, right: openOperations ? '350px' : 0}}
+            paperStyle={{background: '#f1f1f1', marginTop: `calc(${detailsDrawerTop})`, height: `calc(100% - (${detailsDrawerTop}))`, right: openOperations ? '350px' : 0}}
             variant='persistent'
             isOpen
             noToolbar

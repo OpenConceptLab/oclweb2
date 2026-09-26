@@ -72,10 +72,12 @@ const AnnouncementBanner = () => {
   if (!open)
     return null;
 
-  // Gutters match the app bar's Toolbar. z-index matches the app bar's too.
+  // Gutters and z-index match the app bar's. mui-fixed lets MUI's scroll lock pad
+  // it like the app bar when a modal opens, so the close button doesn't jump.
   return (
     <Box
       ref={ref}
+      className='mui-fixed'
       sx={{
         position: 'fixed',
         top: 0,
@@ -102,7 +104,14 @@ const AnnouncementBanner = () => {
             target='_blank'
             rel='noopener noreferrer'
             underline='always'
-            sx={{ fontWeight: 600, color: V3.primary, textDecorationColor: 'rgba(72, 54, 255, 0.4)', '&:hover, &:focus': { color: V3.primary } }}
+            sx={{
+              fontWeight: 600,
+              color: V3.primary,
+              textDecorationColor: 'rgba(72, 54, 255, 0.4)',
+              '&:hover, &:focus': { color: V3.primary },
+              // App.scss removes the focus outline from every link.
+              '&:focus-visible': { outline: `2px solid ${V3.primary} !important`, outlineOffset: '2px' },
+            }}
           >
             {t('announcement.link_label')}
           </Link>
