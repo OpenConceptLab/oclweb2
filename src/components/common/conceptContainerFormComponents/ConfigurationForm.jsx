@@ -182,13 +182,6 @@ const ConfigurationForm = props => {
                     secondaryText={`Anyone can view the content in this ${props.resource}`}
                   />
                 </MenuItem>
-                <MenuItem value='Edit'>
-                  <SelectItemText
-                    icon={<PublicIcon fontSize="small" />}
-                    primaryText="Public (read/write)"
-                    secondaryText={`Anyone can view/edit the content in this ${props.resource}`}
-                  />
-                </MenuItem>
                 <MenuItem value='None'>
                   <SelectItemText
                     icon={<PrivateIcon fontSize="small" />}
