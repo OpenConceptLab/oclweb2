@@ -1,3 +1,18 @@
+# Cache-Control per URI (OpenConceptLab/ocl_issues#2824). Production webpack
+# builds name every bundle [name].[contenthash:8].js (and .css, if CSS is ever
+# extracted), so a bundle that changes gets a new URL, and those URLs can be
+# cached for a year. Everything else gets "no-cache", which lets the browser
+# keep a copy but makes it revalidate before each use: index.html and the SPA
+# fallback, env-config.js (start-prod.sh writes it at container start), and the
+# fixed-name files copied from public/. A returning browser therefore always
+# gets the current index.html, and with it the current bundle names. A request
+# for a hashed name that isn't on disk falls back to /index.html, which changes
+# $uri before this header is computed, so that response gets "no-cache" too.
+map $uri $cache_control {
+    default                          "no-cache";
+    "~\.[0-9a-f]{8}\.(?:js|css)$"    "public, max-age=31536000, immutable";
+}
+
 server {
     listen       ${WEB_PORT};
     server_name  localhost;
@@ -5,6 +20,10 @@ server {
     root         /usr/share/nginx/html;
     index        index.html;
     try_files    $uri /index.html;
+
+    # Keep this the only add_header, at server level: a location that declares
+    # its own add_header stops inheriting this one.
+    add_header   Cache-Control $cache_control always;
 
     gzip on;
     gzip_vary on;
