@@ -13,7 +13,7 @@ import { TBV2_ANNOUNCEMENT_URL } from '../../common/constants';
 // tool rather than inside it. Same component in TBv3 and the Mapper. Update
 // announcement.* in the locale bundles (and bump ANNOUNCEMENT_ID) to re-show a
 // new announcement to visitors who dismissed a previous one.
-const ANNOUNCEMENT_ID = 'tbv2-tbv3-public-preview-2026-09';
+const ANNOUNCEMENT_ID = 'tbv2-tbv3-public-preview-2026-09-v2';
 
 const DISMISSED_KEY = 'announcementDismissed';
 
