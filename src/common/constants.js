@@ -81,4 +81,4 @@ export const DEFAULT_CASCADE_PARAMS = {
 
 export const ALL = '*';
 
-export const TBV2_ANNOUNCEMENT_URL = 'https://openconceptlab.org/blog?utm_source=tbv2&utm_medium=banner&utm_campaign=preview_launch'
+export const TBV2_ANNOUNCEMENT_URL = 'https://openconceptlab.org/blog/letter-to-the-ocl-community?utm_source=tbv2&utm_medium=banner&utm_campaign=preview_launch'
