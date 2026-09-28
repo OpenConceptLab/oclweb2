@@ -1,0 +1,38 @@
+name: PR checks
+
+# Runs build.yml's "Eslint" job on every pull request, so a PR shows the
+# result before it merges (OpenConceptLab/ocl_issues#2838). Keep these steps
+# the same as that job's.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  eslint:
+    name: Eslint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Fail if start-prod.sh writes a secret-shaped variable into env-config.js
+      run: |
+        ALLOWLIST="RECAPTCHA_SITE_KEY|ERRBIT_KEY"
+        LEAKS=$(grep -oE 'var [A-Za-z_]+' start-prod.sh | awk '{print $2}' | grep -E 'SECRET|PASSWORD|_KEY' | grep -vE "^(${ALLOWLIST})$" || true)
+        if [ -n "$LEAKS" ]; then
+          echo "::error::start-prod.sh writes secret-shaped variable(s) into the publicly-served env-config.js: $LEAKS"
+          echo "If this is intentionally public (like a DSN-style key), add it to ALLOWLIST above. Otherwise remove it."
+          exit 1
+        fi
+    - name: Run linting rules
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
+        cache: 'npm'
+    - run: npm ci
+    - run: ./node_modules/eslint/bin/eslint.js --ext .jsx,.js src/
