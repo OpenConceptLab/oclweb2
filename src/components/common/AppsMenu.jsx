@@ -36,7 +36,7 @@ const AppsMenu = props => {
           <AppsIcon/>
         </IconButton>
       </Tooltip>
-      <PopperGrow open={open.value} anchorRef={anchorRef} handleClose={handleClose} minWidth='390px'>
+      <PopperGrow open={open.value} anchorRef={anchorRef} handleClose={handleClose} minWidth='min(390px, 100vw - 16px)'>
         <div className='app-menu'>
           <Box className="app-container" display="inline-block" justifyContent="space-around" style={{width: '100%'}}>
             {
