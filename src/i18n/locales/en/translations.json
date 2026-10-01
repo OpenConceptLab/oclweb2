@@ -176,9 +176,10 @@
     }
   },
   "announcement": {
-    "title": "Try the new OCL TermBrowser v3, now in public preview!",
-    "text": "Your content is already there, and you can switch back any time.",
+    "title": "Subscriptions open November 1.",
+    "text": "Existing accounts using premium features have a grace period until December 1.",
     "link_label": "Learn more",
+    "pricing_label": "See pricing",
     "dismiss": "Dismiss"
   }
 }

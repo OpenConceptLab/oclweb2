@@ -6,14 +6,20 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import { TBV2_ANNOUNCEMENT_URL } from '../../common/constants';
+import { TBV2_ANNOUNCEMENT_LEARN_MORE_URL, TBV2_ANNOUNCEMENT_PRICING_URL } from '../../common/constants';
 
 // OCL Online-wide announcement strip, fixed above the app bar and styled like
 // the community site's AnnouncementBanner, so it reads as sitting above the
 // tool rather than inside it. Same component in TBv3 and the Mapper. Update
 // announcement.* in the locale bundles (and bump ANNOUNCEMENT_ID) to re-show a
 // new announcement to visitors who dismissed a previous one.
-const ANNOUNCEMENT_ID = 'tbv2-tbv3-public-preview-2026-09-v2';
+const ANNOUNCEMENT_ID = 'subscription-dates-2026-10';
+
+// Shown in this order after the text, separated by " · ".
+const ANNOUNCEMENT_LINKS = [
+  { labelKey: 'announcement.link_label', href: TBV2_ANNOUNCEMENT_LEARN_MORE_URL },
+  { labelKey: 'announcement.pricing_label', href: TBV2_ANNOUNCEMENT_PRICING_URL },
+];
 
 const DISMISSED_KEY = 'announcementDismissed';
 
@@ -98,23 +104,30 @@ const AnnouncementBanner = () => {
           {t('announcement.title')}
         </Typography>
         <Typography variant='body2' sx={{ color: V3.text }}>
-          {t('announcement.text')}{' '}
-          <Link
-            href={TBV2_ANNOUNCEMENT_URL}
-            target='_blank'
-            rel='noopener noreferrer'
-            underline='always'
-            sx={{
-              fontWeight: 600,
-              color: V3.primary,
-              textDecorationColor: 'rgba(72, 54, 255, 0.4)',
-              '&:hover, &:focus': { color: V3.primary },
-              // App.scss removes the focus outline from every link.
-              '&:focus-visible': { outline: `2px solid ${V3.primary} !important`, outlineOffset: '2px' },
-            }}
-          >
-            {t('announcement.link_label')}
-          </Link>
+          {t('announcement.text')}
+          {ANNOUNCEMENT_LINKS.map(({ labelKey, href }, i) => (
+            <React.Fragment key={href}>
+              {i ? ' · ' : ' '}
+              <Link
+                href={href}
+                target='_blank'
+                rel='noopener noreferrer'
+                underline='always'
+                sx={{
+                  fontWeight: 600,
+                  color: V3.primary,
+                  textDecorationColor: 'rgba(72, 54, 255, 0.4)',
+                  // The text may wrap between the links, never inside one.
+                  whiteSpace: 'nowrap',
+                  '&:hover, &:focus': { color: V3.primary },
+                  // App.scss removes the focus outline from every link.
+                  '&:focus-visible': { outline: `2px solid ${V3.primary} !important`, outlineOffset: '2px' },
+                }}
+              >
+                {t(labelKey)}
+              </Link>
+            </React.Fragment>
+          ))}
         </Typography>
       </Box>
       <IconButton size='small' aria-label={t('announcement.dismiss')} onClick={onClose}>
