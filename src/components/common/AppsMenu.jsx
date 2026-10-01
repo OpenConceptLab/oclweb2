@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router';
 import { Apps as AppsIcon , Web as MetadataBrowserIcon, Publish as ImportsIcon } from '@mui/icons-material';
+import MapperIcon from '@mui/icons-material/MotionPhotosAutoOutlined';
 import { Tooltip, IconButton, Box, Typography } from '@mui/material';
 import useToggle from '../../hooks/useToggle';
-import { getSiteTitle } from '../../common/utils';
+import { getSiteTitle, toMapperURL } from '../../common/utils';
 import PopperGrow from './PopperGrow';
 
 const SITE_TITLE = getSiteTitle()
@@ -35,7 +36,7 @@ const AppsMenu = props => {
           <AppsIcon/>
         </IconButton>
       </Tooltip>
-      <PopperGrow open={open.value} anchorRef={anchorRef} handleClose={handleClose}>
+      <PopperGrow open={open.value} anchorRef={anchorRef} handleClose={handleClose} minWidth='390px'>
         <div className='app-menu'>
           <Box className="app-container" display="inline-block" justifyContent="space-around" style={{width: '100%'}}>
             {
@@ -60,6 +61,14 @@ const AppsMenu = props => {
                 </Box>
               </Link>
             }
+            <a href={toMapperURL()} target='_blank' rel='noopener noreferrer' className='no-anchor-styles' onClick={handleClose}>
+              <Box className="app" display="inline-block">
+                <MapperIcon fontSize="large"/>
+                <Typography style={{lineHeight:"1.2", marginTop:"15px"}} align="center" component="h6">
+                  OCL <br/> Mapper
+                </Typography>
+              </Box>
+            </a>
           </Box>
         </div>
       </PopperGrow>
