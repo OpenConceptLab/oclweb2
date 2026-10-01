@@ -1185,7 +1185,7 @@ export const toMapperURL = path => {
     url = 'http://localhost:4004'
   else if(['app.qa.openconceptlab.org', 'app.demo.openconceptlab.org'].includes(window.location.host))
     url = 'https://map.qa.openconceptlab.org'
-  else if(window.location.host.match('app.*.openconceptlab.org'))
+  else if(/^app\.([a-z0-9-]+\.)*openconceptlab\.org$/.test(window.location.host))
     url = window.location.origin.replace('//app.', '//map.')
 
   // The Mapper reads auth only from the segment after the first '?' in the referrer's hash, so drop this page's own query
