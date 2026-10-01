@@ -1188,7 +1188,8 @@ export const toMapperURL = path => {
   else if(window.location.host.match('app.*.openconceptlab.org'))
     url = window.location.origin.replace('//app.', '//map.')
 
-  let referrerParams = `referrer=${window.location.href}`
+  // The Mapper reads auth only from the segment after the first '?' in the referrer's hash, so drop this page's own query
+  let referrerParams = `referrer=${window.location.href.split('?')[0]}`
   if(isLoggedIn())
     referrerParams += '?auth=true'
 
