@@ -34,6 +34,8 @@
     "attribute_name_placeholder": "Nombre personalizado",
     "value": "Valor",
     "fill_mandatory_fields": "Por favor, rellene los campos obligatorios.",
+    "terms_of_use": "Términos de uso",
+    "privacy_policy": "Política de privacidad",
     "logo": {
       "tooltip": {
         "add": "Subir logo",
