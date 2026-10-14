@@ -34,6 +34,8 @@
     "attribute_name_placeholder": "自定义名称",
     "value": "取值",
     "fill_mandatory_fields": "请填写必填字段。",
+    "terms_of_use": "使用条款",
+    "privacy_policy": "隐私政策",
     "logo": {
       "tooltip": {
         "add": "上传徽标",

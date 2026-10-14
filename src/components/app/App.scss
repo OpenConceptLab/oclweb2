@@ -14,7 +14,9 @@ $white: #fff;
     }
 }
 .content {
-    margin-bottom: 50px;
+    // Room for the footer; Footer sets --footer-extra-height while narrow
+    // screens stack it onto more rows.
+    margin-bottom: calc(50px + var(--footer-extra-height, 0px));
     display: inline-block;
     width: 100%;
     height: auto;
@@ -754,6 +756,30 @@ footer.footer-container {
         margin: 0 5px;
         background: $black;
         width: 1px;
+    }
+    // Full row height, so the divider between the links matches the others
+    .footer-legal {
+        align-self: stretch;
+    }
+    // The left menu covers the footer's left end. The row (711px in Spanish)
+    // clears the open menu (250px) from about 980px; 1100px leaves room for
+    // longer version strings. Below that the links take a row of their own,
+    // the rest wraps under them, spacing replaces the dividers, and the left
+    // padding clears the closed menu (65px). Footer.jsx publishes the extra
+    // height.
+    @media (max-width: 1099.98px) {
+        height: auto;
+        flex-wrap: wrap;
+        gap: 2px 16px;
+        padding: 6px 16px 6px 73px;
+        .footer-legal {
+            flex-basis: 100%;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+        .footer-divider-vertical {
+            display: none;
+        }
     }
 }
 .pagination-center {
