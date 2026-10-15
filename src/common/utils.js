@@ -16,6 +16,7 @@ import {
 } from './constants';
 import APIService from '../services/APIService';
 import GAService from '../services/GAService';
+import { ensureIdToken } from './ssoSession';
 import { SERVER_CONFIGS } from './serverConfigs';
 
 export const currentPath = () => window.location.hash.split('?')[0];
@@ -786,7 +787,11 @@ export const getSiteTitle = () => get(getAppliedServerConfig(), 'info.site.title
 
 export const getRandomColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`;
 
-export const logoutUser = (alert = true, redirectToLogin, forced) => {
+const exchangeSilentCode = body => APIService.users().appendToUrl('oidc/code-exchange/').post(body, false).then(res => res.data);
+
+export const logoutUser = (...args) => ensureIdToken(exchangeSilentCode).then(() => signOutUser(...args));
+
+const signOutUser = (alert = true, redirectToLogin, forced) => {
   const clearTokens = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('id_token');

@@ -62,6 +62,10 @@
         "lang": "en_US",
         "skipWords": [
           "paded",
+          "sso",
+          "openid",
+          "iframe",
+          "visibilitychange",
           "csv",
           "uploader",
           "noreferrer",

@@ -12,6 +12,8 @@ ENV ERRBIT_KEY=${ERRBIT_KEY}
 ENV HOTJAR_ID=${HOTJAR_ID}
 ENV LOGIN_REDIRECT_URL=${LOGIN_REDIRECT_URL}
 ENV OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID}
+ENV OIDC_SERVER_URL=${OIDC_SERVER_URL}
+ENV OIDC_REALM=${OIDC_REALM}
 RUN mkdir /app
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
@@ -39,6 +41,7 @@ RUN ["bash", "-c", "./set_build_version.sh"]
 RUN npm run build
 RUN cp public/bootstrap.min.css dist/
 RUN cp public/favicon.ico dist/
+RUN cp public/silent-sso.html dist/
 RUN cp public/fhir.svg dist/
 RUN cp public/openmrs_logo_white.gif dist/
 RUN cp -rf public/fontello dist/

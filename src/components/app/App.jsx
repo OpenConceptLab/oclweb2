@@ -5,9 +5,10 @@ import { get, isEmpty } from 'lodash';
 import {
   isFHIRServer, isLoggedIn, setUpRecentHistory, getAppliedServerConfig, getSiteTitle,
   isDeprecatedBrowser, canViewOperationsPanel, isRedirectingToLoginViaReferrer,
-  isSSOEnabled, getLoginURL, isOtherOCLClientURL
+  isSSOEnabled, getLoginURL, isOtherOCLClientURL, refreshCurrentUserCache
 } from '../../common/utils';
 import GAService from '../../services/GAService';
+import { silentSignIn, isSSOSessionEnabled } from '../../common/ssoSession';
 import Search from '../search/Search';
 import SourceHome from '../sources/SourceHome';
 import CollectionHome from '../collections/CollectionHome';
@@ -58,6 +59,8 @@ const App = props => {
   const { openOperations, menuOpen, setMenuOpen, setOpenOperations, setToggles } = React.useContext(OperationsContext);
   const [openOpenMRSDeprecationDialog, setOpenOpenMRSDeprecationDialog] = React.useState(false)
   const operationsPanelAccess = canViewOperationsPanel()
+  const [authVersion, setAuthVersion] = React.useState(0)
+  const silentCheckRunning = React.useRef(false)
 
   // For recent history
   setUpRecentHistory(props.history);
@@ -129,6 +132,32 @@ const App = props => {
     }
   }
 
+  const trySilentSignIn = () => {
+    if(silentCheckRunning.current || isLoggedIn() || !isSSOSessionEnabled())
+      return
+    if(/(^|#)\/(oidc\/login|signin|signup)(\/|\?|$)/i.test(window.location.pathname + window.location.hash))
+      return
+    silentCheckRunning.current = true
+    silentSignIn(body => APIService.users().appendToUrl('oidc/code-exchange/').post(body).then(res => res.data)).then(tokens => {
+      if(!tokens || isLoggedIn())
+        return
+      localStorage.removeItem('server_configs')
+      localStorage.setItem('token', tokens.access_token)
+      localStorage.setItem('id_token', tokens.id_token)
+      refreshCurrentUserCache(() => setAuthVersion(version => version + 1))
+    }).then(() => { silentCheckRunning.current = false }, () => { silentCheckRunning.current = false })
+  }
+
+  React.useEffect(() => {
+    trySilentSignIn()
+    const onVisible = () => {
+      if(document.visibilityState === 'visible')
+        trySilentSignIn()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [])
+
   React.useEffect(() => {
     forceLoginUser()
     setUpOpenMRSDeprecationDialog()
@@ -164,7 +193,7 @@ const App = props => {
   const [deprecatedBrowser, setDeprecatedBrowser] = React.useState(true)
 
   return (
-    <div>
+    <div key={authVersion}>
       {
         openOpenMRSDeprecationDialog &&
           <OpenMRSDeprecationDialog isOpen={openOpenMRSDeprecationDialog} />
