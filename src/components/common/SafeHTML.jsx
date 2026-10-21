@@ -104,9 +104,12 @@ export const sanitizeNotifierHTML = html => run(html, {ALLOWED_TAGS: NOTIFIER_TA
 // Prefix root-relative links with the hash router. Applied before sanitizing.
 export const withHashLinks = html => (html ? String(html) : '').replaceAll('href="/', 'href="/#/')
 
+// Paint containment keeps owner content inside its box; overflow-x lets wide tables and images scroll.
+export const WRAPPER_STYLE = {contain: 'paint', isolation: 'isolate', overflowX: 'auto'}
+
 const SafeHTML = ({html, hashLinks, as: Component = 'div', style, ...rest}) => {
   const source = hashLinks ? withHashLinks(html) : html
-  return <Component {...rest} style={{...style, contain: 'paint', isolation: 'isolate'}} dangerouslySetInnerHTML={{__html: sanitizeHTML(source)}} />
+  return <Component {...rest} style={{...style, ...WRAPPER_STYLE}} dangerouslySetInnerHTML={{__html: sanitizeHTML(source)}} />
 }
 
 export default SafeHTML;
