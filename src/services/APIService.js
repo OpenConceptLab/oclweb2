@@ -30,7 +30,7 @@ const isAPIOrigin = url => {
 };
 
 // A path starting with exactly one '/' (not '//' and not '/\\').
-const hasControlOrSpace = url => /\s|[^\x20-\x7e\u0080-\uffff]/.test(url);
+const hasControlChar = url => /[^\x20-\x7e\u0080-\uffff]/.test(url);
 const resolvesToDoubleSlash = url => {
   try {
     return new URL(url, 'https://base.invalid').pathname.startsWith('//');
@@ -39,9 +39,9 @@ const resolvesToDoubleSlash = url => {
   }
 };
 const isSinglePath = url => (
-  isString(url) && /^\/(?![/\\])/.test(url) && !hasControlOrSpace(url) && !resolvesToDoubleSlash(url)
+  isString(url) && /^\/(?![/\\])/.test(url) && !hasControlChar(url) && !resolvesToDoubleSlash(url)
 );
-const isAbsoluteURL = url => isString(url) && !hasControlOrSpace(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
+const isAbsoluteURL = url => isString(url) && !hasControlChar(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
 
 // Runs inside axios, after it has merged the default, method and request headers and applied
 // baseURL, so it sees exactly what would be sent. A request carrying a token is only sent to the
