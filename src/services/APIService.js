@@ -1,11 +1,61 @@
 /*eslint no-process-env: 0*/
 import axios from 'axios';
-import {get, omit, isPlainObject, isString, defaults } from 'lodash';
+import buildFullPath from 'axios/lib/core/buildFullPath';
+import {get, pick, isPlainObject, isString, defaults } from 'lodash';
 import { currentUserToken, getAPIURL } from '../common/utils';
 import { OCL_CLIENT } from '../common/constants';
 
 
 const APIServiceProvider = {};
+// Config keys request() passes on to axios; none of them changes where a request goes or which adapter runs.
+const REQUEST_CONFIG_KEYS = ['timeout', 'responseType', 'onUploadProgress', 'onDownloadProgress', 'cancelToken', 'signal'];
+const refusal = () => {
+  const error = new Error('Refused a request outside the OCL API');
+  error.isRefusal = true;
+  return error;
+};
+
+const originOf = url => {
+  try {
+    return new URL(url, document.baseURI).origin;
+  } catch (e) {
+    return null;
+  }
+};
+
+// True only when `url` is an absolute URL on the OCL API's own origin.
+const isAPIOrigin = url => {
+  const apiOrigin = originOf(getAPIURL());
+  return Boolean(apiOrigin) && originOf(url) === apiOrigin;
+};
+
+// A path starting with exactly one '/' (not '//' and not '/\\').
+const hasControlChar = url => /[^\x20-\x7e\u0080-\uffff]/.test(url);
+const resolvesToDoubleSlash = url => {
+  try {
+    return new URL(url, 'https://base.invalid').pathname.startsWith('//');
+  } catch (e) {
+    return true;
+  }
+};
+const isSinglePath = url => (
+  isString(url) && /^\/(?![/\\])/.test(url) && !hasControlChar(url) && !resolvesToDoubleSlash(url)
+);
+const isAbsoluteURL = url => isString(url) && !hasControlChar(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
+
+// Runs inside axios, after it has merged the default, method and request headers and applied
+// baseURL, so it sees exactly what would be sent. A request carrying a token is only sent to the
+// OCL API's origin. Other requests (no token) pass through.
+const defaultAdapter = axios.defaults.adapter;
+const guardedAdapter = config => {
+  const hasToken = Object.keys(config.headers || {}).some(
+    key => key.toLowerCase() === 'authorization' && config.headers[key]
+  );
+  if(hasToken && !isAPIOrigin(buildFullPath(config.baseURL, config.url)))
+    return Promise.reject(refusal());
+  return defaultAdapter(config);
+};
+
 const RESOURCES = [
   { name: 'concepts', relations: [] },
   { name: 'mappings', relations: [] },
@@ -50,7 +100,15 @@ class APIService {
   }
 
   overrideURL(url) {
-    this.URL = `${getAPIURL()}${url}`;
+    // Never throws: a refused value is remembered and rejected when the request is sent.
+    if(isSinglePath(url)) {
+      this.URL = `${getAPIURL()}${url}`;
+    } else if(isAbsoluteURL(url) && isAPIOrigin(url)) {
+      this.URL = url;
+    } else {
+      this.URL = '';
+      this.refused = true;
+    }
     return this;
   }
 
@@ -79,10 +137,14 @@ class APIService {
   }
 
   sendRequest(method, data, token, headers, query, raw=false, blob=false) {
+    if(this.refused)
+      return Promise.reject(refusal());
     const request = this.getRequest(method, data, token, headers, query, blob);
     return axios(request)
       .then(response => response || null)
       .catch(error => {
+        if(error && error.isRefusal)
+          throw error;
         if(raw)
           return error;
 
@@ -97,6 +159,7 @@ class APIService {
       headers: headers === false ? {} : this.getHeaders(token, headers),
       params: this.getQueryParams(query),
       data,
+      adapter: guardedAdapter,
     };
     if(blob)
       request.responseType = 'blob'
@@ -111,7 +174,9 @@ class APIService {
       query = get(config, 'query', {});
     }
     let request = this.getRequest(method, data, token, headers, query);
-    request = {...request, ...omit(config, ['headers', 'query'])};
+    request = {...request, ...pick(config, REQUEST_CONFIG_KEYS)};
+    if(this.refused)
+      return Promise.reject(refusal());
     return axios(request);
   };
 
