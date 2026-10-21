@@ -1,21 +1,25 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { sanitizeEditorHTML } from './SafeHTML';
 
 class RTEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.defaultValue || '',
+      value: sanitizeEditorHTML(props.defaultValue),
     }
   }
 
   componentDidUpdate(prevProps) {
     if(!prevProps.defaultValue && this.props.defaultValue)
-      this.setState({value: this.props.defaultValue})
+      this.setState({value: sanitizeEditorHTML(this.props.defaultValue)})
   }
 
-  onChange = value => this.setState({value: value}, () => this.props.onChange(value))
+  onChange = value => {
+    const safeValue = sanitizeEditorHTML(value)
+    this.setState({value: safeValue}, () => this.props.onChange(safeValue))
+  }
 
   render() {
     const { value } = this.state;

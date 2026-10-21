@@ -10,7 +10,7 @@ export const ALLOWED_TAGS = [
 ]
 
 export const ALLOWED_ATTR = [
-  'align', 'alt', 'border', 'cellpadding', 'cellspacing', 'class', 'color', 'colspan', 'dir', 'face', 'height',
+  'align', 'alt', 'border', 'cellpadding', 'cellspacing', 'color', 'colspan', 'dir', 'face', 'height',
   'href', 'id', 'lang', 'rel', 'rowspan', 'size', 'src', 'style', 'target', 'title', 'valign', 'width',
 ]
 
@@ -21,9 +21,19 @@ const ALLOWED_URI_REGEXP = /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:
 
 const purifier = createDOMPurify(window)
 
+// Strict set for notification text (rendered by alertifyjs): basic inline formatting and links only.
+export const NOTIFIER_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'a', 'code', 'ul', 'ol', 'li']
+export const NOTIFIER_ATTR = ['href', 'rel']
+
+// Which flavour the current (synchronous) sanitize call is running as: 'owner', 'editor' or 'notifier'.
+let mode = 'owner'
+
 // Inline styles keep only presentational properties; anything that can position, layer or load is dropped.
 const ALLOWED_CSS_PROPERTY = /^(?:color|background-color|font-weight|font-style|font-size|font-family|text-align|text-decoration(?:-[a-z]+)*|line-height|vertical-align|white-space|margin(?:-[a-z]+)*|padding(?:-[a-z]+)*|border(?:-[a-z]+)*|width|max-width|height|max-height|list-style(?:-[a-z]+)*)$/
 const FORBIDDEN_CSS_VALUE = /url\(|expression\(|@import|image-set\(|\\|<|>|behavior|binding|var\(/i
+// Sizes and spacing may not be viewport-relative, computed or negative, so they cannot outgrow the content box.
+const SIZING_CSS_PROPERTY = /^(?:margin|padding|width|max-width|height|max-height)(?:-[a-z]+)?$/
+const FORBIDDEN_SIZING_VALUE = /v(?:w|h|min|max|i|b)\b|calc\(|min\(|max\(|clamp\(|(?:^|[\s(])-/i
 
 export const filterStyle = style => String(style || '')
   .replace(/\/\*[\s\S]*?\*\//g, '')
@@ -36,6 +46,8 @@ export const filterStyle = style => String(style || '')
     const value = declaration.slice(index + 1).trim()
     if(!value || !ALLOWED_CSS_PROPERTY.test(property) || FORBIDDEN_CSS_VALUE.test(value))
       return null
+    if(SIZING_CSS_PROPERTY.test(property) && FORBIDDEN_SIZING_VALUE.test(value))
+      return null
     return `${property}: ${value}`
   })
   .filter(Boolean)
@@ -46,6 +58,14 @@ purifier.addHook('uponSanitizeAttribute', (node, data) => {
     const filtered = filterStyle(data.attrValue)
     if(filtered)
       data.attrValue = filtered
+    else
+      data.keepAttr = false
+  }
+  if(data.attrName === 'class') {
+    // Only the editor's own formatting classes are kept; owner content and notifications keep none.
+    const classes = mode === 'editor' ? data.attrValue.split(/\s+/).filter(name => /^ql-[a-z0-9-]+$/.test(name)) : []
+    if(classes.length)
+      data.attrValue = classes.join(' ')
     else
       data.keepAttr = false
   }
@@ -62,16 +82,31 @@ purifier.addHook('afterSanitizeAttributes', node => {
   }
 })
 
-export const sanitizeHTML = html => purifier.sanitize((html ? String(html) : ''), {
-  ALLOWED_TAGS,
-  ALLOWED_ATTR,
-  FORBID_TAGS,
-  FORBID_ATTR: ['srcset', 'formaction', 'action'],
-  ALLOW_DATA_ATTR: false,
-  ALLOW_ARIA_ATTR: false,
-  ALLOWED_URI_REGEXP,
-  SANITIZE_NAMED_PROPS: true,
-})
+const run = (html, newMode, config) => {
+  mode = newMode
+  try {
+    return purifier.sanitize(html ? String(html) : '', {
+      FORBID_TAGS,
+      FORBID_ATTR: ['srcset', 'formaction', 'action'],
+      ALLOW_DATA_ATTR: false,
+      ALLOW_ARIA_ATTR: false,
+      ALLOWED_URI_REGEXP,
+      SANITIZE_NAMED_PROPS: true,
+      ...config,
+    })
+  } finally {
+    mode = 'owner'
+  }
+}
+
+// Owner-supplied content: no classes, restricted inline styles.
+export const sanitizeHTML = html => run(html, 'owner', {ALLOWED_TAGS, ALLOWED_ATTR})
+
+// Rich text editor input: like owner content, but keeps the editor's own ql-* classes so editing round-trips.
+export const sanitizeEditorHTML = html => run(html, 'editor', {ALLOWED_TAGS, ALLOWED_ATTR: [...ALLOWED_ATTR, 'class']})
+
+// Notification text: a handful of inline tags, no class, style or id.
+export const sanitizeNotifierHTML = html => run(html, 'notifier', {ALLOWED_TAGS: NOTIFIER_TAGS, ALLOWED_ATTR: NOTIFIER_ATTR})
 
 // Prefix root-relative links with the hash router. Applied before sanitizing.
 export const withHashLinks = html => (html ? String(html) : '').replaceAll('href="/', 'href="/#/')
