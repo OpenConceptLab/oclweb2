@@ -6,6 +6,26 @@ import { OCL_CLIENT } from '../common/constants';
 
 
 const APIServiceProvider = {};
+const REFUSED_MESSAGE = 'Refused a request outside the OCL API';
+
+const originOf = url => {
+  try {
+    return new URL(url, window.location.origin).origin;
+  } catch (e) {
+    return null;
+  }
+};
+
+// True only when `url` is an absolute URL on the OCL API's own origin.
+export const isAPIOrigin = url => {
+  const apiOrigin = originOf(getAPIURL());
+  return Boolean(apiOrigin) && originOf(url) === apiOrigin;
+};
+
+// A path starting with exactly one '/' (not '//' and not '/\\').
+const isSinglePath = url => isString(url) && /^\/(?![/\\])/.test(url);
+const isAbsoluteURL = url => isString(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
+
 const RESOURCES = [
   { name: 'concepts', relations: [] },
   { name: 'mappings', relations: [] },
@@ -50,8 +70,25 @@ class APIService {
   }
 
   overrideURL(url) {
-    this.URL = `${getAPIURL()}${url}`;
+    // Never throws: a refused value is remembered and rejected when the request is sent.
+    if(isSinglePath(url)) {
+      this.URL = `${getAPIURL()}${url}`;
+    } else if(isAbsoluteURL(url) && isAPIOrigin(url)) {
+      this.URL = url;
+    } else {
+      this.URL = '';
+      this.refused = true;
+    }
     return this;
+  }
+
+  // Requests that carry the user's token only go to the OCL API's origin.
+  isAllowed(request) {
+    if(this.refused)
+      return false;
+    if(!get(request, 'headers.Authorization'))
+      return true;
+    return isAPIOrigin(request.url);
   }
 
   head(token, headers = {}, query, raw=false) {
@@ -80,6 +117,8 @@ class APIService {
 
   sendRequest(method, data, token, headers, query, raw=false, blob=false) {
     const request = this.getRequest(method, data, token, headers, query, blob);
+    if(!this.isAllowed(request))
+      return Promise.reject(new Error(REFUSED_MESSAGE));
     return axios(request)
       .then(response => response || null)
       .catch(error => {
@@ -112,6 +151,8 @@ class APIService {
     }
     let request = this.getRequest(method, data, token, headers, query);
     request = {...request, ...omit(config, ['headers', 'query'])};
+    if(!this.isAllowed(request))
+      return Promise.reject(new Error(REFUSED_MESSAGE));
     return axios(request);
   };
 
