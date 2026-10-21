@@ -13,6 +13,14 @@ import LayoutContext from './components/app/LayoutContext';
 import './index.scss';
 import { BLUE, WHITE, BLACK } from './common/constants';
 import './i18n/config';
+import { sanitizeHTML } from './components/common/SafeHTML';
+
+// Notifier messages are rendered as HTML by alertifyjs; keep simple markup (e.g. <br />) but strip anything active.
+['success', 'error', 'warning', 'message', 'notify'].forEach(method => {
+  const original = alertifyjs[method]
+  if(typeof original === 'function')
+    alertifyjs[method] = (message, ...args) => original.call(alertifyjs, typeof message === 'string' ? sanitizeHTML(message) : message, ...args)
+})
 
 alertifyjs.defaults = {
   ...alertifyjs.defaults,

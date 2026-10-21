@@ -14,6 +14,7 @@ import {
 } from '../../common/utils';
 import VerifyEmailMessage from './VerifyEmailMessage';
 import { withTranslation } from 'react-i18next';
+import { escapeHTML } from '../../common/windowConfig';
 
 class Login extends React.Component {
   constructor(props) {
@@ -75,7 +76,7 @@ class Login extends React.Component {
 
   cacheUserData() {
     refreshCurrentUserCache(response => {
-      alertifyjs.success(`Successfully signed in as ${this.state.username}.`)
+      alertifyjs.success(`Successfully signed in as ${escapeHTML(this.state.username)}.`)
       let returnToURL = response.data.url
       if(get(this.props, 'location.search')) {
         const queryParams = new URLSearchParams(this.props.location.search)

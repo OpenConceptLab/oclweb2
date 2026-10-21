@@ -8,6 +8,7 @@ import {
 } from '../../common/utils';
 import APIService from '../../services/APIService'
 import GAService from '../../services/GAService'
+import { windowConfig } from '../../common/windowConfig';
 
 
 class OIDLoginCallback extends React.Component {
@@ -35,8 +36,8 @@ class OIDLoginCallback extends React.Component {
         return
       }
       this.setState({next: next && next !== '/' ? next : null }, () => {
-        const redirectURL = this.state.next ? window.location.origin + this.state.next : (window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL)
-        const clientId = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+        const redirectURL = this.state.next ? window.location.origin + this.state.next : (windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL)
+        const clientId = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
         APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, code_verifier: codeVerifier}).then(res => {
           if(res.data?.access_token) {

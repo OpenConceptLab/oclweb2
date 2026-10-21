@@ -5,6 +5,7 @@ import { Notifier } from '@airbrake/browser';
 import { map, isString } from 'lodash';
 import { getCurrentUser, getEnv } from '../../common/utils';
 import ErrorUI from './ErrorUI';
+import { windowConfig } from '../../common/windowConfig';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -18,9 +19,9 @@ class ErrorBoundary extends React.Component {
 
   getNotifier = () => {
     /*eslint no-undef: 0*/
-    this.ERRBIT_KEY = window.ERRBIT_KEY || process.env.ERRBIT_KEY
+    this.ERRBIT_KEY = windowConfig('ERRBIT_KEY') || process.env.ERRBIT_KEY
     /*eslint no-undef: 0*/
-    this.ERRBIT_URL = window.ERRBIT_URL || process.env.ERRBIT_URL
+    this.ERRBIT_URL = windowConfig('ERRBIT_URL') || process.env.ERRBIT_URL
     if(this.ERRBIT_URL && this.ERRBIT_KEY)
       return new Notifier({
         projectId: 1,

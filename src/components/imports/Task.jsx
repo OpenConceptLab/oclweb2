@@ -10,6 +10,7 @@ import { get, includes, last, isObject } from 'lodash';
 import { formatDateTime } from '../../common/utils';
 import { ERROR_RED, GREEN, WHITE } from '../../common/constants';
 import TaskIcon from './TaskIcon';
+import { escapeHTML } from '../../common/windowConfig';
 
 const ExpiredResult = () => (
   <Chip variant='outlined' label='Result Expired' style={{border: `1px solid ${ERROR_RED}`, color: ERROR_RED}} size='small' />
@@ -63,7 +64,7 @@ const Task = ({task, open, onOpen, onClose, onRevoke, onDownload}) => {
     event.preventDefault()
 
     alertifyjs.confirm(
-      `Revoke Task: ${id}`,
+      `Revoke Task: ${escapeHTML(id)}`,
       'Stopping a running task may result in a confusing state of content. This action is not reversible. Are you sure you want to cancel this?',
       () => onRevoke(id),
       () => {}

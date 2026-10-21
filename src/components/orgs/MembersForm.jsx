@@ -4,6 +4,7 @@ import { Autocomplete, Alert, CircularProgress } from '@mui/material';
 import { Button, TextField } from '@mui/material';
 import { reject, get, map, includes, forEach, compact, debounce } from 'lodash';
 import APIService from '../../services/APIService';
+import { escapeHTML } from '../../common/windowConfig';
 
 class MembersForm extends React.Component {
   constructor(props) {
@@ -82,12 +83,12 @@ class MembersForm extends React.Component {
         if(get(response, 'status') === 204)
           this.setState(
             {success: [...this.state.success, member.username]},
-            () => alertifyjs.success(`Successfully added ${member.username}`, 1, this.closeDrawerIfDone)
+            () => alertifyjs.success(`Successfully added ${escapeHTML(member.username)}`, 1, this.closeDrawerIfDone)
           )
         else
           this.setState(
             {failed: [...this.state.failed, member.username]},
-            () => alertifyjs.error(`Failed to add ${member.username}`, 0)
+            () => alertifyjs.error(`Failed to add ${escapeHTML(member.username)}`, 0)
           )
       })
     })
@@ -101,12 +102,12 @@ class MembersForm extends React.Component {
         if(get(response, 'status') === 204)
           this.setState(
             {success: [...this.state.success, member.username]},
-            () => alertifyjs.success(`Successfully removed ${member.username}`, 1, this.closeDrawerIfDone)
+            () => alertifyjs.success(`Successfully removed ${escapeHTML(member.username)}`, 1, this.closeDrawerIfDone)
           )
         else
           this.setState(
             {failed: [...this.state.failed, member.username]},
-            () => alertifyjs.error(`Failed to remove ${member.username}`, 0)
+            () => alertifyjs.error(`Failed to remove ${escapeHTML(member.username)}`, 0)
           )
       })
     })

@@ -2,10 +2,11 @@
 import ReactGA from 'react-ga4';
 import { startCase } from 'lodash';
 import { OCL_CLIENT } from '../common/constants';
+import { windowConfig } from '../common/windowConfig';
 
 const SIGNUP_FLOW_PENDING_KEY = 'signup_flow_pending';
 
-const gaId = () => window.GA_ACCOUNT_ID || process.env.GA_ACCOUNT_ID;
+const gaId = () => windowConfig('GA_ACCOUNT_ID') || process.env.GA_ACCOUNT_ID;
 const enabled = () => Boolean(gaId() && gaId() !== 'UA-000000-01');
 
 // react-ga4 emits config only on the first initialize() call, so the

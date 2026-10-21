@@ -19,6 +19,7 @@ import {
 import APIService from '../../services/APIService';
 import { ORANGE, WHITE } from '../../common/constants';
 import JSONEditor from './JSONEditor';
+import { escapeHTML } from '../../common/windowConfig';
 
 const DEFAULT_STATE = {
   name: '',
@@ -197,7 +198,7 @@ class ViewConfigForm extends React.Component {
   onDelete = () => {
     this.setState({menu: false})
     alertifyjs.confirm(
-      `Delete Configuration: ${this.state.selected.name}`,
+      `Delete Configuration: ${escapeHTML(this.state.selected.name)}`,
       'Are you sure you want to delete this?',
       () => APIService.new().overrideURL(this.state.selected.url).delete().then(() => alertifyjs.success('Successfully Deleted. Reload...', 1, () => window.location.reload())),
       () => {}

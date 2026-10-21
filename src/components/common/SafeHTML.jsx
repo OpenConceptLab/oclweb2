@@ -21,6 +21,36 @@ const ALLOWED_URI_REGEXP = /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:
 
 const purifier = createDOMPurify(window)
 
+// Inline styles keep only presentational properties; anything that can position, layer or load is dropped.
+const ALLOWED_CSS_PROPERTY = /^(?:color|background-color|font-weight|font-style|font-size|font-family|text-align|text-decoration(?:-[a-z]+)*|line-height|vertical-align|white-space|margin(?:-[a-z]+)*|padding(?:-[a-z]+)*|border(?:-[a-z]+)*|width|max-width|height|max-height|list-style(?:-[a-z]+)*)$/
+const FORBIDDEN_CSS_VALUE = /url\(|expression\(|@import|image-set\(|\\|<|>|behavior|binding|var\(/i
+
+export const filterStyle = style => String(style || '')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .split(';')
+  .map(declaration => {
+    const index = declaration.indexOf(':')
+    if(index < 1)
+      return null
+    const property = declaration.slice(0, index).trim().toLowerCase()
+    const value = declaration.slice(index + 1).trim()
+    if(!value || !ALLOWED_CSS_PROPERTY.test(property) || FORBIDDEN_CSS_VALUE.test(value))
+      return null
+    return `${property}: ${value}`
+  })
+  .filter(Boolean)
+  .join('; ')
+
+purifier.addHook('uponSanitizeAttribute', (node, data) => {
+  if(data.attrName === 'style') {
+    const filtered = filterStyle(data.attrValue)
+    if(filtered)
+      data.attrValue = filtered
+    else
+      data.keepAttr = false
+  }
+})
+
 purifier.addHook('afterSanitizeAttributes', node => {
   // DOMPurify permits data: URLs on images by default; only http, https and relative are allowed here.
   if(node.hasAttribute('src') && /^data:/i.test(Array.from(node.getAttribute('src')).filter(c => c.charCodeAt(0) > 32).join('')))
@@ -40,14 +70,15 @@ export const sanitizeHTML = html => purifier.sanitize((html ? String(html) : '')
   ALLOW_DATA_ATTR: false,
   ALLOW_ARIA_ATTR: false,
   ALLOWED_URI_REGEXP,
+  SANITIZE_NAMED_PROPS: true,
 })
 
 // Prefix root-relative links with the hash router. Applied before sanitizing.
 export const withHashLinks = html => (html ? String(html) : '').replaceAll('href="/', 'href="/#/')
 
-const SafeHTML = ({html, hashLinks, as: Component = 'div', ...rest}) => {
+const SafeHTML = ({html, hashLinks, as: Component = 'div', style, ...rest}) => {
   const source = hashLinks ? withHashLinks(html) : html
-  return <Component {...rest} dangerouslySetInnerHTML={{__html: sanitizeHTML(source)}} />
+  return <Component {...rest} style={{...style, contain: 'paint', isolation: 'isolate'}} dangerouslySetInnerHTML={{__html: sanitizeHTML(source)}} />
 }
 
 export default SafeHTML;
