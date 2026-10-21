@@ -7,9 +7,8 @@ import { OCL_CLIENT } from '../common/constants';
 
 
 const APIServiceProvider = {};
-const REFUSED_MESSAGE = 'Refused a request outside the OCL API';
 const refusal = () => {
-  const error = new Error(REFUSED_MESSAGE);
+  const error = new Error('Refused a request outside the OCL API');
   error.isRefusal = true;
   return error;
 };
@@ -23,7 +22,7 @@ const originOf = url => {
 };
 
 // True only when `url` is an absolute URL on the OCL API's own origin.
-export const isAPIOrigin = url => {
+const isAPIOrigin = url => {
   const apiOrigin = originOf(getAPIURL());
   return Boolean(apiOrigin) && originOf(url) === apiOrigin;
 };
@@ -40,17 +39,8 @@ const guardedAdapter = config => {
   const hasToken = Object.keys(config.headers || {}).some(
     key => key.toLowerCase() === 'authorization' && config.headers[key]
   );
-  if(hasToken) {
-    let allowed = false;
-    try {
-      const destination = new URL(buildFullPath(config.baseURL, config.url), document.baseURI);
-      allowed = destination.origin === new URL(getAPIURL(), document.baseURI).origin;
-    } catch (e) {
-      allowed = false;
-    }
-    if(!allowed)
-      return Promise.reject(refusal());
-  }
+  if(hasToken && !isAPIOrigin(buildFullPath(config.baseURL, config.url)))
+    return Promise.reject(refusal());
   return defaultAdapter(config);
 };
 
@@ -137,7 +127,7 @@ class APIService {
   sendRequest(method, data, token, headers, query, raw=false, blob=false) {
     if(this.refused)
       return Promise.reject(refusal());
-    const request = {...this.getRequest(method, data, token, headers, query, blob), adapter: guardedAdapter};
+    const request = this.getRequest(method, data, token, headers, query, blob);
     return axios(request)
       .then(response => response || null)
       .catch(error => {
@@ -157,6 +147,7 @@ class APIService {
       headers: headers === false ? {} : this.getHeaders(token, headers),
       params: this.getQueryParams(query),
       data,
+      adapter: guardedAdapter,
     };
     if(blob)
       request.responseType = 'blob'
@@ -171,10 +162,10 @@ class APIService {
       query = get(config, 'query', {});
     }
     let request = this.getRequest(method, data, token, headers, query);
-    request = {...request, ...omit(config, ['headers', 'query'])};
+    request = {...request, ...omit(config, ['headers', 'query', 'adapter'])};
     if(this.refused)
       return Promise.reject(refusal());
-    return axios({...request, adapter: guardedAdapter});
+    return axios(request);
   };
 
   getHeaders(token, headers) {
