@@ -4,6 +4,7 @@ import { AccountBalance as OrgIcon } from '@mui/icons-material';
 import Pins from '../common/Pins';
 import PinIcon from '../common/PinIcon';
 import Members from './Members';
+import SafeHTML from '../common/SafeHTML';
 
 const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, members }) => {
   const about = org.text === '<p><br></p>' ? '' : org.text;
@@ -45,7 +46,7 @@ const Overview = ({ org, pins, onPinDelete, onPinOrderUpdate, canDeletePin, memb
             <p style={{marginLeft: '5px', marginTop: '10px'}}>
               {`${org.id} doesn't have any about text yet.`}
             </p> :
-            <div className='col-xs-12 no-side-padding' style={{marginLeft: '5px'}} dangerouslySetInnerHTML={{__html: org.text.replaceAll('href="/', 'href="/#/')}} />
+            <SafeHTML className='col-xs-12 no-side-padding' style={{marginLeft: '5px'}} html={org.text} hashLinks />
           }
         </div>
       </div>

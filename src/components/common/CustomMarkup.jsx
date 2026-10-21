@@ -1,4 +1,5 @@
 import React from 'react';
+import SafeHTML from './SafeHTML';
 
 const CustomMarkup = ({title, markup}) => {
   return (
@@ -6,7 +7,7 @@ const CustomMarkup = ({title, markup}) => {
       { title && <h3> { title } </h3> }
       {
         markup &&
-        <div className='col-md-12 no-side-padding' dangerouslySetInnerHTML={{__html: markup.replaceAll('href="/', 'href="/#/')}} />
+        <SafeHTML className='col-md-12 no-side-padding' html={markup} hashLinks />
       }
     </div>
   );

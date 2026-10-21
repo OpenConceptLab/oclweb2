@@ -38,6 +38,7 @@ import { ALL_COLUMNS, TAGS, CODE_SYSTEM_VERSION_TAGS, HIGHLIGHT_ICON_WHITELISTED
 import SelectedResourceControls from './SelectedResourceControls';
 import FhirContainerResource from '../fhir/ContainerResource';
 import { HtmlToolTipClone as HtmlToolTipNormalRaw } from '../common/HtmlToolTipRaw'
+import SafeHTML from '../common/SafeHTML';
 
 
 const getColumns = definition => isFunction(definition) ? definition() : definition
@@ -695,7 +696,7 @@ const ExpandibleRow = props => {
                       <div>
                         <div>This matched with:</div>
                         <br />
-                        <div dangerouslySetInnerHTML={{__html: highlightedText}} />
+                        <SafeHTML html={highlightedText} />
                         </div>
                     }
                     placement='left'>
@@ -743,7 +744,7 @@ const ExpandibleRow = props => {
                   {
                     fhir && tab === resourceDefinition.tabs.indexOf('Copyright') &&
                     <div style={{borderTop: '1px solid lightgray', maxHeight: '175px', overflow: 'auto'}}>
-                      <div className="col-md-12" style={{padding: '20px'}} dangerouslySetInnerHTML={{__html: item.resource.copyright}} />
+                      <SafeHTML className="col-md-12" style={{padding: '20px'}} html={item.resource.copyright} />
                     </div>
                   }
                   {
