@@ -82,13 +82,32 @@ class APIService {
     return this;
   }
 
-  // Requests that carry the user's token only go to the OCL API's origin.
-  isAllowed(request) {
+  // Headers axios will actually send: defaults.common, the method's defaults, then the request's own.
+  effectiveHeaders(request) {
+    const defaultHeaders = get(axios, 'defaults.headers', {});
+    const method = String(request.method || 'get').toLowerCase();
+    return {...get(defaultHeaders, 'common', {}), ...get(defaultHeaders, method, {}), ...(request.headers || {})};
+  }
+
+  // Resolves the destination the way axios does (baseURL + url) and returns a request with that
+  // absolute URL and no baseURL, or null if it must not be sent. Requests that carry the
+  // user's token only go to the OCL API's origin.
+  validatedRequest(request) {
     if(this.refused)
-      return false;
-    if(!get(request, 'headers.Authorization'))
-      return true;
-    return isAPIOrigin(request.url);
+      return null;
+    const baseURL = request.baseURL || get(axios, 'defaults.baseURL');
+    let destination;
+    try {
+      destination = new URL(request.url, baseURL ? new URL(baseURL, window.location.origin) : window.location.origin).href;
+    } catch (e) {
+      return null;
+    }
+    const hasToken = Object.keys(this.effectiveHeaders(request)).some(
+      key => key.toLowerCase() === 'authorization' && this.effectiveHeaders(request)[key]
+    );
+    if(hasToken && !isAPIOrigin(destination))
+      return null;
+    return {...omit(request, ['baseURL']), url: destination, baseURL: ''};
   }
 
   head(token, headers = {}, query, raw=false) {
@@ -116,8 +135,8 @@ class APIService {
   }
 
   sendRequest(method, data, token, headers, query, raw=false, blob=false) {
-    const request = this.getRequest(method, data, token, headers, query, blob);
-    if(!this.isAllowed(request))
+    const request = this.validatedRequest(this.getRequest(method, data, token, headers, query, blob));
+    if(!request)
       return Promise.reject(new Error(REFUSED_MESSAGE));
     return axios(request)
       .then(response => response || null)
@@ -151,7 +170,8 @@ class APIService {
     }
     let request = this.getRequest(method, data, token, headers, query);
     request = {...request, ...omit(config, ['headers', 'query'])};
-    if(!this.isAllowed(request))
+    request = this.validatedRequest(request);
+    if(!request)
       return Promise.reject(new Error(REFUSED_MESSAGE));
     return axios(request);
   };
