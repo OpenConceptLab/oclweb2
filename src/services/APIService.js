@@ -1,5 +1,6 @@
 /*eslint no-process-env: 0*/
 import axios from 'axios';
+import buildFullPath from 'axios/lib/core/buildFullPath';
 import {get, omit, isPlainObject, isString, defaults } from 'lodash';
 import { currentUserToken, getAPIURL } from '../common/utils';
 import { OCL_CLIENT } from '../common/constants';
@@ -7,10 +8,15 @@ import { OCL_CLIENT } from '../common/constants';
 
 const APIServiceProvider = {};
 const REFUSED_MESSAGE = 'Refused a request outside the OCL API';
+const refusal = () => {
+  const error = new Error(REFUSED_MESSAGE);
+  error.isRefusal = true;
+  return error;
+};
 
 const originOf = url => {
   try {
-    return new URL(url, window.location.origin).origin;
+    return new URL(url, document.baseURI).origin;
   } catch (e) {
     return null;
   }
@@ -25,6 +31,28 @@ export const isAPIOrigin = url => {
 // A path starting with exactly one '/' (not '//' and not '/\\').
 const isSinglePath = url => isString(url) && /^\/(?![/\\])/.test(url);
 const isAbsoluteURL = url => isString(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
+
+// Runs inside axios, after it has merged the default, method and request headers and applied
+// baseURL, so it sees exactly what would be sent. A request carrying a token is only sent to the
+// OCL API's origin. Other requests (no token) pass through.
+const defaultAdapter = axios.defaults.adapter;
+const guardedAdapter = config => {
+  const hasToken = Object.keys(config.headers || {}).some(
+    key => key.toLowerCase() === 'authorization' && config.headers[key]
+  );
+  if(hasToken) {
+    let allowed = false;
+    try {
+      const destination = new URL(buildFullPath(config.baseURL, config.url), document.baseURI);
+      allowed = destination.origin === new URL(getAPIURL(), document.baseURI).origin;
+    } catch (e) {
+      allowed = false;
+    }
+    if(!allowed)
+      return Promise.reject(refusal());
+  }
+  return defaultAdapter(config);
+};
 
 const RESOURCES = [
   { name: 'concepts', relations: [] },
@@ -82,34 +110,6 @@ class APIService {
     return this;
   }
 
-  // Headers axios will actually send: defaults.common, the method's defaults, then the request's own.
-  effectiveHeaders(request) {
-    const defaultHeaders = get(axios, 'defaults.headers', {});
-    const method = String(request.method || 'get').toLowerCase();
-    return {...get(defaultHeaders, 'common', {}), ...get(defaultHeaders, method, {}), ...(request.headers || {})};
-  }
-
-  // Resolves the destination the way axios does (baseURL + url) and returns a request with that
-  // absolute URL and no baseURL, or null if it must not be sent. Requests that carry the
-  // user's token only go to the OCL API's origin.
-  validatedRequest(request) {
-    if(this.refused)
-      return null;
-    const baseURL = request.baseURL || get(axios, 'defaults.baseURL');
-    let destination;
-    try {
-      destination = new URL(request.url, baseURL ? new URL(baseURL, window.location.origin) : window.location.origin).href;
-    } catch (e) {
-      return null;
-    }
-    const hasToken = Object.keys(this.effectiveHeaders(request)).some(
-      key => key.toLowerCase() === 'authorization' && this.effectiveHeaders(request)[key]
-    );
-    if(hasToken && !isAPIOrigin(destination))
-      return null;
-    return {...omit(request, ['baseURL']), url: destination, baseURL: ''};
-  }
-
   head(token, headers = {}, query, raw=false) {
     return this.sendRequest('HEAD', null, token, headers, query, raw);
   }
@@ -135,12 +135,14 @@ class APIService {
   }
 
   sendRequest(method, data, token, headers, query, raw=false, blob=false) {
-    const request = this.validatedRequest(this.getRequest(method, data, token, headers, query, blob));
-    if(!request)
-      return Promise.reject(new Error(REFUSED_MESSAGE));
+    if(this.refused)
+      return Promise.reject(refusal());
+    const request = {...this.getRequest(method, data, token, headers, query, blob), adapter: guardedAdapter};
     return axios(request)
       .then(response => response || null)
       .catch(error => {
+        if(error && error.isRefusal)
+          throw error;
         if(raw)
           return error;
 
@@ -170,10 +172,9 @@ class APIService {
     }
     let request = this.getRequest(method, data, token, headers, query);
     request = {...request, ...omit(config, ['headers', 'query'])};
-    request = this.validatedRequest(request);
-    if(!request)
-      return Promise.reject(new Error(REFUSED_MESSAGE));
-    return axios(request);
+    if(this.refused)
+      return Promise.reject(refusal());
+    return axios({...request, adapter: guardedAdapter});
   };
 
   getHeaders(token, headers) {
