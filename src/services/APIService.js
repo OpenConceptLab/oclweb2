@@ -1,12 +1,14 @@
 /*eslint no-process-env: 0*/
 import axios from 'axios';
 import buildFullPath from 'axios/lib/core/buildFullPath';
-import {get, omit, isPlainObject, isString, defaults } from 'lodash';
+import {get, pick, isPlainObject, isString, defaults } from 'lodash';
 import { currentUserToken, getAPIURL } from '../common/utils';
 import { OCL_CLIENT } from '../common/constants';
 
 
 const APIServiceProvider = {};
+// Config keys request() passes on to axios; none of them changes where a request goes or which adapter runs.
+const REQUEST_CONFIG_KEYS = ['timeout', 'responseType', 'onUploadProgress', 'onDownloadProgress', 'cancelToken', 'signal'];
 const refusal = () => {
   const error = new Error('Refused a request outside the OCL API');
   error.isRefusal = true;
@@ -28,8 +30,18 @@ const isAPIOrigin = url => {
 };
 
 // A path starting with exactly one '/' (not '//' and not '/\\').
-const isSinglePath = url => isString(url) && /^\/(?![/\\])/.test(url);
-const isAbsoluteURL = url => isString(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
+const hasControlOrSpace = url => /\s|[^\x20-\x7e\u0080-\uffff]/.test(url);
+const resolvesToDoubleSlash = url => {
+  try {
+    return new URL(url, 'https://base.invalid').pathname.startsWith('//');
+  } catch (e) {
+    return true;
+  }
+};
+const isSinglePath = url => (
+  isString(url) && /^\/(?![/\\])/.test(url) && !hasControlOrSpace(url) && !resolvesToDoubleSlash(url)
+);
+const isAbsoluteURL = url => isString(url) && !hasControlOrSpace(url) && /^[a-z][a-z0-9+.-]*:\/\//i.test(url);
 
 // Runs inside axios, after it has merged the default, method and request headers and applied
 // baseURL, so it sees exactly what would be sent. A request carrying a token is only sent to the
@@ -162,7 +174,7 @@ class APIService {
       query = get(config, 'query', {});
     }
     let request = this.getRequest(method, data, token, headers, query);
-    request = {...request, ...omit(config, ['headers', 'query', 'adapter'])};
+    request = {...request, ...pick(config, REQUEST_CONFIG_KEYS)};
     if(this.refused)
       return Promise.reject(refusal());
     return axios(request);
