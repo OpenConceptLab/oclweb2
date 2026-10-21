@@ -18,6 +18,8 @@ const JSONEditor = ({placeholder, viewOnly, onChange, height, width}) => {
     setText(value)
     try {
       const jsObject = JSON.parse(value)
+      if(jsObject === null || typeof jsObject !== 'object' || Array.isArray(jsObject))
+        throw new Error('The configuration must be a JSON object')
       setError(null)
       if(onChange)
         onChange({jsObject, error: false})
