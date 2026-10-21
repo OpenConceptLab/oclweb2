@@ -16,10 +16,8 @@ class RTEditor extends React.Component {
       this.setState({value: sanitizeEditorHTML(this.props.defaultValue)})
   }
 
-  onChange = value => {
-    const safeValue = sanitizeEditorHTML(value)
-    this.setState({value: safeValue}, () => this.props.onChange(safeValue))
-  }
+  // The editor's own output stays in state untouched so the cursor never jumps; only what is passed up is sanitized.
+  onChange = value => this.setState({value: value}, () => this.props.onChange(sanitizeEditorHTML(value)))
 
   render() {
     const { value } = this.state;

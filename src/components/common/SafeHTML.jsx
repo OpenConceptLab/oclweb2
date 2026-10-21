@@ -10,7 +10,7 @@ export const ALLOWED_TAGS = [
 ]
 
 export const ALLOWED_ATTR = [
-  'align', 'alt', 'border', 'cellpadding', 'cellspacing', 'color', 'colspan', 'dir', 'face', 'height',
+  'align', 'alt', 'border', 'cellpadding', 'cellspacing', 'class', 'color', 'colspan', 'dir', 'face', 'height',
   'href', 'id', 'lang', 'rel', 'rowspan', 'size', 'src', 'style', 'target', 'title', 'valign', 'width',
 ]
 
@@ -25,8 +25,8 @@ const purifier = createDOMPurify(window)
 export const NOTIFIER_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'a', 'code', 'ul', 'ol', 'li']
 export const NOTIFIER_ATTR = ['href', 'rel']
 
-// Which flavour the current (synchronous) sanitize call is running as: 'owner', 'editor' or 'notifier'.
-let mode = 'owner'
+// Formatting-only classes written by the rich text editor (alignment, indent, direction, size, font).
+const QUILL_FORMAT_CLASS = /^ql-(align|indent|direction|size|font)-[a-z0-9-]+$/
 
 // Inline styles keep only presentational properties; anything that can position, layer or load is dropped.
 const ALLOWED_CSS_PROPERTY = /^(?:color|background-color|font-weight|font-style|font-size|font-family|text-align|text-decoration(?:-[a-z]+)*|line-height|vertical-align|white-space|margin(?:-[a-z]+)*|padding(?:-[a-z]+)*|border(?:-[a-z]+)*|width|max-width|height|max-height|list-style(?:-[a-z]+)*)$/
@@ -62,8 +62,8 @@ purifier.addHook('uponSanitizeAttribute', (node, data) => {
       data.keepAttr = false
   }
   if(data.attrName === 'class') {
-    // Only the editor's own formatting classes are kept; owner content and notifications keep none.
-    const classes = mode === 'editor' ? data.attrValue.split(/\s+/).filter(name => /^ql-[a-z0-9-]+$/.test(name)) : []
+    // Only the editor's formatting classes are kept (all modes but the notifier, which allows no class attribute).
+    const classes = data.attrValue.split(/\s+/).filter(name => QUILL_FORMAT_CLASS.test(name))
     if(classes.length)
       data.attrValue = classes.join(' ')
     else
@@ -82,31 +82,24 @@ purifier.addHook('afterSanitizeAttributes', node => {
   }
 })
 
-const run = (html, newMode, config) => {
-  mode = newMode
-  try {
-    return purifier.sanitize(html ? String(html) : '', {
-      FORBID_TAGS,
-      FORBID_ATTR: ['srcset', 'formaction', 'action'],
-      ALLOW_DATA_ATTR: false,
-      ALLOW_ARIA_ATTR: false,
-      ALLOWED_URI_REGEXP,
-      SANITIZE_NAMED_PROPS: true,
-      ...config,
-    })
-  } finally {
-    mode = 'owner'
-  }
-}
+const run = (html, config) => purifier.sanitize(html ? String(html) : '', {
+  FORBID_TAGS,
+  FORBID_ATTR: ['srcset', 'formaction', 'action'],
+  ALLOW_DATA_ATTR: false,
+  ALLOW_ARIA_ATTR: false,
+  ALLOWED_URI_REGEXP,
+  SANITIZE_NAMED_PROPS: true,
+  ...config,
+})
 
-// Owner-supplied content: no classes, restricted inline styles.
-export const sanitizeHTML = html => run(html, 'owner', {ALLOWED_TAGS, ALLOWED_ATTR})
+// Owner-supplied content: only the editor's formatting classes, restricted inline styles.
+export const sanitizeHTML = html => run(html, {ALLOWED_TAGS, ALLOWED_ATTR})
 
-// Rich text editor input: like owner content, but keeps the editor's own ql-* classes so editing round-trips.
-export const sanitizeEditorHTML = html => run(html, 'editor', {ALLOWED_TAGS, ALLOWED_ATTR: [...ALLOWED_ATTR, 'class']})
+// Rich text editor input: same rules as owner content.
+export const sanitizeEditorHTML = sanitizeHTML
 
 // Notification text: a handful of inline tags, no class, style or id.
-export const sanitizeNotifierHTML = html => run(html, 'notifier', {ALLOWED_TAGS: NOTIFIER_TAGS, ALLOWED_ATTR: NOTIFIER_ATTR})
+export const sanitizeNotifierHTML = html => run(html, {ALLOWED_TAGS: NOTIFIER_TAGS, ALLOWED_ATTR: NOTIFIER_ATTR})
 
 // Prefix root-relative links with the hash router. Applied before sanitizing.
 export const withHashLinks = html => (html ? String(html) : '').replaceAll('href="/', 'href="/#/')
