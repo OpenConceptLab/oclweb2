@@ -17,7 +17,7 @@ const ALLOWED_ATTR = [
 const FORBID_TAGS = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select', 'link', 'meta', 'base', 'svg', 'math']
 
 // http, https and mailto, plus relative URLs. Any other scheme is dropped.
-const ALLOWED_URI_REGEXP = /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i
+const ALLOWED_URI_REGEXP = /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i
 
 const purifier = createDOMPurify(window)
 
@@ -32,7 +32,7 @@ const QUILL_FORMAT_CLASS = /^ql-(align|indent|direction|size|font)-[a-z0-9-]+$/
 const ALLOWED_CSS_PROPERTY = /^(?:color|background-color|font-weight|font-style|font-size|font-family|text-align|text-decoration(?:-[a-z]+)*|line-height|vertical-align|white-space|margin(?:-[a-z]+)*|padding(?:-[a-z]+)*|border(?:-[a-z]+)*|width|max-width|height|max-height|list-style(?:-[a-z]+)*)$/
 const FORBIDDEN_CSS_VALUE = /url\(|expression\(|@import|image-set\(|\\|<|>|behavior|binding|var\(/i
 // Sizes and spacing may not be viewport-relative, computed or negative, so they cannot outgrow the content box.
-const SIZING_CSS_PROPERTY = /^(?:margin|padding|width|max-width|height|max-height)(?:-[a-z]+)?$/
+const SIZING_CSS_PROPERTY = /^(?:margin|padding|width|height|(?:max|min)-width|(?:max|min)-height)(?:-[a-z]+)*$/
 const FORBIDDEN_SIZING_VALUE = /v(?:w|h|min|max|i|b)\b|calc\(|min\(|max\(|clamp\(|(?:^|[\s(])-/i
 
 const filterStyle = style => String(style || '')
@@ -71,10 +71,16 @@ purifier.addHook('uponSanitizeAttribute', (node, data) => {
   }
 })
 
+const RASTER_DATA_IMAGE = /^data:image\/(?:png|jpeg|gif|webp);base64,[a-z0-9+/]+=*$/i
+
 purifier.addHook('afterSanitizeAttributes', node => {
   // DOMPurify permits data: URLs on images by default; only http, https and relative are allowed here.
-  if(node.hasAttribute('src') && /^data:/i.test(Array.from(node.getAttribute('src')).filter(c => c.charCodeAt(0) > 32).join('')))
-    node.removeAttribute('src')
+  if(node.hasAttribute('src')) {
+    // data: URLs are allowed only on img, and only for raster images (never SVG).
+    const src = Array.from(node.getAttribute('src')).filter(c => c.charCodeAt(0) > 32).join('')
+    if(/^data:/i.test(src) && !(node.tagName === 'IMG' && RASTER_DATA_IMAGE.test(src)))
+      node.removeAttribute('src')
+  }
   if(node.tagName === 'A') {
     if(node.hasAttribute('target') && node.getAttribute('target') !== '_blank')
       node.removeAttribute('target')
