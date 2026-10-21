@@ -7,12 +7,11 @@ import {
 import * as d3Selection from 'd3-selection';
 import { tip as d3tip } from "d3-v6-tip";
 import { CircularProgress } from '@mui/material';
-import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray } from 'lodash';
+import { isEmpty, get, reject, find, merge, isEqual, orderBy, filter, isArray, escape } from 'lodash';
 import APIService from '../../services/APIService';
 import { BLUE } from '../../common/constants';
 import { getRandomColor, getWidthOfText, dropVersion, toParentURI } from '../../common/utils';
 import './d3Tree.scss';
-import { escapeHTML } from '../../common/windowConfig';
 
 const HIERARCHY_CHILD_REL = '-haschild-'
 
@@ -226,7 +225,7 @@ class ConceptHierarchyTree extends React.Component {
             mapType = that.props.hierarchyMeaning ? `Has ${rel} (${that.props.hierarchyMeaning})` : `Has ${rel}`
           const idLabel = mapType ? 'Map Type:' : 'ID:'
           const header = existInOCL ? '' : '<div class="gray-italics-small">(not defined in OCL)</div>';
-          const targetSource = escapeHTML(d.data.cascade_target_source || that.getSourceName(d.data))
+          const targetSource = escape(d.data.cascade_target_source || that.getSourceName(d.data))
           const sourceHeader = targetSource ? `<div><span class='gray'>Source: </span><span><b>${targetSource}</b></span></div> ` : '';
           let terminalHeader = '';
           if(!d.data.cascade_target_concept_code && isEmpty(d.data.children)) {
@@ -245,11 +244,11 @@ class ConceptHierarchyTree extends React.Component {
               ${sourceHeader}
               <div>
                 <span class='gray'>${idLabel}</span>
-                <span><b>${escapeHTML(mapType || d.data.id)}</b></span>
+                <span><b>${escape(mapType || d.data.id)}</b></span>
               </div>
               <div>
                 <span class='gray'>Name:</span>
-                <span><b>${escapeHTML(d.data.display_name || d.data.cascade_target_concept_code)}</b></span>
+                <span><b>${escape(d.data.display_name || d.data.cascade_target_concept_code)}</b></span>
                 ${retiredText}
               </div>
             </div>`

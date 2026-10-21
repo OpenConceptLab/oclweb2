@@ -5,11 +5,10 @@ import alertifyjs from 'alertifyjs'
 import {
   Button, Tooltip, Switch, FormControlLabel, FormGroup, FormControl, Dialog
 } from '@mui/material';
-import { includes } from 'lodash'
+import { includes, escape } from 'lodash'
 import APIService from '../../services/APIService'
 import ForgotPasswordForm from './ForgotPasswordForm';
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
-import { escapeHTML } from '../../common/windowConfig';
 
 
 const UserManagement = ({ user }) => {
@@ -23,7 +22,7 @@ const UserManagement = ({ user }) => {
   const isDeactivated = status === 'deactivated'
   const activateLabel = isDeactivated ? t('common.activate') : t('common.deactivate')
   const adminToggleLabel = isAdmin ? t('user.home.management.remove_admin_privileges') : t('user.home.management.make_admin')
-  const userLabel = `<i>${escapeHTML(user.name)}(${escapeHTML(user.username)})</i>`
+  const userLabel = `<i>${escape(user.name)}(${escape(user.username)})</i>`
   const usernameConfirmationMessage = t('user.home.management.username_confirmation_message')
   const usernameIncorrectMessage = t('user.home.management.username_incorrect_message')
   const genericError = t('user.home.management.generic_error')

@@ -18,8 +18,7 @@ import { sanitizeNotifierHTML } from './components/common/SafeHTML';
 // Notifier messages are rendered as HTML by alertifyjs; keep a few inline tags (e.g. <br />) but no classes, styles or ids.
 ['success', 'error', 'warning', 'message', 'notify'].forEach(method => {
   const original = alertifyjs[method]
-  if(typeof original === 'function')
-    alertifyjs[method] = (message, ...args) => original.call(alertifyjs, typeof message === 'string' ? sanitizeNotifierHTML(message) : message, ...args)
+  alertifyjs[method] = (message, ...args) => original.call(alertifyjs, typeof message === 'string' ? sanitizeNotifierHTML(message) : message, ...args)
 })
 
 alertifyjs.defaults = {

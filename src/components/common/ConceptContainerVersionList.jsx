@@ -7,7 +7,7 @@ import {
   IconButton, CircularProgress, Chip, Dialog, DialogActions, DialogContent,
   DialogTitle, Button, Box
 } from '@mui/material';
-import { map, isEmpty, startCase, get, includes, merge, uniqBy } from 'lodash';
+import { map, isEmpty, startCase, get, includes, merge, uniqBy, escape } from 'lodash';
 import {
   Search as SearchIcon, Edit as EditIcon,
   Delete as DeleteIcon, Block as RetireIcon,
@@ -28,7 +28,6 @@ import ConceptContainerExport from './ConceptContainerExport';
 import RepoExternalExports from './RepoExternalExports';
 import ChangelogMarkdown from './ChangelogMarkdown';
 import { CONCEPT_CONTAINER_RESOURCE_CHILDREN_TAGS } from '../search/ResultConstants';
-import { escapeHTML } from '../../common/windowConfig';
 
 const ACCORDIAN_HEADING_STYLES = {
   fontWeight: 'bold',
@@ -207,8 +206,8 @@ const ConceptContainerVersionList = ({ versions: versionsProp, url, resource, ca
   const onReleaseClick = version => onVersionUpdate(version, 'released', 'release', 'Released')
   const onRetireClick = version => onVersionUpdate(version, 'retired', 'retire', 'Retired')
   const onDeleteClick = version => {
-    const title = `Delete ${startCase(resource)} Version : ${escapeHTML(version.short_code)} [${escapeHTML(version.id)}]`;
-    const message = `Are you sure you want to permanently delete this ${resource} version ${escapeHTML(version.id)}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this ${resource} version will not be affected.`
+    const title = `Delete ${startCase(resource)} Version : ${escape(version.short_code)} [${escape(version.id)}]`;
+    const message = `Are you sure you want to permanently delete this ${resource} version ${escape(version.id)}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this ${resource} version will not be affected.`
 
     handleOnClick(title, message, () => deleteVersion(version))
   }
@@ -223,8 +222,8 @@ const ConceptContainerVersionList = ({ versions: versionsProp, url, resource, ca
     const newValue = !get(version, attr)
     label = newValue ? label : `un-${label}`;
     const resLabel = newValue ? successLabel : `Un${successLabel}`
-    const title = `Update ${startCase(resource)} Version : ${escapeHTML(version.short_code)} [${escapeHTML(version.id)}]`;
-    const message = `Are you sure you want to ${label} this ${resource} version ${escapeHTML(version.id)}?`
+    const title = `Update ${startCase(resource)} Version : ${escape(version.short_code)} [${escape(version.id)}]`;
+    const message = `Are you sure you want to ${label} this ${resource} version ${escape(version.id)}?`
 
     handleOnClick(title, message, () => updateVersion(version, {[attr]: newValue}, resLabel, handleLocalUpdate))
   }

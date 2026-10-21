@@ -1,23 +1,23 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { sanitizeEditorHTML } from './SafeHTML';
+import { sanitizeHTML } from './SafeHTML';
 
 class RTEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: sanitizeEditorHTML(props.defaultValue),
+      value: sanitizeHTML(props.defaultValue),
     }
   }
 
   componentDidUpdate(prevProps) {
     if(!prevProps.defaultValue && this.props.defaultValue)
-      this.setState({value: sanitizeEditorHTML(this.props.defaultValue)})
+      this.setState({value: sanitizeHTML(this.props.defaultValue)})
   }
 
   // The editor's own output stays in state untouched so the cursor never jumps; only what is passed up is sanitized.
-  onChange = value => this.setState({value: value}, () => this.props.onChange(sanitizeEditorHTML(value)))
+  onChange = value => this.setState({value: value}, () => this.props.onChange(sanitizeHTML(value)))
 
   render() {
     const { value } = this.state;

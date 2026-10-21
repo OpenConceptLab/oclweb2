@@ -2,19 +2,19 @@
 import React from 'react';
 import createDOMPurify from 'dompurify';
 
-export const ALLOWED_TAGS = [
+const ALLOWED_TAGS = [
   'a', 'abbr', 'b', 'blockquote', 'br', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'div',
   'dl', 'dt', 'em', 'figcaption', 'figure', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins',
   'kbd', 'li', 'mark', 'ol', 'p', 'pre', 'q', 's', 'samp', 'small', 'span', 'strike', 'strong', 'sub', 'sup',
   'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'u', 'ul',
 ]
 
-export const ALLOWED_ATTR = [
+const ALLOWED_ATTR = [
   'align', 'alt', 'border', 'cellpadding', 'cellspacing', 'class', 'color', 'colspan', 'dir', 'face', 'height',
   'href', 'id', 'lang', 'rel', 'rowspan', 'size', 'src', 'style', 'target', 'title', 'valign', 'width',
 ]
 
-export const FORBID_TAGS = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select', 'link', 'meta', 'base', 'svg', 'math']
+const FORBID_TAGS = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select', 'link', 'meta', 'base', 'svg', 'math']
 
 // http, https and mailto, plus relative URLs. Any other scheme is dropped.
 const ALLOWED_URI_REGEXP = /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i
@@ -22,8 +22,8 @@ const ALLOWED_URI_REGEXP = /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:
 const purifier = createDOMPurify(window)
 
 // Strict set for notification text (rendered by alertifyjs): basic inline formatting and links only.
-export const NOTIFIER_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'a', 'code', 'ul', 'ol', 'li']
-export const NOTIFIER_ATTR = ['href', 'rel']
+const NOTIFIER_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'a', 'code', 'ul', 'ol', 'li']
+const NOTIFIER_ATTR = ['href', 'rel']
 
 // Formatting-only classes written by the rich text editor (alignment, indent, direction, size, font).
 const QUILL_FORMAT_CLASS = /^ql-(align|indent|direction|size|font)-[a-z0-9-]+$/
@@ -35,7 +35,7 @@ const FORBIDDEN_CSS_VALUE = /url\(|expression\(|@import|image-set\(|\\|<|>|behav
 const SIZING_CSS_PROPERTY = /^(?:margin|padding|width|max-width|height|max-height)(?:-[a-z]+)?$/
 const FORBIDDEN_SIZING_VALUE = /v(?:w|h|min|max|i|b)\b|calc\(|min\(|max\(|clamp\(|(?:^|[\s(])-/i
 
-export const filterStyle = style => String(style || '')
+const filterStyle = style => String(style || '')
   .replace(/\/\*[\s\S]*?\*\//g, '')
   .split(';')
   .map(declaration => {
@@ -95,20 +95,15 @@ const run = (html, config) => purifier.sanitize(html ? String(html) : '', {
 // Owner-supplied content: only the editor's formatting classes, restricted inline styles.
 export const sanitizeHTML = html => run(html, {ALLOWED_TAGS, ALLOWED_ATTR})
 
-// Rich text editor input: same rules as owner content.
-export const sanitizeEditorHTML = sanitizeHTML
-
 // Notification text: a handful of inline tags, no class, style or id.
 export const sanitizeNotifierHTML = html => run(html, {ALLOWED_TAGS: NOTIFIER_TAGS, ALLOWED_ATTR: NOTIFIER_ATTR})
 
-// Prefix root-relative links with the hash router. Applied before sanitizing.
-export const withHashLinks = html => (html ? String(html) : '').replaceAll('href="/', 'href="/#/')
-
 // Paint containment keeps owner content inside its box; overflow-x lets wide tables and images scroll.
-export const WRAPPER_STYLE = {contain: 'paint', isolation: 'isolate', overflowX: 'auto'}
+const WRAPPER_STYLE = {contain: 'paint', isolation: 'isolate', overflowX: 'auto'}
 
 const SafeHTML = ({html, hashLinks, as: Component = 'div', style, ...rest}) => {
-  const source = hashLinks ? withHashLinks(html) : html
+  // Root-relative links are prefixed for the hash router before sanitizing.
+  const source = hashLinks && html ? String(html).replaceAll('href="/', 'href="/#/') : html
   return <Component {...rest} style={{...style, ...WRAPPER_STYLE}} dangerouslySetInnerHTML={{__html: sanitizeHTML(source)}} />
 }
 
