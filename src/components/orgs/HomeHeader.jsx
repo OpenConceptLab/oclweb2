@@ -26,6 +26,7 @@ import OrgForm from './OrgForm';
 import HomeTabs from './HomeTabs';
 import { ORG_DEFAULT_CONFIG } from "../../common/defaultConfigs"
 import ConceptContainerDelete from '../common/ConceptContainerDelete';
+import SafeHTML from '../common/SafeHTML';
 
 const DEFAULT_VISIBLE_ATTRIBUTES = ORG_DEFAULT_CONFIG.config.header.attributes
 
@@ -194,7 +195,7 @@ const HomeHeader = ({
             }
             {
               (customDescription && isExpandedHeader) ?
-              <div className='col-xs-12 no-side-padding header-custom-html resource-description large' dangerouslySetInnerHTML={{__html: customDescription}} style={getDescriptionStyles()} /> : (
+              <SafeHTML className='col-xs-12 no-side-padding header-custom-html resource-description large' html={customDescription} style={getDescriptionStyles()} /> : (
                 org.description && isExpandedHeader &&
                 <div className='col-xs-12 no-side-padding flex-vertical-center resource-description large' style={getDescriptionStyles()}>
                   {org.description}

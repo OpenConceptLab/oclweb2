@@ -26,7 +26,7 @@ import {
   GetApp as DownloadIcon,
 } from '@mui/icons-material';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { filter, get, includes, isEmpty, map } from 'lodash';
+import { filter, get, includes, isEmpty, map, escape } from 'lodash';
 import APIService from '../../services/APIService';
 import { formatDateTime, formatErrorForDisplay, isLoggedIn } from '../../common/utils';
 
@@ -161,8 +161,8 @@ const RepoExternalExports = ({ version, resource, canEdit, isHEAD, onChange, var
   const deleteExport = externalExport => {
     const key = externalExport.key;
     const confirm = alertifyjs.confirm();
-    confirm.setHeader(`Delete External Export: ${key}`);
-    confirm.setMessage(`Are you sure you want to permanently delete this external export from the ${resource} version?`);
+    confirm.setHeader(`Delete External Export: ${escape(key)}`);
+    confirm.setMessage(`Are you sure you want to permanently delete this external export from the ${escape(resource)} version?`);
     confirm.set('onok', () => {
       setIsDeleting({...isDeleting, [key]: true});
       APIService.new()

@@ -2,8 +2,7 @@ import React from 'react';
 import alertifyjs from 'alertifyjs';
 import {
   get, set, findIndex, cloneDeep, find, reject, values, isEmpty, isArray, isNumber,
-  isEqual
-} from 'lodash';
+  isEqual, escape } from 'lodash';
 import Autocomplete from '@mui/material/Autocomplete';
 import {
   TextField, Button, MenuItem,
@@ -197,7 +196,7 @@ class ViewConfigForm extends React.Component {
   onDelete = () => {
     this.setState({menu: false})
     alertifyjs.confirm(
-      `Delete Configuration: ${this.state.selected.name}`,
+      `Delete Configuration: ${escape(this.state.selected.name)}`,
       'Are you sure you want to delete this?',
       () => APIService.new().overrideURL(this.state.selected.url).delete().then(() => alertifyjs.success('Successfully Deleted. Reload...', 1, () => window.location.reload())),
       () => {}

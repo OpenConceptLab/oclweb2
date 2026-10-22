@@ -44,6 +44,7 @@ import OpenMRSDeprecationDialog from '../common/OpenMRSDeprecationDialog';
 import SigninRedirect from './SigninRedirect'
 import SignupRedirect from './SignupRedirect'
 import CheckAuth from './CheckAuth'
+import { windowConfig } from '../../common/windowConfig';
 
 
 const SITE_TITLE = getSiteTitle()
@@ -67,7 +68,7 @@ const App = props => {
 
   const setupHotJar = () => {
     /*eslint no-undef: 0*/
-    const HID = window.HOTJAR_ID || process.env.HOTJAR_ID
+    const HID = windowConfig('HOTJAR_ID') || process.env.HOTJAR_ID
     if(HID)
       hotjar.initialize(HID, 6);
   }
