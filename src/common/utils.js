@@ -19,6 +19,7 @@ import APIService from '../services/APIService';
 import GAService from '../services/GAService';
 import { ensureIdToken } from './ssoSession';
 import { SERVER_CONFIGS } from './serverConfigs';
+import { windowConfig } from './windowConfig';
 
 export const currentPath = () => window.location.hash.split('?')[0];
 
@@ -120,7 +121,7 @@ export const getMappingsDistributionByMapType = (mappings, concept_url) => {
 export const getAPIURL = () => {
   const savedConfigs = getSelectedServerConfig();
   /*eslint no-undef: 0*/
-  return get(savedConfigs, 'url') || window.API_URL || process.env.API_URL;
+  return get(savedConfigs, 'url') || windowConfig('API_URL') || process.env.API_URL;
 }
 
 export const toFullURL = uri => window.location.origin + '/#' + uri;
@@ -565,7 +566,7 @@ export const getAppliedServerConfig = () => {
   if(selectedConfig)
     return selectedConfig;
 
-  const APIURL = window.API_URL || process.env.API_URL;
+  const APIURL = windowConfig('API_URL') || process.env.API_URL;
   return find(SERVER_CONFIGS, {url: APIURL});
 }
 
@@ -575,7 +576,7 @@ export const isServerSwitched = () => {
 };
 
 export const getDefaultServerConfig = () => {
-  const APIURL = window.API_URL || process.env.API_URL;
+  const APIURL = windowConfig('API_URL') || process.env.API_URL;
   return find(SERVER_CONFIGS, {url: APIURL});
 }
 
@@ -924,8 +925,8 @@ export const isOpera = () => (!!window.opr && !!opr.addons) || !!window.opera ||
 export const isDeprecatedBrowser = () => isIE() || isOpera();
 
 export const isSSOEnabled = () => {
-  const redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
-  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  const redirectURL = windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
+  const oidClientID = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
   return Boolean(redirectURL && oidClientID)
 }
@@ -988,8 +989,8 @@ export const consumeAndValidateOAuthState = returnedState => {
 }
 
 export const getLoginURL = async returnTo => {
-  let redirectURL = window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
-  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  let redirectURL = windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
+  const oidClientID = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
   redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
 
@@ -1013,8 +1014,8 @@ export const getLoginURL = async returnTo => {
 }
 
 export const getRegisterURL = async returnTo => {
-  let redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
-  const oidClientID = window.OIDC_RP_CLIENT_ID || process.env.OIDC_RP_CLIENT_ID
+  let redirectURL = returnTo || windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
+  const oidClientID = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
   redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
 
@@ -1035,7 +1036,7 @@ export const getRegisterURL = async returnTo => {
 }
 
 export const getSSOLogoutURL = returnTo => {
-  const redirectURL = returnTo || window.LOGIN_REDIRECT_URL || process.env.LOGIN_REDIRECT_URL
+  const redirectURL = returnTo || windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
   const idToken = localStorage.id_token
   if(redirectURL && idToken)
     return `${getAPIURL()}/users/logout/?id_token_hint=${idToken}&post_logout_redirect_uri=${redirectURL}`

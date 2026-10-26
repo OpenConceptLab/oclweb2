@@ -1,4 +1,5 @@
 import React from 'react';
+import SafeHTML from './SafeHTML';
 
 const About = ({id, about}) => {
   return (
@@ -8,7 +9,7 @@ const About = ({id, about}) => {
       </h1>
       {
         about ?
-        <div className='col-md-12 no-side-padding' dangerouslySetInnerHTML={{__html: about.replaceAll('href="/', 'href="/#/')}} /> :
+        <SafeHTML className='col-md-12 no-side-padding' html={about} hashLinks /> :
         <p>No about entry</p>
       }
     </div>

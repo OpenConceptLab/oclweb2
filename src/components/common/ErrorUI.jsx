@@ -3,6 +3,7 @@ import { Divider, Collapse, Chip } from '@mui/material'
 import {ArrowRight as RightIcon, ArrowDropDown as DownIcon} from '@mui/icons-material'
 import { get, isObject } from 'lodash';
 import { ERROR_RED } from '../../common/constants';
+import SafeHTML from './SafeHTML';
 
 const ErrorUI = ({header, message, error, errorInfo}) => {
   const [open, setOpen] = React.useState(false)
@@ -18,7 +19,7 @@ const ErrorUI = ({header, message, error, errorInfo}) => {
         <h1>{header}</h1>
         <Divider orientation="vertical" />
         <div className='not-found-text'>
-          <h2 dangerouslySetInnerHTML={{__html: message}} />
+          <SafeHTML as='h2' html={message} />
         </div>
           </div>
       {

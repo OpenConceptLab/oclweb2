@@ -1,10 +1,10 @@
 /*eslint no-process-env: 0*/
 /*eslint no-undef: 0*/
+import { windowConfig } from './windowConfig'
+
 const SILENT_PAGE = '/silent-sso.html'
 const MESSAGE_TYPE = 'ocl-silent-sso'
 const DEFAULT_TIMEOUT_MS = 3000
-
-const runtime = () => typeof window !== 'undefined' ? window : {}
 
 const buildTimeSettings = () => {
   try {
@@ -21,9 +21,9 @@ const buildTimeSettings = () => {
 export const getSSOConfig = () => {
   const built = buildTimeSettings()
   return {
-    serverURL: (runtime().OIDC_SERVER_URL || built.serverURL || '').replace(/\/+$/, ''),
-    realm: runtime().OIDC_REALM || built.realm || '',
-    clientId: runtime().OIDC_RP_CLIENT_ID || built.clientId || '',
+    serverURL: (windowConfig('OIDC_SERVER_URL') || built.serverURL || '').replace(/\/+$/, ''),
+    realm: windowConfig('OIDC_REALM') || built.realm || '',
+    clientId: windowConfig('OIDC_RP_CLIENT_ID') || built.clientId || '',
   }
 }
 

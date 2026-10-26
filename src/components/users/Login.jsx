@@ -7,7 +7,7 @@ import {
   PermIdentity as UserIcon, LockOutlined as LockIcon,
   Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon,
 } from '@mui/icons-material';
-import { values, map, get } from 'lodash';
+import { values, map, get, escape } from 'lodash';
 import APIService from '../../services/APIService';
 import {
   refreshCurrentUserCache, getAppliedServerConfig, isSSOEnabled, getLoginURL
@@ -75,7 +75,7 @@ class Login extends React.Component {
 
   cacheUserData() {
     refreshCurrentUserCache(response => {
-      alertifyjs.success(`Successfully signed in as ${this.state.username}.`)
+      alertifyjs.success(`Successfully signed in as ${escape(this.state.username)}.`)
       let returnToURL = response.data.url
       if(get(this.props, 'location.search')) {
         const queryParams = new URLSearchParams(this.props.location.search)

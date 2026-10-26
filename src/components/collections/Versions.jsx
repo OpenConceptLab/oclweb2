@@ -40,8 +40,7 @@ import {
   isFunction,
   keys,
   pick,
-  isBoolean
-} from 'lodash';
+  isBoolean, escape } from 'lodash';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -208,8 +207,8 @@ const VersionList = ({
     const newValue = !get(version, attr);
     label = newValue ? label : `un-${label}`;
     const resLabel = newValue ? successLabel : `Un${successLabel}`;
-    const title = `Update ${startCase(resource)} Version : ${version.short_code} [${version.id}]`;
-    const message = `Are you sure you want to ${label} this ${resource} version ${version.id}?`;
+    const title = `Update ${startCase(resource)} Version : ${escape(version.short_code)} [${escape(version.id)}]`;
+    const message = `Are you sure you want to ${label} this ${resource} version ${escape(version.id)}?`;
 
     handleOnClick(title, message, () => updateVersion(version, { [attr]: newValue }, resLabel, onUpdate));
   };
@@ -218,14 +217,14 @@ const VersionList = ({
   const onRetireClick = version => onVersionUpdate(version, 'retired', 'retire', 'Retired');
 
   const onDeleteClick = version => {
-    const title = `Delete ${startCase(resource)} Version : ${version.short_code} [${version.id}]`;
-    const message = `Are you sure you want to permanently delete this ${resource} version ${version.id}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this ${resource} version will not be affected.`;
+    const title = `Delete ${startCase(resource)} Version : ${escape(version.short_code)} [${escape(version.id)}]`;
+    const message = `Are you sure you want to permanently delete this ${resource} version ${escape(version.id)}? This action cannot be undone! This will delete the version and all of its details. Concepts and mappings in this ${resource} version will not be affected.`;
 
     handleOnClick(title, message, () => deleteVersion(version));
   };
 
   const onDeleteExpansionClick = expansion => {
-    const title = `Delete Collection Expansion : ${expansion.mnemonic}`;
+    const title = `Delete Collection Expansion : ${escape(expansion.mnemonic)}`;
     const message =
       'Are you sure you want to permanently delete this collection expansion? This action cannot be undone! This will delete the expansion and all of its details. Concepts and mappings in this collection expansion will not be affected.';
 
