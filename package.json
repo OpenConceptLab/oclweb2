@@ -15,7 +15,7 @@
     "@mui/x-date-pickers": "^5.0.20",
     "alertifyjs": "^1.14.0",
     "axios": "^0.21.4",
-    "core-js": "^3.50.0",
+    "core-js": "^3.51.0",
     "d3": "^7.9.0",
     "d3-v6-tip": "^1.0.9",
     "dompurify": "3.4.16",
