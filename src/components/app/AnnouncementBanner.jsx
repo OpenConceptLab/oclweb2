@@ -8,10 +8,8 @@ import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { getAnnouncement, isDismissed, msUntilExpiry, rememberDismissal } from '../../common/announcement';
 
-// This deployment's announcement, from its ANNOUNCEMENT setting (README,
-// "Announcement banner"), fixed above the app bar. Same component in TBv3 and
-// the Mapper. Unset, malformed or past its until, nothing shows. Text and
-// labels show as plain text. A dismissal lasts until the setting's id changes.
+// This deployment's announcement (common/announcement.js; README, "Announcement
+// banner"), fixed above the app bar. Same component in TBv3 and the Mapper.
 
 // The banner's height while it shows. Header moves the app bar, the left menu
 // and the content down by it, and so does anything fixed below the app bar.
