@@ -176,12 +176,5 @@
       "confirmation_message": "Please type <1>{{resourceId}}</1> to confirm.",
       "confirmation_button_label": "I understand the consequences, delete this {{resourceType}}"
     }
-  },
-  "announcement": {
-    "title": "Subscriptions open November 1.",
-    "text": "Existing accounts using premium features have a grace period until December 1.",
-    "link_label": "Learn more",
-    "pricing_label": "See pricing",
-    "dismiss": "Dismiss"
   }
 }

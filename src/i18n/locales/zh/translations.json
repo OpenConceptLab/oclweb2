@@ -175,12 +175,5 @@
       "confirmation_message": "请键入 <1>{{resourceId}}</1> 来确认操作。",
       "confirmation_button_label": "我明白这些后果，请删除这一 {{resourceType}}"
     }
-  },
-  "announcement": {
-    "title": "订阅将于 11 月 1 日开放。",
-    "text": "使用高级功能的现有账户可享受宽限期至 12 月 1 日。",
-    "link_label": "了解更多",
-    "pricing_label": "查看价格",
-    "dismiss": "关闭"
   }
 }
