@@ -271,7 +271,7 @@ class SourceHome extends React.Component {
     let params = {...this.props.match.params}
     const { selected } = this.state
     if(selected) {
-      const isVersionedObject = selected.uuid === selected.versioned_object_id.toString() || selected.is_latest_version
+      const isVersionedObject = selected.uuid === selected.versioned_object_id?.toString() || selected.is_latest_version
       if(selected.map_type)
         params = {...params, mapping: selected.id, mappingVersion: isVersionedObject ? null : selected.version}
       else
@@ -385,7 +385,7 @@ class SourceHome extends React.Component {
                       parent={source}
                       _location={this.props.location}
                       _match={this.props.match}
-                      location={{pathname: selected.versioned_object_id.toString() === selected.uuid ? selected.url : selected.version_url}}
+                      location={{pathname: selected.versioned_object_id?.toString() === selected.uuid ? selected.url : selected.version_url}}
                       match={{params: {conceptVersion: selected.versioned_object_id.toString() === selected.uuid ? null : selected.version, version: this.props.match.params.version}}}
                       openHierarchy={false}
                       header={false}
