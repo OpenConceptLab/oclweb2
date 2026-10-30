@@ -82,7 +82,7 @@ const AnnouncementBanner = () => {
         px: { xs: 2, sm: 3 },
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap', flex: 1, minWidth: 0, overflowWrap: 'anywhere' }}>
         <CampaignOutlinedIcon fontSize='small' sx={{ color: V3.primary }} />
         <Typography variant='body2' sx={{ fontWeight: 600, color: V3.title }}>
           {announcement.text}
@@ -102,8 +102,6 @@ const AnnouncementBanner = () => {
                       fontWeight: 600,
                       color: V3.primary,
                       textDecorationColor: 'rgba(72, 54, 255, 0.4)',
-                      // The text may wrap between the links, never inside one.
-                      whiteSpace: 'nowrap',
                       '&:hover, &:focus': { color: V3.primary },
                       // App.scss removes the focus outline from every link.
                       '&:focus-visible': { outline: `2px solid ${V3.primary} !important`, outlineOffset: '2px' },
@@ -116,7 +114,7 @@ const AnnouncementBanner = () => {
             </Typography>
         }
       </Box>
-      <IconButton size='small' aria-label={t('common.close')} onClick={onClose}>
+      <IconButton size='small' aria-label={t('common.close')} onClick={onClose} sx={{ flexShrink: 0 }}>
         <CloseIcon fontSize='small' />
       </IconButton>
     </Box>
