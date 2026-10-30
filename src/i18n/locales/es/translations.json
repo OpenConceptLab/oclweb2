@@ -175,12 +175,5 @@
       "confirmation_message": "Escribe <1>{{resourceId}}</1> para confirmar.",
       "confirmation_button_label": "Entiendo las consecuencias, eliminar este {{resourceType}}"
     }
-  },
-  "announcement": {
-    "title": "Las suscripciones abren el 1 de noviembre.",
-    "text": "Las cuentas existentes que usan funciones premium tienen un periodo de gracia hasta el 1 de diciembre.",
-    "link_label": "Más información",
-    "pricing_label": "Ver precios",
-    "dismiss": "Descartar"
   }
 }

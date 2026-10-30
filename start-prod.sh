@@ -38,6 +38,30 @@ fi
 if [[ ! -z "${OIDC_REALM}" ]]; then
     echo "var OIDC_REALM = \"${OIDC_REALM}\";" >> ${ENV_FILE}
 fi
+# $1 as a double-quoted JavaScript string literal. Escapes the characters that
+# could end the string (", \ and line breaks), so a value can't add script to
+# env-config.js. One character at a time, which behaves the same in every bash.
+js_string() {
+    local s=$1 out= c i
+    for ((i = 0; i < ${#s}; i++)); do
+        c=${s:i:1}
+        case $c in
+            \\) out+='\\' ;;
+            \") out+='\"' ;;
+            $'\n') out+='\n' ;;
+            $'\r') out+='\r' ;;
+            *) out+=$c ;;
+        esac
+    done
+    printf '"%s"' "$out"
+}
+
+# This deployment's announcement banner, as JSON (README, "Announcement
+# banner"). The app parses and checks it; unset, no banner shows.
+if [[ ! -z "${ANNOUNCEMENT}" ]]; then
+    echo "var ANNOUNCEMENT = $(js_string "${ANNOUNCEMENT}");" >> ${ENV_FILE}
+fi
+
 echo "Adjusting nginx configuration"
 envsubst '$WEB_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
