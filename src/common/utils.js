@@ -20,6 +20,7 @@ import GAService from '../services/GAService';
 import { ensureIdToken } from './ssoSession';
 import { SERVER_CONFIGS } from './serverConfigs';
 import { windowConfig } from './windowConfig';
+import { getEnv, toAppOrigin } from './env';
 
 export const currentPath = () => window.location.hash.split('?')[0];
 
@@ -688,24 +689,7 @@ export const arrayToSentence = (arr, separator, lastSeparator=' and ') => {
 
 export const generateRandomString = () => Math.random().toString(36).substring(7);
 
-export const getEnv = forURL => {
-  const fqdn = window.location.origin;
-
-  if(fqdn.match('app.staging.openconceptlab'))
-    return 'staging';
-  if(fqdn.match('app.qa.openconceptlab'))
-    return 'qa';
-  if(fqdn.match('app.demo.openconceptlab'))
-    return 'demo';
-  if(fqdn.match('app.dev.openconceptlab'))
-    return 'dev';
-  if(fqdn.match('app.staging.who.openconceptlab'))
-    return forURL ? 'staging.who' : 'staging-who';
-  if(fqdn.match('app.openconceptlab'))
-    return forURL ? '' : 'production';
-
-  return 'development';
-}
+export { getEnv };
 
 export const getOpenMRSURL = () => {
   let env = getEnv(true);
@@ -988,8 +972,10 @@ export const consumeAndValidateOAuthState = returnedState => {
   return !returnedState || returnedState === storedState
 }
 
+// Sign-in, sign-up and sign-out come back to the host they started on (app.<env> or app.v2.<env>), since the
+// PKCE verifier and OAuth state are in that origin's sessionStorage. LOGIN_REDIRECT_URL only turns SSO on.
 export const getLoginURL = async returnTo => {
-  let redirectURL = windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
+  let redirectURL = window.location.origin
   const oidClientID = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
   redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
@@ -1014,7 +1000,7 @@ export const getLoginURL = async returnTo => {
 }
 
 export const getRegisterURL = async returnTo => {
-  let redirectURL = returnTo || windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
+  let redirectURL = returnTo || window.location.origin
   const oidClientID = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
   redirectURL = redirectURL.replace(/([^:]\/)\/+/g, "$1");
@@ -1036,7 +1022,7 @@ export const getRegisterURL = async returnTo => {
 }
 
 export const getSSOLogoutURL = returnTo => {
-  const redirectURL = returnTo || windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL
+  const redirectURL = returnTo || window.location.origin
   const idToken = localStorage.id_token
   if(redirectURL && idToken)
     return `${getAPIURL()}/users/logout/?id_token_hint=${idToken}&post_logout_redirect_uri=${redirectURL}`
@@ -1193,7 +1179,7 @@ export const toMapperURL = path => {
   if(['app.qa.openconceptlab.org', 'app.demo.openconceptlab.org'].includes(window.location.host))
     url = 'https://map.qa.openconceptlab.org'
   if(window.location.host.match('app.*.openconceptlab.org'))
-    url = window.location.origin.replace('//app.', '//map.')
+    url = toAppOrigin(window.location.origin).replace('//app.', '//map.')
 
   // The Mapper reads auth only from the segment after the first '?' in the referrer's hash, so drop this page's own query
   let referrerParams = `referrer=${window.location.href.split('?')[0]}`
@@ -1271,7 +1257,7 @@ export const toV3URL = path => {
   if(window.location.host?.includes('localhost'))
     url = 'http://localhost:4002'
   if(window.location.host.match('app.*.openconceptlab.org'))
-    url = window.location.origin.replace('//app.', '//app.v3.')
+    url = toAppOrigin(window.location.origin).replace('//app.', '//app.v3.')
 
   let referrerParams = `referrer=${window.location.href}`
   if(isLoggedIn())
