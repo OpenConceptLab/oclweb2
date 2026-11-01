@@ -1024,7 +1024,7 @@ export const getRegisterURL = async returnTo => {
 export const getSSOLogoutURL = returnTo => {
   const redirectURL = returnTo || window.location.origin
   const idToken = localStorage.id_token
-  if(redirectURL && idToken)
+  if(isSSOEnabled() && idToken)
     return `${getAPIURL()}/users/logout/?id_token_hint=${idToken}&post_logout_redirect_uri=${redirectURL}`
 }
 
