@@ -36,7 +36,7 @@ class OIDLoginCallback extends React.Component {
         return
       }
       this.setState({next: next && next !== '/' ? next : null }, () => {
-        const redirectURL = this.state.next ? window.location.origin + this.state.next : (windowConfig('LOGIN_REDIRECT_URL') || process.env.LOGIN_REDIRECT_URL)
+        const redirectURL = this.state.next ? window.location.origin + this.state.next : window.location.origin
         const clientId = windowConfig('OIDC_RP_CLIENT_ID') || process.env.OIDC_RP_CLIENT_ID
 
         APIService.users().appendToUrl('oidc/code-exchange/').post({code: code, redirect_uri: redirectURL, client_id: clientId, code_verifier: codeVerifier}).then(res => {
