@@ -47,7 +47,8 @@
           "edit": "编辑徽标"
         }
       }
-    }
+    },
+    "checking_auth": "正在验证身份..."
   },
   "resources": {
     "org": "组织机构",

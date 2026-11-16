@@ -226,9 +226,9 @@ const UserManagement = ({ user }) => {
                 <React.Fragment>
                   <p>{t('user.this_user_own')}:</p>
                   <ul>
-                    <li>{t('common.resources.orgs')}: {user.owned_orgs}</li>
-                    <li>{t('common.resources.sources')}: {user.sources}</li>
-                    <li>{t('common.resources.collections')}: {user.collections}</li>
+                    <li>{t('resources.orgs')}: {user.owned_orgs}</li>
+                    <li>{t('resources.sources')}: {user.sources}</li>
+                    <li>{t('resources.collections')}: {user.collections}</li>
                   </ul>
                 </React.Fragment>
               }

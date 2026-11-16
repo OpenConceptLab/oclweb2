@@ -47,7 +47,8 @@
           "edit": "Editar logo"
         }
       }
-    }
+    },
+    "checking_auth": "Verificando la autenticación..."
   },
   "resources": {
     "org": "Organización",
